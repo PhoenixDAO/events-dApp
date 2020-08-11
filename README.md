@@ -25,18 +25,8 @@ yarn install
 npm install
 ```
 
-2. Run the development blockchain.
-```javascript
-ganache-cli -b 5
-```
 
-3. Compile and migrate contracts.
-```javascript
-truffle compile
-truffle migrate
-```
-
-4. Run app.
+2. Run app.
 ```javascript
 yarn run start
 // or
