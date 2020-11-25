@@ -270,7 +270,9 @@ class Ticket extends Component {
 									{date.toLocaleTimeString()}
 								</span>
 							</h4>
+							<div style={{height:"22px"}}>
 							{timeStatus}
+							</div>
 							<h5 className="text-center">
 								Your seat: {ticket_data[1]}
 							</h5>

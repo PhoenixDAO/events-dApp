@@ -184,11 +184,6 @@ class Form extends Component {
 		{e.preventDefault();
 		}
 	}
-	onChange(e) {
-		if (!e.target.validity.badInput) {
-		   this.setState(Number(e.target.value))
-		}
-	}
 	handleForm = (event) => {
 		event.preventDefault();
 
