@@ -3,11 +3,10 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import makeBlockie from "ethereum-blockies-base64";
-
+import "../styles/Ticket.css";
 import ipfs from "../utils/ipfs";
 
 import Loading from "./Loading";
-
 import {
 	EmailShareButton,
 	FacebookShareButton,
@@ -213,7 +212,6 @@ class Ticket extends Component {
 				</div>
 			</div>
 		);
-
 		if (
 			this.event !== null &&
 			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
@@ -270,7 +268,9 @@ class Ticket extends Component {
 									{date.toLocaleTimeString()}
 								</span>
 							</h4>
+							<div style={{height:"22px"}}>
 							{timeStatus}
+							</div>
 							<h5 className="text-center">
 								Your seat: {ticket_data[1]}
 							</h5>
@@ -284,8 +284,9 @@ class Ticket extends Component {
 							<h5 className="card-title event-title">
 								<Link to={titleURL}>{event_data[0]}</Link>
 							</h5>
+							<div className="ticketDescription" >
 							{description}
-
+							</div>
 							<h6 className="text-center mb-0">
 								Tell friends you're going!{" "}
 							</h6>
