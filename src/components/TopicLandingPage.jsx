@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import Loading from './Loading';
+import PhoenixDAOLoader from './PhoenixDAOLoader';
 import Event from './Event';
 
 import Web3 from 'web3';
@@ -23,7 +24,8 @@ class TopicLandingPage extends Component
         openEvents : '',
         blocks : 5000000,
         latestblocks :6000000,
-        loading : false,
+        blocks:0,
+        loading : true,
         Topic_Events : [],
         topic_copy:[],
         active_length : '',
@@ -31,7 +33,7 @@ class TopicLandingPage extends Component
         isActive:true,
         dateNow:''
 
-      };   
+      };
 
 	    this.contracts = context.drizzle.contracts;
 	    this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
@@ -42,7 +44,7 @@ class TopicLandingPage extends Component
 
       this.ActiveEvent = this.ActiveEvent.bind(this);
 	  	this.PastEvent = this.PastEvent.bind(this);
-      this.toggleSortDate = this.toggleSortDate.bind(this); 
+      this.toggleSortDate = this.toggleSortDate.bind(this);
 
 
 	}
@@ -69,7 +71,7 @@ class TopicLandingPage extends Component
     this.props.history.push("/topic/"+slug+"/"+1);
     this.theTopic = this.getTopicData();
     this.loadBlockchain();
-    window.scrollTo(0, 180);   
+    window.scrollTo(0, 180);
   }
 
   getLastURLSegment()
@@ -78,7 +80,7 @@ class TopicLandingPage extends Component
     let currentRoute = this.props.history.location.pathname;
     let middleSegment = currentRoute.split('/')
     //let lastSegment = currentRoute.substr(currentRoute.lastIndexOf('/') + 1);
-    return middleSegment[middleSegment.length - 2]; 
+    return middleSegment[middleSegment.length - 2];
   }
 
   getTopicData() {
@@ -86,34 +88,34 @@ class TopicLandingPage extends Component
 
     let theTopic = topicsJson.filter(function (topic) {
       return topic.slug == topicSlug;
-      
+
     });
-    
+
     return theTopic[0]
-    
+
     ;
-    
+
   }
 
   //Loadblockchain Data
   async loadBlockchain(){
-    
+
     const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b'));
     const openEvents =  new web3.eth.Contract(Open_events_ABI, Open_events_Address);
-    
+
     if (this._isMounted){
     this.setState({openEvents});
     this.setState({Topic_Events:[],active_length:0});
-    
+
     const dateTime = Date.now();
     const dateNow = Math.floor(dateTime / 1000);
     const blockNumber = await web3.eth.getBlockNumber();
-    
+
     this.setState({dateNow})
-    this.setState({blocks:blockNumber - 50000});
-    this.setState({latestblocks:blockNumber});
+    this.setState({blocks:blockNumber});
+    this.setState({latestblocks:blockNumber - 1});
     this.setState({Topic_Events:[]});
-    
+
     if(this.state.isActive){
       this.loadActiveEvents()
       }
@@ -122,95 +124,83 @@ class TopicLandingPage extends Component
       }
     }
 
-    openEvents.events.CreatedEvent({fromBlock: this.state.latestblocks, toBlock:'latest'})
+    openEvents.events.CreatedEvent({fromBlock: this.state.blocks, toBlock:'latest'})
     .on('data', (log) => setTimeout(()=> {
     if(this.state.isActive && log.returnValues.category === this.props.match.params.page){
-    this.setState({loading:true});
-    
+
     this.setState({Topic_Events:[...this.state.Topic_Events,log]});
     var newest = this.state.Topic_Events
     var newsort= newest.concat().sort((a,b)=> b.blockNumber- a.blockNumber);
     if (this._isMounted){
-    
-    
+
+
     //this.setState({incoming:false});
     this.setState({Topic_Events:newsort,topic_copy:newsort});
     this.setState({active_length:this.state.Topic_Events.length})
-    this.setState({loading:false})};
-    }
-    },8000))
-    
-   /* openEvents.getPastEvents("CreatedEvent",{fromBlock: this.state.blocks, toBlock:'latest'})
-    .then(events=>{
-    this.setState({loading:true})
-    var newest = events.filter((activeEvents)=>activeEvents.returnValues.time >=(dateNow) && activeEvents.returnValues.category === this.props.match.params.page);
-    var newsort= newest.concat().sort((a,b)=> b.blockNumber- a.blockNumber);
-    if (this._isMounted){
-    this.setState({Topic_Events:newsort,topic_copy:newsort});
-    this.setState({loading:false})
-    this.setState({active_length:this.state.Topic_Events.length}); 
-  }
-     
-    }).catch((err)=>console.error(err))*/
-    
+       };
+      }
+    },10000))
+
   }
 
 
   //Get My Active Events on Blockchain
 	async loadActiveEvents(){
-		
+
 		if (this._isMounted){
 		this.setState({Topic_Events:[],active_length:0}); }
-	  
-		this.state.openEvents.getPastEvents("CreatedEvent",{fromBlock: 5000000, toBlock:'latest'})
+
+		this.state.openEvents.getPastEvents("CreatedEvent",{fromBlock: 5000000, toBlock:this.state.latestblocks})
 		.then(events=>{
 		this.setState({loading:true})
 		var newest = events.filter((activeEvents)=>activeEvents.returnValues.time >=(this.state.dateNow) && activeEvents.returnValues.category === this.props.match.params.page);
 		var newsort= newest.concat().sort((a,b)=> b.blockNumber- a.blockNumber);
-		
+
 		if (this._isMounted){
       this.setState({Topic_Events:newsort,topic_copy:newsort});
-		this.setState({loading:false})
-		this.setState({active_length:this.state.Topic_Events.length}); }
-		 
+      this.setState({active_length:this.state.Topic_Events.length});
+      setTimeout(()=>this.setState({loading:false}),1000);}
+
 		}).catch((err)=>console.error(err))
-		
+
     }
 
     //Get My Active Events on Blockchain
 	async loadPastEvents(){
-		
+
 		if (this._isMounted){
 		this.setState({Topic_Events:[],active_length:0}); }
-	  
-		this.state.openEvents.getPastEvents("CreatedEvent",{fromBlock: 5000000, toBlock:'latest'})
+
+		this.state.openEvents.getPastEvents("CreatedEvent",{fromBlock: 5000000, toBlock:this.state.latestblocks})
 		.then(events=>{
 		this.setState({loading:true})
 		var newest = events.filter((activeEvents)=>activeEvents.returnValues.time <=(this.state.dateNow) && activeEvents.returnValues.category === this.props.match.params.page);
 		var newsort= newest.concat().sort((a,b)=> b.blockNumber- a.blockNumber);
-		
+
 		if (this._isMounted){
       this.setState({Topic_Events:newsort,topic_copy:newsort});
-		this.setState({loading:false})
-		this.setState({active_length:this.state.Topic_Events.length}); }
-		 
+      this.setState({active_length:this.state.Topic_Events.length});
+      setTimeout(()=>this.setState({loading:false}),1000); }
+
 		}).catch((err)=>console.error(err))
-		
+
     }
 
 
   //Display My Close Events
 	PastEvent=(e)=>{
 		this.setState({
-			isActive: false,
+      isActive: false,
+      loading:true,
 		},()=>{if(!this.state.isActive){
-		this.loadPastEvents()}})	
+		this.loadPastEvents()}})
 	  }
-    
+
   //Display My Active Events
 	ActiveEvent=(e)=>{
 		this.setState({
-			isActive: true,
+      isActive: true,
+      loading:true
 		},()=>{if(this.state.isActive){
 			this.loadActiveEvents()}})
 	  }
@@ -220,12 +210,12 @@ class TopicLandingPage extends Component
   updateSearch=(e)=>{
     let {value} = e.target
     this.setState({value},()=>{
-    if(this.state.value !== ""){  
+    if(this.state.value !== ""){
     var filteredEvents = this.state.topic_copy;
     filteredEvents = filteredEvents.filter((events)=>{
     return events.returnValues.name.toLowerCase().search(this.state.value.toLowerCase()) !==-1;
-    
-    
+
+
     })}else{ filteredEvents = this.state.topic_copy}
 
   this.setState({Topic_Events:filteredEvents,
@@ -237,22 +227,22 @@ class TopicLandingPage extends Component
   toggleSortDate=(e)=>{
     let {value} = e.target
     this.setState({value},()=>{
-    const{Topic_Events}=this.state 
+    const{Topic_Events}=this.state
     var newPolls = Topic_Events
-   
+
      if(this.state.isOldestFirst){
         newPolls = Topic_Events.concat().sort((a,b)=> b.returnValues.eventId - a.returnValues.eventId)
-        } 
+        }
     else {
         newPolls = Topic_Events.concat().sort((a,b)=> a.returnValues.eventId - b.returnValues.eventId)
       }
-    
+
       this.setState({
       isOldestFirst: !this.state.isOldestFirst,
-      Topic_Events:newPolls  
+      Topic_Events:newPolls
       });
     })}
-  
+
 	render()
   {
 		let body = <Loading />;
@@ -260,16 +250,18 @@ class TopicLandingPage extends Component
 
 
 		if (typeof this.props.contracts['OpenEvents'].getEventsCount[this.eventCount] !== 'undefined' ) {
-      let count = this.state.active_length;
-    
-			if (count === 0) {
+      let count = this.state.Topic_Events.length;
+      if(this.state.loading){
+        body = <PhoenixDAOLoader/>
+      }
+			  else if (count === 0 && !this.state.loading) {
 				body = <p className="text-center not-found"><span role="img" aria-label="thinking">🤔</span>&nbsp;No events found. <a href="/createevent">Try creating one.</a></p>;
 			} else {
-        
+
         let currentPage = Number(this.props.match.params.id);
-    
+
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-  
+
 				let end = currentPage * this.perPage;
 				let start = end - this.perPage;
 				if (end > count) end = count;
@@ -278,10 +270,11 @@ class TopicLandingPage extends Component
 				let events_list = [];
 
 				for (let i = start; i < end; i++) {
-          
-          events_list.push(<Event 
-            key={this.state.Topic_Events[i].returnValues.eventId} 
-            id={this.state.Topic_Events[i].returnValues.eventId} 
+
+          events_list.push(<Event
+            inquire={this.props.inquire}
+            key={this.state.Topic_Events[i].returnValues.eventId}
+            id={this.state.Topic_Events[i].returnValues.eventId}
             ipfs={this.state.Topic_Events[i].returnValues.ipfs} />);
 				}
 
@@ -292,8 +285,8 @@ class TopicLandingPage extends Component
 					for (let i = 1; i <= pages; i++) {
 						let active = i === currentPage ? 'active' : '';
 						links.push(
-							<li className={"page-item " + active} key={i}>						
-                <Link to={"/topic/" + this.props.match.params.page + "/" + i } onClick={window.scrollTo(0, 700)} className="page-link">{i}</Link>
+							<li className={"page-item " + active} key={i}>
+                <Link to={"/topic/" + this.props.match.params.page + "/" + i } className="page-link">{i}</Link>
 							</li>
 						);
 					}
@@ -334,18 +327,18 @@ class TopicLandingPage extends Component
       <div className="input-group input-group-lg">
         <div className="input-group-prepend ">
           <span className="input-group-text search-icon" id="inputGroup-sizing-lg"><i className="fa fa-search"></i>&nbsp;Search </span>
-        </div> 
+        </div>
         <input type="text" value={this.state.value} onChange={this.updateSearch.bind(this)} className="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
       </div>
       <br /><br />
 
       <div>
-          <h2 className ="ml-4"><i className="fa fa-calendar-alt"></i>{this.state.isActive ?' Active':' Past'} Events In The <strong>{topic.name}</strong> Topic</h2>
-          
-          <div className="mt-4">
-          <button className="btn sort_button col-md-2 mx-4"  onClick={this.ActiveEvent} >Active Events</button>
-				  <button className="btn sort_button col-md-2 ml-1"  onClick={this.PastEvent} >Past Events</button>
-          <button className="btn sort_button col-md-2 float-right mr-4" value={this.state.value} onClick={this.toggleSortDate} onChange={this.toggleSortDate.bind(this)}>{this.state.isOldestFirst ?'Sort:Oldest':'Sort:Newest'}</button>
+          <h2 className =""><i className={this.state.isActive ?' fa fa-calendar-alt':' fa fa-archive'}></i>{this.state.isActive ?' Active':' Past'} Events In The <strong>{topic.name}</strong> Topic</h2>
+
+          <div className="row row_mobile mt-4 mb-2">
+          <button className="btn sort_button col-md-2 mx-2 mt-2"  onClick={this.ActiveEvent} >Active Events</button>
+				  <button className="btn sort_button col-md-2 mx-2 mt-2"  onClick={this.PastEvent} >Past Events</button>
+          <button className="btn sort_button col-md-2 mx-2 mt-2" value={this.state.value} onClick={this.toggleSortDate} onChange={this.toggleSortDate.bind(this)}>{this.state.isOldestFirst ?'Sort: Oldest':'Sort: Newest'}</button>
           </div>
 
           <hr />
@@ -368,7 +361,7 @@ class TopicLandingPage extends Component
             </div>
             ))}
         </div>
-      </div> 
+      </div>
 
 
 
@@ -379,8 +372,7 @@ class TopicLandingPage extends Component
 	}
 }
 
-TopicLandingPage.contextTypes =
-{
+TopicLandingPage.contextTypes = {
     drizzle: PropTypes.object
 }
 
