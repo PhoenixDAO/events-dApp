@@ -8,6 +8,8 @@ import 'react-datetime/css/react-datetime.css';
 import eventTypes from '../../config/types.json';
 import eventTopics from '../../config/topics.json';
 
+let numeral = require('numeral');
+
 class Form extends Component {
 	constructor(props) {
 		super(props);
@@ -20,38 +22,53 @@ class Form extends Component {
 			description_length: 0,
 			organizer: '',
 			organizer_length: 0,
+			price:'',
 			location: '',
 			time: 0,
 			timeForHumans: null,
-			currency: 'hydro',
-			type: '',
-			topic: '',
+			currency: 'phnx',
+			type: 'auto-boat-and-air',
+			topic: 'appearance-or-signing',
 			limited: false,
 			seatsForHumans: 0,
 			wrong_file: false,
 			file_name: null,
 			file: null,
-			blockie: "/images/hydro.png",
-			fileImg: "/images/event-placeholder.jpg",
-			form_validation: []
+			blockie: "/images/PhoenixDAO.png",
+			fileImg: "/images/event-placeholder.png",
+			form_validation: [],
+
+			PhoenixDAO_market:'',
+			dateDisplay:new Date(parseInt('1577952000', 10) * 1000)
 		}
 	}
+
+
+	getPhoenixDAOMarketValue = () => {
+
+		fetch('https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture')
+			  .then(res => res.json())
+			  .then((data) => {
+				this.setState({PhoenixDAO_market: data.phoenixdao})})
+			  .catch(console.log)
+	  }
 
 	handleDate = (date) => {
 		if (typeof date === 'object' && date.isValid()) {
 			this.setState({
 				timeForHumans: date.time,
-				time: date.unix()
-			});
-
+				time: date.unix(),
+			},()=>this.setState({dateDisplay: new Date(parseInt(this.state.time, 10) * 1000)}));
 			console.log(date)
 		}
 	}
 
 	handleCurrency = (event) => {
 		this.setState({
-			currency: event.target.value
-		});
+			currency: event.target.value,
+			price: '0'
+		},()=>console.log('currency',this.state.currency, this.state.price));
+
 	}
 
 	handleLimited = () => {
@@ -122,20 +139,35 @@ class Form extends Component {
 		});
 	}
 
+	typeChange = (event) => {
+		let topic = event.target.value;
+
+		this.setState({
+			topic: topic
+		},()=>(console.log()));
+	}
+
 	categoryChange = (event) => {
 		let type = event.target.value;
 
 		this.setState({
 			type: type
-		},()=>(console.log("check",this.state.type)));
+		},()=>(console.log()));
 	}
 
 	priceChange = (event) => {
+		if(this.state.currency === 'phnx'){
 		let price = this.form.price.value;
 
 		this.setState({
 			price: price
-		});
+		},()=>console.log('price', this.state.price));}
+		else{
+		let price = '0';
+		this.setState({
+			price: price
+		},()=>console.log('price', this.state.price))
+		}
 	}
 
 	ticketsChange = (event) => {
@@ -146,6 +178,17 @@ class Form extends Component {
 		});
 	}
 
+	restrictMinus=(e) =>{
+		let inputKeyCode = e.keyCode ? e.keyCode : e.which;
+		if (inputKeyCode == 45) 
+		{e.preventDefault();
+		}
+	}
+	onChange(e) {
+		if (!e.target.validity.badInput) {
+		   this.setState(Number(e.target.value))
+		}
+	}
 	handleForm = (event) => {
 		event.preventDefault();
 
@@ -156,7 +199,7 @@ class Form extends Component {
 		if (this.form.description.value === '') form_validation.push('description');
 		if (this.state.wrong_file === true || this.state.file === null) form_validation.push('image');
 		if (this.state.time === 0) form_validation.push('time');
-		if (this.form.price.value === '') form_validation.push('price');
+		if (this.state.price === '') form_validation.push('price');
 		if (this.state.limited === true && this.form.seats.value < 1) form_validation.push('seats');
 		if (this.state.type === '') form_validation.push('type');
 
@@ -175,7 +218,7 @@ class Form extends Component {
 				this.state.type,
 				this.state.topic,
 				this.state.currency,
-				this.form.price.value,
+				this.state.price,
 				this.state.limited,
 				this.form.seats.value
 			);
@@ -183,7 +226,13 @@ class Form extends Component {
 	}
 
 	render() {
-		let symbol = this.state.currency === 'eth' ? 'ethereum.png' : 'hydro.png';
+
+		let symbol = 'PhoenixDAO.png';
+		let currency = this.state.currency === 'eth' ? 'ETH' : 'PHNX';
+		let	freeEvent = '';
+			if( this.state.currency === 'eth'){
+			freeEvent = <p className="free_event">Free Event</p>
+			}
 
 		let file_label = !this.state.wrong_file && this.state.file_name !== '' ? this.state.file_name : 'Select file';
 
@@ -224,47 +273,54 @@ class Form extends Component {
 			organizerForHumans = "Organizer: " + this.state.organizer;
 
 		}
+		let date = new Date(parseInt(this.state.date, 10) * 1000);
+
+		let disabled = false;
+		if(this.props.account.length == 0){
+			disabled = true;
+		}
+		
 
 		return (
 			<React.Fragment>
 			<div className="row">
 			<div className="col col-xl-8 col-lg-8 col-md-12 col-sm-12">
 			<form>
-				
+
 				<div className="form-group">
 					<label htmlFor="name">Event Name:</label>
-					<input type="text" className={"form-control " + warning.name} id="name" value={this.state.title} onChange={this.titleChange} autoComplete="off" />
+					<input type="text" className={"form-control " + warning.name} id="name" title="Event Name" value={this.state.title} onChange={this.titleChange} autoComplete="off" />
 					<small className="form-text text-muted">{this.state.title_length}/80 characters available.</small>
 				</div>
 				<div className="form-group">
 					<label htmlFor="description">Event Description:</label>
-					<textarea className={"form-control " + warning.description} id="description" rows="5" ref={(input) => this.form.description = input} onChange={this.descriptionChange} autoComplete="off"></textarea>
+					<textarea className={"form-control " + warning.description} id="description" title="Event Description" rows="5" ref={(input) => this.form.description = input} onChange={this.descriptionChange} autoComplete="off"></textarea>
 					<small className="form-text text-muted">{this.state.description_length}/500 characters available.</small>
 				</div>
 				<div className="form-group">
 					<label htmlFor="location">Event Location:</label>
-					<input type="text" className={"form-control " + warning.location} id="location"  onChange={this.locationChange} autoComplete="off" />
+					<input type="text" className={"form-control " + warning.location} id="location" title="Event Location" onChange={this.locationChange} autoComplete="off" />
 				</div>
 				<div className="form-group">
 					<label htmlFor="description">Event Date and Time:</label>
-					<Datetime closeOnSelect={true} onChange={this.handleDate} inputProps={{className : "form-control " + warning.time}} autoComplete="off" />
+					<Datetime closeOnSelect={true} onChange={this.handleDate} inputProps={{className : "form-control " + warning.time, title: "Event Date and Time"}} autoComplete="off" />
 				</div>
 				<div className="form-group">
 					<p>Event Cover Image:</p>
 					<div className="custom-file">
-						<input type="file" className={"custom-file-input " + warning.image} id="customFile" onChange={this.handleFile} autoComplete="off" />
+						<input type="file" className={"custom-file-input " + warning.image} id="customFile" title="Event Cover Image" onChange={this.handleFile} autoComplete="off" />
 						<label className="custom-file-label" htmlFor="customFile">{file_label}</label>
 					</div>
 					<small className="form-text text-muted">Image format: jpg, png. Max file size 1mb.</small>
 				</div>
 				<div className="form-group">
 					<label htmlFor="organizer">Organizer Name:</label>
-					<input type="text" className={"form-control " + warning.organizer} id="organizer" value={this.state.organizer} onChange={this.organizerChange} autoComplete="off" />
+					<input type="text" className={"form-control " + warning.organizer} id="organizer" title="Organizer Name" value={this.state.organizer} onChange={this.organizerChange} autoComplete="off" />
 					<small className="form-text text-muted">{this.state.organizer_length}/100 characters available.</small>
 				</div>
 				<div className="form-group">
 					<label htmlFor="description">Event Type:</label>
-					<select className="form-control" id="type">
+					<select className="form-control" id="type" title="Event Type" onChange={this.typeChange}>
 					<option value="" disabled="disabled">Select the type of the event</option>
 					{eventTypes.map((Type, index) => (
 						<option value={Type.slug} key={Type.name}>{Type.name}</option>
@@ -273,7 +329,7 @@ class Form extends Component {
 				</div>
 				<div className="form-group">
 					<label htmlFor="description">Event Topic:</label>
-					<select className="form-control" id="topic" onChange={this.categoryChange}>
+					<select className="form-control" id="topic" title="Event Topic" onChange={this.categoryChange}>
 					<option value="" disabled="disabled">Select the topic of the event</option>
 					{eventTopics.map((Topic, index) => (
 						<option value={Topic.slug} key={Topic.name}>{Topic.name}</option>
@@ -284,14 +340,14 @@ class Form extends Component {
 				<hr />
 				<br />
 				<div className="form-group">
-					<p>Payment Options:</p>
+					<p>Event Options:</p>
 					<div className="custom-control custom-radio custom-control-inline">
-						<input type="radio" id="payment2" name="payment" className="custom-control-input" defaultChecked="true" value="hydro" onChange={this.handleCurrency} autoComplete="off" />
-						<label className="custom-control-label" htmlFor="payment2">Hydro</label>
+						<input type="radio" id="payment2" name="payment" className="custom-control-input" defaultChecked="true" value="phnx" title="PHNX" onChange={this.handleCurrency} autoComplete="off" />
+						<label className="custom-control-label" htmlFor="payment2">Paid Event</label>
 					</div>
 					<div className="custom-control custom-radio custom-control-inline">
-						<input type="radio" id="payment1" name="payment" className="custom-control-input" value="eth" onChange={this.handleCurrency} autoComplete="off" />
-						<label className="custom-control-label" htmlFor="payment1">Ethereum</label>
+						<input type="radio" id="payment1" name="payment" className="custom-control-input" value="eth" title="Ethereum" onChange={this.handleCurrency} autoComplete="off" />
+						<label className="custom-control-label" htmlFor="payment1">Free Event</label>
 					</div>
 				</div>
 				<div className="form-group row">
@@ -301,35 +357,53 @@ class Form extends Component {
 							<div className="input-group-prepend">
 								<span className="input-group-text"><img src={'/images/'+symbol} className="event_price-image" alt="" /></span>
 							</div>
-							<input type="number" min="0.00000001" className={"form-control " + warning.price} id="price" ref={(input) => this.form.price = input} autoComplete="off" />
+							{this.state.currency === 'phnx' &&<input type="number" min="0.00000001" pattern="^[0-9]" onKeyPress={this.restrictMinus} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
+							{this.state.currency === 'eth' &&<input type="number" min="0.00000001" pattern="^[0-9]" onKeyPress={this.restrictMinus} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value = {this.state.price} autoComplete="off" onChange={this.priceChange} />}
+
 						</div>
+						{this.state.currency === 'phnx' &&<div className="input-group mb-3">
+							<div className="input-group-prepend">
+								<span className="input-group-text"><img src={'/images/dollarsign.png'} className="event_price-image" alt="" /></span>
+							</div>
+							 <div className={"form-control " + warning.price} title="Price in USD">{numeral(this.state.price * this.state.PhoenixDAO_market.usd).format('0,0.00')} </div>
+						</div>}
+
+						{this.state.currency === 'eth' &&<div className="input-group mb-3">
+							<div className="input-group-prepend">
+								<span className="input-group-text"><img src={'/images/dollarsign.png'} className="event_price-image" alt="" /></span>
+							</div>
+							 <div className={"form-control " + warning.price} title="Price in USD">0.00 </div>
+						</div>}
 					</div>
 				</div>
 				<div className="form-group">
 					<p>Ticket Options:</p>
 					<div className="custom-control custom-checkbox">
-						<input type="checkbox" className="custom-control-input" id="limited" value="true" onChange={this.handleLimited} autoComplete="off" />
+						<input type="checkbox" className="custom-control-input" id="limited" title="Limited tickets" value="true" onChange={this.handleLimited} autoComplete="off" />
 						<label className="custom-control-label" htmlFor="limited">Limited tickets</label>
 					</div>
 					<div className="row mt-3">
 						<div className="col-lg-6">
 							<label htmlFor="seats">Tickets available:</label>
-							<input type="number" className={"form-control " + warning.seats} id="seats" disabled={!this.state.limited}  ref={(input) => this.form.seats = input} autoComplete="off" />
+							<input type="number" className={"form-control " + warning.seats} id="seats" title="Tickets available" disabled={!this.state.limited}  ref={(input) => this.form.seats = input} autoComplete="off" onChange ={this.ticketsChange} />
 						</div>
 					</div>
 				</div>
 				{alert}
 				<br />
-				<button type="submit" className="btn btn-outline-dark" onClick={this.handleForm}>Make Your Event Live</button>
+				<button type="submit" className="btn btn-outline-dark" title="Make Your Event Live" onClick={this.handleForm} disabled={disabled}>Make Your Event Live</button>
 			</form>
 			</div>
 
 <div className="col col-xl-4 col-lg-4 col-md-12 col-sm-12 create-event">
 <label>Event Preview:</label>
 <div className="card">
+<div className="image_wrapper">
 	<Link to={"/event/"}>
 		<img className="card-img-top event-image" src={this.state.fileImg} alt="Placeholder Event" />
 	</Link>
+	{freeEvent}
+	</div>
 	<div className="card-header text-muted event-header">
 		<img className="float-left" src={this.state.blockie} alt="" />
 		<p className="small text-truncate mb-0">{organizerForHumans}</p>
@@ -341,11 +415,14 @@ class Form extends Component {
 		{this.state.description}
 	</div>
 	<ul className="list-group list-group-flush">
-		<li className="list-group-item"><strong>Price:</strong> <img src={'/images/'+symbol} className="event_price-image" alt="" /> {this.state.price}</li>
-		<li className="list-group-item"><strong>Date:</strong>  </li>
+
+		{this.state.currency == 'phnx' &&<li className="list-group-item"><strong>Price:</strong> <img src={'/images/'+symbol} className="event_price-image" alt="" /> {numeral(this.state.price).format('0,0.00')} or <img src={'/images/dollarsign.png'} className="event_price-image"  alt="Event Price" />
+		{numeral(this.state.price * this.state.PhoenixDAO_market.usd).format('0,0.00')}</li>}
+		{this.state.currency == 'eth' &&<li className="list-group-item"><strong>Price:</strong> <img src={'/images/'+symbol} className="event_price-image" alt="" /> {this.state.price}</li>}
+		<li className="list-group-item"><strong>Date: {this.state.dateDisplay.toLocaleDateString()} at {this.state.dateDisplay.toLocaleTimeString()}</strong>  </li>
 		<li className="list-group-item"><strong>Location:</strong> {this.state.location} </li>
 		<li className="list-group-item"><strong>Tickets Sold:</strong> {seatsForHumans}</li>
-		
+
 	</ul>
 	<div className="card-footer text-muted text-center">
 		<button className="btn btn-dark" disabled=""><i className="fas fa-ticket-alt"></i> Buy Now</button>
@@ -356,7 +433,10 @@ class Form extends Component {
 </React.Fragment>
 		);
 	}
+
+	componentDidMount(){
+		this.getPhoenixDAOMarketValue()
+	}
 }
 
 export default Form;
-

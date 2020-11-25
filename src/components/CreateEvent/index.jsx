@@ -20,7 +20,7 @@ class CreateEvent extends Component {
 			stage: 0,
 			title: null,
 			error: false,
-			error_text: null,
+			error_text: 'IPFS Error',
 			ipfs: null,
 			fileImg: null,
 			data: {
@@ -90,7 +90,17 @@ class CreateEvent extends Component {
 				title: 'Creating transaction...',
 				ipfs: hash[0].hash
 			});
-			this.uploadTransaction();
+			//this.uploadTransaction();
+			this.props.passtransaction(this.contracts['OpenEvents'].methods.createEvent(
+				this.state.data.name,
+				this.state.data.time,
+				this.state.data.price,
+				this.state.data.currency === 'eth' ? false : true,
+				this.state.data.limited,
+				this.state.data.seats,
+				this.state.ipfs,
+				this.state.data.type
+			))
 		}).catch((error) => {
 			this.setState({
 				error: true,
@@ -124,9 +134,18 @@ class CreateEvent extends Component {
 		}
 	}*/
 
+	createNewEvent= () =>{
+		this.setState({error:false,
+					done:false,
+					upload:false},()=>console.log())
+	}
+
+
 	transactionChecker = (id) => {
 		let tx_checker = setInterval(() => {
 			let tx = this.props.transactionStack[id];
+			console.log(tx)
+			console.log(tx_checker)
 			if (typeof tx !== 'undefined') {
 				this.setState({
 					upload: false,
@@ -151,30 +170,44 @@ class CreateEvent extends Component {
 
 
 	render() {
-		
-		if (this.state.error) {
-			return <Error message={this.state.error_text} />;
-		}
 
-		if (this.state.done) {
-			return <Done/>
+		let disabled = true;
+		if(this.props.account.length !== 0){
+			disabled = false;
+		}
+		
+
+		if (this.props.done) {
+			return <Done createNewEvent = {this.createNewEvent} createNewEvent2 = {this.props.createNewEvent}/>
 			;
 		}
 
 		let body =
-			this.state.upload ?
+			this.state.upload || this.props.upload ?
 				<Loader progress={this.state.stage} text={this.state.title} /> :
 				<React.Fragment>
 					<div className="row">
-							<Form createEvent={this.createEvent} />
+							<Form createEvent={this.createEvent} account={this.props.account}/>
 					</div>
 				</React.Fragment>
 		;
 
+		if (this.state.error || this.props.error) {
+			body= <Error message={this.state.error_text} createNewEvent = {this.createNewEvent} createNewEvent2 = {this.props.createNewEvent}/>;
+		}
+
 		return (
-			<div>
+			<div className="home-wrapper">
 				
 				<h2><i className="fa fa-edit"></i> Create Event</h2>
+				{disabled && <div className = "alert-connection col-lg-6 mb-6">
+				<div className="connection-box">
+                    <p className="mt-1 mb-1">
+                    <span>⚠️ You are on VIEW ONLY mode. You won't be able to submit because you are not connected to a network.</span>
+                    </p>
+                </div>	
+				</div>}
+
 				<hr />
 				{body}
 			</div>
