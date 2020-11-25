@@ -97,7 +97,6 @@ class Sidebar extends Component
 						<li>
 							<NavLink to="/calendar" className="nav-link" activeClassName="nav-link-active"><i className="fa fa-calendar-alt"></i> <span className="toggleHidden">Calendar</span></NavLink>
 						</li>
-
 					</ul>
 					<h5 className="mt-5 toggleHidden">Manage Events</h5>
 					<ul className="nav flex-column">

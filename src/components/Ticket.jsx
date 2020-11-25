@@ -7,7 +7,6 @@ import "../styles/Ticket.css";
 import ipfs from "../utils/ipfs";
 
 import Loading from "./Loading";
-
 import {
 	EmailShareButton,
 	FacebookShareButton,
@@ -213,7 +212,6 @@ class Ticket extends Component {
 				</div>
 			</div>
 		);
-
 		if (
 			this.event !== null &&
 			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
@@ -289,8 +287,6 @@ class Ticket extends Component {
 							<div className="ticketDescription" >
 							{description}
 							</div>
-							
-
 							<h6 className="text-center mb-0">
 								Tell friends you're going!{" "}
 							</h6>

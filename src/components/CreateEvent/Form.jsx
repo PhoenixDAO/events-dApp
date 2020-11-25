@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { drizzleConnect } from 'drizzle-react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
@@ -7,15 +9,16 @@ import 'react-datetime/css/react-datetime.css';
 // import ReactTooltip from 'react-tooltip'
 import eventTypes from '../../config/types.json';
 import eventTopics from '../../config/topics.json';
+var moment = require('moment');
 
 let numeral = require('numeral');
-
 class Form extends Component {
 	constructor(props) {
 		super(props);
-
+		
+		// console.log("props.currentBlock",props.currentBlock)
 		this.form = {};
-
+		this.web3=props.web3;
 		this.state = {
 			title: '',
 			title_length: 0,
@@ -25,6 +28,7 @@ class Form extends Component {
 			price:'',
 			location: '',
 			time: 0,
+			// time:Math.floor(Date.now() / 1000),
 			timeForHumans: null,
 			currency: 'phnx',
 			type: 'auto-boat-and-air',
@@ -37,11 +41,50 @@ class Form extends Component {
 			blockie: "/images/PhoenixDAO.png",
 			fileImg: "/images/event-placeholder.png",
 			form_validation: [],
+			currentBlock:null,
+			updateTimeStamp:true,
 
 			PhoenixDAO_market:'',
-			dateDisplay:new Date(parseInt('1577952000', 10) * 1000)
+			dateDisplay: new Date(Date.now()+10800000)
+			// dateDisplay:new Date(parseInt('1577952000', 10) * 1000)
+			// dateDisplay:''
 		}
 	}
+	shouldComponentUpdate(nextProps, nextState) {
+		// console.log("1",nextProps.currentBlock.timestamp, nextState);
+		// console.log("2",this.state.currentBlock	, this.state);
+		if(nextProps.currentBlock && nextProps.currentBlock.timestamp && this.state.updateTimeStamp){
+			console.log("updating now")
+			this.setState({currentBlock: nextProps.currentBlock,updateTimeStamp:false})
+			// this.setState({updateTimeStamp:false});
+		}
+		return true
+	  }
+	getCurrentTime = async()=>{
+		// console.log("this.web3.customProvider.eth : ",this.web3)
+
+		// const blockNumber= await this.web3.customProvider.eth.getBlockNumber()
+		// console.log("blocknumber : ",blockNumber)
+
+		// const block = await this.web3.customProvider.eth.getBlock(blockNumber)
+		// console.log("timestamp : ",block.timestamp)
+		this.setState({updateTimeStamp:true});
+
+		const todayDate=new Date((parseInt(this.state.currentBlock.timestamp, 10) * 1000));
+		console.log("Date : " , todayDate)
+		
+		return todayDate;
+		// this.setState({dateDisplay:todayDate});
+	}
+	
+	getPhoenixDAOMarketValue = () => {
+
+		fetch('https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture')
+			  .then(res => res.json())
+			  .then((data) => {
+				this.setState({PhoenixDAO_market: data.phoenixdao})})
+			  .catch(console.log)
+	  }
 
 
 	getPhoenixDAOMarketValue = () => {
@@ -54,12 +97,26 @@ class Form extends Component {
 	  }
 
 	handleDate = (date) => {
-		if (typeof date === 'object' && date.isValid()) {
+			// console.log("date is d",  date._d.toString())
+			// console.log("date is i",  date._i.toString())
+			// console.log("if equal ",  date._i.toString() == date._d.toString())
+			// console.log("Date(Date.now()) is",typeof Date.now())
+			// console.log("this.state.currentBlock : ",this.state.currentBlock)
+			// console.log("date.unix() : ",date.unix())
+			// console.log("todayDay",todayDay._i/1000)
+			// let todayDay= moment.unix(this.state.currentBlock.timestamp)
+			// console.log("date by adding to timestamp",new Date(parseInt(this.state.currentBlock.timestamp+10800, 10) * 1000))
+		if (typeof date === 'object' && date.isValid() && this.state.currentBlock && this.state.currentBlock.timestamp && date.unix() >  moment.unix(this.state.currentBlock.timestamp+10800)._i/1000) {
+			// console.log("updating")
+			// console.log("date display ", new Date(parseInt(date.unix(), 10) * 1000))
 			this.setState({
+				dateDisplay: new Date(parseInt(date.unix(), 10) * 1000),
 				timeForHumans: date.time,
 				time: date.unix(),
-			},()=>this.setState({dateDisplay: new Date(parseInt(this.state.time, 10) * 1000)}));
-			console.log(date)
+			},
+			// ()=>this.setState({dateDisplay: new Date(parseInt(this.state.time, 10) * 1000)})
+			);
+			// console.log(date)
 		}
 	}
 
@@ -186,7 +243,13 @@ class Form extends Component {
 	}
 	handleForm = (event) => {
 		event.preventDefault();
-
+		// const todayDate=new Date((parseInt(this.state.currentBlock.timestamp, 10) * 1000));
+		// console.log('moment.unix()',moment.unix().toString());
+		// let todayDate = moment.unix(this.state.currentBlock.timestamp).format();
+		// let selectedDate = moment.unix(this.state.time).format();
+		// console.log('selectedData',selectedDate)
+		// console.log('todayDate',todayDate)
+		// console.log("Date : " , todayDate)
 		let form_validation = [];
 		if (this.state.title === '') form_validation.push('name');
 		if (this.state.location === '') form_validation.push('location');
@@ -221,7 +284,6 @@ class Form extends Component {
 	}
 
 	render() {
-
 		let symbol = 'PhoenixDAO.png';
 		let currency = this.state.currency === 'eth' ? 'ETH' : 'PHNX';
 		let	freeEvent = '';
@@ -274,8 +336,6 @@ class Form extends Component {
 		if(this.props.account.length == 0){
 			disabled = true;
 		}
-		
-
 		return (
 			<React.Fragment>
 			<div className="row">
@@ -298,7 +358,7 @@ class Form extends Component {
 				</div>
 				<div className="form-group">
 					<label htmlFor="description">Event Date and Time:</label>
-					<Datetime closeOnSelect={true} onChange={this.handleDate} inputProps={{className : "form-control " + warning.time, title: "Event Date and Time"}} autoComplete="off" />
+					<Datetime  value={this.state.dateDisplay} closeOnSelect={true} onChange={this.handleDate} inputProps={{className : "form-control " + warning.time, title: "Event Date and Time"}} autoComplete="off" />
 				</div>
 				<div className="form-group">
 					<p>Event Cover Image:</p>
@@ -352,9 +412,8 @@ class Form extends Component {
 							<div className="input-group-prepend">
 								<span className="input-group-text"><img src={'/images/'+symbol} className="event_price-image" alt="" /></span>
 							</div>
-							{this.state.currency === 'phnx' &&<input type="number" min="0.00000001" pattern="^[0-9]" onKeyPress={this.restrictMinus} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
-							{this.state.currency === 'eth' &&<input type="number" min="0.00000001" pattern="^[0-9]" onKeyPress={this.restrictMinus} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value = {this.state.price} autoComplete="off" onChange={this.priceChange} />}
-
+							{this.state.currency === 'phnx' &&<input type="number" min="0.00000001" className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
+							{this.state.currency === 'eth' &&<input type="number" min="0.00000001" className={"form-control " + warning.price} id="price" title={"Price in ETH"} value = {this.state.price} autoComplete="off" onChange={this.priceChange} />}
 						</div>
 						{this.state.currency === 'phnx' &&<div className="input-group mb-3">
 							<div className="input-group-prepend">
@@ -430,8 +489,22 @@ class Form extends Component {
 	}
 
 	componentDidMount(){
+		// this.temp();
 		this.getPhoenixDAOMarketValue()
+		
 	}
 }
 
-export default Form;
+Form.contextTypes = {
+    drizzle: PropTypes.object
+}
+
+const mapStateToProps = state => {
+	console.log("state",state.currentBlock)
+    return {
+		currentBlock:state.currentBlock
+    };
+};
+
+const AppContainer = drizzleConnect(Form, mapStateToProps);
+export default AppContainer;

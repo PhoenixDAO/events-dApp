@@ -507,6 +507,23 @@ color: #ea952b !important;
 font-weight: bold;
 }
 
+.nav-link{
+  cursor: pointer!important;
+  transition: all .16s ease-in-out;
+}
+
+.nav-link:hover{
+  text-decoration: none!important;
+  color: #ea952b !important;
+}
+
+.nav-link-active{
+display:block;
+padding: .5rem 1rem;
+color: #ea952b !important;
+font-weight: bold;
+}
+
 .navbar-light .navbar-nav .nav-link {
   color: rgb(255, 255, 255);
 }
@@ -1115,7 +1132,6 @@ button.read-more:hover {
   /* .event-image {
       height: 36vw !important;
   } */
-
 }
 
 
@@ -1364,7 +1380,6 @@ border: 2px dashed rgb(209, 177, 59);
   height: 48px;
   }
  
-
 /*Event Countdown style*/
 .countdown{
   text-align:center;

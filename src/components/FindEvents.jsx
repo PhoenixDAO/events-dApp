@@ -15,8 +15,6 @@ import { Open_events_ABI, Open_events_Address } from '../config/OpenEvents';
 import topicsJson from '../config/topics.json';
 import eventCTAsJson from '../config/event_ctas.json';
 
-
-
 class FindEvents extends Component {
   constructor(props, context) {
     super(props);
@@ -42,7 +40,6 @@ class FindEvents extends Component {
   }
 
   topicClick(slug) {
-
     this.props.history.push("/topic/" + slug + "/" + 1);
     window.scrollTo(0, 80);
   }
@@ -97,7 +94,6 @@ class FindEvents extends Component {
         }
 
       }).catch((err) => console.error(err))
-
 
     //Listens for New Events
     openEvents.events.CreatedEvent({ fromBlock: this.state.blockNumber, toBlock: 'latest' })
@@ -159,8 +155,6 @@ class FindEvents extends Component {
       });
     })
   }
-
-
 
   render() {
     // console.log("check find events disable status", this.props)
@@ -293,7 +287,6 @@ class FindEvents extends Component {
             </Carousel.Caption>
           </Carousel.Item>
         </Carousel>
-
         <div className="retract-page-inner-wrapper-alternative dash">
 
 

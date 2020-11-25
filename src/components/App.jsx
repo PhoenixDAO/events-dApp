@@ -46,37 +46,36 @@ import { X_OK } from 'constants';
 let ethereum = window.ethereum;
 let web3 = window.web3;
 
-class App extends Component {
+let ethereum= window.ethereum;
+let web3=window.web3;
 
+class App extends Component
+{
 	constructor(props) {
 		super(props);
 		this.state = {
 			sent_tx: [],
 			showSidebar: true,
-			account: [],
-			disabledStatus: false,
-			id: '',
-			fee: '',
-			token: '',
-			openEvents_Address: '',
-			buyticket: '',
-			approve: '',
-			createEvent: '',
-			upload: false,
-			done: false,
-			error: false,
-			afterApprove: false,
+			account:[],
+			id:'',
+			fee:'',
+			token:'',
+			openEvents_Address:'',
+			buyticket:'',
+			approve:'',
+			createEvent:'',
+			upload:false,
+			done:false,
+			error:false,
+			afterApprove:false,
 
-			getPhoenixDAO: '',
+			getPhoenixDAO:'',
 		};
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
 	}
 
-
-	componentDidMount() {
+	componentDidMount(){
 		this.loadBlockchainData();
-
-
 	}
 
 	componentWillUpdate() {
@@ -100,8 +99,6 @@ class App extends Component {
 			});
 		}
 	}
-
-
 
 	//Get Account
 	async loadBlockchainData() {
@@ -353,9 +350,7 @@ class App extends Component {
 					}
 				})
 		)
-
 	}
-
 
 	getPhoenixDAO = (getPhoenixDAO) => {
 		let txreceipt = '';
@@ -411,14 +406,12 @@ class App extends Component {
 		)
 
 	}
-
 	createNewEvent = () => {
 		this.setState({
 			error: false,
 			done: false,
 			upload: false
 		}, () => console.log())
-
 	}
 
 	render() {
@@ -515,7 +508,6 @@ class App extends Component {
 		return (
 			<Router>
 				<div id="wrapper" className="toggled">
-
 					<Sidebar connection={!connecting} account={this.state.account} connect={this.loadBlockchainData} />
 					<div id="page-content-wrapper" className="sidebar-open">
 						<div id="bgImage" ref="bgImage" style={{
@@ -535,7 +527,6 @@ class App extends Component {
 						</div>
 					</div>
 					<ToastContainer />
-
 				</div>
 			</Router>
 		);

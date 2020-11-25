@@ -21,7 +21,6 @@ class Event extends Component {
 					PhoenixDAO_Testnet_Token_ABI,
 					PhoenixDAO_Testnet_Token_Address,
 				),
-
 			};
 			context.drizzle.addContract(contractConfig);
 			//Importing PhoenixDAO contracts
@@ -34,7 +33,6 @@ class Event extends Component {
 		} catch (e) {
 			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
 		}
-
 		super(props);
 		this.contracts = context.drizzle.contracts;
 		this.event = this.contracts['OpenEvents'].methods.getEvent.cacheCall(this.props.id);
@@ -68,7 +66,6 @@ class Event extends Component {
 			})
 			.catch(console.log)
 	}
-
 
 	updateIPFS = () => {
 
@@ -130,7 +127,6 @@ class Event extends Component {
 		return locations;
 	}
 
-
 	inquire = () => {
 		this.setState({
 			fee: this.props.contracts['OpenEvents'].getEvent[this.event].value[2],
@@ -150,7 +146,6 @@ class Event extends Component {
 		})
 
 	}
-
 
 	// getPrettyCategory(rawCategory) {
 	//   let prettyCategory = "";
@@ -180,7 +175,6 @@ class Event extends Component {
 			let locations = this.getLocation();
 
 			let buttonText = event_data[3] ? "Buy Ticket" : "Get Ticket";
-
 			let freeEvent = '';
 			if (!event_data[3]) {
 				freeEvent = <p className="free_event">Free Event</p>
@@ -188,29 +182,22 @@ class Event extends Component {
 
 			if (event_data[3] !== 'undefined') {
 				let symbol = 'PhoenixDAO.png';
-
 				let price = event_data[3] ? this.context.drizzle.web3.utils.fromWei(event_data[2]) : 'Free Event';
 				let date = new Date(parseInt(event_data[1], 10) * 1000);
-
 				let max_seats = event_data[4] ? event_data[5] : '∞';
-
 				let disabled = false;
 				let soldOut = " ";
 				let sold = false;
-
 				if (event_data[4] && (Number(event_data[6]) >= Number(event_data[5]))) {
-
 					sold = true
 					disabled = true;
 					buttonText = <span><span role="img" aria-label="alert"> </span> Sold Out</span>;
 					soldOut = <p className="sold_out">Sold Out</p>;
 				}
-
 				if (date.getTime() < new Date().getTime()) {
 					disabled = true;
 					buttonText = "Event has ended";
 				}
-
 				let badge = "";
 
 				if (event_data[6] >= 2) {

@@ -26,7 +26,6 @@ class MyEvents extends Component {
 			account: [],
 			dateNow: ''
 		};
-
 		this.contracts = context.drizzle.contracts;
 		this.events = this.contracts['OpenEvents'].methods.eventsOf.cacheCall(this.props.accounts[0]);
 		this.perPage = 6;
@@ -115,7 +114,6 @@ class MyEvents extends Component {
 
 			}).catch((err) => console.error(err))
 	}
-
 	//Display My Concluded Events
 	PastEvent = (e) => {
 		this.setState({
@@ -160,7 +158,6 @@ class MyEvents extends Component {
 			this.props.history.push("/myevents/" + 1)
 		})
 	}
-
 	render() {
 		let body = <PhoenixDAOLoader />;
 
@@ -230,7 +227,6 @@ class MyEvents extends Component {
 							);
 						}
 					}
-
 					pagination =
 						<nav>
 							<ul className="pagination justify-content-center">
@@ -278,8 +274,6 @@ class MyEvents extends Component {
 	componentWillUnmount() {
 		this._isMounted = false;
 	}
-
-
 }
 
 
