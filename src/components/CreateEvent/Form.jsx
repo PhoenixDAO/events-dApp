@@ -11,7 +11,6 @@ import eventTypes from '../../config/types.json';
 import eventTopics from '../../config/topics.json';
 var moment = require('moment');
 
-
 let numeral = require('numeral');
 class Form extends Component {
 	constructor(props) {
@@ -78,6 +77,16 @@ class Form extends Component {
 		// this.setState({dateDisplay:todayDate});
 	}
 	
+	getPhoenixDAOMarketValue = () => {
+
+		fetch('https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture')
+			  .then(res => res.json())
+			  .then((data) => {
+				this.setState({PhoenixDAO_market: data.phoenixdao})})
+			  .catch(console.log)
+	  }
+
+
 	getPhoenixDAOMarketValue = () => {
 
 		fetch('https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture')
@@ -226,6 +235,12 @@ class Form extends Component {
 		});
 	}
 
+	restrictMinus=(e) =>{
+		let inputKeyCode = e.keyCode ? e.keyCode : e.which;
+		if (inputKeyCode == 45) 
+		{e.preventDefault();
+		}
+	}
 	handleForm = (event) => {
 		event.preventDefault();
 		// const todayDate=new Date((parseInt(this.state.currentBlock.timestamp, 10) * 1000));
@@ -269,7 +284,6 @@ class Form extends Component {
 	}
 
 	render() {
-		console.log("render this.state",this.state)
 		let symbol = 'PhoenixDAO.png';
 		let currency = this.state.currency === 'eth' ? 'ETH' : 'PHNX';
 		let	freeEvent = '';
@@ -322,7 +336,6 @@ class Form extends Component {
 		if(this.props.account.length == 0){
 			disabled = true;
 		}
-
 		return (
 			<React.Fragment>
 			<div className="row">
@@ -401,7 +414,6 @@ class Form extends Component {
 							</div>
 							{this.state.currency === 'phnx' &&<input type="number" min="0.00000001" className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
 							{this.state.currency === 'eth' &&<input type="number" min="0.00000001" className={"form-control " + warning.price} id="price" title={"Price in ETH"} value = {this.state.price} autoComplete="off" onChange={this.priceChange} />}
-
 						</div>
 						{this.state.currency === 'phnx' &&<div className="input-group mb-3">
 							<div className="input-group-prepend">

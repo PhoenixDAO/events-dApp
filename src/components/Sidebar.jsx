@@ -58,9 +58,9 @@ class Sidebar extends Component
 			user =
 				<div>
 					<div className="user-status-icon">
-					<NavLink to="/">
+					<NavLink to="/" style={{display:"flex"}}>
                             <img src={makeBlockie(this.props.account)} alt={this.props.account} /> 
-                        <span>...{this.props.account.substring(this.props.account.length-6,this.props.account.length)}</span>
+                        <span style={{marginLeft:"10px",fontSize:"19px"}}>...{this.props.account.substring(this.props.account.length-6,this.props.account.length)}</span>
                         </NavLink>
 					</div>
 					{/* {this.props.account} */}
@@ -74,7 +74,7 @@ class Sidebar extends Component
 		 return (
 			<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
 				<div className="hamburgerNav" onClick={this.toggleSidebarClass}>
-					<i className="fa fa-bars"></i>
+					<i className="fa fa-bars" ></i>
 				</div>
 				<div className="user-status mt-5">
 					{user}
@@ -95,9 +95,8 @@ class Sidebar extends Component
 							<NavLink to="/locations" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-map-marker-alt"></i> <span className="toggleHidden">Locations</span></NavLink>
 						</li>
 						<li>
-							<NavLink to="/Calendar" className="nav-link" activeClassName="nav-link-active"><i className="fa fa-calendar-alt"></i> <span className="toggleHidden">Calendar</span></NavLink>
+							<NavLink to="/calendar" className="nav-link" activeClassName="nav-link-active"><i className="fa fa-calendar-alt"></i> <span className="toggleHidden">Calendar</span></NavLink>
 						</li>
-
 					</ul>
 					<h5 className="mt-5 toggleHidden">Manage Events</h5>
 					<ul className="nav flex-column">
@@ -151,7 +150,7 @@ class Sidebar extends Component
 							<NavLink to="/locations" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-map-marker-alt" title="Locations"></i> <span className="toggleHidden">Locations</span></NavLink>
 						</li> */}
 						<li>
-							<NavLink to="/Calendar" className="nav-link" activeClassName="nav-link-active"><i className="fa fa-calendar-alt" title="Calendar"></i> <span className="toggleHidden">Calendar</span></NavLink>
+							<NavLink to="/calendar" className="nav-link" activeClassName="nav-link-active"><i className="fa fa-calendar-alt" title="Calendar"></i> <span className="toggleHidden">Calendar</span></NavLink>
 						</li>
 
 					</ul>
@@ -176,7 +175,7 @@ class Sidebar extends Component
 					<h5 className="mt-5 toggleHidden">Tools</h5>
 					<ul className="nav flex-column">
 						<li>
-							<NavLink to="/how-it-works" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-question-circle" title="How It Works"></i> <span className="toggleHidden">How It Works</span></NavLink>
+							<NavLink to="/how-it-works" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fas fa-question-circle" title="How It Works" style={{alignItems:"baseline",marginLeft:"-6px"}} ></i> <span className="toggleHidden">How It Works</span></NavLink>
 						</li>
 						<li className="nav-item">
 							<NavLink to="/token" className="nav-link" activeClassName="nav-link-active"><img src="/images/PhoenixDAO.png" className="sidebar_PhoenixDAO-logo" alt="PhoenixDAO Token Logo" title="PHNX Faucet"/> <span className="toggleHidden">Get PHNX Tokens</span></NavLink>

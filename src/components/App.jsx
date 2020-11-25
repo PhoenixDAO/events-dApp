@@ -41,28 +41,28 @@ import NotifyNetwork from './NotifyNetwork';
 
 import NetworkError from './NetworkError';
 import LoadingApp from './LoadingApp';
+import PageNotFound from './PageNotFound';
+import { X_OK } from 'constants';
+let ethereum = window.ethereum;
+let web3 = window.web3;
 
 let ethereum= window.ethereum;
 let web3=window.web3;
 
 class App extends Component
 {
-
 	constructor(props) {
 		super(props);
 		this.state = {
 			sent_tx: [],
 			showSidebar: true,
 			account:[],
-
-
 			id:'',
 			fee:'',
 			token:'',
 			openEvents_Address:'',
 			buyticket:'',
 			approve:'',
-
 			createEvent:'',
 			upload:false,
 			done:false,
@@ -76,13 +76,10 @@ class App extends Component
 
 	componentDidMount(){
 		this.loadBlockchainData();
-
-
 	}
 
 	componentWillUpdate() {
 		let sent_tx = this.state.sent_tx;
-
 		for (let i = 0; i < this.props.transactionStack.length; i++) {
 			if (sent_tx.indexOf(this.props.transactionStack[i]) === -1) {
 				sent_tx.push(this.props.transactionStack[i]);
@@ -103,327 +100,326 @@ class App extends Component
 		}
 	}
 
+	//Get Account
+	async loadBlockchainData() {
 
+		if (typeof ethereum !== 'undefined') {
+			// console.log("metamask")
+			await ethereum.enable();
+			web3 = new Web3(ethereum);
 
-//Get Account
-async loadBlockchainData() {
+		}
 
-	if(typeof ethereum !=='undefined'){
-	// console.log("metamask")
-	 await ethereum.enable();
-	 web3 = new Web3(ethereum);
+		else if (typeof web3 !== 'undefined') {
+			console.log('Web3 Detected!')
+			window.web3 = new Web3(web3.currentProvider);
+		}
 
- 	}
+		else {
+			console.log('No Web3 Detected')
+			window.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b'));
 
- 	else if (typeof web3 !== 'undefined'){
-	console.log('Web3 Detected!')
- 	window.web3 = new Web3(web3.currentProvider);
-	 }
+		}
 
- 	else{console.log('No Web3 Detected')
- 	window.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b'));
+		window.ethereum.on('accountsChanged', function (accounts) {
+			window.location.reload();
+		})
 
-	}
+		window.ethereum.on('networkChanged', function (netId) {
+			window.location.reload();
+		})
 
-	window.ethereum.on('accountsChanged', function (accounts) {
- 	window.location.reload();
-	})
-
-	window.ethereum.on('networkChanged', function (netId) {
- 	window.location.reload();
-	})
-
-	const accounts = await web3.eth.getAccounts()
-    this.setState({account: accounts[0]});
+		const accounts = await web3.eth.getAccounts()
+		this.setState({ account: accounts[0] });
 
 	}
 
 	//get value from buyer/from child components
-	inquireBuy = (id,fee,token,openEvents_address,buyticket,approve)=>{
-		if(this.state.account.length !== 0 && this.props.web3.networkId == 4){
-		this.setState({
-			fee:fee,
-			token:token,
-			buyticket:buyticket,
-			approve:approve
-		},()=>this.buy())
-	 }
-	 	else {
-		toast(<NotifyNetwork/>, {
-			position: "bottom-right",
-			autoClose: true,
-			pauseOnHover: true
-		})
-	 }
+	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
+
+		if (this.state.account.length !== 0 && this.props.web3.networkId == 4) {
+			this.setState({ disabledStatus: true });
+			this.setState({
+				fee: fee,
+				token: token,
+				buyticket: buyticket,
+				approve: approve,
+			}, () => this.buy())
+		}
+		else {
+			toast(<NotifyNetwork />, {
+				position: "bottom-right",
+				autoClose: true,
+				pauseOnHover: true
+			})
+		}
 	}
 
 	//TransferFrom when buying with PhoenixDAO
 	//After Approval
-	afterApprove = () => setTimeout(()=>{
-		let txreceiptApproved='';
+	afterApprove = () => setTimeout(() => {
+		let txreceiptApproved = '';
 		let txconfirmedApproved = '';
 		let txerror = '';
 		//if(this.state.afterApprove)
-		this.state.buyticket.send({from:this.state.account})
-		.on('transactionHash',(hash)=>{
-			if(hash !==null){
-				toast(<Notify hash={hash} />, {
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
-
-				})
-			}
-		})
-		.on('confirmation',(confirmationNumber, receipt)=>{
-			if(confirmationNumber !== null){
-			 txreceiptApproved = receipt
-			 txconfirmedApproved = confirmationNumber
-			if (txconfirmedApproved == 0 && txreceiptApproved.status == true){
-				toast(<NotifySuccess hash={txreceiptApproved.transactionHash} />, {
+		this.state.buyticket.send({ from: this.state.account })
+			.on('transactionHash', (hash) => {
+				if (hash !== null) {
+					toast(<Notify hash={hash} />, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true
 					})
 				}
-
-			}
-	   	})
-	   .on('error',(error)=>{
-		if(error !== null){
-			txerror = error
-		   		toast(<NotifyError message={txerror.message} />, {
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
+			})
+			.on('confirmation', (confirmationNumber, receipt) => {
+				if (confirmationNumber !== null) {
+					txreceiptApproved = receipt
+					txconfirmedApproved = confirmationNumber
+					if (txconfirmedApproved == 0 && txreceiptApproved.status == true) {
+						toast(<NotifySuccess hash={txreceiptApproved.transactionHash} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true
+						})
+						this.setState({ disabledStatus: false })
+					}
+				}
+			})
+			.on('error', (error) => {
+				if (error !== null) {
+					txerror = error
+					toast(<NotifyError message={txerror.message} />, {
+						position: "bottom-right",
+						autoClose: true,
+						pauseOnHover: true
 					})
-			   	}
-				})
-			this.setState({afterApprove:false})
-		},2000)
+				}
+			})
+		this.setState({ afterApprove: false })
+		this.setState({ disabledStatus: false })
+
+	}, 2000)
 
 	//Buy Function, Notify listen for transaction status.
-	buy = () =>{
+	buy = () => {
 
-		let txreceipt='';
+		let txreceipt = '';
 		let txconfirmed = '';
 		let txerror = '';
+		if (this.state.token) {
+			this.state.approve.send({ from: this.state.account })
 
-		if(this.state.token){
-		this.state.approve.send({from:this.state.account})
+				.on('transactionHash', (hash) => {
+					if (hash !== null) {
+						toast(<NotifyApprove hash={hash} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true
 
-		.on('transactionHash',(hash)=>{
-			if(hash !==null){
-				toast(<NotifyApprove hash={hash} />, {
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
-
+						})
+					}
 				})
-			}
-		})
-		.on('confirmation',(confirmationNumber, receipt)=>{
-			if(confirmationNumber !== null){
-			 txreceipt = receipt
-			 txconfirmed = confirmationNumber
-			if (txconfirmed == 0 && txreceipt.status == true){
+				.on('confirmation', (confirmationNumber, receipt) => {
+					if (confirmationNumber !== null) {
+						txreceipt = receipt
+						txconfirmed = confirmationNumber
+						if (txconfirmed == 0 && txreceipt.status == true) {
 
-				toast(<NotifyApproveSuccess hash={txreceipt.transactionHash} />,
-					{
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
-					})
-					this.afterApprove()
-				}
+							toast(<NotifyApproveSuccess hash={txreceipt.transactionHash} />,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true
+								})
+							this.afterApprove()
+							this.setState({ disabledStatus: false })
+						}
 
-			}
-	   	})
-	   .on('error',(error)=>{
-		if(error !== null){
-			txerror = error
-		   		toast(<NotifyError message={txerror.message} />,
-				{
-				position: "bottom-right",
-				autoClose: true,
-				pauseOnHover: true
+					}
 				})
-				this.afterApprove()
-			   }
-	  	  	})
-
-	}
-		else{
-		this.state.buyticket.send({value:this.state.fee, from:this.state.account})
-
-		.on('transactionHash',(hash)=>{
-			if(hash !==null){
-				toast(<Notify hash={hash} />, {
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
-
+				.on('error', (error) => {
+					if (error !== null) {
+						txerror = error
+						toast(<NotifyError message={txerror.message} />,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true
+							})
+						this.afterApprove()
+						this.setState({ disabledStatus: false })
+					}
 				})
-			}
-		})
-		.on('confirmation',(confirmationNumber, receipt)=>{
-			if(confirmationNumber !== null){
-			txreceipt = receipt
-			txconfirmed = confirmationNumber
-			if (txconfirmed == 0 && txreceipt.status == true){
-				toast(<NotifySuccess hash={txreceipt.transactionHash} />,
-					{
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
-					})
-				}
 
-			}
-	   	})
-	   	.on('error',(error)=>{
-		 	if(error !== null){
-			txerror = error
-		   		toast(<NotifyError message={txerror.message} />,
-				{
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
-					})
-			   	}
-	  	  	})
-	    }
+		}
+		else {
+			this.state.buyticket.send({ value: this.state.fee, from: this.state.account })
+
+				.on('transactionHash', (hash) => {
+					if (hash !== null) {
+						toast(<Notify hash={hash} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true
+
+						})
+					}
+				})
+				.on('confirmation', (confirmationNumber, receipt) => {
+					if (confirmationNumber !== null) {
+						txreceipt = receipt
+						txconfirmed = confirmationNumber
+						if (txconfirmed == 0 && txreceipt.status == true) {
+							toast(<NotifySuccess hash={txreceipt.transactionHash} />,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true
+								})
+							this.setState({ disabledStatus: false })
+						}
+
+					}
+				})
+				.on('error', (error) => {
+					if (error !== null) {
+						txerror = error
+						toast(<NotifyError message={txerror.message} />,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true
+							})
+					}
+					this.setState({ disabledStatus: false })
+				})
+		}
 	}
 
 	//Get Value form Event Creator from child component
 	//Notify,listen for transaction status.
-	passtransaction=(transaction)=>{
-		let txreceipt='';
+	passtransaction = (transaction) => {
+		let txreceipt = '';
 		let txconfirmed = '';
 		let txerror = '';
 
-		this.setState({upload:true,createEvent:transaction},()=>
-		this.state.createEvent.send({from:this.state.account})
+		this.setState({ upload: true, createEvent: transaction }, () =>
+			this.state.createEvent.send({ from: this.state.account })
 
-		.on('transactionHash',(hash)=>{
-			if(hash !==null){
-				this.setState({
-					upload:false,
-					done:true
-				});
-				toast(<Notify hash={hash} />, {
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
+				.on('transactionHash', (hash) => {
+					if (hash !== null) {
+						this.setState({
+							upload: false,
+							done: true
+						});
+						toast(<Notify hash={hash} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true
 
+						})
+
+					}
 				})
-
-			}
-		})
-		.on('confirmation',(confirmationNumber, receipt)=>{
-			if(confirmationNumber !== null){
-			 txreceipt = receipt
-			 txconfirmed = confirmationNumber
-			 if (txconfirmed == 0 && txreceipt.status == true ){
-				toast(<NotifyEventSuccess hash={txreceipt.transactionHash}
-					createdEvent = {txreceipt.events.CreatedEvent.returnValues} />,
-					{
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
-					})
-				}
-			}
-		})
-		.on('error',(error)=>{
-			if(error !== null){
-			   txerror = error
-			   this.setState({error:true})
-				toast(<NotifyError message={txerror.message} />,
-				   {
-				   position: "bottom-right",
-				   autoClose: true,
-				   pauseOnHover: true
-				   })
-				}
-			})
+				.on('confirmation', (confirmationNumber, receipt) => {
+					if (confirmationNumber !== null) {
+						txreceipt = receipt
+						txconfirmed = confirmationNumber
+						if (txconfirmed == 0 && txreceipt.status == true) {
+							toast(<NotifyEventSuccess hash={txreceipt.transactionHash}
+								createdEvent={txreceipt.events.CreatedEvent.returnValues} />,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true
+								})
+						}
+					}
+				})
+				.on('error', (error) => {
+					if (error !== null) {
+						txerror = error
+						this.setState({ error: true })
+						toast(<NotifyError message={txerror.message} />,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true
+							})
+					}
+				})
 		)
-
 	}
 
-
-	getPhoenixDAO=(getPhoenixDAO)=>{
-		let txreceipt='';
+	getPhoenixDAO = (getPhoenixDAO) => {
+		let txreceipt = '';
 		let txconfirmed = '';
 		let txerror = '';
 
-		this.setState({getPhoenixDAO:getPhoenixDAO},()=>
-		this.state.getPhoenixDAO.send({from:this.state.account})
+		this.setState({ getPhoenixDAO: getPhoenixDAO }, () =>
+			this.state.getPhoenixDAO.send({ from: this.state.account })
 
-		.on('transactionHash',(hash)=>{
-			if(hash !==null){
-				this.setState({
-					upload:false,
-					done:true
-				});
-				toast(<NotifyFaucet hash={hash} />, {
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
+				.on('transactionHash', (hash) => {
+					if (hash !== null) {
+						this.setState({
+							upload: false,
+							done: true
+						});
+						toast(<NotifyFaucet hash={hash} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true
 
+						})
+
+					}
 				})
+				.on('confirmation', (confirmationNumber, receipt) => {
+					if (confirmationNumber !== null) {
 
-			}
-		})
-		.on('confirmation',(confirmationNumber, receipt)=>{
-			if(confirmationNumber !== null){
+						txreceipt = receipt
+						txconfirmed = confirmationNumber
 
-			 txreceipt = receipt
-			 txconfirmed = confirmationNumber
-
-			 if (txconfirmed == 0 && txreceipt.status == true ){
-				toast(<NotifySuccessFaucet hash={txreceipt.transactionHash}/>,
-					{
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true
-					})
-				}
-			}
-		})
-		.on('error',(error)=>{
-			if(error !== null){
-			   txerror = error
-			   this.setState({error:true})
-				toast(<NotifyError message={txerror.message} />,
-				   {
-				   position: "bottom-right",
-				   autoClose: true,
-				   pauseOnHover: true
-				   })
-				}
-			})
+						if (txconfirmed == 0 && txreceipt.status == true) {
+							toast(<NotifySuccessFaucet hash={txreceipt.transactionHash} />,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true
+								})
+						}
+					}
+				})
+				.on('error', (error) => {
+					if (error !== null) {
+						txerror = error
+						this.setState({ error: true })
+						toast(<NotifyError message={txerror.message} />,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true
+							})
+					}
+				})
 		)
 
 	}
-
-	createNewEvent= () =>{
-		this.setState({error:false,
-			done:false,
-			upload:false},()=>console.log())
-
+	createNewEvent = () => {
+		this.setState({
+			error: false,
+			done: false,
+			upload: false
+		}, () => console.log())
 	}
 
 	render() {
-
 		let body;
 		let connecting = false;
 
 		var items = ['slide1.png', 'slide2.png', 'slide3.png', 'slide4.png'];
-    	var randomBG = items[Math.floor(Math.random()*items.length)];
-
-		// console.log(randomBG);
-
+		var randomBG = items[Math.floor(Math.random() * items.length)];
 		if (!this.props.drizzleStatus.initialized) {
 
 			body =
@@ -433,7 +429,7 @@ async loadBlockchainData() {
 						<Route component={LoadingApp} />
 					</Switch>
 				</div>
-			;
+				;
 			connecting = true;
 		} else if (this.props.web3.status === 'failed') {
 
@@ -444,83 +440,83 @@ async loadBlockchainData() {
 						<Route component={NetworkError} />
 					</Switch>
 				</div>
-			;
+				;
 			connecting = true;
-		} else if(
-				(this.props.web3.status === 'initialized' && Object.keys(this.props.accounts).length === 0) ||
-				(process.env.NODE_ENV === 'production' && this.props.web3.networkId !== 4)
-				)
-			{
-			  console.log("web3",process.env.NODE_ENV)
+		} else if (
+			(this.props.web3.status === 'initialized' && Object.keys(this.props.accounts).length === 0) ||
+			(process.env.NODE_ENV === 'production' && this.props.web3.networkId !== 4)
+		) {
+			console.log("web3", process.env.NODE_ENV)
 
-			  body =
-			  		<div>
-			  		<Route exact path="/" render={props => <FindEvents  {...props} inquire = {this.inquireBuy}/>} />
-					<Route path="/findevents/:page"  render={props => <FindEvents  {...props} inquire = {this.inquireBuy}/>}  />
-					<Route path="/pastevents/:page" component={PastEvents} />
+			body =
+				<Switch>
+					<Route exact path="/findevents/:page" render={props => <FindEvents {...props} inquire={this.inquireBuy}disabledStatus={this.state.disabledStatus} />} />
+					<Route exact path="/pastevents/:page" component={PastEvents} />
 
-					<Route path="/createevent" render={props=><CreateEvent  {...props}
-					passtransaction = {this.passtransaction}
-					upload={this.state.upload}
-					done = {this.state.done}
-					error = {this.state.error}
-					account ={this.state.account}/>}/>
+					<Route exact path="/createevent" render={props => <CreateEvent  {...props}
+						passtransaction={this.passtransaction}
+						upload={this.state.upload}
+						disabledStatus={this.state.disabledStatus}
+						done={this.state.done}
+						disabledStatus={this.state.disabledStatus}
+						error={this.state.error}
+						account={this.state.account} />} />
 
-					<Route path="/event/:page/:id"  render={props => <EventPage {...props} inquire = {this.inquireBuy}/>}/>
-					<Route path="/topics" component={TopicsLandingPage} />
-					<Route path="/topic/:page/:id" render={props => <TopicLandingPage {...props} inquire = {this.inquireBuy}/>}/>
-					<Route path="/locations" component={LocationsLandingPage} />
-					<Route path="/location/:page" component={LocationLandingPage} />
-					<Route path="/Calendar" component={Calendars} />
-					<Route path="/how-it-works" component={Home} />
-					</div>
-			}
+					<Route exact path="/event/:page/:id" render={props => <EventPage {...props} inquire={this.inquireBuy} />} />
+					<Route exact path="/topics" component={TopicsLandingPage} />
+					<Route exact path="/topic/:page/:id" render={props => <TopicLandingPage {...props} inquire={this.inquireBuy} />} />
+					<Route exact path="/locations" component={LocationsLandingPage} />
+					<Route exact path="/location/:page" component={LocationLandingPage} />
+					<Route exact path="/Calendar" component={Calendars} />
+					<Route exact path="/how-it-works" component={Home} />
+				</Switch>
+		}
 
 		else {
 			body =
-				<div>
-					<Route exact path="/" render={props => <FindEvents  {...props} inquire = {this.inquireBuy}/>} />
-					<Route path="/findevents/:page"  render={props => <FindEvents  {...props} inquire = {this.inquireBuy}/>}  />
-					<Route path="/pastevents/:page" component={PastEvents} />
-					<Route path="/mytickets/:page" component={MyTickets} />
+				<Switch>
+					<Route exact path="/" render={props => <FindEvents  {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus}  />} />
+					<Route exact path="/findevents/:page" render={props => <FindEvents  {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus} />} />
+					<Route exact path="/pastevents/:page" component={PastEvents} />
+					<Route exact path="/mytickets/:page" component={MyTickets} />
 
-					<Route path="/createevent" render={props=><CreateEvent  {...props}
-					passtransaction = {this.passtransaction}
-					createNewEvent  = {this.createNewEvent}
-					upload={this.state.upload}
-					done = {this.state.done}
-					error = {this.state.error}
-					account ={this.state.account}/>}/>
+					<Route exact path="/createevent" render={props => <CreateEvent  {...props}
+						passtransaction={this.passtransaction}
+						createNewEvent={this.createNewEvent}
+						upload={this.state.upload}
+						disabledStatus={this.state.disabledStatus}
+						done={this.state.done}
+						error={this.state.error}
+						account={this.state.account} />} />
 
-					<Route path="/myevents/:page"  render={props => <MyEvents {...props} inquire = {this.inquireBuy}/>}/>
-					<Route path="/event-stat/:page/:id"  render={props => <MyEventStat {...props} inquire = {this.inquireBuy}/>}/>
-					<Route path="/event/:page/:id"  render={props => <EventPage {...props} inquire = {this.inquireBuy}/>}/>
-					<Route path="/token" render={props => <Token {...props} getPhoenixDAO = {this.getPhoenixDAO}/>}/>
-					<Route path="/topics" component={TopicsLandingPage} />
-					<Route path="/topic/:page/:id" render={props => <TopicLandingPage {...props} inquire = {this.inquireBuy}/>}/>
-					<Route path="/locations" component={LocationsLandingPage} />
-					<Route path="/location/:page" component={LocationLandingPage} />
-					<Route path="/calendar" component={Calendars} />
-					<Route path="/dashboard" component={Dashboard} account ={this.state.account} />
-					<Route path="/how-it-works" component={Home} />
-				</div>
-			;
+					<Route exact path="/myevents/:page" render={props => <MyEvents {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus} />} />
+					<Route exact path="/event-stat/:page/:id" render={props => <MyEventStat {...props} inquire={this.inquireBuy} />} />
+					<Route exact path="/event/:page/:id" render={props => <EventPage {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus} />} />
+					<Route exact path="/token" render={props => <Token {...props} getPhoenixDAO={this.getPhoenixDAO} />} />
+					<Route exact path="/topics" component={TopicsLandingPage} />
+					<Route exact path="/topic/:page/:id" render={props => <TopicLandingPage {...props} inquire={this.inquireBuy} />} />
+					<Route exact path="/locations" component={LocationsLandingPage} />
+					<Route exact path="/location/:page" component={LocationLandingPage} />
+					<Route exact path="/calendar" component={Calendars} />
+					<Route exact path="/dashboard" component={Dashboard} account={this.state.account} />
+					<Route exact path="/how-it-works" component={Home} />
+					<Route path="*" exact component={PageNotFound} />
+				</Switch>
+				;
 		}
 
-		return(
+		return (
 			<Router>
-
 				<div id="wrapper" className="toggled">
-
-					<Sidebar connection={!connecting} account={this.state.account} connect = {this.loadBlockchainData}/>
+					<Sidebar connection={!connecting} account={this.state.account} connect={this.loadBlockchainData} />
 					<div id="page-content-wrapper" className="sidebar-open">
 						<div id="bgImage" ref="bgImage" style={{
-  						backgroundImage: "url(/images/slides/"+ randomBG + ")",
+							backgroundImage: "url(/images/slides/" + randomBG + ")",
 						}} />
 						<div className="branding">
-						<img src="/images/PhoenixDAO.png" className="branding-logo" alt="PhoenixDAO logo" />
-						<h1>PhoenixDAO Events Marketplace</h1>
-						<p>What are you going to do?</p>
+							<img src="/images/PhoenixDAO.png" className="branding-logo" alt="PhoenixDAO logo" />
+							<h1>PhoenixDAO Events Marketplace</h1>
+							<p>What are you going to do?</p>
 						</div>
 						<div className="container-fluid">
 							<div className="page-wrapper-inner">
@@ -531,7 +527,6 @@ async loadBlockchainData() {
 						</div>
 					</div>
 					<ToastContainer />
-
 				</div>
 			</Router>
 		);
@@ -539,13 +534,13 @@ async loadBlockchainData() {
 }
 
 const mapStateToProps = state => {
-    return {
+	return {
 		drizzleStatus: state.drizzleStatus,
 		web3: state.web3,
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
 		transactions: state.transactions
-    };
+	};
 };
 
 const AppContainer = drizzleConnect(App, mapStateToProps);

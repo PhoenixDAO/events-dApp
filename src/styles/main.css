@@ -59,7 +59,7 @@ button {
 	box-shadow: 4px 8px 8px rgba(0,0,0,0.4);
   text-align: left!important;
   width: 100%;
-
+overflow-x: hidden;
 }
 
 #sidebar-wrapper.my-sidebar .user-status .user-status-icon {
@@ -134,8 +134,8 @@ button {
 }
 
 .event-image {
-    width: 100%;
-    height: 16vw;
+    /* width: 370px; */
+    height: 225px;
     object-fit: cover;
 }
 
@@ -155,8 +155,9 @@ button {
 }
 
 .event-header p {
-	padding: 10px 0 0 15px;
-	margin-top: -7px;
+	/* padding: 10px 0 0 0px;
+  margin-top: -7px; */
+  text-align: center;
 }
 
 .footer-octicon, .octicon {
@@ -484,6 +485,26 @@ button {
 	font-size: 1.5rem;
 	font-weight: 400;
 	color: #fff;
+}
+.nav-link i{
+  width: 20px;
+  height: 20px;
+}
+.nav-link{
+  cursor: pointer!important;
+  transition: all .16s ease-in-out;
+}
+
+.nav-link:hover{
+  text-decoration: none!important;
+  color: #ea952b !important;
+}
+
+.nav-link-active{
+display:block;
+padding: .5rem 1rem;
+color: #ea952b !important;
+font-weight: bold;
 }
 
 .nav-link{
@@ -992,8 +1013,12 @@ button.read-more:hover {
 @media (min-width: 1100px) {
   .event-hero-sidebar .event-image {
     height: 40vw !important;
+    width:inherit;
+    object-fit: contain;
   }
+ 
 }
+
 
 
 @media (max-width : 1600px) {
@@ -1049,9 +1074,9 @@ button.read-more:hover {
     padding-top: 200px;
   }
 
-  .event-image {
+  /* .event-image {
     height: 28vw;
-  }
+  } */
 }
 
 @media (max-width : 1500px) {
@@ -1063,7 +1088,7 @@ button.read-more:hover {
 
 @media (max-width : 990px) {
   .event-image {
-      height: 40vw !important;
+      height: 313px !important;
   }
 
   .container-fluid {
@@ -1089,7 +1114,6 @@ button.read-more:hover {
     padding-top: 10px !important;
     transition-duration: 1s;
   }
-
   #wrapper.toggled #page-content-wrapper.sidebar-closed {
     opacity: 0;
     transition-duration: 1s;
@@ -1105,10 +1129,9 @@ button.read-more:hover {
     margin: 0 auto;
   }
 
-  .event-image {
+  /* .event-image {
       height: 36vw !important;
-  }
-
+  } */
 }
 
 
@@ -1139,9 +1162,10 @@ button.read-more:hover {
 
 #wrapper.toggled #sidebar-wrapper.sidebar-closed .menu {
   text-align: center;
+  justify-content: center;
   margin-right: 15px;
-  width: 20px;
-  right:20px;
+  width: 13px;
+  right:24px;
   position: absolute;
   transition-duration: 1s;
 }
@@ -1153,7 +1177,7 @@ button.read-more:hover {
 .sidebar-closed .sidebar_PhoenixDAO-logo {
   margin-right: 0px !important;
   width: 32px !important;
-  margin-left: -5px;
+  margin-left: -6px;
 }
 
 .pagination {
@@ -1346,8 +1370,16 @@ border: 2px dashed rgb(209, 177, 59);
   overflow:hidden;
   position:relative;
   z-index:1;
+  height: 225px;
+  
+  /* width:489px; */
+  
 }
-
+.event-description{
+  overflow: hidden;
+  height: 48px;
+  }
+ 
 /*Event Countdown style*/
 .countdown{
   text-align:center;
@@ -1449,8 +1481,10 @@ justify-content: center;
 }
 
 .myEventStat{
-  margin-left:30%;
+  text-align: center;
   font-weight: bold;
+  padding-top: 3px;
+  padding-bottom: 3px;
   text-decoration: none!important;
 }
 
