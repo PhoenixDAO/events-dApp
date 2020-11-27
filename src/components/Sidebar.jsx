@@ -16,7 +16,7 @@ class Sidebar extends Component
 		var isActive = this.context.router.route.location.pathname;
 		var activeClassName = "";
 		var linkLocation = this.props.to;
-
+		
 		if (isActive == linkLocation) {
 			activeClassName = 'nav-item active';
 		} else {
@@ -83,13 +83,18 @@ class Sidebar extends Component
 					<h5 className="toggleHidden">Events & Tickets</h5>
 					<ul className="nav flex-column">
 						<li>
-							<NavLink to="/findevents/1" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-search"></i> <span className="toggleHidden">Events</span></NavLink>
+							<NavLink to="/findevents/1" className="nav-link" activeClassName="nav-link-active" 
+							isActive={() => this.context.router.route.location.pathname.split("/findevents/").length>1 || this.context.router.route.location.pathname.split("/event/").length>1 || this.context.router.route.location.pathname.split("/event-stat/").length>1}
+							onClick={() => {this.sidebarClick(this)}}><i className="fa fa-search"></i> <span className="toggleHidden">Events</span></NavLink>
 						</li>
 						<li>
 							<NavLink to="/pastevents/1" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-archive"></i> <span className="toggleHidden">Past Events</span></NavLink>
 						</li>
 						<li>
-							<NavLink to="/topics" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-comment-alt"></i> <span className="toggleHidden">Topics</span></NavLink>
+						<NavLink to="/topics" className="nav-link" activeClassName="nav-link-active" 
+							//isActive={() => ['/topics','/topic/music/1','/topic/charity-and-causes/1','/topic/parties/1','/topic/sports-and-fitness/1'].includes(this.context.router.route.location.pathname)}
+							isActive={() => this.context.router.route.location.pathname.split("/topic/").length>1 || this.context.router.route.location.pathname.split("/topics").length>1}
+							onClick={() => {this.sidebarClick(this)}}><i className="fa fa-comment-alt" title="Topics"></i> <span className="toggleHidden">Topics</span></NavLink>
 						</li>
 						<li>
 							<NavLink to="/locations" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-map-marker-alt"></i> <span className="toggleHidden">Locations</span></NavLink>
@@ -137,14 +142,20 @@ class Sidebar extends Component
 					<h5 className="toggleHidden">Events & Tickets</h5>
 					<ul className="nav flex-column">
 						<li>
-							<NavLink to="/findevents/1" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-search" title="Find Events"></i> <span className="toggleHidden">Events</span></NavLink>
+							<NavLink to="/findevents/1" className="nav-link" activeClassName="nav-link-active" 
+							isActive={() => this.context.router.route.location.pathname.split("/findevents/").length>1 || this.context.router.route.location.pathname.split("/event/").length>1 || this.context.router.route.location.pathname.split("/event-stat/").length>1}
+							onClick={() => {this.sidebarClick(this)}}><i className="fa fa-search" title="Find Events"></i> <span className="toggleHidden">Events</span></NavLink>
 						</li>
 
 						<li>
 							<NavLink to="/pastevents/1" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-archive" title="Past Events"></i> <span className="toggleHidden">Past Events</span></NavLink>
 						</li>
 						<li>
-							<NavLink to="/topics" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-comment-alt" title="Topics"></i> <span className="toggleHidden">Topics</span></NavLink>
+							<NavLink to="/topics" className="nav-link" activeClassName="nav-link-active" 
+							//isActive={() => ['/topics','/topic/music/1','/topic/charity-and-causes/1','/topic/parties/1','/topic/sports-and-fitness/1'].includes(this.context.router.route.location.pathname)}
+							isActive={() => this.context.router.route.location.pathname.split("/topic/").length>1 || this.context.router.route.location.pathname.split("/topics").length>1}
+
+							onClick={() => {this.sidebarClick(this)}}><i className="fa fa-comment-alt" title="Topics"></i> <span className="toggleHidden">Topics</span></NavLink>
 						</li>
 						{/* <li>
 							<NavLink to="/locations" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-map-marker-alt" title="Locations"></i> <span className="toggleHidden">Locations</span></NavLink>

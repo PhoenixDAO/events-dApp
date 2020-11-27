@@ -83,7 +83,11 @@ class CreateEvent extends Component {
 		});
 
 		let buffer = Buffer.from(data);
+		// let buffer2 = Buffer.from(JSON.stringify({name:"Jaffer",company:"Xord"}))
+		// ipfs.add(buffer2,{pin: pinit}).then((hash)=>{
+		// 	console.log("hash is buffer2",hash);
 
+		// })
 		ipfs.add(buffer, {pin: pinit}).then((hash) => {
 			this.setState({
 				stage: 95,
@@ -91,6 +95,7 @@ class CreateEvent extends Component {
 				ipfs: hash[0].hash
 			});
 			//this.uploadTransaction();
+			console.log("hash is ",hash);
 			this.props.passtransaction(this.contracts['OpenEvents'].methods.createEvent(
 				this.state.data.name,
 				this.state.data.time,
