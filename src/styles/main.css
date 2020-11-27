@@ -236,6 +236,10 @@ button {
     margin-top: 100px;
 }
 
+.custom-file-label {
+    overflow: hidden;
+}
+
 .form-control:focus,
 .custom-file-input:focus,
 .custom-file-input:active,
