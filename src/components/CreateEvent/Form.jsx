@@ -339,7 +339,7 @@ class Form extends Component {
 		return (
 			<React.Fragment>
 			<div className="row">
-			<div className="col col-xl-8 col-lg-8 col-md-12 col-sm-12">
+			<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
 			<form>
 
 				<div className="form-group">
@@ -449,13 +449,13 @@ class Form extends Component {
 			</form>
 			</div>
 
-<div className="col col-xl-4 col-lg-4 col-md-12 col-sm-12 create-event">
+<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 <label>Event Preview:</label>
 <div className="card">
 <div className="image_wrapper">
-	<Link to={"/event/"}>
-		<img className="card-img-top event-image" src={this.state.fileImg} alt="Placeholder Event" />
-	</Link>
+	{/* <Link to={"/event/"}> */}
+		<img className="card-img-top event-image"src={this.state.fileImg} alt="Placeholder Event" />
+	{/* </Link> */}
 	{freeEvent}
 	</div>
 	<div className="card-header text-muted event-header">
@@ -479,7 +479,7 @@ class Form extends Component {
 
 	</ul>
 	<div className="card-footer text-muted text-center">
-		<button className="btn btn-dark" disabled=""><i className="fas fa-ticket-alt"></i> Buy Now</button>
+		<button className="btn btn-dark" disabled="">Buy Now</button>
 	</div>
 </div>
 </div>
