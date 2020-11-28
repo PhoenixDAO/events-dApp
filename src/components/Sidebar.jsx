@@ -60,7 +60,7 @@ class Sidebar extends Component
 					<div className="user-status-icon">
 					<NavLink to="/" style={{display:"flex"}}>
                             <img src={makeBlockie(this.props.account)} alt={this.props.account} /> 
-                        <span style={{marginLeft:"10px",fontSize:"19px"}}>...{this.props.account.substring(this.props.account.length-6,this.props.account.length)}</span>
+                        <span style={{marginLeft:"10px",fontSize:"19px",marginTop:"8px"}}>...{this.props.account.substring(this.props.account.length-6,this.props.account.length)}</span>
                         </NavLink>
 					</div>
 					{/* {this.props.account} */}

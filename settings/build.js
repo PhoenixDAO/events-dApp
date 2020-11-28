@@ -12,7 +12,7 @@ const settings = require('react-scripts/config/webpack.config.prod.js');
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
-const contracts = fs.readdirSync(resolveApp('build/contracts')).map(file => {
+const contracts = fs.readdirSync(resolveApp('contracts')).map(file => {
     return resolveApp('build/contracts/' + file);
 });
 
