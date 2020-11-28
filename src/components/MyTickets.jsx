@@ -4,14 +4,22 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import Loading from './Loading';
+import PhoenixDAOLoader from './PhoenixDAOLoader';
+
 import Ticket from './Ticket';
 
 class MyTickets extends Component {
   constructor(props, context) {
-    super(props);
+
+	super(props);
+	this.state = {
+		myTicket: [],
+		loading:true,
+	}
 		this.contracts = context.drizzle.contracts;
 		this.tickets = this.contracts['OpenEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
 		this.perPage = 6;
+
 	}
 
   readMoreClick(location)
@@ -20,13 +28,38 @@ class MyTickets extends Component {
     window.scrollTo(0, 0);
   }
 
+  setLoader(){
+	if(this._isMounted){
+	this.setState({
+		loading:false});
+		}
+  	}
+
+	getTickets = () =>{
+	if (typeof this.props.contracts['OpenEvents'].ticketsOf[this.tickets] !== 'undefined') {
+		const myTicket = this.props.contracts['OpenEvents'].ticketsOf[this.tickets].value;
+		let newsort= myTicket.concat().sort((a,b)=> b - a);
+		if(newsort!=='undefined'){
+		return newsort
+		}
+	}
+
+  }
+
 	render() {
-		let body = <Loading />;
+		let body = <PhoenixDAOLoader />;
 
 		if (typeof this.props.contracts['OpenEvents'].ticketsOf[this.tickets] !== 'undefined') {
-			let allTickets = this.props.contracts['OpenEvents'].ticketsOf[this.tickets].value;
-
-			if (allTickets.length === 0) {
+			//let allTickets = this.props.contracts['OpenEvents'].ticketsOf[this.tickets].value;
+			let allTickets = this.getTickets();
+			if(this.state.loading){
+				body =
+				<div>
+				<PhoenixDAOLoader/>
+				<hr/>
+				</div>
+			  }
+			else if (allTickets.length === 0) {
 				body =
 					<div className="no-tickets text-center mt-5">
 						<h3>You have not purchased any tickets yet.</h3>
@@ -49,22 +82,45 @@ class MyTickets extends Component {
 
 				for (let i = start; i < end; i++) {
 					let ticket = parseInt(allTickets[i], 10);
-					tickets.push(<Ticket key={tickets} id={ticket} />);
+					tickets.push(<Ticket key={ticket} id={ticket} />);
 				}
-				tickets.reverse();
+				//tickets.reverse();
 
 				let pagination;
 				if (pages > 1) {
 					let links = [];
 
-					for (let i = 1; i <= pages; i++) {
+					if (pages > 5 && currentPage >= 3){
+            			for (let i = currentPage - 2; i <= currentPage + 2 && i<=pages; i++) {
+                 		let active = i === currentPage ? 'active' : '';
+               			links.push(
+                		<li className={"page-item " + active} key={i}>
+							<Link to={"/mytickets/" + i}  className="page-link">{i}</Link>
+                		</li>
+             				 );
+            			}
+          			}
+
+          			else if (pages > 5 && currentPage < 3){
+           				 for (let i = 1 ; i <= 5 && i<=pages; i++) {
+              			let active = i === currentPage ? 'active' : '';
+              			links.push(
+                			<li className={"page-item " + active} key={i}>
+								<Link to={"/mytickets/" + i}  className="page-link">{i}</Link>
+                			</li>
+              					);
+           					}
+          				}
+					else{
+            			for (let i = 1; i <= pages; i++) {
 						let active = i === currentPage ? 'active' : '';
 						links.push(
 							<li className={"page-item " + active} key={i}>
-								<Link to={"/mytickets/" + i} className="page-link">{i}</Link>
+								<Link to={"/mytickets/" + i}  className="page-link">{i}</Link>
 							</li>
-						);
-					}
+							);
+						}
+       				}
 
 					pagination =
 						<nav>
@@ -87,14 +143,25 @@ class MyTickets extends Component {
 		}
 
 		return (
+			<div className="retract-page-inner-wrapper-alternative ticketDiv">
 			<div className="my-tickets-page">
 				<h2><i className="fa fa-ticket-alt"></i> My Tickets</h2>
 				<hr />
 				{body}
 			</div>
+			</div>
 		);
 	}
+	componentDidMount(){
+		this._isMounted = true;
+		setTimeout(()=>this.setLoader(),1000);
+	}
+
+	componentWillUnmount(){
+		this._isMounted = false;
+	}
 }
+
 
 MyTickets.contextTypes = {
     drizzle: PropTypes.object
