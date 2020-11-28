@@ -143,7 +143,7 @@ class MyTickets extends Component {
 		}
 
 		return (
-			<div className="retract-page-inner-wrapper-alternative">
+			<div className="retract-page-inner-wrapper-alternative ticketDiv">
 			<div className="my-tickets-page">
 				<h2><i className="fa fa-ticket-alt"></i> My Tickets</h2>
 				<hr />

@@ -84,7 +84,7 @@ class LocationsLandingPage extends Component {
       <React.Fragment>
       <Carousel className="retract-page-inner-wrapper">
           <Carousel.Item className="slide1">
-            <img className="d-block w-100" src="/images/slides/states/clematis-florida.jpg" alt="First slide" />
+            <img className="d-block w-100 slider" src="/images/slides/states/clematis-florida.jpg" alt="First slide" />
             <Carousel.Caption>
               <h3>Discover Clematis St.</h3>
               <p>Bars, restaurants, ocean, it has it all.</p>
@@ -92,7 +92,7 @@ class LocationsLandingPage extends Component {
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item className="slide2">
-          <img className="d-block w-100" src="/images/slides/states/belmar-colorado.jpg" alt="First slide" />
+          <img className="d-block w-100 slider" src="/images/slides/states/belmar-colorado.jpg" alt="First slide" />
             <Carousel.Caption>
               <h3>Discover Belmar, CO</h3>
               <p>A downtown with it all 10 minutes from Denver and 10 minutes to the mountains.</p>
