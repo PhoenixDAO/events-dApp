@@ -45,10 +45,6 @@ import PageNotFound from './PageNotFound';
 import { X_OK } from 'constants';
 let ethereum = window.ethereum;
 let web3 = window.web3;
-
-let ethereum= window.ethereum;
-let web3=window.web3;
-
 class App extends Component
 {
 	constructor(props) {

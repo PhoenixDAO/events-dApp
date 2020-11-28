@@ -232,7 +232,7 @@ class PastEvents extends Component
       <React.Fragment>
       <Carousel className="retract-page-inner-wrapper">
           <Carousel.Item className="slide1">
-            <img className="d-block w-100" src="/images/topics/music.jpg" alt="First slide" />
+            <img className="d-block w-100 slider " src="/images/topics/music.jpg" alt="First slide" />
             <Carousel.Caption>
               <h3>Check out a Concert</h3>
               <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
@@ -240,7 +240,7 @@ class PastEvents extends Component
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item className="slide2">
-          <img className="d-block w-100" src="/images/topics/charity-and-causes.jpg" alt="First slide" />
+          <img className="d-block w-100 slider" src="/images/topics/charity-and-causes.jpg" alt="First slide" />
             <Carousel.Caption>
               <h3>Support a Local Charity</h3>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -248,7 +248,7 @@ class PastEvents extends Component
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item className="slide3">
-          <img className="d-block w-100" src="/images/topics/parties.jpg" alt="First slide" />
+          <img className="d-block w-100 slider" src="/images/topics/parties.jpg" alt="First slide" />
             <Carousel.Caption>
               <h3>Attend an Exclusive Party</h3>
               <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
@@ -256,7 +256,7 @@ class PastEvents extends Component
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item className="slide4">
-          <img className="d-block w-100" src="/images/topics/sports-and-fitness.jpg" alt="First slide" />
+          <img className="d-block w-100 slider" src="/images/topics/sports-and-fitness.jpg" alt="First slide" />
             <Carousel.Caption>
               <h3>Play a New Sport</h3>
               <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
@@ -264,7 +264,7 @@ class PastEvents extends Component
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item className="slide5">
-          <img className="d-block w-100" src="/images/slides/slide5.png" alt="First slide" />
+          <img className="d-block w-100 slider" src="/images/slides/slide5.png" alt="First slide" />
             <Carousel.Caption>
               <h3>Create and Sell Tickets</h3>
               <p>Create your own event, it takes only a minute.</p>
