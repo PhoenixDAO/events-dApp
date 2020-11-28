@@ -34,7 +34,7 @@ const options = {
 //ReactDOM.render(<App/>,rootElement);
 ReactDOM.render(
 	
-    <DrizzleProvider temp={{hello:"name"}} options={options}>
+    <DrizzleProvider options={options}>
 		<App />
 	</DrizzleProvider>,
     document.getElementById("root")

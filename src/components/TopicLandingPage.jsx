@@ -10,6 +10,9 @@ import Event from './Event';
 import Web3 from 'web3';
 import {Open_events_ABI, Open_events_Address} from '../config/OpenEvents';
 
+// import {  Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+
+
 
 import topicsJson from '../config/topics.json';
 
@@ -243,6 +246,14 @@ class TopicLandingPage extends Component
       });
     })}
 
+    // scrollTo() {
+    //   scroller.scrollTo('scroll-to-element', {
+    //     duration: 800,
+    //     delay: 0,
+    //     smooth: 'easeInOutQuart'
+    //   })
+    // }
+
 	render()
   {
 		let body = <Loading />;
@@ -326,7 +337,9 @@ class TopicLandingPage extends Component
 
       <div className="input-group input-group-lg">
         <div className="input-group-prepend ">
+          {/* <Element name="scroll-to-element"> */}
           <span className="input-group-text search-icon" id="inputGroup-sizing-lg"><i className="fa fa-search"></i>&nbsp;Search </span>
+          {/* </Element> */}
         </div>
         <input type="text" value={this.state.value} onChange={this.updateSearch.bind(this)} className="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
       </div>
