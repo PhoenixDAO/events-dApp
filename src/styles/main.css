@@ -1050,12 +1050,12 @@
             #wrapper.toggled #sidebar-wrapper.sidebar-closed {
                 left: 55px;
                 width: 250px;
-                transition-duration: 1s;
+                transition-duration: 0.5s;
             }
             
             @media (max-width: 650px) {
                 #wrapper.toggled #sidebar-wrapper.sidebar-open {
-                    transition-duration: 1s;
+                    transition-duration: 0.5s;
                     width: 74%
                 }
             }
@@ -1063,14 +1063,14 @@
             @media (max-width: 650px) {
                 #wrapper.toggled #page-content-wrapper.sidebar-open {
                     padding-right: 0px;
-                    transition-duration: 1s;
+                    transition-duration: 0.75;
                 }
             }
             
             #wrapper.toggled #page-content-wrapper.sidebar-open {
                 padding-left: 105px;
                 padding-right: 60px;
-                transition-duration: 1s;
+                transition-duration: 0.75s;
             }
             
             .github {
