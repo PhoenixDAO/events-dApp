@@ -255,7 +255,7 @@ class Event extends Component {
 
 						<ul className="list-group list-group-flush">
 							<li className="list-group-item ">{locations}</li>
-							<li className="list-group-item"><strong>Category:</strong> <a href={topicURL}>{category}</a></li>
+							<li className="list-group-item category"><strong style={{paddingRight:"3px"}}>Category: </strong> <a href={topicURL}>{category}</a></li>
 							<li className="list-group-item"><strong>Price:</strong> <img src={'/images/' + symbol} className="event_price-image" alt="Event Price Icon" /> {event_data[3] ? '' + numeral(price).format('0,0') : '' + price}
 								{event_data[3] ? ' or ' : ''}
 								{event_data[3] ? <img src={'/images/dollarsign.png'} className="event_price-image" alt="Event Price" /> : ''}
