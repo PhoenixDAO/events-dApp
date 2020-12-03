@@ -1198,6 +1198,17 @@
   } */
             }
             
+            .category {
+                display: flex;
+            }
+            
+            @media (max-width:1228px) and (min-width:768px) {
+                .category {
+                    height: 64px;
+                    align-items: center;
+                }
+            }
+            
             @media (max-width: 700px) {
                 .branding h1 {
                     font-size: 1.5rem;
