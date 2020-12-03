@@ -50,6 +50,7 @@ class Event extends Component {
 			openEvents_address: '',
 			buyticket: '',
 			approve: '',
+			buy: "",
 		};
 		this.isCancelled = false;
 	}
@@ -128,12 +129,13 @@ class Event extends Component {
 	}
 
 	inquire = () => {
+		console.log("buy", this.props.contracts['OpenEvents'].getEvent[this.event].value[2])
 		this.setState({
 			fee: this.props.contracts['OpenEvents'].getEvent[this.event].value[2],
 			token: this.props.contracts['OpenEvents'].getEvent[this.event].value[3],
 			openEvents_address: this.contracts['OpenEvents'].address,
 			buyticket: this.contracts['OpenEvents'].methods.buyTicket(this.props.id),
-			approve: this.contracts['PHNX'].methods.approve(this.contracts['OpenEvents'].address, this.props.contracts['OpenEvents'].getEvent[this.event].value[2])
+			approve: this.contracts['PHNX'].methods.approve(this.contracts['OpenEvents'].address, this.props.contracts['OpenEvents'].getEvent[this.event].value[2]),
 		}, () => {
 			this.props.inquire(
 				this.props.id,
@@ -143,8 +145,8 @@ class Event extends Component {
 				this.state.buyticket,
 				this.state.approve,
 			)
-		})
-
+		}
+		)
 	}
 
 	// getPrettyCategory(rawCategory) {
@@ -239,7 +241,7 @@ class Event extends Component {
 							{soldOut}
 							{!sold && freeEvent}
 						</div>
-						
+
 						<div className="card-header text-muted event-header ">
 							<img className="float-left" src={makeBlockie(event_data[9])} alt={event_data[9]} />
 							{this.props.myEvents ? <Link to={myEventStatURL}><p className="myEventStat small text-truncate mb-0">View Event Stats</p></Link> : ''}
@@ -255,7 +257,7 @@ class Event extends Component {
 
 						<ul className="list-group list-group-flush">
 							<li className="list-group-item ">{locations}</li>
-							<li className="list-group-item category"><strong style={{paddingRight:"3px"}}>Category: </strong> <a href={topicURL}>{category}</a></li>
+							<li className="list-group-item category"><strong style={{ paddingRight: "3px" }}>Category: </strong> <a href={topicURL}>{category}</a></li>
 							<li className="list-group-item"><strong>Price:</strong> <img src={'/images/' + symbol} className="event_price-image" alt="Event Price Icon" /> {event_data[3] ? '' + numeral(price).format('0,0') : '' + price}
 								{event_data[3] ? ' or ' : ''}
 								{event_data[3] ? <img src={'/images/dollarsign.png'} className="event_price-image" alt="Event Price" /> : ''}

@@ -244,7 +244,7 @@ class App extends Component
 								autoClose: true,
 								pauseOnHover: true
 							})
-						this.afterApprove()
+						// this.afterApprove()
 						this.setState({ disabledStatus: false })
 					}
 				})
