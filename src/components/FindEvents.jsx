@@ -11,6 +11,8 @@ import Event from './Event';
 import Web3 from 'web3';
 import { Open_events_ABI, Open_events_Address } from '../config/OpenEvents';
 
+
+
 // TODO: Make slides dynamic: import slidesJson from '../config/slides.json';
 import topicsJson from '../config/topics.json';
 import eventCTAsJson from '../config/event_ctas.json';
@@ -37,6 +39,8 @@ class FindEvents extends Component {
     this.topicClick = this.topicClick.bind(this);
 
     this.toggleSortDate = this.toggleSortDate.bind(this);
+    
+
   }
 
   topicClick(slug) {
@@ -56,7 +60,7 @@ class FindEvents extends Component {
 
   caruselClick(location) {
     this.props.history.push(location);
-    window.scrollTo(0, 80);
+    // window.scrollTo(0, 80);
   }
 
 
@@ -296,12 +300,14 @@ class FindEvents extends Component {
 
           <br /><br />
 
+          
           <div className="input-group input-group-lg">
             <div className="input-group-prepend ">
               <span className="input-group-text search-icon" id="inputGroup-sizing-lg"><i className="fa fa-search"></i>&nbsp;Search </span>
             </div>
             <input type="text" value={this.state.value} onChange={this.updateSearch.bind(this)} className="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
           </div>
+
           <br /><br />
 
           <div>
@@ -364,9 +370,11 @@ class FindEvents extends Component {
       </React.Fragment>
     );
   }
+  
 
   componentDidMount() {
     this._isMounted = true;
+  
     this.loadBlockchain();
   }
 

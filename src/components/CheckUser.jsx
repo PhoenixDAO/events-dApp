@@ -154,14 +154,14 @@ class CheckUser extends Component {
 				<h3>Confirm Purchase</h3>
 				<p>Check if user has ticket to this event.</p>
 				{message}
-				<ul className="nav nav-pills nav-fill nav-justified mt-3">
+				{/* <ul className="nav nav-pills nav-fill nav-justified mt-3">
 					<li className="nav-item">
 						<a href="" className={"nav-link " + (this.state.tab === 1 ? 'active' : '')} onClick={(e) => this.changeTab(1, e)}>Enter Address</a>
 					</li>
 					<li className="nav-item">
 						<a href="" className={"nav-link " + (this.state.tab === 2 ? 'active' : '')} onClick={(e) => this.changeTab(2, e)}>QR Scanner</a>
 					</li>
-				</ul>
+				</ul> */}
 				{body}
 			</div>
 		);

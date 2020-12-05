@@ -128,7 +128,9 @@ class Event extends Component {
 		return locations;
 	}
 
-	inquire = () => {
+	inquire = async() => {
+		// let balance = await this.contracts['PHNX'].methods.totalSupply().call();
+		// console.log("approve",balance)
 		console.log("buy", this.props.contracts['OpenEvents'].getEvent[this.event].value[2])
 		this.setState({
 			fee: this.props.contracts['OpenEvents'].getEvent[this.event].value[2],
@@ -137,6 +139,7 @@ class Event extends Component {
 			buyticket: this.contracts['OpenEvents'].methods.buyTicket(this.props.id),
 			approve: this.contracts['PHNX'].methods.approve(this.contracts['OpenEvents'].address, this.props.contracts['OpenEvents'].getEvent[this.event].value[2]),
 		}, () => {
+			
 			this.props.inquire(
 				this.props.id,
 				this.state.fee,
