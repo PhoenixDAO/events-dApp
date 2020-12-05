@@ -351,7 +351,7 @@ class Form extends Component {
 						</div>
 						<div className="form-group">
 							<label htmlFor="description">Event Description:</label>
-							<textarea className={"form-control " + warning.description} id="description" title="Event Description" rows="5" ref={(input) => this.form.description = input} onChange={this.descriptionChange} autoComplete="off"></textarea>
+							<textarea className={"form-control " + warning.description} maxLength="500" id="description" title="Event Description" rows="5" ref={(input) => this.form.description = input} onChange={this.descriptionChange} autoComplete="off"></textarea>
 							<small className="form-text text-muted">{this.state.description_length}/500 characters available.</small>
 						</div>
 						<div className="form-group">
@@ -414,8 +414,9 @@ class Form extends Component {
 									<div className="input-group-prepend">
 										<span className="input-group-text"><img src={'/images/' + symbol} className="event_price-image" alt="" /></span>
 									</div>
-									{this.state.currency === 'phnx' && <input type="number" min="0.00000001" className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
-									{this.state.currency === 'eth' && <input type="number" min="0.00000001" className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
+									{this.state.currency === 'phnx' && <input type="number" min="0.00000001" pattern="^[0-9]" onKeyPress={this.restrictMinus} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
+									{this.state.currency === 'eth' && <input type="number" min="0.00000001" pattern="^[0-9]" onKeyPress={this.restrictMinus} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
+
 								</div>
 								{this.state.currency === 'phnx' && <div className="input-group mb-3">
 									<div className="input-group-prepend">
@@ -441,7 +442,7 @@ class Form extends Component {
 							<div className="row mt-3">
 								<div className="col-lg-6">
 									<label htmlFor="seats">Tickets available:</label>
-									<input type="number" className={"form-control " + warning.seats} id="seats" title="Tickets available" disabled={!this.state.limited} ref={(input) => this.form.seats = input} autoComplete="off" onChange={this.ticketsChange} />
+									<input type="number" className={"form-control " + warning.seats} min="1" pattern="^[1-9]" onKeyPress={this.restrictMinus} id="seats" title="Tickets available" disabled={!this.state.limited} ref={(input) => this.form.seats = input} autoComplete="off" onChange={this.ticketsChange} />
 								</div>
 							</div>
 						</div>
@@ -492,7 +493,7 @@ class Form extends Component {
 	componentDidMount() {
 		// this.temp();
 		this.getPhoenixDAOMarketValue()
-
+		window.scrollTo(0, 0);
 	}
 }
 

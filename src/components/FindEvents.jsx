@@ -117,15 +117,19 @@ class FindEvents extends Component {
   updateSearch = (e) => {
     let { value } = e.target
     this.setState({ value }, () => {
+      try{
       if (this.state.value !== "") {
+
         var filteredEvents = this.state.event_copy;
         filteredEvents = filteredEvents.filter((events) => {
           return events.returnValues.name.toLowerCase().search(this.state.value.toLowerCase()) !== -1;
-
-
         })
-      } else { filteredEvents = this.state.event_copy }
-
+      } 
+      else { filteredEvents = this.state.event_copy }
+    }
+    catch(e){
+      console.log(e);
+    }
       this.setState({
         Events_Blockchain: filteredEvents,
         active_length: filteredEvents.length
@@ -364,6 +368,8 @@ class FindEvents extends Component {
   componentDidMount() {
     this._isMounted = true;
     this.loadBlockchain();
+    window.scrollTo(0, 0);
+
   }
 
   componentWillUnmount() {

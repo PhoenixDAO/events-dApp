@@ -45,6 +45,7 @@ import PageNotFound from './PageNotFound';
 import { X_OK } from 'constants';
 let ethereum = window.ethereum;
 let web3 = window.web3;
+
 class App extends Component
 {
 	constructor(props) {
@@ -98,35 +99,40 @@ class App extends Component
 
 	//Get Account
 	async loadBlockchainData() {
-
-		if (typeof ethereum !== 'undefined') {
-			// console.log("metamask")
-			await ethereum.enable();
-			web3 = new Web3(ethereum);
-
+		console.log("window.ethereum",window.ethereum)
+		if (!window.ethereum || !window.ethereum.isMetaMask) {
+			alert(`METAMASK NOT INSTALLED!!`);
+		}else{
+			if (typeof ethereum !== 'undefined') {
+				// console.log("metamask")
+				await ethereum.enable();
+				web3 = new Web3(ethereum);
+	
+			}
+	
+			else if (typeof web3 !== 'undefined') {
+				console.log('Web3 Detected!')
+				window.web3 = new Web3(web3.currentProvider);
+			}
+	
+			else {
+				console.log('No Web3 Detected')
+				window.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b'));
+	
+			}
+	
+			window.ethereum.on('accountsChanged', function (accounts) {
+				window.location.reload();
+			})
+	
+			window.ethereum.on('networkChanged', function (netId) {
+				window.location.reload();
+			})
+	
+			const accounts = await web3.eth.getAccounts()
+			this.setState({ account: accounts[0] });
 		}
-
-		else if (typeof web3 !== 'undefined') {
-			console.log('Web3 Detected!')
-			window.web3 = new Web3(web3.currentProvider);
-		}
-
-		else {
-			console.log('No Web3 Detected')
-			window.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b'));
-
-		}
-
-		window.ethereum.on('accountsChanged', function (accounts) {
-			window.location.reload();
-		})
-
-		window.ethereum.on('networkChanged', function (netId) {
-			window.location.reload();
-		})
-
-		const accounts = await web3.eth.getAccounts()
-		this.setState({ account: accounts[0] });
+		
 
 	}
 
@@ -243,7 +249,7 @@ class App extends Component
 								autoClose: true,
 								pauseOnHover: true
 							})
-						this.afterApprove()
+						// this.afterApprove()
 						this.setState({ disabledStatus: false })
 					}
 				})

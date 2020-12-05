@@ -1050,12 +1050,12 @@
             #wrapper.toggled #sidebar-wrapper.sidebar-closed {
                 left: 55px;
                 width: 250px;
-                transition-duration: 1s;
+                transition-duration: 0.5s;
             }
             
             @media (max-width: 650px) {
                 #wrapper.toggled #sidebar-wrapper.sidebar-open {
-                    transition-duration: 1s;
+                    transition-duration: 0.5s;
                     width: 74%
                 }
             }
@@ -1063,14 +1063,14 @@
             @media (max-width: 650px) {
                 #wrapper.toggled #page-content-wrapper.sidebar-open {
                     padding-right: 0px;
-                    transition-duration: 1s;
+                    transition-duration: 0.75;
                 }
             }
             
             #wrapper.toggled #page-content-wrapper.sidebar-open {
                 padding-left: 105px;
                 padding-right: 60px;
-                transition-duration: 1s;
+                transition-duration: 0.75s;
             }
             
             .github {
@@ -1196,6 +1196,40 @@
                 /* .event-image {
       height: 36vw !important;
   } */
+            }
+            
+            .category,
+            .date {
+                display: flex;
+            }
+            
+            @media screen and (max-width:1500px) and (min-width:768px) {
+                .category {
+                    height: 64px;
+                    align-items: center;
+                }
+            }
+            
+            @media screen and (max-width:1380px) and (min-width:1325px) {
+                .date {
+                    height: 64px;
+                    align-items: center;
+                }
+            }
+            
+            @media screen and (max-width:1265px) and (min-width:1205px) {
+                .date {
+                    height: 64px;
+                    align-items: center;
+                }
+            }
+            
+            @media screen and (max-width:1140px) and (min-width:930px) {
+                .date {
+                    display: flex;
+                    height: 64px;
+                    align-items: center;
+                }
             }
             
             @media (max-width: 700px) {

@@ -125,7 +125,6 @@ class MyEvents extends Component {
 			}
 		})
 	}
-
 	//Display My Active Events
 	ActiveEvent = (e) => {
 		this.setState({
@@ -142,6 +141,7 @@ class MyEvents extends Component {
 	updateSearch = (e) => {
 		let { value } = e.target
 		this.setState({ value }, () => {
+			try{
 			if (this.state.value !== "") {
 				var filteredEvents = this.state.check;
 				filteredEvents = filteredEvents.filter((events) => {
@@ -150,7 +150,11 @@ class MyEvents extends Component {
 
 				})
 			} else { filteredEvents = this.state.check }
-
+		}
+		catch(e)
+		{
+			
+		}
 			this.setState({
 				MyEvents: filteredEvents,
 				active_length: filteredEvents.length
@@ -269,6 +273,7 @@ class MyEvents extends Component {
 	componentDidMount() {
 		this._isMounted = true;
 		this.loadBlockchain();
+		window.scrollTo(0, 0);
 	}
 
 	componentWillUnmount() {
