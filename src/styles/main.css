@@ -1198,12 +1198,35 @@
   } */
             }
             
-            .category {
+            .category,
+            .date {
                 display: flex;
             }
             
-            @media (max-width:1228px) and (min-width:768px) {
+            @media screen and (max-width:1500px) and (min-width:768px) {
                 .category {
+                    height: 64px;
+                    align-items: center;
+                }
+            }
+            
+            @media screen and (max-width:1380px) and (min-width:1325px) {
+                .date {
+                    height: 64px;
+                    align-items: center;
+                }
+            }
+            
+            @media screen and (max-width:1265px) and (min-width:1205px) {
+                .date {
+                    height: 64px;
+                    align-items: center;
+                }
+            }
+            
+            @media screen and (max-width:1140px) and (min-width:930px) {
+                .date {
+                    display: flex;
                     height: 64px;
                     align-items: center;
                 }

@@ -265,7 +265,7 @@ class Event extends Component {
 								{event_data[3] ? ' or ' : ''}
 								{event_data[3] ? <img src={'/images/dollarsign.png'} className="event_price-image" alt="Event Price" /> : ''}
 								{event_data[3] ? numeral(price * this.state.PhoenixDAO_market.usd).format('0,0.00') : ''}</li>
-							<li className="list-group-item"><strong>Date:</strong> {date.toLocaleDateString()} at {date.toLocaleTimeString()}</li>
+							<li className="list-group-item date"><strong>Date:</strong> {date.toLocaleDateString()} at {date.toLocaleTimeString()}</li>
 							<li className="list-group-item"><strong>Tickets Sold:</strong> {event_data[6]}/{max_seats}</li>
 						</ul>
 
