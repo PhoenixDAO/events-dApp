@@ -9,7 +9,7 @@ import Event from './Event';
 
 import Web3 from 'web3';
 import {Open_events_ABI, Open_events_Address} from '../config/OpenEvents';
-
+import {  DirectLink, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 // import {  Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 
@@ -49,8 +49,17 @@ class TopicLandingPage extends Component
 	  	this.PastEvent = this.PastEvent.bind(this);
       this.toggleSortDate = this.toggleSortDate.bind(this);
 
+      this.scrollTo=this.scrollTo.bind(this)
 
-	}
+
+  }
+  scrollTo() {
+    scroller.scrollTo('scroll-to-element', {
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart'
+    })
+  }
 
   componentDidUpdate()
   {
@@ -59,6 +68,7 @@ class TopicLandingPage extends Component
 
 	componentDidMount()
   {
+    this.scrollTo()
     this._isMounted = true;
 		this.loadBlockchain();
     //this.theTopic = this.getTopicData();
@@ -339,7 +349,7 @@ class TopicLandingPage extends Component
 
       <br /><br />
 
-
+      <Element name="scroll-to-element" className="element">
       <div className="input-group input-group-lg">
         <div className="input-group-prepend ">
           {/* <Element name="scroll-to-element"> */}
@@ -348,6 +358,7 @@ class TopicLandingPage extends Component
         </div>
         <input type="text" value={this.state.value} onChange={this.updateSearch.bind(this)} className="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
       </div>
+      </Element>
       <br /><br />
 
       <div>
