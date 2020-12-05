@@ -213,6 +213,7 @@ class TopicLandingPage extends Component
   updateSearch=(e)=>{
     let {value} = e.target
     this.setState({value},()=>{
+      try{
     if(this.state.value !== ""){
     var filteredEvents = this.state.topic_copy;
     filteredEvents = filteredEvents.filter((events)=>{
@@ -220,7 +221,11 @@ class TopicLandingPage extends Component
 
 
     })}else{ filteredEvents = this.state.topic_copy}
-
+  }
+  catch(e)
+  {
+    
+  }
   this.setState({Topic_Events:filteredEvents,
     active_length:filteredEvents.length});
     this.props.history.push("/topic/"+this.props.match.params.page+"/"+1)
