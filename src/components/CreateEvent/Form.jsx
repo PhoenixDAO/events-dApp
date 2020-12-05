@@ -208,7 +208,7 @@ class Form extends Component {
 
 	categoryChange = (event) => {
 		let type = event.target.value;
-	
+
 		this.setState({
 			type: type
 		}, () => (console.log()));
@@ -493,7 +493,7 @@ class Form extends Component {
 	componentDidMount() {
 		// this.temp();
 		this.getPhoenixDAOMarketValue()
-
+		window.scrollTo(0, 0);
 	}
 }
 

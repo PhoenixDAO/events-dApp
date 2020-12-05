@@ -443,6 +443,7 @@ class Dashboard extends Component {
   componentDidMount() {
     this._isMounted = true;
     this.getPhoenixDAOMarketValue();
+		window.scrollTo(0, 0);
 
   }
 }

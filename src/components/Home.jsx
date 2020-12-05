@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class Home extends Component {
 	render() {
-		return(
+		return (
 			<div className="home-wrapper">
 				<h2>Welcome to the PhoenixDAO Events Marketplace.</h2>
 				<hr />
@@ -12,6 +12,9 @@ class Home extends Component {
 			</div>
 		);
 	}
-}
 
+	componentDidMount() {
+		window.scrollTo(0, 0);
+	}
+}
 export default Home;
