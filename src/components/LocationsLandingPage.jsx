@@ -135,6 +135,11 @@ class LocationsLandingPage extends Component {
       </React.Fragment>
     );
   }
+  componentDidMount() {
+    //this.theTopic = this.getTopicData();
+    window.scrollTo(0, 0);
+  }
+
 }
 
 LocationsLandingPage.contextTypes = {

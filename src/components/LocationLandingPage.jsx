@@ -26,6 +26,9 @@ class LocationLandingPage extends Component {
 
   componentDidMount() {
     //this.theTopic = this.getTopicData();
+    window.scrollTo(0, 0);
+
+    
   }
 
   componentWillUnmount() {

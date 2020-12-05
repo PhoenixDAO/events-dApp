@@ -180,6 +180,9 @@ class TopicsLandingPage extends Component {
 
     </React.Fragment>
 		);
+  }
+  componentDidMount() {
+		window.scrollTo(0, 0);
 	}
 }
 
