@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,useCallback } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { drizzleConnect } from 'drizzle-react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -45,6 +45,7 @@ import PageNotFound from './PageNotFound';
 import { X_OK } from 'constants';
 let ethereum = window.ethereum;
 let web3 = window.web3;
+let interval;
 
 class App extends Component
 {
@@ -74,6 +75,10 @@ class App extends Component
 	componentDidMount(){
 		this.loadBlockchainData();
 	}
+
+	// componentWillUnmount(){
+	// 	clearInterval(interval)
+	// }
 
 	componentWillUpdate() {
 		let sent_tx = this.state.sent_tx;
@@ -107,6 +112,7 @@ class App extends Component
 				// console.log("metamask")
 				await ethereum.enable();
 				web3 = new Web3(ethereum);
+				
 	
 			}
 	
@@ -120,14 +126,33 @@ class App extends Component
 				window.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b'));
 	
 			}
-	
+			setInterval(()=>{
+				if(typeof ethereum !== 'undefined' && typeof web3 !== 'undefined')
+				if(window.web3.eth.getAccounts.length>=1 && Object.keys(this.props.accounts).length<1){
+					window.location.reload();
+				}
+				console.log("accounts",Object.keys(this.props.accounts).length)
+				console.log("web3",window.web3.eth.getAccounts.length)
+			},500)
+			// window.ethereum.on('connect', function (connectInfo) {
+			// 	console.log("hello")
+			// 	alert("connect")
+			// 	window.location.reload();
+			// })
+
 			window.ethereum.on('accountsChanged', function (accounts) {
+				console.log("change hogya")
 				window.location.reload();
 			})
 	
 			window.ethereum.on('networkChanged', function (netId) {
 				window.location.reload();
 			})
+			
+			// window.ethereum.on('chainChanged',function (chainId) {
+			// 	// window.location.reload();
+			// 	console.log("chainChanged")
+			// })
 	
 			const accounts = await web3.eth.getAccounts()
 			this.setState({ account: accounts[0] });
