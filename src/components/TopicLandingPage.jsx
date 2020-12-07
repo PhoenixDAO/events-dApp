@@ -349,16 +349,14 @@ class TopicLandingPage extends Component
 
       <br /><br />
 
-      <Element name="scroll-to-element" className="element">
-      <div className="input-group input-group-lg">
+      {/* <Element name="scroll-to-element" className="element"> */}
+      <div id="scroll-to-element" className="input-group input-group-lg">
         <div className="input-group-prepend ">
-          {/* <Element name="scroll-to-element"> */}
           <span className="input-group-text search-icon" id="inputGroup-sizing-lg"><i className="fa fa-search"></i>&nbsp;Search </span>
-          {/* </Element> */}
         </div>
         <input type="text" value={this.state.value} onChange={this.updateSearch.bind(this)} className="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
       </div>
-      </Element>
+      {/* </Element> */}
       <br /><br />
 
       <div>
