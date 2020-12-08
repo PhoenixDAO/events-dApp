@@ -29,6 +29,7 @@ import Token from './Token';
 import Dashboard from './Dashboard';
 
 import Notify from './Notify';
+import NotifyEvent from './NotifyEvent';
 import NotifyApprove from './NotifyApprove';
 import NotifySuccess from './NotifySuccess';
 import NotifyEventSuccess from './NotifyEventSuccess';
@@ -126,14 +127,14 @@ class App extends Component
 				window.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b'));
 	
 			}
-			setInterval(()=>{
-				if(typeof ethereum !== 'undefined' && typeof web3 !== 'undefined')
-				if(window.web3.eth.getAccounts.length>=1 && Object.keys(this.props.accounts).length<1){
-					window.location.reload();
-				}
-				console.log("accounts",Object.keys(this.props.accounts).length)
-				console.log("web3",window.web3.eth.getAccounts.length)
-			},500)
+			// setInterval(()=>{
+			// 	if(typeof ethereum !== 'undefined' && typeof web3 !== 'undefined')
+			// 	if(window.web3.eth.getAccounts.length>=1 && Object.keys(this.props.accounts).length<1){
+			// 		window.location.reload();
+			// 	}
+			// 	console.log("accounts",Object.keys(this.props.accounts).length)
+			// 	console.log("web3",window.web3.eth.getAccounts.length)
+			// },500)
 			// window.ethereum.on('connect', function (connectInfo) {
 			// 	console.log("hello")
 			// 	alert("connect")
@@ -340,7 +341,7 @@ class App extends Component
 							upload: false,
 							done: true
 						});
-						toast(<Notify hash={hash} />, {
+						toast(<NotifyEvent hash={hash} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true
