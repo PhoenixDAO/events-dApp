@@ -11,6 +11,7 @@ import Loading from './Loading';
 import eventTopics from '../config/topics.json';
 
 let numeral = require('numeral');
+// let balance = await this.contracts['PHNX'].methods.totalSupply().call();
 
 class Event extends Component {
 	constructor(props, context) {
@@ -129,7 +130,7 @@ class Event extends Component {
 	}
 
 	inquire = async() => {
-		// let balance = await this.contracts['PHNX'].methods.totalSupply().call();
+		let balance = await this.contracts['PHNX'].methods.totalSupply().call();
 		// console.log("approve",balance)
 		console.log("buy", this.props.contracts['OpenEvents'].getEvent[this.event].value[2])
 		this.setState({
@@ -137,7 +138,7 @@ class Event extends Component {
 			token: this.props.contracts['OpenEvents'].getEvent[this.event].value[3],
 			openEvents_address: this.contracts['OpenEvents'].address,
 			buyticket: this.contracts['OpenEvents'].methods.buyTicket(this.props.id),
-			approve: this.contracts['PHNX'].methods.approve(this.contracts['OpenEvents'].address, this.props.contracts['OpenEvents'].getEvent[this.event].value[2]),
+			approve: this.contracts['PHNX'].methods.approve(this.contracts['OpenEvents'].address, balance),
 		}, () => {
 			
 			this.props.inquire(
