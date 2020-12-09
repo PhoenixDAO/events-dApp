@@ -26,6 +26,7 @@ class Form extends Component {
 			organizer: '',
 			organizer_length: 0,
 			price: '',
+			dollarPrice: '',
 			location: '',
 			time: 0,
 			// time:Math.floor(Date.now() / 1000),
@@ -215,12 +216,27 @@ class Form extends Component {
 	}
 
 	priceChange = (event) => {
+
 		if (this.state.currency === 'phnx') {
 			let price = this.form.price.value;
-
+			if (this.form.price.value.length > 16) {
+				price = price.slice(0, 16);
+			}
+			console.log("price", price);
 			this.setState({
 				price: price
 			}, () => console.log('price', this.state.price));
+
+			let number = numeral(this.state.price * this.state.PhoenixDAO_market.usd).format('0[.]000001');
+			if (isNaN(number)) {
+				number = numeral(0 * 0).format('0.00');
+				this.setState({ dollarPrice: number })
+				console.log(this.state.dollarPrice)
+			}
+			else {
+				this.setState({ dollarPrice: number })
+			}
+
 		}
 		else {
 			let price = '0';
@@ -228,6 +244,7 @@ class Form extends Component {
 				price: price
 			}, () => console.log('price', this.state.price))
 		}
+
 	}
 
 	ticketsChange = (event) => {
@@ -414,15 +431,15 @@ class Form extends Component {
 									<div className="input-group-prepend">
 										<span className="input-group-text"><img src={'/images/' + symbol} className="event_price-image" alt="" /></span>
 									</div>
-									{this.state.currency === 'phnx' && <input type="number" min="0.00000001" pattern="^[0-9]" onKeyPress={this.restrictMinus} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
-									{this.state.currency === 'eth' && <input type="number" min="0.00000001" pattern="^[0-9]" onKeyPress={this.restrictMinus} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
+									{this.state.currency === 'phnx' && <input type="number" min="0.00000001" maxLength="15" pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
+									{this.state.currency === 'eth' && <input type="number" min="0.00000001" maxLength="15" pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
 
 								</div>
 								{this.state.currency === 'phnx' && <div className="input-group mb-3">
 									<div className="input-group-prepend">
 										<span className="input-group-text"><img src={'/images/dollarsign.png'} className="event_price-image" alt="" /></span>
 									</div>
-									<div className={"form-control " + warning.price} title="Price in USD">{numeral(this.state.price * this.state.PhoenixDAO_market.usd).format('0,0.00')} </div>
+									<div className={"form-control " + warning.price} title="Price in USD">{this.state.dollarPrice}</div>
 								</div>}
 
 								{this.state.currency === 'eth' && <div className="input-group mb-3">
@@ -474,7 +491,7 @@ class Form extends Component {
 						<ul className="list-group list-group-flush">
 
 							{this.state.currency == 'phnx' && <li className="list-group-item"><strong>Price:</strong> <img src={'/images/' + symbol} className="event_price-image" alt="" /> {numeral(this.state.price).format('0,0.00')} or <img src={'/images/dollarsign.png'} className="event_price-image" alt="Event Price" />
-								{numeral(this.state.price * this.state.PhoenixDAO_market.usd).format('0,0.00')}</li>}
+								{this.state.dollarPrice}</li>}
 							{this.state.currency == 'eth' && <li className="list-group-item"><strong>Price:</strong> <img src={'/images/' + symbol} className="event_price-image" alt="" /> {this.state.price}</li>}
 							<li className="list-group-item"><strong>Date: {this.state.dateDisplay.toLocaleDateString()} at {this.state.dateDisplay.toLocaleTimeString()}</strong>  </li>
 							<li className="list-group-item"><strong>Location:</strong> {this.state.location} </li>
