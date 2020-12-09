@@ -215,7 +215,7 @@ class EventPage extends Component {
 	}
 
 
-	inquire = () =>{
+	inquire = async() =>{
 		let balance = await this.contracts['PHNX'].methods.totalSupply().call();
 		this.setState({
 			fee:this.props.contracts['OpenEvents'].getEvent[this.event].value[2],
