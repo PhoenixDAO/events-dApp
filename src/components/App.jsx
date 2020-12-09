@@ -38,6 +38,9 @@ import NotifyFaucet from './NotifyFaucet';
 import NotifySuccessFaucet from './NotifySuccessFaucet';
 import NotifyError from './NotifyError';
 import NotifyNetwork from './NotifyNetwork';
+import PropTypes from 'prop-types';
+
+import { PhoenixDAO_Testnet_Token_ABI, PhoenixDAO_Testnet_Token_Address } from '../config/phoenixDAOcontract_testnet.js';
 
 
 import NetworkError from './NetworkError';
@@ -50,7 +53,26 @@ let interval;
 
 class App extends Component
 {
-	constructor(props) {
+	constructor(props,context) {
+		try {
+			var contractConfig = {
+				contractName: 'PHNX',
+				web3Contract: new context.drizzle.web3.eth.Contract(
+					PhoenixDAO_Testnet_Token_ABI,
+					PhoenixDAO_Testnet_Token_Address,
+				),
+			};
+			context.drizzle.addContract(contractConfig);
+			//Importing PhoenixDAO contracts
+			// **** ENDS UP HERE, SO THIS WORKS
+			/*console.log(
+			  "SUCCESS",
+			  PhoenixDAO_Testnet_Token_Address,
+			  context.drizzle.contracts
+			);*/
+		} catch (e) {
+			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
+		}
 		super(props);
 		this.state = {
 			sent_tx: [],
@@ -70,10 +92,11 @@ class App extends Component
 
 			getPhoenixDAO:'',
 		};
+		this.contracts = context.drizzle.contracts;
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
 	}
 
-	componentDidMount(){
+	async componentDidMount(){
 		this.loadBlockchainData();
 	}
 
@@ -109,9 +132,22 @@ class App extends Component
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
 			alert(`METAMASK NOT INSTALLED!!`);
 		}else{
+			// window.ethereum.on('connect', function (connectInfo) {
+			// 	console.log("hello")
+			// 	alert("connect")
+			// 	// window.location.reload();
+			// })
+
+			
+
 			if (typeof ethereum !== 'undefined') {
 				// console.log("metamask")
-				await ethereum.enable();
+				console.log("here")
+
+				const a =await ethereum.enable();
+				// if(a){
+				// 	window.location.reload()
+				// }
 				web3 = new Web3(ethereum);
 				
 	
@@ -127,20 +163,6 @@ class App extends Component
 				window.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b'));
 	
 			}
-			// setInterval(()=>{
-			// 	if(typeof ethereum !== 'undefined' && typeof web3 !== 'undefined')
-			// 	if(window.web3.eth.getAccounts.length>=1 && Object.keys(this.props.accounts).length<1){
-			// 		window.location.reload();
-			// 	}
-			// 	console.log("accounts",Object.keys(this.props.accounts).length)
-			// 	console.log("web3",window.web3.eth.getAccounts.length)
-			// },500)
-			// window.ethereum.on('connect', function (connectInfo) {
-			// 	console.log("hello")
-			// 	alert("connect")
-			// 	window.location.reload();
-			// })
-
 			window.ethereum.on('accountsChanged', function (accounts) {
 				console.log("change hogya")
 				window.location.reload();
@@ -149,6 +171,24 @@ class App extends Component
 			window.ethereum.on('networkChanged', function (netId) {
 				window.location.reload();
 			})
+			// setInterval(()=>{
+			// 	console.log("typeof ethereum",typeof ethereum)
+			// 	console.log("typeof web3 !== 'undefined'",typeof web3 !== 'undefined')
+			// 	console.log("this.props.drizzleStatus.initialized",this.props.drizzleStatus.initialized)
+
+			// 	console.log("Object.keys(this.props.accounts).length",Object.keys(this.props.accounts).length)
+			// 	if(typeof ethereum !== 'undefined' && this.props.drizzleStatus.initialized&& typeof web3 !== 'undefined')
+			// 	console.log("before accounts",Object.keys(this.props.accounts).length)
+			// 	console.log("before web3",window.web3.eth.getAccounts.length)
+			// 	if(window.web3.eth.getAccounts.length>=1 && Object.keys(this.props.accounts).length<1){
+			// 		// window.location.reload();
+			// 		console.log("will reload")
+			// 	}
+			// 	// console.log("accounts",Object.keys(this.props.accounts).length)
+			// 	console.log("web3",window.web3.eth.getAccounts.length)
+			// },500)
+
+			
 			
 			// window.ethereum.on('chainChanged',function (chainId) {
 			// 	// window.location.reload();
@@ -229,16 +269,22 @@ class App extends Component
 
 	}, 2000)
 
+	allowance = async() =>{
+		let a = await this.contracts['PHNX'].methods.allowance(this.state.account,this.contracts['OpenEvents'].address).call();
+		console.log("allowance ==> ",a)
+		return a;
+	}
+	
 	//Buy Function, Notify listen for transaction status.
-	buy = () => {
+	buy = async() => {
 
 		let txreceipt = '';
 		let txconfirmed = '';
 		let txerror = '';
-		if (this.state.token) {
-			this.state.approve.send({ from: this.state.account })
 
-				.on('transactionHash', (hash) => {
+		if(await this.allowance()==0){
+			this.state.approve.send({ from: this.state.account })
+			.on('transactionHash', (hash) => {
 					if (hash !== null) {
 						toast(<NotifyApprove hash={hash} />, {
 							position: "bottom-right",
@@ -248,7 +294,7 @@ class App extends Component
 						})
 					}
 				})
-				.on('confirmation', (confirmationNumber, receipt) => {
+			.on('confirmation', (confirmationNumber, receipt) => {
 					if (confirmationNumber !== null) {
 						txreceipt = receipt
 						txconfirmed = confirmationNumber
@@ -266,24 +312,22 @@ class App extends Component
 
 					}
 				})
-				.on('error', (error) => {
-					if (error !== null) {
-						txerror = error
-						toast(<NotifyError message={txerror.message} />,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true
-							})
-						// this.afterApprove()
-						this.setState({ disabledStatus: false })
-					}
-				})
-
+			.on('error', (error) => {
+				if (error !== null) {
+					txerror = error
+					toast(<NotifyError message={txerror.message} />,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true
+						})
+					// this.afterApprove()
+					this.setState({ disabledStatus: false })
+				}
+			})
 		}
-		else {
-			this.state.buyticket.send({ value: this.state.fee, from: this.state.account })
-
+		else{
+			this.state.buyticket.send({ from: this.state.account })
 				.on('transactionHash', (hash) => {
 					if (hash !== null) {
 						toast(<Notify hash={hash} />, {
@@ -323,6 +367,99 @@ class App extends Component
 					this.setState({ disabledStatus: false })
 				})
 		}
+		
+		 
+		// console.log(this.contracts)
+
+		// if (this.state.token) {	
+
+		// 	this.state.approve.send({ from: this.state.account })
+		// 	.on('transactionHash', (hash) => {
+		// 			if (hash !== null) {
+		// 				toast(<NotifyApprove hash={hash} />, {
+		// 					position: "bottom-right",
+		// 					autoClose: true,
+		// 					pauseOnHover: true
+
+		// 				})
+		// 			}
+		// 		})
+		// 	.on('confirmation', (confirmationNumber, receipt) => {
+		// 			if (confirmationNumber !== null) {
+		// 				txreceipt = receipt
+		// 				txconfirmed = confirmationNumber
+		// 				if (txconfirmed == 0 && txreceipt.status == true) {
+
+		// 					toast(<NotifyApproveSuccess hash={txreceipt.transactionHash} />,
+		// 						{
+		// 							position: "bottom-right",
+		// 							autoClose: true,
+		// 							pauseOnHover: true
+		// 						})
+		// 					this.afterApprove()
+		// 					this.setState({ disabledStatus: false })
+		// 				}
+
+		// 			}
+		// 		})
+		// 	.on('error', (error) => {
+		// 		if (error !== null) {
+		// 			txerror = error
+		// 			toast(<NotifyError message={txerror.message} />,
+		// 				{
+		// 					position: "bottom-right",
+		// 					autoClose: true,
+		// 					pauseOnHover: true
+		// 				})
+		// 			// this.afterApprove()
+		// 			this.setState({ disabledStatus: false })
+		// 		}
+		// 	})
+
+		// }
+		// else {
+
+		// 	this.state.buyticket.send({ value: this.state.fee, from: this.state.account })
+
+		// 		.on('transactionHash', (hash) => {
+		// 			if (hash !== null) {
+		// 				toast(<Notify hash={hash} />, {
+		// 					position: "bottom-right",
+		// 					autoClose: true,
+		// 					pauseOnHover: true
+
+		// 				})
+		// 			}
+		// 		})
+		// 		.on('confirmation', (confirmationNumber, receipt) => {
+		// 			if (confirmationNumber !== null) {
+		// 				txreceipt = receipt
+		// 				txconfirmed = confirmationNumber
+		// 				if (txconfirmed == 0 && txreceipt.status == true) {
+		// 					toast(<NotifySuccess hash={txreceipt.transactionHash} />,
+		// 						{
+		// 							position: "bottom-right",
+		// 							autoClose: true,
+		// 							pauseOnHover: true
+		// 						})
+		// 					this.setState({ disabledStatus: false })
+		// 				}
+
+		// 			}
+		// 		})
+		// 		.on('error', (error) => {
+		// 			if (error !== null) {
+		// 				txerror = error
+		// 				toast(<NotifyError message={txerror.message} />,
+		// 					{
+		// 						position: "bottom-right",
+		// 						autoClose: true,
+		// 						pauseOnHover: true
+		// 					})
+		// 			}
+		// 			this.setState({ disabledStatus: false })
+		// 		})
+		// }
 	}
 
 	//Get Value form Event Creator from child component
@@ -518,7 +655,7 @@ class App extends Component
 						account={this.state.account} />} />
 
 					<Route exact path="/myevents/:page" render={props => <MyEvents {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus} />} />
-					<Route exact path="/event-stat/:page/:id" render={props => <MyEventStat {...props} inquire={this.inquireBuy} />} />
+					<Route exact path="/event-stat/:page/:id" render={props => <MyEventStat {...props} inquire={this.inquireBuyTest} />} />
 					<Route exact path="/event/:page/:id" render={props => <EventPage {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus} />} />
 					<Route exact path="/token" render={props => <Token {...props} getPhoenixDAO={this.getPhoenixDAO} />} />
 					<Route exact path="/topics" component={TopicsLandingPage} />
@@ -560,6 +697,9 @@ class App extends Component
 		);
 	}
 }
+App.contextTypes = {
+	drizzle: PropTypes.object
+}
 
 const mapStateToProps = state => {
 	return {
@@ -567,7 +707,8 @@ const mapStateToProps = state => {
 		web3: state.web3,
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
-		transactions: state.transactions
+		transactions: state.transactions,
+		contracts: state.contracts,
 	};
 };
 

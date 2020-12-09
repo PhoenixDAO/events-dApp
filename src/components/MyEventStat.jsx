@@ -225,13 +225,15 @@ class MyEventStat extends Component {
 		return description;
 	}
 
-	inquire = () =>{
+	inquire = async() =>{
+		let balance = await this.contracts['PHNX'].methods.totalSupply().call();
+
 		this.setState({
 			fee:this.props.contracts['OpenEvents'].getEvent[this.event].value[2],
 			token:this.props.contracts['OpenEvents'].getEvent[this.event].value[3],
 			openEvents_address:this.contracts['OpenEvents'].address,
 			buyticket:this.contracts['OpenEvents'].methods.buyTicket(this.props.match.params.id),
-			approve:this.contracts['PHNX'].methods.approve(this.contracts['OpenEvents'].address, this.props.contracts['OpenEvents'].getEvent[this.event].value[2])
+			approve:this.contracts['PHNX'].methods.approve(this.contracts['OpenEvents'].address, balance)
 			},()=>{
 				  this.props.inquire(
 					  this.props.id,
