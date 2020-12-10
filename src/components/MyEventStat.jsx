@@ -370,14 +370,14 @@ class MyEventStat extends Component {
 				body =
 						<div className="row">
 						<div className="col-12">
-            			<h3>{event_data[0]}</h3>
+            			{/* <h3>{event_data[0]}</h3>
             			<br />
-           				{description}
-            			<button className="btn btn-dark" onClick={this.inquire} disabled={disabled}><i className="fas fa-ticket-alt"></i>{buttonText}</button>
-            			<label className="pl-2 small">{disabledStatus}</label>
+           				{description} */}
+            			{/* <button className="btn btn-dark" onClick={this.inquire} disabled={disabled}><i className="fas fa-ticket-alt"></i>{buttonText}</button> */}
+            			{/* <label className="pl-2 small">{disabledStatus}</label>
             			<br/>
             			<br/>
-           				<br/>
+           				<br/> */}
 
 						<div className="card event-hero-sidebar">
 							<img className="card-img-top event-image" src={image} alt="Event" />
@@ -535,7 +535,7 @@ class MyEventStat extends Component {
 		}
 
 		return (
-			<div>
+			<div className="event-page-wrapper">
 				<h2><i className="fa fa-calendar-alt"></i> Event</h2>
 				<hr />
 				{body}
