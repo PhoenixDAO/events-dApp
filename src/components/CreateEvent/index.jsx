@@ -20,7 +20,7 @@ class CreateEvent extends Component {
 			stage: 0,
 			title: null,
 			error: false,
-			error_text: 'IPFS Error',
+			error_text: 'Transaction Rejected',
 			ipfs: null,
 			fileImg: null,
 			data: {
@@ -109,7 +109,9 @@ class CreateEvent extends Component {
 		}).catch((error) => {
 			this.setState({
 				error: true,
-				error_text: 'IPFS Error'
+				error_text: 'Transaction Rejected'
+			},()=>{
+				console.log(this.state.error_text);
 			});
 		});
 	};
