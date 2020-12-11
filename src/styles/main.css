@@ -882,6 +882,12 @@
                 }
             }
             
+            @media (min-width:929px) {
+                .branding-logo {
+                    padding-bottom: 42px;
+                }
+            }
+            
             .sort_button {
                 color: #fff;
                 background-color: #343a40;
