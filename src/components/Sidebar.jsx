@@ -10,6 +10,7 @@ class Sidebar extends Component {
 	}
 
 	sidebarClick() {
+		this.toggleSidebarClass(true);
 		var isActive = this.context.router.route.location.pathname;
 		var activeClassName = "";
 		var linkLocation = this.props.to;
@@ -25,15 +26,27 @@ class Sidebar extends Component {
 	}
 
 
-	toggleSidebarClass = () => {
-		const oldSidebarClassName = document.getElementById('sidebar-wrapper').className;
-		const newSidebarClassName = oldSidebarClassName === 'my-sidebar sidebar-closed' ? 'my-sidebar sidebar-open' : 'my-sidebar sidebar-closed'
-
-		const oldPageWrapperClassName = document.getElementById('page-content-wrapper').className;
-		const newPageWrapperClassName = oldPageWrapperClassName === 'sidebar-closed' ? 'sidebar-open' : 'sidebar-closed'
-
-		document.getElementById('sidebar-wrapper').className = newSidebarClassName;
-		document.getElementById('page-content-wrapper').className = newPageWrapperClassName;
+	toggleSidebarClass = (closeOnly) => {
+		console.log("closeOnly",closeOnly)
+		if(!closeOnly){
+			const oldSidebarClassName = document.getElementById('sidebar-wrapper').className;
+			const newSidebarClassName = oldSidebarClassName === 'my-sidebar sidebar-closed' ? 'my-sidebar sidebar-open' : 'my-sidebar sidebar-closed'
+	
+			const oldPageWrapperClassName = document.getElementById('page-content-wrapper').className;
+			const newPageWrapperClassName = oldPageWrapperClassName === 'sidebar-closed' ? 'sidebar-open' : 'sidebar-closed'
+	
+			document.getElementById('sidebar-wrapper').className = newSidebarClassName;
+			document.getElementById('page-content-wrapper').className = newPageWrapperClassName;
+		}else{
+			const newSidebarClassName =  'my-sidebar sidebar-closed'
+	
+			const newPageWrapperClassName = 'sidebar-closed'
+			console.log("document.getElementById('sidebar-wrapper').className -->",document.getElementById('sidebar-wrapper').className)
+			console.log("document.getElementById('page-content-wrapper').className -->",document.getElementById('page-content-wrapper').className)
+			document.getElementById('sidebar-wrapper').className = 'my-sidebar sidebar-closed';
+			document.getElementById('page-content-wrapper').className = 'sidebar-open';
+		}
+		
 	}
 
 
@@ -70,7 +83,7 @@ class Sidebar extends Component {
 
 			return (
 				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
-					<div className="hamburgerNav" onClick={this.toggleSidebarClass}>
+					<div className="hamburgerNav" onClick={()=>{this.toggleSidebarClass(false)}}>
 						<i className="fa fa-bars" ></i>
 					</div>
 					<div className="user-status mt-5">
@@ -97,7 +110,10 @@ class Sidebar extends Component {
 								<NavLink to="/locations" className="nav-link" activeClassName="nav-link-active" onClick={() => { this.sidebarClick(this) }}><i className="fa fa-map-marker-alt"></i> <span className="toggleHidden">Locations</span></NavLink>
 							</li> */}
 							<li>
-								<NavLink to="/calendar" className="nav-link" activeClassName="nav-link-active"><i className="fa fa-calendar-alt"></i> <span className="toggleHidden">Calendar</span></NavLink>
+								<NavLink to="/calendar" className="nav-link" activeClassName="nav-link-active"
+																onClick={()=>{this.toggleSidebarClass(true)}}
+
+								><i className="fa fa-calendar-alt"></i> <span className="toggleHidden">Calendar</span></NavLink>
 							</li>
 						</ul>
 						<h5 className="mt-5 toggleHidden">Manage Events</h5>
@@ -128,7 +144,7 @@ class Sidebar extends Component {
 
 		else return (
 			<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
-				<div className="hamburgerNav" onClick={this.toggleSidebarClass}>
+				<div className="hamburgerNav" onClick={()=>{this.toggleSidebarClass(false)}}>
 					<i className="fa fa-bars"></i>
 				</div>
 				<div className="user-status mt-5">
@@ -157,7 +173,9 @@ class Sidebar extends Component {
 							<NavLink to="/locations" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-map-marker-alt" title="Locations"></i> <span className="toggleHidden">Locations</span></NavLink>
 						</li> */}
 						<li>
-							<NavLink to="/calendar" className="nav-link" activeClassName="nav-link-active"><i className="fa fa-calendar-alt" title="Calendar"></i> <span className="toggleHidden">Calendar</span></NavLink>
+							<NavLink to="/calendar" className="nav-link" activeClassName="nav-link-active"
+							onClick={()=>{this.toggleSidebarClass(true)}}
+							><i className="fa fa-calendar-alt" title="Calendar"></i> <span className="toggleHidden">Calendar</span></NavLink>
 						</li>
 
 					</ul>
@@ -165,7 +183,9 @@ class Sidebar extends Component {
 					<ul className="nav flex-column">
 
 						<li>
-							<NavLink to="/dashboard" className="nav-link" activeClassName="nav-link-active" ><i className="fas fa-tachometer-alt" title="Dashboard"></i> <span className="toggleHidden">Dashboard</span></NavLink>
+							<NavLink to="/dashboard" className="nav-link" activeClassName="nav-link-active" 
+							onClick={()=>{this.toggleSidebarClass(true)}}
+							><i className="fas fa-tachometer-alt" title="Dashboard"></i> <span className="toggleHidden">Dashboard</span></NavLink>
 						</li>
 
 						<li>
