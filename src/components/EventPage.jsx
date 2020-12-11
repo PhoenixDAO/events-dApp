@@ -326,9 +326,9 @@ class EventPage extends Component {
 
 						<div className="col-12">
 
-            	<h3>{event_data[0]}</h3>
+            	{/* <h3>{event_data[0]}</h3>
            		 <br />
-           		 {description}
+           		 {description} */}
             	<button className="btn btn-dark" onClick={this.inquire} disabled={disabled}><i className="fas fa-ticket-alt"></i>{buttonText}</button>
             	<label className="pl-2 small">{disabledStatus}</label>
 
@@ -336,7 +336,7 @@ class EventPage extends Component {
 				{myEvent === true && <Link to ={"/event-stat/"+pagetitle+"/" + this.props.match.params.id}>
 				<button className="btn btn-dark mt-2"><i className="fas fa-chart-bar"></i> View Event Stat</button>
 				</Link>}
-				<div className="social-share-btns-div">
+				<div className="event-social-share-btns-div">
 					<EmailShareButton
 						url={shareUrl}
 						title={title}
