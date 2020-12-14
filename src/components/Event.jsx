@@ -131,8 +131,6 @@ class Event extends Component {
 
 	inquire = async() => {
 		let balance = await this.contracts['PHNX'].methods.totalSupply().call();
-		// console.log("approve",balance)
-		console.log("buy", this.props.contracts['OpenEvents'].getEvent[this.event].value[2])
 		this.setState({
 			fee: this.props.contracts['OpenEvents'].getEvent[this.event].value[2],
 			token: this.props.contracts['OpenEvents'].getEvent[this.event].value[3],
@@ -222,7 +220,6 @@ class Event extends Component {
 
 				let topicURL = "/topic/" + event_data[8] + "/1";
 
-				//console.log(event_data);
 				//Friendly URL Title
 				let rawTitle = event_data[0];
 				var titleRemovedSpaces = rawTitle;

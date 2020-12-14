@@ -271,7 +271,6 @@ class App extends Component
 
 	allowance = async() =>{
 		let a = await this.contracts['PHNX'].methods.allowance(this.state.account,this.contracts['OpenEvents'].address).call();
-		console.log("allowance ==> ",a)
 		return a;
 	}
 	
@@ -615,7 +614,7 @@ class App extends Component
 
 			body =
 				<Switch>
-					<Route exact path="/findevents/:page" render={props => <FindEvents {...props} inquire={this.inquireBuy}disabledStatus={this.state.disabledStatus} />} />
+					<Route exact path="/findevents/:page" render={props => <FindEvents {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus} />} />
 					<Route exact path="/pastevents/:page" component={PastEvents} />
 
 					<Route exact path="/createevent" render={props => <CreateEvent  {...props}
@@ -629,7 +628,7 @@ class App extends Component
 
 					<Route exact path="/event/:page/:id" render={props => <EventPage {...props} inquire={this.inquireBuy} />} />
 					<Route exact path="/topics" component={TopicsLandingPage} />
-					<Route exact path="/topic/:page/:id" render={props => <TopicLandingPage {...props} inquire={this.inquireBuy} />} />
+					<Route exact path="/topic/:page/:id" render={props => <TopicLandingPage {...props} disabledStatus={this.state.disabledStatus} inquire={this.inquireBuy} />} />
 					<Route exact path="/locations" component={LocationsLandingPage} />
 					<Route exact path="/location/:page" component={LocationLandingPage} />
 					<Route exact path="/Calendar" component={Calendars} />
@@ -659,7 +658,7 @@ class App extends Component
 					<Route exact path="/event/:page/:id" render={props => <EventPage {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus} />} />
 					<Route exact path="/token" render={props => <Token {...props} getPhoenixDAO={this.getPhoenixDAO} />} />
 					<Route exact path="/topics" component={TopicsLandingPage} />
-					<Route exact path="/topic/:page/:id" render={props => <TopicLandingPage {...props} inquire={this.inquireBuy} />} />
+					<Route exact path="/topic/:page/:id" render={props => <TopicLandingPage {...props} disabledStatus={this.state.disabledStatus} inquire={this.inquireBuy} />} />
 					<Route exact path="/locations" component={LocationsLandingPage} />
 					<Route exact path="/location/:page" component={LocationLandingPage} />
 					<Route exact path="/calendar" component={Calendars} />

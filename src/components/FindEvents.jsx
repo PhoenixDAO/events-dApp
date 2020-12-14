@@ -20,7 +20,6 @@ import eventCTAsJson from '../config/event_ctas.json';
 class FindEvents extends Component {
   constructor(props, context) {
     super(props);
-    console.log("view final testing check lets go", this.props)
     this.state = {
       openEvents: '',
       upload: false,

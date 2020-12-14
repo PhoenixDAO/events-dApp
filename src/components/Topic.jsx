@@ -85,7 +85,7 @@ class Topic extends Component {
 						<li className="list-group-item"><strong>Tickets Sold:</strong> {event_data[6]}/{max_seats}</li>
 					</ul>
 					<div className="card-footer text-muted text-center">
-						<button className="btn btn-dark" onClick={this.buyTicket} disabled={disabled}><i className="fas fa-ticket-alt"></i> {buttonText}</button>
+						<button className="btn btn-dark" onClick={this.buyTicket} disabled={disabled || this.props.disabledStatus}><i className="fas fa-ticket-alt"></i> {buttonText}</button>
 					</div>
 				</div>
 				;

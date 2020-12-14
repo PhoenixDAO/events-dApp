@@ -218,7 +218,7 @@ class Form extends Component {
 	priceChange = (event) => {
 
 		if (this.state.currency === 'phnx') {
-			let price = this.form.price.value;
+			let price = event.target.value;
 			if (this.form.price.value.length > 16) {
 				price = price.slice(0, 16);
 			}
@@ -227,7 +227,7 @@ class Form extends Component {
 				price: price
 			}, () => console.log('price', this.state.price));
 
-			let number = numeral(this.state.price * this.state.PhoenixDAO_market.usd).format('0[.]000001');
+			let number = numeral(event.target.value * this.state.PhoenixDAO_market.usd).format('0[.]000001');
 			if (isNaN(number)) {
 				number = numeral(0 * 0).format('0.00');
 				this.setState({ dollarPrice: number })

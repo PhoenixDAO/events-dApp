@@ -329,7 +329,7 @@ class EventPage extends Component {
             	{/* <h3>{event_data[0]}</h3>
            		 <br />
            		 {description} */}
-            	<button className="btn btn-dark" onClick={this.inquire} disabled={disabled}><i className="fas fa-ticket-alt"></i>{buttonText}</button>
+            	<button className="btn btn-dark" onClick={this.inquire} disabled={disabled || this.props.disabledStatus}><i className="fas fa-ticket-alt"></i>{buttonText}</button>
             	<label className="pl-2 small">{disabledStatus}</label>
 
             	<br />
