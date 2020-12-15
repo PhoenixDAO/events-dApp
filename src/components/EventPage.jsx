@@ -466,6 +466,7 @@ class EventPage extends Component {
 	}
 
 	componentDidMount() {
+		window.scroll(0,0);
 		this._isMounted = true;
 		this.updateIPFS();
 		this.loadblockhain();
