@@ -20,7 +20,6 @@ import eventCTAsJson from '../config/event_ctas.json';
 class FindEvents extends Component {
   constructor(props, context) {
     super(props);
-    console.log("view final testing check lets go", this.props)
     this.state = {
       openEvents: '',
       upload: false,
@@ -37,9 +36,10 @@ class FindEvents extends Component {
     this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
     this.perPage = 6;
     this.topicClick = this.topicClick.bind(this);
+    this.myRef = React.createRef()
 
     this.toggleSortDate = this.toggleSortDate.bind(this);
-    
+
 
   }
 
@@ -62,6 +62,7 @@ class FindEvents extends Component {
     this.props.history.push(location);
     // window.scrollTo(0, 80);
   }
+  executeScroll = () => this.myRef.current.scrollIntoView()
 
 
   //Loads Blockhain Data,
@@ -121,19 +122,19 @@ class FindEvents extends Component {
   updateSearch = (e) => {
     let { value } = e.target
     this.setState({ value }, () => {
-      try{
-      if (this.state.value !== "") {
+      try {
+        if (this.state.value !== "") {
 
-        var filteredEvents = this.state.event_copy;
-        filteredEvents = filteredEvents.filter((events) => {
-          return events.returnValues.name.toLowerCase().search(this.state.value.toLowerCase()) !== -1;
-        })
-      } 
-      else { filteredEvents = this.state.event_copy }
-    }
-    catch(e){
-      console.log(e);
-    }
+          var filteredEvents = this.state.event_copy;
+          filteredEvents = filteredEvents.filter((events) => {
+            return events.returnValues.name.toLowerCase().search(this.state.value.toLowerCase()) !== -1;
+          })
+        }
+        else { filteredEvents = this.state.event_copy }
+      }
+      catch (e) {
+        console.log(e);
+      }
       this.setState({
         Events_Blockchain: filteredEvents,
         active_length: filteredEvents.length
@@ -144,7 +145,7 @@ class FindEvents extends Component {
 
   //Sort Active Events By Date(Newest/Oldest)
   toggleSortDate = (e) => {
-    let { value } = e.target
+    let { value } = e.target;
     this.setState({ value }, () => {
       const { Events_Blockchain } = this.state
       const { ended } = Events_Blockchain
@@ -204,9 +205,12 @@ class FindEvents extends Component {
               let active = i === currentPage ? 'active' : '';
               links.push(
                 <li className={"page-item " + active} key={i}>
-                  <Link to={"/findevents/" + i} className="page-link">{i}</Link>
+                  <Link to={"/findevents/" + i} className="page-link" >{i}</Link>
                 </li>
               );
+              if (currentPage != 1) {
+                this.executeScroll({ behavior: "smooth", block: "start" });
+              }
             }
           }
 
@@ -218,6 +222,9 @@ class FindEvents extends Component {
                   <Link to={"/findevents/" + i} className="page-link">{i}</Link>
                 </li>
               );
+              if (currentPage != 1) {
+                this.executeScroll({ behavior: "smooth", block: "start" });
+              }
             }
           }
           else {
@@ -228,6 +235,10 @@ class FindEvents extends Component {
                   <Link to={"/findevents/" + i} className="page-link">{i}</Link>
                 </li>
               );
+              if (currentPage != 1) {
+                this.executeScroll({ behavior: "smooth", block: "start" });
+              }
+
             }
           }
           pagination =
@@ -300,8 +311,8 @@ class FindEvents extends Component {
 
           <br /><br />
 
-          
-          <div className="input-group input-group-lg">
+
+          <div className="input-group input-group-lg" ref={this.myRef}>
             <div className="input-group-prepend ">
               <span className="input-group-text search-icon" id="inputGroup-sizing-lg"><i className="fa fa-search"></i>&nbsp;Search </span>
             </div>
@@ -312,7 +323,7 @@ class FindEvents extends Component {
 
           <div>
 
-            <div className="row row_mobile">
+            <div className="row row_mobile" >
               <h2 className="col-lg-10 col-md-9 col-sm-8"><i className="fa fa-calendar-alt"></i> Recent Events</h2>
               <button className="btn sort_button col-lg-2 col-md-3 col-sm-3" value={this.state.value} onClick={this.toggleSortDate} onChange={this.toggleSortDate.bind(this)}>{this.state.isOldestFirst ? 'Sort: Oldest' : 'Sort: Newest'}</button>
             </div>
@@ -370,14 +381,12 @@ class FindEvents extends Component {
       </React.Fragment>
     );
   }
-  
+
 
   componentDidMount() {
     this._isMounted = true;
-  
+    window.scroll(0, 0);
     this.loadBlockchain();
-    window.scrollTo(0, 0);
-
   }
 
   componentWillUnmount() {

@@ -297,7 +297,7 @@ class TopicLandingPage extends Component
 
 				for (let i = start; i < end; i++) {
 
-          events_list.push(<Event
+          events_list.push(<Event disabledStatus={this.props.disabledStatus}
             inquire={this.props.inquire}
             key={this.state.Topic_Events[i].returnValues.eventId}
             id={this.state.Topic_Events[i].returnValues.eventId}
