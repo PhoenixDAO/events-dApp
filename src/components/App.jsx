@@ -181,18 +181,16 @@ class App extends Component {
 					console.log("this.props.drizzleStatus.initialized", this.props.drizzleStatus.initialized)
 
 					console.log("Object.keys(this.props.accounts).length", Object.keys(this.props.accounts).length)
-					if (typeof ethereum !== 'undefined' && 
-					
-					// this.props.drizzleStatus.initialized && 
-					
-					typeof web3 !== 'undefined')
-						{console.log("before accounts", Object.keys(this.props.accounts).length)
-					console.log("before web3", window.web3.eth.getAccounts.length)
-					if (window.web3.eth.getAccounts.length >= 1 && Object.keys(this.props.accounts).length < 1) {
-						window.location.reload();
-						console.log("will reload")
+					if (typeof ethereum !== 'undefined' &&
+						// this.props.drizzleStatus.initialized && 
+						typeof web3 !== 'undefined') {
+						console.log("before accounts", Object.keys(this.props.accounts).length)
+						console.log("before web3", window.web3.eth.getAccounts.length)
+						if (window.web3.eth.getAccounts.length >= 1 && Object.keys(this.props.accounts).length < 1) {
+							window.location.reload();
+							console.log("will reload")
+						}
 					}
-				}
 					// console.log("accounts",Object.keys(this.props.accounts).length)
 					console.log("web3", window.web3.eth.getAccounts.length)
 				}, 1000)
