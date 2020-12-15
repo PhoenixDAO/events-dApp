@@ -6,6 +6,20 @@ import makeBlockie from 'ethereum-blockies-base64';
 import ipfs from '../utils/ipfs';
 import Web3 from 'web3';
 
+import Notify from "./Notify";
+import NotifyEvent from "./NotifyEvent";
+import NotifyApprove from "./NotifyApprove";
+import NotifySuccess from "./NotifySuccess";
+import NotifyEventSuccess from "./NotifyEventSuccess";
+import NotifyApproveSuccess from "./NotifyApproveSuccess";
+import NotifyFaucet from "./NotifyFaucet";
+import NotifySuccessFaucet from "./NotifySuccessFaucet";
+import NotifyError from "./NotifyError";
+import NotifyNetwork from "./NotifyNetwork";
+
+import { ToastContainer, toast } from "react-toastify";
+import ApprovalModal from "./approvalModal";
+
 import {
 	EmailShareButton,
 	FacebookShareButton,
@@ -54,6 +68,7 @@ const customStyles = {
 
 };
 
+
 class EventPage extends Component {
 
     constructor(props, context) {
@@ -99,6 +114,7 @@ class EventPage extends Component {
 			  buyticket:'',
 			  approve:'',
 			  pageTransactions:[],
+			  open:false
 
 		  };
 		  this.isCancelled = false;
@@ -214,25 +230,115 @@ class EventPage extends Component {
 		return description;
 	}
 
+	handleClickOpen = () => {
+		this.setState({ open: true });
+	};
 
-	inquire = async() =>{
-		let balance = await this.contracts['PHNX'].methods.totalSupply().call();
-		this.setState({
-			fee:this.props.contracts['OpenEvents'].getEvent[this.event].value[2],
-			token:this.props.contracts['OpenEvents'].getEvent[this.event].value[3],
-			openEvents_address:this.contracts['OpenEvents'].address,
-			buyticket:this.contracts['OpenEvents'].methods.buyTicket(this.props.match.params.id),
-			approve:this.contracts['PHNX'].methods.approve(this.contracts['OpenEvents'].address, balance)
-			},()=>{
-				  this.props.inquire(
-					  this.props.id,
-					  this.state.fee,
-					  this.state.token,
-					  this.state.openEvents_address,
-					  this.state.buyticket,
-					  this.state.approve)
-				})
+	handleClose = () => {
+		this.setState({ open: false });
+	};
+
+
+	allowance = async () => {
+		let a = await this.contracts["PHNX"].methods
+			.allowance(this.account, this.contracts["OpenEvents"].address)
+			.call();
+		console.log("allowance ==> ", a);
+		return a;
+	};
+
+	giveApproval = async () => {
+		this.handleClose()
+		let txreceipt = "";
+		let txconfirmed = "";
+		let txerror = "";
+		this.state.approve
+			.send({ from: this.account })
+			.on("transactionHash", (hash) => {
+				if (hash !== null) {
+					toast(<NotifyApprove hash={hash} />, {
+						position: "bottom-right",
+						autoClose: true,
+						pauseOnHover: true,
+					});
+				}
+			})
+			.on("confirmation", (confirmationNumber, receipt) => {
+				if (confirmationNumber !== null) {
+					txreceipt = receipt;
+					txconfirmed = confirmationNumber;
+					if (txconfirmed == 0 && txreceipt.status == true) {
+						toast(
+							<NotifyApproveSuccess
+								hash={txreceipt.transactionHash}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
+						this.afterApprove();
+						this.setState({ disabledStatus: false });
+					}
+				}
+			})
+			.on("error", (error) => {
+				if (error !== null) {
+					txerror = error;
+					toast(<NotifyError message={txerror.message} />, {
+						position: "bottom-right",
+						autoClose: true,
+						pauseOnHover: true,
+					});
+					// this.afterApprove()
+					this.setState({ disabledStatus: false });
+				}
+			});
+	};
+
+	inquire = async () => {
+		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
+		// let temp = this.allowance();
+		// console.log("approve",balance)
+		console.log(
+			"buy",
+			this.props.contracts["OpenEvents"].getEvent[this.event].value[2]
+		);
+
+		this.setState(
+			{
+				fee: this.props.contracts["OpenEvents"].getEvent[this.event]
+					.value[2],
+				token: this.props.contracts["OpenEvents"].getEvent[this.event]
+					.value[3],
+				openEvents_address: this.contracts["OpenEvents"].address,
+				buyticket: this.contracts["OpenEvents"].methods.buyTicket(
+					this.props.id
+				),
+				approve: this.contracts["PHNX"].methods.approve(
+					this.contracts["OpenEvents"].address,
+					balance
+				),
+			},
+			async () => {
+				let temp=await this.allowance()
+				console.log("temp is ",temp)
+				if (await this.allowance() == 0) {
+					this.handleClickOpen();
+				} else {
+					this.props.inquire(
+						this.props.id,
+						this.state.fee,
+						this.state.token,
+						this.state.openEvents_address,
+						this.state.buyticket,
+						this.state.approve
+					);
+				}
 			}
+		);
+	};
 
       getLocation = () => {
     		let locations = []
@@ -452,6 +558,7 @@ class EventPage extends Component {
 
 		return (
 			<div className="event-page-wrapper">
+				<ApprovalModal open={this.state.open} handleClose={this.handleClose} giveApproval={this.giveApproval}/>
 				<h2><i className="fa fa-calendar-alt"></i> Event</h2>
 				<hr />
 				{body}
