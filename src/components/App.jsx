@@ -1,4 +1,4 @@
-import React, { Component,useCallback } from 'react';
+import React, { Component, useCallback } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { drizzleConnect } from 'drizzle-react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -51,9 +51,8 @@ let ethereum = window.ethereum;
 let web3 = window.web3;
 let interval;
 
-class App extends Component
-{
-	constructor(props,context) {
+class App extends Component {
+	constructor(props, context) {
 		try {
 			var contractConfig = {
 				contractName: 'PHNX',
@@ -77,33 +76,35 @@ class App extends Component
 		this.state = {
 			sent_tx: [],
 			showSidebar: true,
-			account:[],
-			id:'',
-			fee:'',
-			token:'',
-			openEvents_Address:'',
-			buyticket:'',
-			approve:'',
-			createEvent:'',
-			upload:false,
-			done:false,
-			error:false,
-			afterApprove:false,
-
-			getPhoenixDAO:'',
+			account: [],
+			id: '',
+			fee: '',
+			token: '',
+			openEvents_Address: '',
+			buyticket: '',
+			approve: '',
+			createEvent: '',
+			upload: false,
+			done: false,
+			error: false,
+			afterApprove: false,
+			intervalId: "",
+			getPhoenixDAO: '',
 		};
 		this.contracts = context.drizzle.contracts;
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
 	}
 
-	async componentDidMount(){
+	async componentDidMount() {
 		this.loadBlockchainData();
 	}
 
 	// componentWillUnmount(){
 	// 	clearInterval(interval)
 	// }
-
+	componentWillUnmount() {
+		clearInterval(this.state.intervalId)
+	}
 	componentWillUpdate() {
 		let sent_tx = this.state.sent_tx;
 		for (let i = 0; i < this.props.transactionStack.length; i++) {
@@ -128,77 +129,87 @@ class App extends Component
 
 	//Get Account
 	async loadBlockchainData() {
-		console.log("window.ethereum",window.ethereum)
+		console.log("window.ethereum", window.ethereum)
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
 			alert(`METAMASK NOT INSTALLED!!`);
-		}else{
+		} else {
 			// window.ethereum.on('connect', function (connectInfo) {
 			// 	console.log("hello")
 			// 	alert("connect")
 			// 	// window.location.reload();
 			// })
 
-			
+
 
 			if (typeof ethereum !== 'undefined') {
 				// console.log("metamask")
 				console.log("here")
 
-				const a =await ethereum.enable();
+				const a = await ethereum.enable();
+				console.log("here")
 				// if(a){
 				// 	window.location.reload()
 				// }
 				web3 = new Web3(ethereum);
-				
-	
+
+
 			}
-	
+
 			else if (typeof web3 !== 'undefined') {
 				console.log('Web3 Detected!')
 				window.web3 = new Web3(web3.currentProvider);
 			}
-	
+
 			else {
 				console.log('No Web3 Detected')
 				window.web3 = new Web3(new Web3.providers.HttpProvider('https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b'));
-	
+
 			}
 			window.ethereum.on('accountsChanged', function (accounts) {
 				console.log("change hogya")
 				window.location.reload();
 			})
-	
+
 			window.ethereum.on('networkChanged', function (netId) {
 				window.location.reload();
 			})
-			// setInterval(()=>{
-			// 	console.log("typeof ethereum",typeof ethereum)
-			// 	console.log("typeof web3 !== 'undefined'",typeof web3 !== 'undefined')
-			// 	console.log("this.props.drizzleStatus.initialized",this.props.drizzleStatus.initialized)
 
-			// 	console.log("Object.keys(this.props.accounts).length",Object.keys(this.props.accounts).length)
-			// 	if(typeof ethereum !== 'undefined' && this.props.drizzleStatus.initialized&& typeof web3 !== 'undefined')
-			// 	console.log("before accounts",Object.keys(this.props.accounts).length)
-			// 	console.log("before web3",window.web3.eth.getAccounts.length)
-			// 	if(window.web3.eth.getAccounts.length>=1 && Object.keys(this.props.accounts).length<1){
-			// 		// window.location.reload();
-			// 		console.log("will reload")
-			// 	}
-			// 	// console.log("accounts",Object.keys(this.props.accounts).length)
-			// 	console.log("web3",window.web3.eth.getAccounts.length)
-			// },500)
+			let intervalId =
+				setInterval(() => {
+					console.log("typeof ethereum", typeof ethereum)
+					console.log("typeof web3 !== 'undefined'", typeof web3 !== 'undefined')
+					console.log("this.props.drizzleStatus.initialized", this.props.drizzleStatus.initialized)
 
-			
-			
+					console.log("Object.keys(this.props.accounts).length", Object.keys(this.props.accounts).length)
+					if (typeof ethereum !== 'undefined' && 
+					
+					// this.props.drizzleStatus.initialized && 
+					
+					typeof web3 !== 'undefined')
+						{console.log("before accounts", Object.keys(this.props.accounts).length)
+					console.log("before web3", window.web3.eth.getAccounts.length)
+					if (window.web3.eth.getAccounts.length >= 1 && Object.keys(this.props.accounts).length < 1) {
+						window.location.reload();
+						console.log("will reload")
+					}
+				}
+					// console.log("accounts",Object.keys(this.props.accounts).length)
+					console.log("web3", window.web3.eth.getAccounts.length)
+				}, 1000)
+			this.setState({ intervalId: intervalId })
+			// console.log("intervalId ==>",this.state.intervalId)
+
+
+
 			// window.ethereum.on('chainChanged',function (chainId) {
-			// 	// window.location.reload();
+			// 	 window.location.reload();
 			// 	console.log("chainChanged")
 			// })
-	
+
 			const accounts = await web3.eth.getAccounts()
 			this.setState({ account: accounts[0] });
 		}
-		
+
 
 	}
 
@@ -269,21 +280,21 @@ class App extends Component
 
 	}, 2000)
 
-	allowance = async() =>{
-		let a = await this.contracts['PHNX'].methods.allowance(this.state.account,this.contracts['OpenEvents'].address).call();
+	allowance = async () => {
+		let a = await this.contracts['PHNX'].methods.allowance(this.state.account, this.contracts['OpenEvents'].address).call();
 		return a;
 	}
-	
+
 	//Buy Function, Notify listen for transaction status.
-	buy = async() => {
+	buy = async () => {
 
 		let txreceipt = '';
 		let txconfirmed = '';
 		let txerror = '';
 
-		if(await this.allowance()==0){
+		if (await this.allowance() == 0) {
 			this.state.approve.send({ from: this.state.account })
-			.on('transactionHash', (hash) => {
+				.on('transactionHash', (hash) => {
 					if (hash !== null) {
 						toast(<NotifyApprove hash={hash} />, {
 							position: "bottom-right",
@@ -293,7 +304,7 @@ class App extends Component
 						})
 					}
 				})
-			.on('confirmation', (confirmationNumber, receipt) => {
+				.on('confirmation', (confirmationNumber, receipt) => {
 					if (confirmationNumber !== null) {
 						txreceipt = receipt
 						txconfirmed = confirmationNumber
@@ -311,21 +322,21 @@ class App extends Component
 
 					}
 				})
-			.on('error', (error) => {
-				if (error !== null) {
-					txerror = error
-					toast(<NotifyError message={txerror.message} />,
-						{
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true
-						})
-					// this.afterApprove()
-					this.setState({ disabledStatus: false })
-				}
-			})
+				.on('error', (error) => {
+					if (error !== null) {
+						txerror = error
+						toast(<NotifyError message={txerror.message} />,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true
+							})
+						// this.afterApprove()
+						this.setState({ disabledStatus: false })
+					}
+				})
 		}
-		else{
+		else {
 			this.state.buyticket.send({ from: this.state.account })
 				.on('transactionHash', (hash) => {
 					if (hash !== null) {
@@ -366,8 +377,8 @@ class App extends Component
 					this.setState({ disabledStatus: false })
 				})
 		}
-		
-		 
+
+
 		// console.log(this.contracts)
 
 		// if (this.state.token) {	
@@ -639,7 +650,7 @@ class App extends Component
 		else {
 			body =
 				<Switch>
-					<Route exact path="/" render={props => <FindEvents  {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus}  />} />
+					<Route exact path="/" render={props => <FindEvents  {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus} />} />
 					<Route exact path="/findevents/:page" render={props => <FindEvents  {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus} />} />
 					<Route exact path="/pastevents/:page" component={PastEvents} />
 					<Route exact path="/mytickets/:page" component={MyTickets} />
@@ -695,6 +706,7 @@ class App extends Component
 			</Router>
 		);
 	}
+
 }
 App.contextTypes = {
 	drizzle: PropTypes.object
