@@ -97,6 +97,7 @@ class App extends Component {
 
 	async componentDidMount() {
 		this.loadBlockchainData();
+		setTimeout(()=>{console.log("this.state.account",this.state.account)},1000)
 	}
 
 	// componentWillUnmount(){
@@ -336,7 +337,9 @@ class App extends Component {
 					}
 				})
 		}
-		else {
+
+		else{
+			console.log("this.state.account ===>",this.state.account)
 			this.state.buyticket.send({ from: this.state.account })
 				.on('transactionHash', (hash) => {
 					if (hash !== null) {
