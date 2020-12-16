@@ -88,7 +88,6 @@ class App extends Component {
 			done:false,
 			error:false,
 			afterApprove:false,
-			intervalId:"",
 			getPhoenixDAO:'',
 		};
 		this.contracts = context.drizzle.contracts;
@@ -99,10 +98,6 @@ class App extends Component {
 		this.loadBlockchainData();
 		setTimeout(()=>{console.log("this.state.account",this.state.account)},1000)
 	}
-
-	componentWillUnmount(){
-		clearInterval(this.state.intervalId)
-	  }
 
 	componentWillUpdate() {
 		let sent_tx = this.state.sent_tx;
@@ -132,23 +127,9 @@ class App extends Component {
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
 			alert(`METAMASK NOT INSTALLED!!`);
 		} else {
-			// window.ethereum.on('connect', function (connectInfo) {
-			// 	console.log("hello")
-			// 	alert("connect")
-			// 	// window.location.reload();
-			// })
-
-
 
 			if (typeof ethereum !== 'undefined') {
-				// console.log("metamask")
-				console.log("here")
-
 				const a = await ethereum.enable();
-				console.log("here")
-				// if(a){
-				// 	window.location.reload()
-				// }
 				web3 = new Web3(ethereum);
 
 
@@ -172,31 +153,6 @@ class App extends Component {
 			window.ethereum.on('networkChanged', function (netId) {
 				window.location.reload();
 			})
-			let intervalId = setInterval(()=>{
-				console.log("typeof ethereum",typeof ethereum)
-				console.log("typeof web3 !== 'undefined'",typeof web3 !== 'undefined')
-				console.log("this.props.drizzleStatus.initialized",this.props.drizzleStatus.initialized)
-
-				console.log("Object.keys(this.props.accounts).length",Object.keys(this.props.accounts).length)
-				if(typeof ethereum !== 'undefined' &&  typeof web3 !== 'undefined')
-				console.log("before accounts",Object.keys(this.props.accounts).length)
-				console.log("before web3",window.web3.eth.getAccounts.length)
-				if(window.web3.eth.getAccounts.length>=1 && Object.keys(this.props.accounts).length<1){
-					window.location.reload();
-					// console.log("will reload")
-				}
-				// console.log("accounts",Object.keys(this.props.accounts).length)
-				console.log("web3",window.web3.eth.getAccounts.length)
-			},1000)
-			this.setState({ intervalId: intervalId })
-
-			
-			
-			// window.ethereum.on('chainChanged',function (chainId) {
-			// 	 window.location.reload();
-			// 	console.log("chainChanged")
-			// })
-
 			const accounts = await web3.eth.getAccounts()
 			this.setState({ account: accounts[0] });
 		}
