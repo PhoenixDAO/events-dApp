@@ -30,8 +30,11 @@ class FindEvents extends Component {
       active_length: '',
       isOldestFirst: false,
       event_copy: [],
+      prevPath: -1
     };
-
+    // const a = this.props.location.pathname.split("/")
+    // console.log("this.props.location",a[a.length-1])
+    console.log("this.props",this.props)
     this.contracts = context.drizzle.contracts;
     this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
     this.perPage = 6;
@@ -205,10 +208,11 @@ class FindEvents extends Component {
               let active = i === currentPage ? 'active' : '';
               links.push(
                 <li className={"page-item " + active} key={i}>
-                  <Link to={"/findevents/" + i} className="page-link" >{i}</Link>
+                  <Link to={"/findevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
                 </li>
               );
-              if (currentPage != 1) {
+              if (this.state.prevPath!=-1) {
+                console.log("prevPath",this.state.prevPath)
                 this.executeScroll({ behavior: "smooth", block: "start" });
               }
             }
@@ -219,10 +223,11 @@ class FindEvents extends Component {
               let active = i === currentPage ? 'active' : '';
               links.push(
                 <li className={"page-item " + active} key={i}>
-                  <Link to={"/findevents/" + i} className="page-link">{i}</Link>
+                  <Link to={"/findevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
                 </li>
               );
-              if (currentPage != 1) {
+              if (this.state.prevPath!=-1) {
+                console.log("prevPath",this.state.prevPath)
                 this.executeScroll({ behavior: "smooth", block: "start" });
               }
             }
@@ -232,10 +237,11 @@ class FindEvents extends Component {
               let active = i === currentPage ? 'active' : '';
               links.push(
                 <li className={"page-item " + active} key={i}>
-                  <Link to={"/findevents/" + i} className="page-link">{i}</Link>
+                  <Link to={"/findevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
                 </li>
               );
-              if (currentPage != 1) {
+              if (this.state.prevPath!=-1) {
+                console.log("prevPath",this.state.prevPath)
                 this.executeScroll({ behavior: "smooth", block: "start" });
               }
 
