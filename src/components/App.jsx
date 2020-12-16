@@ -76,20 +76,20 @@ class App extends Component {
 		this.state = {
 			sent_tx: [],
 			showSidebar: true,
-			account: [],
-			id: '',
-			fee: '',
-			token: '',
-			openEvents_Address: '',
-			buyticket: '',
-			approve: '',
-			createEvent: '',
-			upload: false,
-			done: false,
-			error: false,
-			afterApprove: false,
-			intervalId: "",
-			getPhoenixDAO: '',
+			account:[],
+			id:'',
+			fee:'',
+			token:'',
+			openEvents_Address:'',
+			buyticket:'',
+			approve:'',
+			createEvent:'',
+			upload:false,
+			done:false,
+			error:false,
+			afterApprove:false,
+			intervalId:"",
+			getPhoenixDAO:'',
 		};
 		this.contracts = context.drizzle.contracts;
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
@@ -100,12 +100,10 @@ class App extends Component {
 		setTimeout(()=>{console.log("this.state.account",this.state.account)},1000)
 	}
 
-	// componentWillUnmount(){
-	// 	clearInterval(interval)
-	// }
-	componentWillUnmount() {
+	componentWillUnmount(){
 		clearInterval(this.state.intervalId)
-	}
+	  }
+
 	componentWillUpdate() {
 		let sent_tx = this.state.sent_tx;
 		for (let i = 0; i < this.props.transactionStack.length; i++) {
@@ -174,32 +172,26 @@ class App extends Component {
 			window.ethereum.on('networkChanged', function (netId) {
 				window.location.reload();
 			})
+			let intervalId = setInterval(()=>{
+				console.log("typeof ethereum",typeof ethereum)
+				console.log("typeof web3 !== 'undefined'",typeof web3 !== 'undefined')
+				console.log("this.props.drizzleStatus.initialized",this.props.drizzleStatus.initialized)
 
-			let intervalId =
-				setInterval(() => {
-					console.log("typeof ethereum", typeof ethereum)
-					console.log("typeof web3 !== 'undefined'", typeof web3 !== 'undefined')
-					console.log("this.props.drizzleStatus.initialized", this.props.drizzleStatus.initialized)
-
-					console.log("Object.keys(this.props.accounts).length", Object.keys(this.props.accounts).length)
-					if (typeof ethereum !== 'undefined' &&
-						// this.props.drizzleStatus.initialized && 
-						typeof web3 !== 'undefined') {
-						console.log("before accounts", Object.keys(this.props.accounts).length)
-						console.log("before web3", window.web3.eth.getAccounts.length)
-						if (window.web3.eth.getAccounts.length >= 1 && Object.keys(this.props.accounts).length < 1) {
-							window.location.reload();
-							console.log("will reload")
-						}
-					}
-					// console.log("accounts",Object.keys(this.props.accounts).length)
-					console.log("web3", window.web3.eth.getAccounts.length)
-				}, 1000)
+				console.log("Object.keys(this.props.accounts).length",Object.keys(this.props.accounts).length)
+				if(typeof ethereum !== 'undefined' &&  typeof web3 !== 'undefined')
+				console.log("before accounts",Object.keys(this.props.accounts).length)
+				console.log("before web3",window.web3.eth.getAccounts.length)
+				if(window.web3.eth.getAccounts.length>=1 && Object.keys(this.props.accounts).length<1){
+					window.location.reload();
+					// console.log("will reload")
+				}
+				// console.log("accounts",Object.keys(this.props.accounts).length)
+				console.log("web3",window.web3.eth.getAccounts.length)
+			},1000)
 			this.setState({ intervalId: intervalId })
-			// console.log("intervalId ==>",this.state.intervalId)
 
-
-
+			
+			
 			// window.ethereum.on('chainChanged',function (chainId) {
 			// 	 window.location.reload();
 			// 	console.log("chainChanged")
@@ -337,7 +329,9 @@ class App extends Component {
 		}
 
 		else{
-			console.log("this.state.account ===>",this.state.account)
+			console.log("this.state.account ===>", this.state.buyticket)
+			
+			
 			this.state.buyticket.send({ from: this.state.account })
 				.on('transactionHash', (hash) => {
 					if (hash !== null) {

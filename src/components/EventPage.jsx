@@ -302,8 +302,8 @@ class EventPage extends Component {
 
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
-		// let temp = this.allowance();
-		// console.log("approve",balance)
+		let temp = this.allowance();
+		console.log("approve",balance)
 		console.log(
 			"buy",
 			this.props.contracts["OpenEvents"].getEvent[this.event].value[2]
@@ -318,7 +318,7 @@ class EventPage extends Component {
 					.value[3],
 				openEvents_address: this.contracts["OpenEvents"].address,
 				buyticket: this.contracts["OpenEvents"].methods.buyTicket(
-					this.props.id
+					this.props.match.params.id
 				),
 				approve: this.contracts["PHNX"].methods.approve(
 					this.contracts["OpenEvents"].address,
@@ -327,7 +327,9 @@ class EventPage extends Component {
 			},
 			async () => {
 				let temp=await this.allowance()
-				console.log("temp is ",temp)
+				console.log("temp is ",
+					this.props.id
+				)
 				if (await this.allowance() == 0) {
 					this.handleClickOpen();
 				} else {
