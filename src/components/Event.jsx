@@ -260,7 +260,9 @@ class Event extends Component {
 			"buy",
 			this.props.contracts["OpenEvents"].getEvent[this.event].value[2]
 		);
-
+		console.log("temp is ss",
+		this.props.id
+	)
 		this.setState(
 			{
 				fee: this.props.contracts["OpenEvents"].getEvent[this.event]
