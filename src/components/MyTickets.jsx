@@ -15,17 +15,19 @@ class MyTickets extends Component {
 	this.state = {
 		myTicket: [],
 		loading:true,
+		prevPath: -1
 	}
 		this.contracts = context.drizzle.contracts;
 		this.tickets = this.contracts['OpenEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
 		this.perPage = 6;
+		this.myRef = React.createRef()
 
 	}
 
   readMoreClick(location)
   {
     this.props.history.push(location);
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   }
 
   setLoader(){
@@ -45,6 +47,7 @@ class MyTickets extends Component {
 	}
 
   }
+  executeScroll = () => this.myRef.current.scrollIntoView()
 
 	render() {
 		let body = <PhoenixDAOLoader />;
@@ -95,9 +98,13 @@ class MyTickets extends Component {
                  		let active = i === currentPage ? 'active' : '';
                			links.push(
                 		<li className={"page-item " + active} key={i}>
-							<Link to={"/mytickets/" + i}  className="page-link">{i}</Link>
+							<Link to={"/mytickets/" + i}  onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
                 		</li>
-             				 );
+							  );
+							  if (this.state.prevPath!=-1) {
+								console.log("prevPath",this.state.prevPath)
+								this.executeScroll({ behavior: "smooth", block: "start" });
+							  }
             			}
           			}
 
@@ -106,9 +113,13 @@ class MyTickets extends Component {
               			let active = i === currentPage ? 'active' : '';
               			links.push(
                 			<li className={"page-item " + active} key={i}>
-								<Link to={"/mytickets/" + i}  className="page-link">{i}</Link>
+								<Link to={"/mytickets/" + i}  onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
                 			</li>
-              					);
+								  );
+								  if (this.state.prevPath!=-1) {
+									console.log("prevPath",this.state.prevPath)
+									this.executeScroll({ behavior: "smooth", block: "start" });
+								  }
            					}
           				}
 					else{
@@ -116,9 +127,13 @@ class MyTickets extends Component {
 						let active = i === currentPage ? 'active' : '';
 						links.push(
 							<li className={"page-item " + active} key={i}>
-								<Link to={"/mytickets/" + i}  className="page-link">{i}</Link>
+								<Link to={"/mytickets/" + i}  onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
 							</li>
 							);
+							if (this.state.prevPath!=-1) {
+								console.log("prevPath",this.state.prevPath)
+								this.executeScroll({ behavior: "smooth", block: "start" });
+							  }
 						}
        				}
 
@@ -143,7 +158,7 @@ class MyTickets extends Component {
 		}
 
 		return (
-			<div className="retract-page-inner-wrapper-alternative ticketDiv">
+			<div ref={this.myRef} className="retract-page-inner-wrapper-alternative ticketDiv">
 			<div className="my-tickets-page">
 				<h2><i className="fa fa-ticket-alt"></i> My Tickets</h2>
 				<hr />
@@ -155,7 +170,7 @@ class MyTickets extends Component {
 	componentDidMount(){
 		this._isMounted = true;
 		setTimeout(()=>this.setLoader(),1000);
-		window.scrollTo(0, 0);
+		// window.scrollTo(0, 0);
 	}
 
 	componentWillUnmount(){

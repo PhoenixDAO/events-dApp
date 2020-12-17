@@ -25,8 +25,8 @@ class Form extends Component {
 			description_length: 0,
 			organizer: '',
 			organizer_length: 0,
-			price: '',
-			dollarPrice: '',
+			price: '0',
+			dollarPrice: '0',
 			location: '',
 			time: 0,
 			// time:Math.floor(Date.now() / 1000),
@@ -219,14 +219,21 @@ class Form extends Component {
 
 		if (this.state.currency === 'phnx') {
 			let price = event.target.value;
+			console.log("event.target.value",event.target.value)
+			if(event.target.value < 1 && event.target.value >0){
+				price = Number(event.target.value).toFixed(6);
+				// price= Number(Number(event.target.value).toFixed(8)).toString()
+			}else {
+				price = event.target.value;
+			}
 			if (this.form.price.value.length > 16) {
 				price = price.slice(0, 16);
 			}
 			console.log("price", price);
 			this.setState({
-				price: price
+				price:price
 			}, () => console.log('price', this.state.price));
-
+			// console.log("event.target.value",price)
 			let number = numeral(event.target.value * this.state.PhoenixDAO_market.usd).format('0[.]000001');
 			if (isNaN(number)) {
 				number = numeral(0 * 0).format('0.00');
@@ -256,8 +263,10 @@ class Form extends Component {
 	}
 
 	restrictMinus = (e) => {
+		console.log("qwert e.which",e.which)
 		let inputKeyCode = e.keyCode ? e.keyCode : e.which;
-		if (inputKeyCode == 45) {
+		console.log("qwert inputKeyCode",e.which)
+		if (inputKeyCode == 45 || inputKeyCode== 101) {
 			e.preventDefault();
 		}
 	}
@@ -431,8 +440,8 @@ class Form extends Component {
 									<div className="input-group-prepend">
 										<span className="input-group-text"><img src={'/images/' + symbol} className="event_price-image" alt="" /></span>
 									</div>
-									{this.state.currency === 'phnx' && <input type="number" min="0.00000001" maxLength="15" pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
-									{this.state.currency === 'eth' && <input type="number" min="0.00000001" maxLength="15" pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
+									{this.state.currency === 'phnx' && <input type="number" min="0.000001" maxLength="15"  default="1" pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
+									{this.state.currency === 'eth' && <input type="number" min="0.000001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
 
 								</div>
 								{this.state.currency === 'phnx' && <div className="input-group mb-3">
