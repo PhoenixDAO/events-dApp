@@ -24,12 +24,14 @@ class MyEvents extends Component {
 			isOldestFirst: false,
 			isActive: true,
 			account: [],
-			dateNow: ''
+			dateNow: '',
+			prevPath: -1
 		};
 		this.contracts = context.drizzle.contracts;
 		this.events = this.contracts['OpenEvents'].methods.eventsOf.cacheCall(this.props.accounts[0]);
 		this.perPage = 6;
 		this.account = this.props.accounts[0];
+		this.myRef = React.createRef()
 
 		this.ActiveEvent = this.ActiveEvent.bind(this);
 		this.PastEvent = this.PastEvent.bind(this);
@@ -162,6 +164,7 @@ class MyEvents extends Component {
 			this.props.history.push("/myevents/" + 1)
 		})
 	}
+	executeScroll = () => this.myRef.current.scrollIntoView()
 	render() {
 		let body = <PhoenixDAOLoader />;
 
@@ -205,9 +208,13 @@ class MyEvents extends Component {
 							let active = i === currentPage ? 'active' : '';
 							links.push(
 								<li className={"page-item " + active} key={i}>
-									<Link to={"/myevents/" + i} className="page-link">{i}</Link>
+									<Link to={"/myevents/" + i} onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
 								</li>
 							);
+							if (this.state.prevPath!=-1) {
+								console.log("prevPath",this.state.prevPath)
+								this.executeScroll({ behavior: "smooth", block: "start" });
+							  }
 						}
 					}
 
@@ -216,9 +223,13 @@ class MyEvents extends Component {
 							let active = i === currentPage ? 'active' : '';
 							links.push(
 								<li className={"page-item " + active} key={i}>
-									<Link to={"/myevents/" + i} className="page-link">{i}</Link>
+									<Link to={"/myevents/" + i} onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
 								</li>
 							);
+							if (this.state.prevPath!=-1) {
+								console.log("prevPath",this.state.prevPath)
+								this.executeScroll({ behavior: "smooth", block: "start" });
+							  }
 						}
 					}
 					else {
@@ -226,9 +237,13 @@ class MyEvents extends Component {
 							let active = i === currentPage ? 'active' : '';
 							links.push(
 								<li className={"page-item " + active} key={i}>
-									<Link to={"/myevents/" + i} className="page-link">{i}</Link>
+									<Link to={"/myevents/" + i} onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
 								</li>
 							);
+							if (this.state.prevPath!=-1) {
+								console.log("prevPath",this.state.prevPath)
+								this.executeScroll({ behavior: "smooth", block: "start" });
+							  }
 						}
 					}
 					pagination =
@@ -254,7 +269,7 @@ class MyEvents extends Component {
 		return (
 			<div className="event-page-wrapper">
 
-				<h2 className="col-md-10"><i className="fa fa-calendar-alt "></i> My{this.state.isActive ? ' Active' : ' Past'}  Events</h2>
+				<h2 className="col-md-10" ref={this.myRef}><i className="fa fa-calendar-alt "></i> My{this.state.isActive ? ' Active' : ' Past'}  Events</h2>
 				<div className="input-group input-group-lg mb-2">
 					<button className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2" onClick={this.ActiveEvent} >Active Events</button>
 					<button className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2" onClick={this.PastEvent} >Past Events</button>
@@ -273,7 +288,7 @@ class MyEvents extends Component {
 	componentDidMount() {
 		this._isMounted = true;
 		this.loadBlockchain();
-		window.scrollTo(0, 0);
+		// window.scrollTo(0, 0);
 	}
 
 	componentWillUnmount() {
