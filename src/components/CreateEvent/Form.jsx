@@ -25,8 +25,8 @@ class Form extends Component {
 			description_length: 0,
 			organizer: '',
 			organizer_length: 0,
-			price: '0',
-			dollarPrice: '0',
+			price: '',
+			dollarPrice: '',
 			location: '',
 			time: 0,
 			// time:Math.floor(Date.now() / 1000),
@@ -139,7 +139,11 @@ class Form extends Component {
 
 	handleFile = (event) => {
 		let file = event.target.files[0];
+		if(!file){
+		console.log("file",file)
 
+			return
+		}
 		if (
 			file.size > 1024 * 1024 ||
 			(file.type !== 'image/jpeg' && file.type !== 'image/png')
@@ -220,15 +224,25 @@ class Form extends Component {
 		if (this.state.currency === 'phnx') {
 			let price = event.target.value;
 			console.log("event.target.value",event.target.value)
-			if(event.target.value < 1 && event.target.value >0){
-				price = Number(event.target.value).toFixed(6);
-				// price= Number(Number(event.target.value).toFixed(8)).toString()
-			}else {
-				price = event.target.value;
+			// if(event.target.value < 1 && event.target.value >0){
+			// 	price = Number(event.target.value).toFixed(6);
+			// 	// price= Number(Number(event.target.value).toFixed(8)).toString()
+			// }else {
+			// 	price = event.target.value;
+			// }
+			if(price.includes(".") && price.split(".")[1].split("").length>3){
+				event.preventDefault();
+				return
 			}
+			// if(price>0 && price<0.001){
+			// 	event.preventDefault()
+			// 	return
+			// }
 			if (this.form.price.value.length > 16) {
-				price = price.slice(0, 16);
+				event.preventDefault();
+				return
 			}
+			
 			console.log("price", price);
 			this.setState({
 				price:price
@@ -286,7 +300,7 @@ class Form extends Component {
 		if (this.form.description.value === '') form_validation.push('description');
 		if (this.state.wrong_file === true || this.state.file === null) form_validation.push('image');
 		if (this.state.time === 0) form_validation.push('time');
-		if (this.state.price === '') form_validation.push('price');
+		if (this.state.price === '' || this.state.price == 0) form_validation.push('price');
 		if (this.state.limited === true && this.form.seats.value < 1) form_validation.push('seats');
 		if (this.state.type === '') form_validation.push('type');
 
@@ -440,8 +454,8 @@ class Form extends Component {
 									<div className="input-group-prepend">
 										<span className="input-group-text"><img src={'/images/' + symbol} className="event_price-image" alt="" /></span>
 									</div>
-									{this.state.currency === 'phnx' && <input type="number" min="0.000001" maxLength="15"  default="1" pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
-									{this.state.currency === 'eth' && <input type="number" min="0.000001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
+									{this.state.currency === 'phnx' && <input type="number" min="0.0001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
+									{this.state.currency === 'eth' && <input type="number" min="0.0001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
 
 								</div>
 								{this.state.currency === 'phnx' && <div className="input-group mb-3">

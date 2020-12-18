@@ -170,7 +170,7 @@ class MyTickets extends Component {
 	componentDidMount(){
 		this._isMounted = true;
 		setTimeout(()=>this.setLoader(),1000);
-		// window.scrollTo(0, 0);
+		window.scrollTo(0, 0);
 	}
 
 	componentWillUnmount(){

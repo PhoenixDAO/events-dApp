@@ -31,6 +31,8 @@ class CheckUser extends Component {
 	}
 
 	checkManual = () => {
+		console.log("!this.address.value",!this.address.value)
+		console.log("!this.context.drizzle.web3.utils.isAddress(this.address.value)",!this.context.drizzle.web3.utils.isAddress(this.address.value))
 		if (!this.address.value || !this.context.drizzle.web3.utils.isAddress(this.address.value)) {
 			this.setState({wrong_address: true});
 		} else {
@@ -140,11 +142,12 @@ class CheckUser extends Component {
 
 		if (this.state.requests.ticketsOfUser || this.state.requests.listOfTickets) {
 			message = <div className="alert alert-secondary" role="alert"><i className="fas fa-spinner"></i> We are checking</div>;
-		} else if (this.state.requests.requestsDone) {
-			if(this.state.wrong_address){
-				message = <div className="alert alert-danger" role="alert"><i className="fas fa-times"></i> Invalid wallet address</div>;
-			}
-			else if (this.state.status) {
+		}
+		else if (this.state.wrong_address){
+			message = <div className="alert alert-danger" role="alert"><i className="fas fa-times"></i> Invalid wallet address</div>;
+		} 
+		else if (this.state.requests.requestsDone) {
+			if (this.state.status) {
 				message = <div className="alert alert-success" role="alert"><i className="fas fa-check-circle"></i> User has ticket to this event</div>;
 			} else {
 				message = <div className="alert alert-danger" role="alert"><i className="fas fa-times"></i> User has not ticket to this event</div>;
