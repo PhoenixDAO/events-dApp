@@ -239,9 +239,9 @@ class MyEvents extends Component {
 								<li className={"page-item " + active} key={i}>
 									<Link to={"/myevents/" + i} onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
 								</li>
-							);
+							);console.log("prevPath",this.state.prevPath)
 							if (this.state.prevPath!=-1) {
-								console.log("prevPath",this.state.prevPath)
+								// console.log("prevPath",this.state.prevPath)
 								this.executeScroll({ behavior: "smooth", block: "start" });
 							  }
 						}
@@ -288,7 +288,7 @@ class MyEvents extends Component {
 	componentDidMount() {
 		this._isMounted = true;
 		this.loadBlockchain();
-		// window.scrollTo(0, 0);
+		window.scrollTo(0, 0);
 	}
 
 	componentWillUnmount() {
