@@ -124,10 +124,20 @@ class Form extends Component {
 	}
 
 	handleCurrency = (event) => {
-		this.setState({
-			currency: event.target.value,
-			price: '0'
-		}, () => console.log('currency', this.state.currency, this.state.price));
+		console.log("handleCurrency====>",event.target.value)
+		if(event.target.value == "phnx"){
+			this.setState({
+				currency: event.target.value,
+				price: '',
+				dollarPrice:''
+			}, () => console.log('currency', this.state.currency, this.state.price));
+		}else{
+			this.setState({
+				currency: event.target.value,
+				price: '0'
+			}, () => console.log('currency', this.state.currency, this.state.price));
+		}
+		
 
 	}
 
@@ -300,7 +310,7 @@ class Form extends Component {
 		if (this.form.description.value === '') form_validation.push('description');
 		if (this.state.wrong_file === true || this.state.file === null) form_validation.push('image');
 		if (this.state.time === 0) form_validation.push('time');
-		if (this.state.price === '' || this.state.price == 0) form_validation.push('price');
+		if (this.state.price == '' ) form_validation.push('price');
 		if (this.state.limited === true && this.form.seats.value < 1) form_validation.push('seats');
 		if (this.state.type === '') form_validation.push('type');
 
@@ -386,25 +396,32 @@ class Form extends Component {
 
 						<div className="form-group">
 							<label htmlFor="name">Event Name:</label>
+							{warning.name && <small style={{color:"red"}} className="form-text text-muted color-red">Invalid name</small>}
+
 							<input type="text" className={"form-control " + warning.name} id="name" title="Event Name" value={this.state.title} onChange={this.titleChange} autoComplete="off" />
 							<small className="form-text text-muted">{this.state.title_length}/80 characters available.</small>
 						</div>
 						<div className="form-group">
 							<label htmlFor="description">Event Description:</label>
+							{warning.description && <small style={{color:"red"}} className="form-text text-muted color-red">Invalid description</small>}
 							<textarea className={"form-control " + warning.description} maxLength="500" id="description" title="Event Description" rows="5" ref={(input) => this.form.description = input} onChange={this.descriptionChange} autoComplete="off"></textarea>
 							<small className="form-text text-muted">{this.state.description_length}/500 characters available.</small>
 						</div>
 						<div className="form-group">
 							<label htmlFor="location">Event Location:</label>
+							{warning.location && <small style={{color:"red"}} className="form-text text-muted color-red">Invalid location</small>}
 							<input type="text" className={"form-control " + warning.location} id="location" title="Event Location" onChange={this.locationChange} autoComplete="off" />
 						</div>
 						<div className="form-group">
 							<label htmlFor="description">Event Date and Time:</label>
+							{warning.time && <small style={{color:"red"}} className="form-text text-muted color-red">Invalid date and time</small>}
 							<Datetime value={this.state.dateDisplay} closeOnSelect={true} onChange={this.handleDate} inputProps={{ className: "form-control " + warning.time, title: "Event Date and Time" }} autoComplete="off" />
 						</div>
 						<div className="form-group">
 							<p>Event Cover Image:</p>
+							{warning.image && <small style={{color:"red"}} className="form-text text-muted color-red">No image selected</small>}
 							<div className="custom-file">
+								
 								<input type="file" className={"custom-file-input " + warning.image} id="customFile" title="Event Cover Image" onChange={this.handleFile} autoComplete="off" />
 								<label className="custom-file-label" htmlFor="customFile">{file_label}</label>
 							</div>
@@ -412,6 +429,7 @@ class Form extends Component {
 						</div>
 						<div className="form-group">
 							<label htmlFor="organizer">Organizer Name:</label>
+							{warning.organizer && <small style={{color:"red"}} className="form-text text-muted color-red">Invalid organizer name</small>}
 							<input type="text" className={"form-control " + warning.organizer} id="organizer" title="Organizer Name" value={this.state.organizer} onChange={this.organizerChange} autoComplete="off" />
 							<small className="form-text text-muted">{this.state.organizer_length}/100 characters available.</small>
 						</div>
@@ -450,16 +468,20 @@ class Form extends Component {
 						<div className="form-group row">
 							<div className="col-lg-6">
 								<label htmlFor="price">Ticket Price:</label>
+								{/* {warning.price && <small  className="form-text text-muted color-red">Invalid price</small>} */}
+								{this.state.currency === 'phnx' &&<small className= {warning.price? "form-text text-muted color-red": "form-text text-muted"}>Value must be 0 or &gt; 0.001</small>}
 								<div className="input-group mb-3">
 									<div className="input-group-prepend">
 										<span className="input-group-text"><img src={'/images/' + symbol} className="event_price-image" alt="" /></span>
 									</div>
-									{this.state.currency === 'phnx' && <input type="number" min="0.0001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />}
+									{this.state.currency === 'phnx' && <input type="number" min="0.0001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />
+									}
+									
 									{this.state.currency === 'eth' && <input type="number" min="0.0001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
-
 								</div>
 								{this.state.currency === 'phnx' && <div className="input-group mb-3">
 									<div className="input-group-prepend">
+									
 										<span className="input-group-text"><img src={'/images/dollarsign.png'} className="event_price-image" alt="" /></span>
 									</div>
 									<div className={"form-control " + warning.price} title="Price in USD">{this.state.dollarPrice}</div>
