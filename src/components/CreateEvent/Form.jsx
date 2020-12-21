@@ -143,7 +143,8 @@ class Form extends Component {
 
 	handleLimited = () => {
 		this.setState({
-			limited: !this.state.limited
+			limited: !this.state.limited,
+			seats: undefined
 		});
 	}
 
@@ -280,7 +281,11 @@ class Form extends Component {
 
 	ticketsChange = (event) => {
 		let seats = this.form.seats.value;
-
+		console.log("seats.length", seats.length)
+		if (seats && seats.length > 16) {
+			event.preventDefault();
+			return
+		}
 		this.setState({
 			seats: seats
 		});
@@ -290,12 +295,13 @@ class Form extends Component {
 		console.log("qwert e.which",e.which)
 		let inputKeyCode = e.keyCode ? e.keyCode : e.which;
 		console.log("qwert inputKeyCode",e.which)
-		if (inputKeyCode == 45 || inputKeyCode== 101) {
+		if (inputKeyCode == 45 || inputKeyCode==69 || inputKeyCode== 101) {
 			e.preventDefault();
 		}
 	}
 	handleForm = (event) => {
 		event.preventDefault();
+		console.log("state===>",typeof this.state.seats)
 		// const todayDate=new Date((parseInt(this.state.currentBlock.timestamp, 10) * 1000));
 		// console.log('moment.unix()',moment.unix().toString());
 		// let todayDate = moment.unix(this.state.currentBlock.timestamp).format();
@@ -310,7 +316,7 @@ class Form extends Component {
 		if (this.form.description.value === '') form_validation.push('description');
 		if (this.state.wrong_file === true || this.state.file === null) form_validation.push('image');
 		if (this.state.time === 0) form_validation.push('time');
-		if (this.state.price == '' ) form_validation.push('price');
+		if (this.state.currency=="phnx" && this.state.price == '' || this.state.currency=="phnx" && this.state.price == '0' || this.state.price == '0.0' || this.state.price == '0.00' || this.state.price == '0.000') form_validation.push('price');
 		if (this.state.limited === true && this.form.seats.value < 1) form_validation.push('seats');
 		if (this.state.type === '') form_validation.push('type');
 
@@ -469,7 +475,7 @@ class Form extends Component {
 							<div className="col-lg-6">
 								<label htmlFor="price">Ticket Price:</label>
 								{/* {warning.price && <small  className="form-text text-muted color-red">Invalid price</small>} */}
-								{this.state.currency === 'phnx' &&<small className= {warning.price? "form-text text-muted color-red": "form-text text-muted"}>Value must be 0 or &gt; 0.001</small>}
+								{this.state.currency === 'phnx' &&<small className= {warning.price? "form-text text-muted color-red": "form-text text-muted"}>Value must be greater than 0.001</small>}
 								<div className="input-group mb-3">
 									<div className="input-group-prepend">
 										<span className="input-group-text"><img src={'/images/' + symbol} className="event_price-image" alt="" /></span>
@@ -504,7 +510,8 @@ class Form extends Component {
 							<div className="row mt-3">
 								<div className="col-lg-6">
 									<label htmlFor="seats">Tickets available:</label>
-									<input type="number" className={"form-control " + warning.seats} min="1" pattern="^[1-9]" onKeyPress={this.restrictMinus} id="seats" title="Tickets available" disabled={!this.state.limited} ref={(input) => this.form.seats = input} autoComplete="off" onChange={this.ticketsChange} />
+									{this.state.limited &&<small className= {warning.seats? "form-text text-muted color-red": "form-text text-muted"}>Value must be greater than 1</small>}
+									<input type="number" className={"form-control " + warning.seats} min="1" maxLength="15" value={this.form.seats? this.form.seats.value: ""} pattern="^[1-9]" onKeyPress={this.restrictMinus} id="seats" title="Tickets available" disabled={!this.state.limited} ref={(input) => this.form.seats = input} autoComplete="off" onChange={this.ticketsChange} />
 								</div>
 							</div>
 						</div>
