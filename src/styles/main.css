@@ -51,7 +51,32 @@ h5 a {
 	font-weight: 900;
 	color: #333333;
 }
+@media screen and (max-width:1188px )and (min-width:999px){
+	/* .time{	
+		font-size:17px;
+	
+	} */
+	.card-body{
+		padding-left: 7px;
+		padding-right: 6px;
+	}
 
+	/* .text-danger,.text-center{
+		height:60px
+	} */
+}
+.mydate-time{
+	height: 40px;
+    align-items: center;
+    justify-content: center;
+	display: flex;
+	margin-bottom:0px ;
+}
+@media screen and (max-width:1006px ){
+	.mydate-time{
+	margin-bottom: 15px;
+	}
+}
 textarea:focus,
 input:focus,
 a:focus,

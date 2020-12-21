@@ -261,12 +261,15 @@ class Ticket extends Component {
 				card_body = (
 					<div>
 						<div className="card-body">
-							<h5 className={"text-center " + timeClass}>
+							<h5 className={"mydate-time text-center " + timeClass}>
+								<div>
 								<i className="far fa-calendar-alt"></i>
-								<span className="pl-2">
+								<span className=" pl-2">
 									{date.toLocaleDateString()} at{" "}
-									{date.toLocaleTimeString()}
-								</span>
+									{date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+								</span>	
+								</div>
+								
 							</h5>
 							<div style={{height:"22px"}}>
 							{timeStatus}
