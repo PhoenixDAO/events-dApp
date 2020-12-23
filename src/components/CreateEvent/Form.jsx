@@ -513,7 +513,7 @@ class Form extends Component {
 									{this.state.limited &&<small className= {warning.seats? "form-text text-muted color-red": "form-text text-muted"}>Value must be greater than 1</small>}
 									<input type="number" className={"form-control " + warning.seats} min="1" maxLength="15" value={this.form.seats? this.form.seats.value: ""} pattern="^[1-9]" onKeyPress={this.restrictMinus} id="seats" title="Tickets available" disabled={!this.state.limited} ref={(input) => this.form.seats = input} autoComplete="off" onChange={this.ticketsChange} />
 								</div>
-							</div>
+							</div> 	
 						</div>
 						{alert}
 						<br />
