@@ -22,6 +22,7 @@ class TopicsLandingPage extends Component {
   topicClick(slug) {
     this.props.history.push("/topic/"+slug+"/"+1);
     window.scrollTo(0, 180);
+    
   }
 
   caruselClick(location)
