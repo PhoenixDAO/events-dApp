@@ -81,6 +81,7 @@ class TopicLandingPage extends Component
 
   topicClick(slug)
   {
+    this.ActiveEvent()
     this.props.history.push("/topic/"+slug+"/"+1);
     this.theTopic = this.getTopicData();
     this.loadBlockchain();
