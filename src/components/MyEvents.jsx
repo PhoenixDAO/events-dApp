@@ -269,7 +269,7 @@ class MyEvents extends Component {
 		return (
 			<div className="event-page-wrapper">
 
-				<h2 className="col-md-10" ref={this.myRef}><i className="fa fa-calendar-alt "></i> My{this.state.isActive ? ' Active' : ' Past'}  Events</h2>
+				<h2 className="col-md-10" ref={this.myRef}>{this.state.isActive ? <i className="fa fa-calendar-alt "></i> :  <i className="fa fa-archive"></i>} My{this.state.isActive ? ' Active' : ' Past'}  Events</h2>
 				<div className="input-group input-group-lg mb-2">
 					<button className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2" onClick={this.ActiveEvent} >Active Events</button>
 					<button className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2" onClick={this.PastEvent} >Past Events</button>

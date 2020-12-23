@@ -16,17 +16,28 @@ class TopicsLandingPage extends Component {
 	    this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
 	    this.perPage = 6;
       this.topicClick = this.topicClick.bind(this);
+      this.compare = this.compare.bind(this)
 	}
 
   topicClick(slug) {
     this.props.history.push("/topic/"+slug+"/"+1);
     window.scrollTo(0, 180);
+    
   }
 
   caruselClick(location)
   {
     this.props.history.push(location);
     window.scrollTo(0, 80);
+  }
+  compare( a, b ) {
+    if ( a.last_nom < b.last_nom ){
+      return -1;
+    }
+    if ( a.last_nom > b.last_nom ){
+      return 1;
+    }
+    return 0;
   }
 
 	render() {
@@ -156,13 +167,13 @@ class TopicsLandingPage extends Component {
       </div>
       <br /><br />
 
-      <h2><i className="fa fa-calendar-alt"></i> Alls Topics</h2>
+      <h2><i className="fa fa-calendar-alt"></i> All Topics</h2>
       <hr />
       <div className="row user-list mt-4">
 
         {
           topicsJson && topicsJson
-            .filter(topic => topic.popular === "false")
+            // .filter(topic => topic.popular === "false")
             .map((topic, index) => {
               return (
                 <div className="col-lg-4 pb-4 d-flex align-items-stretch" key={topic.slug}>

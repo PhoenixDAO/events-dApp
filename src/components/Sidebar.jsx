@@ -79,6 +79,7 @@ class Sidebar extends Component {
 
 
 		}
+		console.log("this.context.router.route.location.pathname",this.context.router.route.location.pathname.split("/pastevents/"))
 		if (this.props.account.length === 0)
 
 			return (
@@ -98,7 +99,9 @@ class Sidebar extends Component {
 									onClick={() => { this.sidebarClick(this) }}><i className="fa fa-search"></i> <span className="toggleHidden">Events</span></NavLink>
 							</li>
 							<li>
-								<NavLink to="/pastevents/1" className="nav-link" activeClassName="nav-link-active" onClick={() => { this.sidebarClick(this) }}><i className="fa fa-archive"></i> <span className="toggleHidden">Past Events</span></NavLink>
+								<NavLink to="/pastevents/1" className="nav-link" activeClassName="nav-link-active" 
+								isActive={() => this.context.router.route.location.pathname.split("/pastevents/").length > 1 }
+								onClick={() => { this.sidebarClick(this) }}><i className="fa fa-archive"></i> <span className="toggleHidden">Past Events</span></NavLink>
 							</li>
 							<li>
 								<NavLink to="/topics" className="nav-link" activeClassName="nav-link-active"
@@ -160,7 +163,9 @@ class Sidebar extends Component {
 						</li>
 
 						<li>
-							<NavLink to="/pastevents/1" className="nav-link" activeClassName="nav-link-active" onClick={() => { this.sidebarClick(this) }}><i className="fa fa-archive" title="Past Events"></i> <span className="toggleHidden">Past Events</span></NavLink>
+							<NavLink to="/pastevents/1" className="nav-link" activeClassName="nav-link-active" 
+							isActive={() => this.context.router.route.location.pathname.split("/pastevents/").length > 1 }
+							onClick={() => { this.sidebarClick(this) }}><i className="fa fa-archive" title="Past Events"></i> <span className="toggleHidden">Past Events</span></NavLink>
 						</li>
 						<li>
 							<NavLink to="/topics" className="nav-link" activeClassName="nav-link-active"
@@ -192,10 +197,14 @@ class Sidebar extends Component {
 							<NavLink to="/createevent" className="nav-link" activeClassName="nav-link-active" onClick={() => { this.sidebarClick(this) }}><i className="fa fa-edit" title="Create Event"></i> <span className="toggleHidden">Create Event</span></NavLink>
 						</li>
 						<li >
-							<NavLink to="/myevents/1" className="nav-link" activeClassName="nav-link-active" onClick={() => { this.sidebarClick(this) }}><i className="fas fa-list-alt" title="My Created Events"></i> <span className="toggleHidden">My Created Events</span></NavLink>
+							<NavLink to="/myevents/1" className="nav-link" activeClassName="nav-link-active" 
+							isActive={() => this.context.router.route.location.pathname.split("/myevents/").length > 1 }
+							onClick={() => { this.sidebarClick(this) }}><i className="fas fa-list-alt" title="My Created Events"></i> <span className="toggleHidden">My Created Events</span></NavLink>
 						</li>
 						<li>
-							<NavLink to="/mytickets/1" className="nav-link" activeClassName="nav-link-active" onClick={() => { this.sidebarClick(this) }}><i className="fa fa-ticket-alt" title="My Tickets"></i> <span className="toggleHidden">My Tickets</span></NavLink>
+							<NavLink to="/mytickets/1" className="nav-link" activeClassName="nav-link-active" 
+							isActive={() => this.context.router.route.location.pathname.split("/mytickets/").length > 1 }
+							onClick={() => { this.sidebarClick(this) }}><i className="fa fa-ticket-alt" title="My Tickets"></i> <span className="toggleHidden">My Tickets</span></NavLink>
 						</li>
 
 					</ul>
