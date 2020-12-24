@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
+import {FacebookCircularProgress} from './TimeAndDateLoader'
 
 // import { Link } from 'react-router-dom';
 // import ReactTooltip from 'react-tooltip'
@@ -291,6 +292,15 @@ class Form extends Component {
 		});
 	}
 
+	restrictMinusForTickets= (e)=>{
+		console.log("qwert e.which",e.which)
+		let inputKeyCode = e.keyCode ? e.keyCode : e.which;
+		console.log("qwert inputKeyCode",e.which)
+		if (inputKeyCode == 45 || inputKeyCode==69 || inputKeyCode== 101 || inputKeyCode==190) {
+			e.preventDefault();
+		}
+	}
+
 	restrictMinus = (e) => {
 		console.log("qwert e.which",e.which)
 		let inputKeyCode = e.keyCode ? e.keyCode : e.which;
@@ -420,8 +430,14 @@ class Form extends Component {
 						</div>
 						<div className="form-group">
 							<label htmlFor="description">Event Date and Time:</label>
+							{!this.state.currentBlock && <div style={{display:'flex',flexDirection:'row',justifyContent:'left',alignItem:'end'}}>
+							<FacebookCircularProgress/>
+							<small style={{color:"#1a90ff",marginTop:"0"}} className="form-text text-muted ">Loading current timestamp, please wait ...</small>
+							
+							</div>}
 							{warning.time && <small style={{color:"red"}} className="form-text text-muted color-red">Invalid date and time</small>}
-							<Datetime value={this.state.dateDisplay} closeOnSelect={true} onChange={this.handleDate} inputProps={{ className: "form-control " + warning.time, title: "Event Date and Time" }} autoComplete="off" />
+							
+							<Datetime value={this.state.dateDisplay} onChange={this.handleDate} inputProps={{ disabled:!this.state.currentBlock,className: "form-control " + warning.time, title: "Event Date and Time" }} autoComplete="off" />
 						</div>
 						<div className="form-group">
 							<p>Event Cover Image:</p>
@@ -475,7 +491,7 @@ class Form extends Component {
 							<div className="col-lg-6">
 								<label htmlFor="price">Ticket Price:</label>
 								{/* {warning.price && <small  className="form-text text-muted color-red">Invalid price</small>} */}
-								{this.state.currency === 'phnx' &&<small className= {warning.price? "form-text text-muted color-red": "form-text text-muted"}>Value must be greater than 0.001</small>}
+								{this.state.currency === 'phnx' &&<small style={{marginTop:"0"}} className= {warning.price? "form-text text-muted color-red": "form-text text-muted"}>Value must be greater than 0.001</small>}
 								<div className="input-group mb-3">
 									<div className="input-group-prepend">
 										<span className="input-group-text"><img src={'/images/' + symbol} className="event_price-image" alt="" /></span>
@@ -510,8 +526,8 @@ class Form extends Component {
 							<div className="row mt-3">
 								<div className="col-lg-6">
 									<label htmlFor="seats">Tickets available:</label>
-									{this.state.limited &&<small className= {warning.seats? "form-text text-muted color-red": "form-text text-muted"}>Value must be greater than 0</small>}
-									<input type="number" className={"form-control " + warning.seats} min="1" maxLength="15" value={this.form.seats? this.form.seats.value: ""} pattern="^[1-9]" onKeyPress={this.restrictMinus} id="seats" title="Tickets available" disabled={!this.state.limited} ref={(input) => this.form.seats = input} autoComplete="off" onChange={this.ticketsChange} />
+									{this.state.limited &&<small style={{marginTop:"0"}}className= {warning.seats? "form-text text-muted color-red": "form-text text-muted"}>Value must be greater than 0</small>}
+									<input type="number" className={"form-control " + warning.seats} min="1" maxLength="15" value={this.form.seats? this.state.seats: ""} pattern="^[1-9]" onKeyDown={(event)=> event.key==='.'? event.preventDefault() : null} onKeyPress={this.restrictMinusForTickets} id="seats" title="Tickets available" disabled={!this.state.limited} ref={(input) => this.form.seats = input} autoComplete="off" onChange={this.ticketsChange} />
 								</div>
 							</div> 	
 						</div>

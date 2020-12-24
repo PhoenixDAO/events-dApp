@@ -391,8 +391,10 @@ class FindEvents extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    window.scroll(0, 0);
     this.loadBlockchain();
+    if (this.state.prevPath==-1) {
+      window.scrollTo(0,0)
+    }
   }
 
   componentWillUnmount() {

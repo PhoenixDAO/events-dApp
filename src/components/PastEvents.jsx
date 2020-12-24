@@ -27,13 +27,15 @@ class PastEvents extends Component {
       past_length: '',
       isOldestFirst: false,
       past_events: [],
-      past_events_copy: []
+      past_events_copy: [],
+      prevPath: -1
 
     };
     this.contracts = context.drizzle.contracts;
     this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
     this.perPage = 6;
     this.topicClick = this.topicClick.bind(this);
+    this.myRef = React.createRef()
   }
 
   topicClick(slug) {
@@ -52,8 +54,9 @@ class PastEvents extends Component {
 
   caruselClick(location) {
     this.props.history.push(location);
-    window.scrollTo(0, 80);
+    // window.scrollTo(0, 80);
   }
+  executeScroll = () => this.myRef.current.scrollIntoView()
 
   //Load Blockchain Data
   async loadBlockchain() {
@@ -181,9 +184,14 @@ class PastEvents extends Component {
               let active = i === currentPage ? 'active' : '';
               links.push(
                 <li className={"page-item " + active} key={i}>
-                  <Link to={"/pastevents/" + i} className="page-link">{i}</Link>
+                  <Link to={"/pastevents/" + i} onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
                 </li>
               );
+              console.log("prevPath",this.state.prevPath)
+              if (this.state.prevPath!=-1) {
+                console.log("prevPath",this.state.prevPath)
+                this.executeScroll({ behavior: "smooth", block: "start" });
+              }
             }
           }
 
@@ -192,9 +200,14 @@ class PastEvents extends Component {
               let active = i === currentPage ? 'active' : '';
               links.push(
                 <li className={"page-item " + active} key={i}>
-                  <Link to={"/pastevents/" + i} className="page-link">{i}</Link>
+                  <Link to={"/pastevents/" + i} onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
                 </li>
               );
+              console.log("prevPath",this.state.prevPath)
+              if (this.state.prevPath!=-1) {
+                console.log("prevPath",this.state.prevPath)
+                this.executeScroll({ behavior: "smooth", block: "start" });
+              }
             }
           }
           else {
@@ -202,9 +215,14 @@ class PastEvents extends Component {
               let active = i === currentPage ? 'active' : '';
               links.push(
                 <li className={"page-item " + active} key={i}>
-                  <Link to={"/pastevents/" + i} className="page-link">{i}</Link>
+                  <Link to={"/pastevents/" + i} onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
                 </li>
               );
+              console.log("prevPath",this.state.prevPath)
+              if (this.state.prevPath!=-1) {
+                console.log("prevPath",this.state.prevPath)
+                this.executeScroll({ behavior: "smooth", block: "start" });
+              }
             }
           }
           pagination =
@@ -276,7 +294,7 @@ class PastEvents extends Component {
 
           <br /><br />
 
-          <div className="input-group input-group-lg">
+          <div className="input-group input-group-lg" ref={this.myRef}>
             <div className="input-group-prepend">
               <span className="input-group-text search-icon" id="inputGroup-sizing-lg"><i className="fa fa-search"></i>&nbsp;Search </span>
             </div>
@@ -347,7 +365,9 @@ class PastEvents extends Component {
   componentDidMount() {
     this._isMounted = true;
     this.loadBlockchain();
-    window.scrollTo(0, 0);
+    if (this.state.prevPath==-1) {
+      window.scrollTo(0,0)
+    }
 
   }
 
