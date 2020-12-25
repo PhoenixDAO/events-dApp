@@ -94,7 +94,7 @@ class Ticket extends Component {
 	};
 
 	getImage = () => {
-		let image = "/images/loading_ipfs.png";
+		let image = "/images/loading_image_ipfs.png";
 		if (this.state.ipfs_problem) image = "/images/problem_ipfs.png";
 		if (this.state.image !== null) image = this.state.image;
 		return image;
