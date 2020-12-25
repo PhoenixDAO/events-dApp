@@ -59,7 +59,7 @@ class Sidebar extends Component {
 				<div className="user-status-icon">
 					<i className="fas fa-plug"></i>
 				</div>
-				<p className="mt-3 small connection"><span className="toggleHidden">Ethereum network not connected. Please connect with Meta Mask.</span></p>
+				<p className="mt-3 small connection"><span className="toggleHidden">You are not connected to the Ethereum network. Please check MetaMask.</span></p>
 			</div>
 			;
 

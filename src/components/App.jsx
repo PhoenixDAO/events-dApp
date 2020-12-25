@@ -39,6 +39,7 @@ import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
 import PropTypes from "prop-types";
+import Popup from 'react-popup';
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
@@ -125,7 +126,8 @@ class App extends Component {
 	async loadBlockchainData() {
 		console.log("window.ethereum", window.ethereum);
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
-			alert(`METAMASK NOT INSTALLED!!`);
+			let a = <a href="https://www.w3schools.com/">Visit W3Schools.com!</a>
+			alert(`MetaMask is not installed. Please install MetaMask to continue. ${a}`, );
 		} else {
 			if (typeof ethereum !== "undefined") {
 				const a = await ethereum.enable();
