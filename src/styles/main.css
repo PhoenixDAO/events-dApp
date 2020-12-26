@@ -315,9 +315,9 @@ input[type="number"] {
 	/* margin-right: -60px; */
 }
 
-.carousel:hover {
+/* .carousel:hover {
 	transform: scale(1.05);
-}
+} */
 
 .carousel:before {
 	content: "";
@@ -1197,7 +1197,7 @@ button.read-more:hover {
 	.event-hero-sidebar .event-image {
 		height: 40vw !important;
 		width: inherit;
-		object-fit: contain;
+		object-fit: fill;
 	}
 }
 

@@ -39,7 +39,7 @@ import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
 import PropTypes from "prop-types";
-import Popup from 'react-popup';
+import Snackbar from './Snackbar';
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
@@ -92,9 +92,11 @@ class App extends Component {
 			error: false,
 			afterApprove: false,
 			getPhoenixDAO: "",
+			openSnackbar:false
 		};
 		this.contracts = context.drizzle.contracts;
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
+		this.handleSnackbarClose=this.handleSnackbarClose.bind(this)
 	}
 
 	async componentDidMount() {
@@ -126,8 +128,7 @@ class App extends Component {
 	async loadBlockchainData() {
 		console.log("window.ethereum", window.ethereum);
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
-			let a = <a href="https://www.w3schools.com/">Visit W3Schools.com!</a>
-			alert(`MetaMask is not installed. Please install MetaMask to continue. ${a}`, );
+			this.setState({openSnackbar:true})
 		} else {
 			if (typeof ethereum !== "undefined") {
 				const a = await ethereum.enable();
@@ -564,6 +565,9 @@ class App extends Component {
 			() => console.log()
 		);
 	};
+	handleSnackbarClose = () =>{
+		this.setState({openSnackbar:false})
+	}
 
 	render() {
 		let body;
@@ -799,7 +803,9 @@ class App extends Component {
 		}
 
 		return (
+			
 			<Router>
+				
 				<div id="wrapper" className="toggled">
 					<Sidebar
 						connection={!connecting}
@@ -826,7 +832,9 @@ class App extends Component {
 						</div>
 						<div className="container-fluid">
 							<div className="page-wrapper-inner">
-								<div>{body}</div>
+								<div>{body}
+			<Snackbar open={this.state.openSnackbar} message={"MetaMask is not installed. Please install MetaMask to continue."}  handleClose={this.handleSnackbarClose}/>
+								</div>
 							</div>
 						</div>
 					</div>
