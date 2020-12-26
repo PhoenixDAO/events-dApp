@@ -185,7 +185,7 @@ input[type="number"] {
 .event-image {
 	/* width: 370px; */
 	height: 225px;
-	object-fit: cover;
+	object-fit: fill;
 }
 
 .event-title {
