@@ -58,7 +58,11 @@ class FindEvents extends Component {
 
   ctasClick(slug) {
     this.props.history.push("/" + slug);
-    window.scrollTo(0, 0);
+    window.scroll({
+			top: 0,
+			left: 100,
+			behavior: 'smooth'
+		  });
   }
 
   caruselClick(location) {
@@ -393,7 +397,11 @@ class FindEvents extends Component {
     this._isMounted = true;
     this.loadBlockchain();
     if (this.state.prevPath==-1) {
-      window.scrollTo(0,0)
+      window.scroll({
+        top: 0,
+        left: 100,
+        behavior: 'smooth'
+        });
     }
   }
 

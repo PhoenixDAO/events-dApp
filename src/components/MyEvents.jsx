@@ -298,7 +298,11 @@ class MyEvents extends Component {
 	componentDidMount() {
 		this._isMounted = true;
 		this.loadBlockchain();
-		window.scrollTo(0, 0);
+		window.scroll({
+			top: 0,
+			left: 100,
+			behavior: 'smooth'
+		  });
 	}
 
 	componentWillUnmount() {

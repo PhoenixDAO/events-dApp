@@ -472,7 +472,7 @@ class Event extends Component {
 									alt="Event Price Icon"
 								/>{" "}
 								{event_data[3]
-									? "" + numeral(price).format("0,0")
+									? "" + numeral(price).format('0.000')
 									: "" + price}
 								{event_data[3] ? " or " : ""}
 								{event_data[3] ? (
@@ -488,13 +488,13 @@ class Event extends Component {
 									? numeral(
 											price *
 												this.state.PhoenixDAO_market.usd
-									  ).format("0,0.00")
+									  ).format('0.000')
 									: ""}
 							</li>
 							<li className="list-group-item date">
 								<strong>Date:</strong>{" "}
 								{date.toLocaleDateString()} at{" "}
-								{date.toLocaleTimeString()}
+									{date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
 							</li>
 							<li className="list-group-item">
 								<strong>Tickets Sold:</strong> {event_data[6]}/

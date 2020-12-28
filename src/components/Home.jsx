@@ -14,7 +14,11 @@ class Home extends Component {
 	}
 
 	componentDidMount() {
-		window.scrollTo(0, 0);
+		window.scroll({
+			top: 0,
+			left: 100,
+			behavior: 'smooth'
+		  });
 	}
 }
 export default Home;

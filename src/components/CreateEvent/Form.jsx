@@ -256,19 +256,20 @@ class Form extends Component {
 			}
 			
 			console.log("price", price);
-			this.setState({
-				price:price
-			}, () => console.log('price', this.state.price));
-			// console.log("event.target.value",price)
-			let number = numeral(event.target.value * this.state.PhoenixDAO_market.usd).format('0[.]000001');
-			if (isNaN(number)) {
-				number = numeral(0 * 0).format('0.00');
-				this.setState({ dollarPrice: number })
-				console.log(this.state.dollarPrice)
-			}
-			else {
-				this.setState({ dollarPrice: number })
-			}
+				this.setState({
+					price:price
+				}, () => console.log('price', this.state.price));
+				// console.log("event.target.value",price)
+				let number = numeral(event.target.value * this.state.PhoenixDAO_market.usd).format('0[.]000001');
+				if (isNaN(number)) {
+					number = numeral(0 * 0).format('0.00');
+					this.setState({ dollarPrice: number })
+					console.log(this.state.dollarPrice)
+				}
+				else {
+					this.setState({ dollarPrice: number })
+				}
+			
 
 		}
 		else {
@@ -303,10 +304,15 @@ class Form extends Component {
 
 	restrictMinus = (e) => {
 		console.log("qwert e.which",e.which)
-		let inputKeyCode = e.keyCode ? e.keyCode : e.which;
-		console.log("qwert inputKeyCode",e.which)
-		if (inputKeyCode == 45 || inputKeyCode==69 || inputKeyCode== 101) {
+		let inputKeyCode =e.which;
+		console.log("qwert key",e.key)
+		const allowedKeyCodes = [46,48,49,50,51,52,53,54,55,56,57]
+		if(inputKeyCode==46 && this.state.price.split(".").length>1){
 			e.preventDefault();
+		}
+		if (!allowedKeyCodes.includes(inputKeyCode)) {
+			e.preventDefault();
+
 		}
 	}
 	handleForm = (event) => {
@@ -496,7 +502,7 @@ class Form extends Component {
 									<div className="input-group-prepend">
 										<span className="input-group-text"><img src={'/images/' + symbol} className="event_price-image" alt="" /></span>
 									</div>
-									{this.state.currency === 'phnx' && <input type="number" min="0.0001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => this.form.price = input} autoComplete="off" onChange={this.priceChange} />
+									{this.state.currency === 'phnx' && <input type="number" min="0.0001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in PHNX"} ref={(input) => input? this.form.price = input : null} autoComplete="off" onChange={this.priceChange} />
 									}
 									
 									{this.state.currency === 'eth' && <input type="number" min="0.0001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
@@ -578,7 +584,12 @@ class Form extends Component {
 	componentDidMount() {
 		// this.temp();
 		this.getPhoenixDAOMarketValue()
-		window.scrollTo(0, 0);
+		// window.scrollTo(0, 0);
+		window.scroll({
+			top: 0,
+			left: 100,
+			behavior: 'smooth'
+		  });
 	}
 }
 
