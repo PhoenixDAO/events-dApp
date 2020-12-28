@@ -26,7 +26,11 @@ class LocationLandingPage extends Component {
 
   componentDidMount() {
     //this.theTopic = this.getTopicData();
-    window.scrollTo(0, 0);
+    window.scroll({
+			top: 0,
+			left: 100,
+			behavior: 'smooth'
+		  });
 
     
   }
