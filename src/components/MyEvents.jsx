@@ -118,8 +118,11 @@ class MyEvents extends Component {
 	}
 	//Display My Concluded Events
 	PastEvent = (e) => {
+		let value=""
+
 		this.setState({
 			isActive: false,
+			value
 		}, () => {
 			if (!this.state.isActive) {
 				this.loadPastEvents()
@@ -129,8 +132,10 @@ class MyEvents extends Component {
 	}
 	//Display My Active Events
 	ActiveEvent = (e) => {
+		let value=""
 		this.setState({
 			isActive: true,
+			value
 		}, () => {
 			if (this.state.isActive) {
 				this.loadActiveEvents()
@@ -141,6 +146,9 @@ class MyEvents extends Component {
 
 	//Search for My Events By Name
 	updateSearch = (e) => {
+		console.log("value before",e.target.value)
+		console.log("this.state",this.state)
+		
 		let { value } = e.target
 		this.setState({ value }, () => {
 			try{
@@ -152,6 +160,8 @@ class MyEvents extends Component {
 
 				})
 			} else { filteredEvents = this.state.check }
+			console.log("value after",e.target.value)
+
 		}
 		catch(e)
 		{

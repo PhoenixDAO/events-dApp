@@ -491,7 +491,7 @@ class Form extends Component {
 							<div className="col-lg-6">
 								<label htmlFor="price">Ticket Price:</label>
 								{/* {warning.price && <small  className="form-text text-muted color-red">Invalid price</small>} */}
-								{this.state.currency === 'phnx' &&<small style={{marginTop:"0"}} className= {warning.price? "form-text text-muted color-red": "form-text text-muted"}>Value must be greater than 0.001</small>}
+								{this.state.currency === 'phnx' &&<small style={{marginTop:"0"}} className= {warning.price? "form-text text-muted color-red": "form-text text-muted"}>Value must be greater or equals to 0.001</small>}
 								<div className="input-group mb-3">
 									<div className="input-group-prepend">
 										<span className="input-group-text"><img src={'/images/' + symbol} className="event_price-image" alt="" /></span>
