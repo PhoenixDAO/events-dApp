@@ -392,7 +392,7 @@ class Ticket extends Component {
 				card_body = (
 					<div>
 						<div className="card-body">
-							<h5 className="text-center">
+							{/* <h5 className="text-center">
 								Download Digital Ticket:
 							</h5>
 							<p className="text-center">
@@ -441,10 +441,10 @@ class Ticket extends Component {
 										}}
 									/>
 								</p>
-							</div>
+							</div> */}
 
 							<h5 className="text-center">
-								Send or Transfer Ticket:
+								<b>Send or Transfer Ticket:</b>
 							</h5>
 							<div className="form-group">
 								<label htmlFor="address">
@@ -539,5 +539,5 @@ const mapStateToProps = (state) => {
 	};
 };
 
-const AppContainer = drizzleConnect(Ticket, mapStateToProps);
+const 	AppContainer = drizzleConnect(Ticket, mapStateToProps);
 export default AppContainer;

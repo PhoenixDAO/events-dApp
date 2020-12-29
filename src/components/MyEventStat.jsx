@@ -648,7 +648,7 @@ class MyEventStat extends Component {
 												alt="Event Price"
 											/>{" "}
 											{event_data[3]
-												? numeral(price).format("0,0")
+												? numeral(price).format("0.000")
 												: "Free"}
 											{event_data[3] ? " or " : ""}
 											{event_data[3] ? (
@@ -668,12 +668,12 @@ class MyEventStat extends Component {
 															this.state
 																.phoenixDAO_market
 																.usd
-												  ).format("0,0.00")
+												  ).format("0.000")
 												: ""}
 										</li>
 										<li className="list-group-item">
 											{date.toLocaleDateString()} at{" "}
-											{date.toLocaleTimeString()}
+									{date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
 										</li>
 										<li className="list-group-item">
 											Tickets: {event_data[6]}/{max_seats}
@@ -758,7 +758,7 @@ class MyEventStat extends Component {
 									</h4>
 									{this.state.load && <Loading />}
 									<div className="sold_text col-12">
-										<p className="myQR text-center col-md-3">
+										{/* <p className="myQR text-center col-md-3">
 											<QRCode
 												value={titleURL}
 												size={128}
@@ -776,7 +776,7 @@ class MyEventStat extends Component {
 												}}
 											/>
 											<p>Event QR-Code</p>
-										</p>
+										</p> */}
 
 										<p className="col-md-8">
 											Tickets Sold: {event_data[6]}{" "}
@@ -813,7 +813,7 @@ class MyEventStat extends Component {
 								</div>
 
 								<div className="new-transaction-wrapper">
-									<h4 className="sales">
+									<h4 className="transactions">
 										<i className="fas fa-hand-holding-usd"></i>{" "}
 										Ticket Revenue{" "}
 									</h4>

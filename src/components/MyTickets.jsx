@@ -168,13 +168,14 @@ class MyTickets extends Component {
 		);
 	}
 	componentDidMount(){
-		this._isMounted = true;
-		setTimeout(()=>this.setLoader(),1000);
 		window.scroll({
 			top: 0,
 			left: 100,
 			behavior: 'smooth'
 		  });
+		this._isMounted = true;
+		setTimeout(()=>this.setLoader(),1000);
+		
 	}
 
 	componentWillUnmount(){
