@@ -129,6 +129,7 @@ class App extends Component {
 		console.log("window.ethereum", window.ethereum);
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
 			this.setState({openSnackbar:true})
+			
 		} else {
 			if (typeof ethereum !== "undefined") {
 				const a = await ethereum.enable();

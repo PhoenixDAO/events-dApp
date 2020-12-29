@@ -577,7 +577,10 @@ class EventPage extends Component {
 	}
 
 	componentDidMount() {
-		window.scroll(0,0);
+		window.scroll({
+			top: 0,
+			behavior: 'smooth'
+		  });
 		this._isMounted = true;
 		this.updateIPFS();
 		this.loadblockhain();

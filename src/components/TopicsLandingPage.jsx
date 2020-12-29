@@ -195,7 +195,6 @@ class TopicsLandingPage extends Component {
   componentDidMount() {
 		window.scroll({
 			top: 0,
-			left: 100,
 			behavior: 'smooth'
 		  });
 	}

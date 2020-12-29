@@ -441,13 +441,13 @@ class Dashboard extends Component {
     );
   }
   componentDidMount() {
-    this._isMounted = true;
-    this.getPhoenixDAOMarketValue();
-		window.scroll({
+    window.scroll({
 			top: 0,
-			left: 100,
 			behavior: 'smooth'
 		  });
+    this._isMounted = true;
+    this.getPhoenixDAOMarketValue();
+	
 
   }
 }
