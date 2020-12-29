@@ -168,10 +168,9 @@ class MyTickets extends Component {
 		);
 	}
 	componentDidMount(){
-		window.scroll({
-			top: 0,
-			behavior: 'smooth'
-		  });
+		if (this.state.prevPath==-1) {
+			this.props.executeScroll({ behavior: "smooth", block: "start" });
+		  }
 		this._isMounted = true;
 		setTimeout(()=>this.setLoader(),1000);
 		

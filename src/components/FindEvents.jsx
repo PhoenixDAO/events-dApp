@@ -394,10 +394,7 @@ class FindEvents extends Component {
 
   componentDidMount() {
     if (this.state.prevPath==-1) {
-      window.scroll({
-        top: 0,
-        behavior: 'smooth'
-        });
+      this.props.executeScroll({ behavior: "smooth", block: "start" });
     }
     this._isMounted = true;
     this.loadBlockchain();

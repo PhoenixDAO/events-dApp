@@ -13,7 +13,7 @@ import Done from "./Done";
 class CreateEvent extends Component {
 	constructor(props, context) {
 		super(props);
-
+		console.log("props recieved",this.props)
 		this.state = {
 			done: false,
 			upload: false,
@@ -35,7 +35,6 @@ class CreateEvent extends Component {
 				type: null,
 			},
 		};
-
 		this.contracts = context.drizzle.contracts;
 	}
 
@@ -193,6 +192,13 @@ class CreateEvent extends Component {
 			}
 		}, 500);
 	};
+	componentDidMount() {
+		console.log("props",this.props)
+		this.props.executeScroll({ behavior: "smooth", block: "start" });
+		
+	  }
+
+	
 
 	render() {
 		let disabled = true;
@@ -233,7 +239,7 @@ class CreateEvent extends Component {
 		}
 
 		return (
-			<div className="home-wrapper">
+			<div className="home-wrapper" >
 				<h2>
 					<i className="fa fa-edit"></i> Create Event
 				</h2>
