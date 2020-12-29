@@ -94,13 +94,18 @@ class App extends Component {
 			getPhoenixDAO: "",
 			openSnackbar:false
 		};
+		this.myRef = React.createRef()
+
 		this.contracts = context.drizzle.contracts;
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
 		this.handleSnackbarClose=this.handleSnackbarClose.bind(this)
+		this.executeScroll=this.executeScroll.bind(this)
 	}
 
 	async componentDidMount() {
 		this.loadBlockchainData();
+		// this.executeScroll()
+
 	}
 
 	componentWillUpdate() {
@@ -569,6 +574,8 @@ class App extends Component {
 	handleSnackbarClose = () =>{
 		this.setState({openSnackbar:false})
 	}
+	executeScroll = () => this.myRef.current.scrollIntoView()
+
 
 	render() {
 		let body;
@@ -612,6 +619,7 @@ class App extends Component {
 						render={(props) => (
 							<FindEvents
 								{...props}
+								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 							/>
@@ -620,7 +628,11 @@ class App extends Component {
 					<Route
 						exact
 						path="/pastevents/:page"
-						component={PastEvents}
+						render={(props) => (
+							<PastEvents
+								{...props}
+								executeScroll={this.executeScroll}
+							/>)}
 					/>
 
 					<Route
@@ -629,6 +641,7 @@ class App extends Component {
 						render={(props) => (
 							<CreateEvent
 								{...props}
+								executeScroll={this.executeScroll}
 								passtransaction={this.passtransaction}
 								upload={this.state.upload}
 								disabledStatus={this.state.disabledStatus}
@@ -669,8 +682,16 @@ class App extends Component {
 						path="/location/:page"
 						component={LocationLandingPage}
 					/>
-					<Route exact path="/Calendar" component={Calendars} />
-					<Route exact path="/how-it-works" component={Home} />
+					<Route exact path="/Calendar" render={(props) => (
+							<Calendars
+								{...props}
+								executeScroll={this.executeScroll}
+							/>)}/>
+					<Route exact path="/how-it-works" render={(props) => (
+							<Home
+								{...props}
+								executeScroll={this.executeScroll}
+							/>)} />
 				</Switch>
 			);
 		} else {
@@ -682,6 +703,7 @@ class App extends Component {
 						render={(props) => (
 							<FindEvents
 								{...props}
+								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 							/>
@@ -693,6 +715,7 @@ class App extends Component {
 						render={(props) => (
 							<FindEvents
 								{...props}
+								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 							/>
@@ -701,12 +724,21 @@ class App extends Component {
 					<Route
 						exact
 						path="/pastevents/:page"
-						component={PastEvents}
+						render={(props) => (
+							<PastEvents
+								{...props}
+								executeScroll={this.executeScroll}
+							/>)}
 					/>
 					<Route
 						exact
 						path="/mytickets/:page"
-						component={MyTickets}
+						render={(props) => (
+							<MyTickets
+								{...props}
+								executeScroll={this.executeScroll}
+							/>
+						)}
 					/>
 
 					<Route
@@ -715,6 +747,7 @@ class App extends Component {
 						render={(props) => (
 							<CreateEvent
 								{...props}
+								executeScroll={this.executeScroll}
 								passtransaction={this.passtransaction}
 								createNewEvent={this.createNewEvent}
 								upload={this.state.upload}
@@ -732,6 +765,7 @@ class App extends Component {
 						render={(props) => (
 							<MyEvents
 								{...props}
+								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 							/>
@@ -790,14 +824,22 @@ class App extends Component {
 						path="/location/:page"
 						component={LocationLandingPage}
 					/>
-					<Route exact path="/calendar" component={Calendars} />
+					<Route exact path="/calendar" render={(props) => (
+							<Calendars
+								{...props}
+								executeScroll={this.executeScroll}
+							/>)} />
 					<Route
 						exact
 						path="/dashboard"
 						component={Dashboard}
 						account={this.state.account}
 					/>
-					<Route exact path="/how-it-works" component={Home} />
+					<Route exact path="/how-it-works" render={(props) => (
+							<Home
+								{...props}
+								executeScroll={this.executeScroll}
+							/>)} />
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>
 			);
@@ -807,7 +849,7 @@ class App extends Component {
 			
 			<Router>
 				
-				<div id="wrapper" className="toggled">
+				<div id="wrapper" className="toggled" ref={this.myRef}>
 					<Sidebar
 						connection={!connecting}
 						account={this.state.account}
@@ -828,7 +870,7 @@ class App extends Component {
 								className="branding-logo"
 								alt="PhoenixDAO logo"
 							/>
-							<h1>PhoenixDAO Events Marketplace</h1>
+							<h1 >PhoenixDAO Events Marketplace</h1>
 							<p>What are you going to do?</p>
 						</div>
 						<div className="container-fluid">

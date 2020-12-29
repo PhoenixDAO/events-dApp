@@ -367,15 +367,12 @@ class PastEvents extends Component {
 
   componentDidMount() {
     if (this.state.prevPath==-1) {
-      window.scroll({
-        top: 0,
-        left: 100,
-        behavior: 'smooth'
-        });
-    this._isMounted = true;
-    this.loadBlockchain();
+      this.props.executeScroll({ behavior: "smooth", block: "start" });
+    
    
     }
+    this._isMounted = true;
+    this.loadBlockchain();
 
   }
 

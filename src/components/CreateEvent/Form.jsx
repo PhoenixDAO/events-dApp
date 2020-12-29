@@ -583,10 +583,10 @@ class Form extends Component {
 	}
 
 	componentDidMount() {
-		window.scroll({
-			top: 0,
-			behavior: 'smooth'
-		  }); 
+			// window.scroll({
+			// 	top: 0,
+			// 	behavior: 'smooth'
+			// }); 
 		// this.temp();
 		this.getPhoenixDAOMarketValue()
 		// window.scrollTo(0, 0);

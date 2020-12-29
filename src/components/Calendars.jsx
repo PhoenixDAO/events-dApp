@@ -117,10 +117,11 @@ class Calendars extends Component {
     }
 
     componentDidMount(){
-        window.scroll({
-			top: 0,
-			behavior: 'smooth'
-		  });
+        this.props.executeScroll();
+        // window.scroll({
+		// 	top: 0,
+		// 	behavior: 'smooth'
+		//   });
         this._isMounted = true;
         this.loadBlockchain();
 		
