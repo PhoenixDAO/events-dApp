@@ -508,7 +508,7 @@ class Form extends Component {
 									{this.state.currency === 'eth' && <input type="number" min="0.0001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
 								</div>
 
-								{this.state.currency === 'phnx' && <div className="input-group mb-3">
+								{this.state.currency === 'phnx' && <div className="input-group mb-3"> 
 									<div className="input-group-prepend">
 									
 										<span className="input-group-text"><img src={'/images/dollarsign.png'} className="event_price-image" alt="" /></span>
