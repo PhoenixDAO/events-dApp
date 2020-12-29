@@ -589,7 +589,7 @@ class Form extends Component {
 			top: 0,
 			left: 100,
 			behavior: 'smooth'
-		  });
+		  }); 
 	}
 }
 
