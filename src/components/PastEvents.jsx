@@ -51,7 +51,6 @@ class PastEvents extends Component {
     this.props.history.push("/" + slug);
     window.scroll({
 			top: 0,
-			left: 100,
 			behavior: 'smooth'
 		  });
   }
@@ -367,14 +366,15 @@ class PastEvents extends Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
-    this.loadBlockchain();
     if (this.state.prevPath==-1) {
       window.scroll({
         top: 0,
         left: 100,
         behavior: 'smooth'
         });
+    this._isMounted = true;
+    this.loadBlockchain();
+   
     }
 
   }

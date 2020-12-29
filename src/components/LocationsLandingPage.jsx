@@ -139,7 +139,6 @@ class LocationsLandingPage extends Component {
     //this.theTopic = this.getTopicData();
     window.scroll({
 			top: 0,
-			left: 100,
 			behavior: 'smooth'
 		  });
   }
