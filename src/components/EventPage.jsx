@@ -525,11 +525,12 @@ class EventPage extends Component {
 									<ul className="list-group list-group-flush">
 										<li className="list-group-item ">{locations}</li>
 										<li className="list-group-item">Category: {category}</li>
-										<li className="list-group-item">Price: <img src={'/images/' + symbol} className="event_price-image" alt="Event Price" /> {event_data[3] ? numeral(price).format('0,0') : 'Free'}
+										<li className="list-group-item">Price: <img src={'/images/' + symbol} className="event_price-image" alt="Event Price" /> {event_data[3] ? numeral(price).format('0.000') : 'Free'}
 											{event_data[3] ? ' or ' : ''}
 											{event_data[3] ? <img src={'/images/dollarsign.png'} className="event_price-image" alt="Event Price" /> : ''}
-											{event_data[3] ? numeral(price * this.state.PhoenixDAO_market.usd).format('0,0.00') : ''}</li>
-										<li className="list-group-item">{date.toLocaleDateString()} at {date.toLocaleTimeString()}</li>
+											{event_data[3] ? numeral(price * this.state.PhoenixDAO_market.usd).format('0.000') : ''}</li>
+										<li className="list-group-item">{date.toLocaleDateString()} at{" "}
+									{date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</li>
 										<li className="list-group-item">Tickets: {event_data[6]}/{max_seats}</li>
 									</ul>
 								</div>

@@ -507,6 +507,7 @@ class Form extends Component {
 									
 									{this.state.currency === 'eth' && <input type="number" min="0.0001" maxLength="15"  pattern="^[0-9]" onKeyPress={this.restrictMinus} value={this.state.price} className={"form-control " + warning.price} id="price" title={"Price in ETH"} value={this.state.price} autoComplete="off" onChange={this.priceChange} />}
 								</div>
+
 								{this.state.currency === 'phnx' && <div className="input-group mb-3">
 									<div className="input-group-prepend">
 									
@@ -582,14 +583,15 @@ class Form extends Component {
 	}
 
 	componentDidMount() {
-		// this.temp();
-		this.getPhoenixDAOMarketValue()
-		// window.scrollTo(0, 0);
 		window.scroll({
 			top: 0,
 			left: 100,
 			behavior: 'smooth'
 		  }); 
+		// this.temp();
+		this.getPhoenixDAOMarketValue()
+		// window.scrollTo(0, 0);
+		
 	}
 }
 
