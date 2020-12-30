@@ -54,6 +54,9 @@ let ethereum = window.ethereum;
 let web3 = window.web3;
 let interval;
 
+const items = ["slide1.png", "slide2.png", "slide3.png", "slide4.png"];
+const randomBG = items[Math.floor(Math.random() * items.length)];
+
 class App extends Component {
 	constructor(props, context) {
 		try {
@@ -574,20 +577,25 @@ class App extends Component {
 	handleSnackbarClose = () =>{
 		this.setState({openSnackbar:false})
 	}
-	executeScroll = () => this.myRef.current.scrollIntoView()
+	executeScroll = () => {if(this.myRef.current) this.myRef.current.scrollIntoView()}
 
 
 	render() {
 		let body;
 		let connecting = false;
 
-		var items = ["slide1.png", "slide2.png", "slide3.png", "slide4.png"];
-		var randomBG = items[Math.floor(Math.random() * items.length)];
+
+
+		// console.log(randomBG,Math.random());
 		if (!this.props.drizzleStatus.initialized) {
 			body = (
 				<div>
 					<Switch>
-						<Route exact path="/" component={Home} />
+						<Route exact path="/" render={(props) => (
+							<Home
+								{...props}
+								executeScroll={this.executeScroll}
+							/>)} />
 						<Route component={LoadingApp} />
 					</Switch>
 				</div>
@@ -597,7 +605,11 @@ class App extends Component {
 			body = (
 				<div>
 					<Switch>
-						<Route exact path="/" component={Home} />
+						<Route exact path="/" render={(props) => (
+							<Home
+								{...props}
+								executeScroll={this.executeScroll}
+							/>)} />
 						<Route component={NetworkError} />
 					</Switch>
 				</div>
