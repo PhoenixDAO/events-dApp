@@ -857,7 +857,7 @@ class MyEventStat extends Component {
 												alt="Event Price"
 											/>{" "}
 											{event_data[3]
-												? numeral(price).format("0,0")
+												? numeral(price).format("0.000")
 												: "Free"}
 											{event_data[3] ? " or " : ""}
 											{event_data[3] ? (
@@ -877,7 +877,7 @@ class MyEventStat extends Component {
 															this.state
 																.phoenixDAO_market
 																.usd
-												  ).format("0,0.00")
+												  ).format("0.000")
 												: ""}
 										</p>
 
@@ -891,7 +891,7 @@ class MyEventStat extends Component {
 											{event_data[3]
 												? numeral(
 														price * event_data[6]
-												  ).format("0,0")
+												  ).format("0.000")
 												: price * event_data[6]}
 											{event_data[3] ? " or " : ""}
 											{event_data[3] ? (
@@ -912,7 +912,7 @@ class MyEventStat extends Component {
 															this.state
 																.phoenixDAO_market
 																.usd
-												  ).format("0,0.00")
+												  ).format("0.000")
 												: ""}
 										</p>
 
@@ -930,7 +930,7 @@ class MyEventStat extends Component {
 															price *
 																(max_seats -
 																	event_data[6])
-													  ).format("0,0")
+													  ).format("0.000")
 													: price *
 													  (max_seats -
 															event_data[6])}
@@ -954,7 +954,7 @@ class MyEventStat extends Component {
 																this.state
 																	.phoenixDAO_market
 																	.usd
-													  ).format("0,0.00")
+													  ).format("0.000")
 													: ""}
 											</p>
 										) : (
@@ -976,7 +976,7 @@ class MyEventStat extends Component {
 												{event_data[3]
 													? numeral(
 															price * max_seats
-													  ).format("0,0")
+													  ).format("0.000")
 													: price * max_seats}
 												{event_data[3] ? " or " : ""}
 												{event_data[3] ? (
@@ -997,7 +997,7 @@ class MyEventStat extends Component {
 																this.state
 																	.phoenixDAO_market
 																	.usd
-													  ).format("0,0.00")
+													  ).format("0.000")
 													: ""}
 											</p>
 										) : (

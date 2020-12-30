@@ -574,7 +574,7 @@ class App extends Component {
 	handleSnackbarClose = () =>{
 		this.setState({openSnackbar:false})
 	}
-	executeScroll = () => this.myRef.current.scrollIntoView()
+	executeScroll = () => {if(this.myRef.current) this.myRef.current.scrollIntoView()}
 
 
 	render() {
@@ -587,7 +587,11 @@ class App extends Component {
 			body = (
 				<div>
 					<Switch>
-						<Route exact path="/" component={Home} />
+						<Route exact path="/" render={(props) => (
+							<Home
+								{...props}
+								executeScroll={this.executeScroll}
+							/>)} />
 						<Route component={LoadingApp} />
 					</Switch>
 				</div>
@@ -597,7 +601,11 @@ class App extends Component {
 			body = (
 				<div>
 					<Switch>
-						<Route exact path="/" component={Home} />
+						<Route exact path="/" render={(props) => (
+							<Home
+								{...props}
+								executeScroll={this.executeScroll}
+							/>)} />
 						<Route component={NetworkError} />
 					</Switch>
 				</div>
