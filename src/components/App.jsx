@@ -163,6 +163,7 @@ class App extends Component {
 			}
 			window.ethereum.on("connect", function (accounts) {
 				console.log("on connect");
+				window.location.reload();
 			});
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
