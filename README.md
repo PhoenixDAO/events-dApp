@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://phoenixdao-events-dapp.herokuapp.com/" target="blank"><img src="https://phoenix-dao-frontend.herokuapp.com/static/media/logo.147d3f56.png" width="200" alt="PhoenixDao logo" /></a>
+  <a href="https://phoenixdao-events-dapp.herokuapp.com/" target="blank"><img src="https://phoenixdao-events-dapp.herokuapp.com/images/PhoenixDAO.png" width="200" alt="PhoenixDao logo" /></a>
 </p>
 
 # 🎫 PhoenixDAO Events DApp
