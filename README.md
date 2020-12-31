@@ -19,16 +19,14 @@ A user can see the list of events and can choose and buy a ticket for it. The us
 This dApp uses test tokens which user can receive on a special page.
 
 * Functions/Modules 
-  - Submit Proposals
-  - Votes on Proposals
-  - Stake on Proposals
-  - Edit Proposal
-  - Accept Proposal
-  - Reject Proposal
-  - Admin Review Proposal
- 
+  - Create Events
+  - Buy Tickets
+  - Send Tickets
+  - 
+  
 ### Integrated Stack
   - Web3
+  - IPFS
   - Smartcontract
 
 
