@@ -21,6 +21,7 @@ class ApprovalModal extends Component {
     }
     
     render() {
+        console.log("hereeeeeee")
      return(
         <Dialog
         open={this.props.open}
@@ -31,13 +32,11 @@ class ApprovalModal extends Component {
         aria-describedby="alert-dialog-slide-description"
     >
         <DialogTitle id="alert-dialog-slide-title">
-            {"Use Google's location service?"}
+            {`Allow PhoenixDAO Events Marketplace to spend your PHNX?`}
         </DialogTitle>
         <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-                Let Google help apps determine location. This
-                means sending anonymous location data to Google,
-                even when no apps are running.
+            {`Do you trust this site? By granting this permission, you’re allowing PhoenixDAO Events Marketplace to withdraw your PHNX and automate transactions for you.`}
             </DialogContentText>
         </DialogContent>
         <DialogActions>
