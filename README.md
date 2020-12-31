@@ -1,8 +1,8 @@
 <p align="center">
-  <a href="https://phoenixdao-events-dapp.herokuapp.com/" target="blank"><img src="https://phoenixdao-events-dapp.herokuapp.com/images/PhoenixDAO.png" width="200" alt="PhoenixDao logo" /></a>
+  <a href="https://phoenixdao-events-dapp.herokuapp.com/" target="blank"><img src="https://phoenixdao-events-dapp.herokuapp.com/images/PhoenixDAO.png" width="100" alt="PhoenixDao logo" /></a>
 </p>
 
-# 🎫 PhoenixDAO Events DApp
+# PhoenixDAO Events DApp
 
 ## What is it?
 PhoenixDAO Events DApp it is a dApp based on Ethereum Blockchain that provides an ability to create events and sell tickets for events as ERC721 tokens.
