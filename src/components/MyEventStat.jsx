@@ -778,25 +778,25 @@ class MyEventStat extends Component {
 											<p>Event QR-Code</p>
 										</p> */}
 
-										<p className="col-md-8">
+										<p>
 											Tickets Sold: {event_data[6]}{" "}
 											Tickets
 										</p>
 
 										{event_data[4] ? (
-											<p className="col-md-8">
+											<p>
 												Available Tickets:{" "}
 												{max_seats - event_data[6]}{" "}
 												Tickets
 											</p>
 										) : (
-											<p className="col-md-12">
+											<p>
 												Available Tickets: Unlimited
 											</p>
 										)}
 
 										{event_data[4] ? (
-											<p className="col-md-8">
+											<p>
 												Total Tickets For Sale:{" "}
 												{event_data[4]
 													? max_seats
@@ -804,7 +804,7 @@ class MyEventStat extends Component {
 												Tickets
 											</p>
 										) : (
-											<p className="col-md-12">
+											<p>
 												Total Tickets For Sale:
 												Unlimited
 											</p>
@@ -849,7 +849,7 @@ class MyEventStat extends Component {
 												}}
 											/>
 										</div>
-										<p className="col-md-8">
+										<p className="col-md-8" className="removepadding">
 											Price Per Ticket:{" "}
 											<img
 												src={"/images/" + symbol}
@@ -881,7 +881,7 @@ class MyEventStat extends Component {
 												: ""}
 										</p>
 
-										<p className="col-md-8">
+										<p className="col-md-8" className="removepadding">
 											Current Revenue For Sold Tickets:{" "}
 											<img
 												src={"/images/" + symbol}
@@ -958,14 +958,14 @@ class MyEventStat extends Component {
 													: ""}
 											</p>
 										) : (
-											<p className="col-md-12">
+											<p className="col-md-12" className="removepadding">
 												Expected Revenue For Remaining
 												Tickets: Unlimited
 											</p>
 										)}
 
 										{event_data[4] ? (
-											<p className="col-md-8">
+											<p className="col-md-8" className="removepadding">
 												Expected Revenue For Sold Out
 												Event:{" "}
 												<img
@@ -1001,7 +1001,7 @@ class MyEventStat extends Component {
 													: ""}
 											</p>
 										) : (
-											<p className="col-md-12">
+											<p className="col-md-12" className="removepadding">
 												Expected Revenue For Sold Out
 												Event: Unlimited
 											</p>

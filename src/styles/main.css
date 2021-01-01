@@ -1798,6 +1798,7 @@ h4.transactions {
 	padding: 20px;
 	padding-top: 13px;
 	padding-bottom: 5px;
+	margin-bottom: 30px;
 	border: 1px solid rgb(155, 155, 155);
 	color: white;
 	border-radius: 5px;
@@ -1814,7 +1815,9 @@ h4.transactions {
 	margin-right: 15px;
 	float: right;
 }
-
+.removepadding {
+	padding: 0;
+}
 .chart:hover {
 	transform: scale(1.07);
 	cursor: pointer;
@@ -1823,8 +1826,9 @@ h4.transactions {
 
 @media (max-width: 600px) {
 	.chart {
-		min-width: none;
-		margin: none;
+		max-width: 444px !important;
+		width: 110% !important;
+		margin-left: -15px;
 		float: none;
 	}
 }
