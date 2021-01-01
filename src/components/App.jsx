@@ -137,6 +137,10 @@ class App extends Component {
 		console.log("window.ethereum", window.ethereum);
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
 			this.setState({openSnackbar:true})
+			// window.ethereum.on("connect", function (accounts) {
+			// 	console.log("on connect");
+			// 	window.location.reload();
+			// });
 			
 		} else {
 			if (typeof ethereum !== "undefined") {
