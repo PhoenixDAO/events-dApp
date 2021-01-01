@@ -2,10 +2,10 @@
   <a href="https://phoenixdao-events-dapp.herokuapp.com/" target="blank"><img src="https://phoenixdao-events-dapp.herokuapp.com/images/PhoenixDAO.png" width="100" alt="PhoenixDao logo" /></a>
 </p>
 
-# PhoenixDAO Events DApp
+# 🎫 PhoenixDAO Events Marketplace - V1
 
 ## What is it?
-PhoenixDAO Events DApp it is a dApp based on Ethereum Blockchain that provides an ability to create events and sell tickets for events as ERC721 tokens.
+PhoenixDAO Events Marketplace is a dApp based on Ethereum Blockchain that provides an ability to create events and sell tickets for events as ERC721 tokens.
 
 ## Use Cases
 
@@ -18,13 +18,14 @@ A user can see the list of events and can choose and buy a ticket for it. The us
 ## PhoenixDAO Token
 This dApp uses test tokens which user can receive on a special page.
 
-* Functions/Modules 
+* Functions/Modules
+  - View Events
   - Create Events
   - Buy Tickets
   - Send Tickets
-  - 
   
 ### Integrated Stack
+  - ReactJS
   - Web3
   - IPFS
   - Smartcontract
