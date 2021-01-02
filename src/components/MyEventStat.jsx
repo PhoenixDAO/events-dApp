@@ -917,7 +917,7 @@ class MyEventStat extends Component {
 										</p>
 
 										{event_data[4] ? (
-											<p className="col-md-8">
+											<p className="col-md-8" className="removepadding">
 												Expected Revenue For Remaining
 												Tickets:{" "}
 												<img

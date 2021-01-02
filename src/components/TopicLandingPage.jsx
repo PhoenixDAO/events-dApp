@@ -16,7 +16,6 @@ import {  DirectLink, Element, Events, animateScroll as scroll, scrollSpy, scrol
 
 import topicsJson from '../config/topics.json';
 
-
 class TopicLandingPage extends Component
 {
   constructor(props, context)
