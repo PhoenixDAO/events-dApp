@@ -374,7 +374,7 @@ class Dashboard extends Component {
             <div className="col-lg-4 pb-4 d-flex align-items-stretch" >
               <div className="dashboard-card">
                 <div className="dashboard-caption" style={{ backgroundImage: "url(/images/uniswaps.jpg)" }}>
-                  <a href={'https://uniswap.exchange/swap'} target='blank' className="mt-10">
+                  <a href='https://uniswap.exchange/swap' target='blank' className="mt-10">
                     <p className="dashboard-uniswap"><i className="fas fa-sync"></i> BUY PHNX WITH UNISWAP</p></a>
                 </div>
               </div>
