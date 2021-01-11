@@ -198,7 +198,7 @@ class Sidebar extends Component {
 						</li>
 						<li >
 							<NavLink to="/myevents/1" className="nav-link" activeClassName="nav-link-active" 
-							isActive={() => this.context.router.route.location.pathname.split("/myevents/").length > 1 }
+							isActive={() => this.context.router.route.location.pathname.split("/myevents/").length > 1 } 
 							onClick={() => { this.sidebarClick(this) }}><i className="fas fa-list-alt" title="My Created Events"></i> <span className="toggleHidden">My Created Events</span></NavLink>
 						</li>
 						<li>
