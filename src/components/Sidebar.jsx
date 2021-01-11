@@ -190,7 +190,7 @@ class Sidebar extends Component {
 						<li>
 							<NavLink to="/dashboard" className="nav-link" activeClassName="nav-link-active" 
 							onClick={()=>{this.toggleSidebarClass(true)}}
-							><i className="fas fa-tachometer-alt" title="Dashboard"></i> <span className="toggleHidden">Dashboard</span></NavLink>
+							><i className="fas fa-chart-bar" title="Dashboard"></i> <span className="toggleHidden">Dashboard</span></NavLink>
 						</li>
 
 						<li>

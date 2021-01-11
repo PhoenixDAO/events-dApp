@@ -1595,8 +1595,9 @@ h4.transactions {
 	width: 100%;
 	text-align: center;
 	color: rgb(58, 58, 58);
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
+	/* border-top-left-radius: 5px;
+	border-top-right-radius: 5px; */
+	border-radius:5px;
 	overflow: hidden;
 	background: #333940;
 	box-shadow: 0 0 17px rgba(83, 74, 74, 0.5);
