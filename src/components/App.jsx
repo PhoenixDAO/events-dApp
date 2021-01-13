@@ -122,7 +122,7 @@ class App extends Component {
 					autoClose: false,
 					pauseOnHover: true,
 				});
-			}
+			} 
 		}
 
 		if (sent_tx.length !== this.state.sent_tx.length) {
