@@ -150,7 +150,7 @@ class CheckUser extends Component {
 			if (this.state.status) {
 				message = <div className="alert alert-success" role="alert"><i className="fas fa-check-circle"></i> User has ticket to this event</div>;
 			} else {
-				message = <div className="alert alert-danger" role="alert"><i className="fas fa-times"></i> User has not ticket to this event</div>;
+				message = <div className="alert alert-danger" role="alert"><i className="fas fa-times"></i> User has no ticket to this event</div>;
 			}
 		}
 
