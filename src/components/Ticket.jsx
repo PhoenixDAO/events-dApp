@@ -152,7 +152,9 @@ class Ticket extends Component {
 			!this.context.drizzle.web3.utils.isAddress(this.address.value)
 		) {
 			this.setState({ wrong_address: true });
+			console.log("helloo1")
 		} else {
+			console.log("helloo2")
 			this.setState({ wrong_address: false });
 			this.contracts["OpenEvents"].methods.safeTransferFrom.cacheSend(
 				this.props.accounts[0],
