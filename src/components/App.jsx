@@ -52,7 +52,7 @@ import PageNotFound from "./PageNotFound";
 import { X_OK } from "constants";
 let ethereum = window.ethereum;
 let web3 = window.web3;
-let interval;
+// let interval;
 
 const items = ["slide1.png", "slide2.png", "slide3.png", "slide4.png"];
 const randomBG = items[Math.floor(Math.random() * items.length)];
@@ -106,21 +106,21 @@ class App extends Component {
 	}
 
 	componentDidMount() {
-		interval = setInterval(()=>{
-			// console.log("jaffer this.props.drizzleStatus.initialized ",this.props.drizzleStatus.initialized )
-			// console.log("jaffer this.state.account.length",this.state.account)
-			if(!this.props.drizzleStatus.initialized && this.state.account.length!==0){
-				window.location.reload();
-			}
-		},1000)
+		// interval = setInterval(()=>{
+		// 	// console.log("jaffer this.props.drizzleStatus.initialized ",this.props.drizzleStatus.initialized )
+		// 	// console.log("jaffer this.state.account.length",this.state.account)
+		// 	if(!this.props.drizzleStatus.initialized && this.state.account.length!==0){
+		// 		window.location.reload();
+		// 	}
+		// },1000)
 		this.loadBlockchainData();
 		
 		// this.executeScroll()
 
 	}
-	componentWillUnmount() {
-		clearInterval(interval);
-	  } 
+	// componentWillUnmount() {
+	// 	clearInterval(interval);
+	//   } 
 
 	componentWillUpdate() {
 		let sent_tx = this.state.sent_tx;
