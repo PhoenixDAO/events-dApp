@@ -105,22 +105,11 @@ class App extends Component {
 		this.executeScroll=this.executeScroll.bind(this)
 	}
 
-	componentDidMount() {
-		// interval = setInterval(()=>{
-		// 	// console.log("jaffer this.props.drizzleStatus.initialized ",this.props.drizzleStatus.initialized )
-		// 	// console.log("jaffer this.state.account.length",this.state.account)
-		// 	if(!this.props.drizzleStatus.initialized && this.state.account.length!==0){
-		// 		window.location.reload();
-		// 	}
-		// },1000)
+	async componentDidMount() {
 		this.loadBlockchainData();
-		
 		// this.executeScroll()
 
 	}
-	// componentWillUnmount() {
-	// 	clearInterval(interval);
-	//   } 
 
 	componentWillUpdate() {
 		let sent_tx = this.state.sent_tx;

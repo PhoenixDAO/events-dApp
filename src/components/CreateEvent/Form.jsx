@@ -291,7 +291,8 @@ class Form extends Component {
 				event.preventDefault();
 				return;
 			}
-			if (this.form.price.value.length > 16) {
+			console.log("this.form.price.value",this.form.price.value, " length" ,this.form.price.value.length)
+			if (event.target.value.length > 15) {
 				event.preventDefault();
 				return;
 			}
@@ -340,7 +341,7 @@ class Form extends Component {
 		console.log("qwert e.which", e.which);
 		let inputKeyCode = e.which;
 		console.log("qwert key", e.key);
-		console.log("this.form.price.value",this.form.price.value)
+		// console.log("this.form.price.value",this.form.price.value)
 		const allowedKeyCodes = [ 48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
 		if (!allowedKeyCodes.includes(inputKeyCode)) {
 			e.preventDefault();
@@ -352,7 +353,7 @@ class Form extends Component {
 		console.log("qwert e.which", e.which);
 		let inputKeyCode = e.which;
 		console.log("qwert key", e.key);
-		console.log("this.form.price.value",this.form.price.value)
+		// console.log("this.form.price.value",this.form.price.value)
 		const allowedKeyCodes = [46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
 		if (inputKeyCode == 46 && this.form.price.value.split(".").length > 1) {
 			e.preventDefault();
@@ -792,9 +793,10 @@ class Form extends Component {
 									</div>
 									{this.state.currency === "phnx" && (
 										<input
-											type="string"
+											type="number"
 											min="0.0001"
 											maxLength="15"
+											onKeyUp={this.restrictMinus}
 											onKeyPress={this.restrictMinus}
 											value={this.state.price}
 											className={
@@ -816,7 +818,7 @@ class Form extends Component {
 											type="number"
 											min="0.0001"
 											maxLength="15"
-											pattern="^[0-9]"
+											onKeyUp={this.restrictMinus}
 											onKeyPress={this.restrictMinus}
 											value={this.state.price}
 											className={
@@ -826,12 +828,13 @@ class Form extends Component {
 											title={"Price in ETH"}
 											value={this.state.price}
 											autoComplete="off"
-											onChange={this.priceChange}
+											disabled={true}
+											// onChange={this.priceChange}
 										/>
 									)}
 								</div>
 
-								{this.state.currency === "phnx" && (
+								{/* {this.state.currency === "phnx" && (
 									<div className="input-group mb-3">
 										<div className="input-group-prepend">
 											<span className="input-group-text">
@@ -853,31 +856,62 @@ class Form extends Component {
 											{this.state.dollarPrice}
 										</div>
 									</div>
-								)}
-
-								{this.state.currency === "eth" && (
-									<div className="input-group mb-3">
-										<div className="input-group-prepend">
-											<span className="input-group-text">
-												<img
-													src={
-														"/images/dollarsign.png"
-													}
-													className="event_price-image"
-													alt=""
-												/>
-											</span>
-										</div>
-										<div
+								)} */}
+								<div className="input-group mb-3">
+									<div className="input-group-prepend">
+										<span className="input-group-text">
+											<img
+												src={"/images/dollarsign.png"}
+												className="event_price-image"
+												alt=""
+											/>
+										</span>
+									</div>
+								{this.state.currency === "phnx" && (
+										<input
+											type="number"
+											min="0.0001"
+											maxLength="15"
+											onKeyUp={this.restrictMinus}
+											onKeyPress={this.restrictMinus}
+											value={this.state.dollarPrice}
 											className={
 												"form-control " + warning.price
 											}
-											title="Price in USD"
-										>
-											0.00{" "}
-										</div>
-									</div>
+											id="price"
+											title={"Price in USD"}
+											ref={(input) =>
+												this.form.price = input
+													
+											}
+											autoComplete="off"
+											// onChange={this.priceChange}
+										/>
+									)}
+
+								{this.state.currency === "eth" && (
+									<input
+									type="number"
+									min="0.0001"
+									maxLength="15"
+									onKeyUp={this.restrictMinus}
+									onKeyPress={this.restrictMinus}
+									value={0.00}
+									className={
+										"form-control " + warning.price
+									}
+									id="price"
+									title={"Price in USD"}
+									ref={(input) =>
+										this.form.price = input
+											
+									}
+									autoComplete="off"
+									disabled={true}
+									// onChange={this.priceChange}
+								/>
 								)}
+								</div>
 							</div>
 						</div>
 						<div className="form-group">
@@ -929,10 +963,8 @@ class Form extends Component {
 												: ""
 										}
 										pattern="^[1-9]"
-										onKeyDown={(event) =>
-											event.key === "."
-												? event.preventDefault()
-												: null
+										onKeyUp={
+											this.restrictMinusForTickets
 										}
 										onKeyPress={
 											this.restrictMinusForTickets
