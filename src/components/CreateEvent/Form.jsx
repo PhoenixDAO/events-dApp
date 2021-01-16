@@ -792,9 +792,10 @@ class Form extends Component {
 									</div>
 									{this.state.currency === "phnx" && (
 										<input
-											type="string"
+											type="number"
 											min="0.0001"
 											maxLength="15"
+											onKeyUp={this.restrictMinus}
 											onKeyPress={this.restrictMinus}
 											value={this.state.price}
 											className={
@@ -817,6 +818,7 @@ class Form extends Component {
 											min="0.0001"
 											maxLength="15"
 											pattern="^[0-9]"
+											onKeyUp={this.restrictMinus}
 											onKeyPress={this.restrictMinus}
 											value={this.state.price}
 											className={
@@ -929,10 +931,8 @@ class Form extends Component {
 												: ""
 										}
 										pattern="^[1-9]"
-										onKeyDown={(event) =>
-											event.key === "."
-												? event.preventDefault()
-												: null
+										onKeyUp={
+											this.restrictMinusForTickets
 										}
 										onKeyPress={
 											this.restrictMinusForTickets

@@ -98,30 +98,18 @@ class App extends Component {
 			openSnackbar:false
 		};
 		this.myRef = React.createRef()
-		this.isUnlocked =  window.ethereum._state.isUnlocked
-		this.isConnected= window.ethereum._state.isConnected
+
 		this.contracts = context.drizzle.contracts;
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
 		this.handleSnackbarClose=this.handleSnackbarClose.bind(this)
 		this.executeScroll=this.executeScroll.bind(this)
 	}
 
-	componentDidMount() {
-		// interval = setInterval(()=>{
-		// 	// console.log("jaffer this.props.drizzleStatus.initialized ",this.props.drizzleStatus.initialized )
-		// 	// console.log("jaffer this.state.account.length",this.state.account)
-		// 	if(!this.props.drizzleStatus.initialized && this.state.account.length!==0){
-		// 		window.location.reload();
-		// 	}
-		// },1000)
+	async componentDidMount() {
 		this.loadBlockchainData();
-		
 		// this.executeScroll()
 
 	}
-	componentWillUnmount() {
-		clearInterval(interval);
-	  } 
 
 	componentWillUpdate() {
 		let sent_tx = this.state.sent_tx;
@@ -149,37 +137,21 @@ class App extends Component {
 		console.log("window.ethereum", window.ethereum);
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
 			this.setState({openSnackbar:true})
-			window.ethereum.on("connect", function (accounts) {
-				console.log("on connect");
-				window.location.reload();
-			});
+			// window.ethereum.on("connect", function (accounts) {
+			// 	console.log("on connect");
+			// 	window.location.reload();
+			// });
 			
 		} else {
 			if (typeof ethereum !== "undefined") {
-				this.isUnlocked= ethereum._state.isUnlocked
-				this.isConnected= ethereum._state.isConnected
-				console.log("reloading (not) isUnlocked ==>",this.isUnlocked)
-				console.log("reloading (not) isConnected ==>",this.isConnected)
 				const a = await ethereum.enable();
 				web3 = new Web3(ethereum);
 				const accounts = await web3.eth.getAccounts();
-				// const check = localStorage.getItem("account");
-				// if (!check) {
-				// 	console.log("reloading in check");
-				// 	// window.location.reload();
-				// 	localStorage.setItem("account", true);
-				// }else 
-				console.log("reloading (not) ethereum._state.isUnlocked",ethereum._state.isUnlocked)
-				interval = setInterval(()=>{
-					if ( this.isUnlocked===false && window.ethereum._state.isUnlocked===true){
-						console.log("reloading in isUnlocked", this.isUnlocked , window.ethereum._state.isUnlocked);
-						window.location.reload()
-					}else if ( this.isConnected===false && window.ethereum._state.isConnected===true){
-						console.log("reloading in isConnected", this.isConnected , window.ethereum._state.isConnected);
-						window.location.reload()
-					}
-				},1000)
-				
+				const check = localStorage.getItem("account");
+				if (!check) {
+					window.location.reload();
+					localStorage.setItem("account", true);
+				}
 			} else if (typeof web3 !== "undefined") {
 				console.log("Web3 Detected!");
 				alert("alert 123 123!");
@@ -194,29 +166,19 @@ class App extends Component {
 				);
 			}
 			window.ethereum.on("connect", function (accounts) {
-				console.log("reloading in connect");
-				// window.location.reload();
+				console.log("on connect");
+				window.location.reload();
 			});
 			window.ethereum.on("accountsChanged", function (accounts) {
-				// localStorage.removeItem("account");
-				console.log("reloading in accountsChanged");
+				localStorage.removeItem("account");
 				window.location.reload();
 			});
 
 			window.ethereum.on("networkChanged", function (netId) {
-				console.log("reloading in networkChanged");
 				window.location.reload();
 			});
 			const accounts = await web3.eth.getAccounts();
 			this.setState({ account: accounts[0] });
-
-			// console.log("reloading (not) accounts",accounts)
-
-			// if(Object.keys(this.props.accounts).length === 0 && accounts.length > 0){
-			// 	 window.location.reload()
-			// 	console.log("reloading in keys")
-			// }
-			
 		}
 	}
 
