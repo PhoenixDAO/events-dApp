@@ -338,32 +338,68 @@ class Form extends Component {
 	};
 
 	restrictMinusForTickets = (e) => {
-		console.log("qwert e.which", e.which);
-		let inputKeyCode = e.which;
-		console.log("qwert key", e.key);
-		// console.log("this.form.price.value",this.form.price.value)
-		const allowedKeyCodes = [ 48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
-		if (!allowedKeyCodes.includes(inputKeyCode)) {
-			e.preventDefault();
-			return;
+		// Prevent characters that are not numbers ("e", ".", "+" & "-") ✨
+		let checkIfNum;
+		if (e.key !== undefined) {
+		  // Check if it's a "e", ".", "+" or "-"
+		  checkIfNum =
+			e.key === "e" || e.key === "." || e.key === "+" || e.key === "-";
+		} else if (e.keyCode !== undefined) {
+		  // Check if it's a "e" (69), "." (190), "+" (187) or "-" (189)
+		  checkIfNum =
+			e.keyCode === 69 ||
+			e.keyCode === 190 ||
+			e.keyCode === 187 ||
+			e.keyCode === 189;
 		}
-	};
+		return checkIfNum && e.preventDefault();
+	  };
+
+	// restrictMinusForTickets = (e) => {
+	// 	console.log("qwert e.which", e.which);
+	// 	let inputKeyCode = e.which;
+	// 	console.log("qwert key", e.key);
+	// 	// console.log("this.form.price.value",this.form.price.value)
+	// 	const allowedKeyCodes = [ 48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
+	// 	if (!allowedKeyCodes.includes(inputKeyCode)) {
+	// 		e.preventDefault();
+	// 		return;
+	// 	}
+	// };
 
 	restrictMinus = (e) => {
-		console.log("qwert e.which", e.which);
-		let inputKeyCode = e.which;
-		console.log("qwert key", e.key);
-		// console.log("this.form.price.value",this.form.price.value)
-		const allowedKeyCodes = [46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
-		if (inputKeyCode == 46 && this.form.price.value.split(".").length > 1) {
-			e.preventDefault();
-			return;
+		// Prevent characters that are not numbers ("e", ".", "+" & "-") ✨
+		let checkIfNum;
+		if (e.key !== undefined) {
+		  // Check if it's a "e", ".", "+" or "-"
+		  checkIfNum =
+			e.key === "e"  || e.key === "+" || e.key === "-";
+		} else if (e.keyCode !== undefined) {
+		  // Check if it's a "e" (69), "." (190), "+" (187) or "-" (189)
+		  checkIfNum =
+			e.keyCode === 69 ||
+			e.keyCode === 190 ||
+			e.keyCode === 187 ||
+			e.keyCode === 189;
 		}
-		if (!allowedKeyCodes.includes(inputKeyCode)) {
-			e.preventDefault();
-			return;
-		}
-	};
+		return checkIfNum && e.preventDefault();
+	  };
+
+	// restrictMinus = (e) => {
+	// 	console.log("qwert e.which", e.which);
+	// 	let inputKeyCode = e.which;
+	// 	console.log("qwert key", e.key);
+	// 	// console.log("this.form.price.value",this.form.price.value)
+	// 	const allowedKeyCodes = [46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57];
+	// 	if (inputKeyCode == 46 && this.form.price.value.split(".").length > 1) {
+	// 		e.preventDefault();
+	// 		return;
+	// 	}
+	// 	if (!allowedKeyCodes.includes(inputKeyCode)) {
+	// 		e.preventDefault();
+	// 		return;
+	// 	}
+	// };
 	handleForm = (event) => {
 		event.preventDefault();
 		console.log("state===>", typeof this.state.seats);
@@ -796,8 +832,9 @@ class Form extends Component {
 											type="number"
 											min="0.0001"
 											maxLength="15"
-											onKeyUp={this.restrictMinus}
-											onKeyPress={this.restrictMinus}
+											onKeyDown={this.restrictMinus}
+											// onKeyUp={this.restrictMinus}
+											// onKeyPress={this.restrictMinus}
 											value={this.state.price}
 											className={
 												"form-control " + warning.price
@@ -818,8 +855,8 @@ class Form extends Component {
 											type="number"
 											min="0.0001"
 											maxLength="15"
-											onKeyUp={this.restrictMinus}
-											onKeyPress={this.restrictMinus}
+											// onKeyUp={this.restrictMinus}
+											// onKeyPress={this.restrictMinus}
 											value={this.state.price}
 											className={
 												"form-control " + warning.price
@@ -872,8 +909,8 @@ class Form extends Component {
 											type="number"
 											min="0.0001"
 											maxLength="15"
-											onKeyUp={this.restrictMinus}
-											onKeyPress={this.restrictMinus}
+											// onKeyUp={this.restrictMinus}
+											// onKeyPress={this.restrictMinus}
 											value={this.state.dollarPrice}
 											className={
 												"form-control " + warning.price
@@ -894,8 +931,8 @@ class Form extends Component {
 									type="number"
 									min="0.0001"
 									maxLength="15"
-									onKeyUp={this.restrictMinus}
-									onKeyPress={this.restrictMinus}
+									// onKeyUp={this.restrictMinus}
+									// onKeyPress={this.restrictMinus}
 									value={0.00}
 									className={
 										"form-control " + warning.price
@@ -963,12 +1000,15 @@ class Form extends Component {
 												: ""
 										}
 										pattern="^[1-9]"
-										onKeyUp={
+										onKeyDown={
 											this.restrictMinusForTickets
 										}
-										onKeyPress={
-											this.restrictMinusForTickets
-										}
+										// onKeyUp={
+										// 	this.restrictMinusForTickets
+										// }
+										// onKeyPress={
+										// 	this.restrictMinusForTickets
+										// }
 										id="seats"
 										title="Tickets available"
 										disabled={!this.state.limited}
