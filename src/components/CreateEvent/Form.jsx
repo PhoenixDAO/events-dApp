@@ -436,6 +436,8 @@ class Form extends Component {
 		});
 
 		if (form_validation.length === 0) {
+			console.log("this.state",this.state)
+			console.log("this.form",this.form)
 			this.props.createEvent(
 				this.state.title,
 				this.form.description.value,
@@ -448,7 +450,7 @@ class Form extends Component {
 				this.state.currency,
 				this.state.price,
 				this.state.limited,
-				this.form.seats.value
+				this.form.seats? this.form.seats.value : ""
 			);
 		}
 	};
@@ -970,12 +972,13 @@ class Form extends Component {
 									Limited tickets
 								</label>
 							</div>
+							{this.state.limited && 
 							<div className="row mt-3">
 								<div className="col-lg-6">
 									<label htmlFor="seats">
 										Tickets available:
 									</label>
-									{this.state.limited && (
+									
 										<small
 											style={{ marginTop: "0" }}
 											className={
@@ -986,7 +989,7 @@ class Form extends Component {
 										>
 											Value must be greater than 0
 										</small>
-									)}
+									
 									<input
 										type="number"
 										className={
@@ -1019,7 +1022,7 @@ class Form extends Component {
 										onChange={this.ticketsChange}
 									/>
 								</div>
-							</div>
+							</div>}	
 						</div>
 						{alert}
 						<br />
