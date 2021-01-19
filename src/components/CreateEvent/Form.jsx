@@ -37,6 +37,7 @@ class Form extends Component {
 			topic: "appearance-or-signing",
 			limited: false,
 			seatsForHumans: 0,
+			seats:0,
 			wrong_file: false,
 			file_name: null,
 			file: null,
@@ -177,7 +178,7 @@ class Form extends Component {
 	handleLimited = () => {
 		this.setState({
 			limited: !this.state.limited,
-			seats: undefined,
+			seats: 0,
 		});
 	};
 
@@ -284,6 +285,12 @@ class Form extends Component {
 			// 	event.preventDefault();
 			// 	return;
 			// }
+			let test = event.target.value.match(/^\d*\.?\d*$/);
+			console.log("e.target.value",event.target.value)
+			console.log("e.target.value test",test)
+	  		if ((test == null && event.target.value.length != 0)) {
+				  console.log("e.target.value returned",event.target.value.charAt(event.target.value.length-1)) 
+				  return event.preventDefault();}
 			if (
 				price.includes(".") &&
 				price.split(".")[1].split("").length > 3
@@ -326,6 +333,12 @@ class Form extends Component {
 	};
 
 	ticketsChange = (event) => {
+		let test = event.target.value.match(/^\d+$/);
+			console.log("e.target.value",event.target.value)
+			console.log("e.target.value test",test)
+	  		if ((test == null && event.target.value.length != 0) ) {
+				this.form.seats.value=this.state.seats  
+				return event.preventDefault();}
 		let seats = this.form.seats.value;
 		console.log("seats.length", seats.length);
 		if (seats && seats.length > 16) {
@@ -337,23 +350,12 @@ class Form extends Component {
 		});
 	};
 
-	restrictMinusForTickets = (e) => {
-		// Prevent characters that are not numbers ("e", ".", "+" & "-") ✨
-		let checkIfNum;
-		if (e.key !== undefined) {
-		  // Check if it's a "e", ".", "+" or "-"
-		  checkIfNum =
-			e.key === "e" || e.key === "." || e.key === "+" || e.key === "-";
-		} else if (e.keyCode !== undefined) {
-		  // Check if it's a "e" (69), "." (190), "+" (187) or "-" (189)
-		  checkIfNum =
-			e.keyCode === 69 ||
-			e.keyCode === 190 ||
-			e.keyCode === 187 ||
-			e.keyCode === 189;
-		}
-		return checkIfNum && e.preventDefault();
-	  };
+	// restrictMinusForTickets = (e) => {
+	// 	let test = e.target.value.match(/^\d+$/);
+	// 	console.log("e.target.value",e.target.value)
+	// 	console.log("e.target.value test",test)
+	//   if ((test == null && e.target.value.length != 0) ) e.preventDefault();
+	//   };
 
 	// restrictMinusForTickets = (e) => {
 	// 	console.log("qwert e.which", e.which);
@@ -367,23 +369,12 @@ class Form extends Component {
 	// 	}
 	// };
 
-	restrictMinus = (e) => {
-		// Prevent characters that are not numbers ("e", ".", "+" & "-") ✨
-		let checkIfNum;
-		if (e.key !== undefined) {
-		  // Check if it's a "e", ".", "+" or "-"
-		  checkIfNum =
-			e.key === "e"  || e.key === "+" || e.key === "-";
-		} else if (e.keyCode !== undefined) {
-		  // Check if it's a "e" (69), "." (190), "+" (187) or "-" (189)
-		  checkIfNum =
-			e.keyCode === 69 ||
-			e.keyCode === 190 ||
-			e.keyCode === 187 ||
-			e.keyCode === 189;
-		}
-		return checkIfNum && e.preventDefault();
-	  };
+	// restrictMinus = (e) => {
+	// 	let test = e.target.value.match(/^\d+$/);
+	// 	console.log("e.target.value",e.target.value)
+	// 	console.log("e.target.value test",test)
+	//   if ((test == null && e.target.value.length != 0) ) return e.preventDefault();
+	//   };
 
 	// restrictMinus = (e) => {
 	// 	console.log("qwert e.which", e.which);
@@ -402,7 +393,7 @@ class Form extends Component {
 	// };
 	handleForm = (event) => {
 		event.preventDefault();
-		console.log("state===>", typeof this.state.seats);
+		console.log("state===>",  this.state.seats);
 		// const todayDate=new Date((parseInt(this.state.currentBlock.timestamp, 10) * 1000));
 		// console.log('moment.unix()',moment.unix().toString());
 		// let todayDate = moment.unix(this.state.currentBlock.timestamp).format();
@@ -434,10 +425,10 @@ class Form extends Component {
 		this.setState({
 			form_validation: form_validation,
 		});
-
+		console.log("this.state",this.state)
+		console.log("this.form",this.form)
 		if (form_validation.length === 0) {
-			console.log("this.state",this.state)
-			console.log("this.form",this.form)
+			
 			this.props.createEvent(
 				this.state.title,
 				this.form.description.value,
@@ -525,7 +516,7 @@ class Form extends Component {
 		let organizerForHumans = "";
 
 		if (this.state.limited === true) {
-			if (this.state.seats === undefined) {
+			if (this.state.seats === 0) {
 				seatsForHumans = "0/∞";
 			} else {
 				seatsForHumans = "0/" + this.state.seats;
@@ -831,10 +822,10 @@ class Form extends Component {
 									</div>
 									{this.state.currency === "phnx" && (
 										<input
-											type="number"
+											type="string"
 											min="0.0001"
 											maxLength="15"
-											onKeyDown={this.restrictMinus}
+											// onKeyDown={this.restrictMinus}
 											// onKeyUp={this.restrictMinus}
 											// onKeyPress={this.restrictMinus}
 											value={this.state.price}
@@ -854,7 +845,7 @@ class Form extends Component {
 
 									{this.state.currency === "eth" && (
 										<input
-											type="number"
+											type="string"
 											min="0.0001"
 											maxLength="15"
 											// onKeyUp={this.restrictMinus}
@@ -908,7 +899,7 @@ class Form extends Component {
 									</div>
 								{this.state.currency === "phnx" && (
 										<input
-											type="number"
+											type="string"
 											min="0.0001"
 											maxLength="15"
 											// onKeyUp={this.restrictMinus}
@@ -924,13 +915,14 @@ class Form extends Component {
 													
 											}
 											autoComplete="off"
+											disabled={true}
 											// onChange={this.priceChange}
 										/>
 									)}
 
 								{this.state.currency === "eth" && (
 									<input
-									type="number"
+									type="string"
 									min="0.0001"
 									maxLength="15"
 									// onKeyUp={this.restrictMinus}
@@ -991,7 +983,7 @@ class Form extends Component {
 										</small>
 									
 									<input
-										type="number"
+										type="string"
 										className={
 											"form-control " + warning.seats
 										}
@@ -1002,10 +994,10 @@ class Form extends Component {
 												? this.state.seats
 												: ""
 										}
-										pattern="^[1-9]"
-										onKeyDown={
-											this.restrictMinusForTickets
-										}
+										// pattern="^[1-9]"
+										// onKeyDown={
+										// 	this.restrictMinusForTickets
+										// }
 										// onKeyUp={
 										// 	this.restrictMinusForTickets
 										// }
