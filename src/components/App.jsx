@@ -29,6 +29,7 @@ import Token from "./Token";
 import Dashboard from "./Dashboard";
 
 import Notify from "./Notify";
+import NotifySending from "./NotifySending"
 import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
 import NotifySuccess from "./NotifySuccess";
@@ -116,12 +117,13 @@ class App extends Component {
 		for (let i = 0; i < this.props.transactionStack.length; i++) {
 			if (sent_tx.indexOf(this.props.transactionStack[i]) === -1) {
 				sent_tx.push(this.props.transactionStack[i]);
-
-				toast(<Notify hash={this.props.transactionStack[i]} />, {
-					position: "bottom-right",
-					autoClose: false,
-					pauseOnHover: true,
-				});
+				console.log("asasas 1")
+				
+				// toast(<NotifySending hash={this.props.transactionStack[i]} />, {
+				// 	position: "bottom-right",
+				// 	autoClose: false,
+				// 	pauseOnHover: true,
+				// });
 			} 
 		}
 
