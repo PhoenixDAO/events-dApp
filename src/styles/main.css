@@ -1256,9 +1256,9 @@ button.read-more:hover {
 }
 
 @media (max-width: 990px) {
-	.event-image {
+	/* .event-image {
 		height: 313px !important;
-	}
+	} */
 	.container-fluid {
 		/* background-color: transparent; */
 	}
