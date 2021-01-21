@@ -34,7 +34,7 @@ class FindEvents extends Component {
     };
     // const a = this.props.location.pathname.split("/")
     // console.log("this.props.location",a[a.length-1])
-    console.log("this.props",this.props)
+    // console.log("this.props",this.props)
     this.contracts = context.drizzle.contracts;
     this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
     this.perPage = 6;
