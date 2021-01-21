@@ -29,7 +29,7 @@ import Token from "./Token";
 import Dashboard from "./Dashboard";
 
 import Notify from "./Notify";
-import NotifySending from "./NotifySending"
+import NotifySending from "./NotifySending";
 import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
 import NotifySuccess from "./NotifySuccess";
@@ -40,7 +40,7 @@ import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
 import PropTypes from "prop-types";
-import Snackbar from './Snackbar';
+import Snackbar from "./Snackbar";
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
@@ -96,20 +96,26 @@ class App extends Component {
 			error: false,
 			afterApprove: false,
 			getPhoenixDAO: "",
-			openSnackbar:false
+			openSnackbar: false,
 		};
-		this.myRef = React.createRef()
+		this.myRef = React.createRef();
 
 		this.contracts = context.drizzle.contracts;
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
-		this.handleSnackbarClose=this.handleSnackbarClose.bind(this)
-		this.executeScroll=this.executeScroll.bind(this)
+		this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
+		this.executeScroll = this.executeScroll.bind(this);
 	}
 
 	async componentDidMount() {
-		this.loadBlockchainData();
 		// this.executeScroll()
-
+		web3 = new Web3(ethereum);
+		const accounts = await web3.eth.getAccounts();
+		console.log("hey check now haha", accounts);
+		if (accounts.length == 0) {
+			localStorage.removeItem("account");
+			console.log("hey check now haha0");
+		}
+		await this.loadBlockchainData();
 	}
 
 	componentWillUpdate() {
@@ -117,14 +123,14 @@ class App extends Component {
 		for (let i = 0; i < this.props.transactionStack.length; i++) {
 			if (sent_tx.indexOf(this.props.transactionStack[i]) === -1) {
 				sent_tx.push(this.props.transactionStack[i]);
-				console.log("asasas 1")
-				
+				console.log("asasas 1");
+
 				// toast(<NotifySending hash={this.props.transactionStack[i]} />, {
 				// 	position: "bottom-right",
 				// 	autoClose: false,
 				// 	pauseOnHover: true,
 				// });
-			} 
+			}
 		}
 
 		if (sent_tx.length !== this.state.sent_tx.length) {
@@ -138,18 +144,20 @@ class App extends Component {
 	async loadBlockchainData() {
 		console.log("window.ethereum", window.ethereum);
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
-			this.setState({openSnackbar:true})
-			// window.ethereum.on("connect", function (accounts) {
-			// 	console.log("on connect");
-			// 	window.location.reload();
-			// });
-			
+			let a = (
+				<a href="https://www.w3schools.com/">Visit W3Schools.com!</a>
+			);
+			alert(
+				`MetaMask is not installed. Please install MetaMask to continue. ${a}`
+			);
 		} else {
 			if (typeof ethereum !== "undefined") {
 				const a = await ethereum.enable();
 				web3 = new Web3(ethereum);
 				const accounts = await web3.eth.getAccounts();
 				const check = localStorage.getItem("account");
+				console.log("hey check now haha1", accounts);
+				console.log("hey check now haha2", check);
 				if (!check) {
 					window.location.reload();
 					localStorage.setItem("account", true);
@@ -169,7 +177,6 @@ class App extends Component {
 			}
 			window.ethereum.on("connect", function (accounts) {
 				console.log("on connect");
-				window.location.reload();
 			});
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
@@ -581,28 +588,33 @@ class App extends Component {
 			() => console.log()
 		);
 	};
-	handleSnackbarClose = () =>{
-		this.setState({openSnackbar:false})
-	}
-	executeScroll = () => {if(this.myRef.current) this.myRef.current.scrollIntoView()}
-
+	handleSnackbarClose = () => {
+		this.setState({ openSnackbar: false });
+	};
+	executeScroll = () => {
+		if (this.myRef.current) this.myRef.current.scrollIntoView();
+	};
 
 	render() {
 		let body;
 		let connecting = false;
-
-
+		console.log("this.props22", this.props.accounts);
 
 		// console.log(randomBG,Math.random());
 		if (!this.props.drizzleStatus.initialized) {
 			body = (
 				<div>
 					<Switch>
-						<Route exact path="/" render={(props) => (
-							<Home
-								{...props}
-								executeScroll={this.executeScroll}
-							/>)} />
+						<Route
+							exact
+							path="/"
+							render={(props) => (
+								<Home
+									{...props}
+									executeScroll={this.executeScroll}
+								/>
+							)}
+						/>
 						<Route component={LoadingApp} />
 					</Switch>
 				</div>
@@ -612,11 +624,16 @@ class App extends Component {
 			body = (
 				<div>
 					<Switch>
-						<Route exact path="/" render={(props) => (
-							<Home
-								{...props}
-								executeScroll={this.executeScroll}
-							/>)} />
+						<Route
+							exact
+							path="/"
+							render={(props) => (
+								<Home
+									{...props}
+									executeScroll={this.executeScroll}
+								/>
+							)}
+						/>
 						<Route component={NetworkError} />
 					</Switch>
 				</div>
@@ -651,7 +668,8 @@ class App extends Component {
 							<PastEvents
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)}
+							/>
+						)}
 					/>
 
 					<Route
@@ -701,16 +719,26 @@ class App extends Component {
 						path="/location/:page"
 						component={LocationLandingPage}
 					/>
-					<Route exact path="/Calendar" render={(props) => (
+					<Route
+						exact
+						path="/Calendar"
+						render={(props) => (
 							<Calendars
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)}/>
-					<Route exact path="/how-it-works" render={(props) => (
+							/>
+						)}
+					/>
+					<Route
+						exact
+						path="/how-it-works"
+						render={(props) => (
 							<Home
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)} />
+							/>
+						)}
+					/>
 				</Switch>
 			);
 		} else {
@@ -747,7 +775,8 @@ class App extends Component {
 							<PastEvents
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)}
+							/>
+						)}
 					/>
 					<Route
 						exact
@@ -843,31 +872,39 @@ class App extends Component {
 						path="/location/:page"
 						component={LocationLandingPage}
 					/>
-					<Route exact path="/calendar" render={(props) => (
+					<Route
+						exact
+						path="/calendar"
+						render={(props) => (
 							<Calendars
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)} />
+							/>
+						)}
+					/>
 					<Route
 						exact
 						path="/dashboard"
 						component={Dashboard}
 						account={this.state.account}
 					/>
-					<Route exact path="/how-it-works" render={(props) => (
+					<Route
+						exact
+						path="/how-it-works"
+						render={(props) => (
 							<Home
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)} />
+							/>
+						)}
+					/>
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>
 			);
 		}
 
 		return (
-			
 			<Router>
-				
 				<div id="wrapper" className="toggled" ref={this.myRef}>
 					<Sidebar
 						connection={!connecting}
@@ -889,13 +926,20 @@ class App extends Component {
 								className="branding-logo"
 								alt="PhoenixDAO logo"
 							/>
-							<h1 >PhoenixDAO Events Marketplace</h1>
+							<h1>PhoenixDAO Events Marketplace</h1>
 							<p>What are you going to do?</p>
 						</div>
 						<div className="container-fluid">
 							<div className="page-wrapper-inner">
-								<div>{body}
-			<Snackbar open={this.state.openSnackbar} message={"MetaMask is not installed. Please install MetaMask to continue."}  handleClose={this.handleSnackbarClose}/>
+								<div>
+									{body}
+									<Snackbar
+										open={this.state.openSnackbar}
+										message={
+											"MetaMask is not installed. Please install MetaMask to continue."
+										}
+										handleClose={this.handleSnackbarClose}
+									/>
 								</div>
 							</div>
 						</div>
