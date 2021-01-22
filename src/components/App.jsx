@@ -53,7 +53,7 @@ import PageNotFound from "./PageNotFound";
 import { X_OK } from "constants";
 let ethereum = window.ethereum;
 let web3 = window.web3;
-let interval;
+// let interval;
 
 const items = ["slide1.png", "slide2.png", "slide3.png", "slide4.png"];
 const randomBG = items[Math.floor(Math.random() * items.length)];

@@ -710,6 +710,10 @@ input[type="number"] {
 	.home-wrapper {
 		margin: 0px -30px 0 -30px !important;
 	}
+	.welcomeWrapper{
+		margin: 0px -30px 0 -30px !important;
+
+	}
 }
 
 .events-wrapper {
@@ -1256,9 +1260,9 @@ button.read-more:hover {
 }
 
 @media (max-width: 990px) {
-	.event-image {
+	/* .event-image {
 		height: 313px !important;
-	}
+	} */
 	.container-fluid {
 		/* background-color: transparent; */
 	}
@@ -2312,3 +2316,56 @@ h4.transactions {
 	border: 2px solid white;
 }
 /*End Dashboard Style */
+/* Welcome screen */
+.welcomeHead{
+	text-align: center;
+	font-weight: 600;
+	color: #ffffff;
+	padding:30px 0px;
+
+}
+.welcomeWrapper{
+	background-image: url("/images/welcomeBackground.png");
+	margin: -60px -60px 0 -60px !important;
+	height: 100% !important;
+    background-repeat: no-repeat;
+    background-position: center;
+	background-size: cover;
+	border-radius: 5px;
+	box-shadow: 0px 0px 20px #00000029;
+	opacity: 0.86;
+	z-index: -1;
+	
+}
+.opaqueBackground{
+	padding: 0px 30px; 
+	background-color: rgb(3 2 2 / 60%);
+	height: 100% !important;
+    border-radius: 5px;
+
+}
+.opaqueBackground p{
+	color: white;
+	opacity: 0.9;
+
+}
+.headings{
+	font-weight: bold;
+	opacity: 1 !important;
+}
+.metamaskDiv{
+    background-color: rgb(60 54 54 / 0.7);
+	/* background: #57565B 0% 0% no-repeat padding-box; */
+}
+.welcome-img{
+	position: center;
+	padding-top: 10px;
+	z-index: 10;
+	text-align: center;
+	color: #fff;
+	width: 46px;
+	height: 60px;
+	border-radius: 5px;
+	font-size: 3rem !important;
+	text-shadow: 2px 2px 12px rgb(230, 223, 223) !important;
+}
