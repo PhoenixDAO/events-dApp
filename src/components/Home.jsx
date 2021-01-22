@@ -13,6 +13,7 @@ import {
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Snackbar from './Snackbar';
+import Snackbar2 from './Snackbar2';
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Row } from "react-bootstrap";
@@ -37,7 +38,6 @@ class Home extends Component {
 		this.state = {
 			errorMessage: "",
 			openSnackbar: false,
-			type:"",
 			latestblocks: 5000000,
 
 			totalTickets: 0,
@@ -62,6 +62,8 @@ class Home extends Component {
 
 	async connectToMetaMask() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
+		console.log("here")
+
 			let web3 = new Web3(window.ethereum);
 			try {
 				const a = await window.ethereum.enable();
@@ -70,8 +72,9 @@ class Home extends Component {
 					console.log("eeee",e,e.message,e.code)
 					this.setState({
 						errorMessage: "Connection request already pending. Please check MetaMask !",
-						openSnackbar: true,
-						type:"home"
+						openSnackbar1:false,
+						openSnackbar2: true,
+
 					});
 
 			}
@@ -79,12 +82,20 @@ class Home extends Component {
 		}else{
 			this.setState({
 				errorMessage: "MetaMask is not installed. Please install MetaMask to continue !",
-				openSnackbar: true,
+				openSnackbar1: true,
+				openSnackbar2: false,
 			});
 		}
 	}
-	handleSnackbarClose = () => {
-		this.setState({ openSnackbar: false ,type:""});
+	handleSnackbarClose = (number) => {
+		if(number==1){
+			this.setState({ openSnackbar1: false });
+
+		}
+		else{
+			this.setState({ openSnackbar2: false });
+
+		}
 	};
 
 	async loadData() {
@@ -177,12 +188,18 @@ class Home extends Component {
 		return (
 			<div className="welcomeWrapper">
 				<Snackbar
-					open={this.state.openSnackbar}
+					open={this.state.openSnackbar1}
 					message={
 						this.state.errorMessage
 					}
-					handleClose={this.handleSnackbarClose}
-					type={this.state.type}
+					handleClose={()=>this.handleSnackbarClose(1)}
+				/>
+				<Snackbar2
+					open={this.state.openSnackbar2}
+					message={
+						this.state.errorMessage
+					}
+					handleClose={()=>this.handleSnackbarClose(2)}
 				/>
 				<div className="opaqueBackground">
 					<h2 className="welcomeHead">
