@@ -1,5 +1,6 @@
 #folders
 node_modules
+.env
 
 #files
 yarn-error.log

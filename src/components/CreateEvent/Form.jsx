@@ -36,6 +36,7 @@ class Form extends Component {
 			type: "auto-boat-and-air",
 			topic: "appearance-or-signing",
 			limited: false,
+			terms: false,
 			seatsForHumans: 0,
 			seats:0,
 			wrong_file: false,
@@ -179,6 +180,12 @@ class Form extends Component {
 		this.setState({
 			limited: !this.state.limited,
 			seats: 0,
+		});
+	};
+
+	handleTerms = () => {
+		this.setState({
+			terms: !this.state.terms,
 		});
 	};
 
@@ -421,6 +428,8 @@ class Form extends Component {
 		if (this.state.limited === true && this.form.seats.value < 1)
 			form_validation.push("seats");
 		if (this.state.type === "") form_validation.push("type");
+		if (!this.state.terms) form_validation.push("terms");
+
 
 		this.setState({
 			form_validation: form_validation,
@@ -441,7 +450,7 @@ class Form extends Component {
 				this.state.currency,
 				this.state.price,
 				this.state.limited,
-				this.form.seats? this.form.seats.value : ""
+				this.form.seats? this.form.seats.value : "",
 			);
 		}
 	};
@@ -501,7 +510,13 @@ class Form extends Component {
 				this.state.form_validation.indexOf("seats") === -1
 					? ""
 					: "is-invalid",
+			terms:
+				this.state.form_validation.indexOf("terms") === -1
+					? ""
+					: "is-invalid",
+					
 		};
+		console.log("warning",warning)
 
 		let alert;
 
@@ -1015,6 +1030,32 @@ class Form extends Component {
 									/>
 								</div>
 							</div>}	
+							
+						</div>
+						<div className="form-group">
+							<p>Terms and conditions:</p>
+							<div className="custom-control custom-checkbox">
+								<input
+									type="checkbox"
+									// className="custom-control-input"
+									className={
+										"custom-control-input " 
+									}
+									id="terms"
+									title="Terms and conditions"
+									value="true"
+									onChange={this.handleTerms}
+									autoComplete="off"
+								/>
+								<label
+									className={"custom-control-label "}
+									style={{color: warning.terms === "is-invalid" ? "#dc3545" : "#333333"}}
+									htmlFor="terms"
+								>
+									By creating an event, I agree to the <a target='blank' href="www.facebook.com">policies and terms of use</a>.
+								</label>
+							</div>
+							
 						</div>
 						{alert}
 						<br />

@@ -25,7 +25,7 @@ export default function CustomizedSnackbars(props) {
     <div className={classes.root}>
       <Snackbar open={props.open} anchorOrigin={{ vertical:'top', horizontal:"center" }}  autoHideDuration={4000} onClose={()=>props.handleClose()}>
         <Alert  severity="error">
-        {props.message}{typeof InstallTrigger !== 'undefined'? <a target="_blank" style={{textAlign:"center"}} href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"> [LINK]</a> : <a target="_blank" style={{textAlign:"center"}} href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"> [LINK]</a>}
+        {props.message}{props.type=="home"? "" :typeof InstallTrigger !== 'undefined'? <a target="_blank" style={{textAlign:"center"}} href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"> [LINK]</a> : <a target="_blank" style={{textAlign:"center"}} href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"> [LINK]</a>}
         </Alert>
       </Snackbar>
 
