@@ -179,6 +179,17 @@ class MyEventStat extends Component {
 			})
 			.catch((err) => console.error(err));
 
+
+			openEvents
+			.getPastEvents("SoldTicket", {
+				fromBlock: 5000000,
+				toBlock: this.state.latestblocks,
+			})
+			.then((events) => {
+				console.log("soldddd---",events)
+			})
+			.catch((err) => console.error(err));
+
 		//Listen for Incoming Sold Tickets
 		openEvents.events
 			.SoldTicket({
@@ -188,7 +199,9 @@ class MyEventStat extends Component {
 			})
 			.on(
 				"data",
-				(log) =>
+				(log) =>	
+				{
+					// console.log('total tickets ', log)
 					setTimeout(() => {
 						this.setState({ load: true });
 
@@ -208,6 +221,7 @@ class MyEventStat extends Component {
 						this.setState({ load: false });
 					}),
 				15000
+			}
 			);
 	}
 

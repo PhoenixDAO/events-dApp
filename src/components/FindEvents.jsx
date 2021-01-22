@@ -90,7 +90,7 @@ class FindEvents extends Component {
       this.setState({ Events_Blockchain: [] });
     }
 
-    openEvents.getPastEvents("CreatedEvent", { fromBlock: 5000000, toBlock: this.state.latestblocks })
+    openEvents.getPastEvents("CreatedEvent", { fromBlock: 7654042, toBlock: this.state.latestblocks })
       .then(events => {
         if (this._isMounted) {
           this.setState({ loading: true })
