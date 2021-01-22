@@ -56,6 +56,8 @@ class Home extends Component {
 										backgroundSize: "cover",
 										borderRadius: "7px",
 										paddingTop: "26px",
+										opacity: 0.9,
+
 									}}
 								>
 									<img
@@ -109,6 +111,8 @@ class Home extends Component {
 										backgroundImage: `url("/images/slides/slide3.png")`,
 										backgroundSize: "cover",
 										paddingTop: "26px",
+										opacity: 0.9,
+
 									}}
 								>
 									<h3>
