@@ -27,23 +27,23 @@ const options = {
 	}
 };
 
-// const appPassword = prompt("App password");
-// console.log("========>", appPassword , process.env.REACT_APP_PASSWORD);
-// if (appPassword == process.env.REACT_APP_PASSWORD) {
-//   ReactDOM.render(
-//     <DrizzleProvider options={options}>
-// 		<App />
-// 	</DrizzleProvider>,
-//     document.getElementById("root")
-//   );
-// } else {
-//   console.log("Wrong password");
-// }
-
-ReactDOM.render(
-	
+const appPassword = prompt("App password");
+console.log("========>", appPassword , process.env.REACT_APP_PASSWORD);
+if (appPassword == process.env.REACT_APP_PASSWORD) {
+  ReactDOM.render(
     <DrizzleProvider options={options}>
 		<App />
 	</DrizzleProvider>,
     document.getElementById("root")
-);
+  );
+} else {
+  console.log("Wrong password");
+}
+
+// ReactDOM.render(
+	
+//     <DrizzleProvider options={options}>
+// 		<App />
+// 	</DrizzleProvider>,
+//     document.getElementById("root")
+// );
