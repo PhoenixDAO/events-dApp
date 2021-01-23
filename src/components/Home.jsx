@@ -12,8 +12,8 @@ import {
 } from "../config/phoenixDAOcontract_testnet";
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
-import Snackbar from './Snackbar';
-import Snackbar2 from './Snackbar2';
+import Snackbar from "./Snackbar";
+import Snackbar2 from "./Snackbar2";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Row } from "react-bootstrap";
@@ -62,39 +62,36 @@ class Home extends Component {
 
 	async connectToMetaMask() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
-		console.log("here")
+			console.log("here");
 
 			let web3 = new Web3(window.ethereum);
 			try {
 				const a = await window.ethereum.enable();
 			} catch (e) {
-				if (e.code = -32002){
-					console.log("eeee",e,e.message,e.code)
+				if ((e.code = -32002)) {
+					console.log("eeee", e, e.message, e.code);
 					this.setState({
-						errorMessage: "Connection request already pending. Please check MetaMask !",
-						openSnackbar1:false,
+						errorMessage:
+							"Connection request already pending. Please check MetaMask !",
+						openSnackbar1: false,
 						openSnackbar2: true,
-
 					});
-
+				}
 			}
-			}
-		}else{
+		} else {
 			this.setState({
-				errorMessage: "MetaMask is not installed. Please install MetaMask to continue !",
+				errorMessage:
+					"MetaMask is not installed. Please install MetaMask to continue !",
 				openSnackbar1: true,
 				openSnackbar2: false,
 			});
 		}
 	}
 	handleSnackbarClose = (number) => {
-		if(number==1){
+		if (number == 1) {
 			this.setState({ openSnackbar1: false });
-
-		}
-		else{
+		} else {
 			this.setState({ openSnackbar2: false });
-
 		}
 	};
 
@@ -189,17 +186,13 @@ class Home extends Component {
 			<div className="welcomeWrapper">
 				<Snackbar
 					open={this.state.openSnackbar1}
-					message={
-						this.state.errorMessage
-					}
-					handleClose={()=>this.handleSnackbarClose(1)}
+					message={this.state.errorMessage}
+					handleClose={() => this.handleSnackbarClose(1)}
 				/>
 				<Snackbar2
 					open={this.state.openSnackbar2}
-					message={
-						this.state.errorMessage
-					}
-					handleClose={()=>this.handleSnackbarClose(2)}
+					message={this.state.errorMessage}
+					handleClose={() => this.handleSnackbarClose(2)}
 				/>
 				<div className="opaqueBackground">
 					<h2 className="welcomeHead">
@@ -253,7 +246,6 @@ class Home extends Component {
 										borderRadius: "7px",
 										paddingTop: "26px",
 										opacity: 0.9,
-
 									}}
 								>
 									<h3>
@@ -287,37 +279,73 @@ class Home extends Component {
 								</div>
 							</div>
 						</div>
-						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-							<div
-								className="dashboard-card"
-								onClick={this.connectToMetaMask}
-							>
-								<div
-									className="dashboard-caption metamaskDiv"
-									style={{ paddingTop: "26px" }}
-								>
-									<img
-										src={"/welcomePage/metamask-fox.svg"}
-										height="85px "
-										width="85px"
-									></img>
-									<h3
+						{Object.keys(this.props.accounts).length !== 0 ? (
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-card">
+									<div
+										className="dashboard-caption"
 										style={{
-											color: "#FFA200",
-											fontWeight: "bold",
-											opacity: 1,
-											zIndex: 1,
+											backgroundImage:
+												"url(/images/ethorange.png)",
 										}}
 									>
-										Connect to MetaMask
-									</h3>
-									<h4 className="dashboard-data">
-										{/* {eventCount.length} */}
-									</h4>
-									<p className="dashboard-footer">Events</p>
+										<h3>
+											<i className="fas fa-user-astronaut"></i>{" "}
+											User Account
+										</h3>
+										<img
+											className="dashboard-img"
+											src={"/images/ethereum.png"}
+										></img>
+										<p
+											className="mt-2"
+											title={this.props.accounts[0]}
+										>
+											{this.props.accounts[0].slice(
+												0,
+												15
+											) + "..."}
+										</p>
+									</div>
 								</div>
 							</div>
-						</div>
+						) : (
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div
+									className="dashboard-card"
+									onClick={this.connectToMetaMask}
+								>
+									<div
+										className="dashboard-caption metamaskDiv"
+										style={{ paddingTop: "26px" }}
+									>
+										<img
+											src={
+												"/welcomePage/metamask-fox.svg"
+											}
+											height="85px "
+											width="85px"
+										></img>
+										<h3
+											style={{
+												color: "#FFA200",
+												fontWeight: "bold",
+												opacity: 1,
+												zIndex: 1,
+											}}
+										>
+											Connect to MetaMask
+										</h3>
+										<h4 className="dashboard-data">
+											{/* {eventCount.length} */}
+										</h4>
+										<p className="dashboard-footer">
+											Events
+										</p>
+									</div>
+								</div>
+							</div>
+						)}
 
 						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
 							<div className="dashboard-card">
@@ -328,7 +356,6 @@ class Home extends Component {
 										backgroundSize: "cover",
 										paddingTop: "26px",
 										opacity: 0.9,
-
 									}}
 								>
 									<h3>
