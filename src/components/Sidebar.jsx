@@ -352,12 +352,12 @@ class Sidebar extends Component {
 			return (
 				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
 					<Snackbar
-						open={true}
+						open={this.state.Snackbar1}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(1)}
 					/>
 					<Snackbar2
-						open={true}
+						open={this.state.Snackbar2}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(2)}
 					/>
