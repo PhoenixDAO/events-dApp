@@ -29,9 +29,15 @@ const options = {
 
 const account_login = localStorage.getItem("account");
 let appPassword = localStorage.getItem("app_password");
+console.log("appPassword", appPassword);
 let regex = process.env.ENCRYPT_HASH;
 console.log("get item now", account_login, appPassword, regex);
-if (!account_login) {
+if (
+	!account_login ||
+	!appPassword ||
+	appPassword !=
+		"d8836dff8d8d61991212577d3c84a499b08e4fec2f629efd2155a5487b238d9f"
+) {
 	appPassword = prompt("App password");
 	localStorage.setItem("app_password", appPassword);
 }
