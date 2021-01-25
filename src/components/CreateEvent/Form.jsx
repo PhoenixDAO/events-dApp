@@ -1052,7 +1052,7 @@ class Form extends Component {
 									style={{color: warning.terms === "is-invalid" ? "#dc3545" : "#333333"}}
 									htmlFor="terms"
 								>
-									By creating an event, I agree to the <a target='blank' href="www.facebook.com">policies and terms of use</a>.
+									By creating an event, I agree to the <a target='_blank' href="/terms-and-conditions">policies and terms of use</a>.
 								</label>
 							</div>
 							

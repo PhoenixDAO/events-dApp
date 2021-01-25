@@ -220,7 +220,7 @@ class Home extends Component {
 								href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"
 							>
 								{" "}
-								[LINK]
+								MetaMask
 							</a>
 						) : (
 							<a
