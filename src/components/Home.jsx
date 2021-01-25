@@ -431,6 +431,8 @@ class Home extends Component {
 						</div>
 						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
 							<div className="dashboard-card">
+							<a target="_blank" style={{textAlign:"center", color:"white"}} href="https://youtu.be/Pj63VX1Jdxo">
+
 								<div
 									className="dashboard-caption metamaskDiv"
 									style={{ paddingTop: "26px" }}
@@ -443,9 +445,11 @@ class Home extends Component {
 										className="welcome-img"
 									></img>
 									<h3 className="mt-2 headings">
-										Walk Through Video{" "}
+									Walk Through Video{" "}	
 									</h3>
+
 								</div>
+								</a>
 							</div>
 						</div>
 
