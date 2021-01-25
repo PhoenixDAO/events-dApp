@@ -2,10 +2,18 @@ import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 import makeBlockie from "ethereum-blockies-base64";
+import Web3 from 'web3'
+import Snackbar from "./Snackbar";
+import Snackbar2 from "./Snackbar2";
 
 class Sidebar extends Component {
 	constructor(props, context) {
 		super(props);
+		this.state = {
+			errorMessage: "",
+			openSnackbar:false
+		};
+		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
 
 	sidebarClick() {
@@ -66,6 +74,42 @@ class Sidebar extends Component {
 				"sidebar-open";
 		}
 	};
+	async connectToMetaMask() {
+		if (window.ethereum && window.ethereum.isMetaMask) {
+			console.log("here");
+
+			let web3 = new Web3(window.ethereum);
+			try {
+				const a = await window.ethereum.enable();
+			} catch (e) {
+				if ((e.code = -32002)) {
+					console.log("eeee", e, e.message, e.code);
+					// window.alert(e.message)
+					this.setState({
+						errorMessage:
+							"Connection request already pending. Please check MetaMask !",
+						openSnackbar1: false,
+						openSnackbar2: true,
+					});
+					console.log("this.state",this.state)
+				}
+			}
+		} else {
+			this.setState({
+				errorMessage:
+					"MetaMask is not installed. Please install MetaMask to continue !",
+				openSnackbar1: true,
+				openSnackbar2: false,
+			});
+		}
+	}
+	handleSnackbarClose = (number) => {
+		if (number == 1) {
+			this.setState({ openSnackbar1: false });
+		} else {
+			this.setState({ openSnackbar2: false });
+		}
+	};
 
 	render() {
 		console.log("this.props", this.props.account);
@@ -119,6 +163,16 @@ class Sidebar extends Component {
 		if (this.props.account.length === 0)
 			return (
 				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
+						<Snackbar
+						open={this.state.openSnackbar1}
+						message={this.state.errorMessage}
+						handleClose={() => this.handleSnackbarClose(1)}
+					/>
+					<Snackbar2
+						open={this.state.openSnackbar2}
+						message={this.state.errorMessage}
+						handleClose={() => this.handleSnackbarClose(2)}
+					/>
 					<div
 						className="hamburgerNav"
 						onClick={() => {
@@ -257,9 +311,9 @@ class Sidebar extends Component {
 							<li>
 								<div
 									className="nav-link"
-									onClick={() => {
-										this.props.connect();
-									}}
+									onClick={
+										this.connectToMetaMask
+									}
 								>
 									<i className="fas fa-plug"></i>{" "}
 									<span className="toggleHidden">
@@ -297,6 +351,16 @@ class Sidebar extends Component {
 		else
 			return (
 				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
+					<Snackbar
+						open={true}
+						message={this.state.errorMessage}
+						handleClose={() => this.handleSnackbarClose(1)}
+					/>
+					<Snackbar2
+						open={true}
+						message={this.state.errorMessage}
+						handleClose={() => this.handleSnackbarClose(2)}
+					/>
 					<div
 						className="hamburgerNav"
 						onClick={() => {

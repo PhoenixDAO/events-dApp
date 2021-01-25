@@ -37,7 +37,8 @@ class Home extends Component {
 
 		this.state = {
 			errorMessage: "",
-			openSnackbar: false,
+			openSnackbar1: false,
+			openSnackbar2: false,
 			latestblocks: 5000000,
 
 			totalTickets: 0,

@@ -12,8 +12,10 @@ function Alert(props) {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
+    opacity:"1 !important",
     '& > * + *': {
       marginTop: theme.spacing(2),
+
     },
   },
 }));
@@ -25,7 +27,7 @@ export default function CustomizedSnackbars(props) {
     <div className={classes.root}>
       <Snackbar open={props.open} anchorOrigin={{ vertical:'top', horizontal:"center" }}  autoHideDuration={4000} onClose={()=>props.handleClose()}>
         <Alert  severity="error">
-        {props.message}{typeof InstallTrigger !== 'undefined'? <a target="_blank" style={{textAlign:"center"}} href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"> [LINK]</a> : <a target="_blank" style={{textAlign:"center"}} href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"> [LINK]</a>}
+        {props.message}{typeof InstallTrigger !== 'undefined'? <a target="_blank" style={{textAlign:"center",color:"blue",opacity:"1"}} href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"> [LINK]</a> : <a target="_blank" style={{textAlign:"center",color:"blue",opacity:"1"}} href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"> [LINK]</a>}
         </Alert>
       </Snackbar>
 
