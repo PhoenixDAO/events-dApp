@@ -169,6 +169,7 @@ class Sidebar extends Component {
 						handleClose={() => this.handleSnackbarClose(1)}
 					/>
 					<Snackbar2
+						style={{zIndex:"9999999 !important"}}
 						open={this.state.openSnackbar2}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(2)}
@@ -206,7 +207,7 @@ class Sidebar extends Component {
 									}}
 								>
 									<i className="fa fa-search"></i>{" "}
-									<span className="toggleHidden">Events</span>
+									<span className="toggleHidden">Upcoming Events</span>
 								</NavLink>
 							</li>
 							<li>
@@ -395,9 +396,9 @@ class Sidebar extends Component {
 								>
 									<i
 										className="fa fa-search"
-										title="Find Events"
+										title="Upcoming Events"
 									></i>{" "}
-									<span className="toggleHidden">Events</span>
+									<span className="toggleHidden">Upcoming Events</span>
 								</NavLink>
 							</li>
 

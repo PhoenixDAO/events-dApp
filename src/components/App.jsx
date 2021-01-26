@@ -905,7 +905,7 @@ class App extends Component {
 							/>
 						)}
 					/>
-						<Route
+					<Route
 						exact
 						path="/terms-and-conditions"
 						render={(props) => (
