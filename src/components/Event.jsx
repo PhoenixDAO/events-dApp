@@ -171,7 +171,7 @@ class Event extends Component {
 				this.state.description.length > 30
 					? this.state.description.slice(0, 60) + "..."
 					: this.state.description;
-			description = <p className="card-text event-description">{text}</p>;
+			description = <p className="card-text event-description" style={{whiteSpace:"pre-line"}}>{text}</p>;
 		}
 		return description;
 	};

@@ -229,7 +229,7 @@ class EventPage extends Component {
 	getDescription = () => {
 		let description = <Loading />;
 		if (this.state.ipfs_problem) description = <p><span role="img" aria-label="monkey">🙊</span>We can not load description</p>;
-		if (this.state.description !== null) description = <p>{this.state.description}</p>;
+		if (this.state.description !== null) description = <p style={{whiteSpace:"pre-line"}}>{this.state.description}</p>;
 		return description;
 	}
 

@@ -13,11 +13,18 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     opacity:"1 !important",
-
+    zIndex:"999999999999999 !important",
+  
     '& > * + *': {
       marginTop: theme.spacing(2),
     },
+    "&.MuiSnackbar-anchorOriginTopCenter":{
+      zIndex:"99999999 !important"
+          },
   },
+    "&.MuiSnackbar-root":{
+      zIndex:"99999999 !important"
+          },
 }));
     
 export default function CustomizedSnackbars(props) {

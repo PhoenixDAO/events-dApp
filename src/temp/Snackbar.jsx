@@ -1,6 +1,7 @@
 import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import "../styles/main.css";
 
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -23,7 +24,7 @@ export default function CustomizedSnackbars(props) {
 
   return (
     <div className={classes.root}>
-      <Snackbar open={props.open} anchorOrigin={{ vertical:'top', horizontal:"center" }}  autoHideDuration={4000} onClose={()=>props.handleClose()}>
+      <Snackbar open={props.open} className="snackbar" anchorOrigin={{ vertical:'top', horizontal:"center" }}  autoHideDuration={4000} onClose={()=>props.handleClose()}>
         <Alert  severity="error">
         {props.message}{typeof InstallTrigger !== 'undefined'? <a target="_blank" style={{textAlign:"center"}} href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"> [LINK]</a> : <a target="_blank" style={{textAlign:"center"}} href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"> [LINK]</a>}
         </Alert>

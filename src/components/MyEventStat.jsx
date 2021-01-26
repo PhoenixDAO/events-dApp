@@ -301,7 +301,7 @@ class MyEventStat extends Component {
 				</p>
 			);
 		if (this.state.description !== null)
-			description = <p>{this.state.description}</p>;
+			description = <p style={{whiteSpace:"pre-line"}}>{this.state.description}</p>;
 		return description;
 	};
 
