@@ -5,6 +5,13 @@ import { Link } from "react-router-dom";
 import makeBlockie from "ethereum-blockies-base64";
 import "../styles/Ticket.css";
 import ipfs from "../utils/ipfs";
+import NotifySending from "./NotifySending";
+import NotifySuccessSending from "./NotifySuccessSending";
+import NotifyError from "./NotifyError";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 import Loading from "./Loading";
 import {
@@ -47,6 +54,7 @@ class Ticket extends Component {
 			ipfs_problem: false,
 			card_tab: 1,
 			wrong_address: false,
+			disabledStatus: false
 		};
 		this.isCancelled = false;
 	}
@@ -147,20 +155,75 @@ class Ticket extends Component {
 	};
 
 	sendTicket = () => {
+		this.setState({ disabledStatus: true });
 		if (
 			!this.address.value ||
 			!this.context.drizzle.web3.utils.isAddress(this.address.value)
 		) {
 			this.setState({ wrong_address: true });
-			console.log("helloo1")
 		} else {
-			console.log("helloo2")
+			let txreceiptApproved = "";
+			let txconfirmedApproved = "";
+			let txerror = "";
+
 			this.setState({ wrong_address: false });
-			this.contracts["OpenEvents"].methods.safeTransferFrom.cacheSend(
-				this.props.accounts[0],
-				this.address.value,
-				this.props.id
-			);
+			this.contracts["OpenEvents"].methods
+				.safeTransferFrom(
+					this.props.accounts[0],
+					this.address.value,
+					this.props.id
+				)
+				.send({ from: this.props.accounts[0] })
+				.on("transactionHash", (transactionHash) => {
+					console.log("sendticket transactionHash", transactionHash);
+					if (transactionHash !== null) {
+						toast(<NotifySending hash={transactionHash} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						});
+					}
+				})
+				.on("confirmation", (confirmationNumber, receipt) => {
+					console.log("sendticket confirmation", confirmationNumber);
+					console.log("sendticket receipt", receipt);
+
+					if (confirmationNumber !== null) {
+						txreceiptApproved = receipt;
+						txconfirmedApproved = confirmationNumber;
+						if (
+							txconfirmedApproved == 0 &&
+							txreceiptApproved.status == true
+						) {
+							toast(
+								<NotifySuccessSending
+									hash={txreceiptApproved.transactionHash}
+								/>,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true,
+								}
+							);
+						}
+					}
+
+					this.setState({ disabledStatus: false });
+				})
+				.on("error", (error) => {
+					console.log("sendticket error", error);
+
+					if (error !== null) {
+						txerror = error;
+						toast(<NotifyError message={txerror.message} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						});
+					}
+
+					this.setState({ disabledStatus: false });
+				});
 		}
 	};
 
@@ -263,19 +326,23 @@ class Ticket extends Component {
 				card_body = (
 					<div>
 						<div className="card-body">
-							<h5 className={"mydate-time text-center " + timeClass}>
+							<h5
+								className={
+									"mydate-time text-center " + timeClass
+								}
+							>
 								<div>
-								<i className="far fa-calendar-alt"></i>
-								<span className=" pl-2">
-									{date.toLocaleDateString()} at{" "}
-									{date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-								</span>	
+									<i className="far fa-calendar-alt"></i>
+									<span className=" pl-2">
+										{date.toLocaleDateString()} at{" "}
+										{date.toLocaleTimeString([], {
+											hour: "2-digit",
+											minute: "2-digit",
+										})}
+									</span>
 								</div>
-								
 							</h5>
-							<div style={{height:"22px"}}>
-							{timeStatus}
-							</div>
+							<div style={{ height: "22px" }}>{timeStatus}</div>
 							<h5 className="text-center">
 								Your seat: {ticket_data[1]}
 							</h5>
@@ -289,8 +356,8 @@ class Ticket extends Component {
 							<h5 className="card-title event-title">
 								<Link to={titleURL}>{event_data[0]}</Link>
 							</h5>
-							<div className="ticketDescription" >
-							{description}
+							<div className="ticketDescription">
+								{description}
 							</div>
 							<h6 className="text-center mb-0">
 								Tell friends you're going!{" "}
@@ -462,6 +529,7 @@ class Ticket extends Component {
 							<button
 								className="btn btn-dark"
 								onClick={this.sendTicket}
+								disabled={this.state.disabledStatus}
 							>
 								<i className="fas fa-share-square"></i> Send
 								Ticket
@@ -541,5 +609,5 @@ const mapStateToProps = (state) => {
 	};
 };
 
-const 	AppContainer = drizzleConnect(Ticket, mapStateToProps);
+const AppContainer = drizzleConnect(Ticket, mapStateToProps);
 export default AppContainer;
