@@ -990,7 +990,9 @@ class Form extends Component {
 							<h5 className="card-title event-title">
 								{this.state.title}
 							</h5>
+							<p style={{whiteSpace: "pre-line"}}>
 							{this.state.description}
+							</p>
 						</div>
 						<ul className="list-group list-group-flush">
 							{this.state.currency == "phnx" && (

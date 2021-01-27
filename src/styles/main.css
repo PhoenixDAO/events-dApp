@@ -25,14 +25,14 @@ h1 {
 h5 {
 	font-weight: 300;
 }
-.btn:focus{
-    -webkit-box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25)  !important;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25) !important;
-    /* -webkit-box-shadow: 0 0 0 0.2rem  rgba(206, 81, 9, 0.25) !important;
+.btn:focus {
+	-webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+	/* -webkit-box-shadow: 0 0 0 0.2rem  rgba(206, 81, 9, 0.25) !important;
     box-shadow: 0 0 0 0.2rem rgba(206, 81, 9, 0.25) !important; */
 }
-.color-red{
-	color:#dc3545 !important;
+.color-red {
+	color: #dc3545 !important;
 }
 
 .logo a {
@@ -51,12 +51,12 @@ h5 a {
 	font-weight: 900;
 	color: #333333;
 }
-@media screen and (max-width:1188px )and (min-width:999px){
+@media screen and (max-width: 1188px) and (min-width: 999px) {
 	/* .time{	
 		font-size:17px;
 	
 	} */
-	.card-body{
+	.card-body {
 		padding-left: 7px;
 		padding-right: 6px;
 	}
@@ -65,16 +65,16 @@ h5 a {
 		height:60px
 	} */
 }
-.mydate-time{
+.mydate-time {
 	height: 40px;
-    align-items: center;
-    justify-content: center;
+	align-items: center;
+	justify-content: center;
 	display: flex;
-	margin-bottom:0px ;
+	margin-bottom: 0px;
 }
-@media screen and (max-width:1006px ){
-	.mydate-time{
-	margin-bottom: 15px;
+@media screen and (max-width: 1006px) {
+	.mydate-time {
+		margin-bottom: 15px;
 	}
 }
 textarea:focus,
@@ -287,7 +287,7 @@ input[type="number"] {
 .custom-file-input:focus,
 .custom-file-input:active,
 .custom-file-input:focus-within {
-	color:#495057;
+	color: #495057;
 	background-color: #fff;
 	border-color: none;
 	outline: 0;
@@ -710,9 +710,8 @@ input[type="number"] {
 	.home-wrapper {
 		margin: 0px -30px 0 -30px !important;
 	}
-	.welcomeWrapper{
+	.welcomeWrapper {
 		margin: 0px -30px 0 -30px !important;
-
 	}
 }
 
@@ -1279,7 +1278,7 @@ button.read-more:hover {
 	#wrapper.toggled #page-content-wrapper.sidebar-open {
 		padding-left: 75px;
 		padding-right: 20px;
-		padding-top: 10px !important;
+		/* padding-top: 10px !important; */
 		transition-duration: 1s;
 	}
 	#wrapper.toggled #page-content-wrapper.sidebar-closed {
@@ -1297,6 +1296,13 @@ button.read-more:hover {
 	/* .event-image {
       height: 36vw !important;
   } */
+}
+.branding {
+	opacity: 1;
+	z-index: -1 !important;
+}
+#sidebar-wrapper.my-sidebar {
+	z-index: 999 !important;
 }
 
 .category,
@@ -1332,7 +1338,6 @@ button.read-more:hover {
 		align-items: center;
 	}
 }
-
 @media (max-width: 700px) {
 	.branding h1 {
 		font-size: 1.5rem;
@@ -1601,7 +1606,7 @@ h4.transactions {
 	color: rgb(58, 58, 58);
 	/* border-top-left-radius: 5px;
 	border-top-right-radius: 5px; */
-	border-radius:5px;
+	border-radius: 5px;
 	overflow: hidden;
 	background: #333940;
 	box-shadow: 0 0 17px rgba(83, 74, 74, 0.5);
@@ -2317,48 +2322,44 @@ h4.transactions {
 }
 /*End Dashboard Style */
 /* Welcome screen */
-.welcomeHead{
+.welcomeHead {
 	text-align: center;
 	font-weight: 600;
 	color: #ffffff;
-	padding:30px 0px;
+	padding: 30px 0px;
 	letter-spacing: 1px;
-
 }
-.welcomeWrapper{
+.welcomeWrapper {
 	background-image: url("/images/welcomeBackground.png");
 	margin: -60px -60px 0 -60px !important;
 	height: 100% !important;
-    background-repeat: no-repeat;
-    background-position: center;
+	background-repeat: no-repeat;
+	background-position: center;
 	background-size: cover;
 	border-radius: 5px;
 	box-shadow: 0px 0px 20px #00000029;
 	opacity: 0.86;
 	z-index: -1;
-	
 }
-.opaqueBackground{
-	padding: 0px 30px; 
+.opaqueBackground {
+	padding: 0px 30px;
 	background-color: rgb(3 2 2 / 60%);
 	height: 100% !important;
-    border-radius: 5px;
-
+	border-radius: 5px;
 }
-.opaqueBackground p{
+.opaqueBackground p {
 	color: white;
 	opacity: 0.9;
-
 }
-.headings{
+.headings {
 	font-weight: bold;
 	opacity: 1 !important;
 }
-.metamaskDiv{
-    background-color: rgb(60 54 54 / 0.7);
+.metamaskDiv {
+	background-color: rgb(60 54 54 / 0.7);
 	/* background: #57565B 0% 0% no-repeat padding-box; */
 }
-.welcome-img{
+.welcome-img {
 	position: center;
 	padding-top: 10px;
 	z-index: 10;

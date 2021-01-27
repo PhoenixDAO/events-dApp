@@ -161,18 +161,22 @@ class Sidebar extends Component {
 			this.context.router.route.location.pathname.split("/pastevents/")
 		);
 		if (this.props.account.length === 0)
-			return (
-				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
-						<Snackbar
+			{return (
+				<React.Fragment>
+				<Snackbar
 						open={this.state.openSnackbar1}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(1)}
 					/>
 					<Snackbar2
+						style={{zIndex:"9999999 !important"}}
 						open={this.state.openSnackbar2}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(2)}
 					/>
+
+				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
+						
 					<div
 						className="hamburgerNav"
 						onClick={() => {
@@ -206,7 +210,7 @@ class Sidebar extends Component {
 									}}
 								>
 									<i className="fa fa-search"></i>{" "}
-									<span className="toggleHidden">Events</span>
+									<span className="toggleHidden">Upcoming Events</span>
 								</NavLink>
 							</li>
 							<li>
@@ -347,11 +351,13 @@ class Sidebar extends Component {
 						</a>
 					</div>
 				</div>
-			);
+			</React.Fragment>
+			)}
 		else
 			return (
-				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
-					<Snackbar
+				<React.Fragment>
+
+				<Snackbar
 						open={this.state.Snackbar1}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(1)}
@@ -361,6 +367,8 @@ class Sidebar extends Component {
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(2)}
 					/>
+				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
+					
 					<div
 						className="hamburgerNav"
 						onClick={() => {
@@ -395,9 +403,9 @@ class Sidebar extends Component {
 								>
 									<i
 										className="fa fa-search"
-										title="Find Events"
+										title="Upcoming Events"
 									></i>{" "}
-									<span className="toggleHidden">Events</span>
+									<span className="toggleHidden">Upcoming Events</span>
 								</NavLink>
 							</li>
 
@@ -609,7 +617,10 @@ class Sidebar extends Component {
 						</ul>
 					</div>
 				</div>
-			);
+				</React.Fragment>
+			
+			)
+
 	}
 }
 
