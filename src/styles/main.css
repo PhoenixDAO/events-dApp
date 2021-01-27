@@ -1297,15 +1297,12 @@ button.read-more:hover {
       height: 36vw !important;
   } */
 }
-
-@media screen and (max-width: 1000px) {
-	.branding {
-		opacity: 1;
-		z-index: -1 !important;
-	}
-	#sidebar-wrapper.my-sidebar {
-		z-index: 999 !important;
-	}
+.branding {
+	opacity: 1;
+	z-index: -1 !important;
+}
+#sidebar-wrapper.my-sidebar {
+	z-index: 999 !important;
 }
 
 .category,

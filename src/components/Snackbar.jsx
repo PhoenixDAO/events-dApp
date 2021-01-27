@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     opacity: "1 !important",
     zIndex:"999999999999999 !important",
 	"&.MuiSnackbar-anchorOriginTopCenter":{
-		zIndex:"99999999 !important"
+		zIndex:"999999999999999 !important"
 			},
 		"& > * + *": {
 			marginTop: theme.spacing(2),
@@ -31,7 +31,7 @@ export default function CustomizedSnackbars(props) {
 			<Snackbar
 				open={props.open}
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
-				autoHideDuration={4000}
+				autoHideDuration={14000}
 				onClose={() => props.handleClose()}
 			>
 				<Alert severity="error">

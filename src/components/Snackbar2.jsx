@@ -19,11 +19,11 @@ const useStyles = makeStyles((theme) => ({
       marginTop: theme.spacing(2),
     },
     "&.MuiSnackbar-anchorOriginTopCenter":{
-      zIndex:"99999999 !important"
+      zIndex:"999999999999999 !important"
           },
   },
     "&.MuiSnackbar-root":{
-      zIndex:"99999999 !important"
+      zIndex:"999999999999999 !important"
           },
 }));
     
@@ -32,7 +32,7 @@ export default function CustomizedSnackbars(props) {
 
   return (
     <div className={classes.root}>
-      <Snackbar open={props.open} anchorOrigin={{ vertical:'top', horizontal:"center" }}  autoHideDuration={4000} onClose={()=>props.handleClose()}>
+      <Snackbar open={props.open} anchorOrigin={{ vertical:'top', horizontal:"center" }}  autoHideDuration={14000} onClose={()=>props.handleClose()}>
         <Alert  severity="error">
         {props.message}
         </Alert>

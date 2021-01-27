@@ -184,8 +184,8 @@ class Home extends Component {
 
 	render() {
 		return (
-			<div className="welcomeWrapper">
-				<Snackbar
+			<React.Fragment>
+			<Snackbar
 					open={this.state.openSnackbar1}
 					message={this.state.errorMessage}
 					handleClose={() => this.handleSnackbarClose(1)}
@@ -195,6 +195,8 @@ class Home extends Component {
 					message={this.state.errorMessage}
 					handleClose={() => this.handleSnackbarClose(2)}
 				/>
+			<div className="welcomeWrapper">
+				
 				<div className="opaqueBackground">
 					<h2 className="welcomeHead">
 						WELCOME TO PHOENIX EVENT DAPP
@@ -498,6 +500,8 @@ class Home extends Component {
 					</div>
 				</div>
 			</div>
+			</React.Fragment>
+
 		);
 	}
 

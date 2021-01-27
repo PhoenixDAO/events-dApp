@@ -161,9 +161,9 @@ class Sidebar extends Component {
 			this.context.router.route.location.pathname.split("/pastevents/")
 		);
 		if (this.props.account.length === 0)
-			return (
-				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
-						<Snackbar
+			{return (
+				<React.Fragment>
+				<Snackbar
 						open={this.state.openSnackbar1}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(1)}
@@ -174,6 +174,9 @@ class Sidebar extends Component {
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(2)}
 					/>
+
+				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
+						
 					<div
 						className="hamburgerNav"
 						onClick={() => {
@@ -348,11 +351,13 @@ class Sidebar extends Component {
 						</a>
 					</div>
 				</div>
-			);
+			</React.Fragment>
+			)}
 		else
 			return (
-				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
-					<Snackbar
+				<React.Fragment>
+
+				<Snackbar
 						open={this.state.Snackbar1}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(1)}
@@ -362,6 +367,8 @@ class Sidebar extends Component {
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(2)}
 					/>
+				<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
+					
 					<div
 						className="hamburgerNav"
 						onClick={() => {
@@ -610,7 +617,10 @@ class Sidebar extends Component {
 						</ul>
 					</div>
 				</div>
-			);
+				</React.Fragment>
+			
+			)
+
 	}
 }
 
