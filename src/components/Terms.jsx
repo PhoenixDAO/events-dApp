@@ -85,11 +85,11 @@ function Terms() {
 						<strong>Website</strong> refers to PhoenixDAO,
 						accessible from{" "}
 						<a
-							href="http://www.phoenixdao.io"
+							href="https://phoenixdao.io/"
 							rel="external nofollow noopener"
 							target="_blank"
 						>
-							http://www.phoenixdao.io
+							https://phoenixdao.io/
 						</a>
 					</p>
 				</li>
@@ -136,22 +136,22 @@ function Terms() {
 			</p>
 			<h2>Links to Other Websites</h2>
 			<p>
-				Our Service may contain links to third-party web sites or
+				Our Service may contain links to third-party websites or
 				services that are not owned or controlled by the Company.
 			</p>
 			<p>
 				The Company has no control over, and assumes no responsibility
-				for, the content, privacy policies, or practices of any third
-				party web sites or services. You further acknowledge and agree
+				for, the content, privacy policies, or practices of any third-party
+				websites or services. You further acknowledge and agree
 				that the Company shall not be responsible or liable, directly or
 				indirectly, for any damage or loss caused or alleged to be
 				caused by or in connection with the use of or reliance on any
 				such content, goods or services available on or through any such
-				web sites or services.
+				websites or services.
 			</p>
 			<p>
 				We strongly advise You to read the terms and conditions and
-				privacy policies of any third-party web sites or services that
+				privacy policies of any third-party websites or services that
 				You visit.
 			</p>
 			<h2>Termination</h2>
@@ -212,7 +212,7 @@ function Terms() {
 				requirements, achieve any intended results, be compatible or
 				work with any other software, applications, systems or services,
 				operate without interruption, meet any performance or
-				reliability standards or be error free or that any errors or
+				reliability standards or be error-free or that any errors or
 				defects can or will be corrected.
 			</p>
 			<p>
@@ -309,25 +309,25 @@ function Terms() {
 			<ul>
 				<li>
 					<p>
-						By email:{" "}
-						<a
+						By email:{" "}hello@phoenixdao.io
+						{/* <a
 							href="/cdn-cgi/l/email-protection"
 							class="__cf_email__"
 							data-cfemail="fb939e979794bb8b93949e9592839f9a94d59294"
 						>
-							[email&#160;protected]
-						</a>
+							hello@phoenixdao.io
+						</a> */}
 					</p>
 				</li>
-				<li>
+				<li>	
 					<p>
 						By visiting this page on our website:{" "}
 						<a
-							href="http://www.phoenixdao.io/contact"
+							href="https://phoenixdao.io/"
 							rel="external nofollow noopener"
 							target="_blank"
 						>
-							http://www.phoenixdao.io/contact
+					https://phoenixdao.io/
 						</a>
 					</p>
 				</li>

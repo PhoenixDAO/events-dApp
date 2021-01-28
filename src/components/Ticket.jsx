@@ -161,6 +161,8 @@ class Ticket extends Component {
 			!this.context.drizzle.web3.utils.isAddress(this.address.value)
 		) {
 			this.setState({ wrong_address: true });
+			this.setState({ disabledStatus: false });
+
 		} else {
 			let txreceiptApproved = "";
 			let txconfirmedApproved = "";
