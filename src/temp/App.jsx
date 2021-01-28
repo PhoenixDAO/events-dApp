@@ -643,7 +643,7 @@ class App extends Component {
 				<Switch>
 					<Route
 						exact
-						path="/findevents/:page"
+						path="/upcomingevents/:page"
 						render={(props) => (
 							<FindEvents
 								{...props}
@@ -739,7 +739,7 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/findevents/:page"
+						path="/upcomingevents/:page"
 						render={(props) => (
 							<FindEvents
 								{...props}

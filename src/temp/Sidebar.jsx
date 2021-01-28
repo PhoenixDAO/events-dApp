@@ -94,8 +94,8 @@ class Sidebar extends Component {
 						<h5 className="toggleHidden">Events & Tickets</h5>
 						<ul className="nav flex-column">
 							<li>
-								<NavLink to="/findevents/1" className="nav-link" activeClassName="nav-link-active"
-									isActive={() => this.context.router.route.location.pathname.split("/findevents/").length > 1 || this.context.router.route.location.pathname.split("/event/").length > 1 || this.context.router.route.location.pathname.split("/event-stat/").length > 1}
+								<NavLink to="/upcomingevents/1" className="nav-link" activeClassName="nav-link-active"
+									isActive={() => this.context.router.route.location.pathname.split("/upcomingevents/").length > 1 || this.context.router.route.location.pathname.split("/event/").length > 1 || this.context.router.route.location.pathname.split("/event-stat/").length > 1}
 									onClick={() => { this.sidebarClick(this) }}><i className="fa fa-search"></i> <span className="toggleHidden">Events</span></NavLink>
 							</li>
 							<li>
@@ -157,8 +157,8 @@ class Sidebar extends Component {
 					<h5 className="toggleHidden">Events & Tickets</h5>
 					<ul className="nav flex-column">
 						<li>
-							<NavLink to="/findevents/1" className="nav-link" activeClassName="nav-link-active"
-								isActive={() => this.context.router.route.location.pathname.split("/findevents/").length > 1 || this.context.router.route.location.pathname.split("/event/").length > 1 || this.context.router.route.location.pathname.split("/event-stat/").length > 1}
+							<NavLink to="/upcomingevents/1" className="nav-link" activeClassName="nav-link-active"
+								isActive={() => this.context.router.route.location.pathname.split("/upcomingevents/").length > 1 || this.context.router.route.location.pathname.split("/event/").length > 1 || this.context.router.route.location.pathname.split("/event-stat/").length > 1}
 								onClick={() => { this.sidebarClick(this) }}><i className="fa fa-search" title="Find Events"></i> <span className="toggleHidden">Events</span></NavLink>
 						</li>
 

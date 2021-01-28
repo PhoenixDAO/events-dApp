@@ -145,7 +145,7 @@ class FindEvents extends Component {
         Events_Blockchain: filteredEvents,
         active_length: filteredEvents.length
       });
-      this.props.history.push("/findevents/" + 1)
+      this.props.history.push("/upcomingevents/" + 1)
     })
   }
 
@@ -211,7 +211,7 @@ class FindEvents extends Component {
               let active = i === currentPage ? 'active' : '';
               links.push(
                 <li className={"page-item " + active} key={i}>
-                  <Link to={"/findevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
+                  <Link to={"/upcomingevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
                 </li>
               );
               if (this.state.prevPath!=-1) {
@@ -226,7 +226,7 @@ class FindEvents extends Component {
               let active = i === currentPage ? 'active' : '';
               links.push(
                 <li className={"page-item " + active} key={i}>
-                  <Link to={"/findevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
+                  <Link to={"/upcomingevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
                 </li>
               );
               if (this.state.prevPath!=-1) {
@@ -240,7 +240,7 @@ class FindEvents extends Component {
               let active = i === currentPage ? 'active' : '';
               links.push(
                 <li className={"page-item " + active} key={i}>
-                  <Link to={"/findevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
+                  <Link to={"/upcomingevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
                 </li>
               );
               if (this.state.prevPath!=-1) {

@@ -72,7 +72,7 @@ class TopicsLandingPage extends Component {
 						let active = i === currentPage ? 'active' : '';
 						links.push(
 							<li className={"page-item " + active} key={i}>
-								<Link to={"/findevents/" + i} className="page-link">{i}</Link>
+								<Link to={"/upcomingevents/" + i} className="page-link">{i}</Link>
 							</li>
 						);
 					}

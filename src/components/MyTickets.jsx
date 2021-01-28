@@ -66,7 +66,7 @@ class MyTickets extends Component {
 				body =
 					<div className="no-tickets text-center mt-5">
 						<h3>You have not purchased any tickets yet.</h3>
-            <button  className="btn btn-drk read-more" onClick={() => {this.readMoreClick("/findevents/1")}}>Find an Event</button>.
+            <button  className="btn btn-drk read-more" onClick={() => {this.readMoreClick("/upcomingevents/1")}}>Find an Event</button>.
 					</div>
 				;
 			} else {
