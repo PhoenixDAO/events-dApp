@@ -107,8 +107,31 @@ input[type="number"] {
 	text-align: left !important;
 	width: 100%;
 	overflow-x: hidden;
+	scrollbar-color: #bfbfbf #333940;
+	scrollbar-width: thin;
+	
 }
 
+::-webkit-scrollbar {
+	width: 8px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+	background: #333940;
+
+  }
+  
+  ::-webkit-scrollbar-track {
+	border-radius: 10px;
+  }
+  /* Handle */
+::-webkit-scrollbar-thumb {
+	background: #bfbfbf;
+
+	border-radius: 8px;
+	
+  }
 #sidebar-wrapper.my-sidebar .user-status .user-status-icon {
 	font-size: 23px;
 	border: 3px solid #fafafa;
@@ -1147,6 +1170,18 @@ button.read-more:hover {
 	}
 }
 
+html,
+body,
+#root {
+	scrollbar-color: #f1f1f1 #333940;
+	scrollbar-width: thin;
+}
+
+#wrapper{
+	scrollbar-color: #f1f1f1 #333940;
+	scrollbar-width: thin;
+	
+}
 #wrapper.toggled #sidebar-wrapper.sidebar-closed {
 	left: 55px;
 	width: 250px;
@@ -1586,8 +1621,7 @@ h4.transactions {
 	border-top-right-radius: 5px;
 	margin-top: 20px;
 	overflow: hidden;
-	background: #333940;
-	box-shadow: 0 0 17px rgba(83, 74, 74, 0.5);
+    box-shadow: 0 0 17px rgba(83, 74, 74, 0.5);
 	border: 1px solid #343a40;
 	max-height: 90px;
 	max-width: 360px;
@@ -1608,7 +1642,7 @@ h4.transactions {
 	border-top-right-radius: 5px; */
 	border-radius: 5px;
 	overflow: hidden;
-	background: #333940;
+	/* background: #333940; */
 	box-shadow: 0 0 17px rgba(83, 74, 74, 0.5);
 	max-height: 90px;
 	float: right;
@@ -1652,8 +1686,8 @@ h4.transactions {
 	background: linear-gradient(
 		to bottom,
 		rgb(255, 255, 255),
-		rgb(146, 144, 144)
-	);
+		rgb(146 144 144 / 37%)
+	   );
 	box-shadow: 0 0 17px rgba(123, 124, 124, 0.5);
 	border-radius: 5px;
 	border: 1px solid rgb(155, 155, 155);
@@ -1676,23 +1710,23 @@ h4.transactions {
 .clock p:last-child {
 	background: linear-gradient(
 		to top,
-		rgb(4, 56, 99),
+		rgb(4 56 99 /69%),
 		rgb(93, 132, 165),
 		rgb(150, 188, 219)
 	) !important;
 	color: white;
-	border: 1px solid rgb(32, 76, 172);
+	border: 1px solid rgb(149 176 234 / 68%)
 }
 
 .box {
 	background: white;
 	border-radius: 3px;
-	background: linear-gradient(
+	/* background: linear-gradient(
 		to right,
 		rgb(235, 235, 235),
 		rgb(255, 255, 255),
 		rgb(218, 216, 216)
-	);
+	); */
 }
 
 .myEventStat {
