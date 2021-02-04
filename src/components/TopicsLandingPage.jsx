@@ -99,7 +99,7 @@ class TopicsLandingPage extends Component {
 
 		return(
       <React.Fragment>
-      <Carousel className="retract-page-inner-wrapper">
+      {/* <Carousel className="retract-page-inner-wrapper">
           <Carousel.Item className="slide1">
             <img className="d-block w-100 slider" src="/images/topics/music.jpg" alt="First slide" />
             <Carousel.Caption>
@@ -140,7 +140,7 @@ class TopicsLandingPage extends Component {
               <button className="btn btn-dark" onClick={() => {this.caruselClick("/createevent")}}><i className="fas fa-ticket-alt"></i> Create Event</button>
             </Carousel.Caption>
           </Carousel.Item>
-        </Carousel>
+        </Carousel> */}
 
 			<div className="retract-page-inner-wrapper-alternative topicsDiv">
 

@@ -17,6 +17,7 @@ import FindEvents from "./FindEvents";
 import PastEvents from "./PastEvents";
 import MyTickets from "./MyTickets";
 import CreateEvent from "./CreateEvent/";
+import EditEvent from "./EditEvent";
 import MyEvents from "./MyEvents";
 import MyEventStat from "./MyEventStat";
 import EventPage from "./EventPage";
@@ -688,6 +689,23 @@ class App extends Component {
 							/>
 						)}
 					/>
+					<Route
+						exact
+						path="/editevent"
+						render={(props) => (
+							<EditEvent
+								{...props}
+								executeScroll={this.executeScroll}
+								passtransaction={this.passtransaction}
+								upload={this.state.upload}
+								disabledStatus={this.state.disabledStatus}
+								done={this.state.done}
+								disabledStatus={this.state.disabledStatus}
+								error={this.state.error}
+								account={this.state.account}
+							/>
+						)}
+					/>
 
 					<Route
 						exact
@@ -807,6 +825,23 @@ class App extends Component {
 								upload={this.state.upload}
 								disabledStatus={this.state.disabledStatus}
 								done={this.state.done}
+								error={this.state.error}
+								account={this.state.account}
+							/>
+						)}
+					/>
+					<Route
+						exact
+						path="/editevent"
+						render={(props) => (
+							<EditEvent
+								{...props}
+								executeScroll={this.executeScroll}
+								passtransaction={this.passtransaction}
+								upload={this.state.upload}
+								disabledStatus={this.state.disabledStatus}
+								done={this.state.done}
+								disabledStatus={this.state.disabledStatus}
 								error={this.state.error}
 								account={this.state.account}
 							/>

@@ -47,11 +47,3 @@ if (appPassword == process.env.REACT_APP_PASSWORD) {
 } else {
 	console.log("Wrong password");
 }
-
-// ReactDOM.render(
-
-//     <DrizzleProvider options={options}>
-// 		<App />
-// 	</DrizzleProvider>,
-//     document.getElementById("root")
-// );

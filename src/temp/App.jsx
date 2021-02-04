@@ -39,7 +39,7 @@ import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
 import PropTypes from "prop-types";
-import Snackbar from './Snackbar';
+import Snackbar from "./Snackbar";
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
@@ -95,14 +95,14 @@ class App extends Component {
 			error: false,
 			afterApprove: false,
 			getPhoenixDAO: "",
-			openSnackbar:false
+			openSnackbar: false,
 		};
-		this.myRef = React.createRef()
+		this.myRef = React.createRef();
 
 		this.contracts = context.drizzle.contracts;
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
-		this.handleSnackbarClose=this.handleSnackbarClose.bind(this)
-		this.executeScroll=this.executeScroll.bind(this)
+		this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
+		this.executeScroll = this.executeScroll.bind(this);
 	}
 
 	componentDidMount() {
@@ -114,13 +114,12 @@ class App extends Component {
 		// 	}
 		// },1000)
 		this.loadBlockchainData();
-		
-		// this.executeScroll()
 
+		// this.executeScroll()
 	}
 	// componentWillUnmount() {
 	// 	clearInterval(interval);
-	//   } 
+	//   }
 
 	componentWillUpdate() {
 		let sent_tx = this.state.sent_tx;
@@ -133,7 +132,7 @@ class App extends Component {
 					autoClose: false,
 					pauseOnHover: true,
 				});
-			} 
+			}
 		}
 
 		if (sent_tx.length !== this.state.sent_tx.length) {
@@ -147,12 +146,11 @@ class App extends Component {
 	async loadBlockchainData() {
 		console.log("window.ethereum", window.ethereum);
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
-			this.setState({openSnackbar:true})
+			this.setState({ openSnackbar: true });
 			// window.ethereum.on("connect", function (accounts) {
 			// 	console.log("on connect");
 			// 	window.location.reload();
 			// });
-			
 		} else {
 			if (typeof ethereum !== "undefined") {
 				const a = await ethereum.enable();
@@ -590,28 +588,32 @@ class App extends Component {
 			() => console.log()
 		);
 	};
-	handleSnackbarClose = () =>{
-		this.setState({openSnackbar:false})
-	}
-	executeScroll = () => {if(this.myRef.current) this.myRef.current.scrollIntoView()}
-
+	handleSnackbarClose = () => {
+		this.setState({ openSnackbar: false });
+	};
+	executeScroll = () => {
+		if (this.myRef.current) this.myRef.current.scrollIntoView();
+	};
 
 	render() {
 		let body;
 		let connecting = false;
-
-
 
 		// console.log(randomBG,Math.random());
 		if (!this.props.drizzleStatus.initialized) {
 			body = (
 				<div>
 					<Switch>
-						<Route exact path="/" render={(props) => (
-							<Home
-								{...props}
-								executeScroll={this.executeScroll}
-							/>)} />
+						<Route
+							exact
+							path="/"
+							render={(props) => (
+								<Home
+									{...props}
+									executeScroll={this.executeScroll}
+								/>
+							)}
+						/>
 						<Route component={LoadingApp} />
 					</Switch>
 				</div>
@@ -621,11 +623,16 @@ class App extends Component {
 			body = (
 				<div>
 					<Switch>
-						<Route exact path="/" render={(props) => (
-							<Home
-								{...props}
-								executeScroll={this.executeScroll}
-							/>)} />
+						<Route
+							exact
+							path="/"
+							render={(props) => (
+								<Home
+									{...props}
+									executeScroll={this.executeScroll}
+								/>
+							)}
+						/>
 						<Route component={NetworkError} />
 					</Switch>
 				</div>
@@ -660,7 +667,8 @@ class App extends Component {
 							<PastEvents
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)}
+							/>
+						)}
 					/>
 
 					<Route
@@ -710,16 +718,26 @@ class App extends Component {
 						path="/location/:page"
 						component={LocationLandingPage}
 					/>
-					<Route exact path="/Calendar" render={(props) => (
+					<Route
+						exact
+						path="/Calendar"
+						render={(props) => (
 							<Calendars
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)}/>
-					<Route exact path="/how-it-works" render={(props) => (
+							/>
+						)}
+					/>
+					<Route
+						exact
+						path="/how-it-works"
+						render={(props) => (
 							<Home
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)} />
+							/>
+						)}
+					/>
 				</Switch>
 			);
 		} else {
@@ -756,7 +774,8 @@ class App extends Component {
 							<PastEvents
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)}
+							/>
+						)}
 					/>
 					<Route
 						exact
@@ -852,31 +871,39 @@ class App extends Component {
 						path="/location/:page"
 						component={LocationLandingPage}
 					/>
-					<Route exact path="/calendar" render={(props) => (
+					<Route
+						exact
+						path="/calendar"
+						render={(props) => (
 							<Calendars
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)} />
+							/>
+						)}
+					/>
 					<Route
 						exact
 						path="/dashboard"
 						component={Dashboard}
 						account={this.state.account}
 					/>
-					<Route exact path="/how-it-works" render={(props) => (
+					<Route
+						exact
+						path="/how-it-works"
+						render={(props) => (
 							<Home
 								{...props}
 								executeScroll={this.executeScroll}
-							/>)} />
+							/>
+						)}
+					/>
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>
 			);
 		}
 
 		return (
-			
 			<Router>
-				
 				<div id="wrapper" className="toggled" ref={this.myRef}>
 					<Sidebar
 						connection={!connecting}
@@ -898,13 +925,20 @@ class App extends Component {
 								className="branding-logo"
 								alt="PhoenixDAO logo"
 							/>
-							<h1 >PhoenixDAO Events Marketplace</h1>
+							<h1>PhoenixDAO Events Marketplace</h1>
 							<p>What are you going to do?</p>
 						</div>
 						<div className="container-fluid">
 							<div className="page-wrapper-inner">
-								<div>{body}
-			<Snackbar open={this.state.openSnackbar} message={"MetaMask is not installed. Please install MetaMask to continue."}  handleClose={this.handleSnackbarClose}/>
+								<div>
+									{body}
+									<Snackbar
+										open={this.state.openSnackbar}
+										message={
+											"MetaMask is not installed. Please install MetaMask to continue."
+										}
+										handleClose={this.handleSnackbarClose}
+									/>
 								</div>
 							</div>
 						</div>

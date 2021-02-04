@@ -32,7 +32,6 @@ import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
 import { ToastContainer, toast } from "react-toastify";
 
-
 //Numerical Setting
 let numeral = require("numeral");
 //QR Code
@@ -179,14 +178,13 @@ class MyEventStat extends Component {
 			})
 			.catch((err) => console.error(err));
 
-
-			openEvents
+		openEvents
 			.getPastEvents("SoldTicket", {
 				fromBlock: 5000000,
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
-				console.log("soldddd---",events)
+				console.log("soldddd---", events);
 			})
 			.catch((err) => console.error(err));
 
@@ -197,32 +195,28 @@ class MyEventStat extends Component {
 				fromBlock: blockNumber,
 				toBlock: "latest",
 			})
-			.on(
-				"data",
-				(log) =>	
-				{
-					// console.log('total tickets ', log)
-					setTimeout(() => {
-						this.setState({ load: true });
+			.on("data", (log) => {
+				// console.log('total tickets ', log)
+				setTimeout(() => {
+					this.setState({ load: true });
 
+					this.setState({
+						soldTicket: [...this.state.soldTicket, log],
+					});
+					var newest = this.state.soldTicket;
+					var newsort = newest
+						.concat()
+						.sort((a, b) => b.blockNumber - a.blockNumber);
+					if (this._isMounted) {
+						this.setState({ soldTicket: newsort });
 						this.setState({
-							soldTicket: [...this.state.soldTicket, log],
+							active_length: this.state.soldTicket.length,
 						});
-						var newest = this.state.soldTicket;
-						var newsort = newest
-							.concat()
-							.sort((a, b) => b.blockNumber - a.blockNumber);
-						if (this._isMounted) {
-							this.setState({ soldTicket: newsort });
-							this.setState({
-								active_length: this.state.soldTicket.length,
-							});
-						}
-						this.setState({ load: false });
-					}),
-				15000
-			}
-			);
+					}
+					this.setState({ load: false });
+				}),
+					15000;
+			});
 	}
 
 	//get market cap & dollar value of PhoenixDAO
@@ -301,7 +295,11 @@ class MyEventStat extends Component {
 				</p>
 			);
 		if (this.state.description !== null)
-			description = <p style={{whiteSpace:"pre-line"}}>{this.state.description}</p>;
+			description = (
+				<p style={{ whiteSpace: "pre-line" }}>
+					{this.state.description}
+				</p>
+			);
 		return description;
 	};
 
@@ -338,7 +336,7 @@ class MyEventStat extends Component {
 				}
 			})
 			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber ==1) {
+				if (confirmationNumber == 1) {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
@@ -687,7 +685,10 @@ class MyEventStat extends Component {
 										</li>
 										<li className="list-group-item">
 											{date.toLocaleDateString()} at{" "}
-									{date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+											{date.toLocaleTimeString([], {
+												hour: "2-digit",
+												minute: "2-digit",
+											})}
 										</li>
 										<li className="list-group-item">
 											Tickets: {event_data[6]}/{max_seats}
@@ -804,9 +805,7 @@ class MyEventStat extends Component {
 												Tickets
 											</p>
 										) : (
-											<p>
-												Available Tickets: Unlimited
-											</p>
+											<p>Available Tickets: Unlimited</p>
 										)}
 
 										{event_data[4] ? (
@@ -863,7 +862,10 @@ class MyEventStat extends Component {
 												}}
 											/>
 										</div>
-										<p className="col-md-8" className="removepadding">
+										<p
+											className="col-md-8"
+											className="removepadding"
+										>
 											Price Per Ticket:{" "}
 											<img
 												src={"/images/" + symbol}
@@ -895,7 +897,10 @@ class MyEventStat extends Component {
 												: ""}
 										</p>
 
-										<p className="col-md-8" className="removepadding">
+										<p
+											className="col-md-8"
+											className="removepadding"
+										>
 											Current Revenue For Sold Tickets:{" "}
 											<img
 												src={"/images/" + symbol}
@@ -931,7 +936,10 @@ class MyEventStat extends Component {
 										</p>
 
 										{event_data[4] ? (
-											<p className="col-md-8" className="removepadding">
+											<p
+												className="col-md-8"
+												className="removepadding"
+											>
 												Expected Revenue For Remaining
 												Tickets:{" "}
 												<img
@@ -972,14 +980,20 @@ class MyEventStat extends Component {
 													: ""}
 											</p>
 										) : (
-											<p className="col-md-12" className="removepadding">
+											<p
+												className="col-md-12"
+												className="removepadding"
+											>
 												Expected Revenue For Remaining
 												Tickets: Unlimited
 											</p>
 										)}
 
 										{event_data[4] ? (
-											<p className="col-md-8" className="removepadding">
+											<p
+												className="col-md-8"
+												className="removepadding"
+											>
 												Expected Revenue For Sold Out
 												Event:{" "}
 												<img
@@ -1015,7 +1029,10 @@ class MyEventStat extends Component {
 													: ""}
 											</p>
 										) : (
-											<p className="col-md-12" className="removepadding">
+											<p
+												className="col-md-12"
+												className="removepadding"
+											>
 												Expected Revenue For Sold Out
 												Event: Unlimited
 											</p>
