@@ -171,7 +171,14 @@ class Event extends Component {
 				this.state.description.length > 30
 					? this.state.description.slice(0, 60) + "..."
 					: this.state.description;
-			description = <p className="card-text event-description" style={{whiteSpace:"pre-line"}}>{text}</p>;
+			description = (
+				<p
+					className="card-text event-description"
+					style={{ whiteSpace: "pre-line" }}
+				>
+					{text}
+				</p>
+			);
 		}
 		return description;
 	};
@@ -203,7 +210,7 @@ class Event extends Component {
 	};
 
 	giveApproval = async () => {
-		this.handleClose()
+		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
@@ -219,7 +226,7 @@ class Event extends Component {
 				}
 			})
 			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber==1) {
+				if (confirmationNumber == 1) {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
@@ -260,9 +267,7 @@ class Event extends Component {
 			"buy",
 			this.props.contracts["OpenEvents"].getEvent[this.event].value[2]
 		);
-		console.log("temp is ss",
-		this.props.id
-	)
+		console.log("temp is ss", this.props.id);
 		this.setState(
 			{
 				fee: this.props.contracts["OpenEvents"].getEvent[this.event]
@@ -279,9 +284,9 @@ class Event extends Component {
 				),
 			},
 			async () => {
-				let temp=await this.allowance()
-				console.log("temp is ",temp)
-				if (await this.allowance() == 0) {
+				let temp = await this.allowance();
+				console.log("temp is ", temp);
+				if ((await this.allowance()) == 0) {
 					this.handleClickOpen();
 				} else {
 					this.props.inquire(
@@ -472,7 +477,7 @@ class Event extends Component {
 									alt="Event Price Icon"
 								/>{" "}
 								{event_data[3]
-									? "" + numeral(price).format('0.000')
+									? "" + numeral(price).format("0.000")
 									: "" + price}
 								{event_data[3] ? " or " : ""}
 								{event_data[3] ? (
@@ -488,19 +493,43 @@ class Event extends Component {
 									? numeral(
 											price *
 												this.state.PhoenixDAO_market.usd
-									  ).format('0.000')
+									  ).format("0.000")
 									: ""}
 							</li>
 							<li className="list-group-item date">
 								<strong>Date:</strong>{" "}
 								{date.toLocaleDateString()} at{" "}
-									{date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+								{date.toLocaleTimeString([], {
+									hour: "2-digit",
+									minute: "2-digit",
+								})}
 							</li>
 							<li className="list-group-item">
 								<strong>Tickets Sold:</strong> {event_data[6]}/
 								{max_seats}
 							</li>
 						</ul>
+						{this.props.myEvents ? (
+							<div className=" editButtons text-muted text-center">
+								<Link
+									className="col-6"
+									to={{
+										pathname: "/editevent",
+										state: { event: event_data ,...this.state,price:price},
+									}}
+								>
+									<button className="btn btn-dark col-12">
+										<i className="fa fa-edit"></i> Edit
+									</button>
+								</Link>
+								<button
+									className="btn btn-dark col-6"
+									onClick={this.inquire}
+								>
+									<i className="fas fa-trash-alt"></i> Delete
+								</button>
+							</div>
+						) : null}
 
 						<div className="card-footer text-muted text-center">
 							<button
@@ -519,7 +548,11 @@ class Event extends Component {
 
 		return (
 			<div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4">
-					<ApprovalModal open={this.state.open} handleClose={this.handleClose} giveApproval={this.giveApproval}/>
+				<ApprovalModal
+					open={this.state.open}
+					handleClose={this.handleClose}
+					giveApproval={this.giveApproval}
+				/>
 				{body}
 			</div>
 		);

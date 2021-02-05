@@ -193,7 +193,7 @@ class CreateEvent extends Component {
 		}, 500);
 	};
 	componentDidMount() {
-		console.log("props",this.props)
+		console.log("indexprops",this.props)
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
 		
 	  }
@@ -224,6 +224,7 @@ class CreateEvent extends Component {
 						<Form
 							createEvent={this.createEvent}
 							account={this.props.account}
+							{...this.props.location.state}
 						/>
 					</div>
 				</React.Fragment>
@@ -241,7 +242,7 @@ class CreateEvent extends Component {
 		return (
 			<div className="home-wrapper" >
 				<h2>
-					<i className="fa fa-edit"></i> Create Event
+					<i className="fa fa-edit"></i> Edit Event
 				</h2>
 				{disabled && (
 					<div className="alert-connection col-lg-6 mb-6">

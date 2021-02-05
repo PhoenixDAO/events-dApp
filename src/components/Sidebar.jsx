@@ -76,8 +76,6 @@ class Sidebar extends Component {
 	};
 	async connectToMetaMask() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
-			console.log("here");
-
 			let web3 = new Web3(window.ethereum);
 			try {
 				const a = await window.ethereum.enable();
@@ -91,7 +89,6 @@ class Sidebar extends Component {
 						openSnackbar1: false,
 						openSnackbar2: true,
 					});
-					console.log("this.state",this.state)
 				}
 			}
 		} else {
@@ -112,7 +109,7 @@ class Sidebar extends Component {
 	};
 
 	render() {
-		console.log("this.props", this.props.account);
+		// console.log("this.props", this.props.account);
 
 		let user = (
 			<div>
@@ -128,7 +125,6 @@ class Sidebar extends Component {
 			</div>
 		);
 		if (this.props.connection === true && this.props.account.length !== 0) {
-			console.log("123456", this.props);
 			user = (
 				<div>
 					<div className="user-status-icon">
@@ -156,10 +152,10 @@ class Sidebar extends Component {
 				</div>
 			);
 		}
-		console.log(
-			"this.context.router.route.location.pathname",
-			this.context.router.route.location.pathname.split("/pastevents/")
-		);
+		// console.log(
+		// 	"this.context.router.route.location.pathname",
+		// 	this.context.router.route.location.pathname.split("/pastevents/")
+		// );
 		if (this.props.account.length === 0)
 			{return (
 				<React.Fragment>
