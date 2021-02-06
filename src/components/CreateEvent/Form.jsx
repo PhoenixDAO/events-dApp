@@ -11,6 +11,7 @@ import { FacebookCircularProgress } from "./TimeAndDateLoader";
 import eventTypes from "../../config/types.json";
 import eventTopics from "../../config/topics.json";
 var moment = require("moment");
+var Filter = require('bad-words');
 
 let numeral = require("numeral");
 class Form extends Component {
@@ -408,6 +409,14 @@ class Form extends Component {
 		// console.log('selectedData',selectedDate)
 		// console.log('todayDate',todayDate)
 		// console.log("Date : " , todayDate)
+		let filteredDescription=""
+		if(this.form.description.value !== ""){
+			let filter = new Filter();
+			filteredDescription = filter.clean(this.form.description.value);
+			this.setState({description:filteredDescription})
+		}
+		console.log("filteredDescription form",this.form.description.value)
+		console.log("filteredDescription",filteredDescription)
 		let form_validation = [];
 		if (this.state.title === "") form_validation.push("name");
 		if (this.state.location === "") form_validation.push("location");
@@ -440,7 +449,7 @@ class Form extends Component {
 			
 			this.props.createEvent(
 				this.state.title,
-				this.form.description.value,
+				filteredDescription,
 				this.state.location,
 				this.state.time,
 				this.state.file,

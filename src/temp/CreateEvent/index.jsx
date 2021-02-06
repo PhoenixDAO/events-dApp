@@ -110,7 +110,7 @@ class CreateEvent extends Component {
 				//this.uploadTransaction();
 				console.log("hash is ", hash);
 				this.props.passtransaction(
-					this.contracts["OpenEvents"].methods.createEvent(
+					this.contracts["DaoEvents"].methods.createEvent(
 						this.state.data.name,
 						this.state.data.time,
 						this.state.data.price,
@@ -136,7 +136,7 @@ class CreateEvent extends Component {
 	};
 
 	uploadTransaction = () => {
-		let id = this.contracts["OpenEvents"].methods.createEvent.cacheSend(
+		let id = this.contracts["DaoEvents"].methods.createEvent.cacheSend(
 			this.state.data.name,
 			this.state.data.time,
 			this.state.data.price,

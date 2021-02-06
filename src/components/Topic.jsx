@@ -27,8 +27,8 @@ class Topic extends Component {
 	render() {
 		let body = <div className="card"><div className="card-body"><Loading /></div></div>;
 
-		if (typeof this.props.contracts['OpenEvents'].getEvent[this.event] !== 'undefined') {
-			let event_data = this.props.contracts['OpenEvents'].getEvent[this.event].value;
+		if (typeof this.props.contracts['DaoEvents'].getEvent[this.event] !== 'undefined') {
+			let event_data = this.props.contracts['DaoEvents'].getEvent[this.event].value;
 
 			let image = this.getImage();
 			let description = this.getDescription();

@@ -32,7 +32,7 @@ class PastEvents extends Component {
 
     };
     this.contracts = context.drizzle.contracts;
-    this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
+    this.eventCount = this.contracts['DaoEvents'].methods.getEventsCount.cacheCall();
     this.perPage = 6;
     this.topicClick = this.topicClick.bind(this);
     this.myRef = React.createRef()
@@ -151,8 +151,8 @@ class PastEvents extends Component {
   render() {
     let body = <PhoenixDAOLoader />;
 
-    if (typeof this.props.contracts['OpenEvents'].getEventsCount[this.eventCount] !== 'undefined' && this.state.active_length !== 'undefined' && this.state.loading !== true) {
-      //let count = Number(this.props.contracts['OpenEvents'].getEventsCount[this.eventCount].value);
+    if (typeof this.props.contracts['DaoEvents'].getEventsCount[this.eventCount] !== 'undefined' && this.state.active_length !== 'undefined' && this.state.loading !== true) {
+      //let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
       let count = this.state.past_length
       if (this.state.loading) {
         body = <PhoenixDAOLoader />

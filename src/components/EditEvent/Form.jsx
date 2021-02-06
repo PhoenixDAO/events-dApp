@@ -10,30 +10,31 @@ import { FacebookCircularProgress } from "./TimeAndDateLoader";
 // import ReactTooltip from 'react-tooltip'
 import eventTypes from "../../config/types.json";
 import eventTopics from "../../config/topics.json";
+import { title } from "process";
 var moment = require("moment");
 
 let numeral = require("numeral");
 class Form extends Component {
 	constructor(props) {
 		super(props);
-
 		// console.log("props.currentBlock",props.currentBlock)
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
-			title: "",
-			title_length: 0,
+			title: this.props.event[0],
+			title_length: title.length,
+			description:this.props.description,
 			description_length: 0,
 			organizer: "",
 			organizer_length: 0,
-			price: "",
-			dollarPrice: "",
-			location: "",
+			price:numeral(this.props.price ).format("0.000"),
+			dollarPrice: this.props.PhoenixDAO_market.usd* numeral(this.props.price).format("0.000"),
+			location: this.props.locations,
 			time: 0,
 			// time:Math.floor(Date.now() / 1000),
 			timeForHumans: null,
 			currency: "phnx",
-			type: "auto-boat-and-air",
+			type: this.props.event.category,
 			topic: "appearance-or-signing",
 			limited: false,
 			terms: false,
@@ -43,13 +44,13 @@ class Form extends Component {
 			file_name: null,
 			file: null,
 			blockie: "/images/PhoenixDAO.png",
-			fileImg: "/images/event-placeholder.png",
+			fileImg: this.props.image,
 			form_validation: [],
 			currentBlock: null,
 			updateTimeStamp: true,
 
 			PhoenixDAO_market: "",
-			dateDisplay: new Date(Date.now() + 10800000),
+			dateDisplay: new Date(parseInt(this.props.event[1], 10) * 1000),
 			// dateDisplay:new Date(parseInt('1577952000', 10) * 1000)
 			// dateDisplay:''
 		};
@@ -179,7 +180,7 @@ class Form extends Component {
 	handleLimited = () => {
 		this.setState({
 			limited: !this.state.limited,
-			seats: 0,
+			seats: this.state.seats,
 		});
 	};
 
@@ -399,6 +400,8 @@ class Form extends Component {
 	// 	}
 	// };
 	handleForm = (event) => {
+		console.log("editevent",this.props.location.state)
+
 		event.preventDefault();
 		console.log("state===>",  this.state.seats);
 		// const todayDate=new Date((parseInt(this.state.currentBlock.timestamp, 10) * 1000));
@@ -516,8 +519,6 @@ class Form extends Component {
 					: "is-invalid",
 					
 		};
-		console.log("warning",warning)
-
 		let alert;
 
 		if (this.state.form_validation.length > 0) {
@@ -600,6 +601,7 @@ class Form extends Component {
 								id="description"
 								title="Event Description"
 								rows="5"
+								value={this.state.description}
 								ref={(input) => (this.form.description = input)}
 								onChange={this.descriptionChange}
 								autoComplete="off"
@@ -623,6 +625,7 @@ class Form extends Component {
 								type="text"
 								className={"form-control " + warning.location}
 								id="location"
+								value={this.state.location}
 								title="Event Location"
 								onChange={this.locationChange}
 								autoComplete="off"
@@ -755,6 +758,7 @@ class Form extends Component {
 								id="topic"
 								title="Event Topic"
 								onChange={this.categoryChange}
+								value={this.state.type}
 							>
 								<option value="" disabled="disabled">
 									Select the topic of the event
@@ -968,9 +972,11 @@ class Form extends Component {
 									className="custom-control-input"
 									id="limited"
 									title="Limited tickets"
-									value="true"
+								    value="true"
 									onChange={this.handleLimited}
 									autoComplete="off"
+									// checked={this.props.event.limited}
+									checked={this.state.limited}
 								/>
 								<label
 									className="custom-control-label"
@@ -1021,7 +1027,7 @@ class Form extends Component {
 										// }
 										id="seats"
 										title="Tickets available"
-										disabled={!this.state.limited}
+										disabled={!this.state.limited }
 										ref={(input) =>
 											(this.form.seats = input)
 										}
@@ -1160,11 +1166,12 @@ class Form extends Component {
 	}
 
 	componentDidMount() {
-		// window.scroll({
-		// 	top: 0,
-		// 	behavior: 'smooth'
-		// });
-		// this.temp();
+		this.setState({
+			limited: this.props.event.limited,
+			seats: this.props.event.seats,
+		});
+		console.log("formprops",this.props)
+		console.log("formprops",this.props.event.limited)
 		this.getPhoenixDAOMarketValue();
 		// window.scrollTo(0, 0);
 	}
@@ -1175,7 +1182,7 @@ Form.contextTypes = {
 };
 
 const mapStateToProps = (state) => {
-	console.log("state", state.currentBlock);
+	// console.log("state", state.currentBlock);
 	return {
 		currentBlock: state.currentBlock,
 	};

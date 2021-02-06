@@ -586,6 +586,25 @@ class Sidebar extends Component {
 									</span>
 								</NavLink>
 							</li>
+							<li>
+								<NavLink
+									to="/terms-and-conditions"
+									className="nav-link"
+									activeClassName="nav-link-active"
+									onClick={() => {
+										this.sidebarClick(this);
+									}}
+								>
+									<i
+										className="fas fa-info-circle"
+										title="How It Works"
+										style={{ alignItems: "baseline" }}
+									></i>{" "}
+									<span className="toggleHidden">
+									Terms and Conditions
+									</span>
+								</NavLink>
+							</li>
 							{/* <li className="nav-item">
 							<NavLink to="/token" className="nav-link" activeClassName="nav-link-active"><img src="/images/PhoenixDAO.png" className="sidebar_PhoenixDAO-logo" alt="PhoenixDAO Token Logo" title="PHNX Faucet" /> <span className="toggleHidden">Get PHNX Tokens</span></NavLink>
 						</li> */}

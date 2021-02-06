@@ -16,366 +16,262 @@ import topicsJson from "../config/topics.json";
 import eventCTAsJson from "../config/event_ctas.json";
 
 class FindEvents extends Component {
-	constructor(props, context) {
-		super(props);
-		this.state = {
-			openEvents: "",
-			upload: false,
-			blocks: 5000000,
-			latestblocks: 6000000,
-			loading: true,
-			Events_Blockchain: [],
-			active_length: "",
-			isOldestFirst: false,
-			event_copy: [],
-			prevPath: -1,
-		};
-		// const a = this.props.location.pathname.split("/")
-		// console.log("this.props.location",a[a.length-1])
-		// console.log("this.props",this.props)
-		this.contracts = context.drizzle.contracts;
-		this.eventCount = this.contracts[
-			"OpenEvents"
-		].methods.getEventsCount.cacheCall();
-		this.perPage = 6;
-		this.topicClick = this.topicClick.bind(this);
-		this.myRef = React.createRef();
+  constructor(props, context) {
+    super(props);
+    this.state = {
+      openEvents: '',
+      upload: false,
+      blocks: 5000000,
+      latestblocks: 6000000,
+      loading: true,
+      Events_Blockchain: [],
+      active_length: '',
+      isOldestFirst: false,
+      event_copy: [],
+      prevPath: -1
+    };
+    // const a = this.props.location.pathname.split("/")
+    // console.log("this.props.location",a[a.length-1])
+    // console.log("this.props",this.props)
+    this.contracts = context.drizzle.contracts;
+    this.eventCount = this.contracts['DaoEvents'].methods.getEventsCount.cacheCall();
+    this.perPage = 6;
+    this.topicClick = this.topicClick.bind(this);
+    this.myRef = React.createRef()
 
-		this.toggleSortDate = this.toggleSortDate.bind(this);
-	}
+    this.toggleSortDate = this.toggleSortDate.bind(this);
 
-	topicClick(slug) {
-		this.props.history.push("/topic/" + slug + "/" + 1);
-		window.scrollTo(0, 80);
-	}
 
-	readMoreClick(location) {
-		this.props.history.push(location);
-		// window.scrollTo(0, 0);
-	}
+  }
 
-	ctasClick(slug) {
-		this.props.history.push("/" + slug);
-		window.scroll({
+  topicClick(slug) {
+    this.props.history.push("/topic/" + slug + "/" + 1);
+    window.scrollTo(0, 80);
+  }
+
+  readMoreClick(location) {
+    this.props.history.push(location);
+    // window.scrollTo(0, 0);
+  }
+
+  ctasClick(slug) {
+    this.props.history.push("/" + slug);
+    window.scroll({
 			top: 0,
-			behavior: "smooth",
-		});
-	}
+			behavior: 'smooth'
+		  });
+  }
 
-	caruselClick(location) {
-		this.props.history.push(location);
-		// window.scrollTo(0, 80);
-	}
-	executeScroll = () => this.myRef.current.scrollIntoView();
+  caruselClick(location) {
+    this.props.history.push(location);
+    // window.scrollTo(0, 80);
+  }
+  executeScroll = () => this.myRef.current.scrollIntoView()
 
-	//Loads Blockhain Data,
-	async loadBlockchain() {
-		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(
-				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
-			)
-		);
-		const openEvents = new web3.eth.Contract(
-			Open_events_ABI,
-			Open_events_Address
-		);
 
-		if (this._isMounted) {
-			this.setState({ openEvents });
-		}
-		const dateTime = Date.now();
-		const dateNow = Math.floor(dateTime / 1000);
+  //Loads Blockhain Data,
+  async loadBlockchain() {
 
-		const blockNumber = await web3.eth.getBlockNumber();
-		if (this._isMounted) {
-			this.setState({ blocks: blockNumber - 50000 });
-			this.setState({ latestblocks: blockNumber - 1 });
-			this.setState({ Events_Blockchain: [] });
-		}
+    const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b'));
+    const openEvents = new web3.eth.Contract(Open_events_ABI, Open_events_Address);
 
-		openEvents
-			.getPastEvents("CreatedEvent", {
-				fromBlock: 7654042,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
-				if (this._isMounted) {
-					this.setState({ loading: true });
+    if (this._isMounted) {
+      this.setState({ openEvents });
+    }
+    const dateTime = Date.now();
+    const dateNow = Math.floor(dateTime / 1000);
 
-					var newsort = events
-						.concat()
-						.sort((a, b) => b.blockNumber - a.blockNumber)
-						.filter(
-							(activeEvents) =>
-								activeEvents.returnValues.time >= dateNow
-						);
+    const blockNumber = await web3.eth.getBlockNumber();
+    if (this._isMounted) {
+      this.setState({ blocks: blockNumber - 50000 });
+      this.setState({ latestblocks: blockNumber - 1 });
+      this.setState({ Events_Blockchain: [] });
+    }
 
-					this.setState({
-						Events_Blockchain: newsort,
-						event_copy: newsort,
-					});
-					this.setState({
-						active_length: this.state.Events_Blockchain.length,
-					});
-					this.setState({ loading: false });
-				}
-			})
-			.catch((err) => console.error(err));
+    openEvents.getPastEvents("CreatedEvent", { fromBlock: 7654042, toBlock: this.state.latestblocks })
+      .then(events => {
+        if (this._isMounted) {
+          this.setState({ loading: true })
 
-		//Listens for New Events
-		openEvents.events
-			.CreatedEvent({
-				fromBlock: this.state.blockNumber,
-				toBlock: "latest",
-			})
-			.on("data", (log) =>
-				setTimeout(() => {
-					if (this._isMounted) {
-						// this.setState({loading:true});
+          var newsort = events.concat().sort((a, b) =>
+            b.blockNumber - a.blockNumber).filter((activeEvents =>
+              activeEvents.returnValues.time >= (dateNow)));
 
-						this.setState({
-							Events_Blockchain: [
-								...this.state.Events_Blockchain,
-								log,
-							],
-						});
-						var newest = this.state.Events_Blockchain;
-						var newsort = newest
-							.concat()
-							.sort((a, b) => b.blockNumber - a.blockNumber);
+          this.setState({ Events_Blockchain: newsort, event_copy: newsort });
+          this.setState({ active_length: this.state.Events_Blockchain.length })
+          this.setState({ loading: false });
+        }
 
-						//this.setState({incoming:false});
-						this.setState({
-							Events_Blockchain: newsort,
-							event_copy: newsort,
-						});
-						this.setState({
-							active_length: this.state.Events_Blockchain.length,
-						});
-					}
-					//this.setState({loading:false});
-				}, 10000)
-			);
-	}
+      }).catch((err) => console.error(err))
 
-	//Search Active Events By Name
-	updateSearch = (e) => {
-		let { value } = e.target;
-		this.setState({ value }, () => {
-			try {
-				if (this.state.value !== "") {
-					var filteredEvents = this.state.event_copy;
-					filteredEvents = filteredEvents.filter((events) => {
-						return (
-							events.returnValues.name
-								.toLowerCase()
-								.search(this.state.value.toLowerCase()) !== -1
-						);
-					});
-				} else {
-					filteredEvents = this.state.event_copy;
-				}
-			} catch (e) {
-				console.log(e);
-			}
-			this.setState({
-				Events_Blockchain: filteredEvents,
-				active_length: filteredEvents.length,
-			});
-			this.props.history.push("/upcomingevents/" + 1);
-		});
-	};
+    //Listens for New Events
+    openEvents.events.CreatedEvent({ fromBlock: this.state.blockNumber, toBlock: 'latest' })
+      .on('data', (log) => setTimeout(() => {
+        if (this._isMounted) {
+          // this.setState({loading:true});
 
-	//Sort Active Events By Date(Newest/Oldest)
-	toggleSortDate = (e) => {
-		let { value } = e.target;
-		this.setState({ value }, () => {
-			const { Events_Blockchain } = this.state;
-			const { ended } = Events_Blockchain;
-			var newPolls = ended;
+          this.setState({ Events_Blockchain: [...this.state.Events_Blockchain, log] });
+          var newest = this.state.Events_Blockchain
+          var newsort = newest.concat().sort((a, b) => b.blockNumber - a.blockNumber);
 
-			if (this.state.isOldestFirst) {
-				newPolls = Events_Blockchain.concat().sort(
-					(a, b) => b.returnValues.eventId - a.returnValues.eventId
-				);
-			} else {
-				newPolls = Events_Blockchain.concat().sort(
-					(a, b) => a.returnValues.eventId - b.returnValues.eventId
-				);
-			}
+          //this.setState({incoming:false});
+          this.setState({ Events_Blockchain: newsort, event_copy: newsort });
+          this.setState({ active_length: this.state.Events_Blockchain.length })
+        }
+        //this.setState({loading:false});
+      }, 10000))
+  }
 
-			this.setState({
-				isOldestFirst: !this.state.isOldestFirst,
-				Events_Blockchain: newPolls,
-			});
-		});
-	};
+  //Search Active Events By Name
+  updateSearch = (e) => {
+    let { value } = e.target
+    this.setState({ value }, () => {
+      try {
+        if (this.state.value !== "") {
 
-	render() {
-		// console.log("check find events disable status", this.props)
-		let body = <PhoenixDAOLoader />;
+          var filteredEvents = this.state.event_copy;
+          filteredEvents = filteredEvents.filter((events) => {
+            return events.returnValues.name.toLowerCase().search(this.state.value.toLowerCase()) !== -1;
+          })
+        }
+        else { filteredEvents = this.state.event_copy }
+      }
+      catch (e) {
+        console.log(e);
+      }
+      this.setState({
+        Events_Blockchain: filteredEvents,
+        active_length: filteredEvents.length
+      });
+      this.props.history.push("/upcomingevents/" + 1)
+    })
+  }
 
-		if (
-			typeof this.props.contracts["OpenEvents"].getEventsCount[
-				this.eventCount
-			] !== "undefined" &&
-			this.state.active_length !== "undefined"
-		) {
-			//let count = Number(this.props.contracts['OpenEvents'].getEventsCount[this.eventCount].value);
-			let count = this.state.Events_Blockchain.length;
-			if (this.state.loading) {
-				body = <PhoenixDAOLoader />;
-			} else if (count === 0 && !this.state.loading) {
-				body = (
-					<p className="text-center not-found">
-						<span role="img" aria-label="thinking">
-							🤔
-						</span>
-						&nbsp;No events found.{" "}
-						<a href="/createevent">Try creating one.</a>
-					</p>
-				);
-			} else {
-				let currentPage = Number(this.props.match.params.page);
-				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+  //Sort Active Events By Date(Newest/Oldest)
+  toggleSortDate = (e) => {
+    let { value } = e.target;
+    this.setState({ value }, () => {
+      const { Events_Blockchain } = this.state
+      const { ended } = Events_Blockchain
+      var newPolls = ended
 
-				let end = currentPage * this.perPage;
-				let start = end - this.perPage;
-				if (end > count) end = count;
-				let pages = Math.ceil(count / this.perPage);
+      if (this.state.isOldestFirst) {
+        newPolls = Events_Blockchain.concat().sort((a, b) => b.returnValues.eventId - a.returnValues.eventId)
+      }
+      else {
+        newPolls = Events_Blockchain.concat().sort((a, b) => a.returnValues.eventId - b.returnValues.eventId)
+      }
 
-				let events_list = [];
-				for (let i = start; i < end; i++) {
-					events_list.push(
-						<Event
-							disabledStatus={this.props.disabledStatus}
-							inquire={this.props.inquire}
-							key={
-								this.state.Events_Blockchain[i].returnValues
-									.eventId
-							}
-							id={
-								this.state.Events_Blockchain[i].returnValues
-									.eventId
-							}
-							ipfs={
-								this.state.Events_Blockchain[i].returnValues
-									.ipfs
-							}
-						/>
-					);
-				}
+      this.setState({
+        isOldestFirst: !this.state.isOldestFirst,
+        Events_Blockchain: newPolls
+      });
+    })
+  }
 
-				events_list.reverse();
+  render() {
+    // console.log("check find events disable status", this.props)
+    let body = <PhoenixDAOLoader />;
 
-				let pagination = "";
-				if (pages > 1) {
-					let links = [];
+    if (typeof this.props.contracts['DaoEvents'].getEventsCount[this.eventCount] !== 'undefined' && this.state.active_length !== 'undefined') {
+      //let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
+      let count = this.state.Events_Blockchain.length
+      if (this.state.loading) {
+        body = <PhoenixDAOLoader />
+      }
+      else if (count === 0 && !this.state.loading) {
+        body = <p className="text-center not-found"><span role="img" aria-label="thinking">🤔</span>&nbsp;No events found. <a href="/createevent">Try creating one.</a></p>;
+      } else {
+        let currentPage = Number(this.props.match.params.page);
+        if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 
-					if (pages > 5 && currentPage >= 3) {
-						for (
-							let i = currentPage - 2;
-							i <= currentPage + 2 && i <= pages;
-							i++
-						) {
-							let active = i === currentPage ? "active" : "";
-							links.push(
-								<li className={"page-item " + active} key={i}>
-									<Link
-										to={"/upcomingevents/" + i}
-										onClick={() =>
-											this.setState({
-												prevPath: currentPage,
-											})
-										}
-										className="page-link"
-									>
-										{i}
-									</Link>
-								</li>
-							);
-							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
-								this.executeScroll({
-									behavior: "smooth",
-									block: "start",
-								});
-							}
-						}
-					} else if (pages > 5 && currentPage < 3) {
-						for (let i = 1; i <= 5 && i <= pages; i++) {
-							let active = i === currentPage ? "active" : "";
-							links.push(
-								<li className={"page-item " + active} key={i}>
-									<Link
-										to={"/upcomingevents/" + i}
-										onClick={() =>
-											this.setState({
-												prevPath: currentPage,
-											})
-										}
-										className="page-link"
-									>
-										{i}
-									</Link>
-								</li>
-							);
-							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
-								this.executeScroll({
-									behavior: "smooth",
-									block: "start",
-								});
-							}
-						}
-					} else {
-						for (let i = 1; i <= pages; i++) {
-							let active = i === currentPage ? "active" : "";
-							links.push(
-								<li className={"page-item " + active} key={i}>
-									<Link
-										to={"/upcomingevents/" + i}
-										onClick={() =>
-											this.setState({
-												prevPath: currentPage,
-											})
-										}
-										className="page-link"
-									>
-										{i}
-									</Link>
-								</li>
-							);
-							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
-								this.executeScroll({
-									behavior: "smooth",
-									block: "start",
-								});
-							}
-						}
-					}
-					pagination = (
-						<nav>
-							<ul className="pagination justify-content-center">
-								{links}
-							</ul>
-						</nav>
-					);
-				}
+        let end = currentPage * this.perPage;
+        let start = end - this.perPage;
+        if (end > count) end = count;
+        let pages = Math.ceil(count / this.perPage);
 
-				body = (
-					<div>
-						<div className="row user-list mt-4">{events_list}</div>
-						{pagination}
-					</div>
-				);
-			}
-		}
+        let events_list = [];
+        for (let i = start; i < end; i++) {
+          events_list.push(<Event disabledStatus={this.props.disabledStatus} inquire={this.props.inquire}
+            key={this.state.Events_Blockchain[i].returnValues.eventId}
+            id={this.state.Events_Blockchain[i].returnValues.eventId}
+            ipfs={this.state.Events_Blockchain[i].returnValues.ipfs} />);
+        }
 
-		return (
-			<React.Fragment>
-				{/* <Carousel className="retract-page-inner-wrapper">
+        events_list.reverse();
+
+        let pagination = '';
+        if (pages > 1) {
+          let links = [];
+
+          if (pages > 5 && currentPage >= 3) {
+            for (let i = currentPage - 2; i <= currentPage + 2 && i <= pages; i++) {
+              let active = i === currentPage ? 'active' : '';
+              links.push(
+                <li className={"page-item " + active} key={i}>
+                  <Link to={"/upcomingevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
+                </li>
+              );
+              if (this.state.prevPath!=-1) {
+                console.log("prevPath",this.state.prevPath)
+                this.executeScroll({ behavior: "smooth", block: "start" });
+              }
+            }
+          }
+
+          else if (pages > 5 && currentPage < 3) {
+            for (let i = 1; i <= 5 && i <= pages; i++) {
+              let active = i === currentPage ? 'active' : '';
+              links.push(
+                <li className={"page-item " + active} key={i}>
+                  <Link to={"/upcomingevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
+                </li>
+              );
+              if (this.state.prevPath!=-1) {
+                console.log("prevPath",this.state.prevPath)
+                this.executeScroll({ behavior: "smooth", block: "start" });
+              }
+            }
+          }
+          else {
+            for (let i = 1; i <= pages; i++) {
+              let active = i === currentPage ? 'active' : '';
+              links.push(
+                <li className={"page-item " + active} key={i}>
+                  <Link to={"/upcomingevents/" + i} onClick={()=> this.setState({prevPath:currentPage})}className="page-link" >{i}</Link>
+                </li>
+              );
+              if (this.state.prevPath!=-1) {
+                console.log("prevPath",this.state.prevPath)
+                this.executeScroll({ behavior: "smooth", block: "start" });
+              }
+
+            }
+          }
+          pagination =
+            <nav>
+              <ul className="pagination justify-content-center">
+                {links}
+              </ul>
+            </nav>
+            ;
+        }
+
+        body =
+          <div >
+            <div className="row user-list mt-4">
+              {events_list}
+            </div>
+            {pagination}
+          </div>
+          ;
+      }
+    }
+
+
+    return (
+      <React.Fragment>
+        {/* <Carousel className="retract-page-inner-wrapper">
           <Carousel.Item className="slide1">
             <img className="d-block slider w-100" src="/images/topics/music.jpg" alt="First slide" />
             <Carousel.Caption>
@@ -416,7 +312,8 @@ class FindEvents extends Component {
               <button className="btn btn-dark" onClick={() => { this.caruselClick("/createevent") }}><i className="fas fa-ticket-alt"></i> Create Event</button>
             </Carousel.Caption>
           </Carousel.Item>
-        </Carousel> */}
+        </Carousel>
+				 */}
 				<div
 				//  className="retract-page-inner-wrapper-alternative dash"
 				>

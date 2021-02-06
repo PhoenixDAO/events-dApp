@@ -20,6 +20,26 @@ import {
 } from "../config/phoenixDAOcontract_testnet";
 import ApprovalModal from "./approvalModal";
 
+import {
+	EmailShareButton,
+	FacebookShareButton,
+	LinkedinShareButton,
+	RedditShareButton,
+	TelegramShareButton,
+	TwitterShareButton,
+	WhatsappShareButton
+} from "react-share";
+
+import {
+	EmailIcon,
+	FacebookIcon,
+	LinkedinIcon,
+	RedditIcon,
+	TelegramIcon,
+	TwitterIcon,
+	WhatsappIcon
+} from "react-share";
+
 import Notify from "./Notify";
 import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
@@ -88,6 +108,7 @@ const customStyles = {
 
 class MyEventStat extends Component {
 	constructor(props, context) {
+		console.log("props 321",props.location.pathname.split("/")[props.location.pathname.split("/").length-1])
 		try {
 			var contractConfig = {
 				contractName: "PHNX",
@@ -102,7 +123,7 @@ class MyEventStat extends Component {
 		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.event = this.contracts["OpenEvents"].methods.getEvent.cacheCall(
+		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
 			this.props.match.params.id
 		);
 		this.account = this.props.accounts[0];
@@ -128,6 +149,7 @@ class MyEventStat extends Component {
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
+		this.handleDelete = this.handleDelete.bind(this);
 	}
 
 	//Get SoldTicket Data
@@ -237,9 +259,9 @@ class MyEventStat extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 				"undefined" &&
-			!this.props.contracts["OpenEvents"].getEvent[this.event].error
+			!this.props.contracts["DaoEvents"].getEvent[this.event].error
 		) {
 			this.setState(
 				{
@@ -247,7 +269,7 @@ class MyEventStat extends Component {
 				},
 				() => {
 					ipfs.get(
-						this.props.contracts["OpenEvents"].getEvent[this.event]
+						this.props.contracts["DaoEvents"].getEvent[this.event]
 							.value[7]
 					)
 						.then((file) => {
@@ -313,7 +335,7 @@ class MyEventStat extends Component {
 
 	allowance = async () => {
 		let a = await this.contracts["PHNX"].methods
-			.allowance(this.account, this.contracts["OpenEvents"].address)
+			.allowance(this.account, this.contracts["DaoEvents"].address)
 			.call();
 		console.log("allowance ==> ", a);
 		return a;
@@ -375,21 +397,21 @@ class MyEventStat extends Component {
 		// console.log("approve",balance)
 		console.log(
 			"buy",
-			this.props.contracts["OpenEvents"].getEvent[this.event].value[2]
+			this.props.contracts["DaoEvents"].getEvent[this.event].value[2]
 		);
 
 		this.setState(
 			{
-				fee: this.props.contracts["OpenEvents"].getEvent[this.event]
+				fee: this.props.contracts["DaoEvents"].getEvent[this.event]
 					.value[2],
-				token: this.props.contracts["OpenEvents"].getEvent[this.event]
+				token: this.props.contracts["DaoEvents"].getEvent[this.event]
 					.value[3],
-				openEvents_address: this.contracts["OpenEvents"].address,
-				buyticket: this.contracts["OpenEvents"].methods.buyTicket(
+				openEvents_address: this.contracts["DaoEvents"].address,
+				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
 					this.props.id
 				),
 				approve: this.contracts["PHNX"].methods.approve(
-					this.contracts["OpenEvents"].address,
+					this.contracts["DaoEvents"].address,
 					balance
 				),
 			},
@@ -435,14 +457,23 @@ class MyEventStat extends Component {
 		this.setState({ pageTransactions });
 	}
 
+	handleDelete(){
+		console.log("delete pressed")
+		let id = this.props.location.pathname.split("/")[this.props.location.pathname.split("/").length-1]
+		this.contracts["DaoEvents"].methods.deleteEvent.cacheSend(
+			id
+		)
+		
+	}
+
 	render() {
 		let body = <Loading />;
-
+		
 		if (
-			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 			"undefined"
 		) {
-			if (this.props.contracts["OpenEvents"].getEvent[this.event].error) {
+			if (this.props.contracts["DaoEvents"].getEvent[this.event].error) {
 				body = (
 					<div className="text-center mt-5">
 						<span role="img" aria-label="unicorn">
@@ -452,13 +483,16 @@ class MyEventStat extends Component {
 					</div>
 				);
 			} else {
-				let event_data = this.props.contracts["OpenEvents"].getEvent[
+				let event_data = this.props.contracts["DaoEvents"].getEvent[
 					this.event
 				].value;
 				let image = this.getImage();
 				let description = this.getDescription();
 				let locations = this.getLocation();
 				let buttonText = event_data[3] ? " Buy Ticket" : " Get Ticket";
+
+				let shareUrl = window.location;
+				let title = event_data[0];
 
 				let symbol = event_data[3]
 					? "PhoenixDAO.png"
@@ -623,19 +657,25 @@ class MyEventStat extends Component {
             			<br/>
             			<br/>
            				<br/> */}
-
+<div>
+										<button onClick={this.handleDelete}>
+											delete
+										</button>
+									</div>
 								<div className="card event-hero-sidebar">
 									<img
 										className="card-img-top event-image"
 										src={image}
 										alt="Event"
 									/>
+									
 									<div className="card-header event-header">
 										<img
 											className="float-left"
 											src={makeBlockie(event_data[9])}
 											alt="User Identicon"
 										/>
+										
 									</div>
 
 									<div className="card-body">
@@ -694,6 +734,7 @@ class MyEventStat extends Component {
 											Tickets: {event_data[6]}/{max_seats}
 										</li>
 									</ul>
+									
 								</div>
 
 								{this._isMounted && (
@@ -704,6 +745,66 @@ class MyEventStat extends Component {
 								)}
 
 								<div className="new-transaction-wrapper">
+								<h4 className="transactions">
+										Share your event
+									</h4>
+									<div className="event-social-share-btns-div">
+									<EmailShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<EmailIcon size={32} round />
+									</EmailShareButton>
+
+									<FacebookShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<FacebookIcon size={32} round />
+									</FacebookShareButton>
+
+									<LinkedinShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<LinkedinIcon size={32} round />
+									</LinkedinShareButton>
+
+									<RedditShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<RedditIcon size={32} round />
+									</RedditShareButton>
+
+									<TelegramShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<TelegramIcon size={32} round />
+									</TelegramShareButton>
+
+									<TwitterShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<TwitterIcon size={32} round />
+									</TwitterShareButton>
+
+									<WhatsappShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<WhatsappIcon size={32} round />
+									</WhatsappShareButton>
+								</div>
 									<h4 className="transactions">
 										Ticket Purchases
 									</h4>

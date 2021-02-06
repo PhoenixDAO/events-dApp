@@ -239,7 +239,7 @@ class Home extends Component {
 					</p>
 					<div className="row user-list mt-4 pb-5">
 						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-							<div className="dashboard-card">
+							<div className="welcome-card">
 								<div
 									className="dashboard-caption"
 									style={{
@@ -284,7 +284,7 @@ class Home extends Component {
 						</div>
 						{Object.keys(this.props.accounts).length !== 0 ? (
 							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-								<div className="dashboard-card">
+								<div className="welcome-card">
 									<div
 										className="dashboard-caption"
 										style={{
@@ -351,7 +351,7 @@ class Home extends Component {
 						)}
 
 						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-							<div className="dashboard-card">
+							<div className="welcome-card">
 								<div
 									className="dashboard-caption"
 									style={{
@@ -389,7 +389,7 @@ class Home extends Component {
 							</div>
 						</div>
 						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-							<div className="dashboard-card">
+							<div className="welcome-card">
 								<div
 									className="dashboard-caption"
 									style={{
@@ -456,7 +456,7 @@ class Home extends Component {
 						</div>
 
 						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-							<div className="dashboard-card">
+							<div className="welcome-card">
 								<div
 									className="dashboard-caption"
 									style={{

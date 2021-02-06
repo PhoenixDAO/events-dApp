@@ -270,7 +270,7 @@ class App extends Component {
 
 	allowance = async () => {
 		let a = await this.contracts["PHNX"].methods
-			.allowance(this.state.account, this.contracts["OpenEvents"].address)
+			.allowance(this.state.account, this.contracts["DaoEvents"].address)
 			.call();
 		return a;
 	};
