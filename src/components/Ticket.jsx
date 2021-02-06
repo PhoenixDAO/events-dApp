@@ -40,7 +40,7 @@ class Ticket extends Component {
 	constructor(props, context) {
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.ticket = this.contracts["OpenEvents"].methods.getTicket.cacheCall(
+		this.ticket = this.contracts["DaoEvents"].methods.getTicket.cacheCall(
 			this.props.id
 		);
 		this.event = null;
@@ -63,7 +63,7 @@ class Ticket extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 				"undefined"
 		) {
 			this.setState(
@@ -72,7 +72,7 @@ class Ticket extends Component {
 				},
 				() => {
 					ipfs.get(
-						this.props.contracts["OpenEvents"].getEvent[this.event]
+						this.props.contracts["DaoEvents"].getEvent[this.event]
 							.value[7]
 					)
 						.then((file) => {
@@ -169,7 +169,7 @@ class Ticket extends Component {
 			let txerror = "";
 
 			this.setState({ wrong_address: false });
-			this.contracts["OpenEvents"].methods
+			this.contracts["DaoEvents"].methods
 				.safeTransferFrom(
 					this.props.accounts[0],
 					this.address.value,
@@ -231,14 +231,14 @@ class Ticket extends Component {
 
 	updateEvent = () => {
 		if (
-			typeof this.props.contracts["OpenEvents"].getTicket[this.ticket] !==
+			typeof this.props.contracts["DaoEvents"].getTicket[this.ticket] !==
 				"undefined" &&
 			this.event === null
 		) {
 			this.event = this.contracts[
-				"OpenEvents"
+				"DaoEvents"
 			].methods.getEvent.cacheCall(
-				this.props.contracts["OpenEvents"].getTicket[this.ticket]
+				this.props.contracts["DaoEvents"].getTicket[this.ticket]
 					.value[0]
 			);
 		}
@@ -250,10 +250,10 @@ class Ticket extends Component {
 	};
 
 	downloadQR = () => {
-		let ticket_data = this.props.contracts["OpenEvents"].getTicket[
+		let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 			this.ticket
 		].value;
-		let event_data = this.props.contracts["OpenEvents"].getEvent[this.event]
+		let event_data = this.props.contracts["DaoEvents"].getEvent[this.event]
 			.value;
 		const canvas = document.getElementById(
 			event_data[0] + "-" + ticket_data[1]
@@ -281,13 +281,13 @@ class Ticket extends Component {
 		);
 		if (
 			this.event !== null &&
-			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 				"undefined"
 		) {
-			let ticket_data = this.props.contracts["OpenEvents"].getTicket[
+			let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 				this.ticket
 			].value;
-			let event_data = this.props.contracts["OpenEvents"].getEvent[
+			let event_data = this.props.contracts["DaoEvents"].getEvent[
 				this.event
 			].value;
 
@@ -451,10 +451,10 @@ class Ticket extends Component {
 				);
 			} else {
 				let image = this.getImage();
-				let ticket_data = this.props.contracts["OpenEvents"].getTicket[
+				let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 					this.ticket
 				].value;
-				let event_data = this.props.contracts["OpenEvents"].getEvent[
+				let event_data = this.props.contracts["DaoEvents"].getEvent[
 					this.event
 				].value;
 				let warning = this.state.wrong_address ? "is-invalid" : "";

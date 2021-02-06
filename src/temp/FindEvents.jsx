@@ -36,7 +36,7 @@ class FindEvents extends Component {
     // console.log("this.props.location",a[a.length-1])
     console.log("this.props",this.props)
     this.contracts = context.drizzle.contracts;
-    this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
+    this.eventCount = this.contracts['DaoEvents'].methods.getEventsCount.cacheCall();
     this.perPage = 6;
     this.topicClick = this.topicClick.bind(this);
     this.myRef = React.createRef()
@@ -175,8 +175,8 @@ class FindEvents extends Component {
     // console.log("check find events disable status", this.props)
     let body = <PhoenixDAOLoader />;
 
-    if (typeof this.props.contracts['OpenEvents'].getEventsCount[this.eventCount] !== 'undefined' && this.state.active_length !== 'undefined') {
-      //let count = Number(this.props.contracts['OpenEvents'].getEventsCount[this.eventCount].value);
+    if (typeof this.props.contracts['DaoEvents'].getEventsCount[this.eventCount] !== 'undefined' && this.state.active_length !== 'undefined') {
+      //let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
       let count = this.state.Events_Blockchain.length
       if (this.state.loading) {
         body = <PhoenixDAOLoader />

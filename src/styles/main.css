@@ -1191,8 +1191,8 @@ body,
 	
 }
 #wrapper.toggled #sidebar-wrapper.sidebar-closed {
-	left: 55px;
-	width: 250px;
+	left: 45px;
+	width: 260px;
 	transition-duration: 0.5s;
 }
 

@@ -49,7 +49,7 @@ class CheckUser extends Component {
 	}
 
 	runChecking = (address) => {
-		this.ticketsOfUser = this.contracts['OpenEvents'].methods.ticketsOf.cacheCall(address);
+		this.ticketsOfUser = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(address);
 		this.setState({
 			wrong_address: false,
 			requests: {
@@ -65,13 +65,13 @@ class CheckUser extends Component {
 		if (
 			this.state.requests.ticketsOfUser &&
 			this.ticketsOfUser !== null &&
-			typeof this.props.contracts['OpenEvents'].ticketsOf[this.ticketsOfUser] !== 'undefined' &&
+			typeof this.props.contracts['DaoEvents'].ticketsOf[this.ticketsOfUser] !== 'undefined' &&
 			!this.state.requests.listOfTickets
 		) {
-			let tickets = this.props.contracts['OpenEvents'].ticketsOf[this.ticketsOfUser].value;
+			let tickets = this.props.contracts['DaoEvents'].ticketsOf[this.ticketsOfUser].value;
 
 			for (let i = 0; i < tickets.length; i++) {
-				this.listOfTickets.push(this.contracts['OpenEvents'].methods.getTicket.cacheCall(tickets[i]));
+				this.listOfTickets.push(this.contracts['DaoEvents'].methods.getTicket.cacheCall(tickets[i]));
 			}
 
 			this.setState({
@@ -88,10 +88,10 @@ class CheckUser extends Component {
 			let found = false;
 
 			for (let i = 0; i < this.listOfTickets.length; i++) {
-				if (typeof this.props.contracts['OpenEvents'].getTicket[this.listOfTickets[i]] === 'undefined') {
+				if (typeof this.props.contracts['DaoEvents'].getTicket[this.listOfTickets[i]] === 'undefined') {
 					loading = true;
 				} else {
-					if (this.props.contracts['OpenEvents'].getTicket[this.listOfTickets[i]].value[0] === this.props.event_id) {
+					if (this.props.contracts['DaoEvents'].getTicket[this.listOfTickets[i]].value[0] === this.props.event_id) {
 						found = true;
 					}
 				}

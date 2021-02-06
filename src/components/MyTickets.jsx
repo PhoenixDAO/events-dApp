@@ -18,7 +18,7 @@ class MyTickets extends Component {
 		prevPath: -1
 	}
 		this.contracts = context.drizzle.contracts;
-		this.tickets = this.contracts['OpenEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
+		this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
 		this.perPage = 6;
 		this.myRef = React.createRef()
 
@@ -38,8 +38,8 @@ class MyTickets extends Component {
   	}
 
 	getTickets = () =>{
-	if (typeof this.props.contracts['OpenEvents'].ticketsOf[this.tickets] !== 'undefined') {
-		const myTicket = this.props.contracts['OpenEvents'].ticketsOf[this.tickets].value;
+	if (typeof this.props.contracts['DaoEvents'].ticketsOf[this.tickets] !== 'undefined') {
+		const myTicket = this.props.contracts['DaoEvents'].ticketsOf[this.tickets].value;
 		let newsort= myTicket.concat().sort((a,b)=> b - a);
 		if(newsort!=='undefined'){
 		return newsort
@@ -52,8 +52,8 @@ class MyTickets extends Component {
 	render() {
 		let body = <PhoenixDAOLoader />;
 
-		if (typeof this.props.contracts['OpenEvents'].ticketsOf[this.tickets] !== 'undefined') {
-			//let allTickets = this.props.contracts['OpenEvents'].ticketsOf[this.tickets].value;
+		if (typeof this.props.contracts['DaoEvents'].ticketsOf[this.tickets] !== 'undefined') {
+			//let allTickets = this.props.contracts['DaoEvents'].ticketsOf[this.tickets].value;
 			let allTickets = this.getTickets();
 			if(this.state.loading){
 				body =

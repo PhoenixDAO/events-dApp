@@ -20,7 +20,7 @@ class Dashboard extends Component {
 
     }
     this.contracts = context.drizzle.contracts;
-    this.events = this.contracts['OpenEvents'].methods.eventsOf.cacheCall(this.props.accounts[0]);
+    this.events = this.contracts['DaoEvents'].methods.eventsOf.cacheCall(this.props.accounts[0]);
 
     this.perPage = 6;
     this.topicClick = this.topicClick.bind(this);
@@ -66,17 +66,17 @@ class Dashboard extends Component {
   render() {
     let body = '';
 
-    if (typeof this.props.contracts['OpenEvents'].eventsOf[this.events] !== 'undefined') {
+    if (typeof this.props.contracts['DaoEvents'].eventsOf[this.events] !== 'undefined') {
 
-      let eventCount = this.props.contracts['OpenEvents'].eventsOf[this.events].value;
+      let eventCount = this.props.contracts['DaoEvents'].eventsOf[this.events].value;
       let eventCache = [];
       let eventDetails = [];
       let check = [5, 1, 1];
 
       for (var i = 0; i < eventCount.length; i++) {
-        eventCache.push(this.contracts['OpenEvents'].methods.getEvent.cacheCall(eventCount[i]))
-        if (typeof this.props.contracts['OpenEvents'].getEvent[eventCache[i]] !== 'undefined' && this.props.contracts['OpenEvents'].getEvent[eventCache[i]].value) {
-          eventDetails.push({ result: this.props.contracts['OpenEvents'].getEvent[eventCache[i]].value, id: eventCount[i] })
+        eventCache.push(this.contracts['DaoEvents'].methods.getEvent.cacheCall(eventCount[i]))
+        if (typeof this.props.contracts['DaoEvents'].getEvent[eventCache[i]] !== 'undefined' && this.props.contracts['DaoEvents'].getEvent[eventCache[i]].value) {
+          eventDetails.push({ result: this.props.contracts['DaoEvents'].getEvent[eventCache[i]].value, id: eventCount[i] })
 
         }
       }

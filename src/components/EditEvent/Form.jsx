@@ -36,10 +36,10 @@ class Form extends Component {
 			currency: "phnx",
 			type: this.props.event.category,
 			topic: "appearance-or-signing",
-			limited: this.props.event.limited,
+			limited: false,
 			terms: false,
 			seatsForHumans: 0,
-			seats:this.props.event.seats,
+			seats:0,
 			wrong_file: false,
 			file_name: null,
 			file: null,
@@ -1166,6 +1166,10 @@ class Form extends Component {
 	}
 
 	componentDidMount() {
+		this.setState({
+			limited: this.props.event.limited,
+			seats: this.props.event.seats,
+		});
 		console.log("formprops",this.props)
 		console.log("formprops",this.props.event.limited)
 		this.getPhoenixDAOMarketValue();

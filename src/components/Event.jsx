@@ -64,7 +64,7 @@ class Event extends Component {
 		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.event = this.contracts["OpenEvents"].methods.getEvent.cacheCall(
+		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
 			this.props.id
 		);
 		this.account = this.props.accounts[0];
@@ -113,7 +113,7 @@ class Event extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 				"undefined"
 		) {
 			this.setState(
@@ -203,7 +203,7 @@ class Event extends Component {
 
 	allowance = async () => {
 		let a = await this.contracts["PHNX"].methods
-			.allowance(this.account, this.contracts["OpenEvents"].address)
+			.allowance(this.account, this.contracts["DaoEvents"].address)
 			.call();
 		console.log("allowance ==> ", a);
 		return a;
@@ -265,21 +265,21 @@ class Event extends Component {
 		// console.log("approve",balance)
 		console.log(
 			"buy",
-			this.props.contracts["OpenEvents"].getEvent[this.event].value[2]
+			this.props.contracts["DaoEvents"].getEvent[this.event].value[2]
 		);
 		console.log("temp is ss", this.props.id);
 		this.setState(
 			{
-				fee: this.props.contracts["OpenEvents"].getEvent[this.event]
+				fee: this.props.contracts["DaoEvents"].getEvent[this.event]
 					.value[2],
-				token: this.props.contracts["OpenEvents"].getEvent[this.event]
+				token: this.props.contracts["DaoEvents"].getEvent[this.event]
 					.value[3],
-				openEvents_address: this.contracts["OpenEvents"].address,
-				buyticket: this.contracts["OpenEvents"].methods.buyTicket(
+				openEvents_address: this.contracts["DaoEvents"].address,
+				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
 					this.props.id
 				),
 				approve: this.contracts["PHNX"].methods.approve(
-					this.contracts["OpenEvents"].address,
+					this.contracts["DaoEvents"].address,
 					balance
 				),
 			},
@@ -325,11 +325,11 @@ class Event extends Component {
 		);
 
 		if (
-			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 				"undefined" &&
-			this.props.contracts["OpenEvents"].getEvent[this.event].value
+			this.props.contracts["DaoEvents"].getEvent[this.event].value
 		) {
-			let event_data = this.props.contracts["OpenEvents"].getEvent[
+			let event_data = this.props.contracts["DaoEvents"].getEvent[
 				this.event
 			].value;
 

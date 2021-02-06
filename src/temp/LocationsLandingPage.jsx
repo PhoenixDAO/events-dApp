@@ -15,7 +15,7 @@ class LocationsLandingPage extends Component {
   constructor(props, context) {
     super(props);
     this.contracts = context.drizzle.contracts;
-    this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
+    this.eventCount = this.contracts['DaoEvents'].methods.getEventsCount.cacheCall();
     this.perPage = 6;
     this.topicClick = this.topicClick.bind(this);
   }
@@ -28,8 +28,8 @@ class LocationsLandingPage extends Component {
   render() {
     let body = <Loading />;
 
-    if (typeof this.props.contracts['OpenEvents'].getEventsCount[this.eventCount] !== 'undefined') {
-      let count = Number(this.props.contracts['OpenEvents'].getEventsCount[this.eventCount].value);
+    if (typeof this.props.contracts['DaoEvents'].getEventsCount[this.eventCount] !== 'undefined') {
+      let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
       if (count === 0) {
         body = <p className="text-center not-found"><span role="img" aria-label="thinking">🤔</span>&nbsp;No events found. <a href="/createevent">Try creating one.</a></p>;
       } else {

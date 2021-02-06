@@ -19,51 +19,55 @@ import {
 } from "react-scroll";
 // import {  Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
-import topicsJson from "../config/topics.json";
+import topicsJson from '../config/topics.json';
 
-class TopicLandingPage extends Component {
-	constructor(props, context) {
-		super(props);
+class TopicLandingPage extends Component
+{
+  constructor(props, context)
+  {
+      super(props);
 
-		this.state = {
-			openEvents: "",
-			blocks: 5000000,
-			latestblocks: 6000000,
-			blocks: 0,
-			loading: true,
-			Topic_Events: [],
-			topic_copy: [],
-			active_length: "",
-			isOldestFirst: false,
-			isActive: true,
-			dateNow: "",
-		};
+      this.state = {
+        openEvents : '',
+        blocks : 5000000,
+        latestblocks :6000000,
+        blocks:0,
+        loading : true,
+        Topic_Events : [],
+        topic_copy:[],
+        active_length : '',
+        isOldestFirst:false,
+        isActive:true,
+        dateNow:''
 
-		this.contracts = context.drizzle.contracts;
-		this.eventCount = this.contracts[
-			"OpenEvents"
-		].methods.getEventsCount.cacheCall();
-		this.perPage = 6;
-		this.topicClick = this.topicClick.bind(this);
-		this.theTopic = this.getTopicData();
-		this.topicBackground = this.theTopic["image"];
+      };
 
-		this.ActiveEvent = this.ActiveEvent.bind(this);
-		this.PastEvent = this.PastEvent.bind(this);
-		this.toggleSortDate = this.toggleSortDate.bind(this);
+	    this.contracts = context.drizzle.contracts;
+	    this.eventCount = this.contracts['DaoEvents'].methods.getEventsCount.cacheCall();
+	    this.perPage = 6;
+      this.topicClick = this.topicClick.bind(this);
+      this.theTopic = this.getTopicData();
+      this.topicBackground = this.theTopic['image'];
 
-		this.scrollTo = this.scrollTo.bind(this);
-	}
-	scrollTo() {
-		scroller.scrollTo("scroll-to-element", {
-			duration: 800,
-			delay: 0,
-			smooth: "easeInOutQuart",
-		});
-	}
+      this.ActiveEvent = this.ActiveEvent.bind(this);
+	  	this.PastEvent = this.PastEvent.bind(this);
+      this.toggleSortDate = this.toggleSortDate.bind(this);
 
-	componentDidUpdate() {
-		//this.theTopic = this.getTopicData();
+      this.scrollTo=this.scrollTo.bind(this)
+
+
+  }
+  scrollTo() {
+    scroller.scrollTo('scroll-to-element', {
+      duration: 800,
+      delay: 0,
+      smooth: 'easeInOutQuart'
+    })
+  }
+
+  componentDidUpdate()
+  {
+    //this.theTopic = this.getTopicData();
 	}
 
 	componentDidMount() {
@@ -333,7 +337,7 @@ class TopicLandingPage extends Component {
 		const topic = this.theTopic;
 
 		if (
-			typeof this.props.contracts["OpenEvents"].getEventsCount[
+			typeof this.props.contracts["DaoEvents"].getEventsCount[
 				this.eventCount
 			] !== "undefined"
 		) {

@@ -38,7 +38,7 @@ class TopicLandingPage extends Component
       };
 
 	    this.contracts = context.drizzle.contracts;
-	    this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
+	    this.eventCount = this.contracts['DaoEvents'].methods.getEventsCount.cacheCall();
 	    this.perPage = 6;
       this.topicClick = this.topicClick.bind(this);
       this.theTopic = this.getTopicData();
@@ -275,7 +275,7 @@ class TopicLandingPage extends Component
     const topic = this.theTopic;
 
 
-		if (typeof this.props.contracts['OpenEvents'].getEventsCount[this.eventCount] !== 'undefined' ) {
+		if (typeof this.props.contracts['DaoEvents'].getEventsCount[this.eventCount] !== 'undefined' ) {
       let count = this.state.Topic_Events.length;
       if(this.state.loading){
         body = <PhoenixDAOLoader/>

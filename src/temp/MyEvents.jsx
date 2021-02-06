@@ -28,7 +28,7 @@ class MyEvents extends Component {
 			prevPath: -1
 		};
 		this.contracts = context.drizzle.contracts;
-		this.events = this.contracts['OpenEvents'].methods.eventsOf.cacheCall(this.props.accounts[0]);
+		this.events = this.contracts['DaoEvents'].methods.eventsOf.cacheCall(this.props.accounts[0]);
 		this.perPage = 6;
 		this.account = this.props.accounts[0];
 		this.myRef = React.createRef()
@@ -178,7 +178,7 @@ class MyEvents extends Component {
 	render() {
 		let body = <PhoenixDAOLoader />;
 
-		if (typeof this.props.contracts['OpenEvents'].eventsOf[this.events] !== 'undefined') {
+		if (typeof this.props.contracts['DaoEvents'].eventsOf[this.events] !== 'undefined') {
 			let events = this.state.MyEvents.length;
 			if (this.state.loading) {
 				body = <PhoenixDAOLoader />

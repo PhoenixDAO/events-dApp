@@ -103,7 +103,7 @@ class MyEventStat extends Component {
 		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.event = this.contracts["OpenEvents"].methods.getEvent.cacheCall(
+		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
 			this.props.match.params.id
 		);
 		this.account = this.props.accounts[0];
@@ -229,9 +229,9 @@ class MyEventStat extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 				"undefined" &&
-			!this.props.contracts["OpenEvents"].getEvent[this.event].error
+			!this.props.contracts["DaoEvents"].getEvent[this.event].error
 		) {
 			this.setState(
 				{
@@ -239,7 +239,7 @@ class MyEventStat extends Component {
 				},
 				() => {
 					ipfs.get(
-						this.props.contracts["OpenEvents"].getEvent[this.event]
+						this.props.contracts["DaoEvents"].getEvent[this.event]
 							.value[7]
 					)
 						.then((file) => {
@@ -301,7 +301,7 @@ class MyEventStat extends Component {
 
 	allowance = async () => {
 		let a = await this.contracts["PHNX"].methods
-			.allowance(this.account, this.contracts["OpenEvents"].address)
+			.allowance(this.account, this.contracts["DaoEvents"].address)
 			.call();
 		console.log("allowance ==> ", a);
 		return a;
@@ -363,21 +363,21 @@ class MyEventStat extends Component {
 		// console.log("approve",balance)
 		console.log(
 			"buy",
-			this.props.contracts["OpenEvents"].getEvent[this.event].value[2]
+			this.props.contracts["DaoEvents"].getEvent[this.event].value[2]
 		);
 
 		this.setState(
 			{
-				fee: this.props.contracts["OpenEvents"].getEvent[this.event]
+				fee: this.props.contracts["DaoEvents"].getEvent[this.event]
 					.value[2],
-				token: this.props.contracts["OpenEvents"].getEvent[this.event]
+				token: this.props.contracts["DaoEvents"].getEvent[this.event]
 					.value[3],
-				openEvents_address: this.contracts["OpenEvents"].address,
-				buyticket: this.contracts["OpenEvents"].methods.buyTicket(
+				openEvents_address: this.contracts["DaoEvents"].address,
+				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
 					this.props.id
 				),
 				approve: this.contracts["PHNX"].methods.approve(
-					this.contracts["OpenEvents"].address,
+					this.contracts["DaoEvents"].address,
 					balance
 				),
 			},
@@ -427,10 +427,10 @@ class MyEventStat extends Component {
 		let body = <Loading />;
 
 		if (
-			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 			"undefined"
 		) {
-			if (this.props.contracts["OpenEvents"].getEvent[this.event].error) {
+			if (this.props.contracts["DaoEvents"].getEvent[this.event].error) {
 				body = (
 					<div className="text-center mt-5">
 						<span role="img" aria-label="unicorn">
@@ -440,7 +440,7 @@ class MyEventStat extends Component {
 					</div>
 				);
 			} else {
-				let event_data = this.props.contracts["OpenEvents"].getEvent[
+				let event_data = this.props.contracts["DaoEvents"].getEvent[
 					this.event
 				].value;
 				let image = this.getImage();
