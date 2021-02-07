@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import makeBlockie from "ethereum-blockies-base64";
-
+import { Link } from "react-router-dom";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 
@@ -27,7 +27,7 @@ import {
 	RedditShareButton,
 	TelegramShareButton,
 	TwitterShareButton,
-	WhatsappShareButton
+	WhatsappShareButton,
 } from "react-share";
 
 import {
@@ -37,7 +37,7 @@ import {
 	RedditIcon,
 	TelegramIcon,
 	TwitterIcon,
-	WhatsappIcon
+	WhatsappIcon,
 } from "react-share";
 
 import Notify from "./Notify";
@@ -108,7 +108,12 @@ const customStyles = {
 
 class MyEventStat extends Component {
 	constructor(props, context) {
-		console.log("props 321",props.location.pathname.split("/")[props.location.pathname.split("/").length-1])
+		console.log(
+			"props 321",
+			props.location.pathname.split("/")[
+				props.location.pathname.split("/").length - 1
+			]
+		);
 		try {
 			var contractConfig = {
 				contractName: "PHNX",
@@ -168,7 +173,6 @@ class MyEventStat extends Component {
 			this.setState({ openEvents });
 			this.setState({ phoenixDAOTransfer: [] });
 		}
-
 		const blockNumber = await web3.eth.getBlockNumber();
 		if (this._isMounted) {
 			this.setState({
@@ -399,7 +403,6 @@ class MyEventStat extends Component {
 			"buy",
 			this.props.contracts["DaoEvents"].getEvent[this.event].value[2]
 		);
-
 		this.setState(
 			{
 				fee: this.props.contracts["DaoEvents"].getEvent[this.event]
@@ -457,29 +460,42 @@ class MyEventStat extends Component {
 		this.setState({ pageTransactions });
 	}
 
-	handleDelete(){
-		console.log("delete pressed")
-		let id = this.props.location.pathname.split("/")[this.props.location.pathname.split("/").length-1]
-		this.contracts["DaoEvents"].methods.deleteEvent.cacheSend(
-			id
-		)
-		
+	handleDelete() {
+		console.log("delete pressed");
+		let id = this.props.location.pathname.split("/")[
+			this.props.location.pathname.split("/").length - 1
+		];
+		this.contracts["DaoEvents"].methods.deleteEvent.cacheSend(id);
 	}
 
 	render() {
-		let body = <Loading />;
-		
+		let body = (
+			<div>
+				<h2>
+					<i className="fa fa-calendar-alt"></i> Event
+				</h2>
+				<hr />
+				<Loading />
+			</div>
+		);
+
 		if (
 			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 			"undefined"
 		) {
 			if (this.props.contracts["DaoEvents"].getEvent[this.event].error) {
 				body = (
-					<div className="text-center mt-5">
-						<span role="img" aria-label="unicorn">
-							🦄
-						</span>{" "}
-						PhoenixDAO Event not found
+					<div>
+						<h2>
+							<i className="fa fa-calendar-alt"></i> Event
+						</h2>
+						<hr />
+						<div className="text-center mt-5">
+							<span role="img" aria-label="unicorn">
+								🦄
+							</span>{" "}
+							PhoenixDAO Event not found
+						</div>
 					</div>
 				);
 			} else {
@@ -580,19 +596,25 @@ class MyEventStat extends Component {
 
 				if (this.props.accounts[0] !== event_data[9]) {
 					body = (
-						<div className="mt-5 text-center">
-							<h3 className="mt-5">Access Denied!</h3>
-							<p className="emoji">
-								<span role="img" aria-label="sweat">
-									😓
-								</span>
-							</p>
-							<p>You do not have access to this page.</p>
-							<p>
-								If you are the owner of this event & wish to
-								view the page, please sign in with{" "}
-								<b>Metamask</b>.
-							</p>
+						<div className="row">
+							<h2>
+								<i className="fa fa-calendar-alt"></i> Event
+							</h2>
+							<hr />
+							<div className="mt-5 text-center">
+								<h3 className="mt-5">Access Denied!</h3>
+								<p className="emoji">
+									<span role="img" aria-label="sweat">
+										😓
+									</span>
+								</p>
+								<p>You do not have access to this page.</p>
+								<p>
+									If you are the owner of this event & wish to
+									view the page, please sign in with{" "}
+									<b>Metamask</b>.
+								</p>
+							</div>
 						</div>
 					);
 				} else if (this.props.match.params.page === pagetitle) {
@@ -647,8 +669,12 @@ class MyEventStat extends Component {
 					};
 
 					body = (
-						<div className="row">
-							<div className="col-12">
+						<div className="col-12">
+							<div className="row">
+								<h2 className="col-7">
+									<i className="fa fa-calendar-alt"></i> Event
+								</h2>
+
 								{/* <h3>{event_data[0]}</h3>
             			<br />
            				{description} */}
@@ -657,25 +683,47 @@ class MyEventStat extends Component {
             			<br/>
             			<br/>
            				<br/> */}
-<div>
-										<button onClick={this.handleDelete}>
-											delete
-										</button>
-									</div>
+								<div className=" editButtons text-muted col-5 text-center">
+										<Link
+											// className="col-4"
+											// style={{ display: "grid" }}
+											to={{
+												pathname: "/editevent",
+												state: {
+													event: event_data,
+													...this.state,
+													price: price,
+												},
+											}}
+										>
+									<button className="btn btn-dark" >
+											<i className="fa fa-edit"></i> Edit
+									</button>
+										</Link>
+									<button
+										className="btn btn-dark"
+										onClick={this.inquire}
+									>
+										<i className="fas fa-trash-alt"></i>{" "}
+										Delete
+									</button>
+								</div>
+							</div>
+							<hr />
+							<div className="row">
 								<div className="card event-hero-sidebar">
 									<img
 										className="card-img-top event-image"
 										src={image}
 										alt="Event"
 									/>
-									
+
 									<div className="card-header event-header">
 										<img
 											className="float-left"
 											src={makeBlockie(event_data[9])}
 											alt="User Identicon"
 										/>
-										
 									</div>
 
 									<div className="card-body">
@@ -734,77 +782,77 @@ class MyEventStat extends Component {
 											Tickets: {event_data[6]}/{max_seats}
 										</li>
 									</ul>
-									
 								</div>
+								<div className="row">
+									{this._isMounted && (
+										<Clock
+											deadline={date}
+											event_unix={event_data[1]}
+										/>
+									)}
 
-								{this._isMounted && (
-									<Clock
-										deadline={date}
-										event_unix={event_data[1]}
-									/>
-								)}
+									<div className="new-transaction-wrapper">
+										<h4 className="transactions">
+											Share your event
+										</h4>
+										<div className="event-social-share-btns-div">
+											<EmailShareButton
+												url={shareUrl}
+												title={title}
+												resetButtonStyle={false}
+											>
+												<EmailIcon size={32} round />
+											</EmailShareButton>
 
-								<div className="new-transaction-wrapper">
-								<h4 className="transactions">
-										Share your event
-									</h4>
-									<div className="event-social-share-btns-div">
-									<EmailShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<EmailIcon size={32} round />
-									</EmailShareButton>
+											<FacebookShareButton
+												url={shareUrl}
+												title={title}
+												resetButtonStyle={false}
+											>
+												<FacebookIcon size={32} round />
+											</FacebookShareButton>
 
-									<FacebookShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<FacebookIcon size={32} round />
-									</FacebookShareButton>
+											<LinkedinShareButton
+												url={shareUrl}
+												title={title}
+												resetButtonStyle={false}
+											>
+												<LinkedinIcon size={32} round />
+											</LinkedinShareButton>
 
-									<LinkedinShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<LinkedinIcon size={32} round />
-									</LinkedinShareButton>
+											<RedditShareButton
+												url={shareUrl}
+												title={title}
+												resetButtonStyle={false}
+											>
+												<RedditIcon size={32} round />
+											</RedditShareButton>
 
-									<RedditShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<RedditIcon size={32} round />
-									</RedditShareButton>
+											<TelegramShareButton
+												url={shareUrl}
+												title={title}
+												resetButtonStyle={false}
+											>
+												<TelegramIcon size={32} round />
+											</TelegramShareButton>
 
-									<TelegramShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<TelegramIcon size={32} round />
-									</TelegramShareButton>
+											<TwitterShareButton
+												url={shareUrl}
+												title={title}
+												resetButtonStyle={false}
+											>
+												<TwitterIcon size={32} round />
+											</TwitterShareButton>
 
-									<TwitterShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<TwitterIcon size={32} round />
-									</TwitterShareButton>
-
-									<WhatsappShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<WhatsappIcon size={32} round />
-									</WhatsappShareButton>
-								</div>
+											<WhatsappShareButton
+												url={shareUrl}
+												title={title}
+												resetButtonStyle={false}
+											>
+												<WhatsappIcon size={32} round />
+											</WhatsappShareButton>
+										</div>
+									</div>
 									<h4 className="transactions">
 										Ticket Purchases
 									</h4>
@@ -1152,7 +1200,13 @@ class MyEventStat extends Component {
 						</div>
 					);
 				} else {
-					body = <EventNotFound />;
+					<div className="row">
+						<h2>
+							<i className="fa fa-calendar-alt"></i> Event
+						</h2>
+						<hr />
+						body = <EventNotFound />
+					</div>;
 				}
 			}
 		}
@@ -1165,10 +1219,6 @@ class MyEventStat extends Component {
 					giveApproval={this.giveApproval}
 				/>
 
-				<h2>
-					<i className="fa fa-calendar-alt"></i> Event
-				</h2>
-				<hr />
 				{body}
 				<hr />
 			</div>
@@ -1176,6 +1226,7 @@ class MyEventStat extends Component {
 	}
 
 	componentDidMount() {
+		console.log("myeventprops",this.props);
 		this._isMounted = true;
 		this.updateIPFS();
 		this.loadblockhain();
@@ -1184,6 +1235,8 @@ class MyEventStat extends Component {
 
 	componentDidUpdate() {
 		this.updateIPFS();
+		console.log("eventstate",this.state);
+
 		//this.afterApprove();
 	}
 
