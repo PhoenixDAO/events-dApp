@@ -14,6 +14,7 @@ import {
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
+import Snackbar3 from "./Snackbar3";
 
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Row } from "react-bootstrap";
@@ -39,6 +40,7 @@ class Home extends Component {
 			errorMessage: "",
 			openSnackbar1: false,
 			openSnackbar2: false,
+			openSnackbar3: false,
 			latestblocks: 5000000,
 
 			totalTickets: 0,
@@ -54,11 +56,31 @@ class Home extends Component {
 			loadingUpcomingEvents: true,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
+		this.checkNetwork=this.checkNetwork.bind(this)
 	}
 
 	componentDidMount() {
+		setTimeout(()=> this.checkNetwork(),1000)
 		this.props.executeScroll();
-		this.loadData();
+		this.loadData();	
+	}
+
+	// componentDidUpdate(){
+	// 	this.checkNetwork()
+	// }
+
+	checkNetwork(){
+		console.log("123 this.props.web3.status",this.props.web3.status)
+		console.log("123 this.props.web3.networkId",this.props.web3.networkId)
+		if(this.props.web3.status == "initialized" && this.props.web3.networkId != 4){
+			this.setState({
+				errorMessage:
+					"Please switch to rinkeby network !",
+				openSnackbar1: false,
+				openSnackbar2: false,
+				openSnackbar3: true
+			});
+		}
 	}
 
 	async connectToMetaMask() {
@@ -76,6 +98,7 @@ class Home extends Component {
 							"Connection request already pending. Please check MetaMask !",
 						openSnackbar1: false,
 						openSnackbar2: true,
+						openSnackbar3: false
 					});
 				}
 			}
@@ -85,14 +108,18 @@ class Home extends Component {
 					"MetaMask is not installed. Please install MetaMask to continue !",
 				openSnackbar1: true,
 				openSnackbar2: false,
+				openSnackbar3: false
 			});
 		}
 	}
 	handleSnackbarClose = (number) => {
 		if (number == 1) {
 			this.setState({ openSnackbar1: false });
-		} else {
+		} else if (number == 2) {
 			this.setState({ openSnackbar2: false });
+		} else {
+			this.setState({ openSnackbar3: false });
+
 		}
 	};
 
@@ -194,6 +221,11 @@ class Home extends Component {
 					open={this.state.openSnackbar2}
 					message={this.state.errorMessage}
 					handleClose={() => this.handleSnackbarClose(2)}
+				/>
+				<Snackbar3
+					open={this.state.openSnackbar3}
+					message={this.state.errorMessage}
+					handleClose={() => this.handleSnackbarClose(3)}
 				/>
 			<div className="welcomeWrapper">
 				
@@ -519,6 +551,7 @@ const mapStateToProps = (state) => {
 		contracts: state.contracts,
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
+		web3: state.web3
 	};
 };
 

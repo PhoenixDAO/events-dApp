@@ -118,7 +118,8 @@ class CreateEvent extends Component {
 						this.state.data.limited,
 						this.state.data.seats,
 						this.state.ipfs,
-						this.state.data.type
+						this.state.data.type,
+						// this.state.organizer
 					)
 				);
 			})

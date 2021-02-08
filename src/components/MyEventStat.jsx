@@ -684,25 +684,42 @@ class MyEventStat extends Component {
             			<br/>
            				<br/> */}
 								<div className=" editButtons text-muted col-5 text-center">
-										<Link
-											// className="col-4"
-											// style={{ display: "grid" }}
-											to={{
-												pathname: "/editevent",
-												state: {
-													event: event_data,
-													...this.state,
-													price: price,
-												},
-											}}
-										>
-									<button className="btn btn-dark" >
+									<Link
+										// className="col-4"
+										// style={{ display: "grid" }}
+										to={{
+											pathname: "/editevent",
+											state: {
+												event: event_data,
+												price: price,
+												//  ...this.props.location.state,
+												//  ...this.state,
+												description: this.state.description,
+												image: this.state.image,
+												ipfs_problem: this.state.ipfs_problem,
+
+												soldTicket: this.state.soldTicket,
+												latestblocks: this.state.latestblocks,
+												PhoenixDAO_market: this.state.phoenixDAO_market,
+
+												fee: this.state.fee,
+												token: this.state.token,
+												openEvents_address: this.state.openEvents_address,
+												buyticket: this.state.buyticket,
+												approve: this.state.approve,
+												pageTransactions: this.state.pageTransactions,
+												open: this.state.open,
+												locations:this.state.locations
+											},
+										}}
+									>
+										<button className="btn btn-dark">
 											<i className="fa fa-edit"></i> Edit
-									</button>
-										</Link>
+										</button>
+									</Link>
 									<button
 										className="btn btn-dark"
-										onClick={this.inquire}
+										onClick={this.handleDelete}
 									>
 										<i className="fas fa-trash-alt"></i>{" "}
 										Delete
@@ -1226,7 +1243,7 @@ class MyEventStat extends Component {
 	}
 
 	componentDidMount() {
-		console.log("myeventprops",this.props);
+		console.log("myeventprops", this.props);
 		this._isMounted = true;
 		this.updateIPFS();
 		this.loadblockhain();
@@ -1235,7 +1252,7 @@ class MyEventStat extends Component {
 
 	componentDidUpdate() {
 		this.updateIPFS();
-		console.log("eventstate",this.state);
+		console.log("eventstate", this.state);
 
 		//this.afterApprove();
 	}

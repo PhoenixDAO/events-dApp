@@ -1,5 +1,5 @@
 
-export const Open_events_Address = '0xB63D7992CaC4E8E684F478c7F5ad0c9E200090aD';
+export const Open_events_Address = '0xeD3048B35CF552DFD45B95540Bd51ef254c3EeFe';
 
 export const Open_events_ABI = [
   {
