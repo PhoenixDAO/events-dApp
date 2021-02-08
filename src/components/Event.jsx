@@ -420,7 +420,7 @@ class Event extends Component {
 				body = (
 					<div className="card">
 						<div className="image_wrapper">
-							<Link to={titleURL}>
+							<Link to={this.props.myEvents ? myEventStatURL :titleURL}>
 								<img
 									className="card-img-top event-image"
 									src={image}
@@ -437,15 +437,12 @@ class Event extends Component {
 								src={makeBlockie(event_data[9])}
 								alt={event_data[9]}
 							/>
-							{this.props.myEvents ? (
+							{/* {this.props.myEvents ? (
 								<Link to={myEventStatURL}>
-									<p className="myEventStat small text-truncate mb-0">
-										View Event Stats
-									</p>
 								</Link>
 							) : (
 								""
-							)}
+							)} */}
 						</div>
 
 						<div className="card-body">

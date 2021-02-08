@@ -694,11 +694,13 @@ input[type="number"] {
 }
 .editButtons{
 	display: flex;
-	padding: 10px;
-	justify-content: space-around;
+	align-items: flex-start;
+	justify-content: flex-end;
 }
 .editButtons button{
 	border-radius: 20px;
+	padding: 5px 20px;
+	margin-left:10px;
 
 }
 .container-fluid:before {

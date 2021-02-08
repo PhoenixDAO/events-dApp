@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 
-import ipfs from "../../utils/ipfs";
-
 import Form from "./Form";
+import ipfs from "../../utils/ipfs";
 import Loader from "./Loader";
 import Error from "./Error";
 import Done from "./Done";
