@@ -1,7 +1,6 @@
+export const Open_events_Address = '0xa96eA8B6B9e0aC9130877Ec1388dAB2973b397f6';
 
-export const Open_events_Address = '0xeD3048B35CF552DFD45B95540Bd51ef254c3EeFe';
-
-export const Open_events_ABI = [
+export const Open_events_ABI =[
   {
     "constant": true,
     "inputs": [
@@ -130,6 +129,10 @@ export const Open_events_ABI = [
       {
         "name": "_category",
         "type": "string"
+      },
+      {
+        "name": "_organizer",
+        "type": "string"
       }
     ],
     "name": "updateEvent",
@@ -225,6 +228,52 @@ export const Open_events_ABI = [
       }
     ],
     "name": "chengeToken",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "name": "_time",
+        "type": "uint256"
+      },
+      {
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "name": "_token",
+        "type": "bool"
+      },
+      {
+        "name": "_limited",
+        "type": "bool"
+      },
+      {
+        "name": "_seats",
+        "type": "uint256"
+      },
+      {
+        "name": "_ipfs",
+        "type": "string"
+      },
+      {
+        "name": "_category",
+        "type": "string"
+      },
+      {
+        "name": "_organizer",
+        "type": "string"
+      }
+    ],
+    "name": "createEvent",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -505,6 +554,25 @@ export const Open_events_ABI = [
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "getOwnerDetails",
+    "outputs": [
+      {
+        "name": "organizer",
+        "type": "string"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "symbol",
     "outputs": [
@@ -646,48 +714,6 @@ export const Open_events_ABI = [
     "type": "function"
   },
   {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "name": "_time",
-        "type": "uint256"
-      },
-      {
-        "name": "_price",
-        "type": "uint256"
-      },
-      {
-        "name": "_token",
-        "type": "bool"
-      },
-      {
-        "name": "_limited",
-        "type": "bool"
-      },
-      {
-        "name": "_seats",
-        "type": "uint256"
-      },
-      {
-        "name": "_ipfs",
-        "type": "string"
-      },
-      {
-        "name": "_category",
-        "type": "string"
-      }
-    ],
-    "name": "createEvent",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "name": "_token",
@@ -755,6 +781,11 @@ export const Open_events_ABI = [
         "indexed": false,
         "name": "category",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "organizer",
+        "type": "string"
       }
     ],
     "name": "CreatedEvent",
@@ -818,6 +849,11 @@ export const Open_events_ABI = [
       {
         "indexed": false,
         "name": "category",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "organizer",
         "type": "string"
       }
     ],

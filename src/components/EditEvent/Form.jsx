@@ -401,16 +401,34 @@ class Form extends Component {
 	// };
 	handleForm = (event) => {
 		console.log("editevent",this.props.location.state)
-
 		event.preventDefault();
-		// console.log("state===>",  this.state.seats);
-		// // const todayDate=new Date((parseInt(this.state.currentBlock.timestamp, 10) * 1000));
-		// // console.log('moment.unix()',moment.unix().toString());
-		// // let todayDate = moment.unix(this.state.currentBlock.timestamp).format();
-		// // let selectedDate = moment.unix(this.state.time).format();
-		// // console.log('selectedData',selectedDate)
-		// // console.log('todayDate',todayDate)
-		// // console.log("Date : " , todayDate)
+
+		// let filteredDescription=""
+		// let filteredTitle=""
+		// let filteredOrganizer=""
+		// let filteredLocation = ""
+		// if(this.form.description.value !== ""){
+		// 	let filter = new Filter();
+		// 	filteredDescription = filter.clean(this.form.description.value);
+		// 	this.setState({description:filteredDescription})
+		// }
+		// if(this.state.title !== ""){
+		// 	let filter = new Filter();
+		// 	filteredTitle = filter.clean(this.state.title);
+		// 	this.setState({title:filteredTitle})
+		// }
+		// if(this.state.organizer !== ""){
+		// 	let filter = new Filter();
+		// 	filteredOrganizer = filter.clean(this.state.organizer);
+		// 	this.setState({organizer:filteredOrganizer})
+		// }
+		// if(this.state.location !== ""){
+		// 	let filter = new Filter();
+		// 	filteredLocation = filter.clean(this.state.location);
+		// 	this.setState({organizer:filteredLocation})
+		// }
+		// console.log("filteredDescription form",this.form.description.value)
+		// console.log("filteredDescription",filteredDescription)
 		// let form_validation = [];
 		// if (this.state.title === "") form_validation.push("name");
 		// if (this.state.location === "") form_validation.push("location");
@@ -442,12 +460,12 @@ class Form extends Component {
 		// if (form_validation.length === 0) {
 			
 		// 	this.props.createEvent(
-		// 		this.state.title,
-		// 		this.form.description.value,
-		// 		this.state.location,
+		// 		filteredTitle,
+		// 		filteredDescription,
+		// 		filteredLocation,
 		// 		this.state.time,
 		// 		this.state.file,
-		// 		this.state.organizer,
+		// 		filteredOrganizer,
 		// 		this.state.type,
 		// 		this.state.topic,
 		// 		this.state.currency,

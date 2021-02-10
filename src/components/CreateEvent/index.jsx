@@ -109,6 +109,17 @@ class CreateEvent extends Component {
 				});
 				//this.uploadTransaction();
 				console.log("hash is ", hash);
+				// console.log("testing",this.contracts["DaoEvents"].methods.createEvent(
+				// 	this.state.data.name,
+				// 	this.state.data.time,
+				// 	this.state.data.price,
+				// 	this.state.data.currency === "eth" ? false : true,
+				// 	this.state.data.limited,
+				// 	this.state.data.seats,
+				// 	this.state.ipfs,
+				// 	this.state.data.type,
+				// 	this.state.organizer
+				// ))
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.createEvent(
 						this.state.data.name,
@@ -119,6 +130,7 @@ class CreateEvent extends Component {
 						this.state.data.seats,
 						this.state.ipfs,
 						this.state.data.type,
+						"Jaffer",
 						// this.state.organizer
 					)
 				);
