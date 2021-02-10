@@ -1,6 +1,6 @@
 {
     "contractName": "DaoEvents",
-    "abi": [
+    "abi":[
         {
           "constant": true,
           "inputs": [
@@ -129,6 +129,10 @@
             {
               "name": "_category",
               "type": "string"
+            },
+            {
+              "name": "_organizer",
+              "type": "string"
             }
           ],
           "name": "updateEvent",
@@ -224,6 +228,52 @@
             }
           ],
           "name": "chengeToken",
+          "outputs": [],
+          "payable": false,
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "constant": false,
+          "inputs": [
+            {
+              "name": "_name",
+              "type": "string"
+            },
+            {
+              "name": "_time",
+              "type": "uint256"
+            },
+            {
+              "name": "_price",
+              "type": "uint256"
+            },
+            {
+              "name": "_token",
+              "type": "bool"
+            },
+            {
+              "name": "_limited",
+              "type": "bool"
+            },
+            {
+              "name": "_seats",
+              "type": "uint256"
+            },
+            {
+              "name": "_ipfs",
+              "type": "string"
+            },
+            {
+              "name": "_category",
+              "type": "string"
+            },
+            {
+              "name": "_organizer",
+              "type": "string"
+            }
+          ],
+          "name": "createEvent",
           "outputs": [],
           "payable": false,
           "stateMutability": "nonpayable",
@@ -504,6 +554,25 @@
         },
         {
           "constant": true,
+          "inputs": [
+            {
+              "name": "_id",
+              "type": "uint256"
+            }
+          ],
+          "name": "getOwnerDetails",
+          "outputs": [
+            {
+              "name": "organizer",
+              "type": "string"
+            }
+          ],
+          "payable": false,
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "constant": true,
           "inputs": [],
           "name": "symbol",
           "outputs": [
@@ -645,48 +714,6 @@
           "type": "function"
         },
         {
-          "constant": false,
-          "inputs": [
-            {
-              "name": "_name",
-              "type": "string"
-            },
-            {
-              "name": "_time",
-              "type": "uint256"
-            },
-            {
-              "name": "_price",
-              "type": "uint256"
-            },
-            {
-              "name": "_token",
-              "type": "bool"
-            },
-            {
-              "name": "_limited",
-              "type": "bool"
-            },
-            {
-              "name": "_seats",
-              "type": "uint256"
-            },
-            {
-              "name": "_ipfs",
-              "type": "string"
-            },
-            {
-              "name": "_category",
-              "type": "string"
-            }
-          ],
-          "name": "createEvent",
-          "outputs": [],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
           "inputs": [
             {
               "name": "_token",
@@ -754,6 +781,11 @@
               "indexed": false,
               "name": "category",
               "type": "string"
+            },
+            {
+              "indexed": false,
+              "name": "organizer",
+              "type": "string"
             }
           ],
           "name": "CreatedEvent",
@@ -817,6 +849,11 @@
             {
               "indexed": false,
               "name": "category",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "name": "organizer",
               "type": "string"
             }
           ],
@@ -11292,8 +11329,8 @@
                 }
             },
             "links": {},
-            "address": "0xeD3048B35CF552DFD45B95540Bd51ef254c3EeFe",
-            "transactionHash": "0x594bae16b42c28dc718d6d5d004e4f424aa4dd933ee1678900e960a37a59ba45"
+            "address": "0xa96eA8B6B9e0aC9130877Ec1388dAB2973b397f6",
+            "transactionHash": "0xd0169119cb75140148d13f5dc3e8f631dd11c541db407bd560baeea01bbad935"
         },
         "5777": {
             "events": {

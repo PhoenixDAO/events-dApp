@@ -25,6 +25,7 @@ class FindEvents extends Component {
       latestblocks: 6000000,
       loading: true,
       Events_Blockchain: [],
+      Deleted_Events:[],
       active_length: '',
       isOldestFirst: false,
       event_copy: [],
@@ -88,14 +89,33 @@ class FindEvents extends Component {
       this.setState({ Events_Blockchain: [] });
     }
 
-    openEvents.getPastEvents("CreatedEvent", { fromBlock: 7654042, toBlock: this.state.latestblocks })
-      .then(events => {
+    await openEvents.getPastEvents("DeletedEvent", { fromBlock: 7654042, toBlock: this.state.latestblocks })
+    .then(events => {
+      console.log("eventsssss deletedEvents",events)
+      this.setState({ Deleted_Events: events});
+      return events
+    }).catch((err) => {
+      console.error(err)
+      this.setState({Deleted_Events:[]})
+    })
+
+    await openEvents.getPastEvents("CreatedEvent", { fromBlock: 7654042, toBlock: this.state.latestblocks })
+      .then(async events => {
         if (this._isMounted) {
           this.setState({ loading: true })
+          let allEvents=events;
+          let deletedEvents=[];
+          console.log("eventsssss all Events",allEvents)
+         
+          // deletedEvents.map((deletedEvent)=> allEvents.pop(deletedEvent.returnValues.eventId))
+          console.log("eventsssss after filter",allEvents)
 
-          var newsort = events.concat().sort((a, b) =>
-            b.blockNumber - a.blockNumber).filter((activeEvents =>
-              activeEvents.returnValues.time >= (dateNow)));
+          var newsort = allEvents.concat().sort((a, b) =>
+            b.blockNumber - a.blockNumber)
+            .filter((activeEvents =>
+              activeEvents.returnValues.time >= (dateNow) ));
+          
+              // console.log("eventsssss ",newsort)
 
           this.setState({ Events_Blockchain: newsort, event_copy: newsort });
           this.setState({ active_length: this.state.Events_Blockchain.length })
@@ -103,6 +123,10 @@ class FindEvents extends Component {
         }
 
       }).catch((err) => console.error(err))
+
+     
+
+      
 
     //Listens for New Events
     openEvents.events.CreatedEvent({ fromBlock: this.state.blockNumber, toBlock: 'latest' })
@@ -121,6 +145,18 @@ class FindEvents extends Component {
         //this.setState({loading:false});
       }, 10000))
   }
+
+  // async getDeletedEvents(){
+  //   await openEvents.getPastEvents("DeletedEvent", { fromBlock: 7654042, toBlock: this.state.latestblocks })
+  //   .then(events => {
+  //     console.log("eventsssss deletedEvents",events)
+  //     this.setState({ Deleted_Events: events});
+  //     return events
+  //   }).catch((err) => {
+  //     console.error(err)
+  //     this.setState({Deleted_Events:[]})
+  //   })
+  // }
 
   //Search Active Events By Name
   updateSearch = (e) => {
@@ -191,12 +227,23 @@ class FindEvents extends Component {
         let pages = Math.ceil(count / this.perPage);
 
         let events_list = [];
+        let skip=false;
         for (let i = start; i < end; i++) {
-          events_list.push(<Event disabledStatus={this.props.disabledStatus} inquire={this.props.inquire}
-            key={this.state.Events_Blockchain[i].returnValues.eventId}
-            id={this.state.Events_Blockchain[i].returnValues.eventId}
-            ipfs={this.state.Events_Blockchain[i].returnValues.ipfs} />);
+          for(let j=0 ; j<this.state.Deleted_Events.length;j++){
+            if(this.state.Events_Blockchain[i].returnValues.eventId == this.state.Deleted_Events[j].returnValues.eventId){
+              skip=true
+            }
+          }
+          if(!skip){
+            
+            events_list.push(<Event disabledStatus={this.props.disabledStatus} inquire={this.props.inquire}
+              key={this.state.Events_Blockchain[i].returnValues.eventId}
+              id={this.state.Events_Blockchain[i].returnValues.eventId}
+              ipfs={this.state.Events_Blockchain[i].returnValues.ipfs} />);
+          }
+          skip=false
         }
+          
 
         events_list.reverse();
 

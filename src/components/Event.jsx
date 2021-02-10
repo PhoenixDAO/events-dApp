@@ -332,6 +332,7 @@ class Event extends Component {
 			let event_data = this.props.contracts["DaoEvents"].getEvent[
 				this.event
 			].value;
+			console.log("event_data",event_data)
 
 			let image = this.getImage();
 			let description = this.getDescription();

@@ -410,10 +410,28 @@ class Form extends Component {
 		// console.log('todayDate',todayDate)
 		// console.log("Date : " , todayDate)
 		let filteredDescription=""
+		let filteredTitle=""
+		let filteredOrganizer=""
+		let filteredLocation = ""
 		if(this.form.description.value !== ""){
 			let filter = new Filter();
 			filteredDescription = filter.clean(this.form.description.value);
 			this.setState({description:filteredDescription})
+		}
+		if(this.state.title !== ""){
+			let filter = new Filter();
+			filteredTitle = filter.clean(this.state.title);
+			this.setState({title:filteredTitle})
+		}
+		if(this.state.organizer !== ""){
+			let filter = new Filter();
+			filteredOrganizer = filter.clean(this.state.organizer);
+			this.setState({organizer:filteredOrganizer})
+		}
+		if(this.state.location !== ""){
+			let filter = new Filter();
+			filteredLocation = filter.clean(this.state.location);
+			this.setState({organizer:filteredLocation})
 		}
 		console.log("filteredDescription form",this.form.description.value)
 		console.log("filteredDescription",filteredDescription)
@@ -448,12 +466,12 @@ class Form extends Component {
 		if (form_validation.length === 0) {
 			
 			this.props.createEvent(
-				this.state.title,
+				filteredTitle,
 				filteredDescription,
-				this.state.location,
+				filteredLocation,
 				this.state.time,
 				this.state.file,
-				this.state.organizer,
+				filteredOrganizer,
 				this.state.type,
 				this.state.topic,
 				this.state.currency,
