@@ -697,11 +697,23 @@ input[type="number"] {
 	align-items: flex-start;
 	justify-content: flex-end;
 }
+@media screen and (max-width:400px){
+	.editButtons button{
+		padding:0px;
+		margin-left:0px;
+	}
+}
 .editButtons button{
 	border-radius: 20px;
 	padding: 5px 20px;
 	margin-left:10px;
 
+}
+@media screen and (max-width:600px){
+#myId
+{
+min-width:100px i !important;
+}
 }
 .container-fluid:before {
 	content: "";
@@ -715,7 +727,21 @@ input[type="number"] {
 	-webkit-box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
 	box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
 }
-
+.clockShare{
+	margin-left: 0px !important;
+	margin-right: 0px !important;
+	width:100%;
+}
+.clockDiv{
+	align-items: flex-end;
+    display: flex;
+}
+@media screen and (max-width:990px)
+{
+	.clockDiv{
+		margin-top: 39px;
+	}
+}
 .input-group:before {
 	content: "";
 	position: absolute;
