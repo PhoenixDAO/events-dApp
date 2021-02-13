@@ -6,392 +6,764 @@ import Carousel from "react-bootstrap/Carousel";
 
 import Loading from "./Loading";
 import { Bar, Doughnut } from "react-chartjs-2";
-
+import UniswapModal from "./UniswapModal";
 import topicsJson from "../config/topics.json";
 
 let numeral = require("numeral");
 
 class Dashboard extends Component {
-  constructor(props, context) {
-    super(props);
-    this.state = {
-      PhoenixDAO_market: [],
+	constructor(props, context) {
+		super(props);
+		this.state = {
+			PhoenixDAO_market: [],
+			openModal: false,
+		};
+		this.contracts = context.drizzle.contracts;
+		this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
+			this.props.accounts[0]
+		);
 
-    }
-    this.contracts = context.drizzle.contracts;
-    this.events = this.contracts['DaoEvents'].methods.eventsOf.cacheCall(this.props.accounts[0]);
+		this.perPage = 6;
+		this.topicClick = this.topicClick.bind(this);
+	}
+	handleClickOpen = () => {
+		this.setState({ open: true });
+	};
 
-    this.perPage = 6;
-    this.topicClick = this.topicClick.bind(this);
-  }
+	handleClose = () => {
+		this.setState({ open: false });
+	};
+	topicClick(slug) {
+		this.props.history.push("/topic/" + slug + "/" + 1);
+		window.scrollTo(0, 180);
+	}
 
-  topicClick(slug) {
-    this.props.history.push("/topic/" + slug + "/" + 1);
-    window.scrollTo(0, 180);
-  }
+	caruselClick(location) {
+		this.props.history.push(location);
+		window.scrollTo(0, 80);
+	}
 
-  caruselClick(location) {
-    this.props.history.push(location);
-    window.scrollTo(0, 80);
-  }
+	goTo = (id, name) => {
+		let rawTitle = name;
+		var titleRemovedSpaces = rawTitle;
+		titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
 
-  goTo = (id, name) => {
-    let rawTitle = name;
-    var titleRemovedSpaces = rawTitle;
-    titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, '-');
+		var pagetitle = titleRemovedSpaces
+			.toLowerCase()
+			.split(" ")
+			.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+			.join(" ");
 
-    var pagetitle = titleRemovedSpaces.toLowerCase()
-      .split(' ')
-      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(' ');
+		let myEventStatURL = "/event-stat/" + pagetitle + "/" + id;
+		this.props.history.push(myEventStatURL);
+	};
 
-    let myEventStatURL = "/event-stat/" + pagetitle + "/" + id;
-    this.props.history.push(myEventStatURL);
-  }
+	async getPhoenixDAOMarketValue() {
+		fetch(
+			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
+		)
+			.then((res) => res.json())
+			.then((data) => {
+				if (this._isMounted) {
+					this.setState({ PhoenixDAO_market: data.phoenixdao });
+				}
+			})
+			.catch(console.log);
+	}
 
-  async getPhoenixDAOMarketValue() {
+	render() {
+		let body = "";
+		if (this.state.openModal) {
+			return <UniswapModal />;
+		}
+		if (
+			typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
+			"undefined"
+		) {
+			let eventCount = this.props.contracts["DaoEvents"].eventsOf[
+				this.events
+			].value;
+			let eventCache = [];
+			let eventDetails = [];
+			let check = [5, 1, 1];
 
-    fetch('https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture')
-      .then(res => res.json())
-      .then((data) => {
-        if (this._isMounted) {
-          this.setState({ PhoenixDAO_market: data.phoenixdao })
-        }
-      })
-      .catch(console.log)
-  }
+			for (var i = 0; i < eventCount.length; i++) {
+				eventCache.push(
+					this.contracts["DaoEvents"].methods.getEvent.cacheCall(
+						eventCount[i]
+					)
+				);
+				if (
+					typeof this.props.contracts["DaoEvents"].getEvent[
+						eventCache[i]
+					] !== "undefined" &&
+					this.props.contracts["DaoEvents"].getEvent[eventCache[i]]
+						.value
+				) {
+					eventDetails.push({
+						result: this.props.contracts["DaoEvents"].getEvent[
+							eventCache[i]
+						].value,
+						id: eventCount[i],
+					});
+				}
+			}
 
+			//console.log(eventDetails)
+			let sortBySold = eventDetails
+				.concat()
+				.sort((a, b) => b.result.sold - a.result.sold);
+			let phoenixDAORevenue = eventDetails.filter(
+				(event_token) => event_token.result.token == true
+			);
+			let limited = eventDetails.filter(
+				(event_seats) => event_seats.result.limited == true
+			);
 
-  render() {
-    let body = '';
+			let top_PhoenixDAORevenue = phoenixDAORevenue
+				.concat()
+				.sort(
+					(a, b) =>
+						parseInt(
+							b.result.sold *
+								this.context.drizzle.web3.utils.fromWei(
+									b.result.price
+								)
+						) -
+						parseInt(
+							a.result.sold *
+								this.context.drizzle.web3.utils.fromWei(
+									a.result.price
+								)
+						)
+				);
 
-    if (typeof this.props.contracts['DaoEvents'].eventsOf[this.events] !== 'undefined') {
+			let sortSold = [];
+			let sortTopRevenue = [];
+			let toplist = true;
 
-      let eventCount = this.props.contracts['DaoEvents'].eventsOf[this.events].value;
-      let eventCache = [];
-      let eventDetails = [];
-      let check = [5, 1, 1];
+			if (sortBySold.length <= 0) {
+				toplist = false;
+			}
 
-      for (var i = 0; i < eventCount.length; i++) {
-        eventCache.push(this.contracts['DaoEvents'].methods.getEvent.cacheCall(eventCount[i]))
-        if (typeof this.props.contracts['DaoEvents'].getEvent[eventCache[i]] !== 'undefined' && this.props.contracts['DaoEvents'].getEvent[eventCache[i]].value) {
-          eventDetails.push({ result: this.props.contracts['DaoEvents'].getEvent[eventCache[i]].value, id: eventCount[i] })
+			if (sortBySold.length > 5) {
+				for (var x = 0; x < 5; x++) {
+					sortSold.push(sortBySold[x]);
+				}
+			} else {
+				for (var x = 0; x < sortBySold.length; x++) {
+					sortSold.push(sortBySold[x]);
+				}
+			}
 
-        }
-      }
+			/*Get Top PhoenixDAO Revenue*/
 
-      //console.log(eventDetails)
-      let sortBySold = eventDetails.concat().sort((a, b) => b.result.sold - a.result.sold);
-      let phoenixDAORevenue = eventDetails.filter((event_token) => event_token.result.token == true)
-      let limited = eventDetails.filter((event_seats) => event_seats.result.limited == true)
+			if (top_PhoenixDAORevenue.length > 5) {
+				for (var x = 0; x < 5; x++) {
+					sortTopRevenue.push(top_PhoenixDAORevenue[x]);
+				}
+			} else {
+				for (var x = 0; x < top_PhoenixDAORevenue.length; x++) {
+					sortTopRevenue.push(top_PhoenixDAORevenue[x]);
+				}
+			}
 
-      let top_PhoenixDAORevenue = phoenixDAORevenue.concat().sort((a, b) =>
-        parseInt(b.result.sold * this.context.drizzle.web3.utils.fromWei(b.result.price)) -
-        parseInt(a.result.sold * this.context.drizzle.web3.utils.fromWei(a.result.price)));
+			let totalSold = sortBySold.reduce(
+				(accumulator, currentValue) =>
+					accumulator + parseInt(currentValue.result.sold),
+				0
+			);
+			let revenue = phoenixDAORevenue.reduce(
+				(accumulator, currentValue) =>
+					accumulator +
+					parseInt(
+						currentValue.result.sold *
+							this.context.drizzle.web3.utils.fromWei(
+								currentValue.result.price
+							)
+					),
+				0
+			);
+			let soldSeats = limited.reduce(
+				(accumulator, currentValue) =>
+					accumulator + parseInt(currentValue.result.sold),
+				0
+			);
+			let totalSeats = limited.reduce(
+				(accumulator, currentValue) =>
+					accumulator + parseInt(currentValue.result.seats),
+				0
+			);
 
-      let sortSold = [];
-      let sortTopRevenue = [];
-      let toplist = true;
+			// Doughnut Chart Data
+			this.DoughnutData = (canvas) => {
+				const ctx = canvas.getContext("2d");
+				const gradient = ctx.createLinearGradient(
+					100,
+					180,
+					100,
+					100,
+					200
+				);
+				gradient.addColorStop(1, "white");
+				gradient.addColorStop(0, "black");
 
-      if (sortBySold.length <= 0) {
-        toplist = false;
-      }
+				const gradient2 = ctx.createLinearGradient(
+					100,
+					120,
+					100,
+					100,
+					200
+				);
+				gradient2.addColorStop(1, "rgb(104, 160, 206)");
+				gradient2.addColorStop(0, "rgb(100, 101, 102)");
+				if (totalSeats !== 0) {
+					return {
+						labels: ["Sold Tickets", "Unsold Tickets"],
+						datasets: [
+							{
+								label: "PHNX",
+								fontColor: "black",
+								backgroundColor: [
+									gradient2,
+									gradient,
+									gradient,
+								],
+								borderColor: "rgb(228, 83, 138)",
+								borderWidth: 0.8,
+								hoverBackgroundColor: [gradient2, gradient],
+								hoverBorderColor: "pink",
+								hoverBorderWidth: 1,
+								weight: 5,
+								borderAlign: "center",
+								data: [soldSeats, totalSeats - soldSeats],
+							},
+						],
+					};
+				} else {
+					return {
+						labels: ["Sold Tickets", "Unsold Tickets"],
+						datasets: [
+							{
+								label: "PHNX",
+								fontColor: "black",
+								backgroundColor: [
+									gradient2,
+									gradient,
+									gradient,
+								],
+								borderColor: "rgb(228, 83, 138)",
+								borderWidth: 0.8,
+								hoverBackgroundColor: [gradient2, gradient],
+								hoverBorderColor: "pink",
+								hoverBorderWidth: 1,
+								weight: 5,
+								borderAlign: "center",
+								data: [0, -1],
+							},
+						],
+					};
+				}
+			};
 
-      if (sortBySold.length > 5) {
-        for (var x = 0; x < 5; x++) {
-          sortSold.push(sortBySold[x])
-        }
-      } else {
-        for (var x = 0; x < sortBySold.length; x++) {
-          sortSold.push(sortBySold[x])
-        }
-      };
+			this.BarData = (canvas) => {
+				const ctx = canvas.getContext("2d");
+				const gradient = ctx.createLinearGradient(
+					800,
+					200,
+					500,
+					800,
+					200
+				);
+				gradient.addColorStop(1, "blue");
+				gradient.addColorStop(0, "white");
 
-      /*Get Top PhoenixDAO Revenue*/
+				const gradient2 = ctx.createLinearGradient(
+					100,
+					120,
+					100,
+					100,
+					200
+				);
+				gradient2.addColorStop(1, "rgb(104, 160, 206)");
+				gradient2.addColorStop(0, "rgb(100, 101, 102)");
+				if (sortTopRevenue.length !== 0) {
+					return {
+						labels: sortTopRevenue.map((event) => [
+							event.result.name,
+						]),
+						datasets: [
+							{
+								label: "PHNX",
+								fontColor: "black",
+								backgroundColor: [
+									gradient,
+									gradient,
+									gradient,
+									gradient,
+									gradient,
+								],
+								borderColor: "white",
+								borderWidth: 0.8,
+								backgroundColor: [
+									gradient,
+									gradient,
+									gradient,
+									gradient,
+									gradient,
+								],
+								hoverBorderColor: "pink",
+								hoverBorderWidth: 1,
+								weight: 5,
+								borderAlign: "center",
+								data: sortTopRevenue.map((event) =>
+									parseInt(
+										event.result.sold *
+											this.context.drizzle.web3.utils.fromWei(
+												event.result.price
+											)
+									)
+								),
+							},
+						],
+					};
+				} else {
+					return {
+						labels: ["You", "Havent", "Created", "Any", "Event"],
+						datasets: [
+							{
+								label: "PHNX",
+								fontColor: "black",
+								backgroundColor: [
+									gradient,
+									gradient,
+									gradient,
+									gradient,
+									gradient,
+								],
+								borderColor: "rgb(228, 83, 138)",
+								borderWidth: 0.8,
+								backgroundColor: [
+									gradient,
+									gradient,
+									gradient,
+									gradient,
+									gradient,
+								],
+								hoverBorderColor: "pink",
+								hoverBorderWidth: 1,
+								weight: 5,
+								borderAlign: "center",
+								data: [10, 5, 10, 5, 10],
+							},
+						],
+					};
+				}
+			};
 
-      if (top_PhoenixDAORevenue.length > 5) {
-        for (var x = 0; x < 5; x++) {
-          sortTopRevenue.push(top_PhoenixDAORevenue[x])
-        }
-      } else {
-        for (var x = 0; x < top_PhoenixDAORevenue.length; x++) {
-          sortTopRevenue.push(top_PhoenixDAORevenue[x])
-        }
-      }
+			body = (
+				<div className="retract-page-inner-wrapper-alternative dash">
+					<div>
+						<h2>
+							<i className="fas fa-chalkboard-teacher"></i>{" "}
+							Dashboard
+						</h2>
+						<hr />
+						<div className="row user-list mt-4">
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-card">
+									<div
+										className="dashboard-caption"
+										style={{
+											backgroundImage:
+												"url(/images/ethorange.png)",
+										}}
+									>
+										<h3>
+											<i className="fas fa-user-astronaut"></i>{" "}
+											User Account
+										</h3>
+										<img
+											className="dashboard-img"
+											src={"/images/ethereum.png"}
+										></img>
+										<p
+											className="mt-2"
+											title={this.props.accounts[0]}
+										>
+											{this.props.accounts[0].slice(
+												0,
+												15
+											) + "..."}
+										</p>
+									</div>
+								</div>
+							</div>
 
-      let totalSold = sortBySold.reduce((accumulator, currentValue) => accumulator + parseInt(currentValue.result.sold), 0)
-      let revenue = phoenixDAORevenue.reduce((accumulator, currentValue) => accumulator + parseInt(currentValue.result.sold * this.context.drizzle.web3.utils.fromWei(currentValue.result.price)), 0)
-      let soldSeats = limited.reduce((accumulator, currentValue) => accumulator + parseInt(currentValue.result.sold), 0)
-      let totalSeats = limited.reduce((accumulator, currentValue) => accumulator + parseInt(currentValue.result.seats), 0)
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-card">
+									<div
+										className="dashboard-caption"
+										style={{
+											backgroundImage:
+												"url(/images/topics/" +
+												topicsJson[21].image +
+												")",
+										}}
+									>
+										<h3>
+											<i className="fa fa-edit"></i> Total
+											Number Of Created Events
+										</h3>
+										<h4 className="dashboard-data">
+											{eventCount.length}
+										</h4>
+										<p className="dashboard-footer">
+											Events
+										</p>
+									</div>
+								</div>
+							</div>
 
-      // Doughnut Chart Data
-      this.DoughnutData = (canvas) => {
-        const ctx = canvas.getContext("2d")
-        const gradient = ctx.createLinearGradient(100, 180, 100, 100, 200);
-        gradient.addColorStop(1, 'white');
-        gradient.addColorStop(0, 'black');
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-card">
+									<div
+										className="dashboard-caption"
+										style={{
+											backgroundImage:
+												"url(/images/topics/" +
+												topicsJson[12].image +
+												")",
+										}}
+									>
+										<h3>
+											<i className="fas fa-ticket-alt"></i>{" "}
+											Total Number Of Tickets Sold
+										</h3>
+										<h4 className="dashboard-data">
+											{totalSold}
+										</h4>
+										<p className="dashboard-footer">
+											Tickets
+										</p>
+									</div>
+								</div>
+							</div>
 
-        const gradient2 = ctx.createLinearGradient(100, 120, 100, 100, 200);
-        gradient2.addColorStop(1, 'rgb(104, 160, 206)');
-        gradient2.addColorStop(0, 'rgb(100, 101, 102)');
-        if (totalSeats !== 0) {
-          return {
-            labels: ['Sold Tickets', 'Unsold Tickets'],
-            datasets: [{
-              label: 'PHNX',
-              fontColor: 'black',
-              backgroundColor: [gradient2, gradient, gradient],
-              borderColor: 'rgb(228, 83, 138)',
-              borderWidth: .8,
-              hoverBackgroundColor: [gradient2, gradient],
-              hoverBorderColor: 'pink',
-              hoverBorderWidth: 1,
-              weight: 5,
-              borderAlign: 'center',
-              data: [soldSeats, totalSeats - soldSeats],
-            }],
-          }
-        }
-        else {
-          return {
-            labels: ['Sold Tickets', 'Unsold Tickets'],
-            datasets: [{
-              label: 'PHNX',
-              fontColor: 'black',
-              backgroundColor: [gradient2, gradient, gradient],
-              borderColor: 'rgb(228, 83, 138)',
-              borderWidth: .8,
-              hoverBackgroundColor: [gradient2, gradient],
-              hoverBorderColor: 'pink',
-              hoverBorderWidth: 1,
-              weight: 5,
-              borderAlign: 'center',
-              data: [0, -1],
-            }],
-          }
-        }
-      }
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-events-card">
+									<div
+										className="dashboard-events-caption"
+										style={{
+											backgroundImage:
+												"url(/images/topics/" +
+												topicsJson[17].image +
+												")",
+										}}
+									>
+										<h3 title="Top 5 Events Based On Ticket Sale">
+											<i className="fas fa-trophy"></i>{" "}
+											Your Top 5 Events
+										</h3>
+									</div>
+									{toplist && (
+										<div className="dashboard-events">
+											<div className="dashboard-events-list">
+												<Link to="/myevents/1">
+													<h4 className="mb-2">
+														Events
+													</h4>
+												</Link>
+												{sortSold.map((event, index) =>
+													event.result.name.length >
+													15 ? (
+														<h4
+															key={index}
+															title={
+																event.result
+																	.name
+															}
+															onClick={() =>
+																this.goTo(
+																	event.id,
+																	event.result
+																		.name
+																)
+															}
+														>
+															{" "}
+															{index + 1}.{" "}
+															{event.result.name.slice(
+																0,
+																15
+															) + "..."}
+														</h4>
+													) : (
+														<h4
+															title={
+																event.result
+																	.name
+															}
+															onClick={() =>
+																this.goTo(
+																	event.id,
+																	event.result
+																		.name
+																)
+															}
+														>
+															{index + 1}.{" "}
+															{event.result.name}
+														</h4>
+													)
+												)}
+											</div>
+											<div className="dashboard-events-list-sale">
+												<h4 className="mb-2">
+													Tickets Sold
+												</h4>
+												{sortSold.map(
+													(event, index) => (
+														<h4
+															key={index}
+															title={
+																event.result
+																	.sold +
+																" Tickets Sold"
+															}
+															onClick={() =>
+																this.goTo(
+																	event.id,
+																	event.result
+																		.name
+																)
+															}
+														>
+															{event.result.sold}
+														</h4>
+													)
+												)}
+											</div>
+										</div>
+									)}
 
-      this.BarData = (canvas) => {
-        const ctx = canvas.getContext("2d")
-        const gradient = ctx.createLinearGradient(800, 200, 500, 800, 200);
-        gradient.addColorStop(1, 'blue');
-        gradient.addColorStop(0, 'white');
+									{!toplist && (
+										<div className="dashboard-events">
+											<h4 className="dashboard-no-event mt-5">
+												You haven't created an event yet
+											</h4>
+											<Link to="/createevent">
+												Try to create one.
+											</Link>
+										</div>
+									)}
+								</div>
+							</div>
 
-        const gradient2 = ctx.createLinearGradient(100, 120, 100, 100, 200);
-        gradient2.addColorStop(1, 'rgb(104, 160, 206)');
-        gradient2.addColorStop(0, 'rgb(100, 101, 102)');
-        if (sortTopRevenue.length !== 0) {
-          return {
-            labels: sortTopRevenue.map(event => [event.result.name]),
-            datasets: [{
-              label: 'PHNX',
-              fontColor: 'black',
-              backgroundColor: [gradient, gradient, gradient, gradient, gradient],
-              borderColor: 'white',
-              borderWidth: .8,
-              backgroundColor: [gradient, gradient, gradient, gradient, gradient],
-              hoverBorderColor: 'pink',
-              hoverBorderWidth: 1,
-              weight: 5,
-              borderAlign: 'center',
-              data: sortTopRevenue.map(event => parseInt(event.result.sold * this.context.drizzle.web3.utils.fromWei(event.result.price))),
-            }],
-          }
-        }
-        else {
-          return {
-            labels: ['You', 'Havent', 'Created', 'Any', 'Event'],
-            datasets: [{
-              label: 'PHNX',
-              fontColor: 'black',
-              backgroundColor: [gradient, gradient, gradient, gradient, gradient],
-              borderColor: 'rgb(228, 83, 138)',
-              borderWidth: .8,
-              backgroundColor: [gradient, gradient, gradient, gradient, gradient],
-              hoverBorderColor: 'pink',
-              hoverBorderWidth: 1,
-              weight: 5,
-              borderAlign: 'center',
-              data: [10, 5, 10, 5, 10],
-            }],
-          }
-        }
-      }
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-events-card">
+									<div
+										className="dashboard-events-caption"
+										style={{
+											backgroundImage:
+												"url(/images/topics/" +
+												topicsJson[17].image +
+												")",
+										}}
+									>
+										<h3 title="Top 5 Events Based On PHNX Revenue">
+											<i className="fas fa-award"></i>{" "}
+											Your Top 5 Events
+										</h3>
+									</div>
+									<div className="dashboard-bar">
+										<Bar
+											className="bars"
+											options={{
+												responsive: true,
+												maintainAspectRatio: false,
+												title: {
+													display: true,
+													position: "top",
+													text:
+														"Based On PHNX Revenue",
+													fontSize: 16,
+													lineHeight: 1.5,
+													padding: 1,
+													fontColor: "white",
+												},
+												scales: {
+													yAxes: [
+														{
+															ticks: {
+																beginAtZero: true,
+																fontSize: 10,
+																fontColor:
+																	"white",
+																fontStyle:
+																	"600",
+																precision: 0,
+															},
+														},
+													],
+													xAxes: [
+														{
+															ticks: {
+																beginAtZero: true,
+																fontSize: 12,
+																fontColor:
+																	"white",
+																fontStyle:
+																	"600",
+															},
+															barPercentage: 1,
+															display: false,
+														},
+													],
+												},
+												elements: {
+													rectangle: {
+														borderSkipped: "bottom",
+													},
+												},
+											}}
+											data={this.BarData}
+										/>
+									</div>
+								</div>
+							</div>
 
-      body = <div className="retract-page-inner-wrapper-alternative dash">
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-events-card">
+									<div
+										className="dashboard-events-caption"
+										style={{
+											backgroundImage:
+												"url(/images/topics/" +
+												topicsJson[12].image +
+												")",
+										}}
+									>
+										<h3 title="Overall Limited Tickets Sold">
+											<i className="fas fa-ticket-alt"></i>{" "}
+											Sold Tickets (Limited){" "}
+										</h3>
+									</div>
+									<div className="dashboard-chart">
+										<div className="mt-5">
+											<Doughnut
+												data={this.DoughnutData}
+												options={{
+													responsive: true,
+													maintainAspectRatio: false,
+													cutoutPercentage: 62,
+													title: {
+														display: true,
+														position: "bottom",
+														text:
+															"Limited Tickets Sold",
+														fontSize: 16,
+														lineHeight: 1.5,
+														padding: 1.6,
+														fontColor: "white",
+													},
+													legend: {
+														display: false,
+														labels: {
+															fontColor: "white",
+															fontSize: 11,
+														},
+														tooltips: {
+															enabled: true,
+														},
+													},
+												}}
+											/>
+										</div>
+									</div>
+								</div>
+							</div>
 
-        <br /><br /><br />
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-card">
+									<div
+										className="dashboard-caption"
+										style={{
+											backgroundImage:
+												"url(/images/snowflake2.jpg)",
+										}}
+									>
+										<h3>
+											<img
+												src={"/images/PhoenixDAO.png"}
+												className="dashboard-PhoenixDAO"
+												alt=""
+											/>{" "}
+											Total PHNX Revenue{" "}
+										</h3>
+										<h4 className="dashboard-data">
+											{numeral(revenue).format("0,0.00")}
+										</h4>
+										<p className="dashboard-footer">PHNX</p>
+									</div>
+								</div>
+							</div>
 
-        <div>
-          <h2><i className="fas fa-chalkboard-teacher"></i> Dashboard</h2>
-          <hr />
-          <div className="row user-list mt-4">
-            <div className="col-lg-4 pb-4 d-flex align-items-stretch" >
-              <div className="dashboard-card">
-                <div className="dashboard-caption" style={{ backgroundImage: "url(/images/ethorange.png)" }}>
-                  <h3><i className="fas fa-user-astronaut"></i> User Account</h3>
-                  <img className="dashboard-img" src={'/images/ethereum.png'} ></img>
-                  <p className="mt-2" title={this.props.accounts[0]}>{this.props.accounts[0].slice(0, 15) + '...'}</p>
-                </div>
-              </div>
-            </div>
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-card">
+									<div
+										className="dashboard-caption"
+										style={{
+											backgroundImage:
+												"url(/images/topics/" +
+												topicsJson[20].image +
+												")",
+										}}
+									>
+										<h3>
+											<i className="fas fa-hand-holding-usd"></i>{" "}
+											Total Dollar Revenue{" "}
+										</h3>
+										<h4 className="dashboard-data">
+											$
+											{numeral(
+												revenue *
+													this.state.PhoenixDAO_market
+														.usd
+											).format("0,0.00")}
+										</h4>
+										<p className="dashboard-footer">USD</p>
+									</div>
+								</div>
+							</div>
 
-            <div className="col-lg-4 pb-4 d-flex align-items-stretch" >
-              <div className="dashboard-card">
-                <div className="dashboard-caption" style={{ backgroundImage: "url(/images/topics/" + topicsJson[21].image + ")" }}>
-                  <h3><i className="fa fa-edit"></i> Total Number Of Created Events</h3>
-                  <h4 className="dashboard-data">{eventCount.length}</h4>
-                  <p className="dashboard-footer">Events</p>
-                </div>
-              </div>
-            </div>
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-card">
+									<div
+										className="dashboard-caption"
+										style={{
+											backgroundImage:
+												"url(/images/uniswaps.jpg)",
+										}}
+										onClick={this.handleClickOpen}
+									>
+										<p className="dashboard-uniswap">
+											<i className="fas fa-sync"></i> BUY
+											PHNX WITH UNISWAP
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<hr />
+					</div>
+				</div>
+			);
+		}
 
-            <div className="col-lg-4 pb-4 d-flex align-items-stretch" >
-              <div className="dashboard-card">
-                <div className="dashboard-caption" style={{ backgroundImage: "url(/images/topics/" + topicsJson[12].image + ")" }}>
-                  <h3><i className="fas fa-ticket-alt" ></i> Total Number Of Tickets Sold</h3>
-                  <h4 className="dashboard-data">{totalSold}</h4>
-                  <p className="dashboard-footer">Tickets</p></div>
-              </div>
-            </div>
-
-            <div className="col-lg-4 pb-4 d-flex align-items-stretch" >
-              <div className="dashboard-events-card">
-                <div className="dashboard-events-caption" style={{ backgroundImage: "url(/images/topics/" + topicsJson[17].image + ")" }}>
-                  <h3 title="Top 5 Events Based On Ticket Sale"><i className="fas fa-trophy"></i> Your Top 5 Events</h3>
-                </div>
-                {toplist && <div className="dashboard-events">
-                  <div className="dashboard-events-list">
-                    <Link to="/myevents/1"><h4 className="mb-2">Events</h4></Link>
-                    {sortSold.map((event, index) => (event.result.name.length > 15 ? <h4 key={index} title={event.result.name} onClick={() => this.goTo(event.id, event.result.name)}> {index + 1}. {event.result.name.slice(0, 15) + '...'}</h4> : <h4 title={event.result.name} onClick={() => this.goTo(event.id, event.result.name)}>{index + 1}. {event.result.name}</h4>))}
-                  </div>
-                  <div className="dashboard-events-list-sale">
-                    <h4 className="mb-2">Tickets Sold</h4>
-                    {sortSold.map((event, index) => (<h4 key={index} title={event.result.sold + " Tickets Sold"} onClick={() => this.goTo(event.id, event.result.name)}>
-                      {event.result.sold}</h4>))}
-                  </div>
-                </div>}
-
-                {!toplist && <div className="dashboard-events">
-                  <h4 className="dashboard-no-event mt-5">You haven't created an event yet</h4>
-                  <Link to="/createevent">Try to create one.</Link>
-                </div>}
-              </div>
-            </div>
-
-            <div className="col-lg-4 pb-4 d-flex align-items-stretch" >
-              <div className="dashboard-events-card">
-                <div className="dashboard-events-caption" style={{ backgroundImage: "url(/images/topics/" + topicsJson[17].image + ")" }}>
-                  <h3 title="Top 5 Events Based On PHNX Revenue"><i className="fas fa-award"></i> Your Top 5 Events</h3>
-                </div>
-                <div className="dashboard-bar">
-                  <Bar className="bars"
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      title: {
-                        display: true,
-                        position: "top",
-                        text: 'Based On PHNX Revenue',
-                        fontSize: 16,
-                        lineHeight: 1.5,
-                        padding: 1,
-                        fontColor: 'white',
-                      },
-                      scales: {
-                        yAxes: [{ ticks: { beginAtZero: true, fontSize: 10, fontColor: 'white', fontStyle: '600', precision: 0 } }],
-                        xAxes: [{ ticks: { beginAtZero: true, fontSize: 12, fontColor: 'white', fontStyle: '600' }, barPercentage: 1, display: false }]
-                      },
-                      elements: {
-                        rectangle: { borderSkipped: 'bottom', }
-                      }
-                    }} data={this.BarData} />
-                </div>
-
-
-              </div>
-            </div>
-
-            <div className="col-lg-4 pb-4 d-flex align-items-stretch" >
-              <div className="dashboard-events-card">
-                <div className="dashboard-events-caption" style={{ backgroundImage: "url(/images/topics/" + topicsJson[12].image + ")" }}>
-                  <h3 title="Overall Limited Tickets Sold"><i className="fas fa-ticket-alt"></i> Sold Tickets (Limited) </h3>
-                </div>
-                <div className="dashboard-chart">
-                  <div className="mt-5">
-                    <Doughnut data={this.DoughnutData}
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutoutPercentage: 62,
-                        title: {
-                          display: true,
-                          position: "bottom",
-                          text: 'Limited Tickets Sold',
-                          fontSize: 16,
-                          lineHeight: 1.5,
-                          padding: 1.6,
-                          fontColor: 'white',
-                        },
-                        legend: {
-                          display: false,
-                          labels: {
-                            fontColor: 'white',
-                            fontSize: 11
-                          },
-                          tooltips: {
-                            enabled: true
-                          },
-                        }
-                      }} />
-
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-lg-4 pb-4 d-flex align-items-stretch" >
-              <div className="dashboard-card">
-                <div className="dashboard-caption" style={{ backgroundImage: "url(/images/snowflake2.jpg)" }}>
-                  <h3><img src={'/images/PhoenixDAO.png'} className="dashboard-PhoenixDAO" alt="" />  Total PHNX Revenue </h3>
-                  <h4 className="dashboard-data">{numeral(revenue).format('0,0.00')}</h4>
-                  <p className="dashboard-footer">PHNX</p></div>
-              </div>
-            </div>
-
-            <div className="col-lg-4 pb-4 d-flex align-items-stretch" >
-              <div className="dashboard-card">
-                <div className="dashboard-caption" style={{ backgroundImage: "url(/images/topics/" + topicsJson[20].image + ")" }}>
-                  <h3><i className="fas fa-hand-holding-usd"></i>  Total Dollar Revenue </h3>
-                  <h4 className="dashboard-data">${numeral(revenue * this.state.PhoenixDAO_market.usd).format('0,0.00')}</h4>
-                  <p className="dashboard-footer">USD</p></div>
-              </div>
-            </div>
-
-
-            <div className="col-lg-4 pb-4 d-flex align-items-stretch" >
-              <div className="dashboard-card">
-                <div className="dashboard-caption" style={{ backgroundImage: "url(/images/uniswaps.jpg)" }}>
-                  <a href='https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0xfe1b6abc39e46cec54d275efb4b29b33be176c2a' target='blank' className="mt-10">
-                    <p className="dashboard-uniswap"><i className="fas fa-sync"></i> BUY PHNX WITH UNISWAP</p></a>
-                </div>
-              </div>
-            </div>
-
-          </div>
-          <hr />
-
-        </div>
-      </div>
-    }
-
-
-
-
-    return (
-      <React.Fragment>
-        {/* <Carousel className="retract-page-inner-wrapper">
+		return (
+			<React.Fragment>
+				{/* <Carousel className="retract-page-inner-wrapper">
           <Carousel.Item className="slide1">
             <img className="d-block slider w-100" src="/images/topics/music.jpg" alt="First slide" />
             <Carousel.Caption>
@@ -434,6 +806,10 @@ class Dashboard extends Component {
           </Carousel.Item>
         </Carousel>
 			 */}
+				<UniswapModal
+					open={this.state.open}
+					handleClose={this.handleClose}
+				/>
 				{body}
 			</React.Fragment>
 		);

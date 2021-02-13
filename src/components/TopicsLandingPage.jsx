@@ -144,7 +144,7 @@ class TopicsLandingPage extends Component {
 
 			<div className="retract-page-inner-wrapper-alternative topicsDiv">
 
-      <br /><br />
+    
 
       <div className="topics-wrapper">
       <h2><i className="fa fa-calendar-alt"></i> Popular Topics</h2>

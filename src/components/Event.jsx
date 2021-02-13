@@ -332,7 +332,6 @@ class Event extends Component {
 			let event_data = this.props.contracts["DaoEvents"].getEvent[
 				this.event
 			].value;
-			console.log("event_data",event_data)
 
 			let image = this.getImage();
 			let description = this.getDescription();
@@ -417,11 +416,15 @@ class Event extends Component {
 				let titleURL = "/event/" + pagetitle + "/" + this.props.id;
 				let myEventStatURL =
 					"/event-stat/" + pagetitle + "/" + this.props.id;
-
+					let myEvent = false;
+					if (event_data[9] === this.account) {
+						myEvent = true;
+					}
+	
 				body = (
 					<div className="card">
 						<div className="image_wrapper">
-							<Link to={this.props.myEvents ? myEventStatURL :titleURL}>
+							<Link to={myEvent ? myEventStatURL :titleURL}>
 								<img
 									className="card-img-top event-image"
 									src={image}
@@ -507,7 +510,7 @@ class Event extends Component {
 								{max_seats}
 							</li>
 						</ul>
-						{this.props.myEvents ? (
+						{/* {this.props.myEvents ? (
 							<div className=" editButtons text-muted text-center">
 								<Link
 									className="col-6"
@@ -527,7 +530,7 @@ class Event extends Component {
 									<i className="fas fa-trash-alt"></i> Delete
 								</button>
 							</div>
-						) : null}
+						) : null} */}
 
 						<div className="card-footer text-muted text-center">
 							<button

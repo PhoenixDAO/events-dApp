@@ -158,7 +158,7 @@ class CheckUser extends Component {
 			<div>
 				<hr className="mt-5" />
 				<h3>Confirm Purchase</h3>
-				<p>Check if user has ticket to this event.</p>
+				<p>Check if a user has purchased a ticket to this event.</p>
 				{message}
 				{/* <ul className="nav nav-pills nav-fill nav-justified mt-3">
 					<li className="nav-item">

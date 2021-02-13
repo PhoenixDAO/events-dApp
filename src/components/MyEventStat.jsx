@@ -466,6 +466,8 @@ class MyEventStat extends Component {
 			this.props.location.pathname.split("/").length - 1
 		];
 		this.contracts["DaoEvents"].methods.deleteEvent.cacheSend(id);
+		// this.props.history.push("/upcomingevents/1");
+
 	}
 
 	render() {
@@ -596,8 +598,8 @@ class MyEventStat extends Component {
 
 				if (this.props.accounts[0] !== event_data[9]) {
 					body = (
-						<div className="row">
-							<h2>
+						<div>
+							{/* <h2>
 								<i className="fa fa-calendar-alt"></i> Event
 							</h2>
 							<hr />
@@ -614,6 +616,22 @@ class MyEventStat extends Component {
 									view the page, please sign in with{" "}
 									<b>Metamask</b>.
 								</p>
+							</div>  */}
+							<h2>
+								<i className="fa fa-calendar-alt"></i> Event
+							</h2>
+							<hr />
+							<div className="mt-5 text-center">
+								<h3 className="mt-5">
+									OOPS !!! PAGE NOT FOUND
+								</h3>
+								<p className="emoji">
+									<span role="img" aria-label="worried face">
+										{" "}
+										😟
+									</span>
+								</p>
+								<p>That page doesn't exist or is unavailable</p>
 							</div>
 						</div>
 					);
@@ -671,7 +689,7 @@ class MyEventStat extends Component {
 					body = (
 						<div className="col-12">
 							<div className="row">
-								<h2 className="col-7">
+								<h2 className="col-lg-6 col-md-6 col-sm-4 col-xs-4">
 									<i className="fa fa-calendar-alt"></i> Event
 								</h2>
 
@@ -683,7 +701,7 @@ class MyEventStat extends Component {
             			<br/>
             			<br/>
            				<br/> */}
-								<div className=" editButtons text-muted col-5 text-center">
+								<div className=" editButtons text-muted col-lg-6 col-md-6 col-xs-7 col-sm-8 text-center">
 									<Link
 										// className="col-4"
 										// style={{ display: "grid" }}
@@ -694,22 +712,29 @@ class MyEventStat extends Component {
 												price: price,
 												//  ...this.props.location.state,
 												//  ...this.state,
-												description: this.state.description,
+												description: this.state
+													.description,
 												image: this.state.image,
-												ipfs_problem: this.state.ipfs_problem,
+												ipfs_problem: this.state
+													.ipfs_problem,
 
-												soldTicket: this.state.soldTicket,
-												latestblocks: this.state.latestblocks,
-												PhoenixDAO_market: this.state.phoenixDAO_market,
+												soldTicket: this.state
+													.soldTicket,
+												latestblocks: this.state
+													.latestblocks,
+												PhoenixDAO_market: this.state
+													.phoenixDAO_market,
 
 												fee: this.state.fee,
 												token: this.state.token,
-												openEvents_address: this.state.openEvents_address,
+												openEvents_address: this.state
+													.openEvents_address,
 												buyticket: this.state.buyticket,
 												approve: this.state.approve,
-												pageTransactions: this.state.pageTransactions,
+												pageTransactions: this.state
+													.pageTransactions,
 												open: this.state.open,
-												locations:this.state.locations
+												locations: this.state.locations,
 											},
 										}}
 									>
@@ -800,15 +825,16 @@ class MyEventStat extends Component {
 										</li>
 									</ul>
 								</div>
-								<div className="row">
-									{this._isMounted && (
-										<Clock
-											deadline={date}
-											event_unix={event_data[1]}
-										/>
-									)}
-
-									<div className="new-transaction-wrapper">
+								<div className="row clockShare">
+									<div className="col-md-12 col-xs-12 col-sm-12 col-lg-7 clockDiv">
+										{this._isMounted && (
+											<Clock
+												deadline={date}
+												event_unix={event_data[1]}
+											/>
+										)}
+									</div>
+									<div className="new-transaction-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-5">
 										<h4 className="transactions">
 											Share your event
 										</h4>
@@ -870,7 +896,7 @@ class MyEventStat extends Component {
 											</WhatsappShareButton>
 										</div>
 									</div>
-									<h4 className="transactions">
+									<h4 className="transactions col-12">
 										Ticket Purchases
 									</h4>
 									{this.state.load && <Loading />}

@@ -80,7 +80,20 @@ class PastEvents extends Component {
       this.setState({ latestblocks: blockNumber });
       this.setState({ past_events: [] });
     }
-
+		await openEvents
+			.getPastEvents("DeletedEvent", {
+				fromBlock: 7654042,
+				toBlock: this.state.latestblocks,
+			})
+			.then((events) => {
+				console.log("eventsssss deletedEvents", events);
+				this.setState({ Deleted_Events: events });
+				return events;
+			})
+			.catch((err) => {
+				console.error(err);
+				this.setState({ Deleted_Events: [] });
+			});
     //Get Finished Events
     openEvents.getPastEvents("CreatedEvent", { fromBlock: 5000000, toBlock: 'latest' })
       .then(events => {
@@ -93,6 +106,8 @@ class PastEvents extends Component {
               pastEvents.returnValues.time <= (dateNow)));
 
           this.setState({ past_events: newsort, past_events_copy: newsort });
+          console.log("eventsssss pastEvents", this.state.past_events);
+
           this.setState({ past_length: this.state.past_events.length })
           this.setState({ loading: false });
         }
@@ -154,6 +169,8 @@ class PastEvents extends Component {
     if (typeof this.props.contracts['DaoEvents'].getEventsCount[this.eventCount] !== 'undefined' && this.state.active_length !== 'undefined' && this.state.loading !== true) {
       //let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
       let count = this.state.past_length
+      console.log("pasteventlength",count);
+
       if (this.state.loading) {
         body = <PhoenixDAOLoader />
       }
@@ -161,19 +178,36 @@ class PastEvents extends Component {
         body = <p className="text-center not-found"><span role="img" aria-label="thinking">🤔</span>&nbsp;No events found. <a href="/createevent">Try creating one.</a></p>;
       } else {
         let currentPage = Number(this.props.match.params.page);
-        if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-
-        let end = currentPage * this.perPage;
-        let start = end - this.perPage;
-        if (end > count) end = count;
-        let pages = Math.ceil(count / this.perPage);
-
-        let events_list = [];
+				let events_list = [];
+				let skip = false;
+				for (let i =0; i < this.state.past_events.length; i++) {
+					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+						if (
+							this.state.past_events[i].returnValues
+								.eventId ==
+							this.state.Deleted_Events[j].returnValues.eventId
+						) {
+							skip = true;
+						}
+					}
+					if (!skip) {
+						events_list.push(this.state.past_events[i]);
+					}
+					skip = false;
+				}
+        console.log("events after vfilter",events_list);
+				let updated_list=[]
+                count=events_list.length;
+				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+				let end = currentPage * this.perPage;
+				let start = end - this.perPage;
+				if (end > count) end = count;
+				let pages = Math.ceil(count / this.perPage);
         for (let i = start; i < end; i++) {
-          events_list.push(<Event
-            key={this.state.past_events[i].returnValues.eventId}
-            id={this.state.past_events[i].returnValues.eventId}
-            ipfs={this.state.past_events[i].returnValues.ipfs} />);
+          updated_list.push(<Event
+            key={events_list[i].returnValues.eventId}
+            id={events_list[i].returnValues.eventId}
+            ipfs={events_list[i].returnValues.ipfs} />);
         }
 
         //events_list.reverse();
@@ -240,7 +274,7 @@ class PastEvents extends Component {
         body =
           <div >
             <div className="row user-list mt-4">
-              {events_list}
+              {updated_list}
             </div>
             {pagination}
           </div>
@@ -296,9 +330,6 @@ class PastEvents extends Component {
         <div 
         //  className="retract-page-inner-wrapper-alternative dash"
          >
-
-          <br /><br />
-
           <div className="input-group input-group-lg" ref={this.myRef}>
             <div className="input-group-prepend">
               <span className="input-group-text search-icon" id="inputGroup-sizing-lg"><i className="fa fa-search"></i>&nbsp;Search </span>
