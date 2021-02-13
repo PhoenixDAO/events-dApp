@@ -460,9 +460,7 @@ class FindEvents extends Component {
 				<div
 				//  className="retract-page-inner-wrapper-alternative dash"
 				>
-					<br />
-					<br />
-
+			
 					<div
 						className="input-group input-group-lg"
 						ref={this.myRef}

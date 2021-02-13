@@ -221,9 +221,6 @@ class Dashboard extends Component {
       }
 
       body = <div className="retract-page-inner-wrapper-alternative dash">
-
-        <br /><br /><br />
-
         <div>
           <h2><i className="fas fa-chalkboard-teacher"></i> Dashboard</h2>
           <hr />

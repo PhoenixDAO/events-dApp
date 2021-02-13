@@ -466,6 +466,8 @@ class MyEventStat extends Component {
 			this.props.location.pathname.split("/").length - 1
 		];
 		this.contracts["DaoEvents"].methods.deleteEvent.cacheSend(id);
+		// this.props.history.push("/upcomingevents/1");
+
 	}
 
 	render() {

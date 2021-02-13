@@ -25,7 +25,8 @@ class MyEvents extends Component {
 			isActive: true,
 			account: [],
 			dateNow: '',
-			prevPath: -1
+			prevPath: -1,
+			Deleted_Events: [],
 		};
 		this.contracts = context.drizzle.contracts;
 		this.events = this.contracts['DaoEvents'].methods.eventsOf.cacheCall(this.props.accounts[0]);
@@ -72,6 +73,21 @@ class MyEvents extends Component {
 
 				}, 10000))
 		}
+		await openEvents
+		.getPastEvents("DeletedEvent", {
+			fromBlock: 7654042,
+			toBlock: this.state.latestblocks,
+		})
+		.then((events) => {
+			console.log("eventsssss deletedEvents", events);
+			this.setState({ Deleted_Events: events });
+			return events;
+		})
+		.catch((err) => {
+			console.error(err);
+			this.setState({ Deleted_Events: [] });
+		});
+
 	}
 
 	//Get My Active Events on Blockchain
@@ -89,6 +105,7 @@ class MyEvents extends Component {
 				if (this._isMounted) {
 					this.setState({ MyEvents: newsort, check: newsort });
 					this.setState({ active_length: this.state.MyEvents.length });
+					console.log("myevents",this.state.MyEvents);
 					setTimeout(() => this.setState({ loading: false }), 1000);
 				}
 
@@ -186,28 +203,60 @@ class MyEvents extends Component {
 			else if (events === 0) {
 				body = <p className="text-center not-found"><span role="img" aria-label="thinking">🤔</span>&nbsp;No events found. <a href="/createevent">Try creating one.</a></p>;
 			} else {
-				let count = this.state.MyEvents.length
+				 let count = this.state.MyEvents.length
+				// let currentPage = Number(this.props.match.params.page);
+				// if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 
+				// let end = currentPage * this.perPage;
+				// let start = end - this.perPage;
+				// if (end > count) end = count;
+				// let pages = Math.ceil(count / this.perPage);
+
+				// let myEvents = [];
+
+				// for (let i = start; i < end; i++) {
+				// 	myEvents.push(<Event disabledStatus={this.props.disabledStatus}
+				// 		inquire={this.props.inquire}
+				// 		key={this.state.MyEvents[i].returnValues.eventId}
+				// 		id={this.state.MyEvents[i].returnValues.eventId}
+				// 		ipfs={this.state.MyEvents[i].returnValues.ipfs}
+				// 		myEvents={true} />);
+				// }
+
+				//events.reverse();
 				let currentPage = Number(this.props.match.params.page);
+				let events_list = [];
+				let skip = false;
+				for (let i =0; i <count; i++) {
+					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+						if (
+							this.state.MyEvents[i].returnValues
+								.eventId ==
+							this.state.Deleted_Events[j].returnValues.eventId
+						) {
+							skip = true;
+						}
+					}
+					if (!skip) {
+						events_list.push(this.state.MyEvents[i]);
+					}
+					skip = false;
+				}
+				let updated_list=[]
+                count=events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-
 				let end = currentPage * this.perPage;
 				let start = end - this.perPage;
 				if (end > count) end = count;
 				let pages = Math.ceil(count / this.perPage);
 
-				let myEvents = [];
-
 				for (let i = start; i < end; i++) {
-					myEvents.push(<Event disabledStatus={this.props.disabledStatus}
-						inquire={this.props.inquire}
-						key={this.state.MyEvents[i].returnValues.eventId}
-						id={this.state.MyEvents[i].returnValues.eventId}
-						ipfs={this.state.MyEvents[i].returnValues.ipfs}
-						myEvents={true} />);
+				  updated_list.push(<Event disabledStatus={this.props.disabledStatus} inquire={this.props.inquire}
+					key={events_list[i].returnValues.eventId}
+					id={events_list[i].returnValues.eventId}
+					ipfs={events_list[i].returnValues.ipfs} />);
 				}
-
-				//events.reverse();
+				// events_list.reverse();
 
 				let pagination;
 
@@ -268,7 +317,7 @@ class MyEvents extends Component {
 				body =
 					<div>
 						<div className="row user-list mt-4">
-							{myEvents}
+							{updated_list}
 						</div>
 						{pagination}
 					</div>

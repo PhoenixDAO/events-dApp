@@ -7,6 +7,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
+import { Autocomplete } from "@material-ui/lab";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -33,7 +34,7 @@ class UniswapModal extends Component {
 				style={{ maxWidth: "100%" }}
 			>
 				<iframe
-					src="https://app.uniswap.org/#/swap?outputCurrency=0x38A2fDc11f526Ddd5a607C1F251C065f40fBF2f7"
+					src="https://app.uniswap.org/#/swap?outputCurrency=0xfe1b6ABc39E46cEc54d275efB4b29B33be176c2A"
 					height="660px"
 					width="100%"
                     className="frame"
@@ -42,7 +43,7 @@ class UniswapModal extends Component {
 						margin: "0 auto",
 						display: "block",
 						maxWidth: "900px",
-						minWidth: "450px",
+						overflow:"auto",
 					}}
 					id="myId"
 				/>

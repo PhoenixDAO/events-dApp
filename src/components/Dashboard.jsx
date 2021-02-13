@@ -363,10 +363,6 @@ class Dashboard extends Component {
 
 			body = (
 				<div className="retract-page-inner-wrapper-alternative dash">
-					<br />
-					<br />
-					<br />
-
 					<div>
 						<h2>
 							<i className="fas fa-chalkboard-teacher"></i>{" "}
@@ -749,7 +745,7 @@ class Dashboard extends Component {
 											backgroundImage:
 												"url(/images/uniswaps.jpg)",
 										}}
-										onClick={	this.handleClickOpen}
+										onClick={this.handleClickOpen}
 									>
 										<p className="dashboard-uniswap">
 											<i className="fas fa-sync"></i> BUY
