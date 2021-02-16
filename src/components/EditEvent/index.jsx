@@ -7,7 +7,7 @@ import ipfs from "../../utils/ipfs";
 import Loader from "./Loader";
 import Error from "./Error";
 import Done from "./Done";
-//import { Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 class CreateEvent extends Component {
 	constructor(props, context) {
@@ -23,6 +23,7 @@ class CreateEvent extends Component {
 			ipfs: null,
 			fileImg: null,
 			data: {
+				eventId:0,
 				name: null,
 				description: null,
 				time: 0,
@@ -38,6 +39,7 @@ class CreateEvent extends Component {
 	}
 
 	createEvent = (
+		eventId,
 		name,
 		description,
 		location,
@@ -53,18 +55,8 @@ class CreateEvent extends Component {
 	) => {
 		console.log(
 			"hey hey0",
-			name,
-			description,
-			location,
-			time,
-			file,
 			organizer,
-			type,
-			topic,
-			currency,
-			price,
-			limited,
-			seats
+		
 		);
 		this.setState(
 			{
@@ -73,6 +65,7 @@ class CreateEvent extends Component {
 				stage: 25,
 				title: "Uploading event image...",
 				data: {
+					eventId:eventId,
 					name: name,
 					description: description,
 					time: time,
@@ -122,9 +115,16 @@ class CreateEvent extends Component {
 					ipfs: hash[0].hash,
 				});
 				//this.uploadTransaction();
-				console.log("hash is ", hash);
+				console.log("hash is ",this.state.data.eventId,
+				this.state.data.name,
+				this.state.data.time,
+				this.state.data.price,
+				this.state.data.seats,
+				this.state.ipfs,
+				this.state.data.type,
+				this.state.data.organizer );
 				this.props.passtransaction(
-					this.contracts["OpenEvents"].methods.updateEvent(
+					this.contracts["DaoEvents"].methods.updateEvent(
 						this.state.data.eventId,
 						this.state.data.name,
 						this.state.data.time,
@@ -132,7 +132,7 @@ class CreateEvent extends Component {
 						this.state.data.seats,
 						this.state.ipfs,
 						this.state.data.type,
-						this.state.organizer
+						this.state.data.organizer
 					)
 				);
 
@@ -152,7 +152,8 @@ class CreateEvent extends Component {
 	};
 
 	uploadTransaction = () => {
-		let id = this.contracts["OpenEvents"].methods.updateEvent.cacheSend(
+
+		let id = this.contracts["DaoEvents"].methods.updateEvent.cacheSend(
 			this.state.data.eventId,
 			this.state.data.name,
 			this.state.data.time,
@@ -164,17 +165,19 @@ class CreateEvent extends Component {
 		);
 console.log("eventId",this.state.data.eventId)
 		this.transactionChecker(id);
-		//this.setRedirect();
+		this.createNewEvent();
+
+		this.setRedirect();
 	};
 
-	/*setRedirect=()=>{
+	setRedirect=()=>{
 		this.setState({
 			redirect: true
 		  })
 		if(this.state.redirect){
 			return <Redirect to='/'/>
 		}
-	}*/
+	}
 
 	createNewEvent = () => {
 		this.setState({ error: false, done: false, upload: false }, () =>

@@ -22,6 +22,7 @@ class Form extends Component {
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
+			eventId:this.props.eventId,
 			title: this.props.event[0],
 			title_length: title.length,
 			description: this.props.description,
@@ -33,7 +34,7 @@ class Form extends Component {
 				this.props.PhoenixDAO_market.usd *
 				numeral(this.props.price).format("0.000"),
 			location: this.props.locations,
-			time: 0,
+			time: this.props.event[1],
 			// time:Math.floor(Date.now() / 1000),
 			timeForHumans: null,
 			currency: "phnx",
@@ -144,6 +145,8 @@ class Form extends Component {
 				}
 				// ()=>this.setState({dateDisplay: new Date(parseInt(this.state.time, 10) * 1000)})
 			);
+			console.log("time",this.state.time);
+
 			// console.log(date)
 		}
 	};
@@ -471,8 +474,10 @@ class Form extends Component {
 		});
 		console.log("this.state", this.state);
 		console.log("this.form", this.form);
+		console.log("eventId",this.state.eventId)
 		if (form_validation.length === 0) {
 			this.props.createEvent(
+				this.state.eventId,
 				filteredTitle,
 				filteredDescription,
 				filteredLocation,
@@ -1103,7 +1108,7 @@ class Form extends Component {
 						onClick={this.handleForm}
 						disabled={disabled}
 					>
-						Make Your Event Live
+						Update Your Event
 					</button>
 				</div>
 

@@ -131,7 +131,7 @@ class MyEventStat extends Component {
 		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
 			this.props.match.params.id
 		);
-
+ 
 		this.account = this.props.accounts[0];
 		this.state = {
 			load: true,
@@ -504,6 +504,9 @@ class MyEventStat extends Component {
 				let event_data = this.props.contracts["DaoEvents"].getEvent[
 					this.event
 				].value;
+				let id = this.props.location.pathname.split("/")[
+					this.props.location.pathname.split("/").length - 1
+				];
 				let ownerDetails = this.props.contracts["DaoEvents"]
 					.getOwnerDetails[this.event];
 				let owner = "";
@@ -717,10 +720,11 @@ class MyEventStat extends Component {
 										to={{
 											pathname: "/editevent",
 											state: {
+												done:false,
 												event: event_data,
 												price: price,
 												organizer: ownerDetails,
-												
+												eventId:id,
 												//  ...this.props.location.state,
 												//  ...this.state,
 												description: this.state
