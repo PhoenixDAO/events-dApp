@@ -783,13 +783,14 @@ input[type="number"] {
 }
 
 @media (max-width: 650px) {
-	.event-page-wrapper {
+	.event-page-wrapper,.retract-page-inner-wrapper-alternative.dashh{
 		margin: 0px -40px 0 -40px !important;
 	}
 	.countdown {
 		margin-bottom: 20px;
 		max-height: 123px !important;
 	}
+
 }
 
 @media (max-width: 320px) {

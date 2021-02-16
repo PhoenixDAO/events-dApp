@@ -462,7 +462,7 @@ class Event extends Component {
 								className="card-title event-title"
 								title={event_data[0]}
 							>
-								<Link to={titleURL}>
+								<Link to={myEvent ? myEventStatURL :titleURL}>
 									{badge}
 									{event_data[0]}
 								</Link>
