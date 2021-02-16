@@ -328,7 +328,7 @@ class PastEvents extends Component {
         </Carousel> */}
 
         <div 
-        //  className="retract-page-inner-wrapper-alternative dash"
+         className="retract-page-inner-wrapper-alternative dashh"
          >
           <div className="input-group input-group-lg" ref={this.myRef}>
             <div className="input-group-prepend">

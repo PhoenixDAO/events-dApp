@@ -13,7 +13,7 @@ import Done from "./Done";
 class CreateEvent extends Component {
 	constructor(props, context) {
 		super(props);
-		console.log("props recieved",this.props)
+		console.log("props recieved", this.props);
 		this.state = {
 			done: false,
 			upload: false,
@@ -52,6 +52,7 @@ class CreateEvent extends Component {
 		limited,
 		seats
 	) => {
+		console.log("in create event here index.js", organizer);
 		this.setState(
 			{
 				upload: true,
@@ -130,8 +131,7 @@ class CreateEvent extends Component {
 						this.state.data.seats,
 						this.state.ipfs,
 						this.state.data.type,
-						"Jaffer",
-						// this.state.organizer
+						this.state.data.organizer
 					)
 				);
 			})
@@ -157,7 +157,8 @@ class CreateEvent extends Component {
 			this.state.data.limited,
 			this.state.data.seats,
 			this.state.ipfs,
-			this.state.data.type
+			this.state.data.type,
+			this.state.data.organizer
 		);
 
 		this.transactionChecker(id);
@@ -206,12 +207,9 @@ class CreateEvent extends Component {
 		}, 500);
 	};
 	componentDidMount() {
-		console.log("props",this.props)
+		console.log("props", this.props);
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
-		
-	  }
-
-	
+	}
 
 	render() {
 		let disabled = true;
@@ -252,7 +250,7 @@ class CreateEvent extends Component {
 		}
 
 		return (
-			<div className="home-wrapper" >
+			<div className="home-wrapper">
 				<h2>
 					<i className="fa fa-edit"></i> Create Event
 				</h2>
