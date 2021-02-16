@@ -11,7 +11,7 @@ import { FacebookCircularProgress } from "./TimeAndDateLoader";
 import eventTypes from "../../config/types.json";
 import eventTopics from "../../config/topics.json";
 var moment = require("moment");
-var Filter = require('bad-words');
+var Filter = require("bad-words");
 
 let numeral = require("numeral");
 class Form extends Component {
@@ -39,7 +39,7 @@ class Form extends Component {
 			limited: false,
 			terms: false,
 			seatsForHumans: 0,
-			seats:0,
+			seats: 0,
 			wrong_file: false,
 			file_name: null,
 			file: null,
@@ -294,11 +294,15 @@ class Form extends Component {
 			// 	return;
 			// }
 			let test = event.target.value.match(/^\d*\.?\d*$/);
-			console.log("e.target.value",event.target.value)
-			console.log("e.target.value test",test)
-	  		if ((test == null && event.target.value.length != 0)) {
-				  console.log("e.target.value returned",event.target.value.charAt(event.target.value.length-1)) 
-				  return event.preventDefault();}
+			console.log("e.target.value", event.target.value);
+			console.log("e.target.value test", test);
+			if (test == null && event.target.value.length != 0) {
+				console.log(
+					"e.target.value returned",
+					event.target.value.charAt(event.target.value.length - 1)
+				);
+				return event.preventDefault();
+			}
 			if (
 				price.includes(".") &&
 				price.split(".")[1].split("").length > 3
@@ -306,7 +310,12 @@ class Form extends Component {
 				event.preventDefault();
 				return;
 			}
-			console.log("this.form.price.value",this.form.price.value, " length" ,this.form.price.value.length)
+			console.log(
+				"this.form.price.value",
+				this.form.price.value,
+				" length",
+				this.form.price.value.length
+			);
 			if (event.target.value.length > 15) {
 				event.preventDefault();
 				return;
@@ -342,11 +351,12 @@ class Form extends Component {
 
 	ticketsChange = (event) => {
 		let test = event.target.value.match(/^\d+$/);
-			console.log("e.target.value",event.target.value)
-			console.log("e.target.value test",test)
-	  		if ((test == null && event.target.value.length != 0) ) {
-				this.form.seats.value=this.state.seats  
-				return event.preventDefault();}
+		console.log("e.target.value", event.target.value);
+		console.log("e.target.value test", test);
+		if (test == null && event.target.value.length != 0) {
+			this.form.seats.value = this.state.seats;
+			return event.preventDefault();
+		}
 		let seats = this.form.seats.value;
 		console.log("seats.length", seats.length);
 		if (seats && seats.length > 16) {
@@ -401,7 +411,7 @@ class Form extends Component {
 	// };
 	handleForm = (event) => {
 		event.preventDefault();
-		console.log("state===>",  this.state.seats);
+		console.log("state===>", this.state);
 		// const todayDate=new Date((parseInt(this.state.currentBlock.timestamp, 10) * 1000));
 		// console.log('moment.unix()',moment.unix().toString());
 		// let todayDate = moment.unix(this.state.currentBlock.timestamp).format();
@@ -409,32 +419,32 @@ class Form extends Component {
 		// console.log('selectedData',selectedDate)
 		// console.log('todayDate',todayDate)
 		// console.log("Date : " , todayDate)
-		let filteredDescription=""
-		let filteredTitle=""
-		let filteredOrganizer=""
-		let filteredLocation = ""
-		if(this.form.description.value !== ""){
+		let filteredDescription = "";
+		let filteredTitle = "";
+		let filteredOrganizer = "";
+		let filteredLocation = "";
+		if (this.form.description.value !== "") {
 			let filter = new Filter();
 			filteredDescription = filter.clean(this.form.description.value);
-			this.setState({description:filteredDescription})
+			this.setState({ description: filteredDescription });
 		}
-		if(this.state.title !== ""){
+		if (this.state.title !== "") {
 			let filter = new Filter();
 			filteredTitle = filter.clean(this.state.title);
-			this.setState({title:filteredTitle})
+			this.setState({ title: filteredTitle });
 		}
-		if(this.state.organizer !== ""){
-			let filter = new Filter();
-			filteredOrganizer = filter.clean(this.state.organizer);
-			this.setState({organizer:filteredOrganizer})
+		if (this.state.organizer !== "") {
+			// let filter = new Filter();
+			// filteredOrganizer = filter.clean(this.state.organizer);
+			this.setState({ organizer: filteredOrganizer });
 		}
-		if(this.state.location !== ""){
+		if (this.state.location !== "") {
 			let filter = new Filter();
 			filteredLocation = filter.clean(this.state.location);
-			this.setState({organizer:filteredLocation})
+			this.setState({ location: filteredLocation });
 		}
-		console.log("filteredDescription form",this.form.description.value)
-		console.log("filteredDescription",filteredDescription)
+		console.log("filteredDescription form", this.form.description.value);
+		console.log("filteredDescription", filteredDescription);
 		let form_validation = [];
 		if (this.state.title === "") form_validation.push("name");
 		if (this.state.location === "") form_validation.push("location");
@@ -457,27 +467,26 @@ class Form extends Component {
 		if (this.state.type === "") form_validation.push("type");
 		if (!this.state.terms) form_validation.push("terms");
 
-
 		this.setState({
 			form_validation: form_validation,
 		});
-		console.log("this.state",this.state)
-		console.log("this.form",this.form)
+		console.log("this.state", this.state);
+		console.log("this.form", this.form);
 		if (form_validation.length === 0) {
-			
 			this.props.createEvent(
 				filteredTitle,
 				filteredDescription,
 				filteredLocation,
 				this.state.time,
 				this.state.file,
-				filteredOrganizer,
+				// filteredOrganizer,
+				this.state.organizer,
 				this.state.type,
 				this.state.topic,
 				this.state.currency,
 				this.state.price,
 				this.state.limited,
-				this.form.seats? this.form.seats.value : "",
+				this.form.seats ? this.form.seats.value : ""
 			);
 		}
 	};
@@ -541,9 +550,8 @@ class Form extends Component {
 				this.state.form_validation.indexOf("terms") === -1
 					? ""
 					: "is-invalid",
-					
 		};
-		console.log("warning",warning)
+		console.log("warning", warning);
 
 		let alert;
 
@@ -877,8 +885,7 @@ class Form extends Component {
 											id="price"
 											title={"Price in PHNX"}
 											ref={(input) =>
-												this.form.price = input
-													
+												(this.form.price = input)
 											}
 											autoComplete="off"
 											onChange={this.priceChange}
@@ -939,7 +946,7 @@ class Form extends Component {
 											/>
 										</span>
 									</div>
-								{this.state.currency === "phnx" && (
+									{this.state.currency === "phnx" && (
 										<input
 											type="string"
 											min="0.0001"
@@ -953,8 +960,7 @@ class Form extends Component {
 											id="price"
 											title={"Price in USD"}
 											ref={(input) =>
-												this.form.price = input
-													
+												(this.form.price = input)
 											}
 											autoComplete="off"
 											disabled={true}
@@ -962,28 +968,27 @@ class Form extends Component {
 										/>
 									)}
 
-								{this.state.currency === "eth" && (
-									<input
-									type="string"
-									min="0.0001"
-									maxLength="15"
-									// onKeyUp={this.restrictMinus}
-									// onKeyPress={this.restrictMinus}
-									value={0.00}
-									className={
-										"form-control " + warning.price
-									}
-									id="price"
-									title={"Price in USD"}
-									ref={(input) =>
-										this.form.price = input
-											
-									}
-									autoComplete="off"
-									disabled={true}
-									// onChange={this.priceChange}
-								/>
-								)}
+									{this.state.currency === "eth" && (
+										<input
+											type="string"
+											min="0.0001"
+											maxLength="15"
+											// onKeyUp={this.restrictMinus}
+											// onKeyPress={this.restrictMinus}
+											value={0.0}
+											className={
+												"form-control " + warning.price
+											}
+											id="price"
+											title={"Price in USD"}
+											ref={(input) =>
+												(this.form.price = input)
+											}
+											autoComplete="off"
+											disabled={true}
+											// onChange={this.priceChange}
+										/>
+									)}
 								</div>
 							</div>
 						</div>
@@ -1006,13 +1011,13 @@ class Form extends Component {
 									Limited tickets
 								</label>
 							</div>
-							{this.state.limited && 
-							<div className="row mt-3">
-								<div className="col-lg-6">
-									<label htmlFor="seats">
-										Tickets available:
-									</label>
-									
+							{this.state.limited && (
+								<div className="row mt-3">
+									<div className="col-lg-6">
+										<label htmlFor="seats">
+											Tickets available:
+										</label>
+
 										<small
 											style={{ marginTop: "0" }}
 											className={
@@ -1023,41 +1028,41 @@ class Form extends Component {
 										>
 											Value must be greater than 0
 										</small>
-									
-									<input
-										type="string"
-										className={
-											"form-control " + warning.seats
-										}
-										min="1"
-										maxLength="15"
-										value={
-											this.form.seats
-												? this.state.seats
-												: ""
-										}
-										// pattern="^[1-9]"
-										// onKeyDown={
-										// 	this.restrictMinusForTickets
-										// }
-										// onKeyUp={
-										// 	this.restrictMinusForTickets
-										// }
-										// onKeyPress={
-										// 	this.restrictMinusForTickets
-										// }
-										id="seats"
-										title="Tickets available"
-										disabled={!this.state.limited}
-										ref={(input) =>
-											(this.form.seats = input)
-										}
-										autoComplete="off"
-										onChange={this.ticketsChange}
-									/>
+
+										<input
+											type="string"
+											className={
+												"form-control " + warning.seats
+											}
+											min="1"
+											maxLength="15"
+											value={
+												this.form.seats
+													? this.state.seats
+													: ""
+											}
+											// pattern="^[1-9]"
+											// onKeyDown={
+											// 	this.restrictMinusForTickets
+											// }
+											// onKeyUp={
+											// 	this.restrictMinusForTickets
+											// }
+											// onKeyPress={
+											// 	this.restrictMinusForTickets
+											// }
+											id="seats"
+											title="Tickets available"
+											disabled={!this.state.limited}
+											ref={(input) =>
+												(this.form.seats = input)
+											}
+											autoComplete="off"
+											onChange={this.ticketsChange}
+										/>
+									</div>
 								</div>
-							</div>}	
-							
+							)}
 						</div>
 						<div className="form-group">
 							<p>Terms and conditions:</p>
@@ -1065,9 +1070,7 @@ class Form extends Component {
 								<input
 									type="checkbox"
 									// className="custom-control-input"
-									className={
-										"custom-control-input " 
-									}
+									className={"custom-control-input "}
 									id="terms"
 									title="Terms and conditions"
 									value="true"
@@ -1076,13 +1079,24 @@ class Form extends Component {
 								/>
 								<label
 									className={"custom-control-label "}
-									style={{color: warning.terms === "is-invalid" ? "#dc3545" : "#333333"}}
+									style={{
+										color:
+											warning.terms === "is-invalid"
+												? "#dc3545"
+												: "#333333",
+									}}
 									htmlFor="terms"
 								>
-									By creating an event, I agree to the <a target='_blank' href="/terms-and-conditions">policies and terms of use</a>.
+									By creating an event, I agree to the{" "}
+									<a
+										target="_blank"
+										href="/terms-and-conditions"
+									>
+										policies and terms of use
+									</a>
+									.
 								</label>
 							</div>
-							
 						</div>
 						{alert}
 						<br />
@@ -1125,10 +1139,9 @@ class Form extends Component {
 							<h5 className="card-title event-title">
 								{this.state.title}
 							</h5>
-							<p style={{whiteSpace:"pre-line"}}>
-							{this.state.description}
+							<p style={{ whiteSpace: "pre-line" }}>
+								{this.state.description}
 							</p>
-					
 						</div>
 						<ul className="list-group list-group-flush">
 							{this.state.currency == "phnx" && (

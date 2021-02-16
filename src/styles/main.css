@@ -755,11 +755,14 @@ input[type="number"] {
 	background: transparent !important;
 }
 
+.retract-page-inner-wrapper-alternative.dashh {
+	margin: 0px -30px 0 -30px !important;
+	background: transparent !important;
+}
 .retract-page-inner-wrapper-alternative.dash {
 	margin: 0px -30px 0 -30px !important;
 	background: transparent !important;
 }
-
 @media (max-width: 650px) {
 	.home-wrapper {
 		margin: 0px -30px 0 -30px !important;

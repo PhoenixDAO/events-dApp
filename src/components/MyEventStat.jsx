@@ -131,6 +131,7 @@ class MyEventStat extends Component {
 		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
 			this.props.match.params.id
 		);
+
 		this.account = this.props.accounts[0];
 		this.state = {
 			load: true,
@@ -467,7 +468,6 @@ class MyEventStat extends Component {
 		];
 		this.contracts["DaoEvents"].methods.deleteEvent.cacheSend(id);
 		// this.props.history.push("/upcomingevents/1");
-
 	}
 
 	render() {
@@ -504,6 +504,15 @@ class MyEventStat extends Component {
 				let event_data = this.props.contracts["DaoEvents"].getEvent[
 					this.event
 				].value;
+				let ownerDetails = this.props.contracts["DaoEvents"]
+					.getOwnerDetails[this.event];
+				let owner = "";
+				if (ownerDetails != undefined) {
+					ownerDetails = ownerDetails.value;
+					console.log("owner",ownerDetails);
+					// this.setState({owner:ownerDetails})
+				}
+				console.log("eventttt", event_data);
 				let image = this.getImage();
 				let description = this.getDescription();
 				let locations = this.getLocation();
@@ -710,6 +719,8 @@ class MyEventStat extends Component {
 											state: {
 												event: event_data,
 												price: price,
+												organizer: ownerDetails,
+												
 												//  ...this.props.location.state,
 												//  ...this.state,
 												description: this.state
@@ -735,6 +746,7 @@ class MyEventStat extends Component {
 													.pageTransactions,
 												open: this.state.open,
 												locations: this.state.locations,
+
 											},
 										}}
 									>

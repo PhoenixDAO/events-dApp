@@ -12,7 +12,7 @@ import Done from "./Done";
 class CreateEvent extends Component {
 	constructor(props, context) {
 		super(props);
-		console.log("props recieved",this.props)
+		console.log("props recieved", this.props);
 		this.state = {
 			done: false,
 			upload: false,
@@ -51,6 +51,21 @@ class CreateEvent extends Component {
 		limited,
 		seats
 	) => {
+		console.log(
+			"hey hey0",
+			name,
+			description,
+			location,
+			time,
+			file,
+			organizer,
+			type,
+			topic,
+			currency,
+			price,
+			limited,
+			seats
+		);
 		this.setState(
 			{
 				upload: true,
@@ -109,17 +124,18 @@ class CreateEvent extends Component {
 				//this.uploadTransaction();
 				console.log("hash is ", hash);
 				this.props.passtransaction(
-					this.contracts["OpenEvents"].methods.createEvent(
+					this.contracts["OpenEvents"].methods.updateEvent(
+						this.state.data.eventId,
 						this.state.data.name,
 						this.state.data.time,
 						this.state.data.price,
-						this.state.data.currency === "eth" ? false : true,
-						this.state.data.limited,
 						this.state.data.seats,
 						this.state.ipfs,
-						this.state.data.type
+						this.state.data.type,
+						this.state.organizer
 					)
 				);
+
 			})
 			.catch((error) => {
 				this.setState(
@@ -131,21 +147,22 @@ class CreateEvent extends Component {
 						console.log(this.state.error_text);
 					}
 				);
+				console.log(error);
 			});
 	};
 
 	uploadTransaction = () => {
-		let id = this.contracts["OpenEvents"].methods.createEvent.cacheSend(
+		let id = this.contracts["OpenEvents"].methods.updateEvent.cacheSend(
+			this.state.data.eventId,
 			this.state.data.name,
 			this.state.data.time,
 			this.state.data.price,
-			this.state.data.currency === "eth" ? false : true,
-			this.state.data.limited,
 			this.state.data.seats,
 			this.state.ipfs,
-			this.state.data.type
+			this.state.data.type,
+			this.state.organizer
 		);
-
+console.log("eventId",this.state.data.eventId)
 		this.transactionChecker(id);
 		//this.setRedirect();
 	};
@@ -192,12 +209,9 @@ class CreateEvent extends Component {
 		}, 500);
 	};
 	componentDidMount() {
-		console.log("indexprops",this.props)
+		console.log("indexprops", this.props);
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
-		
-	  }
-
-	
+	}
 
 	render() {
 		let disabled = true;
@@ -239,7 +253,7 @@ class CreateEvent extends Component {
 		}
 
 		return (
-			<div className="home-wrapper" >
+			<div className="home-wrapper">
 				<h2>
 					<i className="fa fa-edit"></i> Edit Event
 				</h2>

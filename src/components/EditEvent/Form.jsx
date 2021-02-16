@@ -12,23 +12,26 @@ import eventTypes from "../../config/types.json";
 import eventTopics from "../../config/topics.json";
 import { title } from "process";
 var moment = require("moment");
+var Filter = require("bad-words");
 
 let numeral = require("numeral");
 class Form extends Component {
 	constructor(props) {
 		super(props);
-		console.log("props in form",props)
+		console.log("props in form", props);
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
 			title: this.props.event[0],
 			title_length: title.length,
-			description:this.props.description,
+			description: this.props.description,
 			description_length: 0,
-			organizer: "",
+			organizer: this.props.organizer,
 			organizer_length: 0,
-			price:numeral(this.props.price ).format("0.000"),
-			dollarPrice: this.props.PhoenixDAO_market.usd* numeral(this.props.price).format("0.000"),
+			price: numeral(this.props.price).format("0.000"),
+			dollarPrice:
+				this.props.PhoenixDAO_market.usd *
+				numeral(this.props.price).format("0.000"),
 			location: this.props.locations,
 			time: 0,
 			// time:Math.floor(Date.now() / 1000),
@@ -39,7 +42,7 @@ class Form extends Component {
 			limited: false,
 			terms: false,
 			seatsForHumans: 0,
-			seats:0,
+			seats: 0,
 			wrong_file: false,
 			file_name: null,
 			file: null,
@@ -294,11 +297,15 @@ class Form extends Component {
 			// 	return;
 			// }
 			let test = event.target.value.match(/^\d*\.?\d*$/);
-			console.log("e.target.value",event.target.value)
-			console.log("e.target.value test",test)
-	  		if ((test == null && event.target.value.length != 0)) {
-				  console.log("e.target.value returned",event.target.value.charAt(event.target.value.length-1)) 
-				  return event.preventDefault();}
+			console.log("e.target.value", event.target.value);
+			console.log("e.target.value test", test);
+			if (test == null && event.target.value.length != 0) {
+				console.log(
+					"e.target.value returned",
+					event.target.value.charAt(event.target.value.length - 1)
+				);
+				return event.preventDefault();
+			}
 			if (
 				price.includes(".") &&
 				price.split(".")[1].split("").length > 3
@@ -306,7 +313,12 @@ class Form extends Component {
 				event.preventDefault();
 				return;
 			}
-			console.log("this.form.price.value",this.form.price.value, " length" ,this.form.price.value.length)
+			console.log(
+				"this.form.price.value",
+				this.form.price.value,
+				" length",
+				this.form.price.value.length
+			);
 			if (event.target.value.length > 15) {
 				event.preventDefault();
 				return;
@@ -342,11 +354,12 @@ class Form extends Component {
 
 	ticketsChange = (event) => {
 		let test = event.target.value.match(/^\d+$/);
-			console.log("e.target.value",event.target.value)
-			console.log("e.target.value test",test)
-	  		if ((test == null && event.target.value.length != 0) ) {
-				this.form.seats.value=this.state.seats  
-				return event.preventDefault();}
+		console.log("e.target.value", event.target.value);
+		console.log("e.target.value test", test);
+		if (test == null && event.target.value.length != 0) {
+			this.form.seats.value = this.state.seats;
+			return event.preventDefault();
+		}
 		let seats = this.form.seats.value;
 		console.log("seats.length", seats.length);
 		if (seats && seats.length > 16) {
@@ -400,83 +413,90 @@ class Form extends Component {
 	// 	}
 	// };
 	handleForm = (event) => {
-		console.log("editevent",this.props.location.state)
+		console.log("edit", event);
+		console.log("editprops", this.props);
 		event.preventDefault();
 
-		// let filteredDescription=""
-		// let filteredTitle=""
-		// let filteredOrganizer=""
-		// let filteredLocation = ""
-		// if(this.form.description.value !== ""){
-		// 	let filter = new Filter();
-		// 	filteredDescription = filter.clean(this.form.description.value);
-		// 	this.setState({description:filteredDescription})
-		// }
-		// if(this.state.title !== ""){
-		// 	let filter = new Filter();
-		// 	filteredTitle = filter.clean(this.state.title);
-		// 	this.setState({title:filteredTitle})
-		// }
-		// if(this.state.organizer !== ""){
-		// 	let filter = new Filter();
-		// 	filteredOrganizer = filter.clean(this.state.organizer);
-		// 	this.setState({organizer:filteredOrganizer})
-		// }
-		// if(this.state.location !== ""){
-		// 	let filter = new Filter();
-		// 	filteredLocation = filter.clean(this.state.location);
-		// 	this.setState({organizer:filteredLocation})
-		// }
-		// console.log("filteredDescription form",this.form.description.value)
-		// console.log("filteredDescription",filteredDescription)
-		// let form_validation = [];
-		// if (this.state.title === "") form_validation.push("name");
-		// if (this.state.location === "") form_validation.push("location");
-		// if (this.state.organizer === "") form_validation.push("organizer");
-		// if (this.form.description.value === "")
-		// 	form_validation.push("description");
-		// if (this.state.wrong_file === true || this.state.file === null)
-		// 	form_validation.push("image");
-		// if (this.state.time === 0) form_validation.push("time");
-		// if (
-		// 	(this.state.currency == "phnx" && this.state.price == "") ||
-		// 	(this.state.currency == "phnx" && this.state.price == "0") ||
-		// 	this.state.price == "0.0" ||
-		// 	this.state.price == "0.00" ||
-		// 	this.state.price == "0.000"
-		// )
-		// 	form_validation.push("price");
-		// if (this.state.limited === true && this.form.seats.value < 1)
-		// 	form_validation.push("seats");
-		// if (this.state.type === "") form_validation.push("type");
-		// if (!this.state.terms) form_validation.push("terms");
+		let filteredDescription = "";
+		let filteredTitle = "";
+		let filteredOrganizer = "";
+		let filteredLocation = "";
+		if (this.form.description.value !== "") {
+			let filter = new Filter();
+			filteredDescription = filter.clean(this.form.description.value);
+			this.setState({ description: filteredDescription });
+		}
+		if (this.state.title !== "") {
+			let filter = new Filter();
+			filteredTitle = filter.clean(this.state.title);
+			this.setState({ title: filteredTitle });
+		}
+		if (this.state.organizer !== "") {
+			let filter = new Filter();
+			filteredOrganizer = filter.clean(this.state.organizer);
+			this.setState({ organizer: filteredOrganizer });
+		}
+		if (this.state.location !== "") {
+			let filter = new Filter();
+			filteredLocation = filter.clean(this.state.location);
+			this.setState({ organizer: filteredLocation });
+		}
+		console.log("hahaha");
+		console.log("filteredDescription form", this.form.description.value);
+		console.log("filteredDescription", filteredDescription);
+		let form_validation = [];
+		if (this.state.title === "") form_validation.push("name");
+		if (this.state.location === "") form_validation.push("location");
+		if (this.state.organizer === "") form_validation.push("organizer");
+		if (this.form.description.value === "")
+			form_validation.push("description");
+		if (this.state.wrong_file === true || this.state.file === null)
+			form_validation.push("image");
+		if (this.state.time === 0) form_validation.push("time");
+		if (
+			(this.state.currency == "phnx" && this.state.price == "") ||
+			(this.state.currency == "phnx" && this.state.price == "0") ||
+			this.state.price == "0.0" ||
+			this.state.price == "0.00" ||
+			this.state.price == "0.000"
+		)
+			form_validation.push("price");
+		if (this.state.limited === true && this.form.seats.value < 1)
+			form_validation.push("seats");
+		if (this.state.type === "") form_validation.push("type");
+		if (!this.state.terms) form_validation.push("terms");
 
-
-		// this.setState({
-		// 	form_validation: form_validation,
-		// });
-		// console.log("this.state",this.state)
-		// console.log("this.form",this.form)
-		// if (form_validation.length === 0) {
-			
-		// 	this.props.createEvent(
-		// 		filteredTitle,
-		// 		filteredDescription,
-		// 		filteredLocation,
-		// 		this.state.time,
-		// 		this.state.file,
-		// 		filteredOrganizer,
-		// 		this.state.type,
-		// 		this.state.topic,
-		// 		this.state.currency,
-		// 		this.state.price,
-		// 		this.state.limited,
-		// 		this.form.seats? this.form.seats.value : "",
-		// 	);
-		// }
+		this.setState({
+			form_validation: form_validation,
+		});
+		console.log("this.state", this.state);
+		console.log("this.form", this.form);
+		if (form_validation.length === 0) {
+			this.props.createEvent(
+				filteredTitle,
+				filteredDescription,
+				filteredLocation,
+				this.state.time,
+				this.state.file,
+				this.state.organizer,
+				this.state.type,
+				this.state.topic,
+				this.state.currency,
+				this.state.price,
+				this.state.limited,
+				this.form.seats ? this.form.seats.value : ""
+			);
+		}
+		console.log(
+			"hey lets go wow!!!!123...???/////",
+			form_validation.length
+		);
+		return;
 	};
 
 	render() {
+		console.log("hey hey hey", this.props);
+
 		let symbol = "PhoenixDAO.png";
 		let currency = this.state.currency === "eth" ? "ETH" : "PHNX";
 		let freeEvent = "";
@@ -535,7 +555,6 @@ class Form extends Component {
 				this.state.form_validation.indexOf("terms") === -1
 					? ""
 					: "is-invalid",
-					
 		};
 		let alert;
 
@@ -573,335 +592,325 @@ class Form extends Component {
 		return (
 			<React.Fragment>
 				<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
-					<form>
-						<div className="form-group">
-							<label htmlFor="name">Event Name:</label>
-							{warning.name && (
-								<small
-									style={{ color: "red" }}
-									className="form-text text-muted color-red"
-								>
-									Invalid name
-								</small>
-							)}
-
-							<input
-								type="text"
-								className={"form-control " + warning.name}
-								id="name"
-								title="Event Name"
-								value={this.state.title}
-								onChange={this.titleChange}
-								autoComplete="off"
-							/>
-							<small className="form-text text-muted">
-								{this.state.title_length}/80 characters
-								available.
+					<div className="form-group">
+						<label htmlFor="name">Event Name:</label>
+						{warning.name && (
+							<small
+								style={{ color: "red" }}
+								className="form-text text-muted color-red"
+							>
+								Invalid name
 							</small>
-						</div>
-						<div className="form-group">
-							<label htmlFor="description">
-								Event Description:
-							</label>
-							{warning.description && (
-								<small
-									style={{ color: "red" }}
-									className="form-text text-muted color-red"
-								>
-									Invalid description
-								</small>
-							)}
-							<textarea
-								className={
-									"form-control " + warning.description
-								}
-								maxLength="500"
-								id="description"
-								title="Event Description"
-								rows="5"
-								value={this.state.description}
-								ref={(input) => (this.form.description = input)}
-								onChange={this.descriptionChange}
-								autoComplete="off"
-							></textarea>
-							<small className="form-text text-muted">
-								{this.state.description_length}/500 characters
-								available.
-							</small>
-						</div>
-						<div className="form-group">
-							<label htmlFor="location">Event Location:</label>
-							{warning.location && (
-								<small
-									style={{ color: "red" }}
-									className="form-text text-muted color-red"
-								>
-									Invalid location
-								</small>
-							)}
-							<input
-								type="text"
-								className={"form-control " + warning.location}
-								id="location"
-								value={this.state.location}
-								title="Event Location"
-								onChange={this.locationChange}
-								autoComplete="off"
-							/>
-						</div>
-						<div className="form-group">
-							<label htmlFor="description">
-								Event Date and Time:
-							</label>
-							{!this.state.currentBlock && (
-								<div
-									style={{
-										display: "flex",
-										flexDirection: "row",
-										justifyContent: "left",
-										alignItem: "end",
-									}}
-								>
-									<FacebookCircularProgress />
-									<small
-										style={{
-											color: "#1a90ff",
-											marginTop: "0",
-										}}
-										className="form-text text-muted "
-									>
-										Loading current timestamp, please wait
-										...
-									</small>
-								</div>
-							)}
-							{warning.time && (
-								<small
-									style={{ color: "red" }}
-									className="form-text text-muted color-red"
-								>
-									Invalid date and time
-								</small>
-							)}
+						)}
 
-							<Datetime
-								value={this.state.dateDisplay}
-								onChange={this.handleDate}
-								inputProps={{
-									disabled: !this.state.currentBlock,
-									className: "form-control " + warning.time,
-									title: "Event Date and Time",
+						<input
+							type="text"
+							className={"form-control " + warning.name}
+							id="name"
+							title="Event Name"
+							value={this.state.title}
+							onChange={this.titleChange}
+							autoComplete="off"
+						/>
+						<small className="form-text text-muted">
+							{this.state.title_length}/80 characters available.
+						</small>
+					</div>
+					<div className="form-group">
+						<label htmlFor="description">Event Description:</label>
+						{warning.description && (
+							<small
+								style={{ color: "red" }}
+								className="form-text text-muted color-red"
+							>
+								Invalid description
+							</small>
+						)}
+						<textarea
+							className={"form-control " + warning.description}
+							maxLength="500"
+							id="description"
+							title="Event Description"
+							rows="5"
+							value={this.state.description}
+							ref={(input) => (this.form.description = input)}
+							onChange={this.descriptionChange}
+							autoComplete="off"
+						></textarea>
+						<small className="form-text text-muted">
+							{this.state.description_length}/500 characters
+							available.
+						</small>
+					</div>
+					<div className="form-group">
+						<label htmlFor="location">Event Location:</label>
+						{warning.location && (
+							<small
+								style={{ color: "red" }}
+								className="form-text text-muted color-red"
+							>
+								Invalid location
+							</small>
+						)}
+						<input
+							type="text"
+							className={"form-control " + warning.location}
+							id="location"
+							value={this.state.location}
+							title="Event Location"
+							onChange={this.locationChange}
+							autoComplete="off"
+						/>
+					</div>
+					<div className="form-group">
+						<label htmlFor="description">
+							Event Date and Time:
+						</label>
+						{!this.state.currentBlock && (
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "row",
+									justifyContent: "left",
+									alignItem: "end",
 								}}
-								autoComplete="off"
-							/>
-						</div>
-						<div className="form-group">
-							<p>Event Cover Image:</p>
-							{warning.image && (
+							>
+								<FacebookCircularProgress />
 								<small
-									style={{ color: "red" }}
-									className="form-text text-muted color-red"
+									style={{
+										color: "#1a90ff",
+										marginTop: "0",
+									}}
+									className="form-text text-muted "
 								>
-									No image selected
+									Loading current timestamp, please wait ...
 								</small>
-							)}
-							<div className="custom-file">
-								<input
-									type="file"
-									className={
-										"custom-file-input " + warning.image
-									}
-									id="customFile"
-									title="Event Cover Image"
-									onChange={this.handleFile}
-									autoComplete="off"
-								/>
-								<label
-									className="custom-file-label"
-									htmlFor="customFile"
-								>
-									{file_label}
-								</label>
 							</div>
-							<small className="form-text text-muted">
-								Image format: jpg, png. Max file size 1mb.
+						)}
+						{warning.time && (
+							<small
+								style={{ color: "red" }}
+								className="form-text text-muted color-red"
+							>
+								Invalid date and time
 							</small>
-						</div>
-						<div className="form-group">
-							<label htmlFor="organizer">Organizer Name:</label>
-							{warning.organizer && (
-								<small
-									style={{ color: "red" }}
-									className="form-text text-muted color-red"
-								>
-									Invalid organizer name
-								</small>
-							)}
+						)}
+
+						<Datetime
+							value={this.state.dateDisplay}
+							onChange={this.handleDate}
+							inputProps={{
+								disabled: !this.state.currentBlock,
+								className: "form-control " + warning.time,
+								title: "Event Date and Time",
+							}}
+							autoComplete="off"
+						/>
+					</div>
+					<div className="form-group">
+						<p>Event Cover Image:</p>
+						{warning.image && (
+							<small
+								style={{ color: "red" }}
+								className="form-text text-muted color-red"
+							>
+								No image selected
+							</small>
+						)}
+						<div className="custom-file">
 							<input
-								type="text"
-								className={"form-control " + warning.organizer}
-								id="organizer"
-								title="Organizer Name"
-								value={this.state.organizer}
-								onChange={this.organizerChange}
+								type="file"
+								className={"custom-file-input " + warning.image}
+								id="customFile"
+								title="Event Cover Image"
+								onChange={this.handleFile}
 								autoComplete="off"
 							/>
-							<small className="form-text text-muted">
-								{this.state.organizer_length}/100 characters
-								available.
+							<label
+								className="custom-file-label"
+								htmlFor="customFile"
+							>
+								{file_label}
+							</label>
+						</div>
+						<small className="form-text text-muted">
+							Image format: jpg, png. Max file size 1mb.
+						</small>
+					</div>
+					<div className="form-group">
+						<label htmlFor="organizer">Organizer Name:</label>
+						{warning.organizer && (
+							<small
+								style={{ color: "red" }}
+								className="form-text text-muted color-red"
+							>
+								Invalid organizer name
 							</small>
-						</div>
-						<div className="form-group">
-							<label htmlFor="description">Event Type:</label>
-							<select
-								className="form-control"
-								id="type"
-								title="Event Type"
-								onChange={this.typeChange}
-							>
-								<option value="" disabled="disabled">
-									Select the type of the event
+						)}
+						<input
+							type="text"
+							className={"form-control " + warning.organizer}
+							id="organizer"
+							title="Organizer Name"
+							value={this.state.organizer}
+							onChange={this.organizerChange}
+							autoComplete="off"
+						/>
+						<small className="form-text text-muted">
+							{this.state.organizer_length}/100 characters
+							available.
+						</small>
+					</div>
+					<div className="form-group">
+						<label htmlFor="description">Event Type:</label>
+						<select
+							className="form-control"
+							id="type"
+							title="Event Type"
+							onChange={this.typeChange}
+						>
+							<option value="" disabled="disabled">
+								Select the type of the event
+							</option>
+							{eventTypes.map((Type, index) => (
+								<option value={Type.slug} key={Type.name}>
+									{Type.name}
 								</option>
-								{eventTypes.map((Type, index) => (
-									<option value={Type.slug} key={Type.name}>
-										{Type.name}
-									</option>
-								))}
-							</select>
-						</div>
-						<div className="form-group">
-							<label htmlFor="description">Event Topic:</label>
-							<select
-								className="form-control"
-								id="topic"
-								title="Event Topic"
-								onChange={this.categoryChange}
-								value={this.state.type}
-							>
-								<option value="" disabled="disabled">
-									Select the topic of the event
+							))}
+						</select>
+					</div>
+					<div className="form-group">
+						<label htmlFor="description">Event Topic:</label>
+						<select
+							className="form-control"
+							id="topic"
+							title="Event Topic"
+							onChange={this.categoryChange}
+							value={this.state.type}
+						>
+							<option value="" disabled="disabled">
+								Select the topic of the event
+							</option>
+							{eventTopics.map((Topic, index) => (
+								<option value={Topic.slug} key={Topic.name}>
+									{Topic.name}
 								</option>
-								{eventTopics.map((Topic, index) => (
-									<option value={Topic.slug} key={Topic.name}>
-										{Topic.name}
-									</option>
-								))}
-							</select>
+							))}
+						</select>
+					</div>
+					<br />
+					<hr />
+					<br />
+					<div className="form-group">
+						<p>Event Options:</p>
+						<div className="custom-control custom-radio custom-control-inline">
+							<input
+								type="radio"
+								id="payment2"
+								name="payment"
+								className="custom-control-input"
+								defaultChecked="true"
+								value="phnx"
+								title="PHNX"
+								onChange={this.handleCurrency}
+								autoComplete="off"
+							/>
+							<label
+								className="custom-control-label"
+								htmlFor="payment2"
+							>
+								Paid Event
+							</label>
 						</div>
-						<br />
-						<hr />
-						<br />
-						<div className="form-group">
-							<p>Event Options:</p>
-							<div className="custom-control custom-radio custom-control-inline">
-								<input
-									type="radio"
-									id="payment2"
-									name="payment"
-									className="custom-control-input"
-									defaultChecked="true"
-									value="phnx"
-									title="PHNX"
-									onChange={this.handleCurrency}
-									autoComplete="off"
-								/>
-								<label
-									className="custom-control-label"
-									htmlFor="payment2"
-								>
-									Paid Event
-								</label>
-							</div>
-							<div className="custom-control custom-radio custom-control-inline">
-								<input
-									type="radio"
-									id="payment1"
-									name="payment"
-									className="custom-control-input"
-									value="eth"
-									title="Ethereum"
-									onChange={this.handleCurrency}
-									autoComplete="off"
-								/>
-								<label
-									className="custom-control-label"
-									htmlFor="payment1"
-								>
-									Free Event
-								</label>
-							</div>
+						<div className="custom-control custom-radio custom-control-inline">
+							<input
+								type="radio"
+								id="payment1"
+								name="payment"
+								className="custom-control-input"
+								value="eth"
+								title="Ethereum"
+								onChange={this.handleCurrency}
+								autoComplete="off"
+							/>
+							<label
+								className="custom-control-label"
+								htmlFor="payment1"
+							>
+								Free Event
+							</label>
 						</div>
-						<div className="form-group row">
-							<div className="col-lg-6">
-								<label htmlFor="price">Ticket Price:</label>
-								{/* {warning.price && <small  className="form-text text-muted color-red">Invalid price</small>} */}
-								{this.state.currency === "phnx" && (
-									<small
-										style={{ marginTop: "0" }}
-										className={
-											warning.price
-												? "form-text text-muted color-red"
-												: "form-text text-muted"
-										}
-									>
-										Value must be greater or equals to 0.001
-									</small>
-								)}
-								<div className="input-group mb-3">
-									<div className="input-group-prepend">
-										<span className="input-group-text">
-											<img
-												src={"/images/" + symbol}
-												className="event_price-image"
-												alt=""
-											/>
-										</span>
-									</div>
-									{this.state.currency === "phnx" && (
-										<input
-											type="string"
-											min="0.0001"
-											maxLength="15"
-											// onKeyDown={this.restrictMinus}
-											// onKeyUp={this.restrictMinus}
-											// onKeyPress={this.restrictMinus}
-											value={this.state.price}
-											className={
-												"form-control " + warning.price
-											}
-											id="price"
-											title={"Price in PHNX"}
-											ref={(input) =>
-												this.form.price = input
-													
-											}
-											autoComplete="off"
-											onChange={this.priceChange}
+					</div>
+					<div className="form-group row">
+						<div className="col-lg-6">
+							<label htmlFor="price">Ticket Price:</label>
+							{/* {warning.price && <small  className="form-text text-muted color-red">Invalid price</small>} */}
+							{this.state.currency === "phnx" && (
+								<small
+									style={{ marginTop: "0" }}
+									className={
+										warning.price
+											? "form-text text-muted color-red"
+											: "form-text text-muted"
+									}
+								>
+									Value must be greater or equals to 0.001
+								</small>
+							)}
+							<div className="input-group mb-3">
+								<div className="input-group-prepend">
+									<span className="input-group-text">
+										<img
+											src={"/images/" + symbol}
+											className="event_price-image"
+											alt=""
 										/>
-									)}
-
-									{this.state.currency === "eth" && (
-										<input
-											type="string"
-											min="0.0001"
-											maxLength="15"
-											// onKeyUp={this.restrictMinus}
-											// onKeyPress={this.restrictMinus}
-											value={this.state.price}
-											className={
-												"form-control " + warning.price
-											}
-											id="price"
-											title={"Price in ETH"}
-											value={this.state.price}
-											autoComplete="off"
-											disabled={true}
-											// onChange={this.priceChange}
-										/>
-									)}
+									</span>
 								</div>
+								{this.state.currency === "phnx" && (
+									<input
+										type="string"
+										min="0.0001"
+										maxLength="15"
+										// onKeyDown={this.restrictMinus}
+										// onKeyUp={this.restrictMinus}
+										// onKeyPress={this.restrictMinus}
+										value={this.state.price}
+										className={
+											"form-control " + warning.price
+										}
+										id="price"
+										title={"Price in PHNX"}
+										ref={(input) =>
+											(this.form.price = input)
+										}
+										autoComplete="off"
+										onChange={this.priceChange}
+									/>
+								)}
 
-								{/* {this.state.currency === "phnx" && (
+								{this.state.currency === "eth" && (
+									<input
+										type="string"
+										min="0.0001"
+										maxLength="15"
+										// onKeyUp={this.restrictMinus}
+										// onKeyPress={this.restrictMinus}
+										value={this.state.price}
+										className={
+											"form-control " + warning.price
+										}
+										id="price"
+										title={"Price in ETH"}
+										value={this.state.price}
+										autoComplete="off"
+										disabled={true}
+										// onChange={this.priceChange}
+									/>
+								)}
+							</div>
+
+							{/* {this.state.currency === "phnx" && (
 									<div className="input-group mb-3">
 										<div className="input-group-prepend">
 											<span className="input-group-text">
@@ -924,103 +933,101 @@ class Form extends Component {
 										</div>
 									</div>
 								)} */}
-								<div className="input-group mb-3">
-									<div className="input-group-prepend">
-										<span className="input-group-text">
-											<img
-												src={"/images/dollarsign.png"}
-												className="event_price-image"
-												alt=""
-											/>
-										</span>
-									</div>
-								{this.state.currency === "phnx" && (
-										<input
-											type="string"
-											min="0.0001"
-											maxLength="15"
-											// onKeyUp={this.restrictMinus}
-											// onKeyPress={this.restrictMinus}
-											value={this.state.dollarPrice}
-											className={
-												"form-control " + warning.price
-											}
-											id="price"
-											title={"Price in USD"}
-											ref={(input) =>
-												this.form.price = input
-													
-											}
-											autoComplete="off"
-											disabled={true}
-											// onChange={this.priceChange}
+							<div className="input-group mb-3">
+								<div className="input-group-prepend">
+									<span className="input-group-text">
+										<img
+											src={"/images/dollarsign.png"}
+											className="event_price-image"
+											alt=""
 										/>
-									)}
+									</span>
+								</div>
+								{this.state.currency === "phnx" && (
+									<input
+										type="string"
+										min="0.0001"
+										maxLength="15"
+										// onKeyUp={this.restrictMinus}
+										// onKeyPress={this.restrictMinus}
+										value={this.state.dollarPrice}
+										className={
+											"form-control " + warning.price
+										}
+										id="price"
+										title={"Price in USD"}
+										ref={(input) =>
+											(this.form.price = input)
+										}
+										autoComplete="off"
+										disabled={true}
+										// onChange={this.priceChange}
+									/>
+								)}
 
 								{this.state.currency === "eth" && (
 									<input
-									type="string"
-									min="0.0001"
-									maxLength="15"
-									// onKeyUp={this.restrictMinus}
-									// onKeyPress={this.restrictMinus}
-									value={0.00}
-									className={
-										"form-control " + warning.price
-									}
-									id="price"
-									title={"Price in USD"}
-									ref={(input) =>
-										this.form.price = input
-											
-									}
-									autoComplete="off"
-									disabled={true}
-									// onChange={this.priceChange}
-								/>
+										type="string"
+										min="0.0001"
+										maxLength="15"
+										// onKeyUp={this.restrictMinus}
+										// onKeyPress={this.restrictMinus}
+										value={0.0}
+										className={
+											"form-control " + warning.price
+										}
+										id="price"
+										title={"Price in USD"}
+										ref={(input) =>
+											(this.form.price = input)
+										}
+										autoComplete="off"
+										disabled={true}
+										// onChange={this.priceChange}
+									/>
 								)}
-								</div>
 							</div>
 						</div>
-						<div className="form-group">
-							<p>Ticket Options:</p>
-							<div className="custom-control custom-checkbox">
-								<input
-									type="checkbox"
-									className="custom-control-input"
-									id="limited"
-									title="Limited tickets"
-								    value="true"
-									onChange={this.handleLimited}
-									autoComplete="off"
-									// checked={this.props.event.limited}
-									checked={this.state.limited}
-								/>
-								<label
-									className="custom-control-label"
-									htmlFor="limited"
-								>
-									Limited tickets
-								</label>
-							</div>
-							{this.state.limited && 
+					</div>
+					<div className="form-group">
+						<p>Ticket Options:</p>
+						<div className="custom-control custom-checkbox">
+							<input
+								type="checkbox"
+								className="custom-control-input"
+								id="limited"
+								title="Limited tickets"
+								value="true"
+								onChange={this.handleLimited}
+								autoComplete="off"
+								// checked={this.props.event.limited}
+								checked={this.state.limited}
+							/>
+							<label
+								className="custom-control-label"
+								htmlFor="limited"
+							>
+								Limited tickets
+							</label>
+						</div>
+						{this.state.limited && (
 							<div className="row mt-3">
 								<div className="col-lg-6">
 									<label htmlFor="seats">
 										Tickets available:
 									</label>
-									
-										<small
-											style={{ marginTop: "0" }}
-											className={
-												warning.seats
-													? "form-text text-muted color-red"
-													: "form-text text-muted"
-											}
-										>
-											Value must be greater than 0
-										</small>
-									
+
+									<small
+										style={{ marginTop: "0" }}
+										className={
+											warning.seats
+												? "form-text text-muted color-red"
+												: "form-text text-muted"
+										}
+									>
+										Value must be greater than 0
+									</small>
+
 									<input
 										type="string"
 										className={
@@ -1045,7 +1052,7 @@ class Form extends Component {
 										// }
 										id="seats"
 										title="Tickets available"
-										disabled={!this.state.limited }
+										disabled={!this.state.limited}
 										ref={(input) =>
 											(this.form.seats = input)
 										}
@@ -1053,46 +1060,51 @@ class Form extends Component {
 										onChange={this.ticketsChange}
 									/>
 								</div>
-							</div>}	
-							
-						</div>
-						<div className="form-group">
-							<p>Terms and conditions:</p>
-							<div className="custom-control custom-checkbox">
-								<input
-									type="checkbox"
-									// className="custom-control-input"
-									className={
-										"custom-control-input " 
-									}
-									id="terms"
-									title="Terms and conditions"
-									value="true"
-									onChange={this.handleTerms}
-									autoComplete="off"
-								/>
-								<label
-									className={"custom-control-label "}
-									style={{color: warning.terms === "is-invalid" ? "#dc3545" : "#333333"}}
-									htmlFor="terms"
-								>
-									By creating an event, I agree to the <a target='_blank' href="/terms-and-conditions">policies and terms of use</a>.
-								</label>
 							</div>
-							
+						)}
+					</div>
+					<div className="form-group">
+						<p>Terms and conditions:</p>
+						<div className="custom-control custom-checkbox">
+							<input
+								type="checkbox"
+								// className="custom-control-input"
+								className={"custom-control-input "}
+								id="terms"
+								title="Terms and conditions"
+								value="true"
+								onChange={this.handleTerms}
+								autoComplete="off"
+							/>
+							<label
+								className={"custom-control-label "}
+								style={{
+									color:
+										warning.terms === "is-invalid"
+											? "#dc3545"
+											: "#333333",
+								}}
+								htmlFor="terms"
+							>
+								By creating an event, I agree to the{" "}
+								<a target="_blank" href="/terms-and-conditions">
+									policies and terms of use
+								</a>
+								.
+							</label>
 						</div>
-						{alert}
-						<br />
-						<button
-							type="submit"
-							className="btn btn-outline-dark"
-							title="Make Your Event Live"
-							onClick={this.handleForm}
-							disabled={disabled}
-						>
-							Make Your Event Live
-						</button>
-					</form>
+					</div>
+					{alert}
+					<br />
+					<button
+						// type="submit"
+						className="btn btn-outline-dark"
+						title="Make Your Event Live"
+						onClick={this.handleForm}
+						disabled={disabled}
+					>
+						Make Your Event Live
+					</button>
 				</div>
 
 				<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
@@ -1122,10 +1134,9 @@ class Form extends Component {
 							<h5 className="card-title event-title">
 								{this.state.title}
 							</h5>
-							<p style={{whiteSpace:"pre-line"}}>
-							{this.state.description}
+							<p style={{ whiteSpace: "pre-line" }}>
+								{this.state.description}
 							</p>
-					
 						</div>
 						<ul className="list-group list-group-flush">
 							{this.state.currency == "phnx" && (
@@ -1188,8 +1199,8 @@ class Form extends Component {
 			limited: this.props.event.limited,
 			seats: this.props.event.seats,
 		});
-		console.log("formprops",this.props)
-		console.log("formprops",this.props.event.limited)
+		console.log("formprops", this.props);
+		console.log("formprops", this.props.event.limited);
 		this.getPhoenixDAOMarketValue();
 		// window.scrollTo(0, 0);
 	}

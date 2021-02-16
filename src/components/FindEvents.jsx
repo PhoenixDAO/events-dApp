@@ -458,7 +458,7 @@ class FindEvents extends Component {
         </Carousel>
 				 */}
 				<div
-				//  className="retract-page-inner-wrapper-alternative dash"
+				 className="retract-page-inner-wrapper-alternative dashh"
 				>
 			
 					<div

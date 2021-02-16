@@ -67,8 +67,12 @@ class Event extends Component {
 		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
 			this.props.id
 		);
+		this.organizerName = this.contracts["DaoEvents"].methods.getOwnerDetails.cacheCall(
+			this.props.id
+		);
 		this.account = this.props.accounts[0];
 		this.state = {
+			owner:"unknown",
 			loading: false,
 			loaded: false,
 			description: null,
@@ -332,7 +336,11 @@ class Event extends Component {
 			let event_data = this.props.contracts["DaoEvents"].getEvent[
 				this.event
 			].value;
-
+			
+			let ownerDetails = this.props.contracts["DaoEvents"].getOwnerDetails[
+				this.event
+			];
+			
 			let image = this.getImage();
 			let description = this.getDescription();
 			let locations = this.getLocation();

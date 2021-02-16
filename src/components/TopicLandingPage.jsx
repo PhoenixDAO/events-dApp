@@ -432,7 +432,7 @@ class TopicLandingPage extends Component
 					</div>
 				</div>
 
-				<div className="retract-page-inner-wrapper-alternative topicsDiv">
+				<div className="retract-page-inner-wrapper-alternative dash topicsDiv">
 					<br />
 					<br />
 
