@@ -19,6 +19,8 @@ class Calendars extends Component {
             latestblocks:6000000,
             blocks:5000000,
             events:[],
+            Deleted_Events: [],
+
         }
         this._isMounted = false;
     }
@@ -61,9 +63,25 @@ class Calendars extends Component {
         this.setState({active_length:this.state.Events_Blockchain.length})}
         this.setState({loading:false});
         },10000))
+
+        await openEvents
+        .getPastEvents("DeletedEvent", {
+            fromBlock: 7654042,
+            toBlock: this.state.latestblocks,
+        })
+        .then((events) => {
+            console.log("eventsssss deletedEvents", events);
+            this.setState({ Deleted_Events: events });
+            return events;
+        })
+        .catch((err) => {
+            console.error(err);
+            this.setState({ Deleted_Events: [] });
+        });
+
       }
-    
-    
+
+	
     goToEvent = (event_calendar)=>{
             let rawTitle = event_calendar.title;
             var titleRemovedSpaces = rawTitle;
@@ -82,16 +100,33 @@ class Calendars extends Component {
         const localizer = momentLocalizer(moment) // or globalizeLocalizer
         {
         let events_calendar = []
-
-        for(var i = 0;i<this.state.Events_Blockchain.length;i++){
+        let events_list = [];
+        let skip = false;
+        for (let i =0; i < this.state.Events_Blockchain.length; i++) {
+            for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+                if (
+                    this.state.Events_Blockchain[i].returnValues
+                        .eventId ==
+                    this.state.Deleted_Events[j].returnValues.eventId
+                ) {
+                    skip = true;
+                }
+            }
+            if (!skip) {
+                events_list.push(this.state.Events_Blockchain[i]);
+            }
+            skip = false;
+        }
+        for(var i = 0;i<events_list.length;i++){
             events_calendar.push({
-            id:this.state.Events_Blockchain[i].returnValues.eventId,
-            title:this.state.Events_Blockchain[i].returnValues.name,
-            start:parseInt(this.state.Events_Blockchain[i].returnValues.time,10)*1000,
-            end:parseInt(this.state.Events_Blockchain[i].returnValues.time,10)*1000,
+            id:events_list[i].returnValues.eventId,
+            title:events_list[i].returnValues.name,
+            start:parseInt(events_list[i].returnValues.time,10)*1000,
+            end:parseInt(events_list[i].returnValues.time,10)*1000,
             allDay:true,
                 })
             }
+            console.log("calendar event",events_calendar);
 
         body = 
             <div style={{ height: '500pt'}}>

@@ -775,7 +775,9 @@ input[type="number"] {
 .events-wrapper {
 	margin-bottom: 60px !important;
 }
-
+.activeButton{
+padding: 10px 0px !important;
+}
 @media (max-width: 750px) {
 	.countdown {
 		float: none !important;

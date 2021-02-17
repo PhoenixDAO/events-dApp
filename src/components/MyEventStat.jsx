@@ -131,7 +131,7 @@ class MyEventStat extends Component {
 		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
 			this.props.match.params.id
 		);
- 
+		console.log("eventstatsprops", this.props.pastEvents);
 		this.account = this.props.accounts[0];
 		this.state = {
 			load: true,
@@ -140,7 +140,7 @@ class MyEventStat extends Component {
 			description: null,
 			image: null,
 			ipfs_problem: false,
-
+			disabledButton: false,
 			soldTicket: [],
 			latestblocks: 5000000,
 			phoenixDAO_market: [],
@@ -512,7 +512,7 @@ class MyEventStat extends Component {
 				let owner = "";
 				if (ownerDetails != undefined) {
 					ownerDetails = ownerDetails.value;
-					console.log("owner",ownerDetails);
+					console.log("owner", ownerDetails);
 					// this.setState({owner:ownerDetails})
 				}
 				console.log("eventttt", event_data);
@@ -533,7 +533,8 @@ class MyEventStat extends Component {
 				let date = new Date(parseInt(event_data[1], 10) * 1000);
 
 				let max_seats = event_data[4] ? event_data[5] : "∞";
-
+				let disabledButton = this.state.soldTicket != 0 ?true :false;
+				console.log("disable",disabledButton);
 				let disabled = false;
 				let disabledStatus;
 				let sold = true;
@@ -713,59 +714,66 @@ class MyEventStat extends Component {
             			<br/>
             			<br/>
            				<br/> */}
-								<div className=" editButtons text-muted col-lg-6 col-md-6 col-xs-7 col-sm-8 text-center">
-									<Link
-										// className="col-4"
-										// style={{ display: "grid" }}
-										to={{
-											pathname: "/editevent",
-											state: {
-												done:false,
-												event: event_data,
-												price: price,
-												organizer: ownerDetails,
-												eventId:id,
-												//  ...this.props.location.state,
-												//  ...this.state,
-												description: this.state
-													.description,
-												image: this.state.image,
-												ipfs_problem: this.state
-													.ipfs_problem,
+								{date.getTime() > new Date().getTime() ? (
+									<div className=" editButtons text-muted col-lg-6 col-md-6 col-xs-7 col-sm-8 text-center">
+										<Link
+											// className="col-4"
+											// style={{ display: "grid" }}
+											to={{
+												pathname: "/editevent",
+												state: {
+													done: false,
+													event: event_data,
+													price: price,
+													organizer: ownerDetails,
+													eventId: id,
+													//  ...this.props.location.state,
+													//  ...this.state,
+													description: this.state
+														.description,
+													image: this.state.image,
+													ipfs_problem: this.state
+														.ipfs_problem,
 
-												soldTicket: this.state
-													.soldTicket,
-												latestblocks: this.state
-													.latestblocks,
-												PhoenixDAO_market: this.state
-													.phoenixDAO_market,
+													soldTicket: this.state
+														.soldTicket,
+													latestblocks: this.state
+														.latestblocks,
+													PhoenixDAO_market: this
+														.state
+														.phoenixDAO_market,
 
-												fee: this.state.fee,
-												token: this.state.token,
-												openEvents_address: this.state
-													.openEvents_address,
-												buyticket: this.state.buyticket,
-												approve: this.state.approve,
-												pageTransactions: this.state
-													.pageTransactions,
-												open: this.state.open,
-												locations: this.state.locations,
-
-											},
-										}}
-									>
-										<button className="btn btn-dark">
-											<i className="fa fa-edit"></i> Edit
+													fee: this.state.fee,
+													token: this.state.token,
+													openEvents_address: this
+														.state
+														.openEvents_address,
+													buyticket: this.state
+														.buyticket,
+													approve: this.state.approve,
+													pageTransactions: this.state
+														.pageTransactions,
+													open: this.state.open,
+													locations: this.state
+														.locations,
+												},
+											}}
+										>
+											<button className="btn btn-dark">
+												<i className="fa fa-edit"></i>{" "}
+												Edit
+											</button>
+										</Link>
+										<button
+											className="btn btn-dark"
+											onClick={this.handleDelete}
+											disabled={disabledButton}
+										>
+											<i className="fas fa-trash-alt"></i>{" "}
+											Delete
 										</button>
-									</Link>
-									<button
-										className="btn btn-dark"
-										onClick={this.handleDelete}
-									>
-										<i className="fas fa-trash-alt"></i>{" "}
-										Delete
-									</button>
-								</div>
+									</div>
+								) : null}
 							</div>
 							<hr />
 							<div className="row">
