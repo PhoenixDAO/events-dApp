@@ -83,7 +83,7 @@ class TopicLandingPage extends Component {
 		this.props.history.push("/topic/" + slug + "/" + 1);
 		this.theTopic = this.getTopicData();
 		this.loadBlockchain();
-		window.scrollTo(0, 180);
+		this.scrollTo();
 	}
 
 	getLastURLSegment() {

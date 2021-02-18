@@ -2452,3 +2452,7 @@ h4.transactions {
 	font-size: 3rem !important;
 	text-shadow: 2px 2px 12px rgb(230, 223, 223) !important;
 }
+.termsDiv{
+	margin-left: -31px;
+    margin-right: -31px;
+}

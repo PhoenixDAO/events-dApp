@@ -51,6 +51,7 @@ import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
 import { ToastContainer, toast } from "react-toastify";
+import NotifyDelete from "./NotifyDelete";
 
 //Numerical Setting
 let numeral = require("numeral");
@@ -144,7 +145,7 @@ class MyEventStat extends Component {
 			soldTicket: [],
 			latestblocks: 5000000,
 			phoenixDAO_market: [],
-
+			hash: "",
 			fee: "",
 			token: "",
 			openEvents_address: "",
@@ -378,7 +379,6 @@ class MyEventStat extends Component {
 							}
 						);
 						this.afterApprove();
-						this.setState({ disabledStatus: false });
 					}
 				}
 			})
@@ -391,7 +391,6 @@ class MyEventStat extends Component {
 						pauseOnHover: true,
 					});
 					// this.afterApprove()
-					this.setState({ disabledStatus: false });
 				}
 			});
 	};
@@ -461,13 +460,76 @@ class MyEventStat extends Component {
 		this.setState({ pageTransactions });
 	}
 
+	// handleDelete() {
+	// 	console.log("delete pressed");
+	// 	let id = this.props.location.pathname.split("/")[
+	// 		this.props.location.pathname.split("/").length - 1
+	// 	];
+	// 	let transactionId = this.contracts[
+	// 		"DaoEvents"
+	// 	].methods.deleteEvent.cacheSend(id);
+	// 	this.setState({ hash: transactionId });
+	// 	this.transactionChecker(transactionId);
+	// 	// this.props.history.push("/upcomingevents/1");
+	// }
+
 	handleDelete() {
-		console.log("delete pressed");
+		let txreceipt = "";
+		let txconfirmed = "";
+		let txerror = "";
 		let id = this.props.location.pathname.split("/")[
 			this.props.location.pathname.split("/").length - 1
 		];
-		this.contracts["DaoEvents"].methods.deleteEvent.cacheSend(id);
-		// this.props.history.push("/upcomingevents/1");
+		this.contracts.DaoEvents.methods
+			.deleteEvent(id)
+			.send({ from: this.state.account })
+			.on("transactionHash", (hash) => {
+				if (hash !== null) {
+					toast(
+						<NotifyDelete
+							hash={hash}
+							text="Deleting your event..."
+						/>,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
+				}
+			})
+			.on("confirmation", (confirmationNumber, receipt) => {
+				if (confirmationNumber !== null) {
+					txreceipt = receipt;
+					txconfirmed = confirmationNumber;
+					if (txconfirmed == 0 && txreceipt.status == true) {
+						toast(
+							<NotifyDelete
+								hash={txreceipt.transactionHash}
+								text="your event has been deleted."
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
+						this.setState({ deleted: true });
+						this.props.history.push("/upcomingevents/1");
+					}
+				}
+			})
+			.on("error", (error) => {
+				if (error !== null) {
+					txerror = error;
+					toast(<NotifyError message={txerror.message} />, {
+						position: "bottom-right",
+						autoClose: true,
+						pauseOnHover: true,
+					});
+				}
+				this.setState({ deleted: false });
+			});
 	}
 
 	render() {
@@ -480,7 +542,16 @@ class MyEventStat extends Component {
 				<Loading />
 			</div>
 		);
+		console.log("deleted", this.props.deleted);
+		// if (this.state.deleted) {
+		// 	toast(<NotifyDelete />, {
 
+		// 		position: "bottom-right",
+		// 		autoClose: true,
+		// 		pauseOnHover: true,
+		// 	});
+		// 	this.props.history.push("/upcomingevents/1");
+		// }
 		if (
 			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 			"undefined"
@@ -512,10 +583,7 @@ class MyEventStat extends Component {
 				let owner = "";
 				if (ownerDetails != undefined) {
 					ownerDetails = ownerDetails.value;
-					console.log("owner", ownerDetails);
-					// this.setState({owner:ownerDetails})
 				}
-				console.log("eventttt", event_data);
 				let image = this.getImage();
 				let description = this.getDescription();
 				let locations = this.getLocation();
@@ -533,10 +601,9 @@ class MyEventStat extends Component {
 				let date = new Date(parseInt(event_data[1], 10) * 1000);
 
 				let max_seats = event_data[4] ? event_data[5] : "∞";
-				let disabledButton = this.state.soldTicket != 0 ?true :false;
-				console.log("disable",disabledButton);
+				let disabledButton = this.state.soldTicket != 0 ? true : false;
 				let disabled = false;
-				let disabledStatus;
+				let deleted;
 				let sold = true;
 
 				if (
@@ -544,7 +611,7 @@ class MyEventStat extends Component {
 					Number(event_data[6]) >= Number(event_data[5])
 				) {
 					disabled = true;
-					disabledStatus = (
+					deleted = (
 						<span>
 							<span role="img" aria-label="alert">
 								⚠️
@@ -557,7 +624,7 @@ class MyEventStat extends Component {
 
 				if (date.getTime() < new Date().getTime()) {
 					disabled = true;
-					disabledStatus = (
+					deleted = (
 						<span>
 							<span role="img" aria-label="alert">
 								⚠️
@@ -710,7 +777,7 @@ class MyEventStat extends Component {
             			<br />
            				{description} */}
 								{/* <button className="btn btn-dark" onClick={this.inquire} disabled={disabled}><i className="fas fa-ticket-alt"></i>{buttonText}</button> */}
-								{/* <label className="pl-2 small">{disabledStatus}</label>
+								{/* <label className="pl-2 small">{deleted}</label>
             			<br/>
             			<br/>
            				<br/> */}
@@ -972,7 +1039,7 @@ class MyEventStat extends Component {
 									)}
 								</div>
 
-								<div className="pagination">
+								<div className="pagination col-12">
 									<JwPagination
 										items={this.state.soldTicket}
 										onChangePage={this.onChangePage}

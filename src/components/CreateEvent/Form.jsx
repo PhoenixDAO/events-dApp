@@ -250,7 +250,9 @@ class Form extends Component {
 
 	locationChange = (event) => {
 		let location = event.target.value;
-
+		if (location.length > 100) {
+			location = location.slice(0, 100);
+		}
 		this.setState({
 			location: location,
 		});
@@ -656,6 +658,7 @@ class Form extends Component {
 							)}
 							<input
 								type="text"
+								maxLength="100"
 								className={"form-control " + warning.location}
 								id="location"
 								title="Event Location"
