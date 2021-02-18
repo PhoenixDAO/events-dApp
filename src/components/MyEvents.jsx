@@ -1,38 +1,41 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { drizzleConnect } from 'drizzle-react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import { drizzleConnect } from "drizzle-react";
+import PropTypes from "prop-types";
 
-import Loading from './Loading';
-import PhoenixDAOLoader from './PhoenixDAOLoader';
+import Loading from "./Loading";
+import PhoenixDAOLoader from "./PhoenixDAOLoader";
 
-import Event from './Event';
-import Web3 from 'web3';
-import { Open_events_ABI, Open_events_Address } from '../config/OpenEvents';
-
+import Event from "./Event";
+import Web3 from "web3";
+import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 class MyEvents extends Component {
 	constructor(props, context) {
-		super(props)
+		super(props);
 		this.state = {
-			openEvents: '',
+			openEvents: "",
 			blocks: 5000000,
 			latestblocks: 6000000,
 			loading: true,
 			MyEvents: [],
-			active_length: '',
+			active_length: "",
 			isOldestFirst: false,
 			isActive: true,
 			account: [],
-			dateNow: '',
+			dateNow: "",
 			prevPath: -1,
 			Deleted_Events: [],
 		};
 		this.contracts = context.drizzle.contracts;
-		this.events = this.contracts['DaoEvents'].methods.eventsOf.cacheCall(this.props.accounts[0]);
+		this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
+			this.props.accounts[0]
+		);
 		this.perPage = 6;
 		this.account = this.props.accounts[0];
-		this.myRef = React.createRef()
+		this.myRef = React.createRef();
+
+		console.log("hey view my events now", this.events);
 
 		this.ActiveEvent = this.ActiveEvent.bind(this);
 		this.PastEvent = this.PastEvent.bind(this);
@@ -41,9 +44,17 @@ class MyEvents extends Component {
 
 	//Get Blockchain State
 	async loadBlockchain() {
-		const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b'));
-		const openEvents = new web3.eth.Contract(Open_events_ABI, Open_events_Address);
-
+		console.log("check state", this.state);
+		const web3 = new Web3(
+			new Web3.providers.WebsocketProvider(
+				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
+			)
+		);
+		const openEvents = new web3.eth.Contract(
+			Open_events_ABI,
+			Open_events_Address
+		);
+		console.log("check props events", openEvents);
 		if (this._isMounted) {
 			this.setState({ openEvents: openEvents });
 			this.setState({ MyEvents: [] });
@@ -51,159 +62,207 @@ class MyEvents extends Component {
 			const dateTime = Date.now();
 			const dateNow = Math.floor(dateTime / 1000);
 			const blockNumber = await web3.eth.getBlockNumber();
-			this.setState({ dateNow })
+			this.setState({ dateNow });
 			this.setState({ blocks: blockNumber - 50000 });
 			this.setState({ latestblocks: blockNumber - 1 });
-			this.loadActiveEvents()
+			this.loadActiveEvents();
 
 			//Listen For My Newly Created Events
-			this.state.openEvents.events.CreatedEvent({ filter: { owner: this.account }, fromBlock: blockNumber, toBlock: 'latest' })
-				.on('data', (log) => setTimeout(() => {
-					if (this.state.isActive) {
+			openEvents.events
+				.CreatedEvent({
+					filter: { owner: this.account },
+					fromBlock: blockNumber,
+					toBlock: "latest",
+				})
+				.on("data", (log) =>
+					setTimeout(() => {
+						if (this.state.isActive) {
+							this.setState({
+								MyEvents: [...this.state.MyEvents, log],
+							});
+							var newest = this.state.MyEvents;
+							var newsort = newest
+								.concat()
+								.sort((a, b) => b.blockNumber - a.blockNumber);
 
-						this.setState({ MyEvents: [...this.state.MyEvents, log] });
-						var newest = this.state.MyEvents
-						var newsort = newest.concat().sort((a, b) => b.blockNumber - a.blockNumber);
-
-						this.setState({
-							MyEvents: newsort,
-							active_length: this.state.MyEvents.length
-						});
-					};
-
-				}, 10000))
+							this.setState({
+								MyEvents: newsort,
+								active_length: this.state.MyEvents.length,
+							});
+						}
+					}, 10000)
+				);
 		}
+		console.log("check state", this.state);
+		console.log("check state events", openEvents.getPastEvents);
 		await openEvents
-		.getPastEvents("DeletedEvent", {
-			fromBlock: 7654042,
-			toBlock: this.state.latestblocks,
-		})
-		.then((events) => {
-			console.log("eventsssss deletedEvents", events);
-			this.setState({ Deleted_Events: events });
-			return events;
-		})
-		.catch((err) => {
-			console.error(err);
-			this.setState({ Deleted_Events: [] });
-		});
-
+			.getPastEvents("DeletedEvent", {
+				fromBlock: 7654042,
+				toBlock: this.state.latestblocks,
+			})
+			.then((events) => {
+				console.log("eventsssss deletedEvents", events);
+				this.setState({ Deleted_Events: events });
+				return events;
+			})
+			.catch((err) => {
+				console.error(err);
+				this.setState({ Deleted_Events: [] });
+			});
 	}
 
 	//Get My Active Events on Blockchain
 	async loadActiveEvents() {
-
 		if (this._isMounted) {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
 
-		this.state.openEvents.getPastEvents("CreatedEvent", { filter: { owner: this.account }, fromBlock: 5000000, toBlock: this.state.latestblocks })
-			.then(events => {
-				var newest = events.filter((activeEvents) => activeEvents.returnValues.time >= (this.state.dateNow));
-				var newsort = newest.concat().sort((a, b) => b.blockNumber - a.blockNumber);
+		this.state.openEvents
+			.getPastEvents("CreatedEvent", {
+				filter: { owner: this.account },
+				fromBlock: 5000000,
+				toBlock: this.state.latestblocks,
+			})
+			.then((events) => {
+				var newest = events.filter(
+					(activeEvents) =>
+						activeEvents.returnValues.time >= this.state.dateNow
+				);
+				var newsort = newest
+					.concat()
+					.sort((a, b) => b.blockNumber - a.blockNumber);
 
 				if (this._isMounted) {
 					this.setState({ MyEvents: newsort, check: newsort });
-					this.setState({ active_length: this.state.MyEvents.length });
-					console.log("myevents",this.state.MyEvents);
+					this.setState({
+						active_length: this.state.MyEvents.length,
+					});
+					console.log("myevents", this.state.MyEvents);
 					setTimeout(() => this.setState({ loading: false }), 1000);
 				}
-
-			}).catch((err) => console.error(err))
-
+			})
+			.catch((err) => console.error(err));
 	}
 
 	//Get My Concluded Events on Blockchain
 	async loadPastEvents() {
-
 		if (this._isMounted) {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
-		this.state.openEvents.getPastEvents("CreatedEvent", { filter: { owner: this.account }, fromBlock: 5000000, toBlock: this.state.latestblocks })
-			.then(events => {
-				this.setState({ loading: true })
-				var newest = events.filter((activeEvents) => activeEvents.returnValues.time <= (this.state.dateNow));
-				var newsort = newest.concat().sort((a, b) => b.blockNumber - a.blockNumber);
+		this.state.openEvents
+			.getPastEvents("CreatedEvent", {
+				filter: { owner: this.account },
+				fromBlock: 5000000,
+				toBlock: this.state.latestblocks,
+			})
+			.then((events) => {
+				this.setState({ loading: true });
+				var newest = events.filter(
+					(activeEvents) =>
+						activeEvents.returnValues.time <= this.state.dateNow
+				);
+				var newsort = newest
+					.concat()
+					.sort((a, b) => b.blockNumber - a.blockNumber);
 
 				if (this._isMounted) {
 					this.setState({ MyEvents: newsort, check: newsort });
-					this.setState({ active_length: this.state.MyEvents.length });
+					this.setState({
+						active_length: this.state.MyEvents.length,
+					});
 					setTimeout(() => this.setState({ loading: false }), 1000);
 				}
-
-			}).catch((err) => console.error(err))
+			})
+			.catch((err) => console.error(err));
 	}
 	//Display My Concluded Events
 	PastEvent = (e) => {
-		let value=""
+		let value = "";
 
-		this.setState({
-			isActive: false,
-			value
-		}, () => {
-			if (!this.state.isActive) {
-				this.loadPastEvents()
-				this.props.history.push("/myevents/" + 1)
+		this.setState(
+			{
+				isActive: false,
+				value,
+			},
+			() => {
+				if (!this.state.isActive) {
+					this.loadPastEvents();
+					this.props.history.push("/myevents/" + 1);
+				}
 			}
-		})
-	}
+		);
+	};
 	//Display My Active Events
 	ActiveEvent = (e) => {
-		let value=""
-		this.setState({
-			isActive: true,
-			value
-		}, () => {
-			if (this.state.isActive) {
-				this.loadActiveEvents()
-				this.props.history.push("/myevents/" + 1)
+		let value = "";
+		this.setState(
+			{
+				isActive: true,
+				value,
+			},
+			() => {
+				if (this.state.isActive) {
+					this.loadActiveEvents();
+					this.props.history.push("/myevents/" + 1);
+				}
 			}
-		})
-	}
+		);
+	};
 
 	//Search for My Events By Name
 	updateSearch = (e) => {
-		console.log("value before",e.target.value)
-		console.log("this.state",this.state)
-		
-		let { value } = e.target
+		console.log("value before", e.target.value);
+		console.log("this.state", this.state);
+
+		let { value } = e.target;
 		this.setState({ value }, () => {
-			try{
-			if (this.state.value !== "") {
-				var filteredEvents = this.state.check;
-				filteredEvents = filteredEvents.filter((events) => {
-					return events.returnValues.name.toLowerCase().search(this.state.value.toLowerCase()) !== -1;
-
-
-				})
-			} else { filteredEvents = this.state.check }
-			console.log("value after",e.target.value)
-
-		}
-		catch(e)
-		{
-			
-		}
+			try {
+				if (this.state.value !== "") {
+					var filteredEvents = this.state.check;
+					filteredEvents = filteredEvents.filter((events) => {
+						return (
+							events.returnValues.name
+								.toLowerCase()
+								.search(this.state.value.toLowerCase()) !== -1
+						);
+					});
+				} else {
+					filteredEvents = this.state.check;
+				}
+				console.log("value after", e.target.value);
+			} catch (e) {}
 			this.setState({
 				MyEvents: filteredEvents,
-				active_length: filteredEvents.length
+				active_length: filteredEvents.length,
 			});
-			this.props.history.push("/myevents/" + 1)
-		})
-	}
-	executeScroll = () => this.myRef.current.scrollIntoView()
+			this.props.history.push("/myevents/" + 1);
+		});
+	};
+	executeScroll = () => this.myRef.current.scrollIntoView();
+
 	render() {
+
 		let body = <PhoenixDAOLoader />;
 
-		if (typeof this.props.contracts['DaoEvents'].eventsOf[this.events] !== 'undefined') {
+		if (
+			typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
+			"undefined"
+		) {
 			let events = this.state.MyEvents.length;
 			if (this.state.loading) {
-				body = <PhoenixDAOLoader />
-			}
-			else if (events === 0) {
-				body = <p className="text-center not-found"><span role="img" aria-label="thinking">🤔</span>&nbsp;No events found. <a href="/createevent">Try creating one.</a></p>;
+				body = <PhoenixDAOLoader />;
+			} else if (events === 0) {
+				body = (
+					<p className="text-center not-found">
+						<span role="img" aria-label="thinking">
+							🤔
+						</span>
+						&nbsp;No events found.{" "}
+						<a href="/createevent">Try creating one.</a>
+					</p>
+				);
 			} else {
-				 let count = this.state.MyEvents.length
+				let count = this.state.MyEvents.length;
 				// let currentPage = Number(this.props.match.params.page);
 				// if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 
@@ -227,11 +286,10 @@ class MyEvents extends Component {
 				let currentPage = Number(this.props.match.params.page);
 				let events_list = [];
 				let skip = false;
-				for (let i =0; i <count; i++) {
+				for (let i = 0; i < count; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
-							this.state.MyEvents[i].returnValues
-								.eventId ==
+							this.state.MyEvents[i].returnValues.eventId ==
 							this.state.Deleted_Events[j].returnValues.eventId
 						) {
 							skip = true;
@@ -242,8 +300,8 @@ class MyEvents extends Component {
 					}
 					skip = false;
 				}
-				let updated_list=[]
-                count=events_list.length;
+				let updated_list = [];
+				count = events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 				let end = currentPage * this.perPage;
 				let start = end - this.perPage;
@@ -251,10 +309,15 @@ class MyEvents extends Component {
 				let pages = Math.ceil(count / this.perPage);
 
 				for (let i = start; i < end; i++) {
-				  updated_list.push(<Event disabledStatus={this.props.disabledStatus} inquire={this.props.inquire}
-					key={events_list[i].returnValues.eventId}
-					id={events_list[i].returnValues.eventId}
-					ipfs={events_list[i].returnValues.ipfs} />);
+					updated_list.push(
+						<Event
+							disabledStatus={this.props.disabledStatus}
+							inquire={this.props.inquire}
+							key={events_list[i].returnValues.eventId}
+							id={events_list[i].returnValues.eventId}
+							ipfs={events_list[i].returnValues.ipfs}
+						/>
+					);
 				}
 				// events_list.reverse();
 
@@ -263,79 +326,146 @@ class MyEvents extends Component {
 				if (pages > 1) {
 					let links = [];
 					if (pages > 5 && currentPage >= 3) {
-						for (let i = currentPage - 2; i <= currentPage + 2 && i <= pages; i++) {
-							let active = i === currentPage ? 'active' : '';
+						for (
+							let i = currentPage - 2;
+							i <= currentPage + 2 && i <= pages;
+							i++
+						) {
+							let active = i === currentPage ? "active" : "";
 							links.push(
 								<li className={"page-item " + active} key={i}>
-									<Link to={"/myevents/" + i} onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
+									<Link
+										to={"/myevents/" + i}
+										onClick={() =>
+											this.setState({
+												prevPath: currentPage,
+											})
+										}
+										className="page-link"
+									>
+										{i}
+									</Link>
 								</li>
 							);
-							if (this.state.prevPath!=-1) {
-								console.log("prevPath",this.state.prevPath)
-								this.executeScroll({ behavior: "smooth", block: "start" });
-							  }
+							if (this.state.prevPath != -1) {
+								console.log("prevPath", this.state.prevPath);
+								this.executeScroll({
+									behavior: "smooth",
+									block: "start",
+								});
+							}
 						}
-					}
-
-					else if (pages > 5 && currentPage < 3) {
+					} else if (pages > 5 && currentPage < 3) {
 						for (let i = 1; i <= 5 && i <= pages; i++) {
-							let active = i === currentPage ? 'active' : '';
+							let active = i === currentPage ? "active" : "";
 							links.push(
 								<li className={"page-item " + active} key={i}>
-									<Link to={"/myevents/" + i} onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
+									<Link
+										to={"/myevents/" + i}
+										onClick={() =>
+											this.setState({
+												prevPath: currentPage,
+											})
+										}
+										className="page-link"
+									>
+										{i}
+									</Link>
 								</li>
 							);
-							if (this.state.prevPath!=-1) {
-								console.log("prevPath",this.state.prevPath)
-								this.executeScroll({ behavior: "smooth", block: "start" });
-							  }
+							if (this.state.prevPath != -1) {
+								console.log("prevPath", this.state.prevPath);
+								this.executeScroll({
+									behavior: "smooth",
+									block: "start",
+								});
+							}
 						}
-					}
-					else {
+					} else {
 						for (let i = 1; i <= pages; i++) {
-							let active = i === currentPage ? 'active' : '';
+							let active = i === currentPage ? "active" : "";
 							links.push(
 								<li className={"page-item " + active} key={i}>
-									<Link to={"/myevents/" + i} onClick={()=> this.setState({prevPath:currentPage})} className="page-link">{i}</Link>
+									<Link
+										to={"/myevents/" + i}
+										onClick={() =>
+											this.setState({
+												prevPath: currentPage,
+											})
+										}
+										className="page-link"
+									>
+										{i}
+									</Link>
 								</li>
-							);console.log("prevPath",this.state.prevPath)
-							if (this.state.prevPath!=-1) {
+							);
+							console.log("prevPath", this.state.prevPath);
+							if (this.state.prevPath != -1) {
 								// console.log("prevPath",this.state.prevPath)
-								this.executeScroll({ behavior: "smooth", block: "start" });
-							  }
+								this.executeScroll({
+									behavior: "smooth",
+									block: "start",
+								});
+							}
 						}
 					}
-					pagination =
+					pagination = (
 						<nav>
 							<ul className="pagination justify-content-center">
 								{links}
 							</ul>
 						</nav>
-						;
+					);
 				}
 
-				body =
+				body = (
 					<div>
-						<div className="row user-list mt-4">
-							{updated_list}
-						</div>
+						<div className="row user-list mt-4">{updated_list}</div>
 						{pagination}
 					</div>
-					;
+				);
 			}
 		}
 
 		return (
 			<div className="event-page-wrapper">
-
-				<h2 className="col-md-10" ref={this.myRef}>{this.state.isActive ? <i className="fa fa-calendar-alt "></i> :  <i className="fa fa-archive"></i>} My{this.state.isActive ? ' Active' : ' Past'}  Events</h2>
+				<h2 className="col-md-10" ref={this.myRef}>
+					{this.state.isActive ? (
+						<i className="fa fa-calendar-alt "></i>
+					) : (
+						<i className="fa fa-archive"></i>
+					)}{" "}
+					My{this.state.isActive ? " Active" : " Past"} Events
+				</h2>
 				<div className="input-group input-group-lg mb-2">
-					<button className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2" onClick={this.ActiveEvent} >Active Events</button>
-					<button className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2" onClick={this.PastEvent} >Past Events</button>
+					<button
+						className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2"
+						onClick={this.ActiveEvent}
+					>
+						Active Events
+					</button>
+					<button
+						className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2"
+						onClick={this.PastEvent}
+					>
+						Past Events
+					</button>
 					<div className="input-group-prepend ml-2 mt-2">
-						<span className="input-group-text rounded-left  search-icon float-right" id="inputGroup-sizing-lg"><i className="fa fa-search"></i>&nbsp;Search </span>
+						<span
+							className="input-group-text rounded-left  search-icon float-right"
+							id="inputGroup-sizing-lg"
+						>
+							<i className="fa fa-search"></i>&nbsp;Search{" "}
+						</span>
 					</div>
-					<input type="text" value={this.state.value} onChange={this.updateSearch.bind(this)} className="form-control mr-2 mt-2 col-md-6" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />
+					<input
+						type="text"
+						value={this.state.value}
+						onChange={this.updateSearch.bind(this)}
+						className="form-control mr-2 mt-2 col-md-6"
+						aria-label="Large"
+						aria-describedby="inputGroup-sizing-sm"
+					/>
 				</div>
 
 				<hr />
@@ -345,12 +475,11 @@ class MyEvents extends Component {
 	}
 
 	componentDidMount() {
-		if (this.state.prevPath==-1) {
+		if (this.state.prevPath == -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
-		  }
+		}
 		this._isMounted = true;
 		this.loadBlockchain();
-		
 	}
 
 	componentWillUnmount() {
@@ -358,16 +487,14 @@ class MyEvents extends Component {
 	}
 }
 
-
-
 MyEvents.contextTypes = {
-	drizzle: PropTypes.object
-}
+	drizzle: PropTypes.object,
+};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	return {
 		contracts: state.contracts,
-		accounts: state.accounts
+		accounts: state.accounts,
 	};
 };
 
