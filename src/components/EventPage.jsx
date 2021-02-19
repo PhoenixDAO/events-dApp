@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
-import PropTypes from 'prop-types';
-import makeBlockie from 'ethereum-blockies-base64';
+import PropTypes from "prop-types";
+import makeBlockie from "ethereum-blockies-base64";
 
-import ipfs from '../utils/ipfs';
-import Web3 from 'web3';
+import ipfs from "../utils/ipfs";
+import Web3 from "web3";
 
 import Notify from "./Notify";
 import NotifyEvent from "./NotifyEvent";
@@ -27,7 +27,7 @@ import {
 	RedditShareButton,
 	TelegramShareButton,
 	TwitterShareButton,
-	WhatsappShareButton
+	WhatsappShareButton,
 } from "react-share";
 
 import {
@@ -37,49 +37,45 @@ import {
 	RedditIcon,
 	TelegramIcon,
 	TwitterIcon,
-	WhatsappIcon
+	WhatsappIcon,
 } from "react-share";
 
-import Loading from './Loading';
-import EventNotFound from './EventNotFound';
-import Clock from './Clock';
-import JwPagination from 'jw-react-pagination';
-import { Link } from 'react-router-dom';
+import Loading from "./Loading";
+import EventNotFound from "./EventNotFound";
+import Clock from "./Clock";
+import JwPagination from "jw-react-pagination";
+import { Link } from "react-router-dom";
 
-import CheckUser from './CheckUser';
-import { Open_events_ABI, Open_events_Address } from '../config/OpenEvents';
-import { PhoenixDAO_Testnet_Token_ABI, PhoenixDAO_Testnet_Token_Address } from '../config/phoenixDAOcontract_testnet';
+import CheckUser from "./CheckUser";
+import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+import {
+	PhoenixDAO_Testnet_Token_ABI,
+	PhoenixDAO_Testnet_Token_Address,
+} from "../config/phoenixDAOcontract_testnet";
 
-let numeral = require('numeral');
+let numeral = require("numeral");
 
 const customStyles = {
 	ul: {
-		border: 'rgb(10, 53, 88)'
-
+		border: "rgb(10, 53, 88)",
 	},
 	li: {
-		border: 'rgb(10, 53, 88)'
-
+		border: "rgb(10, 53, 88)",
 	},
 	a: {
-		color: '#007bff',
-
+		color: "#007bff",
 	},
-
 };
 
-
 class EventPage extends Component {
-
 	constructor(props, context) {
 		try {
 			var contractConfig = {
-				contractName: 'PHNX',
+				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
 					PhoenixDAO_Testnet_Token_ABI,
-					PhoenixDAO_Testnet_Token_Address,
+					PhoenixDAO_Testnet_Token_Address
 				),
-
 			};
 			context.drizzle.addContract(contractConfig);
 			//Importing PhoenixDAO/OMG contracts
@@ -91,10 +87,12 @@ class EventPage extends Component {
 			);*/
 		} catch (e) {
 			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
-    }
+		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.event = this.contracts['DaoEvents'].methods.getEvent.cacheCall(this.props.match.params.id);
+		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
+			this.props.match.params.id
+		);
 		this.account = this.props.accounts[0];
 		this.state = {
 			load: true,
@@ -108,24 +106,28 @@ class EventPage extends Component {
 			latestblocks: 5000000,
 			PhoenixDAO_market: [],
 
-			fee: '',
-			token: '',
-			openEvents_address: '',
-			buyticket: '',
-			approve: '',
+			fee: "",
+			token: "",
+			openEvents_address: "",
+			buyticket: "",
+			approve: "",
 			pageTransactions: [],
-
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
-
 	}
 
 	//Get SoldTicket Data
 	async loadblockhain() {
-
-		const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b'));
-		const openEvents = new web3.eth.Contract(Open_events_ABI, Open_events_Address);
+		const web3 = new Web3(
+			new Web3.providers.WebsocketProvider(
+				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
+			)
+		);
+		const openEvents = new web3.eth.Contract(
+			Open_events_ABI,
+			Open_events_Address
+		);
 
 		if (this._isMounted) {
 			this.setState({ openEvents });
@@ -137,101 +139,147 @@ class EventPage extends Component {
 			this.setState({
 				blocks: blockNumber - 50000,
 				latestblocks: blockNumber - 1,
-				soldTicket: []
+				soldTicket: [],
 			});
 		}
 
-		openEvents.getPastEvents("SoldTicket", { filter: { eventId: this.props.match.params.id }, fromBlock: 5000000, toBlock: this.state.latestblocks })
-			.then(events => {
-
-				this.setState({ load: true })
+		openEvents
+			.getPastEvents("SoldTicket", {
+				filter: { eventId: this.props.match.params.id },
+				fromBlock: 5000000,
+				toBlock: this.state.latestblocks,
+			})
+			.then((events) => {
+				this.setState({ load: true });
 				var newest = events;
-				var newsort = newest.concat().sort((a, b) => b.blockNumber - a.blockNumber);
+				var newsort = newest
+					.concat()
+					.sort((a, b) => b.blockNumber - a.blockNumber);
 				if (this._isMounted) {
 					this.setState({ soldTicket: newsort, check: newsort });
-					this.setState({ load: false })
-					this.setState({ active_length: this.state.soldTicket.length });
-
+					this.setState({ load: false });
+					this.setState({
+						active_length: this.state.soldTicket.length,
+					});
 				}
-			}).catch((err) => console.error(err))
+			})
+			.catch((err) => console.error(err));
 
 		//Listen for Incoming Sold Tickets
-		openEvents.events.SoldTicket({ filter: { eventId: this.props.match.params.id }, fromBlock: blockNumber, toBlock: 'latest' })
-			.on('data', (log) => setTimeout(() => {
-				this.setState({ load: true });
+		openEvents.events
+			.SoldTicket({
+				filter: { eventId: this.props.match.params.id },
+				fromBlock: blockNumber,
+				toBlock: "latest",
+			})
+			.on(
+				"data",
+				(log) =>
+					setTimeout(() => {
+						this.setState({ load: true });
 
-				this.setState({ soldTicket: [...this.state.soldTicket, log] });
-				var newest = this.state.soldTicket
-				var newsort = newest.concat().sort((a, b) => b.blockNumber - a.blockNumber);
-				if (this._isMounted) {
-
-					this.setState({ soldTicket: newsort });
-					this.setState({ active_length: this.state.soldTicket.length })
-				}
-				this.setState({ load: false });
-			}), 15000)
+						this.setState({
+							soldTicket: [...this.state.soldTicket, log],
+						});
+						var newest = this.state.soldTicket;
+						var newsort = newest
+							.concat()
+							.sort((a, b) => b.blockNumber - a.blockNumber);
+						if (this._isMounted) {
+							this.setState({ soldTicket: newsort });
+							this.setState({
+								active_length: this.state.soldTicket.length,
+							});
+						}
+						this.setState({ load: false });
+					}),
+				15000
+			);
 	}
 
 	//get market cap & dollar value of PhoenixDAO
 	async getPhoenixDAOMarketValue() {
-
-		fetch('https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture')
-			.then(res => res.json())
+		fetch(
+			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
+		)
+			.then((res) => res.json())
 			.then((data) => {
 				if (this._isMounted) {
-					this.setState({ PhoenixDAO_market: data.phoenixdao })
+					this.setState({ PhoenixDAO_market: data.phoenixdao });
 				}
 			})
-			.catch(console.log)
+			.catch(console.log);
 	}
 
 	updateIPFS = () => {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts['DaoEvents'].getEvent[this.event] !== 'undefined' &&
-			!this.props.contracts['DaoEvents'].getEvent[this.event].error
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
+				"undefined" &&
+			!this.props.contracts["DaoEvents"].getEvent[this.event].error
 		) {
-			this.setState({
-				loading: true
-			}, () => {
-				ipfs.get(this.props.contracts['DaoEvents'].getEvent[this.event].value[7]).then((file) => {
-					let data = JSON.parse(file[0].content.toString());
-					if (!this.isCancelled) {
-						this.setState({
-							loading: false,
-							loaded: true,
-							description: data.text,
-							image: data.image,
-							locations: data.location
+			this.setState(
+				{
+					loading: true,
+				},
+				() => {
+					ipfs.get(
+						this.props.contracts["DaoEvents"].getEvent[this.event]
+							.value[7]
+					)
+						.then((file) => {
+							let data = JSON.parse(file[0].content.toString());
+							if (!this.isCancelled) {
+								this.setState({
+									loading: false,
+									loaded: true,
+									description: data.text,
+									image: data.image,
+									locations: data.location,
+								});
+							}
+						})
+						.catch(() => {
+							if (!this.isCancelled) {
+								this.setState({
+									loading: false,
+									loaded: true,
+									ipfs_problem: true,
+								});
+							}
 						});
-					}
-				}).catch(() => {
-					if (!this.isCancelled) {
-						this.setState({
-							loading: false,
-							loaded: true,
-							ipfs_problem: true
-						});
-					}
-				});
-			});
+				}
+			);
 		}
-	}
+	};
 
 	getImage = () => {
-		let image = '/images/loading_image_ipfs.png';
-		if (this.state.ipfs_problem) image = '/images/problem_ipfs.png';
+		let image = "/images/loading_image_ipfs.png";
+		if (this.state.ipfs_problem) image = "/images/problem_ipfs.png";
 		if (this.state.image !== null) image = this.state.image;
 		return image;
-	}
+	};
 
 	getDescription = () => {
 		let description = <Loading />;
-		if (this.state.ipfs_problem) description = <p><span role="img" aria-label="monkey">🙊</span>We can not load description</p>;
-		if (this.state.description !== null) description = <p style={{whiteSpace:"pre-line"}}>{this.state.description}</p>;
+		if (this.state.ipfs_problem)
+			description = (
+				<p>
+					<span role="img" aria-label="monkey">
+						🙊
+					</span>
+					We can not load description
+				</p>
+			);
+		if (this.state.description !== null)
+			description = (
+				<p style={{ whiteSpace: "pre-line" }}>
+					{this.state.description}
+				</p>
+			);
 		return description;
-	}
+	};
 
 	handleClickOpen = () => {
 		this.setState({ open: true });
@@ -240,7 +288,6 @@ class EventPage extends Component {
 	handleClose = () => {
 		this.setState({ open: false });
 	};
-
 
 	allowance = async () => {
 		let a = await this.contracts["PHNX"].methods
@@ -251,7 +298,7 @@ class EventPage extends Component {
 	};
 
 	giveApproval = async () => {
-		this.handleClose()
+		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
@@ -267,7 +314,7 @@ class EventPage extends Component {
 				}
 			})
 			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber ==1) {
+				if (confirmationNumber == 1) {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
@@ -303,12 +350,11 @@ class EventPage extends Component {
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 		let temp = this.allowance();
-		console.log("approve",balance)
+		console.log("approve", balance);
 		console.log(
 			"buy",
 			this.props.contracts["DaoEvents"].getEvent[this.event].value[2]
 		);
-
 
 		this.setState(
 			{
@@ -326,11 +372,9 @@ class EventPage extends Component {
 				),
 			},
 			async () => {
-				let temp=await this.allowance()
-				console.log("temp is ",
-					this.props.id
-				)
-				if (await this.allowance() == 0) {
+				let temp = await this.allowance();
+				console.log("temp is ", this.props.id);
+				if ((await this.allowance()) == 0) {
 					this.handleClickOpen();
 				} else {
 					this.props.inquire(
@@ -347,14 +391,22 @@ class EventPage extends Component {
 	};
 
 	getLocation = () => {
-		let locations = []
-		if (this.state.ipfs_problem) locations = <p className="text-center mb-0 event-description"><span role="img" aria-label="monkey">🙊</span>We can not load location</p>;
+		let locations = [];
+		if (this.state.ipfs_problem)
+			locations = (
+				<p className="text-center mb-0 event-description">
+					<span role="img" aria-label="monkey">
+						🙊
+					</span>
+					We can not load location
+				</p>
+			);
 		if (this.state.locations !== null) {
-			let place = this.state.locations
+			let place = this.state.locations;
 			locations = <span>Location: {place}</span>;
 		}
 		return locations;
-	}
+	};
 
 	onChangePage(pageTransactions) {
 		this.setState({ pageTransactions });
@@ -363,44 +415,73 @@ class EventPage extends Component {
 	render() {
 		let body = <Loading />;
 
-
-
-		if (typeof this.props.contracts['DaoEvents'].getEvent[this.event] !== 'undefined') {
-			if (this.props.contracts['DaoEvents'].getEvent[this.event].error) {
-				body = <div className="text-center mt-5"><span role="img" aria-label="unicorn">🦄</span> PhoenixDAO Event not found</div>;
+		if (
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
+			"undefined"
+		) {
+			if (this.props.contracts["DaoEvents"].getEvent[this.event].error) {
+				body = (
+					<div className="text-center mt-5">
+						<span role="img" aria-label="unicorn">
+							🦄
+						</span>{" "}
+						PhoenixDAO Event not found
+					</div>
+				);
 			} else {
-
-				let event_data = this.props.contracts['DaoEvents'].getEvent[this.event].value;
+				let event_data = this.props.contracts["DaoEvents"].getEvent[
+					this.event
+				].value;
 
 				let shareUrl = window.location;
 				let title = event_data[0];
 
-				let event_tit
+				let event_tit;
 				let image = this.getImage();
 				let description = this.getDescription();
 				let locations = this.getLocation();
 				let buttonText = event_data[3] ? " Buy Ticket" : " Get Ticket";
 
-				let symbol = event_data[3] ? 'PhoenixDAO.png' : 'PhoenixDAO.png';
-				let price = this.context.drizzle.web3.utils.fromWei(event_data[2]);
+				let symbol = event_data[3]
+					? "PhoenixDAO.png"
+					: "PhoenixDAO.png";
+				let price = this.context.drizzle.web3.utils.fromWei(
+					event_data[2]
+				);
 				let date = new Date(parseInt(event_data[1], 10) * 1000);
 
-				let max_seats = event_data[4] ? event_data[5] : '∞';
+				let max_seats = event_data[4] ? event_data[5] : "∞";
 
 				let disabled = false;
 				let disabledStatus;
 				let sold = true;
 
-				if (event_data[4] && (Number(event_data[6]) >= Number(event_data[5]))) {
+				if (
+					event_data[4] &&
+					Number(event_data[6]) >= Number(event_data[5])
+				) {
 					disabled = true;
-					disabledStatus = <span><span role="img" aria-label="alert">⚠️</span> No more tickets</span>;
-					buttonText = " Sold Out"
+					disabledStatus = (
+						<span>
+							<span role="img" aria-label="alert">
+								⚠️
+							</span>{" "}
+							No more tickets
+						</span>
+					);
+					buttonText = " Sold Out";
 				}
-
 
 				if (date.getTime() < new Date().getTime()) {
 					disabled = true;
-					disabledStatus = <span><span role="img" aria-label="alert">⚠️</span> This event has already ended.</span>;
+					disabledStatus = (
+						<span>
+							<span role="img" aria-label="alert">
+								⚠️
+							</span>{" "}
+							This event has already ended.
+						</span>
+					);
 				}
 
 				if (this.state.active_length <= 0) {
@@ -415,39 +496,64 @@ class EventPage extends Component {
 				let rawCategory = event_data[8];
 
 				var categoryRemovedDashes = rawCategory;
-				categoryRemovedDashes = categoryRemovedDashes.replace(/-/g, ' ');
+				categoryRemovedDashes = categoryRemovedDashes.replace(
+					/-/g,
+					" "
+				);
 
-				var category = categoryRemovedDashes.toLowerCase()
-					.split(' ')
+				var category = categoryRemovedDashes
+					.toLowerCase()
+					.split(" ")
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-					.join(' ');
+					.join(" ");
 				//Friendly URL Title
 				let rawTitle = event_data[0];
 				var titleRemovedSpaces = rawTitle;
-				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, '-');
+				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
 
-				var pagetitle = titleRemovedSpaces.toLowerCase()
-					.split(' ')
+				var pagetitle = titleRemovedSpaces
+					.toLowerCase()
+					.split(" ")
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-					.join(' ');
+					.join(" ");
 
 				if (this.props.match.params.page === pagetitle) {
-
-					body =
+					body = (
 						<div className="row">
-
 							<div className="col-12">
-
 								{/* <h3>{event_data[0]}</h3>
            		 <br />
            		 {description} */}
-								<button className="btn btn-dark" onClick={this.inquire} disabled={disabled || this.props.disabledStatus}><i className="fas fa-ticket-alt"></i>{buttonText}</button>
-								<label className="pl-2 small">{disabledStatus}</label>
+								<button
+									className="btn btn-dark"
+									onClick={this.inquire}
+									disabled={
+										disabled || this.props.disabledStatus
+									}
+								>
+									<i className="fas fa-ticket-alt"></i>
+									{buttonText}
+								</button>
+								<label className="pl-2 small">
+									{disabledStatus}
+								</label>
 
 								<br />
-								{myEvent === true && <Link to={"/event-stat/" + pagetitle + "/" + this.props.match.params.id}>
-									<button className="btn btn-dark mt-2"><i className="fas fa-chart-bar"></i> View Event Stat</button>
-								</Link>}
+								{myEvent === true && (
+									<Link
+										to={
+											"/event-stat/" +
+											pagetitle +
+											"/" +
+											this.props.match.params.id
+										}
+									>
+										<button className="btn btn-dark mt-2">
+											<i className="fas fa-chart-bar"></i>{" "}
+											View Event Stat
+										</button>
+									</Link>
+								)}
 								<div className="event-social-share-btns-div">
 									<EmailShareButton
 										url={shareUrl}
@@ -510,9 +616,17 @@ class EventPage extends Component {
 								<br />
 
 								<div className="card event-hero-sidebar">
-									<img className="card-img-top event-image" src={image} alt="Event" />
+									<img
+										className="card-img-top event-image"
+										src={image}
+										alt="Event"
+									/>
 									<div className="card-header event-header">
-										<img className="float-left" src={makeBlockie(event_data[9])} alt="User Identicon" />
+										<img
+											className="float-left"
+											src={makeBlockie(event_data[9])}
+											alt="User Identicon"
+										/>
 									</div>
 
 									<div className="card-body">
@@ -523,55 +637,131 @@ class EventPage extends Component {
 									</div>
 
 									<ul className="list-group list-group-flush">
-										<li className="list-group-item ">{locations}</li>
-										<li className="list-group-item">Category: {category}</li>
-										<li className="list-group-item">Price: <img src={'/images/' + symbol} className="event_price-image" alt="Event Price" /> {event_data[3] ? numeral(price).format('0.000') : 'Free'}
-											{event_data[3] ? ' or ' : ''}
-											{event_data[3] ? <img src={'/images/dollarsign.png'} className="event_price-image" alt="Event Price" /> : ''}
-											{event_data[3] ? numeral(price * this.state.PhoenixDAO_market.usd).format('0.000') : ''}</li>
-										<li className="list-group-item">{date.toLocaleDateString()} at{" "}
-									{date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</li>
-										<li className="list-group-item">Tickets: {event_data[6]}/{max_seats}</li>
+										<li className="list-group-item ">
+											{locations}
+										</li>
+										<li className="list-group-item">
+											Category: {category}
+										</li>
+										<li className="list-group-item">
+											Price:{" "}
+											<img
+												src={"/images/" + symbol}
+												className="event_price-image"
+												alt="Event Price"
+											/>{" "}
+											{event_data[3]
+												? numeral(price).format("0.000")
+												: "Free"}
+											{event_data[3] ? " or " : ""}
+											{event_data[3] ? (
+												<img
+													src={
+														"/images/dollarsign.png"
+													}
+													className="event_price-image"
+													alt="Event Price"
+												/>
+											) : (
+												""
+											)}
+											{event_data[3]
+												? numeral(
+														price *
+															this.state
+																.PhoenixDAO_market
+																.usd
+												  ).format("0.000")
+												: ""}
+										</li>
+										<li className="list-group-item">
+											{date.toLocaleDateString()} at{" "}
+											{date.toLocaleTimeString([], {
+												hour: "2-digit",
+												minute: "2-digit",
+											})}
+										</li>
+										<li className="list-group-item">
+											Tickets: {event_data[6]}/{max_seats}
+										</li>
 									</ul>
 								</div>
-								{this._isMounted && <Clock deadline={date} event_unix={event_data[1]} />}
-								<div className="new-transaction-wrapper"><h4 className="transactions">Ticket Purchases</h4>
+								{this._isMounted && (
+									<Clock
+										deadline={date}
+										event_unix={event_data[1]}
+									/>
+								)}
+								<div className="new-transaction-wrapper">
+									<h4 className="transactions">
+										Ticket Purchases
+									</h4>
 									{this.state.load && <Loading />}
-									{this.state.pageTransactions.map((sold, index) => (<p className="sold_text col-md-12" key={index}><img className="float-left blockie" src={makeBlockie(sold.returnValues.buyer)} /> Someone bought 1 ticket for <strong>{event_data[0]}</strong>.</p>))}
-									{!sold && <p className="sold_text col-md-12 no-tickets">There are currently no purchases for this ticket.</p>}
+									{this.state.pageTransactions.map(
+										(sold, index) => (
+											<p
+												className="sold_text col-md-12"
+												key={index}
+											>
+												<img
+													className="float-left blockie"
+													src={makeBlockie(
+														sold.returnValues.buyer
+													)}
+												/>{" "}
+												Someone bought 1 ticket for{" "}
+												<strong>{event_data[0]}</strong>
+												.
+											</p>
+										)
+									)}
+									{!sold && (
+										<p className="sold_text col-md-12 no-tickets">
+											There are currently no purchases for
+											this ticket.
+										</p>
+									)}
 								</div>
 
 								<div className="pagination">
-									<JwPagination items={this.state.soldTicket} onChangePage={this.onChangePage} maxPages={5} pageSize={5} styles={customStyles} />
+									<JwPagination
+										items={this.state.soldTicket}
+										onChangePage={this.onChangePage}
+										maxPages={5}
+										pageSize={5}
+										styles={customStyles}
+									/>
 								</div>
-
 							</div>
 
 							<div className="col-12">
-								<div className="mt-5">
-								</div>
-								<CheckUser event_id={this.props.match.params.id} />
+								<div className="mt-5"></div>
+								<CheckUser
+									event_id={this.props.match.params.id}
+								/>
 							</div>
 							<hr />
-						</div>;
-				}
-
-				else {
+						</div>
+					);
+				} else {
 					body = <EventNotFound />;
 				}
 			}
-
 		}
 
 		return (
 			<div className="event-page-wrapper">
-				<ApprovalModal open={this.state.open} handleClose={this.handleClose} giveApproval={this.giveApproval}/>
-				<h2><i className="fa fa-calendar-alt"></i> Event</h2>
+				<ApprovalModal
+					open={this.state.open}
+					handleClose={this.handleClose}
+					giveApproval={this.giveApproval}
+				/>
+				<h2>
+					<i className="fa fa-calendar-alt"></i> Event
+				</h2>
 				<hr />
 				{body}
 				<hr />
-
-
 			</div>
 		);
 	}
@@ -579,8 +769,8 @@ class EventPage extends Component {
 	componentDidMount() {
 		window.scroll({
 			top: 0,
-			behavior: 'smooth'
-		  });
+			behavior: "smooth",
+		});
 		this._isMounted = true;
 		this.updateIPFS();
 		this.loadblockhain();
@@ -599,14 +789,14 @@ class EventPage extends Component {
 }
 
 EventPage.contextTypes = {
-	drizzle: PropTypes.object
-}
+	drizzle: PropTypes.object,
+};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
 	return {
 		contracts: state.contracts,
 		accounts: state.accounts,
-		transactionStack: state.transactionStack
+		transactionStack: state.transactionStack,
 	};
 };
 

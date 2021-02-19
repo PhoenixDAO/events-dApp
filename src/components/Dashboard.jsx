@@ -3,9 +3,10 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-
+import Web3 from "web3";
 import Loading from "./Loading";
 import { Bar, Doughnut } from "react-chartjs-2";
+import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import UniswapModal from "./UniswapModal";
 import topicsJson from "../config/topics.json";
 
@@ -15,14 +16,32 @@ class Dashboard extends Component {
 	constructor(props, context) {
 		super(props);
 		this.state = {
+			openEvents: "",
+			blocks: 5000000,
+			latestblocks: 6000000,
+			loading: true,
+			MyEvents: [],
+			active_length: "",
+			isOldestFirst: false,
+			isActive: true,
+			top5Events: [],
+			account: [],
+			sortedArrayLength: "",
+			dateNow: "",
+			prevPath: -1,
+			Deleted_Events: [],
 			PhoenixDAO_market: [],
 			openModal: false,
+			deletedArray: [],
 		};
+
 		this.contracts = context.drizzle.contracts;
 		this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
 			this.props.accounts[0]
 		);
+		console.log("hey view my events now", this.events);
 
+		this.account = this.props.accounts[0];
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 	}
@@ -71,8 +90,130 @@ class Dashboard extends Component {
 			.catch(console.log);
 	}
 
+	async loadActiveEvents() {
+		if (this._isMounted) {
+			this.setState({ MyEvents: [], active_length: 0, loading: true });
+		}
+
+		this.state.openEvents
+			.getPastEvents("CreatedEvent", {
+				filter: { owner: this.account },
+				fromBlock: 5000000,
+				toBlock: this.state.latestblocks,
+			})
+			.then((events) => {
+				var newest = events.filter(
+					(activeEvents) =>
+						activeEvents.returnValues.time >= this.state.dateNow
+				);
+				var newsort = newest
+					.concat()
+					.sort((a, b) => b.blockNumber - a.blockNumber);
+
+				if (this._isMounted) {
+					this.setState({ MyEvents: newsort, check: newsort });
+					this.setState({
+						active_length: this.state.MyEvents.length,
+					});
+					console.log("myevents", this.state.MyEvents);
+					setTimeout(() => this.setState({ loading: false }), 1000);
+				}
+			})
+			.catch((err) => console.error(err));
+	}
+
+	async loadBockchain() {
+		// let MyEvents = this.state;
+		const web3 = new Web3(
+			new Web3.providers.WebsocketProvider(
+				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
+			)
+		);
+		const openEvents = new web3.eth.Contract(
+			Open_events_ABI,
+			Open_events_Address
+		);
+		if (this._isMounted) {
+			console.log("check props123", openEvents);
+			this.setState({ openEvents: openEvents });
+			this.setState({ MyEvents: [] });
+
+			const blockNumber = await web3.eth.getBlockNumber();
+			this.setState({ blocks: blockNumber - 50000 });
+			this.setState({ latestblocks: blockNumber - 1 });
+			this.loadActiveEvents();
+
+			//Listen For My Newly Created Events
+			this.state.openEvents.events
+				.CreatedEvent({
+					filter: { owner: this.account },
+					fromBlock: blockNumber,
+					toBlock: "latest",
+				})
+				.on("data", (log) =>
+					setTimeout(() => {
+						console.log("check props123", log);
+						if (this.state.isActive) {
+							this.setState({
+								MyEvents: [...this.state.MyEvents, log],
+							});
+							var newest = this.state.MyEvents;
+							var newsort = newest
+								.concat()
+								.sort((a, b) => b.blockNumber - a.blockNumber);
+
+							this.setState({
+								MyEvents: newsort,
+								active_length: this.state.MyEvents.length,
+							});
+						}
+					}, 10000)
+				);
+		}
+
+		await openEvents
+			.getPastEvents("DeletedEvent", {
+				fromBlock: 7654042,
+				toBlock: this.state.latestblocks,
+			})
+			.then((events) => {
+				console.log("eventsssss deletedEvents", events);
+				this.setState({ Deleted_Events: events });
+				return events;
+			})
+			.catch((err) => {
+				console.error(err);
+				this.setState({ Deleted_Events: [] });
+			});
+		let deletedArray = [];
+		// var array1 = [];
+		for (var key in this.state.MyEvents) {
+			this.state.Deleted_Events.filter((data) => {
+				if (
+					data.returnValues.eventId ==
+					this.state.MyEvents[key].returnValues.eventId
+				) {
+					deletedArray.push(data.returnValues.eventId);
+				}
+			});
+		}
+		// var array1 = this.state.MyEvents;
+		// for (var key in this.state.MyEvents) {
+		// 	for (var key2 in deletedArray) {
+		// 		if (deletedArray[key] != this.state.MyEvents[key2]) {
+		// 			array1.splice(key, 1);
+		// 		}
+		// 	}
+		// }
+		this.setState({
+			// top5Events: array1,
+			deletedArray: deletedArray,
+		});
+	}
+
 	render() {
 		let body = "";
+		console.log("============>", this.state);
 		if (this.state.openModal) {
 			return <UniswapModal />;
 		}
@@ -83,9 +224,13 @@ class Dashboard extends Component {
 			let eventCount = this.props.contracts["DaoEvents"].eventsOf[
 				this.events
 			].value;
+			let eventCounts = this.props.contracts["DaoEvents"].eventsOf[
+				this.events
+			];
+			console.log("hey123", eventCounts);
+
 			let eventCache = [];
 			let eventDetails = [];
-			let check = [5, 1, 1];
 
 			for (var i = 0; i < eventCount.length; i++) {
 				eventCache.push(
@@ -109,13 +254,16 @@ class Dashboard extends Component {
 				}
 			}
 
+			console.log("event details", eventDetails);
+
 			//console.log(eventDetails)
-			let sortBySold = eventDetails
+			var sortBySold = eventDetails
 				.concat()
 				.sort((a, b) => b.result.sold - a.result.sold);
 			let phoenixDAORevenue = eventDetails.filter(
 				(event_token) => event_token.result.token == true
 			);
+			console.log("check phoen", phoenixDAORevenue);
 			let limited = eventDetails.filter(
 				(event_seats) => event_seats.result.limited == true
 			);
@@ -137,10 +285,17 @@ class Dashboard extends Component {
 								)
 						)
 				);
-
+			console.log("hey hey sort", sortBySold);
+			var array1 = sortBySold;
+			var array2 = this.state.deletedArray;
+			var sortBySold = array1.filter(function (val) {
+				return array2.indexOf(val.id) == -1;
+			});
 			let sortSold = [];
 			let sortTopRevenue = [];
 			let toplist = true;
+
+			console.log("hey hey sort2", sortBySold);
 
 			if (sortBySold.length <= 0) {
 				toplist = false;
@@ -155,6 +310,7 @@ class Dashboard extends Component {
 					sortSold.push(sortBySold[x]);
 				}
 			}
+			console.log("hey hey sort3", sortSold);
 
 			/*Get Top PhoenixDAO Revenue*/
 
@@ -194,6 +350,18 @@ class Dashboard extends Component {
 					accumulator + parseInt(currentValue.result.seats),
 				0
 			);
+			var array1 = eventDetails;
+			var array2 = this.state.deletedArray;
+			let totalEvents = array1.filter(function (val) {
+				return array2.indexOf(val.id) == -1;
+			});
+
+			var array1 = sortSold;
+			let topEvents = array1.filter(function (val) {
+				return array2.indexOf(val.id) == -1;
+			});
+
+			console.log("array sort12", topEvents);
 
 			// Doughnut Chart Data
 			this.DoughnutData = (canvas) => {
@@ -416,7 +584,7 @@ class Dashboard extends Component {
 											Number Of Created Events
 										</h3>
 										<h4 className="dashboard-data">
-											{eventCount.length}
+											{totalEvents.length}
 										</h4>
 										<p className="dashboard-footer">
 											Events
@@ -474,55 +642,45 @@ class Dashboard extends Component {
 														Events
 													</h4>
 												</Link>
-												{sortSold.map((event, index) =>
-													event.result.name.length >
-													15 ? (
-														<h4
-															key={index}
-															title={
-																event.result
-																	.name
-															}
-															onClick={() =>
-																this.goTo(
-																	event.id,
+												{topEvents.map(
+													(event, index) => {
+														console.log(
+															"hey uo",
+															event.result.name
+														);
+														return (
+															<h4
+																key={index}
+																title={
 																	event.result
 																		.name
-																)
-															}
-														>
-															{" "}
-															{index + 1}.{" "}
-															{event.result.name.slice(
-																0,
-																15
-															) + "..."}
-														</h4>
-													) : (
-														<h4
-															title={
-																event.result
-																	.name
-															}
-															onClick={() =>
-																this.goTo(
-																	event.id,
+																}
+																onClick={() =>
+																	this.goTo(
+																		event.id,
+																		event
+																			.result
+																			.name
+																	)
+																}
+															>
+																<span>
+																	{`${index}. `}
+																</span>
+																{
 																	event.result
 																		.name
-																)
-															}
-														>
-															{index + 1}.{" "}
-															{event.result.name}
-														</h4>
-													)
+																}
+															</h4>
+														);
+													}
 												)}
 											</div>
 											<div className="dashboard-events-list-sale">
 												<h4 className="mb-2">
 													Tickets Sold
 												</h4>
-												{sortSold.map(
+												{topEvents.map(
 													(event, index) => (
 														<h4
 															key={index}
@@ -763,49 +921,6 @@ class Dashboard extends Component {
 
 		return (
 			<React.Fragment>
-				{/* <Carousel className="retract-page-inner-wrapper">
-          <Carousel.Item className="slide1">
-            <img className="d-block slider w-100" src="/images/topics/music.jpg" alt="First slide" />
-            <Carousel.Caption>
-              <h3>Check out a Concert</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-              <button className="btn btn-dark" onClick={() => { this.caruselClick("/topic/music/1") }}><i className="fas fa-ticket-alt"></i> Find Events</button>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item className="slide2">
-            <img className="d-block w-100 slider" src="/images/topics/charity-and-causes.jpg" alt="First slide" />
-            <Carousel.Caption>
-              <h3>Support a Local Charity</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              <button className="btn btn-dark" onClick={() => { this.caruselClick("/topic/charity-and-causes/1") }}><i className="fas fa-ticket-alt"></i> Find Events</button>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item className="slide3">
-            <img className="d-block w-100 slider" src="/images/topics/parties.jpg" alt="First slide" />
-            <Carousel.Caption>
-              <h3>Attend an Exclusive Party</h3>
-              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-              <button className="btn btn-dark" onClick={() => { this.caruselClick("/topic/parties/1") }}><i className="fas fa-ticket-alt"></i> Find Events</button>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item className="slide4 slider">
-            <img className="d-block w-100" src="/images/topics/sports-and-fitness.jpg" alt="First slide" />
-            <Carousel.Caption>
-              <h3>Play a New Sport</h3>
-              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-              <button className="btn btn-dark" onClick={() => { this.caruselClick("/topic/sports-and-fitness/1") }}><i className="fas fa-ticket-alt"></i> Find Events</button>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item className="slide5">
-            <img className="d-block w-100 slider" src="/images/slides/slide5.png" alt="First slide" />
-            <Carousel.Caption>
-              <h3>Create and Sell Tickets</h3>
-              <p>Create your own event, it takes only a minute.</p>
-              <button className="btn btn-dark" onClick={() => { this.caruselClick("/createevent") }}><i className="fas fa-ticket-alt"></i> Create Event</button>
-            </Carousel.Caption>
-          </Carousel.Item>
-        </Carousel>
-			 */}
 				<UniswapModal
 					open={this.state.open}
 					handleClose={this.handleClose}
@@ -821,6 +936,10 @@ class Dashboard extends Component {
 		});
 		this._isMounted = true;
 		this.getPhoenixDAOMarketValue();
+		this.loadBockchain();
+	}
+	componentWillUnmount() {
+		this._isMounted = false;
 	}
 }
 
