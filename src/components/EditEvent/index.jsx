@@ -7,7 +7,7 @@ import ipfs from "../../utils/ipfs";
 import Loader from "./Loader";
 import Error from "./Error";
 import Done from "./Done";
-import { Redirect } from 'react-router-dom';
+import { Redirect } from "react-router-dom";
 
 class CreateEvent extends Component {
 	constructor(props, context) {
@@ -23,7 +23,7 @@ class CreateEvent extends Component {
 			ipfs: null,
 			fileImg: null,
 			data: {
-				eventId:0,
+				eventId: 0,
 				name: null,
 				description: null,
 				time: 0,
@@ -39,6 +39,7 @@ class CreateEvent extends Component {
 	}
 
 	createEvent = (
+		fileImg,
 		eventId,
 		name,
 		description,
@@ -53,11 +54,7 @@ class CreateEvent extends Component {
 		limited,
 		seats
 	) => {
-		console.log(
-			"hey hey0",
-			organizer,
-		
-		);
+		console.log("hey hey0", organizer);
 		this.setState(
 			{
 				upload: true,
@@ -65,7 +62,8 @@ class CreateEvent extends Component {
 				stage: 25,
 				title: "Uploading event image...",
 				data: {
-					eventId:eventId,
+					fileImg: fileImg,
+					eventId: eventId,
 					name: name,
 					description: description,
 					time: time,
@@ -79,8 +77,12 @@ class CreateEvent extends Component {
 				},
 			},
 			() => {
-				this.stageUpdater(90);
-				this.readFile(file);
+				if (fileImg == "") {
+					this.stageUpdater(90);
+					this.readFile(file);
+				}
+				this.stageUpdater(100);
+				this.convertAndUpload();
 			}
 		);
 	};
@@ -93,14 +95,21 @@ class CreateEvent extends Component {
 	};
 
 	convertAndUpload = (reader) => {
+		let data;
 		let pinit = process.env.NODE_ENV === "production";
-
-		let data = JSON.stringify({
-			image: reader.result,
-			text: this.state.data.description,
-			location: this.state.data.location,
-		});
-
+		if (this.state.data.fileImg == "") {
+			data = JSON.stringify({
+				image: reader.result,
+				text: this.state.data.description,
+				location: this.state.data.location,
+			});
+		} else {
+			data = JSON.stringify({
+				image: this.state.data.fileImg,
+				text: this.state.data.description,
+				location: this.state.data.location,
+			});
+		}
 		let buffer = Buffer.from(data);
 		// let buffer2 = Buffer.from(JSON.stringify({name:"Jaffer",company:"Xord"}))
 		// ipfs.add(buffer2,{pin: pinit}).then((hash)=>{
@@ -115,14 +124,17 @@ class CreateEvent extends Component {
 					ipfs: hash[0].hash,
 				});
 				//this.uploadTransaction();
-				console.log("hash is ",this.state.data.eventId,
-				this.state.data.name,
-				this.state.data.time,
-				this.state.data.price,
-				this.state.data.seats,
-				this.state.ipfs,
-				this.state.data.type,
-				this.state.data.organizer );
+				console.log(
+					"hash is ",
+					this.state.data.eventId,
+					this.state.data.name,
+					this.state.data.time,
+					this.state.data.price,
+					this.state.data.seats,
+					this.state.ipfs,
+					this.state.data.type,
+					this.state.data.organizer
+				);
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.updateEvent(
 						this.state.data.eventId,
@@ -135,7 +147,6 @@ class CreateEvent extends Component {
 						this.state.data.organizer
 					)
 				);
-
 			})
 			.catch((error) => {
 				this.setState(
@@ -152,7 +163,6 @@ class CreateEvent extends Component {
 	};
 
 	uploadTransaction = () => {
-
 		let id = this.contracts["DaoEvents"].methods.updateEvent.cacheSend(
 			this.state.data.eventId,
 			this.state.data.name,
@@ -163,21 +173,21 @@ class CreateEvent extends Component {
 			this.state.data.type,
 			this.state.organizer
 		);
-console.log("eventId",this.state.data.eventId)
+		console.log("eventId", this.state.data.eventId);
 		this.transactionChecker(id);
 		this.createNewEvent();
 
 		this.setRedirect();
 	};
 
-	setRedirect=()=>{
+	setRedirect = () => {
 		this.setState({
-			redirect: true
-		  })
-		if(this.state.redirect){
-			return <Redirect to='/'/>
+			redirect: true,
+		});
+		if (this.state.redirect) {
+			return <Redirect to="/" />;
 		}
-	}
+	};
 
 	createNewEvent = () => {
 		this.setState({ error: false, done: false, upload: false }, () =>

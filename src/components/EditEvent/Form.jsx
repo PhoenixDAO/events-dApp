@@ -22,7 +22,7 @@ class Form extends Component {
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
-			eventId:this.props.eventId,
+			eventId: this.props.eventId,
 			title: this.props.event[0],
 			title_length: title.length,
 			description: this.props.description,
@@ -45,7 +45,7 @@ class Form extends Component {
 			seatsForHumans: 0,
 			seats: 0,
 			wrong_file: false,
-			file_name: null,
+			file_name: "file.jpg",
 			file: null,
 			blockie: "/images/PhoenixDAO.png",
 			fileImg: this.props.image,
@@ -145,7 +145,7 @@ class Form extends Component {
 				}
 				// ()=>this.setState({dateDisplay: new Date(parseInt(this.state.time, 10) * 1000)})
 			);
-			console.log("time",this.state.time);
+			console.log("time", this.state.time);
 
 			// console.log(date)
 		}
@@ -198,26 +198,29 @@ class Form extends Component {
 
 	handleFile = (event) => {
 		let file = event.target.files[0];
-		if (!file) {
-			console.log("file", file);
+		console.log("image", file);
+		if (this.state.fileImg != "") {
+			if (!file) {
+				console.log("file", file);
 
-			return;
-		}
-		if (
-			file.size > 1024 * 1024 ||
-			(file.type !== "image/jpeg" && file.type !== "image/png")
-		) {
-			this.setState({
-				wrong_file: true,
-				file: null,
-			});
-		} else {
-			this.setState({
-				wrong_file: false,
-				file_name: file.name,
-				file: file,
-				fileImg: URL.createObjectURL(event.target.files[0]),
-			});
+				return;
+			}
+			if (
+				file.size > 1024 * 1024 ||
+				(file.type !== "image/jpeg" && file.type !== "image/png")
+			) {
+				this.setState({
+					wrong_file: true,
+					file: null,
+				});
+			} else {
+				this.setState({
+					wrong_file: false,
+					file_name: file.name,
+					file: file,
+					fileImg: URL.createObjectURL(event.target.files[0]),
+				});
+			}
 		}
 	};
 
@@ -453,7 +456,7 @@ class Form extends Component {
 		if (this.state.organizer === "") form_validation.push("organizer");
 		if (this.form.description.value === "")
 			form_validation.push("description");
-		if (this.state.wrong_file === true || this.state.file === null)
+		if (this.state.wrong_file === true )
 			form_validation.push("image");
 		if (this.state.time === 0) form_validation.push("time");
 		if (
@@ -474,9 +477,10 @@ class Form extends Component {
 		});
 		console.log("this.state", this.state);
 		console.log("this.form", this.form);
-		console.log("eventId",this.state.eventId)
+		console.log("eventId", this.state.eventId);
 		if (form_validation.length === 0) {
 			this.props.createEvent(
+				this.state.fileImg,
 				this.state.eventId,
 				filteredTitle,
 				filteredDescription,
@@ -680,8 +684,7 @@ class Form extends Component {
 									alignItem: "end",
 								}}
 							>
-								<FacebookCircularProgress />
-								<small
+								{/* <small
 									style={{
 										color: "#1a90ff",
 										marginTop: "0",
@@ -689,7 +692,7 @@ class Form extends Component {
 									className="form-text text-muted "
 								>
 									Loading current timestamp, please wait ...
-								</small>
+								</small> */}
 							</div>
 						)}
 						{warning.time && (
@@ -814,9 +817,11 @@ class Form extends Component {
 								id="payment2"
 								name="payment"
 								className="custom-control-input"
-								defaultChecked="true"
 								value="phnx"
 								title="PHNX"
+								defaultChecked={
+									this.props.price != 0 ? true : false
+								}
 								onChange={this.handleCurrency}
 								autoComplete="off"
 							/>
@@ -837,6 +842,9 @@ class Form extends Component {
 								title="Ethereum"
 								onChange={this.handleCurrency}
 								autoComplete="off"
+								defaultChecked={
+									this.props.price == 0 ? true : false
+								}
 							/>
 							<label
 								className="custom-control-label"

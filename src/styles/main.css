@@ -775,8 +775,8 @@ input[type="number"] {
 .events-wrapper {
 	margin-bottom: 60px !important;
 }
-.activeButton{
-padding: 10px 0px !important;
+.activeButton {
+	padding: 10px 0px !important;
 }
 @media (max-width: 750px) {
 	.countdown {
@@ -785,14 +785,14 @@ padding: 10px 0px !important;
 }
 
 @media (max-width: 650px) {
-	.event-page-wrapper,.retract-page-inner-wrapper-alternative.dashh{
+	.event-page-wrapper,
+	.retract-page-inner-wrapper-alternative.dashh {
 		margin: 0px -40px 0 -40px !important;
 	}
 	.countdown {
 		margin-bottom: 20px;
 		max-height: 123px !important;
 	}
-
 }
 
 @media (max-width: 320px) {
@@ -1506,7 +1506,7 @@ body,
 	max-width: 100%;
 	text-align: left;
 }
-.sold_text{
+.sold_text {
 	padding-top: 15px;
 	padding-bottom: 0px;
 	padding-left: 15px;
@@ -1542,6 +1542,11 @@ h4.transactions {
 	text-align: left;
 	margin-top: 60px;
 	font-size: 1.75rem;
+}
+@media screen and (max-width: 990px) {
+	h4.transactions {
+		margin-top: 30px !important;
+	}
 }
 
 h4.transactions {
@@ -2452,7 +2457,7 @@ h4.transactions {
 	font-size: 3rem !important;
 	text-shadow: 2px 2px 12px rgb(230, 223, 223) !important;
 }
-.termsDiv{
+.termsDiv {
 	margin-left: -31px;
-    margin-right: -31px;
+	margin-right: -31px;
 }
