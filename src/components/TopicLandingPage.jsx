@@ -19,55 +19,54 @@ import {
 } from "react-scroll";
 // import {  Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
-import topicsJson from '../config/topics.json';
+import topicsJson from "../config/topics.json";
 
-class TopicLandingPage extends Component
-{
-  constructor(props, context)
-  {
-      super(props);
+class TopicLandingPage extends Component {
+	constructor(props, context) {
+		super(props);
 
-      this.state = {
-        openEvents : '',
-        blocks : 5000000,
-        latestblocks :6000000,
-        blocks:0,
-        loading : true,
-        Topic_Events : [],
-        topic_copy:[],
-        active_length : '',
-        isOldestFirst:false,
-        isActive:true,
-        dateNow:''
+		this.state = {
+			openEvents: "",
+			blocks: 5000000,
+			latestblocks: 6000000,
+			blocks: 0,
+			loading: true,
+			Topic_Events: [],
+			topic_copy: [],
+			active_length: "",
+			isOldestFirst: false,
+			isActive: true,
+			Deleted_Events: [],
+			Filtered_Events_length: 0,
 
-      };
+			dateNow: "",
+		};
 
-	    this.contracts = context.drizzle.contracts;
-	    this.eventCount = this.contracts['DaoEvents'].methods.getEventsCount.cacheCall();
-	    this.perPage = 6;
-      this.topicClick = this.topicClick.bind(this);
-      this.theTopic = this.getTopicData();
-      this.topicBackground = this.theTopic['image'];
+		this.contracts = context.drizzle.contracts;
+		this.eventCount = this.contracts[
+			"DaoEvents"
+		].methods.getEventsCount.cacheCall();
+		this.perPage = 6;
+		this.topicClick = this.topicClick.bind(this);
+		this.theTopic = this.getTopicData();
+		this.topicBackground = this.theTopic["image"];
 
-      this.ActiveEvent = this.ActiveEvent.bind(this);
-	  	this.PastEvent = this.PastEvent.bind(this);
-      this.toggleSortDate = this.toggleSortDate.bind(this);
+		this.ActiveEvent = this.ActiveEvent.bind(this);
+		this.PastEvent = this.PastEvent.bind(this);
+		this.toggleSortDate = this.toggleSortDate.bind(this);
 
-      this.scrollTo=this.scrollTo.bind(this)
+		this.scrollTo = this.scrollTo.bind(this);
+	}
+	scrollTo() {
+		scroller.scrollTo("scroll-to-element", {
+			duration: 800,
+			delay: 0,
+			smooth: "easeInOutQuart",
+		});
+	}
 
-
-  }
-  scrollTo() {
-    scroller.scrollTo('scroll-to-element', {
-      duration: 800,
-      delay: 0,
-      smooth: 'easeInOutQuart'
-    })
-  }
-
-  componentDidUpdate()
-  {
-    //this.theTopic = this.getTopicData();
+	componentDidUpdate() {
+		//this.theTopic = this.getTopicData();
 	}
 
 	componentDidMount() {
@@ -84,7 +83,7 @@ class TopicLandingPage extends Component
 		this.props.history.push("/topic/" + slug + "/" + 1);
 		this.theTopic = this.getTopicData();
 		this.loadBlockchain();
-		window.scrollTo(0, 180);
+		this.scrollTo();
 	}
 
 	getLastURLSegment() {
@@ -136,6 +135,20 @@ class TopicLandingPage extends Component
 				this.loadPastEvents();
 			}
 		}
+		await openEvents
+			.getPastEvents("DeletedEvent", {
+				fromBlock: 7654042,
+				toBlock: this.state.latestblocks,
+			})
+			.then((events) => {
+				console.log("eventsssss deletedEvents", events);
+				this.setState({ Deleted_Events: events });
+				return events;
+			})
+			.catch((err) => {
+				console.error(err);
+				this.setState({ Deleted_Events: [] });
+			});
 
 		openEvents.events
 			.CreatedEvent({ fromBlock: this.state.blocks, toBlock: "latest" })
@@ -341,7 +354,7 @@ class TopicLandingPage extends Component
 				this.eventCount
 			] !== "undefined"
 		) {
-			let count = this.state.Topic_Events.length;
+			let count = this.state.active_length;
 			if (this.state.loading) {
 				body = <PhoenixDAOLoader />;
 			} else if (count === 0 && !this.state.loading) {
@@ -355,69 +368,99 @@ class TopicLandingPage extends Component
 					</p>
 				);
 			} else {
-				let currentPage = Number(this.props.match.params.id);
-
-				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-
-				let end = currentPage * this.perPage;
-				let start = end - this.perPage;
-				if (end > count) end = count;
-				let pages = Math.ceil(count / this.perPage);
-
+				let currentPage = Number(this.props.match.params.page);
 				let events_list = [];
-
-				for (let i = start; i < end; i++) {
-					events_list.push(
-						<Event
-							disabledStatus={this.props.disabledStatus}
-							inquire={this.props.inquire}
-							key={
-								this.state.Topic_Events[i].returnValues.eventId
-							}
-							id={this.state.Topic_Events[i].returnValues.eventId}
-							ipfs={this.state.Topic_Events[i].returnValues.ipfs}
-						/>
-					);
+				let skip = false;
+				for (let i = 0; i < this.state.Topic_Events.length; i++) {
+					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+						if (
+							this.state.Topic_Events[i].returnValues.eventId ==
+							this.state.Deleted_Events[j].returnValues.eventId
+						) {
+							skip = true;
+						}
+					}
+					if (!skip) {
+						events_list.push(this.state.Topic_Events[i]);
+					}
+					skip = false;
 				}
+				console.log("events_list _lanht", events_list);
+				if (events_list.length == 0) {
+					console.log("events_list _lanht", events_list);
 
-				let pagination = "";
-				if (pages > 1) {
-					let links = [];
+					body = (
+						<p className="text-center not-found">
+							<span role="img" aria-label="thinking">
+								🤔
+							</span>
+							&nbsp;No events found.{" "}
+							<a href="/createevent">Try creating one.</a>
+						</p>
+					);
+				} else {
+					let updated_list = [];
+					count = events_list.length;
+					if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+					let end = currentPage * this.perPage;
+					let start = end - this.perPage;
+					if (end > count) end = count;
+					let pages = Math.ceil(count / this.perPage);
 
-					for (let i = 1; i <= pages; i++) {
-						let active = i === currentPage ? "active" : "";
-						links.push(
-							<li className={"page-item " + active} key={i}>
-								<Link
-									to={
-										"/topic/" +
-										this.props.match.params.page +
-										"/" +
-										i
-									}
-									className="page-link"
-								>
-									{i}
-								</Link>
-							</li>
+					for (let i = start; i < end; i++) {
+						updated_list.push(
+							<Event
+								disabledStatus={this.props.disabledStatus}
+								inquire={this.props.inquire}
+								key={events_list[i].returnValues.eventId}
+								id={events_list[i].returnValues.eventId}
+								ipfs={events_list[i].returnValues.ipfs}
+							/>
+						);
+					}
+					// updated_list.reverse();
+
+					let pagination = "";
+					if (pages > 1) {
+						let links = [];
+
+						for (let i = 1; i <= pages; i++) {
+							let active = i === currentPage ? "active" : "";
+							links.push(
+								<li className={"page-item " + active} key={i}>
+									<Link
+										to={
+											"/topic/" +
+											this.props.match.params.page +
+											"/" +
+											i
+										}
+										className="page-link"
+									>
+										{i}
+									</Link>
+								</li>
+							);
+						}
+
+						pagination = (
+							<nav>
+								<ul className="pagination justify-content-center">
+									{links}
+								</ul>
+							</nav>
 						);
 					}
 
-					pagination = (
-						<nav>
-							<ul className="pagination justify-content-center">
-								{links}
-							</ul>
-						</nav>
+					body = (
+						<div>
+							<div className="row user-list mt-4">
+								{updated_list}
+							</div>
+							{pagination}
+						</div>
 					);
 				}
-
-				body = (
-					<div>
-						<div className="row user-list mt-4">{events_list}</div>
-						{pagination}
-					</div>
-				);
 			}
 		}
 
@@ -477,7 +520,7 @@ class TopicLandingPage extends Component
 
 						<div className="row row_mobile mt-4 mb-2">
 							<button
-								className="btn sort_button col-md-2 mx-2 mt-2"
+								className="btn sort_button col-md-2 mx-2 mt-2 activeButton"
 								onClick={this.ActiveEvent}
 							>
 								Active Events

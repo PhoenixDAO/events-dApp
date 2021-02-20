@@ -51,34 +51,36 @@ class Home extends Component {
 
 			pastEvents: 0,
 			loadingPastEvents: true,
-
+			Deleted_Events: [],
 			upcomingEvents: 0,
 			loadingUpcomingEvents: true,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
-		this.checkNetwork=this.checkNetwork.bind(this)
+		this.checkNetwork = this.checkNetwork.bind(this);
 	}
 
 	componentDidMount() {
-		setTimeout(()=> this.checkNetwork(),1000)
+		setTimeout(() => this.checkNetwork(), 1000);
 		this.props.executeScroll();
-		this.loadData();	
+		this.loadData();
 	}
 
 	// componentDidUpdate(){
 	// 	this.checkNetwork()
 	// }
 
-	checkNetwork(){
-		console.log("123 this.props.web3.status",this.props.web3.status)
-		console.log("123 this.props.web3.networkId",this.props.web3.networkId)
-		if(this.props.web3.status == "initialized" && this.props.web3.networkId != 4){
+	checkNetwork() {
+		console.log("123 this.props.web3.status", this.props.web3.status);
+		console.log("123 this.props.web3.networkId", this.props.web3.networkId);
+		if (
+			this.props.web3.status == "initialized" &&
+			this.props.web3.networkId != 4
+		) {
 			this.setState({
-				errorMessage:
-					"Please switch to rinkeby network !",
+				errorMessage: "Please switch to rinkeby network !",
 				openSnackbar1: false,
 				openSnackbar2: false,
-				openSnackbar3: true
+				openSnackbar3: true,
 			});
 		}
 	}
@@ -98,7 +100,7 @@ class Home extends Component {
 							"Connection request already pending. Please check MetaMask !",
 						openSnackbar1: false,
 						openSnackbar2: true,
-						openSnackbar3: false
+						openSnackbar3: false,
 					});
 				}
 			}
@@ -108,7 +110,7 @@ class Home extends Component {
 					"MetaMask is not installed. Please install MetaMask to continue !",
 				openSnackbar1: true,
 				openSnackbar2: false,
-				openSnackbar3: false
+				openSnackbar3: false,
 			});
 		}
 	}
@@ -119,7 +121,6 @@ class Home extends Component {
 			this.setState({ openSnackbar2: false });
 		} else {
 			this.setState({ openSnackbar3: false });
-
 		}
 	};
 
@@ -130,7 +131,6 @@ class Home extends Component {
 				Open_events_ABI,
 				Open_events_Address
 			);
-			console.log("OPEN EEEE======", openEvents);
 
 			const blockNumber = await web3.eth.getBlockNumber();
 
@@ -148,19 +148,39 @@ class Home extends Component {
 			});
 
 			let uniqueAllTicketBuyers = [...new Set(allTicketBuyers)];
-			console.log(
-				"Unique ticket holders addresses",
-				uniqueAllTicketBuyers
-			);
 
 			const dateTime = Date.now();
 			const dateNow = Math.floor(dateTime / 1000);
 
 			// Get All events
-			let allEvents = await openEvents.getPastEvents("CreatedEvent", {
+			let Events_Blockchain = await openEvents.getPastEvents("CreatedEvent", {
 				fromBlock: 7000000,
 				toBlock: blockNumber,
 			});
+
+			//Get Deleted Events
+			let Deleted_Events = await openEvents.getPastEvents("DeletedEvent", {
+				fromBlock: 7654042,
+				toBlock: blockNumber,
+			});
+			//filtered event
+			let allEvents = [];
+			let skip = false;
+			for (let i =0; i < Events_Blockchain.length; i++) {
+				for (let j = 0; j < Deleted_Events.length; j++) {
+					if (
+						Events_Blockchain[i].returnValues
+							.eventId ==
+						Deleted_Events[j].returnValues.eventId
+					) {
+						skip = true;
+					}
+				}
+				if (!skip) {
+					allEvents.push(Events_Blockchain[i]);
+				}
+				skip = false;
+			}
 
 			// Get Past events
 			let pastEvents = allEvents
@@ -182,6 +202,22 @@ class Home extends Component {
 				.filter(
 					(activeEvents) => activeEvents.returnValues.time >= dateNow
 				);
+			// await openEvents
+			// 	.getPastEvents("DeletedEvent", {
+			// 		fromBlock: 7654042,
+			// 		toBlock: this.state.latestblocks,
+			// 	})
+			// 	.then((events) => {
+			// 		console.log("eventsssss deletedEvents", events);
+			// 		this.setState({ Deleted_Events: events });
+			// 		return events;
+			// 	})
+			// 	.catch((err) => {
+			// 		console.error(err);
+			// 		this.setState({ Deleted_Events: [] });
+			// 	});
+			// console.log("open", openEvents);
+			// let deletedEventLength = this.state.Deleted_Events.length;
 
 			this.setState({
 				upcomingEvents: upcomingEvents.length,
@@ -204,15 +240,13 @@ class Home extends Component {
 				activeUsers: uniqueAllUser.length,
 				loadingActiveUsers: false,
 			});
-			console.log("Unique users", uniqueAllUser);
-			console.log("this.state", this.state);
 		}
 	}
 
 	render() {
 		return (
 			<React.Fragment>
-			<Snackbar
+				<Snackbar
 					open={this.state.openSnackbar1}
 					message={this.state.errorMessage}
 					handleClose={() => this.handleSnackbarClose(1)}
@@ -227,313 +261,319 @@ class Home extends Component {
 					message={this.state.errorMessage}
 					handleClose={() => this.handleSnackbarClose(3)}
 				/>
-			<div className="welcomeWrapper">
-				
-				<div className="opaqueBackground">
-					<h2 className="welcomeHead">
-						WELCOME TO PHOENIX EVENT DAPP
-					</h2>
-					<p>
-						The PhoenixDAO Events Marketplace is a dApp that allows
-						people to create events and sell tickets online, with
-						the option to make an event, paid or free.
-					</p>
-					<p>
-						The tickets created on this service are ERC721 tokens,
-						which means that users are able to move, gift, or sell
-						those tickets to other users.
-					</p>
-					<p>
-						The PhoenixDAO Events Marketplace is a dApp powered by
-						the Ethereum blockchain. In order to create events or
-						purchase tickets, you are required have an Ethereum
-						wallet. If you do not have one currently, you can use{" "}
-						{typeof InstallTrigger !== "undefined" ? (
-							<a
-								target="_blank"
-								style={{ textAlign: "center" }}
-								href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"
-							>
-								{" "}
-								MetaMask
-							</a>
-						) : (
-							<a
-								target="_blank"
-								style={{ textAlign: "center" }}
-								href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
-							>
-								{" "}
-								MetaMask
-							</a>
-						)}
-						.
-					</p>
-					<div className="row user-list mt-4 pb-5">
-						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-							<div className="welcome-card">
-								<div
-									className="dashboard-caption"
-									style={{
-										backgroundImage:
-											"url(/images/topics/bar-crawl.jpg)",
-										backgroundSize: "cover",
-										borderRadius: "7px",
-										paddingTop: "26px",
-										opacity: 0.9,
-									}}
+				<div className="welcomeWrapper">
+					<div className="opaqueBackground">
+						<h2 className="welcomeHead">
+							WELCOME TO PHOENIX EVENT DAPP
+						</h2>
+						<p>
+							The PhoenixDAO Events Marketplace is a dApp that
+							allows people to create events and sell tickets
+							online, with the option to make an event, paid or
+							free.
+						</p>
+						<p>
+							The tickets created on this service are ERC721
+							tokens, which means that users are able to move,
+							gift, or sell those tickets to other users.
+						</p>
+						<p>
+							The PhoenixDAO Events Marketplace is a dApp powered
+							by the Ethereum blockchain. In order to create
+							events or purchase tickets, you are required have an
+							Ethereum wallet. If you do not have one currently,
+							you can use{" "}
+							{typeof InstallTrigger !== "undefined" ? (
+								<a
+									target="_blank"
+									style={{ textAlign: "center" }}
+									href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"
 								>
-									<h3>
-										<img
-											className="welcome-img"
-											src={
-												"/welcomePage/Icon material-event-available.svg"
-											}
-										></img>
-									</h3>
-									<p
-										className="mt-0 headings"
-										style={{ margin: "0px" }}
-									>
-										{this.state.loadingPastEvents ? (
-											<CircularProgress
-												size={20}
-												type={"home"}
-												color={"white"}
-											/>
-										) : (
-											this.state.pastEvents
-										)}
-									</p>
-									<p
-										className="mt-0 headings"
-										style={{ marginTop: "0px" }}
-									>
-										Past Events
-									</p>
-								</div>
-							</div>
-						</div>
-						{Object.keys(this.props.accounts).length !== 0 ? (
+									{" "}
+									MetaMask
+								</a>
+							) : (
+								<a
+									target="_blank"
+									style={{ textAlign: "center" }}
+									href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
+								>
+									{" "}
+									MetaMask
+								</a>
+							)}
+							.
+						</p>
+						<div className="row user-list mt-4 pb-5">
 							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
 								<div className="welcome-card">
 									<div
 										className="dashboard-caption"
 										style={{
 											backgroundImage:
-												"url(/images/ethorange.png)",
+												"url(/images/topics/bar-crawl.jpg)",
+											backgroundSize: "cover",
+											borderRadius: "7px",
+											paddingTop: "26px",
+											opacity: 0.9,
 										}}
 									>
 										<h3>
-											<i className="fas fa-user-astronaut"></i>{" "}
-											User Account
+											<img
+												className="welcome-img"
+												src={
+													"/welcomePage/Icon material-event-available.svg"
+												}
+											></img>
 										</h3>
-										<img
-											className="dashboard-img"
-											src={"/images/ethereum.png"}
-										></img>
 										<p
-											className="mt-2"
-											title={this.props.accounts[0]}
+											className="mt-0 headings"
+											style={{ margin: "0px" }}
 										>
-											{this.props.accounts[0].slice(
-												0,
-												15
-											) + "..."}
+											{this.state.loadingPastEvents ? (
+												<CircularProgress
+													size={20}
+													type={"home"}
+													color={"white"}
+												/>
+											) : (
+												this.state.pastEvents
+											)}
+										</p>
+										<p
+											className="mt-0 headings"
+											style={{ marginTop: "0px" }}
+										>
+											Past Events
 										</p>
 									</div>
 								</div>
 							</div>
-						) : (
-							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-								<div
-									className="dashboard-card"
-									onClick={this.connectToMetaMask}
-								>
-									<div
-										className="dashboard-caption metamaskDiv"
-										style={{ paddingTop: "26px" }}
-									>
-										<img
-											src={
-												"/welcomePage/metamask-fox.svg"
-											}
-											height="85px "
-											width="85px"
-										></img>
-										<h3
+							{Object.keys(this.props.accounts).length !== 0 ? (
+								<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+									<div className="welcome-card">
+										<div
+											className="dashboard-caption"
 											style={{
-												color: "#FFA200",
-												fontWeight: "bold",
-												opacity: 1,
-												zIndex: 1,
+												backgroundImage:
+													"url(/images/ethorange.png)",
 											}}
 										>
-											Connect to MetaMask
+											<h3>
+												<i className="fas fa-user-astronaut"></i>{" "}
+												User Account
+											</h3>
+											<img
+												className="dashboard-img"
+												src={"/images/ethereum.png"}
+											></img>
+											<p
+												className="mt-2"
+												title={this.props.accounts[0]}
+											>
+												{this.props.accounts[0].slice(
+													0,
+													15
+												) + "..."}
+											</p>
+										</div>
+									</div>
+								</div>
+							) : (
+								<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+									<div
+										className="dashboard-card"
+										onClick={this.connectToMetaMask}
+									>
+										<div
+											className="dashboard-caption metamaskDiv"
+											style={{ paddingTop: "26px" }}
+										>
+											<img
+												src={
+													"/welcomePage/metamask-fox.svg"
+												}
+												height="85px "
+												width="85px"
+											></img>
+											<h3
+												style={{
+													color: "#FFA200",
+													fontWeight: "bold",
+													opacity: 1,
+													zIndex: 1,
+												}}
+											>
+												Connect to MetaMask
+											</h3>
+											<h4 className="dashboard-data">
+												{/* {eventCount.length} */}
+											</h4>
+											<p className="dashboard-footer">
+												Events
+											</p>
+										</div>
+									</div>
+								</div>
+							)}
+
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="welcome-card">
+									<div
+										className="dashboard-caption"
+										style={{
+											backgroundImage: `url("/images/slides/slide3.png")`,
+											backgroundSize: "cover",
+											paddingTop: "26px",
+											opacity: 0.9,
+										}}
+									>
+										<h3>
+											<i className="fas fa-calendar-alt welcome-img"></i>
 										</h3>
-										<h4 className="dashboard-data">
-											{/* {eventCount.length} */}
-										</h4>
-										<p className="dashboard-footer">
-											Events
+
+										<p
+											className="mt-0 headings"
+											style={{ margin: "0px" }}
+										>
+											{this.state
+												.loadingUpcomingEvents ? (
+												<CircularProgress
+													size={20}
+													type={"home"}
+													color={"white"}
+												/>
+											) : (
+												this.state.upcomingEvents
+											)}
+										</p>
+										<p
+											className="mt-0 headings"
+											style={{ marginTop: "0px" }}
+										>
+											Upcoming Events
 										</p>
 									</div>
 								</div>
 							</div>
-						)}
-
-						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-							<div className="welcome-card">
-								<div
-									className="dashboard-caption"
-									style={{
-										backgroundImage: `url("/images/slides/slide3.png")`,
-										backgroundSize: "cover",
-										paddingTop: "26px",
-										opacity: 0.9,
-									}}
-								>
-									<h3>
-										<i className="fas fa-calendar-alt welcome-img"></i>
-									</h3>
-
-									<p
-										className="mt-0 headings"
-										style={{ margin: "0px" }}
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="welcome-card">
+									<div
+										className="dashboard-caption"
+										style={{
+											backgroundImage: `url("/images/topics/charity-and-causes.jpg")`,
+											backgroundSize: "cover",
+											opacity: 0.9,
+											paddingTop: "26px",
+										}}
 									>
-										{this.state.loadingUpcomingEvents ? (
-											<CircularProgress
-												size={20}
-												type={"home"}
-												color={"white"}
-											/>
-										) : (
-											this.state.upcomingEvents
-										)}
-									</p>
-									<p
-										className="mt-0 headings"
-										style={{ marginTop: "0px" }}
-									>
-										Upcoming Events
-									</p>
+										<h3>
+											<img
+												src={
+													"/welcomePage/Icon feather-user.svg"
+												}
+												className="welcome-img"
+											></img>
+										</h3>
+										{/* style={{justifyContent: "center",display: "flex",flexDirection: "row"}} */}
+										<p
+											className="mt-0 headings"
+											style={{ margin: "0px" }}
+										>
+											{this.state.loadingActiveUsers ? (
+												<CircularProgress
+													size={20}
+													type={"home"}
+													color={"white"}
+												/>
+											) : (
+												this.state.activeUsers
+											)}
+										</p>
+										<p
+											className="mt-0 headings"
+											style={{ marginTop: "0px" }}
+										>
+											Active Users
+										</p>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-							<div className="welcome-card">
-								<div
-									className="dashboard-caption"
-									style={{
-										backgroundImage: `url("/images/topics/charity-and-causes.jpg")`,
-										backgroundSize: "cover",
-										opacity: 0.9,
-										paddingTop: "26px",
-									}}
-								>
-									<h3>
-										<img
-											src={
-												"/welcomePage/Icon feather-user.svg"
-											}
-											className="welcome-img"
-										></img>
-									</h3>
-									{/* style={{justifyContent: "center",display: "flex",flexDirection: "row"}} */}
-									<p
-										className="mt-0 headings"
-										style={{ margin: "0px" }}
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="dashboard-card">
+									<a
+										target="_blank"
+										style={{
+											textAlign: "center",
+											color: "white",
+										}}
+										href="https://youtu.be/Pj63VX1Jdxo"
 									>
-										{this.state.loadingActiveUsers ? (
-											<CircularProgress
-												size={20}
-												type={"home"}
-												color={"white"}
-											/>
-										) : (
-											this.state.activeUsers
-										)}
-									</p>
-									<p
-										className="mt-0 headings"
-										style={{ marginTop: "0px" }}
-									>
-										Active Users
-									</p>
+										<div
+											className="dashboard-caption metamaskDiv"
+											style={{ paddingTop: "26px" }}
+										>
+											<img
+												src={
+													"/welcomePage/Icon ionic-logo-youtube.svg"
+												}
+												style={{ width: "50px" }}
+												className="welcome-img"
+											></img>
+											<h3 className="mt-2 headings">
+												Walk Through Video{" "}
+											</h3>
+										</div>
+									</a>
 								</div>
 							</div>
-						</div>
-						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-							<div className="dashboard-card">
-							<a target="_blank" style={{textAlign:"center", color:"white"}} href="https://youtu.be/Pj63VX1Jdxo">
 
-								<div
-									className="dashboard-caption metamaskDiv"
-									style={{ paddingTop: "26px" }}
-								>
-									<img
-										src={
-											"/welcomePage/Icon ionic-logo-youtube.svg"
-										}
-										style={{ width: "50px" }}
-										className="welcome-img"
-									></img>
-									<h3 className="mt-2 headings">
-									Walk Through Video{" "}	
-									</h3>
-
-								</div>
-								</a>
-							</div>
-						</div>
-
-						<div className="col-lg-4 pb-4 d-flex align-items-stretch">
-							<div className="welcome-card">
-								<div
-									className="dashboard-caption"
-									style={{
-										backgroundImage: `url("/images/slides/slide1.png")`,
-										backgroundSize: "cover",
-										opacity: 0.9,
-										paddingTop: "26px",
-									}}
-								>
-									<h3>
-										<img
-											src={
-												"/welcomePage/Icon awesome-ticket-alt.svg"
-											}
-											className="welcome-img"
-										></img>
-									</h3>
-									<p
-										className="mt-0 headings"
-										style={{ margin: "0px" }}
+							<div className="col-lg-4 pb-4 d-flex align-items-stretch">
+								<div className="welcome-card">
+									<div
+										className="dashboard-caption"
+										style={{
+											backgroundImage: `url("/images/slides/slide1.png")`,
+											backgroundSize: "cover",
+											opacity: 0.9,
+											paddingTop: "26px",
+										}}
 									>
-										{this.state.loadingTotalTickets ? (
-											<CircularProgress
-												size={20}
-												type={"home"}
-												color={"white"}
-											/>
-										) : (
-											this.state.totalTickets
-										)}
-									</p>
-									<p
-										className="mt-0 headings"
-										style={{ marginTop: "0px" }}
-									>
-										Tickets Sold
-									</p>
+										<h3>
+											<img
+												src={
+													"/welcomePage/Icon awesome-ticket-alt.svg"
+												}
+												className="welcome-img"
+											></img>
+										</h3>
+										<p
+											className="mt-0 headings"
+											style={{ margin: "0px" }}
+										>
+											{this.state.loadingTotalTickets ? (
+												<CircularProgress
+													size={20}
+													type={"home"}
+													color={"white"}
+												/>
+											) : (
+												this.state.totalTickets
+											)}
+										</p>
+										<p
+											className="mt-0 headings"
+											style={{ marginTop: "0px" }}
+										>
+											Tickets Sold
+										</p>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 			</React.Fragment>
-
 		);
 	}
 
@@ -551,7 +591,7 @@ const mapStateToProps = (state) => {
 		contracts: state.contracts,
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
-		web3: state.web3
+		web3: state.web3,
 	};
 };
 

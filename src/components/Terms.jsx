@@ -1,8 +1,9 @@
 import React from "react";
 
-function Terms() {
+function Terms(props) {
+	props.executeScroll();
 	return (
-		<div>
+		<div className="termsDiv">
 			<h2 style={{fontWeight:"bold" ,fontSize:"xx-large"}}>Terms and Conditions</h2>
 			<p>Last updated: January 23, 2021</p>
 			<p>
