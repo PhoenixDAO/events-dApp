@@ -188,7 +188,7 @@ class TopicLandingPage extends Component {
 		}
 
 		this.state.openEvents
-			.getPastEvents("CreatedEvent", {
+			.getPastEvents("NewAndUpdatedEvent", {
 				fromBlock: 5000000,
 				toBlock: this.state.latestblocks,
 			})
@@ -203,11 +203,17 @@ class TopicLandingPage extends Component {
 				var newsort = newest
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
-
+         const result = Object.values(
+		newsort.reduce((a, c) => {
+				a[c.returnValues.eventId] ||
+					(a[c.returnValues.eventId] = Object.assign(c))
+				return a;
+			}, {})
+		);
 				if (this._isMounted) {
 					this.setState({
-						Topic_Events: newsort,
-						topic_copy: newsort,
+						Topic_Events: result,
+						topic_copy: result,
 					});
 					this.setState({
 						active_length: this.state.Topic_Events.length,
@@ -225,7 +231,7 @@ class TopicLandingPage extends Component {
 		}
 
 		this.state.openEvents
-			.getPastEvents("CreatedEvent", {
+			.getPastEvents("NewAndUpdatedEvent", {
 				fromBlock: 5000000,
 				toBlock: this.state.latestblocks,
 			})
@@ -240,11 +246,17 @@ class TopicLandingPage extends Component {
 				var newsort = newest
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
-
+				const result = Object.values(
+					newsort.reduce((a, c) => {
+							a[c.returnValues.eventId] ||
+								(a[c.returnValues.eventId] = Object.assign(c))
+							return a;
+						}, {})
+					);
 				if (this._isMounted) {
 					this.setState({
-						Topic_Events: newsort,
-						topic_copy: newsort,
+						Topic_Events: result,
+						topic_copy: result,
 					});
 					this.setState({
 						active_length: this.state.Topic_Events.length,

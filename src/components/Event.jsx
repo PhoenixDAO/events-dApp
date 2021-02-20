@@ -350,7 +350,7 @@ class Event extends Component {
 			if (!event_data[3]) {
 				freeEvent = <p className="free_event">Free Event</p>;
 			}
-
+console
 			if (event_data[3] !== "undefined") {
 				let symbol = "PhoenixDAO.png";
 				let price = event_data[3]
@@ -568,6 +568,8 @@ class Event extends Component {
 	}
 
 	componentDidMount() {
+		console.log("I am in event");
+
 		this._isMounted = true;
 		this.updateIPFS();
 		this.getPhoenixDAOMarketValue();

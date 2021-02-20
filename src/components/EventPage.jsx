@@ -441,7 +441,6 @@ class EventPage extends Component {
 				let description = this.getDescription();
 				let locations = this.getLocation();
 				let buttonText = event_data[3] ? " Buy Ticket" : " Get Ticket";
-
 				let symbol = event_data[3]
 					? "PhoenixDAO.png"
 					: "PhoenixDAO.png";

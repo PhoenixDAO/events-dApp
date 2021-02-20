@@ -95,7 +95,7 @@ class PastEvents extends Component {
 				this.setState({ Deleted_Events: [] });
 			});
     //Get Finished Events
-    openEvents.getPastEvents("CreatedEvent", { fromBlock: 5000000, toBlock: 'latest' })
+    openEvents.getPastEvents("NewAndUpdatedEvent", { fromBlock: 5000000, toBlock: 'latest' })
       .then(events => {
         if (this._isMounted) {
           this.setState({ loading: true })
@@ -104,9 +104,23 @@ class PastEvents extends Component {
           var newsort = events.concat().sort((a, b) =>
             b.blockNumber - a.blockNumber).filter((pastEvents =>
               pastEvents.returnValues.time <= (dateNow)));
+				
+	const result = Object.values(
+		newsort.reduce((a, c) => {
+				// The accumulator 'a' will contain objects as follow:
+				// {'123': {id: 123, desc: 'desc'...., qty: 2}}
 
-          this.setState({ past_events: newsort, past_events_copy: newsort });
+				// This line checks for the current object with 'c.id'
+				// If that object doesn't exist, a new object is created with
+				// a further property called 'qty' and then we add +1
+				a[c.returnValues.eventId] ||
+					(a[c.returnValues.eventId] = Object.assign(c))
+				return a;
+			}, {})
+		);
+          this.setState({ past_events: result, past_events_copy: result });
           console.log("eventsssss pastEvents", this.state.past_events);
+
 
           this.setState({ past_length: this.state.past_events.length })
           this.setState({ loading: false });

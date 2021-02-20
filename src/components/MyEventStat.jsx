@@ -52,6 +52,7 @@ import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
 import { ToastContainer, toast } from "react-toastify";
 import NotifyDelete from "./NotifyDelete";
+import { CircularProgress } from "@material-ui/core";
 
 //Numerical Setting
 let numeral = require("numeral");
@@ -279,6 +280,7 @@ class MyEventStat extends Component {
 							.value[7]
 					)
 						.then((file) => {
+							console.log(this.props.contracts["DaoEvents"].getEvent[this.event].value[8]);
 							let data = JSON.parse(file[0].content.toString());
 							if (!this.isCancelled) {
 								this.setState({
@@ -782,7 +784,7 @@ class MyEventStat extends Component {
             			<br/>
            				<br/> */}
 								{date.getTime() > new Date().getTime() ? (
-									<div className=" editButtons text-muted col-lg-6 col-md-6 col-xs-7 col-sm-8 text-center">
+									<div className=" editButtons text-muted col-lg-6 col-md-6 col-xs-12 col-sm-8 text-center">
 										<Link
 											// className="col-4"
 											// style={{ display: "grid" }}
@@ -828,7 +830,7 @@ class MyEventStat extends Component {
 										>
 											<button className="btn btn-dark">
 												<i className="fa fa-edit"></i>{" "}
-												Edit
+												{this.state.loading ? <CircularProgress color="white" size={10} /> : "Edit"}
 											</button>
 										</Link>
 										<button
@@ -925,7 +927,7 @@ class MyEventStat extends Component {
 											/>
 										)}
 									</div>
-									<div className="new-transaction-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-5">
+									<div className="new-transaction-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-5" style={{padding:"0px"}}>
 										<h4 className="transactions">
 											Share your event
 										</h4>
@@ -1323,13 +1325,13 @@ class MyEventStat extends Component {
 									</div>
 								</div>
 							</div>
-
+{/* 
 							<div className="col-12">
 								<div className="mt-5"></div>
 								<CheckUser
 									event_id={this.props.match.params.id}
 								/>
-							</div>
+							</div> */}
 							<hr />
 						</div>
 					);
@@ -1360,11 +1362,16 @@ class MyEventStat extends Component {
 	}
 
 	componentDidMount() {
+		window.scroll({
+			top: 0,
+			behavior: "smooth",
+		});
 		console.log("myeventprops", this.props);
 		this._isMounted = true;
 		this.updateIPFS();
 		this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
+		
 	}
 
 	componentDidUpdate() {

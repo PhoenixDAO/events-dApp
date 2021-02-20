@@ -26,6 +26,7 @@ class FindEvents extends Component {
 			loading: true,
 			Events_Blockchain: [],
 			Deleted_Events: [],
+			Updated_Events: [],
 			active_length: "",
 			isOldestFirst: false,
 			event_copy: [],
@@ -93,7 +94,7 @@ class FindEvents extends Component {
 			this.setState({ latestblocks: blockNumber - 1 });
 			this.setState({ Events_Blockchain: [] });
 		}
-
+		//listens for deleted event
 		await openEvents
 			.getPastEvents("DeletedEvent", {
 				fromBlock: 7654042,
@@ -108,9 +109,9 @@ class FindEvents extends Component {
 				console.error(err);
 				this.setState({ Deleted_Events: [] });
 			});
-
+		// listens for all events
 		await openEvents
-			.getPastEvents("CreatedEvent", {
+			.getPastEvents("NewAndUpdatedEvent", {
 				fromBlock: 7654042,
 				toBlock: this.state.latestblocks,
 			})
@@ -118,12 +119,7 @@ class FindEvents extends Component {
 				if (this._isMounted) {
 					this.setState({ loading: true });
 					let allEvents = events;
-					let deletedEvents = [];
 					console.log("eventsssss all Events", allEvents);
-
-					// deletedEvents.map((deletedEvent)=> allEvents.pop(deletedEvent.returnValues.eventId))
-					console.log("eventsssss after filter", allEvents);
-
 					var newsort = allEvents
 						.concat()
 						.sort((a, b) => b.blockNumber - a.blockNumber)
@@ -131,11 +127,15 @@ class FindEvents extends Component {
 							(activeEvents) =>
 								activeEvents.returnValues.time >= dateNow
 						);
-
-					// console.log("eventsssss ",newsort)
-
+					const result = Object.values(
+						newsort.reduce((a, c) => {
+								a[c.returnValues.eventId] ||
+									(a[c.returnValues.eventId] = Object.assign(c))
+								return a;
+							}, {})
+						);
 					this.setState({
-						Events_Blockchain: newsort,
+						Events_Blockchain: result,
 						event_copy: newsort,
 					});
 					this.setState({
@@ -144,42 +144,74 @@ class FindEvents extends Component {
 					this.setState({ loading: false });
 				}
 			})
+
 			.catch((err) => console.error(err));
 
+	
+		// await openEvents
+		// .getPastEvents("NewAndUpdatedEvent", {
+		// 	fromBlock: 7654042,
+		// 	toBlock: this.state.latestblocks,
+		// })
+		// .then((events) => {
+		// 	console.log("new contract NewAndUpdatedEvent", events);
+		// 	this.setState({ Deleted_Events: events });
+		// 	return events;
+		// })
+		// .catch((err) => {
+		// 	console.error(err);
+		// 	this.setState({ Deleted_Events: [] });
+		// });
+
+		//filtered updated events from all events
+		// let updatedArray = [];
+
+		// for (var key in this.state.Events_Blockchain) {
+		// 	this.state.Updated_Events.filter((data) => {
+		// 		if (
+		// 			data.returnValues.eventId ==
+		// 			this.state.MyEvents[key].returnValues.eventId
+		// 		) {
+		// 			updatedArray.push(data.returnValues.eventId);
+		// 		}
+		// 	});
+		// }
+		// console.log("updated events", updatedArray);
 		//Listens for New Events
-		openEvents.events
-			.CreatedEvent({
-				fromBlock: this.state.blockNumber,
-				toBlock: "latest",
-			})
-			.on("data", (log) =>
-				setTimeout(() => {
-					if (this._isMounted) {
-						// this.setState({loading:true});
 
-						this.setState({
-							Events_Blockchain: [
-								...this.state.Events_Blockchain,
-								log,
-							],
-						});
-						var newest = this.state.Events_Blockchain;
-						var newsort = newest
-							.concat()
-							.sort((a, b) => b.blockNumber - a.blockNumber);
+		// await openEvents.events
+		// 	.CreatedEvent({
+		// 		fromBlock: this.state.blockNumber,
+		// 		toBlock: "latest",
+		// 	})
+		// 	.on("data", (log) =>
+		// 		setTimeout(() => {
+		// 			if (this._isMounted) {
+		// 				// this.setState({loading:true});
 
-						//this.setState({incoming:false});
-						this.setState({
-							Events_Blockchain: newsort,
-							event_copy: newsort,
-						});
-						this.setState({
-							active_length: this.state.Events_Blockchain.length,
-						});
-					}
-					//this.setState({loading:false});
-				}, 10000)
-			);
+		// 				this.setState({
+		// 					Events_Blockchain: [
+		// 						...this.state.Events_Blockchain,
+		// 						log,
+		// 					],
+		// 				});
+		// 				var newest = this.state.Events_Blockchain;
+		// 				var newsort = newest
+		// 					.concat()
+		// 					.sort((a, b) => b.blockNumber - a.blockNumber);
+
+		// 				//this.setState({incoming:false});
+		// 				this.setState({
+		// 					Events_Blockchain: newsort,
+		// 					event_copy: newsort,
+		// 				});
+		// 				this.setState({
+		// 					active_length: this.state.Events_Blockchain.length,
+		// 				});
+		// 			}
+		// 			//this.setState({loading:false});
+		// 		}, 10000)
+		// 	);
 	}
 
 	// async getDeletedEvents(){
@@ -248,7 +280,6 @@ class FindEvents extends Component {
 	};
 
 	render() {
-		// console.log("check find events disable status", this.props)
 		let body = <PhoenixDAOLoader />;
 
 		if (
@@ -259,7 +290,6 @@ class FindEvents extends Component {
 		) {
 			//let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
 			let count = this.state.Events_Blockchain.length;
-			console.log("blockchainlength",count);
 			if (this.state.loading) {
 				body = <PhoenixDAOLoader />;
 			} else if (count === 0 && !this.state.loading) {
@@ -276,7 +306,7 @@ class FindEvents extends Component {
 				let currentPage = Number(this.props.match.params.page);
 				let events_list = [];
 				let skip = false;
-				for (let i =0; i < this.state.Events_Blockchain.length; i++) {
+				for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
 							this.state.Events_Blockchain[i].returnValues
@@ -291,19 +321,25 @@ class FindEvents extends Component {
 					}
 					skip = false;
 				}
-				let updated_list=[]
-                count=events_list.length;
+				let updated_list = [];
+				count = events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 				let end = currentPage * this.perPage;
 				let start = end - this.perPage;
 				if (end > count) end = count;
 				let pages = Math.ceil(count / this.perPage);
-
 				for (let i = start; i < end; i++) {
-				  updated_list.push(<Event disabledStatus={this.props.disabledStatus} inquire={this.props.inquire}
-					key={events_list[i].returnValues.eventId}
-					id={events_list[i].returnValues.eventId}
-					ipfs={events_list[i].returnValues.ipfs} />);
+					console.log("end4",end);
+
+					updated_list.push(
+						<Event
+							disabledStatus={this.props.disabledStatus}
+							inquire={this.props.inquire}
+							key={events_list[i].returnValues.eventId}
+							id={events_list[i].returnValues.eventId}
+							ipfs={events_list[i].returnValues.ipfs}
+						/>
+					);
 				}
 				// events_list.reverse();
 
@@ -457,10 +493,7 @@ class FindEvents extends Component {
           </Carousel.Item>
         </Carousel>
 				 */}
-				<div
-				 className="retract-page-inner-wrapper-alternative dashh"
-				>
-			
+				<div className="retract-page-inner-wrapper-alternative dashh">
 					<div
 						className="input-group input-group-lg"
 						ref={this.myRef}
