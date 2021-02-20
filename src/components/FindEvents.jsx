@@ -136,7 +136,7 @@ class FindEvents extends Component {
 						);
 					this.setState({
 						Events_Blockchain: result,
-						event_copy: newsort,
+						event_copy: result,
 					});
 					this.setState({
 						active_length: this.state.Events_Blockchain.length,
