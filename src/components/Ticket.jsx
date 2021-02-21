@@ -5,6 +5,13 @@ import { Link } from "react-router-dom";
 import makeBlockie from "ethereum-blockies-base64";
 import "../styles/Ticket.css";
 import ipfs from "../utils/ipfs";
+import NotifySending from "./NotifySending";
+import NotifySuccessSending from "./NotifySuccessSending";
+import NotifyError from "./NotifyError";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 import Loading from "./Loading";
 import {
@@ -33,7 +40,7 @@ class Ticket extends Component {
 	constructor(props, context) {
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.ticket = this.contracts["OpenEvents"].methods.getTicket.cacheCall(
+		this.ticket = this.contracts["DaoEvents"].methods.getTicket.cacheCall(
 			this.props.id
 		);
 		this.event = null;
@@ -47,6 +54,7 @@ class Ticket extends Component {
 			ipfs_problem: false,
 			card_tab: 1,
 			wrong_address: false,
+			disabledStatus: false
 		};
 		this.isCancelled = false;
 	}
@@ -55,7 +63,7 @@ class Ticket extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 				"undefined"
 		) {
 			this.setState(
@@ -64,7 +72,7 @@ class Ticket extends Component {
 				},
 				() => {
 					ipfs.get(
-						this.props.contracts["OpenEvents"].getEvent[this.event]
+						this.props.contracts["DaoEvents"].getEvent[this.event]
 							.value[7]
 					)
 						.then((file) => {
@@ -94,7 +102,7 @@ class Ticket extends Component {
 	};
 
 	getImage = () => {
-		let image = "/images/loading_ipfs.png";
+		let image = "/images/loading_image_ipfs.png";
 		if (this.state.ipfs_problem) image = "/images/problem_ipfs.png";
 		if (this.state.image !== null) image = this.state.image;
 		return image;
@@ -147,31 +155,90 @@ class Ticket extends Component {
 	};
 
 	sendTicket = () => {
+		this.setState({ disabledStatus: true });
 		if (
 			!this.address.value ||
 			!this.context.drizzle.web3.utils.isAddress(this.address.value)
 		) {
 			this.setState({ wrong_address: true });
+			this.setState({ disabledStatus: false });
+
 		} else {
+			let txreceiptApproved = "";
+			let txconfirmedApproved = "";
+			let txerror = "";
+
 			this.setState({ wrong_address: false });
-			this.contracts["OpenEvents"].methods.safeTransferFrom.cacheSend(
-				this.props.accounts[0],
-				this.address.value,
-				this.props.id
-			);
+			this.contracts["DaoEvents"].methods
+				.safeTransferFrom(
+					this.props.accounts[0],
+					this.address.value,
+					this.props.id
+				)
+				.send({ from: this.props.accounts[0] })
+				.on("transactionHash", (transactionHash) => {
+					console.log("sendticket transactionHash", transactionHash);
+					if (transactionHash !== null) {
+						toast(<NotifySending hash={transactionHash} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						});
+					}
+				})
+				.on("confirmation", (confirmationNumber, receipt) => {
+					console.log("sendticket confirmation", confirmationNumber);
+					console.log("sendticket receipt", receipt);
+
+					if (confirmationNumber !== null) {
+						txreceiptApproved = receipt;
+						txconfirmedApproved = confirmationNumber;
+						if (
+							txconfirmedApproved == 0 &&
+							txreceiptApproved.status == true
+						) {
+							toast(
+								<NotifySuccessSending
+									hash={txreceiptApproved.transactionHash}
+								/>,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true,
+								}
+							);
+						}
+					}
+
+					this.setState({ disabledStatus: false });
+				})
+				.on("error", (error) => {
+					console.log("sendticket error", error);
+
+					if (error !== null) {
+						txerror = error;
+						toast(<NotifyError message={txerror.message} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						});
+					}
+
+					this.setState({ disabledStatus: false });
+				});
 		}
 	};
 
 	updateEvent = () => {
 		if (
-			typeof this.props.contracts["OpenEvents"].getTicket[this.ticket] !==
+			typeof this.props.contracts["DaoEvents"].getTicket[this.ticket] !==
 				"undefined" &&
 			this.event === null
 		) {
 			this.event = this.contracts[
-				"OpenEvents"
+				"DaoEvents"
 			].methods.getEvent.cacheCall(
-				this.props.contracts["OpenEvents"].getTicket[this.ticket]
+				this.props.contracts["DaoEvents"].getTicket[this.ticket]
 					.value[0]
 			);
 		}
@@ -183,10 +250,10 @@ class Ticket extends Component {
 	};
 
 	downloadQR = () => {
-		let ticket_data = this.props.contracts["OpenEvents"].getTicket[
+		let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 			this.ticket
 		].value;
-		let event_data = this.props.contracts["OpenEvents"].getEvent[this.event]
+		let event_data = this.props.contracts["DaoEvents"].getEvent[this.event]
 			.value;
 		const canvas = document.getElementById(
 			event_data[0] + "-" + ticket_data[1]
@@ -214,13 +281,13 @@ class Ticket extends Component {
 		);
 		if (
 			this.event !== null &&
-			typeof this.props.contracts["OpenEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
 				"undefined"
 		) {
-			let ticket_data = this.props.contracts["OpenEvents"].getTicket[
+			let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 				this.ticket
 			].value;
-			let event_data = this.props.contracts["OpenEvents"].getEvent[
+			let event_data = this.props.contracts["DaoEvents"].getEvent[
 				this.event
 			].value;
 
@@ -261,16 +328,23 @@ class Ticket extends Component {
 				card_body = (
 					<div>
 						<div className="card-body">
-							<h5 className={"text-center " + timeClass}>
-								<i className="far fa-calendar-alt"></i>
-								<span className="pl-2">
-									{date.toLocaleDateString()} at{" "}
-									{date.toLocaleTimeString()}
-								</span>
+							<h5
+								className={
+									"mydate-time text-center " + timeClass
+								}
+							>
+								<div>
+									<i className="far fa-calendar-alt"></i>
+									<span className=" pl-2">
+										{date.toLocaleDateString()} at{" "}
+										{date.toLocaleTimeString([], {
+											hour: "2-digit",
+											minute: "2-digit",
+										})}
+									</span>
+								</div>
 							</h5>
-							<div style={{height:"22px"}}>
-							{timeStatus}
-							</div>
+							<div style={{ height: "22px" }}>{timeStatus}</div>
 							<h5 className="text-center">
 								Your seat: {ticket_data[1]}
 							</h5>
@@ -284,8 +358,8 @@ class Ticket extends Component {
 							<h5 className="card-title event-title">
 								<Link to={titleURL}>{event_data[0]}</Link>
 							</h5>
-							<div className="ticketDescription" >
-							{description}
+							<div className="ticketDescription">
+								{description}
 							</div>
 							<h6 className="text-center mb-0">
 								Tell friends you're going!{" "}
@@ -377,10 +451,10 @@ class Ticket extends Component {
 				);
 			} else {
 				let image = this.getImage();
-				let ticket_data = this.props.contracts["OpenEvents"].getTicket[
+				let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 					this.ticket
 				].value;
-				let event_data = this.props.contracts["OpenEvents"].getEvent[
+				let event_data = this.props.contracts["DaoEvents"].getEvent[
 					this.event
 				].value;
 				let warning = this.state.wrong_address ? "is-invalid" : "";
@@ -389,7 +463,7 @@ class Ticket extends Component {
 				card_body = (
 					<div>
 						<div className="card-body">
-							<h5 className="text-center">
+							{/* <h5 className="text-center">
 								Download Digital Ticket:
 							</h5>
 							<p className="text-center">
@@ -438,10 +512,10 @@ class Ticket extends Component {
 										}}
 									/>
 								</p>
-							</div>
+							</div> */}
 
 							<h5 className="text-center">
-								Send or Transfer Ticket:
+								<b>Send or Transfer Ticket:</b>
 							</h5>
 							<div className="form-group">
 								<label htmlFor="address">
@@ -457,6 +531,7 @@ class Ticket extends Component {
 							<button
 								className="btn btn-dark"
 								onClick={this.sendTicket}
+								disabled={this.state.disabledStatus}
 							>
 								<i className="fas fa-share-square"></i> Send
 								Ticket

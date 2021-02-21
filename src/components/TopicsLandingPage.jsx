@@ -13,14 +13,16 @@ class TopicsLandingPage extends Component {
   constructor(props, context) {
       super(props);
 	    this.contracts = context.drizzle.contracts;
-	    this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
+	    this.eventCount = this.contracts['DaoEvents'].methods.getEventsCount.cacheCall();
 	    this.perPage = 6;
       this.topicClick = this.topicClick.bind(this);
+      this.compare = this.compare.bind(this)
 	}
 
   topicClick(slug) {
     this.props.history.push("/topic/"+slug+"/"+1);
     window.scrollTo(0, 180);
+    
   }
 
   caruselClick(location)
@@ -28,13 +30,22 @@ class TopicsLandingPage extends Component {
     this.props.history.push(location);
     window.scrollTo(0, 80);
   }
+  compare( a, b ) {
+    if ( a.last_nom < b.last_nom ){
+      return -1;
+    }
+    if ( a.last_nom > b.last_nom ){
+      return 1;
+    }
+    return 0;
+  }
 
 	render() {
 		let body = <Loading />;
 
-		if (typeof this.props.contracts['OpenEvents'].getEventsCount[this.eventCount] !== 'undefined') {
+		if (typeof this.props.contracts['DaoEvents'].getEventsCount[this.eventCount] !== 'undefined') {
 
-			let count = Number(this.props.contracts['OpenEvents'].getEventsCount[this.eventCount].value);
+			let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
 			if (count === 0) {
 				body = <p className="text-center not-found"><span role="img" aria-label="thinking">🤔</span>&nbsp;No events found. <a href="/createevent">Try creating one.</a></p>;
 			} else {
@@ -61,7 +72,7 @@ class TopicsLandingPage extends Component {
 						let active = i === currentPage ? 'active' : '';
 						links.push(
 							<li className={"page-item " + active} key={i}>
-								<Link to={"/findevents/" + i} className="page-link">{i}</Link>
+								<Link to={"/upcomingevents/" + i} className="page-link">{i}</Link>
 							</li>
 						);
 					}
@@ -88,7 +99,7 @@ class TopicsLandingPage extends Component {
 
 		return(
       <React.Fragment>
-      <Carousel className="retract-page-inner-wrapper">
+      {/* <Carousel className="retract-page-inner-wrapper">
           <Carousel.Item className="slide1">
             <img className="d-block w-100 slider" src="/images/topics/music.jpg" alt="First slide" />
             <Carousel.Caption>
@@ -129,11 +140,11 @@ class TopicsLandingPage extends Component {
               <button className="btn btn-dark" onClick={() => {this.caruselClick("/createevent")}}><i className="fas fa-ticket-alt"></i> Create Event</button>
             </Carousel.Caption>
           </Carousel.Item>
-        </Carousel>
+        </Carousel> */}
 
 			<div className="retract-page-inner-wrapper-alternative topicsDiv">
 
-      <br /><br />
+    
 
       <div className="topics-wrapper">
       <h2><i className="fa fa-calendar-alt"></i> Popular Topics</h2>
@@ -156,13 +167,13 @@ class TopicsLandingPage extends Component {
       </div>
       <br /><br />
 
-      <h2><i className="fa fa-calendar-alt"></i> Alls Topics</h2>
+      <h2><i className="fa fa-calendar-alt"></i> All Topics</h2>
       <hr />
       <div className="row user-list mt-4">
 
         {
           topicsJson && topicsJson
-            .filter(topic => topic.popular === "false")
+            // .filter(topic => topic.popular === "false")
             .map((topic, index) => {
               return (
                 <div className="col-lg-4 pb-4 d-flex align-items-stretch" key={topic.slug}>
@@ -182,7 +193,10 @@ class TopicsLandingPage extends Component {
 		);
   }
   componentDidMount() {
-		window.scrollTo(0, 0);
+		// window.scroll({
+		// 	top: 0,
+		// 	behavior: 'smooth'
+		//   });
 	}
 }
 
