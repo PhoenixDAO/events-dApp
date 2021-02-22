@@ -7,6 +7,10 @@ createNewEvent=()=>{
 	this.props.createNewEvent()
 	this.props.createNewEvent2()
 }
+componentWillUnmount=()=>{
+	this.props.createNewEvent()
+	this.props.createNewEvent2()
+}
 
 render(){
 	return (
