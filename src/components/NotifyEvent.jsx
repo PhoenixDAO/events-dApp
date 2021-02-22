@@ -8,7 +8,7 @@ function NotifyEvent(props) {
 				<img src={makeBlockie(props.hash)} alt={props.hash} />
 			</a>
 			<a href={"https://rinkeby.etherscan.io/tx/" + props.hash} title={props.hash} target = "blank">Transaction sent!</a> <span role="img" aria-labelledby="rocket">🚀 {props.tx}</span>
-			<p> Creating your Event... </p>
+			<p> {props.type==="create"?"Creating":"Updating"} your Event... </p>
 		</div>
 	);
 }

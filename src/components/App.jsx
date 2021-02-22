@@ -258,7 +258,8 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						toast(<NotifyError message={txerror.message} />, {
+						console.log("error",error)
+						toast(<NotifyError error={error} message={txerror.message} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -317,7 +318,8 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						toast(<NotifyError message={txerror.message} />, {
+						console.log("error",error)
+						toast(<NotifyError error={error} message={txerror.message} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -362,7 +364,8 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						toast(<NotifyError message={txerror.message} />, {
+						console.log("error",error)
+						toast(<NotifyError error={error} message={txerror.message} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -467,7 +470,7 @@ class App extends Component {
 
 	//Get Value form Event Creator from child component
 	//Notify,listen for transaction status.
-	passtransaction = (transaction) => {
+	passtransaction = (transaction,type) => {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
@@ -478,11 +481,12 @@ class App extends Component {
 
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
+						
 						this.setState({
 							upload: false,
 							done: true,
 						});
-						toast(<NotifyEvent hash={hash} />, {
+						toast(<NotifyEvent hash={hash} type={type}/>, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -514,8 +518,9 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
+						console.log("error",error)
 						this.setState({ error: true });
-						toast(<NotifyError message={txerror.message} />, {
+						toast(<NotifyError error={error} message={txerror.message} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -569,8 +574,9 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
+						console.log("error",error)
 						this.setState({ error: true });
-						toast(<NotifyError message={txerror.message} />, {
+						toast(<NotifyError error={error} message={txerror.message} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
