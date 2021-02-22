@@ -23,6 +23,7 @@ class CreateEvent extends Component {
 			ipfs: null,
 			fileImg: null,
 			data: {
+				fileHandle:false,
 				eventId: 0,
 				name: null,
 				description: null,
@@ -39,6 +40,7 @@ class CreateEvent extends Component {
 	}
 
 	createEvent = (
+		fileHandle,
 		fileImg,
 		eventId,
 		name,
@@ -54,7 +56,7 @@ class CreateEvent extends Component {
 		limited,
 		seats
 	) => {
-		console.log("hey hey0", organizer);
+		console.log("hey hey0", fileImg);
 		this.setState(
 			{
 				upload: true,
@@ -62,6 +64,7 @@ class CreateEvent extends Component {
 				stage: 25,
 				title: "Uploading event image...",
 				data: {
+					fileHandle:fileHandle,
 					fileImg: fileImg,
 					eventId: eventId,
 					name: name,
@@ -77,12 +80,17 @@ class CreateEvent extends Component {
 				},
 			},
 			() => {
-				if (fileImg == "") {
+				console.log("data",fileHandle);
+				if (fileHandle == true) {
 					this.stageUpdater(90);
 					this.readFile(file);
+					console.log("fileImg in index",fileImg);
 				}
-				this.stageUpdater(100);
-				this.convertAndUpload();
+				else{
+					this.stageUpdater(100);
+					this.convertAndUpload();
+				}
+				
 			}
 		);
 	};
@@ -97,12 +105,13 @@ class CreateEvent extends Component {
 	convertAndUpload = (reader) => {
 		let data;
 		let pinit = process.env.NODE_ENV === "production";
-		if (this.state.data.fileImg == "") {
+		if (this.state.data.fileHandle) {
 			data = JSON.stringify({
 				image: reader.result,
 				text: this.state.data.description,
 				location: this.state.data.location,
 			});
+			console.log("Iam here ")
 		} else {
 			data = JSON.stringify({
 				image: this.state.data.fileImg,
@@ -138,7 +147,6 @@ class CreateEvent extends Component {
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.updateEvent(
 						this.state.data.eventId,
-						this.state.data.name,
 						this.state.data.time,
 						this.state.data.price,
 						this.state.data.seats,
@@ -165,7 +173,6 @@ class CreateEvent extends Component {
 	uploadTransaction = () => {
 		let id = this.contracts["DaoEvents"].methods.updateEvent.cacheSend(
 			this.state.data.eventId,
-			this.state.data.name,
 			this.state.data.time,
 			this.state.data.price,
 			this.state.data.seats,

@@ -32,7 +32,6 @@ class Sidebar extends Component {
 	}
 
 	toggleSidebarClass = (closeOnly) => {
-		console.log("closeOnly", closeOnly);
 		if (!closeOnly) {
 			const oldSidebarClassName = document.getElementById(
 				"sidebar-wrapper"
@@ -60,14 +59,7 @@ class Sidebar extends Component {
 			const newSidebarClassName = "my-sidebar sidebar-closed";
 
 			const newPageWrapperClassName = "sidebar-closed";
-			console.log(
-				"document.getElementById('sidebar-wrapper').className -->",
-				document.getElementById("sidebar-wrapper").className
-			);
-			console.log(
-				"document.getElementById('page-content-wrapper').className -->",
-				document.getElementById("page-content-wrapper").className
-			);
+		
 			document.getElementById("sidebar-wrapper").className =
 				"my-sidebar sidebar-closed";
 			document.getElementById("page-content-wrapper").className =
@@ -76,7 +68,6 @@ class Sidebar extends Component {
 	};
 	async connectToMetaMask() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
-			console.log("here");
 
 			let web3 = new Web3(window.ethereum);
 			try {
@@ -91,7 +82,6 @@ class Sidebar extends Component {
 						openSnackbar1: false,
 						openSnackbar2: true,
 					});
-					console.log("this.state",this.state)
 				}
 			}
 		} else {
@@ -112,7 +102,6 @@ class Sidebar extends Component {
 	};
 
 	render() {
-		console.log("this.props", this.props.account);
 
 		let user = (
 			<div>
@@ -128,7 +117,6 @@ class Sidebar extends Component {
 			</div>
 		);
 		if (this.props.connection === true && this.props.account.length !== 0) {
-			console.log("123456", this.props);
 			user = (
 				<div>
 					<div className="user-status-icon">
@@ -156,10 +144,7 @@ class Sidebar extends Component {
 				</div>
 			);
 		}
-		console.log(
-			"this.context.router.route.location.pathname",
-			this.context.router.route.location.pathname.split("/pastevents/")
-		);
+	
 		if (this.props.account.length === 0)
 			{return (
 				<React.Fragment>

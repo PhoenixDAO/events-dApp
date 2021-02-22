@@ -42,11 +42,18 @@ class Calendars extends Component {
         this.setState({latestblocks:blockNumber - 1});
         this.setState({Events_Blockchain:[]});}
       
-        openEvents.getPastEvents("CreatedEvent",{fromBlock: 5000000, toBlock:this.state.latestblocks})
+        openEvents.getPastEvents("NewAndUpdatedEvent",{fromBlock: 5000000, toBlock:this.state.latestblocks})
         .then(events=>{
         if (this._isMounted){
         this.setState({loading:true})
-        this.setState({Events_Blockchain:events});
+        	const result = Object.values(
+						events.reduce((a, c) => {
+								a[c.returnValues.eventId] ||
+									(a[c.returnValues.eventId] = Object.assign(c))
+								return a;
+							}, {})
+						);
+        this.setState({Events_Blockchain:result});
         this.setState({loading:false})
         this.setState({active_length:this.state.Events_Blockchain.length})
         

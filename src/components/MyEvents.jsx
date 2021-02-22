@@ -66,7 +66,7 @@ class MyEvents extends Component {
 			this.setState({ blocks: blockNumber - 50000 });
 			this.setState({ latestblocks: blockNumber - 1 });
 			this.loadActiveEvents();
-
+console.log("Iam here");
 			//Listen For My Newly Created Events
 			openEvents.events
 				.CreatedEvent({
@@ -118,7 +118,7 @@ class MyEvents extends Component {
 		}
 
 		this.state.openEvents
-			.getPastEvents("CreatedEvent", {
+			.getPastEvents("NewAndUpdatedEvent", {
 				filter: { owner: this.account },
 				fromBlock: 5000000,
 				toBlock: this.state.latestblocks,
@@ -131,9 +131,15 @@ class MyEvents extends Component {
 				var newsort = newest
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
-
+	const result = Object.values(
+		newsort.reduce((a, c) => {
+				a[c.returnValues.eventId] ||
+					(a[c.returnValues.eventId] = Object.assign(c))
+				return a;
+			}, {})
+		);
 				if (this._isMounted) {
-					this.setState({ MyEvents: newsort, check: newsort });
+					this.setState({ MyEvents: result, check: result });
 					this.setState({
 						active_length: this.state.MyEvents.length,
 					});
@@ -150,7 +156,7 @@ class MyEvents extends Component {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
 		this.state.openEvents
-			.getPastEvents("CreatedEvent", {
+			.getPastEvents("NewAndUpdatedEvent", {
 				filter: { owner: this.account },
 				fromBlock: 5000000,
 				toBlock: this.state.latestblocks,
@@ -164,9 +170,15 @@ class MyEvents extends Component {
 				var newsort = newest
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
-
+const result = Object.values(
+		newsort.reduce((a, c) => {
+				a[c.returnValues.eventId] ||
+					(a[c.returnValues.eventId] = Object.assign(c))
+				return a;
+			}, {})
+		);
 				if (this._isMounted) {
-					this.setState({ MyEvents: newsort, check: newsort });
+					this.setState({ MyEvents: result, check: result });
 					this.setState({
 						active_length: this.state.MyEvents.length,
 					});

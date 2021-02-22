@@ -231,29 +231,30 @@ class Dashboard extends Component {
 
 			let eventCache = [];
 			let eventDetails = [];
-
-			for (var i = 0; i < eventCount.length; i++) {
-				eventCache.push(
-					this.contracts["DaoEvents"].methods.getEvent.cacheCall(
-						eventCount[i]
-					)
-				);
-				if (
-					typeof this.props.contracts["DaoEvents"].getEvent[
-						eventCache[i]
-					] !== "undefined" &&
-					this.props.contracts["DaoEvents"].getEvent[eventCache[i]]
-						.value
-				) {
-					eventDetails.push({
-						result: this.props.contracts["DaoEvents"].getEvent[
+			if (eventCount !== undefined) {
+				for (var i = 0; i < eventCount.length; i++) {
+					eventCache.push(
+						this.contracts["DaoEvents"].methods.getEvent.cacheCall(
+							eventCount[i]
+						)
+					);
+					if (
+						typeof this.props.contracts["DaoEvents"].getEvent[
 							eventCache[i]
-						].value,
-						id: eventCount[i],
-					});
+						] !== "undefined" &&
+						this.props.contracts["DaoEvents"].getEvent[
+							eventCache[i]
+						].value
+					) {
+						eventDetails.push({
+							result: this.props.contracts["DaoEvents"].getEvent[
+								eventCache[i]
+							].value,
+							id: eventCount[i],
+						});
+					}
 				}
 			}
-
 			console.log("event details", eventDetails);
 
 			//console.log(eventDetails)
@@ -665,7 +666,7 @@ class Dashboard extends Component {
 																}
 															>
 																<span>
-																	{`${index}. `}
+																	{`${index+1}. `}
 																</span>
 																{
 																	event.result

@@ -665,6 +665,10 @@ class Form extends Component {
 								onChange={this.locationChange}
 								autoComplete="off"
 							/>
+								<small className="form-text text-muted">
+								{this.state.location.length}/100 characters
+								available.
+							</small>
 						</div>
 						<div className="form-group">
 							<label htmlFor="description">

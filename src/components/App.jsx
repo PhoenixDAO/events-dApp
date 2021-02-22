@@ -699,7 +699,7 @@ class App extends Component {
 								passtransaction={this.passtransaction}
 								upload={this.state.upload}
 								disabledStatus={this.state.disabledStatus}
-								done={this.state.done}
+								done={false}
 								disabledStatus={this.state.disabledStatus}
 								error={this.state.error}
 								account={this.state.account}

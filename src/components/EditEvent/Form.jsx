@@ -22,6 +22,7 @@ class Form extends Component {
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
+			fileHandle:false,
 			eventId: this.props.eventId,
 			title: this.props.event[0],
 			title_length: title.length,
@@ -199,28 +200,32 @@ class Form extends Component {
 	handleFile = (event) => {
 		let file = event.target.files[0];
 		console.log("image", file);
-		if (this.state.fileImg != "") {
-			if (!file) {
-				console.log("file", file);
 
-				return;
-			}
-			if (
-				file.size > 1024 * 1024 ||
-				(file.type !== "image/jpeg" && file.type !== "image/png")
-			) {
-				this.setState({
-					wrong_file: true,
-					file: null,
-				});
-			} else {
-				this.setState({
-					wrong_file: false,
-					file_name: file.name,
-					file: file,
-					fileImg: URL.createObjectURL(event.target.files[0]),
-				});
-			}
+		if (!file) {
+			console.log("file", file);
+
+			return;
+		}
+		if(file != undefined){
+			console.log("I am here")
+			this.setState({fileHandle : true});
+		console.log("state",this.state.fileHandle);
+		}
+		if (
+			file.size > 1024 * 1024 ||
+			(file.type !== "image/jpeg" && file.type !== "image/png")
+		) {
+			this.setState({
+				wrong_file: true,
+				file: null,
+			});
+		} else {
+			this.setState({
+				wrong_file: false,
+				file_name: file.name,
+				file: file,
+				fileImg: URL.createObjectURL(event.target.files[0]),
+			});
 		}
 	};
 
@@ -456,8 +461,7 @@ class Form extends Component {
 		if (this.state.organizer === "") form_validation.push("organizer");
 		if (this.form.description.value === "")
 			form_validation.push("description");
-		if (this.state.wrong_file === true )
-			form_validation.push("image");
+		if (this.state.wrong_file === true) form_validation.push("image");
 		if (this.state.time === 0) form_validation.push("time");
 		if (
 			(this.state.currency == "phnx" && this.state.price == "") ||
@@ -480,6 +484,7 @@ class Form extends Component {
 		console.log("eventId", this.state.eventId);
 		if (form_validation.length === 0) {
 			this.props.createEvent(
+				this.state.fileHandle,
 				this.state.fileImg,
 				this.state.eventId,
 				filteredTitle,
@@ -620,9 +625,10 @@ class Form extends Component {
 							value={this.state.title}
 							onChange={this.titleChange}
 							autoComplete="off"
+							disabled={true}
 						/>
 						<small className="form-text text-muted">
-							{this.state.title_length}/80 characters available.
+							This field is not editable.
 						</small>
 					</div>
 					<div className="form-group">
@@ -653,23 +659,19 @@ class Form extends Component {
 					</div>
 					<div className="form-group">
 						<label htmlFor="location">Event Location:</label>
-						{warning.location && (
-							<small
-								style={{ color: "red" }}
-								className="form-text text-muted color-red"
-							>
-								Invalid location
-							</small>
-						)}
 						<input
 							type="text"
 							className={"form-control " + warning.location}
 							id="location"
+							disabled={true}
 							value={this.state.location}
 							title="Event Location"
 							onChange={this.locationChange}
 							autoComplete="off"
 						/>
+						<small className="form-text text-muted">
+							This field is not editable.
+						</small>
 					</div>
 					<div className="form-group">
 						<label htmlFor="description">

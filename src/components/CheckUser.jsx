@@ -181,6 +181,13 @@ class CheckUser extends Component {
 	};
 
 	render() {
+		let ownerDetails = this.props.contracts["DaoEvents"].getOwnerDetails[
+			this.event
+		];
+		if (ownerDetails != undefined) {
+			ownerDetails = ownerDetails.value;
+		}
+		console.log("owner1",ownerDetails)
 		console.log("hey props", this.props);
 		console.log("hey props", this.event);
 		console.log("hey props", this.event_data);
