@@ -336,7 +336,7 @@ class EventPage extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
-					toast(<NotifyError message={txerror.message} />, {
+					toast(<NotifyError error={error} message={txerror.message} />, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -435,8 +435,12 @@ class EventPage extends Component {
 
 				let shareUrl = window.location;
 				let title = event_data[0];
-
-				let event_tit;
+				let ownerDetails = this.props.contracts["DaoEvents"]
+					.getOwnerDetails[this.event];
+				if (ownerDetails != undefined) {
+					ownerDetails = ownerDetails.value;
+				console.log("owner",ownerDetails);
+				}
 				let image = this.getImage();
 				let description = this.getDescription();
 				let locations = this.getLocation();
@@ -643,6 +647,9 @@ class EventPage extends Component {
 											Category: {category}
 										</li>
 										<li className="list-group-item">
+											Organizer: {ownerDetails}
+										</li>
+										<li className="list-group-item">
 											Price:{" "}
 											<img
 												src={"/images/" + symbol}
@@ -683,6 +690,7 @@ class EventPage extends Component {
 										<li className="list-group-item">
 											Tickets: {event_data[6]}/{max_seats}
 										</li>
+										
 									</ul>
 								</div>
 								{this._isMounted && (

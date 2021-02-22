@@ -132,7 +132,7 @@ class CreateEvent extends Component {
 						this.state.ipfs,
 						this.state.data.type,
 						this.state.data.organizer
-					)
+					),"create"
 				);
 			})
 			.catch((error) => {

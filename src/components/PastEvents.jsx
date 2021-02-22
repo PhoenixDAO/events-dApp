@@ -249,10 +249,22 @@ class PastEvents extends Component {
 						}
 					}
 					if (!skip) {
+						for (let j = 0; j < this.state.hideEvent.length; j++) {
+							if (
+								this.state.past_events[i].returnValues
+									.eventId == this.state.hideEvent[j].id
+							) {
+								skip = true;
+							}
+						}
+					}
+					if (!skip) {
 						events_list.push(this.state.past_events[i]);
 					}
 					skip = false;
 				}
+				events_list.reverse();
+
 				console.log("events after vfilter", events_list);
 				let updated_list = [];
 				count = events_list.length;
@@ -271,21 +283,18 @@ class PastEvents extends Component {
 					);
 				}
 
-
-let newUpdatedList = [];
-for (let i = 0; i < updated_list.length; i++) {
-	for (let j = 0; j < this.state.hideEvent.length; j++) {
-		if (updated_list[i].key == this.state.hideEvent[j].id) {
-			skip = true;
-		}
-	}
-	if (!skip) {
-		newUpdatedList.push(updated_list[i]);
-	}
-	skip = false;
-}
-				//events_list.reverse();
-
+				// let newUpdatedList = [];
+				// for (let i = 0; i < updated_list.length; i++) {
+				// 	for (let j = 0; j < this.state.hideEvent.length; j++) {
+				// 		if (updated_list[i].key == this.state.hideEvent[j].id) {
+				// 			skip = true;
+				// 		}
+				// 	}
+				// 	if (!skip) {
+				// 		newUpdatedList.push(updated_list[i]);
+				// 	}
+				// 	skip = false;
+				// }
 				let pagination = "";
 				if (pages > 1) {
 					let links = [];
@@ -387,7 +396,9 @@ for (let i = 0; i < updated_list.length; i++) {
 
 				body = (
 					<div>
-						<div className="row user-list mt-4">{newUpdatedList}</div>
+						<div className="row user-list mt-4">
+							{updated_list}
+						</div>
 						{pagination}
 					</div>
 				);

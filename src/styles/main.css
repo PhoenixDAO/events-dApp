@@ -804,6 +804,9 @@ input[type="number"] {
 		margin-bottom: 20px;
 		max-height: 123px !important;
 	}
+	.read-more {
+		padding:15px 25px !important;
+	}
 }
 
 @media (max-width: 320px) {

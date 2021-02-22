@@ -136,6 +136,7 @@ class FindEvents extends Component {
 								return a;
 							}, {})
 						);
+						console.log("updated",result);
 					this.setState({
 						Events_Blockchain: result,
 						event_copy: result,
@@ -321,6 +322,7 @@ class FindEvents extends Component {
 				let currentPage = Number(this.props.match.params.page);
 				let events_list = [];
 				let skip = false;
+				console.log("this.state.hideEvent",this.state.hideEvent)
 				for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
@@ -331,11 +333,24 @@ class FindEvents extends Component {
 							skip = true;
 						}
 					}
+					if(!skip){
+						for (let j = 0; j < this.state.hideEvent.length; j++) {
+							if (
+								this.state.Events_Blockchain[i].returnValues
+									.eventId ==
+								this.state.hideEvent[j].id
+							) {
+								skip = true;
+							}
+						}
+					}
 					if (!skip) {
 						events_list.push(this.state.Events_Blockchain[i]);
 					}
 					skip = false;
 				}
+				events_list.reverse();
+				console.log("events_list",events_list)
 				let updated_list = [];
 				count = events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
@@ -356,19 +371,20 @@ class FindEvents extends Component {
 						/>
 					);
 				}
-				let newUpdatedList = [];
-				for (let i = 0; i < updated_list.length; i++) {
-					for (let j = 0; j < this.state.hideEvent.length; j++) {
-						if (updated_list[i].key == this.state.hideEvent[j].id) {
-							skip = true;
-						}
-					}
-					if (!skip) {
-						newUpdatedList.push(updated_list[i]);
-					}
-					skip = false;
-				}
-				console.log("hewy", newUpdatedList);
+				
+				// let newUpdatedList = [];
+				// for (let i = 0; i < updated_list.length; i++) {
+				// 	for (let j = 0; j < this.state.hideEvent.length; j++) {
+				// 		if (updated_list[i].key == this.state.hideEvent[j].id) {
+				// 			skip = true;
+				// 		}
+				// 	}
+				// 	if (!skip) {
+				// 		newUpdatedList.push(updated_list[i]);
+				// 	}
+				// 	skip = false;
+				// }
+				// console.log("hewy", newUpdatedList);
 
 				let pagination = "";
 				if (pages > 1) {
@@ -469,7 +485,7 @@ class FindEvents extends Component {
 				body = (
 					<div>
 						<div className="row user-list mt-4">
-							{newUpdatedList}
+							{updated_list}
 						</div>
 						{pagination}
 					</div>
