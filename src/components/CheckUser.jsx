@@ -7,6 +7,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Loading from "./Loading";
 import Snackbar from "./Snackbar";
+import { API_URL, REPORT_EVENT } from "../utils/const";
 
 class CheckUser extends Component {
 	constructor(props, context) {
@@ -36,6 +37,7 @@ class CheckUser extends Component {
 		this.organizerName = this.contracts[
 			"DaoEvents"
 		].methods.getOwnerDetails.cacheCall(this.event);
+		console.log("view this.props", this.props);
 	}
 
 	changeTab = (tab, event) => {
@@ -63,21 +65,23 @@ class CheckUser extends Component {
 
 	reportEvent = async () => {
 		try {
-			console.log("cehck now", this.event);
-			let ownerDetails = this.props.contracts["DaoEvents"]
-				.getOwnerDetails[this.event];
-			let payload = {
-				reporterAccountAddress: this.account,
-				id: this.props.event_id,
-				count: 1,
-			};
 			this.setState({
 				loading: true,
 			});
+			console.log("cehck now 123", this.event);
+			let ownerDetails = this.props.contracts["DaoEvents"]
+				.getOwnerDetails[this.event];
+			let payload = {
+				reportAccounts: this.account,
+				eventName: this.event_data.name,
+				id: this.props.event_id,
+				count: 1,
+			};
 			const report = await axios.post(
-				"http://192.168.100.19:8000/event/report",
+				`${API_URL}${REPORT_EVENT}`,
 				payload
 			);
+			console.log("report==>", report);
 			this.setState({
 				loading: false,
 			});
@@ -111,6 +115,10 @@ class CheckUser extends Component {
 			status: false,
 		});
 	};
+
+	// filterHideEvents = async () => {
+	// 	const get=await
+	// };
 
 	checkTickets = () => {
 		if (
@@ -191,8 +199,6 @@ class CheckUser extends Component {
 		console.log("hey props", this.props);
 		console.log("hey props", this.event);
 		console.log("hey props", this.event_data);
-		console.log("hey props", this.organizerName);
-		console.log("hey props", this.account);
 		<Snackbar
 			// open={this.state.openSnackbar1}
 			open={true}
@@ -226,6 +232,7 @@ class CheckUser extends Component {
 							<i className="fas fa-receipt"></i> Confirm Purchase
 						</button>
 						<button
+							disabled={this.state.loading}
 							className="btn btn-dark"
 							onClick={this.reportEvent}
 						>
@@ -319,6 +326,7 @@ class CheckUser extends Component {
 
 	componentDidMount() {
 		this.checkTickets();
+		// this.filterHideEvents();
 	}
 }
 

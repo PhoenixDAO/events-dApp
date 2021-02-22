@@ -3,7 +3,8 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-
+import axios from "axios";
+import { API_URL, REPORT_EVENT } from "../utils/const";
 // Import dApp Components
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
@@ -28,6 +29,7 @@ class PastEvents extends Component {
 			past_events: [],
 			past_events_copy: [],
 			prevPath: -1,
+			hideEvent: [],
 		};
 		this.contracts = context.drizzle.contracts;
 		this.eventCount = this.contracts[
@@ -269,6 +271,19 @@ class PastEvents extends Component {
 					);
 				}
 
+
+let newUpdatedList = [];
+for (let i = 0; i < updated_list.length; i++) {
+	for (let j = 0; j < this.state.hideEvent.length; j++) {
+		if (updated_list[i].key == this.state.hideEvent[j].id) {
+			skip = true;
+		}
+	}
+	if (!skip) {
+		newUpdatedList.push(updated_list[i]);
+	}
+	skip = false;
+}
 				//events_list.reverse();
 
 				let pagination = "";
@@ -372,7 +387,7 @@ class PastEvents extends Component {
 
 				body = (
 					<div>
-						<div className="row user-list mt-4">{updated_list}</div>
+						<div className="row user-list mt-4">{newUpdatedList}</div>
 						{pagination}
 					</div>
 				);
@@ -381,49 +396,6 @@ class PastEvents extends Component {
 
 		return (
 			<React.Fragment>
-				{/* <Carousel className="retract-page-inner-wrapper">
-          <Carousel.Item className="slide1">
-            <img className="d-block w-100 slider " src="/images/topics/music.jpg" alt="First slide" />
-            <Carousel.Caption>
-              <h3>Check out a Concert</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-              <button className="btn btn-dark" onClick={() => { this.caruselClick("/topic/music/1") }}><i className="fas fa-ticket-alt"></i> Find Events</button>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item className="slide2">
-            <img className="d-block w-100 slider" src="/images/topics/charity-and-causes.jpg" alt="First slide" />
-            <Carousel.Caption>
-              <h3>Support a Local Charity</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              <button className="btn btn-dark" onClick={() => { this.caruselClick("/topic/charity-and-causes/1") }}><i className="fas fa-ticket-alt"></i> Find Events</button>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item className="slide3">
-            <img className="d-block w-100 slider" src="/images/topics/parties.jpg" alt="First slide" />
-            <Carousel.Caption>
-              <h3>Attend an Exclusive Party</h3>
-              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-              <button className="btn btn-dark" onClick={() => { this.caruselClick("/topic/parties/1") }}><i className="fas fa-ticket-alt"></i> Find Events</button>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item className="slide4">
-            <img className="d-block w-100 slider" src="/images/topics/sports-and-fitness.jpg" alt="First slide" />
-            <Carousel.Caption>
-              <h3>Play a New Sport</h3>
-              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-              <button className="btn btn-dark" onClick={() => { this.caruselClick("/topic/sports-and-fitness/1") }}><i className="fas fa-ticket-alt"></i> Find Events</button>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item className="slide5">
-            <img className="d-block w-100 slider" src="/images/slides/slide5.png" alt="First slide" />
-            <Carousel.Caption>
-              <h3>Create and Sell Tickets</h3>
-              <p>Create your own event, it takes only a minute.</p>
-              <button className="btn btn-dark" onClick={() => { this.caruselClick("/createevent") }}><i className="fas fa-ticket-alt"></i> Create Event</button>
-            </Carousel.Caption>
-          </Carousel.Item>
-        </Carousel> */}
-
 				<div className="retract-page-inner-wrapper-alternative dashh">
 					<div
 						className="input-group input-group-lg"
@@ -474,22 +446,6 @@ class PastEvents extends Component {
 					<br />
 
 					<div className="topics-wrapper">
-						{/*
-      <h2><i className="fa fa-calendar-alt"></i> Browse Events By</h2>
-      <hr />
-        <div className="row user-list mt-4">
-          {eventCTAsJson.map(eventCTA => (
-            <div className="col-lg-4 pb-4 d-flex align-items-stretch" key={eventCTA.slug}>
-              <div className="topic" style={{ backgroundImage: "url(/images/cta"+eventCTA.image+")"}} onClick={() => {this.ctasClick(eventCTA.slug)}}>
-              <div className="topic-caption"><h3>{eventCTA.name}</h3><button className="btn">View Events</button></div>
-              </div>
-            </div>
-          ))}
-          <button className="btn read-more" onClick={() => {this.readMoreClick("/findevents/1")}}>All Events</button>
-        </div>
-        <br /><br />
-        */}
-
 						<h2>
 							<i className="fa fa-calendar-alt"></i> Popular
 							Topics
@@ -545,12 +501,26 @@ class PastEvents extends Component {
 		);
 	}
 
+	filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			console.log("get", get.data.result);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			return;
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
+
 	componentDidMount() {
 		if (this.state.prevPath == -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}
 		this._isMounted = true;
 		this.loadBlockchain();
+		this.filterHideEvent();
 	}
 
 	componentWillUnmount() {

@@ -651,7 +651,7 @@ class Dashboard extends Component {
 														);
 														return (
 															<h4
-																key={index}
+																key={index + 1}
 																title={
 																	event.result
 																		.name
