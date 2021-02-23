@@ -22,7 +22,7 @@ class Form extends Component {
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
-			fileHandle:false,
+			fileHandle: false,
 			eventId: this.props.eventId,
 			title: this.props.event[0],
 			title_length: title.length,
@@ -53,7 +53,7 @@ class Form extends Component {
 			form_validation: [],
 			currentBlock: null,
 			updateTimeStamp: true,
-
+			free: this.props.price == 0,
 			PhoenixDAO_market: "",
 			dateDisplay: new Date(parseInt(this.props.event[1], 10) * 1000),
 			// dateDisplay:new Date(parseInt('1577952000', 10) * 1000)
@@ -153,6 +153,7 @@ class Form extends Component {
 	};
 
 	handleCurrency = (event) => {
+		this.setState({free:!this.state.free});
 		console.log("handleCurrency====>", event.target.value);
 		if (event.target.value == "phnx") {
 			this.setState(
@@ -206,10 +207,10 @@ class Form extends Component {
 
 			return;
 		}
-		if(file != undefined){
-			console.log("I am here")
-			this.setState({fileHandle : true});
-		console.log("state",this.state.fileHandle);
+		if (file != undefined) {
+			console.log("I am here");
+			this.setState({ fileHandle: true });
+			console.log("state", this.state.fileHandle);
 		}
 		if (
 			file.size > 1024 * 1024 ||
@@ -887,9 +888,6 @@ class Form extends Component {
 										type="string"
 										min="0.0001"
 										maxLength="15"
-										// onKeyDown={this.restrictMinus}
-										// onKeyUp={this.restrictMinus}
-										// onKeyPress={this.restrictMinus}
 										value={this.state.price}
 										className={
 											"form-control " + warning.price
@@ -899,6 +897,7 @@ class Form extends Component {
 										ref={(input) =>
 											(this.form.price = input)
 										}
+										disabled={this.state.free}
 										autoComplete="off"
 										onChange={this.priceChange}
 									/>

@@ -220,20 +220,17 @@ class CheckUser extends Component {
 						/>
 					</div>
 					<div
-						style={{
-							display: "flex",
-							justifyContent: "space-between",
-						}}
+					className="buttonsDiv"
 					>
 						<button
-							className="btn btn-dark"
+							className="btn btn-dark col-xs-12"
 							onClick={this.checkManual}
 						>
 							<i className="fas fa-receipt"></i> Confirm Purchase
 						</button>
 						<button
 							disabled={this.state.loading}
-							className="btn btn-dark"
+							className="btn btn-dark col-xs-12"
 							onClick={this.reportEvent}
 						>
 							{this.state.loading ? (
