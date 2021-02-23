@@ -697,6 +697,7 @@ class App extends Component {
 								{...props}
 								executeScroll={this.executeScroll}
 								passtransaction={this.passtransaction}
+								createNewEvent={this.createNewEvent}
 								upload={this.state.upload}
 								disabledStatus={this.state.disabledStatus}
 								done={false}
@@ -838,6 +839,7 @@ class App extends Component {
 								{...props}
 								executeScroll={this.executeScroll}
 								passtransaction={this.passtransaction}
+								createNewEvent={this.createNewEvent}
 								upload={this.state.upload}
 								disabledStatus={this.state.disabledStatus}
 								done={this.state.done}
