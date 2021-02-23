@@ -252,7 +252,7 @@ class Event extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
-					toast(<NotifyError message={txerror.message} />, {
+					toast(<NotifyError error={error} message={txerror.message} />, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -350,7 +350,6 @@ class Event extends Component {
 			if (!event_data[3]) {
 				freeEvent = <p className="free_event">Free Event</p>;
 			}
-console
 			if (event_data[3] !== "undefined") {
 				let symbol = "PhoenixDAO.png";
 				let price = event_data[3]

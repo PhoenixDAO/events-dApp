@@ -387,7 +387,7 @@ class MyEventStat extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
-					toast(<NotifyError message={txerror.message} />, {
+					toast(<NotifyError error={error} message={txerror.message} />, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -524,7 +524,7 @@ class MyEventStat extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
-					toast(<NotifyError message={txerror.message} />, {
+					toast(<NotifyError error={error} message={txerror.message} />, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -582,7 +582,6 @@ class MyEventStat extends Component {
 				];
 				let ownerDetails = this.props.contracts["DaoEvents"]
 					.getOwnerDetails[this.event];
-				let owner = "";
 				if (ownerDetails != undefined) {
 					ownerDetails = ownerDetails.value;
 				}
@@ -876,6 +875,12 @@ class MyEventStat extends Component {
 											Category: {category}
 										</li>
 										<li className="list-group-item">
+											Organizer: {ownerDetails}
+										</li>
+										{/* <li className="list-group-item">
+											Organizer Name: {ownerDetails}
+										</li> */}
+										<li className="list-group-item">
 											Price:{" "}
 											<img
 												src={"/images/" + symbol}
@@ -916,6 +921,7 @@ class MyEventStat extends Component {
 										<li className="list-group-item">
 											Tickets: {event_data[6]}/{max_seats}
 										</li>
+									
 									</ul>
 								</div>
 								<div className="row clockShare">
@@ -1325,13 +1331,13 @@ class MyEventStat extends Component {
 									</div>
 								</div>
 							</div>
-{/* 
+
 							<div className="col-12">
 								<div className="mt-5"></div>
 								<CheckUser
 									event_id={this.props.match.params.id}
 								/>
-							</div> */}
+							</div>
 							<hr />
 						</div>
 					);

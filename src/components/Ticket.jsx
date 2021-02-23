@@ -217,7 +217,7 @@ class Ticket extends Component {
 
 					if (error !== null) {
 						txerror = error;
-						toast(<NotifyError message={txerror.message} />, {
+						toast(<NotifyError error={error} message={txerror.message} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
