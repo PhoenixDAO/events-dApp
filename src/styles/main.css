@@ -420,8 +420,9 @@ input[type="number"] {
 	.calendarDiv,
 	.topicsDiv,
 	.ticketDiv {
-		margin-left: -50px;
-		margin-right: -50px;
+		margin-left: -50px !important;
+		margin-right: -50px !important;
+		margin-top: -30px !important;
 	}
 	.slider {
 		width: fit-content !important;
@@ -699,12 +700,10 @@ input[type="number"] {
 	.editButtons button {
 		padding: 5px 10px !important;
 		margin-left: 0px;
-			font-size:13px;
-
-
+		font-size: 13px;
 	}
-	.editButtons{
-		justify-content:center;
+	.editButtons {
+		justify-content: center;
 	}
 }
 .editButtons button {
@@ -741,11 +740,11 @@ input[type="number"] {
 @media screen and (max-width: 990px) {
 	.clockDiv {
 		margin-top: 39px;
-		    padding-left: 0px;
-    padding-right: 0px;
+		padding-left: 0px;
+		padding-right: 0px;
 	}
-	.countdownEnded{
-		margin-bottom:40px;
+	.countdownEnded {
+		margin-bottom: 40px;
 	}
 }
 .input-group:before {
@@ -766,8 +765,9 @@ input[type="number"] {
 	background: transparent !important;
 }
 
-.retract-page-inner-wrapper-alternative.dashh {
-	margin: 0px -30px 0 -30px !important;
+.retract-page-inner-wrapper-alternative.dashh,
+.topicsDiv {
+	margin: 0px -30px 0 -30px;
 	background: transparent !important;
 }
 .retract-page-inner-wrapper-alternative.dash {
@@ -776,7 +776,7 @@ input[type="number"] {
 }
 @media (max-width: 650px) {
 	.home-wrapper {
-		margin: 0px -30px 0 -30px !important;
+		margin: -20px -30px 0 -30px !important;
 	}
 	.welcomeWrapper {
 		margin: 0px -30px 0 -30px !important;
@@ -794,24 +794,60 @@ input[type="number"] {
 		float: none !important;
 	}
 }
-
+.input-group-prepend{
+	display: block;
+}
+.buttonsDiv {
+	justify-content: space-between;
+	display: flex;
+}
+@media screen and (max-width: 520px) {
+	.buttonsDiv {
+		justify-content: space-around !important;
+		display: block;
+	}
+	.btn-dark {
+		width: 90%;
+		margin-bottom: 8px;
+	}
+}
+@media screen and (max-width: 330px) {
+	.btn-dark {
+		width: 100%;
+		padding: 5px;
+		margin-bottom: 8px;
+		font-size: 12px;
+	}
+}
 @media (max-width: 650px) {
+	.welcomeHead {
+		padding: 15px 0px !important;
+	}
+	.row_mobile {
+		margin-top: -15px;
+	}
 	.event-page-wrapper,
-	.retract-page-inner-wrapper-alternative.dashh {
-		margin: 0px -50px 0 -50px !important;
+	.retract-page-inner-wrapper-alternative.dashh,
+	.retract-page-inner-wrapper-alternative.dash {
+		margin: -30px -50px 0 -50px !important;
 	}
 	.countdown {
 		margin-bottom: 20px;
 		max-height: 123px !important;
 	}
 	.read-more {
-		padding:15px 25px !important;
+		padding: 15px 25px !important;
+	}
+	.termsDiv {
+		margin-left: -50px !important;
+		margin-right: -50px !important;
+
 	}
 }
 
 @media (max-width: 320px) {
 	.event-page-wrapper {
-		margin: 0px -50px 0 -50px !important;
+		margin: -30px -50px 0 -50px !important;
 	}
 }
 
@@ -1763,7 +1799,7 @@ h4.transactions {
 	.clock p {
 		padding: 7px 6px 7px;
 		align-items: center;
-		font-size:11px;
+		font-size: 11px;
 	}
 }
 
@@ -1984,6 +2020,11 @@ h4.transactions {
 	color: white !important;
 }
 
+@media screen and (max-width: 400px) {
+	.rbc-header {
+		min-width: 93px;
+	}
+}
 .rbc-event {
 	background: linear-gradient(
 		45deg,

@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
+import { API_URL, REPORT_EVENT } from "../utils/const";
 
 import Web3 from "web3";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
@@ -38,6 +40,7 @@ class TopicLandingPage extends Component {
 			isActive: true,
 			Deleted_Events: [],
 			Filtered_Events_length: 0,
+			hideEvent: [],
 
 			dateNow: "",
 		};
@@ -73,6 +76,8 @@ class TopicLandingPage extends Component {
 		this.scrollTo();
 		this._isMounted = true;
 		this.loadBlockchain();
+		this.filterHideEvent();
+
 		//this.theTopic = this.getTopicData();
 	}
 
@@ -324,7 +329,18 @@ class TopicLandingPage extends Component {
 			);
 		});
 	};
-
+	filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			console.log("get", get.data.result);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			return;
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
 	//Sort Active Events By Date(Newest/Oldest)
 	toggleSortDate = (e) => {
 		let { value } = e.target;
@@ -392,15 +408,23 @@ class TopicLandingPage extends Component {
 							skip = true;
 						}
 					}
+					if(!skip){
+						for (let j = 0; j < this.state.hideEvent.length; j++) {
+							if (
+								this.state.Topic_Events[i].returnValues
+									.eventId ==
+								this.state.hideEvent[j].id
+							) {
+								skip = true;
+							}
+						}
+					}
 					if (!skip) {
 						events_list.push(this.state.Topic_Events[i]);
 					}
 					skip = false;
 				}
-				console.log("events_list _lanht", events_list);
 				if (events_list.length == 0) {
-					console.log("events_list _lanht", events_list);
-
 					body = (
 						<p className="text-center not-found">
 							<span role="img" aria-label="thinking">

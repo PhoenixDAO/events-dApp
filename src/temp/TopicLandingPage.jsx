@@ -351,7 +351,7 @@ class TopicLandingPage extends Component
 
       {/* <Element name="scroll-to-element" className="element"> */}
       <div id="scroll-to-element" className="input-group input-group-lg">
-        <div className="input-group-prepend ">
+        <div className="input-group">
           <span className="input-group-text search-icon" id="inputGroup-sizing-lg"><i className="fa fa-search"></i>&nbsp;Search </span>
         </div>
         <input type="text" value={this.state.value} onChange={this.updateSearch.bind(this)} className="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" />

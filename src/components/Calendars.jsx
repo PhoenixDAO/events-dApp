@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import main from '../styles/main.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { API_URL, REPORT_EVENT } from "../utils/const";
+import axios from "axios";
 
 import Web3 from 'web3';
 import {Open_events_ABI, Open_events_Address} from '../config/OpenEvents';
@@ -13,7 +15,8 @@ class Calendars extends Component {
 
         super(props);
         this.state = {
-           
+            hideEvent: [],
+
             Events_Blockchain:[],
             activeEvents:'',
             latestblocks:6000000,
@@ -54,6 +57,7 @@ class Calendars extends Component {
 							}, {})
 						);
         this.setState({Events_Blockchain:result});
+        console.log("all events",this.state.Events_Blockchain);
         this.setState({loading:false})
         this.setState({active_length:this.state.Events_Blockchain.length})
         
@@ -87,7 +91,18 @@ class Calendars extends Component {
         });
 
       }
-
+      filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			console.log("get", get.data.result);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			return;
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
 	
     goToEvent = (event_calendar)=>{
             let rawTitle = event_calendar.title;
@@ -117,6 +132,17 @@ class Calendars extends Component {
                     this.state.Deleted_Events[j].returnValues.eventId
                 ) {
                     skip = true;
+                }
+            }
+            if(!skip){
+                for (let j = 0; j < this.state.hideEvent.length; j++) {
+                    if (
+                        this.state.Events_Blockchain[i].returnValues
+                            .eventId ==
+                        this.state.hideEvent[j].id
+                    ) {
+                        skip = true;
+                    }
                 }
             }
             if (!skip) {
@@ -166,7 +192,8 @@ class Calendars extends Component {
 		//   });
         this._isMounted = true;
         this.loadBlockchain();
-		
+        this.filterHideEvent();
+
 
     }
 
