@@ -8,6 +8,8 @@ import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Loading from "./Loading";
 import Snackbar from "./Snackbar";
 import { API_URL, REPORT_EVENT } from "../utils/const";
+import { ToastContainer, toast } from "react-toastify";
+import NotifyReport from "./NotifyReport";
 
 class CheckUser extends Component {
 	constructor(props, context) {
@@ -81,12 +83,25 @@ class CheckUser extends Component {
 				`${API_URL}${REPORT_EVENT}`,
 				payload
 			);
+			if(report.status==200){
+				toast(<NotifyReport text={"Report successful!"}/>, {
+					position: "bottom-right",
+					autoClose: true,
+					pauseOnHover: true,
+				});
+			}
 			console.log("report==>", report);
 			this.setState({
 				loading: false,
 			});
 		} catch (error) {
-			console.log("error", error);
+			console.log("error", error.response.data.responseMessage);
+			// console.log("error", error);
+			toast(<NotifyReport text={error.response.data.responseMessage+"!"}/>, {
+				position: "bottom-right",
+				autoClose: true,
+				pauseOnHover: true,
+			});
 			this.setState({
 				loading: false,
 			});
