@@ -66,7 +66,7 @@ class MyEvents extends Component {
 			this.setState({ blocks: blockNumber - 50000 });
 			this.setState({ latestblocks: blockNumber - 1 });
 			this.loadActiveEvents();
-console.log("Iam here");
+			console.log("Iam here");
 			//Listen For My Newly Created Events
 			openEvents.events
 				.CreatedEvent({
@@ -131,13 +131,13 @@ console.log("Iam here");
 				var newsort = newest
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
-	const result = Object.values(
-		newsort.reduce((a, c) => {
-				a[c.returnValues.eventId] ||
-					(a[c.returnValues.eventId] = Object.assign(c))
-				return a;
-			}, {})
-		);
+				const result = Object.values(
+					newsort.reduce((a, c) => {
+						a[c.returnValues.eventId] ||
+							(a[c.returnValues.eventId] = Object.assign(c));
+						return a;
+					}, {})
+				);
 				if (this._isMounted) {
 					this.setState({ MyEvents: result, check: result });
 					this.setState({
@@ -170,13 +170,13 @@ console.log("Iam here");
 				var newsort = newest
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
-const result = Object.values(
-		newsort.reduce((a, c) => {
-				a[c.returnValues.eventId] ||
-					(a[c.returnValues.eventId] = Object.assign(c))
-				return a;
-			}, {})
-		);
+				const result = Object.values(
+					newsort.reduce((a, c) => {
+						a[c.returnValues.eventId] ||
+							(a[c.returnValues.eventId] = Object.assign(c));
+						return a;
+					}, {})
+				);
 				if (this._isMounted) {
 					this.setState({ MyEvents: result, check: result });
 					this.setState({
@@ -253,7 +253,6 @@ const result = Object.values(
 	executeScroll = () => this.myRef.current.scrollIntoView();
 
 	render() {
-
 		let body = <PhoenixDAOLoader />;
 
 		if (
@@ -429,13 +428,26 @@ const result = Object.values(
 						</nav>
 					);
 				}
-
-				body = (
-					<div>
-						<div className="row user-list mt-4">{updated_list}</div>
-						{pagination}
-					</div>
-				);
+				if (updated_list.length == 0) {
+					body = (
+						<p className="text-center not-found">
+							<span role="img" aria-label="thinking">
+								🤔
+							</span>
+							&nbsp;No events found.{" "}
+							<a href="/createevent">Try creating one.</a>
+						</p>
+					);
+				} else {
+					body = (
+						<div>
+							<div className="row user-list mt-4">
+								{updated_list}
+							</div>
+							{pagination}
+						</div>
+					);
+				}
 			}
 		}
 

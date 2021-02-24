@@ -781,6 +781,13 @@ input[type="number"] {
 	.welcomeWrapper {
 		margin: 0px -30px 0 -30px !important;
 	}
+	.opaqueBackground{
+		padding: 0px 10px !important;
+	}
+	
+	.btn-dark{
+		font-size: 15px;
+	}
 }
 
 .events-wrapper {
@@ -794,9 +801,6 @@ input[type="number"] {
 		float: none !important;
 	}
 }
-.input-group-prepend{
-	display: block;
-}
 .buttonsDiv {
 	justify-content: space-between;
 	display: flex;
@@ -806,13 +810,16 @@ input[type="number"] {
 		justify-content: space-around !important;
 		display: block;
 	}
-	.btn-dark {
+	.report ,.confirm{
 		width: 90%;
 		margin-bottom: 8px;
 	}
 }
 @media screen and (max-width: 330px) {
-	.btn-dark {
+	.card-footer button{
+		padding:5px 10px !important;
+	}
+	.report,.confirm {
 		width: 100%;
 		padding: 5px;
 		margin-bottom: 8px;
@@ -2019,11 +2026,6 @@ h4.transactions {
 	color: white !important;
 }
 
-@media screen and (max-width: 400px) {
-	.rbc-header {
-		min-width: 93px;
-	}
-}
 .rbc-event {
 	background: linear-gradient(
 		45deg,

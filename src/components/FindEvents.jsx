@@ -131,12 +131,12 @@ class FindEvents extends Component {
 						);
 					const result = Object.values(
 						newsort.reduce((a, c) => {
-								a[c.returnValues.eventId] ||
-									(a[c.returnValues.eventId] = Object.assign(c))
-								return a;
-							}, {})
-						);
-						console.log("updated",result);
+							a[c.returnValues.eventId] ||
+								(a[c.returnValues.eventId] = Object.assign(c));
+							return a;
+						}, {})
+					);
+					console.log("updated", result);
 					this.setState({
 						Events_Blockchain: result,
 						event_copy: result,
@@ -150,7 +150,6 @@ class FindEvents extends Component {
 
 			.catch((err) => console.error(err));
 
-	
 		// await openEvents
 		// .getPastEvents("NewAndUpdatedEvent", {
 		// 	fromBlock: 7654042,
@@ -235,6 +234,7 @@ class FindEvents extends Component {
 		this.setState({ value }, () => {
 			try {
 				if (this.state.value !== "") {
+					console.log("event_copy", this.state.event_copy);
 					var filteredEvents = this.state.event_copy;
 					filteredEvents = filteredEvents.filter((events) => {
 						return (
@@ -322,7 +322,7 @@ class FindEvents extends Component {
 				let currentPage = Number(this.props.match.params.page);
 				let events_list = [];
 				let skip = false;
-				console.log("this.state.hideEvent",this.state.hideEvent)
+				console.log("this.state.hideEvent", this.state.hideEvent);
 				for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
@@ -333,12 +333,11 @@ class FindEvents extends Component {
 							skip = true;
 						}
 					}
-					if(!skip){
+					if (!skip) {
 						for (let j = 0; j < this.state.hideEvent.length; j++) {
 							if (
 								this.state.Events_Blockchain[i].returnValues
-									.eventId ==
-								this.state.hideEvent[j].id
+									.eventId == this.state.hideEvent[j].id
 							) {
 								skip = true;
 							}
@@ -349,8 +348,9 @@ class FindEvents extends Component {
 					}
 					skip = false;
 				}
+
 				events_list.reverse();
-				console.log("events_list",events_list)
+				console.log("events_list", events_list);
 				let updated_list = [];
 				count = events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
@@ -359,7 +359,7 @@ class FindEvents extends Component {
 				if (end > count) end = count;
 				let pages = Math.ceil(count / this.perPage);
 				for (let i = start; i < end; i++) {
-					console.log("end4",end);
+					console.log("end4", end);
 
 					updated_list.push(
 						<Event
@@ -481,15 +481,26 @@ class FindEvents extends Component {
 						</nav>
 					);
 				}
-
-				body = (
-					<div>
-						<div className="row user-list mt-4">
-							{updated_list}
+				if (updated_list.length == 0) {
+					body = (
+						<p className="text-center not-found">
+							<span role="img" aria-label="thinking">
+								🤔
+							</span>
+							&nbsp;No events found.{" "}
+							<a href="/createevent">Try creating one.</a>
+						</p>
+					);
+				} else {
+					body = (
+						<div>
+							<div className="row user-list mt-4">
+								{updated_list}
+							</div>
+							{pagination}
 						</div>
-						{pagination}
-					</div>
-				);
+					);
+				}
 			}
 		}
 

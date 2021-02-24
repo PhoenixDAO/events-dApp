@@ -10,7 +10,8 @@ import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Testnet_Token_Address,
 } from "../config/phoenixDAOcontract_testnet";
-
+import { API_URL, REPORT_EVENT } from "../utils/const";
+import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
@@ -48,7 +49,7 @@ class Home extends Component {
 
 			activeUsers: 0,
 			loadingActiveUsers: true,
-
+			hideEvent:[],
 			pastEvents: 0,
 			loadingPastEvents: true,
 			Deleted_Events: [],
@@ -63,6 +64,8 @@ class Home extends Component {
 		setTimeout(() => this.checkNetwork(), 1000);
 		this.props.executeScroll();
 		this.loadData();
+		this.filterHideEvent();
+
 	}
 
 	// componentDidUpdate(){
@@ -123,7 +126,18 @@ class Home extends Component {
 			this.setState({ openSnackbar3: false });
 		}
 	};
-
+	filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			console.log("get", get.data.result);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			return;
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
 	async loadData() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			let web3 = new Web3(window.ethereum);
@@ -174,6 +188,17 @@ class Home extends Component {
 						Deleted_Events[j].returnValues.eventId
 					) {
 						skip = true;
+					}
+				}
+				if(!skip){
+					for (let j = 0; j < this.state.hideEvent.length; j++) {
+						if (
+							Events_Blockchain[i].returnValues
+								.eventId ==
+							this.state.hideEvent[j].id
+						) {
+							skip = true;
+						}
 					}
 				}
 				if (!skip) {
@@ -576,10 +601,6 @@ class Home extends Component {
 			</React.Fragment>
 		);
 	}
-
-	// componentDidMount() {
-	// 	this.props.executeScroll();
-	// }
 }
 
 Home.contextTypes = {

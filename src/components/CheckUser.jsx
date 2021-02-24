@@ -238,14 +238,14 @@ class CheckUser extends Component {
 					className="buttonsDiv"
 					>
 						<button
-							className="btn btn-dark col-xs-12"
+							className="btn btn-dark confirm col-xs-12"
 							onClick={this.checkManual}
 						>
 							<i className="fas fa-receipt"></i> Confirm Purchase
 						</button>
 						<button
 							disabled={this.state.loading}
-							className="btn btn-dark col-xs-12"
+							className="btn btn-dark report col-xs-12"
 							onClick={this.reportEvent}
 						>
 							{this.state.loading ? (
