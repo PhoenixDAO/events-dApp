@@ -451,7 +451,7 @@ class Form extends Component {
 		if (this.state.location !== "") {
 			let filter = new Filter();
 			filteredLocation = filter.clean(this.state.location);
-			this.setState({ organizer: filteredLocation });
+			this.setState({ location: filteredLocation });
 		}
 		console.log("hahaha");
 		console.log("filteredDescription form", this.form.description.value);
@@ -467,11 +467,11 @@ class Form extends Component {
 		if (
 			(this.state.currency == "phnx" && this.state.price == "") ||
 			(this.state.currency == "phnx" && this.state.price == "0") ||
-			this.state.price == "0.0" ||
+			(this.state.price == "0.0" ||
 			this.state.price == "0.00" ||
-			this.state.price == "0.000"
+			this.state.price == "0.000" && !this.state.free)
 		)
-			form_validation.push("price");
+			 form_validation.push("price");
 		if (this.state.limited === true && this.form.seats.value < 1)
 			form_validation.push("seats");
 		if (this.state.type === "") form_validation.push("type");
@@ -865,12 +865,13 @@ class Form extends Component {
 								<small
 									style={{ marginTop: "0" }}
 									className={
-										warning.price
+										warning.price && !this.state.free
 											? "form-text text-muted color-red"
 											: "form-text text-muted"
 									}
 								>
-									Value must be greater or equals to 0.001
+									{this.state.free?null:
+									"Value must be greater or equals to 0.001"}
 								</small>
 							)}
 							<div className="input-group mb-3">

@@ -567,8 +567,6 @@ class Event extends Component {
 	}
 
 	componentDidMount() {
-		console.log("I am in event");
-
 		this._isMounted = true;
 		this.updateIPFS();
 		this.getPhoenixDAOMarketValue();

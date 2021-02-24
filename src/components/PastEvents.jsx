@@ -393,15 +393,26 @@ class PastEvents extends Component {
 						</nav>
 					);
 				}
-
-				body = (
-					<div>
-						<div className="row user-list mt-4">
-							{updated_list}
+				if (updated_list.length == 0) {
+					body = (
+						<p className="text-center not-found">
+							<span role="img" aria-label="thinking">
+								🤔
+							</span>
+							&nbsp;No events found.{" "}
+							<a href="/createevent">Try creating one.</a>
+						</p>
+					);
+				} else {
+					body = (
+						<div>
+							<div className="row user-list mt-4">
+								{updated_list}
+							</div>
+							{pagination}
 						</div>
-						{pagination}
-					</div>
-				);
+					);
+				}
 			}
 		}
 

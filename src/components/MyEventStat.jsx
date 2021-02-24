@@ -1336,6 +1336,7 @@ class MyEventStat extends Component {
 								<div className="mt-5"></div>
 								<CheckUser
 									event_id={this.props.match.params.id}
+									disabledStatus={disabled}
 								/>
 							</div>
 							<hr />

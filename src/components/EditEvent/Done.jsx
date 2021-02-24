@@ -18,8 +18,7 @@ render(){
 			<h3 className="mt-5">Done, your event has been updated!</h3>
 			<p className="emoji"><span role="img" aria-label="sunglasses">😎🎸</span></p>
 			<p>We will notify you as soon as the transaction has been confirmed. It will be available for users shortly.</p>
-			<Link to="/editevent" onClick={this.createNewEvent}>Edit event</Link>
-
+			
 		
 		</div>
 	);

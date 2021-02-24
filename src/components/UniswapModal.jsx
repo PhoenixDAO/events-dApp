@@ -33,6 +33,16 @@ class UniswapModal extends Component {
 				aria-describedby="alert-dialog-slide-description"
 				style={{ maxWidth: "100%" }}
 			>
+                <i
+                  className="fa fa-times fa-1x"
+				  onClick={this.props.handleClose}
+				  style={{display: "flex",
+					justifyContent: "flex-end",
+					padding: "7px",
+					zIndex: "1",
+				}}
+                ></i>
+
 				<iframe
 					src="https://app.uniswap.org/#/swap?outputCurrency=0xfe1b6ABc39E46cEc54d275efB4b29B33be176c2A"
 					height="660px"
@@ -44,10 +54,13 @@ class UniswapModal extends Component {
 						display: "block",
 						maxWidth: "900px",
 						overflow:"auto",
+						marginTop:"-30px",
 					}}
 					id="myId"
 				/>
-			</Dialog>
+			
+	
+		</Dialog>
 		);
 	}
 }
