@@ -744,7 +744,9 @@ class EventPage extends Component {
 							<div className="col-12">
 								<div className="mt-5"></div>
 								<CheckUser
+									disabledStatus={disabledStatus}
 									event_id={this.props.match.params.id}
+									history={this.props.history}
 								/>
 							</div>
 							<hr />

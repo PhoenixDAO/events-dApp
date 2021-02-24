@@ -39,6 +39,7 @@ class CheckUser extends Component {
 		this.organizerName = this.contracts[
 			"DaoEvents"
 		].methods.getOwnerDetails.cacheCall(this.event);
+		this.reportEvent = this.reportEvent.bind(this);
 		console.log("view this.props", this.props);
 	}
 
@@ -79,23 +80,23 @@ class CheckUser extends Component {
 				id: this.props.event_id,
 				count: 1,
 			};
+			console.log("here==>");
 			const report = await axios.post(
 				`${API_URL}${REPORT_EVENT}`,
 				payload
 			);
-			if(report.status==200){
-				toast(<NotifyReport text={"Report successful!"}/>, {
+			console.log("report==>", report);
+			toast(<NotifyReport text={"Report successful!"}/>, {
 					position: "bottom-right",
 					autoClose: true,
 					pauseOnHover: true,
 				});
-			}
-			console.log("report==>", report);
+			this.props.history.push("/upcomingevents/1");
 			this.setState({
 				loading: false,
 			});
 		} catch (error) {
-			console.log("error", error.response.data.responseMessage);
+			// console.log("error", error.response.data.responseMessage);
 			// console.log("error", error);
 			toast(<NotifyReport text={error.response.data.responseMessage+"!"}/>, {
 				position: "bottom-right",
