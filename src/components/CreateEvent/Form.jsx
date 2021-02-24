@@ -436,8 +436,8 @@ class Form extends Component {
 			this.setState({ title: filteredTitle });
 		}
 		if (this.state.organizer !== "") {
-			// let filter = new Filter();
-			// filteredOrganizer = filter.clean(this.state.organizer);
+			let filter = new Filter();
+			filteredOrganizer = filter.clean(this.state.organizer);
 			this.setState({ organizer: filteredOrganizer });
 		}
 		if (this.state.location !== "") {
