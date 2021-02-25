@@ -480,6 +480,7 @@ class App extends Component {
 				.send({ from: this.state.account })
 
 				.on("transactionHash", (hash) => {
+					console.log("hiiiiii Agya hashhh",hash)
 					if (hash !== null) {
 						
 						this.setState({
@@ -494,6 +495,8 @@ class App extends Component {
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
+					console.log("hiiiiii Agya confirmationNumber",confirmationNumber,"and receipt",receipt)
+
 					if (confirmationNumber !== null) {
 						txreceipt = receipt;
 						txconfirmed = confirmationNumber;
@@ -501,10 +504,10 @@ class App extends Component {
 							toast(
 								<NotifyEventSuccess
 									hash={txreceipt.transactionHash}
-									createdEvent={
-										txreceipt.events.CreatedEvent
-											.returnValues
-									}
+									createdEvent={type==="create"?txreceipt.events.CreatedEvent
+									.returnValues:txreceipt.events.UpdatedEvent
+									.returnValues}
+									
 								/>,
 								{
 									position: "bottom-right",
@@ -718,7 +721,7 @@ class App extends Component {
 						exact
 						path="/event/:page/:id"
 						render={(props) => (
-							<EventPage {...props} inquire={this.inquireBuy} />
+							<EventPage {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus}/>
 						)}
 					/>
 					<Route exact path="/topics" component={TopicsLandingPage} />
@@ -874,7 +877,8 @@ class App extends Component {
 						render={(props) => (
 							<MyEventStat
 								{...props}
-								inquire={this.inquireBuyTest}
+								inquire={this.inquireBuy}
+								disabledStatus={this.state.disabledStatus}
 							/>
 						)}
 					/>
