@@ -12,7 +12,7 @@ function NotifyEventSuccess(props) {
       .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
       .join(' ');
 
-	  let titleURL = "/event/"+pagetitle+"/" + props.createdEvent.eventId;
+	  let titleURL = "/event-stat/"+pagetitle+"/" + props.createdEvent.eventId;
 	return (
 		<div className="notify">
 			<a href={"https://rinkeby.etherscan.io/tx/" + props.hash} title={props.hash} target = "blank">
