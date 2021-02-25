@@ -781,11 +781,11 @@ input[type="number"] {
 	.welcomeWrapper {
 		margin: 0px -30px 0 -30px !important;
 	}
-	.opaqueBackground{
+	.opaqueBackground {
 		padding: 0px 10px !important;
 	}
-	
-	.btn-dark{
+
+	.btn-dark {
 		font-size: 15px;
 	}
 }
@@ -810,16 +810,41 @@ input[type="number"] {
 		justify-content: space-around !important;
 		display: block;
 	}
-	.report ,.confirm{
+	.report,
+	.confirm {
 		width: 90%;
 		margin-bottom: 8px;
 	}
+	.eventTitle {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width: 185px;
+		font-size: 10px;
+	}
+}
+@media screen and (max-width: 430px) {
+	.reportbtn {
+		margin-top: 15px;
+		padding: 6px 15px;
+	}
+}
+@media screen and (max-width: 400px) {
+	.eventTitle {
+		font-size: 10px;
+		width: 118px;
+	}
+	.dashboard-events-list h4,
+	.dashboard-events-list-sale h4 {
+		font-size: 15px !important;
+	}
 }
 @media screen and (max-width: 330px) {
-	.card-footer button{
-		padding:5px 10px !important;
+	.card-footer button {
+		padding: 5px 10px !important;
 	}
-	.report,.confirm {
+	.report,
+	.confirm {
 		width: 100%;
 		padding: 5px;
 		margin-bottom: 8px;
@@ -848,7 +873,6 @@ input[type="number"] {
 	.termsDiv {
 		margin-left: -50px !important;
 		margin-right: -50px !important;
-
 	}
 }
 
@@ -2351,7 +2375,7 @@ h4.transactions {
 	text-transform: capitalize !important;
 	text-shadow: 2px 2px 12px rgb(15, 8, 8) !important;
 	font-weight: 400;
-	font-size: 1.1rem !important;
+	font-size: 1.1rem;
 	border-bottom: 2px solid rgba(27, 31, 43, 0.377);
 	cursor: pointer;
 	color: white;
@@ -2386,7 +2410,7 @@ h4.transactions {
 	text-transform: capitalize !important;
 	text-shadow: 2px 2px 12px #000 !important;
 	font-weight: 400;
-	font-size: 1.1rem !important;
+	font-size: 1.1rem;
 	border-bottom: 2px solid rgba(81, 84, 95, 0.377);
 	border-bottom: 2px solid rgba(27, 31, 43, 0.377);
 }

@@ -246,7 +246,7 @@ class CheckUser extends Component {
 						</button>
 						<button
 							disabled={this.state.loading || this.props.disabledStatus}
-							className="btn btn-dark col-xs-12"
+							className="btn btn-dark reportbtn col-xs-12"
 							onClick={this.reportEvent}
 						>
 							{this.state.loading ? (
