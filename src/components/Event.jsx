@@ -271,7 +271,7 @@ class Event extends Component {
 			"buy",
 			this.props.contracts["DaoEvents"].getEvent[this.event].value[2]
 		);
-		console.log("temp is ss", this.props.id);
+		console.log("temp is ss", this.props);
 		this.setState(
 			{
 				fee: this.props.contracts["DaoEvents"].getEvent[this.event]
@@ -344,7 +344,6 @@ class Event extends Component {
 			let image = this.getImage();
 			let description = this.getDescription();
 			let locations = this.getLocation();
-
 			let buttonText = event_data[3] ? "Buy Ticket" : "Get Ticket";
 			let freeEvent = "";
 			if (!event_data[3]) {

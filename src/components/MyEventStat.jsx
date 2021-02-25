@@ -397,6 +397,48 @@ class MyEventStat extends Component {
 			});
 	};
 
+	// inquire = async () => {
+	// 	let balance = await this.contracts["PHNX"].methods.totalSupply().call();
+	// 	// let temp = this.allowance();
+	// 	// console.log("approve",balance)
+	// 	console.log(
+	// 		"buy",
+	// 		this.props.contracts["DaoEvents"].getEvent[this.event].value[2]
+	// 	);
+	// 	this.setState(
+	// 		{
+	// 			fee: this.props.contracts["DaoEvents"].getEvent[this.event]
+	// 				.value[2],
+	// 			token: this.props.contracts["DaoEvents"].getEvent[this.event]
+	// 				.value[3],
+	// 			openEvents_address: this.contracts["DaoEvents"].address,
+	// 			buyticket: this.contracts["DaoEvents"].methods.buyTicket(
+	// 				this.props.id
+	// 			),
+	// 			approve: this.contracts["PHNX"].methods.approve(
+	// 				this.contracts["DaoEvents"].address,
+	// 				balance
+	// 			),
+	// 		},
+	// 		async () => {
+	// 			let temp = await this.allowance();
+	// 			console.log("temp is ", temp);
+	// 			if ((await this.allowance()) == 0) {
+	// 				this.handleClickOpen();
+	// 			} else {
+	// 				this.props.inquire(
+	// 					this.props.id,
+	// 					this.state.fee,
+	// 					this.state.token,
+	// 					this.state.openEvents_address,
+	// 					this.state.buyticket,
+	// 					this.state.approve
+	// 				);
+	// 			}
+	// 		}
+	// 	);
+	// };
+
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 		// let temp = this.allowance();
@@ -405,6 +447,8 @@ class MyEventStat extends Component {
 			"buy",
 			this.props.contracts["DaoEvents"].getEvent[this.event].value[2]
 		);
+		console.log("temp is ss", this.props.match.params.id);
+
 		this.setState(
 			{
 				fee: this.props.contracts["DaoEvents"].getEvent[this.event]
@@ -413,7 +457,7 @@ class MyEventStat extends Component {
 					.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
-					this.props.id
+					this.props.match.params.id
 				),
 				approve: this.contracts["PHNX"].methods.approve(
 					this.contracts["DaoEvents"].address,
@@ -827,7 +871,9 @@ class MyEventStat extends Component {
 												},
 											}}
 										>
-											<button className="btn btn-dark">
+											<button className="btn btn-dark"
+												disabled={this.state.loading || this.props.disabledStatus}
+											>
 												<i className="fa fa-edit"></i>{" "}
 												{this.state.loading ? <CircularProgress color="white" size={10} /> : "Edit"}
 											</button>
@@ -835,13 +881,118 @@ class MyEventStat extends Component {
 										<button
 											className="btn btn-dark"
 											onClick={this.handleDelete}
-											disabled={disabledButton}
+											disabled={disabledButton || this.props.disabledStatus}
 										>
 											<i className="fas fa-trash-alt"></i>{" "}
 											Delete
 										</button>
 									</div>
 								) : null}
+								</div>
+								<hr />
+								<div className="row">
+							<div className="col-12">
+								{/* <h3>{event_data[0]}</h3>
+           		 <br />
+           		 {description} */}
+								<button
+								className="btn btn-dark"
+								onClick={this.inquire}
+								disabled={disabled || this.props.disabledStatus}
+							>
+								<i className="fas fa-ticket-alt"></i>{" "}
+								{buttonText}
+							</button>
+								<label className="pl-2 small">
+									{this.props.disabledStatus}
+								</label>
+
+								<br />
+								{/* {myEvent === true && (
+									<Link
+										to={
+											"/event-stat/" +
+											pagetitle +
+											"/" +
+											this.props.match.params.id
+										}
+									>
+										<button className="btn btn-dark mt-2">
+											<i className="fas fa-chart-bar"></i>{" "}
+											View Event Stat
+										</button>
+									</Link>
+								)} */}
+								<div className="event-social-share-btns-div">
+									<EmailShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<EmailIcon size={32} round />
+									</EmailShareButton>
+
+									<FacebookShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<FacebookIcon size={32} round />
+									</FacebookShareButton>
+
+									<LinkedinShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<LinkedinIcon size={32} round />
+									</LinkedinShareButton>
+
+									<RedditShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<RedditIcon size={32} round />
+									</RedditShareButton>
+
+									<TelegramShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<TelegramIcon size={32} round />
+									</TelegramShareButton>
+
+									<TwitterShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<TwitterIcon size={32} round />
+									</TwitterShareButton>
+
+									<WhatsappShareButton
+										url={shareUrl}
+										title={title}
+										resetButtonStyle={false}
+									>
+										<WhatsappIcon size={32} round />
+									</WhatsappShareButton>
+								</div>
+
+								<br />
+								<br />
+								
+								
+								{/* <button
+								className="btn btn-dark"
+								onClick={this.inquire}
+								disabled={disabled || this.props.disabledStatus}
+							>
+								<i className="fas fa-ticket-alt"></i>{" "}
+								{buttonText}
+							</button> */}
 							</div>
 							<hr />
 							<div className="row">
@@ -933,7 +1084,7 @@ class MyEventStat extends Component {
 											/>
 										)}
 									</div>
-									<div className="new-transaction-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-5" style={{padding:"0px"}}>
+									{/* <div className="new-transaction-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-5" style={{padding:"0px"}}>
 										<h4 className="transactions">
 											Share your event
 										</h4>
@@ -994,7 +1145,7 @@ class MyEventStat extends Component {
 												<WhatsappIcon size={32} round />
 											</WhatsappShareButton>
 										</div>
-									</div>
+									</div> */}
 									<h4 className="transactions col-12">
 										Ticket Purchases
 									</h4>
@@ -1341,6 +1492,8 @@ class MyEventStat extends Component {
 							</div>
 							<hr />
 						</div>
+					</div>
+				
 					);
 				} else {
 					<div className="row">
@@ -1361,7 +1514,7 @@ class MyEventStat extends Component {
 					handleClose={this.handleClose}
 					giveApproval={this.giveApproval}
 				/>
-
+				{/* <hr /> */}
 				{body}
 				<hr />
 			</div>
