@@ -280,7 +280,11 @@ class MyEventStat extends Component {
 							.value[7]
 					)
 						.then((file) => {
-							console.log(this.props.contracts["DaoEvents"].getEvent[this.event].value[8]);
+							console.log(
+								this.props.contracts["DaoEvents"].getEvent[
+									this.event
+								].value[8]
+							);
 							let data = JSON.parse(file[0].content.toString());
 							if (!this.isCancelled) {
 								this.setState({
@@ -387,11 +391,14 @@ class MyEventStat extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
-					toast(<NotifyError error={error} message={txerror.message} />, {
-						position: "bottom-right",
-						autoClose: true,
-						pauseOnHover: true,
-					});
+					toast(
+						<NotifyError error={error} message={txerror.message} />,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
 					// this.afterApprove()
 				}
 			});
@@ -568,11 +575,14 @@ class MyEventStat extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
-					toast(<NotifyError error={error} message={txerror.message} />, {
-						position: "bottom-right",
-						autoClose: true,
-						pauseOnHover: true,
-					});
+					toast(
+						<NotifyError error={error} message={txerror.message} />,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
 				}
 				this.setState({ deleted: false });
 			});
@@ -871,44 +881,61 @@ class MyEventStat extends Component {
 												},
 											}}
 										>
-											<button className="btn btn-dark"
-												disabled={this.state.loading || this.props.disabledStatus}
+											<button
+												className="btn btn-dark"
+												disabled={
+													this.state.loading ||
+													this.props.disabledStatus
+												}
 											>
 												<i className="fa fa-edit"></i>{" "}
-												{this.state.loading ? <CircularProgress color="white" size={10} /> : "Edit"}
+												{this.state.loading ? (
+													<CircularProgress
+														color="white"
+														size={10}
+													/>
+												) : (
+													"Edit"
+												)}
 											</button>
 										</Link>
 										<button
 											className="btn btn-dark"
 											onClick={this.handleDelete}
-											disabled={disabledButton || this.props.disabledStatus}
+											disabled={
+												disabledButton ||
+												this.props.disabledStatus
+											}
 										>
 											<i className="fas fa-trash-alt"></i>{" "}
 											Delete
 										</button>
 									</div>
 								) : null}
-								</div>
-								<hr />
-								<div className="row">
-							<div className="col-12">
-								{/* <h3>{event_data[0]}</h3>
+							</div>
+							<hr />
+							<div className="row">
+								<div className="col-12">
+									{/* <h3>{event_data[0]}</h3>
            		 <br />
            		 {description} */}
-								<button
-								className="btn btn-dark"
-								onClick={this.inquire}
-								disabled={disabled || this.props.disabledStatus}
-							>
-								<i className="fas fa-ticket-alt"></i>{" "}
-								{buttonText}
-							</button>
-								<label className="pl-2 small">
-									{this.props.disabledStatus}
-								</label>
+									<button
+										className="btn btn-dark"
+										onClick={this.inquire}
+										disabled={
+											disabled ||
+											this.props.disabledStatus
+										}
+									>
+										<i className="fas fa-ticket-alt"></i>{" "}
+										{buttonText}
+									</button>
+									<label className="pl-2 small">
+										{this.props.disabledStatus}
+									</label>
 
-								<br />
-								{/* {myEvent === true && (
+									<br />
+									{/* {myEvent === true && (
 									<Link
 										to={
 											"/event-stat/" +
@@ -923,69 +950,68 @@ class MyEventStat extends Component {
 										</button>
 									</Link>
 								)} */}
-								<div className="event-social-share-btns-div">
-									<EmailShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<EmailIcon size={32} round />
-									</EmailShareButton>
+									<div className="event-social-share-btns-div">
+										<EmailShareButton
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<EmailIcon size={32} round />
+										</EmailShareButton>
 
-									<FacebookShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<FacebookIcon size={32} round />
-									</FacebookShareButton>
+										<FacebookShareButton
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<FacebookIcon size={32} round />
+										</FacebookShareButton>
 
-									<LinkedinShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<LinkedinIcon size={32} round />
-									</LinkedinShareButton>
+										<LinkedinShareButton
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<LinkedinIcon size={32} round />
+										</LinkedinShareButton>
 
-									<RedditShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<RedditIcon size={32} round />
-									</RedditShareButton>
+										<RedditShareButton
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<RedditIcon size={32} round />
+										</RedditShareButton>
 
-									<TelegramShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<TelegramIcon size={32} round />
-									</TelegramShareButton>
+										<TelegramShareButton
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<TelegramIcon size={32} round />
+										</TelegramShareButton>
 
-									<TwitterShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<TwitterIcon size={32} round />
-									</TwitterShareButton>
+										<TwitterShareButton
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<TwitterIcon size={32} round />
+										</TwitterShareButton>
 
-									<WhatsappShareButton
-										url={shareUrl}
-										title={title}
-										resetButtonStyle={false}
-									>
-										<WhatsappIcon size={32} round />
-									</WhatsappShareButton>
-								</div>
+										<WhatsappShareButton
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<WhatsappIcon size={32} round />
+										</WhatsappShareButton>
+									</div>
 
-								<br />
-								<br />
-								
-								
-								{/* <button
+									<br />
+									<br />
+
+									{/* <button
 								className="btn btn-dark"
 								onClick={this.inquire}
 								disabled={disabled || this.props.disabledStatus}
@@ -993,98 +1019,101 @@ class MyEventStat extends Component {
 								<i className="fas fa-ticket-alt"></i>{" "}
 								{buttonText}
 							</button> */}
-							</div>
-							<hr />
-							<div className="row">
-								<div className="card event-hero-sidebar">
-									<img
-										className="card-img-top event-image"
-										src={image}
-										alt="Event"
-									/>
-
-									<div className="card-header event-header">
+								</div>
+								<hr />
+								<div className="row">
+									<div className="card event-hero-sidebar">
 										<img
-											className="float-left"
-											src={makeBlockie(event_data[9])}
-											alt="User Identicon"
+											className="card-img-top event-image"
+											src={image}
+											alt="Event"
 										/>
-									</div>
 
-									<div className="card-body">
-										<h5 className="card-title event-title">
-											{event_data[0]}
-										</h5>
-										{description}
-									</div>
+										<div className="card-header event-header">
+											<img
+												className="float-left"
+												src={makeBlockie(event_data[9])}
+												alt="User Identicon"
+											/>
+										</div>
 
-									<ul className="list-group list-group-flush">
-										<li className="list-group-item ">
-											{locations}
-										</li>
-										<li className="list-group-item">
-											Category: {category}
-										</li>
-										<li className="list-group-item">
-											Organizer: {ownerDetails}
-										</li>
-										{/* <li className="list-group-item">
+										<div className="card-body">
+											<h5 className="card-title event-title">
+												{event_data[0]}
+											</h5>
+											{description}
+										</div>
+
+										<ul className="list-group list-group-flush">
+											<li className="list-group-item ">
+												{locations}
+											</li>
+											<li className="list-group-item">
+												Category: {category}
+											</li>
+											<li className="list-group-item">
+												Organizer: {ownerDetails}
+											</li>
+											{/* <li className="list-group-item">
 											Organizer Name: {ownerDetails}
 										</li> */}
-										<li className="list-group-item">
-											Price:{" "}
-											<img
-												src={"/images/" + symbol}
-												className="event_price-image"
-												alt="Event Price"
-											/>{" "}
-											{event_data[3]
-												? numeral(price).format("0.000")
-												: "Free"}
-											{event_data[3] ? " or " : ""}
-											{event_data[3] ? (
+											<li className="list-group-item">
+												Price:{" "}
 												<img
-													src={
-														"/images/dollarsign.png"
-													}
+													src={"/images/" + symbol}
 													className="event_price-image"
 													alt="Event Price"
-												/>
-											) : (
-												""
-											)}
-											{event_data[3]
-												? numeral(
-														price *
-															this.state
-																.phoenixDAO_market
-																.usd
-												  ).format("0.000")
-												: ""}
-										</li>
-										<li className="list-group-item">
-											{date.toLocaleDateString()} at{" "}
-											{date.toLocaleTimeString([], {
-												hour: "2-digit",
-												minute: "2-digit",
-											})}
-										</li>
-										<li className="list-group-item">
-											Tickets: {event_data[6]}/{max_seats}
-										</li>
-									
-									</ul>
-								</div>
-								<div className="row clockShare">
-									<div className="col-md-12 col-xs-12 col-sm-12 col-lg-7 clockDiv">
+												/>{" "}
+												{event_data[3]
+													? numeral(price).format(
+															"0.000"
+													  )
+													: "Free"}
+												{event_data[3] ? " or " : ""}
+												{event_data[3] ? (
+													<img
+														src={
+															"/images/dollarsign.png"
+														}
+														className="event_price-image"
+														alt="Event Price"
+													/>
+												) : (
+													""
+												)}
+												{event_data[3]
+													? numeral(
+															price *
+																this.state
+																	.phoenixDAO_market
+																	.usd
+													  ).format("0.000")
+													: ""}
+											</li>
+											<li className="list-group-item">
+												{date.toLocaleDateString()} at{" "}
+												{date.toLocaleTimeString([], {
+													hour: "2-digit",
+													minute: "2-digit",
+												})}
+											</li>
+											<li className="list-group-item">
+												Tickets: {event_data[6]}/
+												{max_seats}
+											</li>
+										</ul>
+									</div>
+
+									<div className="col-12">
+										{/* <div className="col-md-12 col-xs-12 col-sm-12 col-lg-7 clockDiv"> */}
 										{this._isMounted && (
 											<Clock
 												deadline={date}
 												event_unix={event_data[1]}
 											/>
 										)}
-									</div>
-									{/* <div className="new-transaction-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-5" style={{padding:"0px"}}>
+										{/* </div> */}
+										{/* <div className="new-transaction-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-5" style={{padding:"0px"}}>
 										<h4 className="transactions">
 											Share your event
 										</h4>
@@ -1145,77 +1174,85 @@ class MyEventStat extends Component {
 												<WhatsappIcon size={32} round />
 											</WhatsappShareButton>
 										</div>
-									</div> */}
-									<h4 className="transactions col-12">
-										Ticket Purchases
-									</h4>
-									{this.state.load && <Loading />}
-									{this.state.pageTransactions.map(
-										(sold, index) => (
-											<p
-												className="sold_text col-md-12"
-												key={index}
-											>
-												<img
-													className="float-left blockie"
-													src={makeBlockie(
-														sold.returnValues.buyer
-													)}
-												/>
-												<a
-													href={
-														"https://rinkeby.etherscan.io/address/" +
-														sold.returnValues.buyer
-													}
-													target="blank"
-												>
-													{sold.returnValues.buyer.slice(
-														0,
-														10
-													) + "..."}
-												</a>{" "}
-												has{" "}
-												<a
-													href={
-														"https://rinkeby.etherscan.io/tx/" +
-														sold.transactionHash
-													}
-													target="blank"
-												>
-													bought
-												</a>{" "}
-												1 ticket for{" "}
-												<strong>{event_data[0]}</strong>
-												.
-											</p>
-										)
-									)}
-									{!sold && (
-										<p className="sold_text col-md-12 no-tickets">
-											There are currently no purchases for
-											this ticket.
-										</p>
-									)}
-								</div>
+									  </div> */}
+										<div className="new-transaction-wrapper">
+											<h4 className="transactions col-md-12 ">
+												Ticket Purchases
+											</h4>
+											{this.state.load && <Loading />}
+											{this.state.pageTransactions.map(
+												(sold, index) => (
+													<p
+														className="sold_text col-md-12"
+														key={index}
+													>
+														<img
+															className="float-left blockie"
+															src={makeBlockie(
+																sold
+																	.returnValues
+																	.buyer
+															)}
+														/>
+														<a
+															href={
+																"https://rinkeby.etherscan.io/address/" +
+																sold
+																	.returnValues
+																	.buyer
+															}
+															target="blank"
+														>
+															{sold.returnValues.buyer.slice(
+																0,
+																10
+															) + "..."}
+														</a>{" "}
+														has{" "}
+														<a
+															href={
+																"https://rinkeby.etherscan.io/tx/" +
+																sold.transactionHash
+															}
+															target="blank"
+														>
+															bought
+														</a>{" "}
+														1 ticket for{" "}
+														<strong>
+															{event_data[0]}
+														</strong>
+														.
+													</p>
+												)
+											)}
+											{!sold && (
+												<p className="sold_text col-md-12 no-tickets">
+													There are currently no
+													purchases for this ticket.
+												</p>
+											)}
+										</div>
+									</div>
 
-								<div className="pagination col-12">
-									<JwPagination
-										items={this.state.soldTicket}
-										onChangePage={this.onChangePage}
-										maxPages={5}
-										pageSize={5}
-										styles={customStyles}
-									/>
-								</div>
+									<div className="pagination col-12">
+										<JwPagination
+											items={this.state.soldTicket}
+											onChangePage={this.onChangePage}
+											maxPages={5}
+											pageSize={5}
+											styles={customStyles}
+										/>
+									</div>
 
-								<div className="new-transaction-wrapper">
-									<h4 className="transactions">
-										<i className="fas fa-ticket-alt"></i>{" "}
-										Ticket Sales Info
-									</h4>
-									{this.state.load && <Loading />}
-									<div className="sold_text col-12">
-										{/* <p className="myQR text-center col-md-3">
+									<div className="new-transaction-wrapper">
+										<h4 className="transactions">
+											<i className="fas fa-ticket-alt"></i>{" "}
+											Ticket Sales Info
+										</h4>
+										{this.state.load && <Loading />}
+										<div className="sold_text col-12">
+											{/* <p className="myQR text-center col-md-3">
 											<QRCode
 												value={titleURL}
 												size={128}
@@ -1235,154 +1272,121 @@ class MyEventStat extends Component {
 											<p>Event QR-Code</p>
 										</p> */}
 
-										<p>
-											Tickets Sold: {event_data[6]}{" "}
-											Tickets
-										</p>
-
-										{event_data[4] ? (
 											<p>
-												Available Tickets:{" "}
-												{max_seats - event_data[6]}{" "}
+												Tickets Sold: {event_data[6]}{" "}
 												Tickets
 											</p>
-										) : (
-											<p>Available Tickets: Unlimited</p>
-										)}
 
-										{event_data[4] ? (
-											<p>
-												Total Tickets For Sale:{" "}
-												{event_data[4]
-													? max_seats
-													: "Unlimited"}{" "}
-												Tickets
-											</p>
-										) : (
-											<p>
-												Total Tickets For Sale:
-												Unlimited
-											</p>
-										)}
-									</div>
-								</div>
+											{event_data[4] ? (
+												<p>
+													Available Tickets:{" "}
+													{max_seats - event_data[6]}{" "}
+													Tickets
+												</p>
+											) : (
+												<p>
+													Available Tickets: Unlimited
+												</p>
+											)}
 
-								<div className="new-transaction-wrapper">
-									<h4 className="transactions">
-										<i className="fas fa-hand-holding-usd"></i>{" "}
-										Ticket Revenue{" "}
-									</h4>
-
-									<div className="sold_text col-12">
-										<div className="chart col-md-3">
-											<Doughnut
-												data={this.data}
-												options={{
-													responsive: true,
-													maintainAspectRatio: false,
-													cutoutPercentage: 62,
-
-													title: {
-														display: true,
-														position: "bottom",
-														text: "PHNX Revenue",
-														fontSize: 16,
-														lineHeight: 1.5,
-														padding: 1.6,
-														fontColor: "white",
-													},
-													legend: {
-														display: false,
-														labels: {
-															fontColor: "white",
-															fontSize: 11,
-														},
-														tooltips: {
-															enabled: true,
-														},
-													},
-												}}
-											/>
+											{event_data[4] ? (
+												<p>
+													Total Tickets For Sale:{" "}
+													{event_data[4]
+														? max_seats
+														: "Unlimited"}{" "}
+													Tickets
+												</p>
+											) : (
+												<p>
+													Total Tickets For Sale:
+													Unlimited
+												</p>
+											)}
 										</div>
-										<p
-											className="col-md-8"
-											className="removepadding"
-										>
-											Price Per Ticket:{" "}
-											<img
-												src={"/images/" + symbol}
-												className="event_price-image2"
-												alt="Event Price"
-											/>{" "}
-											{event_data[3]
-												? numeral(price).format("0.000")
-												: "Free"}
-											{event_data[3] ? " or " : ""}
-											{event_data[3] ? (
-												<img
-													src={
-														"/images/dollarsign.png"
-													}
-													className="event_price-image2"
-													alt="Event Price"
-												/>
-											) : (
-												""
-											)}
-											{event_data[3]
-												? numeral(
-														price *
-															this.state
-																.phoenixDAO_market
-																.usd
-												  ).format("0.000")
-												: ""}
-										</p>
+									</div>
 
-										<p
-											className="col-md-8"
-											className="removepadding"
-										>
-											Current Revenue For Sold Tickets:{" "}
-											<img
-												src={"/images/" + symbol}
-												className="event_price-image2"
-												alt="Event Price"
-											/>{" "}
-											{event_data[3]
-												? numeral(
-														price * event_data[6]
-												  ).format("0.000")
-												: price * event_data[6]}
-											{event_data[3] ? " or " : ""}
-											{event_data[3] ? (
-												<img
-													src={
-														"/images/dollarsign.png"
-													}
-													className="event_price-image2"
-													alt="Event Price"
-												/>
-											) : (
-												""
-											)}
-											{event_data[3]
-												? numeral(
-														price *
-															event_data[6] *
-															this.state
-																.phoenixDAO_market
-																.usd
-												  ).format("0.000")
-												: ""}
-										</p>
+									<div className="new-transaction-wrapper">
+										<h4 className="transactions">
+											<i className="fas fa-hand-holding-usd"></i>{" "}
+											Ticket Revenue{" "}
+										</h4>
 
-										{event_data[4] ? (
+										<div className="sold_text col-12">
+											<div className="chart col-md-3">
+												<Doughnut
+													data={this.data}
+													options={{
+														responsive: true,
+														maintainAspectRatio: false,
+														cutoutPercentage: 62,
+
+														title: {
+															display: true,
+															position: "bottom",
+															text:
+																"PHNX Revenue",
+															fontSize: 16,
+															lineHeight: 1.5,
+															padding: 1.6,
+															fontColor: "white",
+														},
+														legend: {
+															display: false,
+															labels: {
+																fontColor:
+																	"white",
+																fontSize: 11,
+															},
+															tooltips: {
+																enabled: true,
+															},
+														},
+													}}
+												/>
+											</div>
 											<p
 												className="col-md-8"
 												className="removepadding"
 											>
-												Expected Revenue For Remaining
+												Price Per Ticket:{" "}
+												<img
+													src={"/images/" + symbol}
+													className="event_price-image2"
+													alt="Event Price"
+												/>{" "}
+												{event_data[3]
+													? numeral(price).format(
+															"0.000"
+													  )
+													: "Free"}
+												{event_data[3] ? " or " : ""}
+												{event_data[3] ? (
+													<img
+														src={
+															"/images/dollarsign.png"
+														}
+														className="event_price-image2"
+														alt="Event Price"
+													/>
+												) : (
+													""
+												)}
+												{event_data[3]
+													? numeral(
+															price *
+																this.state
+																	.phoenixDAO_market
+																	.usd
+													  ).format("0.000")
+													: ""}
+											</p>
+
+											<p
+												className="col-md-8"
+												className="removepadding"
+											>
+												Current Revenue For Sold
 												Tickets:{" "}
 												<img
 													src={"/images/" + symbol}
@@ -1392,12 +1396,9 @@ class MyEventStat extends Component {
 												{event_data[3]
 													? numeral(
 															price *
-																(max_seats -
-																	event_data[6])
+																event_data[6]
 													  ).format("0.000")
-													: price *
-													  (max_seats -
-															event_data[6])}
+													: price * event_data[6]}
 												{event_data[3] ? " or " : ""}
 												{event_data[3] ? (
 													<img
@@ -1413,87 +1414,139 @@ class MyEventStat extends Component {
 												{event_data[3]
 													? numeral(
 															price *
-																(max_seats -
-																	event_data[6]) *
+																event_data[6] *
 																this.state
 																	.phoenixDAO_market
 																	.usd
 													  ).format("0.000")
 													: ""}
 											</p>
-										) : (
-											<p
-												className="col-md-12"
-												className="removepadding"
-											>
-												Expected Revenue For Remaining
-												Tickets: Unlimited
-											</p>
-										)}
 
-										{event_data[4] ? (
-											<p
-												className="col-md-8"
-												className="removepadding"
-											>
-												Expected Revenue For Sold Out
-												Event:{" "}
-												<img
-													src={"/images/" + symbol}
-													className="event_price-image2"
-													alt="Event Price"
-												/>{" "}
-												{event_data[3]
-													? numeral(
-															price * max_seats
-													  ).format("0.000")
-													: price * max_seats}
-												{event_data[3] ? " or " : ""}
-												{event_data[3] ? (
+											{event_data[4] ? (
+												<p
+													className="col-md-8"
+													className="removepadding"
+												>
+													Expected Revenue For
+													Remaining Tickets:{" "}
 													<img
 														src={
-															"/images/dollarsign.png"
+															"/images/" + symbol
 														}
 														className="event_price-image2"
 														alt="Event Price"
-													/>
-												) : (
-													""
-												)}
-												{event_data[3]
-													? numeral(
-															price *
-																max_seats *
-																this.state
-																	.phoenixDAO_market
-																	.usd
-													  ).format("0.000")
-													: ""}
-											</p>
-										) : (
-											<p
-												className="col-md-12"
-												className="removepadding"
-											>
-												Expected Revenue For Sold Out
-												Event: Unlimited
-											</p>
-										)}
+													/>{" "}
+													{event_data[3]
+														? numeral(
+																price *
+																	(max_seats -
+																		event_data[6])
+														  ).format("0.000")
+														: price *
+														  (max_seats -
+																event_data[6])}
+													{event_data[3]
+														? " or "
+														: ""}
+													{event_data[3] ? (
+														<img
+															src={
+																"/images/dollarsign.png"
+															}
+															className="event_price-image2"
+															alt="Event Price"
+														/>
+													) : (
+														""
+													)}
+													{event_data[3]
+														? numeral(
+																price *
+																	(max_seats -
+																		event_data[6]) *
+																	this.state
+																		.phoenixDAO_market
+																		.usd
+														  ).format("0.000")
+														: ""}
+												</p>
+											) : (
+												<p
+													className="col-md-12"
+													className="removepadding"
+												>
+													Expected Revenue For
+													Remaining Tickets: Unlimited
+												</p>
+											)}
+
+											{event_data[4] ? (
+												<p
+													className="col-md-8"
+													className="removepadding"
+												>
+													Expected Revenue For Sold
+													Out Event:{" "}
+													<img
+														src={
+															"/images/" + symbol
+														}
+														className="event_price-image2"
+														alt="Event Price"
+													/>{" "}
+													{event_data[3]
+														? numeral(
+																price *
+																	max_seats
+														  ).format("0.000")
+														: price * max_seats}
+													{event_data[3]
+														? " or "
+														: ""}
+													{event_data[3] ? (
+														<img
+															src={
+																"/images/dollarsign.png"
+															}
+															className="event_price-image2"
+															alt="Event Price"
+														/>
+													) : (
+														""
+													)}
+													{event_data[3]
+														? numeral(
+																price *
+																	max_seats *
+																	this.state
+																		.phoenixDAO_market
+																		.usd
+														  ).format("0.000")
+														: ""}
+												</p>
+											) : (
+												<p
+													className="col-md-12"
+													className="removepadding"
+												>
+													Expected Revenue For Sold
+													Out Event: Unlimited
+												</p>
+											)}
+										</div>
 									</div>
 								</div>
-							</div>
 
-							<div className="col-12">
-								<div className="mt-5"></div>
-								<CheckUser
-									event_id={this.props.match.params.id}
-									disabledStatus={disabled}
-								/>
+								<div className="col-12">
+									<div className="mt-5"></div>
+									<CheckUser
+										event_id={this.props.match.params.id}
+										disabledStatus={disabled}
+									/>
+								</div>
+								<hr />
 							</div>
-							<hr />
 						</div>
-					</div>
-				
 					);
 				} else {
 					<div className="row">
@@ -1531,7 +1584,6 @@ class MyEventStat extends Component {
 		this.updateIPFS();
 		this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
-		
 	}
 
 	componentDidUpdate() {
