@@ -229,6 +229,7 @@ class Dashboard extends Component {
 			];
 			console.log("hey123", eventCounts);
 
+			var loading = true
 			let eventCache = [];
 			let eventDetails = [];
 			if (eventCount !== undefined) {
@@ -363,6 +364,7 @@ class Dashboard extends Component {
 			});
 
 			console.log("array sort12", topEvents);
+			loading=false
 
 			// Doughnut Chart Data
 			this.DoughnutData = (canvas) => {
@@ -635,7 +637,7 @@ class Dashboard extends Component {
 											Your Top 5 Events
 										</h3>
 									</div>
-									{toplist && (
+									{!loading && toplist && (
 										<div className="dashboard-events">
 											<div className="dashboard-events-list">
 												<Link to="/myevents/1">
@@ -645,7 +647,8 @@ class Dashboard extends Component {
 												</Link>
 												{topEvents.map(
 													(event, index) => {
-														console.log(
+														if(event.result.name!=""){
+															console.log(
 															"hey uo",
 															event.result.name
 														);
@@ -673,7 +676,7 @@ class Dashboard extends Component {
 																		.name
 																}
 															</h4>
-														);
+														);}
 													}
 												)}
 											</div>
@@ -681,8 +684,9 @@ class Dashboard extends Component {
 												<h4 className="mb-2">
 													Tickets Sold
 												</h4>
-												{topEvents.map(
-													(event, index) => (
+												{!loading && topEvents.map(
+													(event, index) => {if(event.result.name!=""){
+														return (
 														<h4
 															key={index}
 															title={
@@ -700,7 +704,7 @@ class Dashboard extends Component {
 														>
 															{event.result.sold}
 														</h4>
-													)
+													)}}
 												)}
 											</div>
 										</div>
