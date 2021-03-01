@@ -481,7 +481,7 @@ class Form extends Component {
 				filteredLocation,
 				this.state.time,
 				this.state.file,
-			    filteredOrganizer,
+				filteredOrganizer,
 				this.state.type,
 				this.state.topic,
 				this.state.currency,
