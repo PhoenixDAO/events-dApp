@@ -64,12 +64,13 @@ class Event extends Component {
 		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
+		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.id
 		);
-		this.organizerName = this.contracts["DaoEvents"].methods.getOwnerDetails.cacheCall(
-			this.props.id
-		);
+		this.organizerName = "qwerty"
+		// this.contracts["DaoEvents"].methods.getOwnerDetails.cacheCall(
+		// 	this.props.id
+		// );
 		this.account = this.props.accounts[0];
 		this.state = {
 			owner:"unknown",
@@ -117,7 +118,7 @@ class Event extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].events[this.event] !==
 				"undefined"
 		) {
 			this.setState(
@@ -128,6 +129,7 @@ class Event extends Component {
 					ipfs.get(this.props.ipfs)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
+							console.log("data in event",data)
 							if (!this.isCancelled) {
 								this.setState({
 									loading: false,
@@ -135,6 +137,7 @@ class Event extends Component {
 									description: data.text,
 									image: data.image,
 									locations: data.location,
+									organizer:data.organizer
 								});
 							}
 						})
@@ -269,14 +272,14 @@ class Event extends Component {
 		// console.log("approve",balance)
 		console.log(
 			"buy",
-			this.props.contracts["DaoEvents"].getEvent[this.event].value[2]
+			this.props.contracts["DaoEvents"].events[this.event].value[2]
 		);
 		console.log("temp is ss", this.props);
 		this.setState(
 			{
-				fee: this.props.contracts["DaoEvents"].getEvent[this.event]
+				fee: this.props.contracts["DaoEvents"].events[this.event]
 					.value[2],
-				token: this.props.contracts["DaoEvents"].getEvent[this.event]
+				token: this.props.contracts["DaoEvents"].events[this.event]
 					.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
@@ -318,7 +321,7 @@ class Event extends Component {
 	//
 	//   return prettyCategory;
 	// }
-
+	
 	render() {
 		let body = (
 			<div className="card">
@@ -329,17 +332,23 @@ class Event extends Component {
 		);
 
 		if (
-			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].events[this.event] !==
 				"undefined" &&
-			this.props.contracts["DaoEvents"].getEvent[this.event].value
+			this.props.contracts["DaoEvents"].events[this.event].value
 		) {
-			let event_data = this.props.contracts["DaoEvents"].getEvent[
+			let event_data = this.props.contracts["DaoEvents"].events[
 				this.event
 			].value;
+	
+
+			// let event_data=this.tempFun()
+
+			console.log("event_data",event_data)
+
 			
-			let ownerDetails = this.props.contracts["DaoEvents"].getOwnerDetails[
-				this.event
-			];
+			// let ownerDetails = this.props.contracts["DaoEvents"].getOwnerDetails[
+			// 	this.event
+			// ];
 			
 			let image = this.getImage();
 			let description = this.getDescription();

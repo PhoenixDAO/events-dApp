@@ -90,7 +90,7 @@ class EventPage extends Component {
 		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
+		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.match.params.id
 		);
 		this.account = this.props.accounts[0];
@@ -215,9 +215,9 @@ class EventPage extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].events[this.event] !==
 				"undefined" &&
-			!this.props.contracts["DaoEvents"].getEvent[this.event].error
+			!this.props.contracts["DaoEvents"].events[this.event].error
 		) {
 			this.setState(
 				{
@@ -225,11 +225,12 @@ class EventPage extends Component {
 				},
 				() => {
 					ipfs.get(
-						this.props.contracts["DaoEvents"].getEvent[this.event]
+						this.props.contracts["DaoEvents"].events[this.event]
 							.value[7]
 					)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
+							console.log("data in eventPage",data)
 							if (!this.isCancelled) {
 								this.setState({
 									loading: false,
@@ -237,6 +238,7 @@ class EventPage extends Component {
 									description: data.text,
 									image: data.image,
 									locations: data.location,
+									organizer:data.organizer
 								});
 							}
 						})
@@ -353,14 +355,14 @@ class EventPage extends Component {
 		console.log("approve", balance);
 		console.log(
 			"buy",
-			this.props.contracts["DaoEvents"].getEvent[this.event].value[2]
+			this.props.contracts["DaoEvents"].events[this.event].value[2]
 		);
 
 		this.setState(
 			{
-				fee: this.props.contracts["DaoEvents"].getEvent[this.event]
+				fee: this.props.contracts["DaoEvents"].events[this.event]
 					.value[2],
-				token: this.props.contracts["DaoEvents"].getEvent[this.event]
+				token: this.props.contracts["DaoEvents"].events[this.event]
 					.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
@@ -416,10 +418,10 @@ class EventPage extends Component {
 		let body = <Loading />;
 
 		if (
-			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].events[this.event] !==
 			"undefined"
 		) {
-			if (this.props.contracts["DaoEvents"].getEvent[this.event].error) {
+			if (this.props.contracts["DaoEvents"].events[this.event].error) {
 				body = (
 					<div className="text-center mt-5">
 						<span role="img" aria-label="unicorn">
@@ -429,20 +431,21 @@ class EventPage extends Component {
 					</div>
 				);
 			} else {
-				let event_data = this.props.contracts["DaoEvents"].getEvent[
+				let event_data = this.props.contracts["DaoEvents"].events[
 					this.event
 				].value;
 
 				let shareUrl = window.location;
 				let title = event_data[0];
-				let ownerDetails = this.props.contracts["DaoEvents"]
-					.getOwnerDetails[this.event];
-				if (ownerDetails != undefined) {
-					ownerDetails = ownerDetails.value;
-				console.log("owner",ownerDetails);
-				}
+				// let ownerDetails = this.props.contracts["DaoEvents"]
+				// 	.getOwnerDetails[this.event];
+				// if (ownerDetails != undefined) {
+				// 	ownerDetails = ownerDetails.value;
+				// console.log("owner",ownerDetails);
+				// }
 				let image = this.getImage();
 				let description = this.getDescription();
+				// let organizer = this.getOrganizer();
 				let locations = this.getLocation();
 				let buttonText = event_data[3] ? " Buy Ticket" : " Get Ticket";
 				let symbol = event_data[3]
@@ -647,7 +650,7 @@ class EventPage extends Component {
 											Category: {category}
 										</li>
 										<li className="list-group-item">
-											Organizer: {ownerDetails}
+											Organizer: {this.state.organizer}
 										</li>
 										<li className="list-group-item">
 											Price:{" "}

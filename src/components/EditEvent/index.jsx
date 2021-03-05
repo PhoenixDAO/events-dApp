@@ -110,6 +110,7 @@ class CreateEvent extends Component {
 				image: reader.result,
 				text: this.state.data.description,
 				location: this.state.data.location,
+				organizer: this.state.data.organizer
 			});
 			console.log("Iam here ")
 		} else {
@@ -117,6 +118,7 @@ class CreateEvent extends Component {
 				image: this.state.data.fileImg,
 				text: this.state.data.description,
 				location: this.state.data.location,
+				organizer: this.state.data.organizer
 			});
 		}
 		let buffer = Buffer.from(data);
@@ -152,11 +154,12 @@ class CreateEvent extends Component {
 						this.state.data.seats,
 						this.state.ipfs,
 						this.state.data.type,
-						this.state.data.organizer
+						// this.state.data.organizer
 					),"edit"
 				);
 			})
 			.catch((error) => {
+				console.log("error in edit index",error)
 				this.setState(
 					{
 						error: true,

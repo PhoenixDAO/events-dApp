@@ -30,15 +30,15 @@ class CheckUser extends Component {
 		this.address = null;
 		this.ticketsOfUser = null;
 		this.listOfTickets = [];
-		this.event = this.contracts["DaoEvents"].methods.getEvent.cacheCall(
+		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.event_id
 		);
-		this.event_data = this.props.contracts["DaoEvents"].getEvent[
+		this.event_data = this.props.contracts["DaoEvents"].events[
 			this.event
 		].value;
-		this.organizerName = this.contracts[
-			"DaoEvents"
-		].methods.getOwnerDetails.cacheCall(this.event);
+		// this.organizerName = this.contracts[
+		// 	"DaoEvents"
+		// ].methods.getOwnerDetails.cacheCall(this.event);
 		this.reportEvent = this.reportEvent.bind(this);
 		console.log("view this.props", this.props);
 	}
@@ -72,8 +72,8 @@ class CheckUser extends Component {
 				loading: true,
 			});
 			console.log("cehck now 123", this.event);
-			let ownerDetails = this.props.contracts["DaoEvents"]
-				.getOwnerDetails[this.event];
+			// let ownerDetails = this.props.contracts["DaoEvents"]
+			// 	.getOwnerDetails[this.event];
 			let payload = {
 				reportAccounts: this.account,
 				eventName: this.event_data.name,
@@ -205,13 +205,13 @@ class CheckUser extends Component {
 	};
 
 	render() {
-		let ownerDetails = this.props.contracts["DaoEvents"].getOwnerDetails[
-			this.event
-		];
-		if (ownerDetails != undefined) {
-			ownerDetails = ownerDetails.value;
-		}
-		console.log("owner1",ownerDetails)
+		// let ownerDetails = this.props.contracts["DaoEvents"].getOwnerDetails[
+		// 	this.event
+		// ];
+		// if (ownerDetails != undefined) {
+		// 	ownerDetails = ownerDetails.value;
+		// }
+		// console.log("owner1",ownerDetails)
 		console.log("hey props", this.props);
 		console.log("hey props", this.event);
 		console.log("hey props", this.event_data);

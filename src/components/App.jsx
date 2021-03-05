@@ -474,7 +474,7 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-
+		console.log("i am here",type)
 		this.setState({ upload: true, createEvent: transaction }, () =>
 			this.state.createEvent
 				.send({ from: this.state.account })
@@ -505,7 +505,7 @@ class App extends Component {
 								<NotifyEventSuccess
 									hash={txreceipt.transactionHash}
 									createdEvent={type==="create"?txreceipt.events.CreatedEvent
-									.returnValues:txreceipt.events.UpdatedEvent
+									.returnValues:txreceipt.events.NewAndUpdatedEvent
 									.returnValues}
 									
 								/>,
