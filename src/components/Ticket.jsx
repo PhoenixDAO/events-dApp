@@ -63,7 +63,7 @@ class Ticket extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].events[this.event] !==
 				"undefined"
 		) {
 			this.setState(
@@ -72,7 +72,7 @@ class Ticket extends Component {
 				},
 				() => {
 					ipfs.get(
-						this.props.contracts["DaoEvents"].getEvent[this.event]
+						this.props.contracts["DaoEvents"].events[this.event]
 							.value[7]
 					)
 						.then((file) => {
@@ -237,7 +237,7 @@ class Ticket extends Component {
 		) {
 			this.event = this.contracts[
 				"DaoEvents"
-			].methods.getEvent.cacheCall(
+			].methods.events.cacheCall(
 				this.props.contracts["DaoEvents"].getTicket[this.ticket]
 					.value[0]
 			);
@@ -253,7 +253,7 @@ class Ticket extends Component {
 		let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 			this.ticket
 		].value;
-		let event_data = this.props.contracts["DaoEvents"].getEvent[this.event]
+		let event_data = this.props.contracts["DaoEvents"].events[this.event]
 			.value;
 		const canvas = document.getElementById(
 			event_data[0] + "-" + ticket_data[1]
@@ -281,13 +281,13 @@ class Ticket extends Component {
 		);
 		if (
 			this.event !== null &&
-			typeof this.props.contracts["DaoEvents"].getEvent[this.event] !==
+			typeof this.props.contracts["DaoEvents"].events[this.event] !==
 				"undefined"
 		) {
 			let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 				this.ticket
 			].value;
-			let event_data = this.props.contracts["DaoEvents"].getEvent[
+			let event_data = this.props.contracts["DaoEvents"].events[
 				this.event
 			].value;
 
@@ -454,7 +454,7 @@ class Ticket extends Component {
 				let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 					this.ticket
 				].value;
-				let event_data = this.props.contracts["DaoEvents"].getEvent[
+				let event_data = this.props.contracts["DaoEvents"].events[
 					this.event
 				].value;
 				let warning = this.state.wrong_address ? "is-invalid" : "";

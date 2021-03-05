@@ -89,12 +89,14 @@ class CreateEvent extends Component {
 	convertAndUpload = (reader) => {
 		let pinit = process.env.NODE_ENV === "production";
 
+		console.log("i am here in convertAndUpload")
 		let data = JSON.stringify({
 			image: reader.result,
 			text: this.state.data.description,
+			organizer:this.state.data.organizer,
 			location: this.state.data.location,
 		});
-
+		console.log("i am here in convertAndUpload2")
 		let buffer = Buffer.from(data);
 		// let buffer2 = Buffer.from(JSON.stringify({name:"Jaffer",company:"Xord"}))
 		// ipfs.add(buffer2,{pin: pinit}).then((hash)=>{
@@ -121,6 +123,7 @@ class CreateEvent extends Component {
 				// 	this.state.data.type,
 				// 	this.state.organizer
 				// ))
+				console.log("testing contract",this.state.data)
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.createEvent(
 						this.state.data.name,
@@ -131,11 +134,12 @@ class CreateEvent extends Component {
 						this.state.data.seats,
 						this.state.ipfs,
 						this.state.data.type,
-						this.state.data.organizer
+						// this.state.data.organizer
 					),"create"
 				);
 			})
 			.catch((error) => {
+				console.log("i am here error",error)
 				this.setState(
 					{
 						error: true,
