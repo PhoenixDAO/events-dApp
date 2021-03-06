@@ -235,20 +235,20 @@ class Dashboard extends Component {
 			if (eventCount !== undefined) {
 				for (var i = 0; i < eventCount.length; i++) {
 					eventCache.push(
-						this.contracts["DaoEvents"].methods.getEvent.cacheCall(
+						this.contracts["DaoEvents"].methods.events.cacheCall(
 							eventCount[i]
 						)
 					);
 					if (
-						typeof this.props.contracts["DaoEvents"].getEvent[
+						typeof this.props.contracts["DaoEvents"].events[
 							eventCache[i]
 						] !== "undefined" &&
-						this.props.contracts["DaoEvents"].getEvent[
+						this.props.contracts["DaoEvents"].events[
 							eventCache[i]
 						].value
 					) {
 						eventDetails.push({
-							result: this.props.contracts["DaoEvents"].getEvent[
+							result: this.props.contracts["DaoEvents"].events[
 								eventCache[i]
 							].value,
 							id: eventCount[i],
