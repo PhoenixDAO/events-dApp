@@ -267,11 +267,11 @@ class CreateEvent extends Component {
 			);
 		if (this.state.error || this.props.error) {
 			body = (
-				<Error
-					message={this.state.error_text}
-					createNewEvent={this.createNewEvent}
-					createNewEvent2={this.props.createNewEvent}
-				/>
+				<Form
+							createEvent={this.createEvent}
+							account={this.props.account}
+							{...this.props.location.state}
+						/>
 			);
 		}
 

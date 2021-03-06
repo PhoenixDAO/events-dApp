@@ -99,7 +99,7 @@ class FindEvents extends Component {
 		//listens for deleted event
 		await openEvents
 			.getPastEvents("DeletedEvent", {
-				fromBlock: 7654042,
+				fromBlock: 8181618,
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
@@ -114,7 +114,7 @@ class FindEvents extends Component {
 		// listens for all events
 		await openEvents
 			.getPastEvents("NewAndUpdatedEvent", {
-				fromBlock: 7654042,
+				fromBlock: 8181618,
 				toBlock: this.state.latestblocks,
 			})
 			.then(async (events) => {

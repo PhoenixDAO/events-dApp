@@ -97,7 +97,7 @@ class MyEvents extends Component {
 		console.log("check state events", openEvents.getPastEvents);
 		await openEvents
 			.getPastEvents("DeletedEvent", {
-				fromBlock: 7654042,
+				fromBlock: 8181618,
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
