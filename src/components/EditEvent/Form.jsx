@@ -604,6 +604,8 @@ class Form extends Component {
 		if (this.props.account.length == 0) {
 			disabled = true;
 		}
+		// let buttonText = event_data[3] ? "Buy Ticket" : "Get Ticket";
+
 		return (
 			<React.Fragment>
 				<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
@@ -1153,7 +1155,14 @@ class Form extends Component {
 								{this.state.description}
 							</p>
 						</div>
+						
 						<ul className="list-group list-group-flush">
+						<li className="list-group-item">
+								<strong>Location:</strong> {this.state.location}{" "}
+							</li>
+							<li className="list-group-item">
+								<strong>Category:</strong> {this.state.type}{" "}
+							</li>
 							{this.state.currency == "phnx" && (
 								<li className="list-group-item">
 									<strong>Price:</strong>{" "}
@@ -1200,7 +1209,7 @@ class Form extends Component {
 						</ul>
 						<div className="card-footer text-muted text-center">
 							<button className="btn btn-dark" disabled="">
-								Buy Now
+							{  this.state.currency === "eth" ?"Get Ticket":"Buy Ticket"}
 							</button>
 						</div>
 					</div>

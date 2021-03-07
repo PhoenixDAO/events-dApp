@@ -366,8 +366,8 @@ class EventPage extends Component {
 					.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
-							
-				),
+                    this.props.match.params.id  
+                ),
 				approve: this.contracts["PHNX"].methods.approve(
 					this.contracts["DaoEvents"].address,
 					balance
