@@ -144,16 +144,26 @@ class CreateEvent extends Component {
 					this.state.data.seats,
 					this.state.ipfs,
 					this.state.data.type,
-					this.state.data.organizer
+					this.state.data.organizer,
+					this.state.data.currency,
+					this.state.data.currency === "eth"
 				);
+				
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.updateEvent(
 						this.state.data.eventId,
 						this.state.data.time,
 						this.state.data.price,
+						this.state.data.currency === "eth" ? false : true,
+						this.state.data.limited,
+						// false,
+						// false,
 						this.state.data.seats,
 						this.state.ipfs,
 						this.state.data.type,
+						// false,
+						// false
+						
 						// this.state.data.organizer
 					),"edit"
 				);
