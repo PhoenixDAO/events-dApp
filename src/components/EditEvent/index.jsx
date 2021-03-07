@@ -144,16 +144,26 @@ class CreateEvent extends Component {
 					this.state.data.seats,
 					this.state.ipfs,
 					this.state.data.type,
-					this.state.data.organizer
+					this.state.data.organizer,
+					this.state.data.currency,
+					this.state.data.currency === "eth"
 				);
+				
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.updateEvent(
 						this.state.data.eventId,
 						this.state.data.time,
 						this.state.data.price,
+						this.state.data.currency === "eth" ? false : true,
+						this.state.data.limited,
+						// false,
+						// false,
 						this.state.data.seats,
 						this.state.ipfs,
 						this.state.data.type,
+						// false,
+						// false
+						
 						// this.state.data.organizer
 					),"edit"
 				);
@@ -267,11 +277,11 @@ class CreateEvent extends Component {
 			);
 		if (this.state.error || this.props.error) {
 			body = (
-				<Error
-					message={this.state.error_text}
-					createNewEvent={this.createNewEvent}
-					createNewEvent2={this.props.createNewEvent}
-				/>
+				<Form
+							createEvent={this.createEvent}
+							account={this.props.account}
+							{...this.props.location.state}
+						/>
 			);
 		}
 

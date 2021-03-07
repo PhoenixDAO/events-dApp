@@ -149,7 +149,7 @@ class Home extends Component {
 			const blockNumber = await web3.eth.getBlockNumber();
 
 			let totalTickets = await openEvents.getPastEvents("SoldTicket", {
-				fromBlock: 7654042,
+				fromBlock: 8181618,
 				toBlock: blockNumber,
 			});
 			let allTicketBuyers = totalTickets.map((tt) => {
@@ -174,7 +174,7 @@ class Home extends Component {
 
 			//Get Deleted Events
 			let Deleted_Events = await openEvents.getPastEvents("DeletedEvent", {
-				fromBlock: 7654042,
+				fromBlock: 8181618,
 				toBlock: blockNumber,
 			});
 			//filtered event

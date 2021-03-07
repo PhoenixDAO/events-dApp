@@ -126,7 +126,7 @@ class Dashboard extends Component {
 		// let MyEvents = this.state;
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
-				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
+				"https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b"
 			)
 		);
 		const openEvents = new web3.eth.Contract(
@@ -173,7 +173,7 @@ class Dashboard extends Component {
 
 		await openEvents
 			.getPastEvents("DeletedEvent", {
-				fromBlock: 7654042,
+				fromBlock: 8181618,
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
