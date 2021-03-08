@@ -587,6 +587,8 @@ class Form extends Component {
 		if (this.props.account.length == 0) {
 			disabled = true;
 		}
+		let buttonText = this.state.price != 0 ? "Buy Ticket" : "Get Ticket";
+
 		return (
 			<React.Fragment>
 				<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
@@ -664,7 +666,7 @@ class Form extends Component {
 								onChange={this.locationChange}
 								autoComplete="off"
 							/>
-								<small className="form-text text-muted">
+							<small className="form-text text-muted">
 								{this.state.location.length}/100 characters
 								available.
 							</small>
@@ -1150,6 +1152,13 @@ class Form extends Component {
 							</p>
 						</div>
 						<ul className="list-group list-group-flush">
+							<li className="list-group-item">
+								<strong>Location:</strong> {this.state.location}{" "}
+							</li>
+							<li className="list-group-item">
+								<strong>Category:</strong> {this.state.type}{" "}
+							</li>
+
 							{this.state.currency == "phnx" && (
 								<li className="list-group-item">
 									<strong>Price:</strong>{" "}
@@ -1187,16 +1196,16 @@ class Form extends Component {
 									{this.state.dateDisplay.toLocaleTimeString()}
 								</strong>{" "}
 							</li>
-							<li className="list-group-item">
-								<strong>Location:</strong> {this.state.location}{" "}
-							</li>
+
 							<li className="list-group-item">
 								<strong>Tickets Sold:</strong> {seatsForHumans}
 							</li>
 						</ul>
 						<div className="card-footer text-muted text-center">
 							<button className="btn btn-dark" disabled="">
-								Buy Now
+								{this.state.currency === "eth"
+									? "Get Ticket"
+									: "Buy Ticket"}
 							</button>
 						</div>
 					</div>

@@ -3,6 +3,8 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
+import { API_URL, REPORT_EVENT } from "../utils/const";
+import axios from "axios";
 import Web3 from "web3";
 import Loading from "./Loading";
 import { Bar, Doughnut } from "react-chartjs-2";
@@ -33,6 +35,7 @@ class Dashboard extends Component {
 			PhoenixDAO_market: [],
 			openModal: false,
 			deletedArray: [],
+			hideEvent: [],
 		};
 
 		this.contracts = context.drizzle.contracts;
@@ -121,12 +124,23 @@ class Dashboard extends Component {
 			})
 			.catch((err) => console.error(err));
 	}
-
+	filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			console.log("get", get.data.result);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			return;
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
 	async loadBockchain() {
 		// let MyEvents = this.state;
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
-				"https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b"
+				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
 			)
 		);
 		const openEvents = new web3.eth.Contract(
@@ -166,6 +180,8 @@ class Dashboard extends Component {
 								MyEvents: newsort,
 								active_length: this.state.MyEvents.length,
 							});
+
+							console.log("myevents2", this.state.MyEvents);
 						}
 					}, 10000)
 				);
@@ -187,16 +203,34 @@ class Dashboard extends Component {
 			});
 		let deletedArray = [];
 		// var array1 = [];
-		for (var key in this.state.MyEvents) {
-			this.state.Deleted_Events.filter((data) => {
+		console.log("myevents4", this.state.Deleted_Events);
+		let skip = false;
+		for (let i = 0; i < this.state.MyEvents.length; i++) {
+			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
-					data.returnValues.eventId ==
-					this.state.MyEvents[key].returnValues.eventId
+					this.state.MyEvents[i].returnValues.eventId ==
+					this.state.Deleted_Events[j].returnValues.eventId
 				) {
-					deletedArray.push(data.returnValues.eventId);
+					skip = true;
 				}
-			});
+			}
+			if (!skip) {
+				for (let j = 0; j < this.state.hideEvent.length; j++) {
+					if (
+						this.state.MyEvents[i].returnValues.eventId ==
+						this.state.hideEvent[j].id
+					) {
+						skip = true;
+					}
+				}
+			}
+			if (!skip) {
+				deletedArray.push(this.state.MyEvents[i]);
+			}
+			skip = false;
 		}
+
+		console.log("DElete length", deletedArray);
 		// var array1 = this.state.MyEvents;
 		// for (var key in this.state.MyEvents) {
 		// 	for (var key2 in deletedArray) {
@@ -229,7 +263,7 @@ class Dashboard extends Component {
 			];
 			console.log("hey123", eventCounts);
 
-			var loading = true
+			var loading = true;
 			let eventCache = [];
 			let eventDetails = [];
 			if (eventCount !== undefined) {
@@ -243,12 +277,11 @@ class Dashboard extends Component {
 						typeof this.props.contracts["DaoEvents"].events[
 							eventCache[i]
 						] !== "undefined" &&
-						this.props.contracts["DaoEvents"].events[
-							eventCache[i]
-						].value
+						this.props.contracts["DaoEvents"].events[eventCache[i]]
+							.value
 					) {
 						eventDetails.push({
-							result: this.props.contracts["DaoEvents"].events[
+							returnValues: this.props.contracts["DaoEvents"].events[
 								eventCache[i]
 							].value,
 							id: eventCount[i],
@@ -256,18 +289,17 @@ class Dashboard extends Component {
 					}
 				}
 			}
-			console.log("event details", eventDetails);
-
-			//console.log(eventDetails)
-			var sortBySold = eventDetails
+			let CreatedEvent = this.state.deletedArray;
+			console.log("event details", CreatedEvent);
+			var sortBySold = CreatedEvent
 				.concat()
-				.sort((a, b) => b.result.sold - a.result.sold);
-			let phoenixDAORevenue = eventDetails.filter(
-				(event_token) => event_token.result.token == true
+				.sort((a, b) => b.result.sold - a.returnValues.sold);
+			let phoenixDAORevenue = CreatedEvent.filter(
+				(event_token) => event_token.returnValues.token == true
 			);
 			console.log("check phoen", phoenixDAORevenue);
-			let limited = eventDetails.filter(
-				(event_seats) => event_seats.result.limited == true
+			let limited = CreatedEvent.filter(
+				(event_seats) => event_seats.returnValues.limited == true
 			);
 
 			let top_PhoenixDAORevenue = phoenixDAORevenue
@@ -275,15 +307,15 @@ class Dashboard extends Component {
 				.sort(
 					(a, b) =>
 						parseInt(
-							b.result.sold *
+							b.returnValues.sold *
 								this.context.drizzle.web3.utils.fromWei(
-									b.result.price
+									b.returnValues.price
 								)
 						) -
 						parseInt(
-							a.result.sold *
+							a.returnValues.sold *
 								this.context.drizzle.web3.utils.fromWei(
-									a.result.price
+									a.returnValues.price
 								)
 						)
 				);
@@ -328,35 +360,38 @@ class Dashboard extends Component {
 
 			let totalSold = sortBySold.reduce(
 				(accumulator, currentValue) =>
-					accumulator + parseInt(currentValue.result.sold),
+					accumulator + parseInt(currentValue.returnValues.sold),
 				0
 			);
 			let revenue = phoenixDAORevenue.reduce(
 				(accumulator, currentValue) =>
 					accumulator +
 					parseInt(
-						currentValue.result.sold *
+						currentValue.returnValues.sold *
 							this.context.drizzle.web3.utils.fromWei(
-								currentValue.result.price
+								currentValue.returnValues.price
 							)
 					),
 				0
 			);
 			let soldSeats = limited.reduce(
 				(accumulator, currentValue) =>
-					accumulator + parseInt(currentValue.result.sold),
+					accumulator + parseInt(currentValue.returnValues.sold),
 				0
 			);
 			let totalSeats = limited.reduce(
 				(accumulator, currentValue) =>
-					accumulator + parseInt(currentValue.result.seats),
+					accumulator + parseInt(currentValue.returnValues.seats),
 				0
 			);
+
 			var array1 = eventDetails;
 			var array2 = this.state.deletedArray;
 			let totalEvents = array1.filter(function (val) {
 				return array2.indexOf(val.id) == -1;
 			});
+			console.log("total events", array1);
+			console.log("total events2", array2);
 
 			var array1 = sortSold;
 			let topEvents = array1.filter(function (val) {
@@ -364,7 +399,7 @@ class Dashboard extends Component {
 			});
 
 			console.log("array sort12", topEvents);
-			loading=false
+			loading = false;
 
 			// Doughnut Chart Data
 			this.DoughnutData = (canvas) => {
@@ -461,7 +496,7 @@ class Dashboard extends Component {
 				if (sortTopRevenue.length !== 0) {
 					return {
 						labels: sortTopRevenue.map((event) => [
-							event.result.name,
+							event.returnValues.name,
 						]),
 						datasets: [
 							{
@@ -489,9 +524,9 @@ class Dashboard extends Component {
 								borderAlign: "center",
 								data: sortTopRevenue.map((event) =>
 									parseInt(
-										event.result.sold *
+										event.returnValues.sold *
 											this.context.drizzle.web3.utils.fromWei(
-												event.result.price
+												event.returnValues.price
 											)
 									)
 								),
@@ -587,7 +622,7 @@ class Dashboard extends Component {
 											Number Of Created Events
 										</h3>
 										<h4 className="dashboard-data">
-											{totalEvents.length}
+											{CreatedEvent.length}
 										</h4>
 										<p className="dashboard-footer">
 											Events
@@ -647,36 +682,50 @@ class Dashboard extends Component {
 												</Link>
 												{topEvents.map(
 													(event, index) => {
-														if(event.result.name!=""){
+														if (
+															event.returnValues.name !=
+															""
+														) {
 															console.log(
-															"hey uo",
-															event.result.name
-														);
-														return (
-															<h4 className="eventTitle"
-																key={index + 1}
-																title={
-																	event.result
-																		.name
-																}
-																onClick={() =>
-																	this.goTo(
-																		event.id,
+																"hey uo",
+																event.returnValues
+																	.name
+															);
+															return (
+																<h4
+																	className="eventTitle"
+																	key={
+																		index +
+																		1
+																	}
+																	title={
 																		event
-																			.result
+																			.returnValues
 																			.name
-																	)
-																}
-															>
-																<span>
-																	{`${index+1}. `}
-																</span>
-																{
-																	event.result
-																		.name
-																}
-															</h4>
-														);}
+																	}
+																	onClick={() =>
+																		this.goTo(
+																			event.id,
+																			event
+																				.returnValues
+																				.name
+																		)
+																	}
+																>
+																	<span>
+																		{`${
+																			index +
+																			1
+																		}. `}
+																	</span>
+																	{
+																		event
+																			.returnValues
+																			.name
+																	}
+																</h4>
+															);
+														}
 													}
 												)}
 											</div>
@@ -684,28 +733,43 @@ class Dashboard extends Component {
 												<h4 className="mb-2">
 													Tickets Sold
 												</h4>
-												{!loading && topEvents.map(
-													(event, index) => {if(event.result.name!=""){
-														return (
-														<h4
-															key={index}
-															title={
-																event.result
-																	.sold +
-																" Tickets Sold"
+												{!loading &&
+													topEvents.map(
+														(event, index) => {
+															if (
+																event.returnValues
+																	.name != ""
+															) {
+																return (
+																	<h4
+																		key={
+																			index
+																		}
+																		title={
+																			event
+																				.returnValues
+																				.sold +
+																			" Tickets Sold"
+																		}
+																		onClick={() =>
+																			this.goTo(
+																				event.id,
+																				event
+																					.returnValues
+																					.name
+																			)
+																		}
+																	>
+																		{
+																			event
+																				.returnValues
+																				.sold
+																		}
+																	</h4>
+																);
 															}
-															onClick={() =>
-																this.goTo(
-																	event.id,
-																	event.result
-																		.name
-																)
-															}
-														>
-															{event.result.sold}
-														</h4>
-													)}}
-												)}
+														}
+													)}
 											</div>
 										</div>
 									)}
@@ -942,6 +1006,7 @@ class Dashboard extends Component {
 		this._isMounted = true;
 		this.getPhoenixDAOMarketValue();
 		this.loadBockchain();
+		this.filterHideEvent();
 	}
 	componentWillUnmount() {
 		this._isMounted = false;
