@@ -474,7 +474,7 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-		console.log("i am here",type)
+		console.log("i am here",transaction)
 		this.setState({ upload: true, createEvent: transaction }, () =>
 			this.state.createEvent
 				.send({ from: this.state.account })
