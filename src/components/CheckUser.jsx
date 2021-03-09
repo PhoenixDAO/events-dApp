@@ -261,7 +261,7 @@ class CheckUser extends Component {
 									className="fas fa-flag"
 								></i>
 							)}
-							Report An Event
+							Report Event
 						</button>
 					</div>
 				</div>
