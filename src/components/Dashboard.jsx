@@ -99,7 +99,7 @@ class Dashboard extends Component {
 		}
 
 		this.state.openEvents
-			.getPastEvents("CreatedEvent", {
+			.getPastEvents("NewAndUpdatedEvent", {
 				filter: { owner: this.account },
 				fromBlock: 5000000,
 				toBlock: this.state.latestblocks,
@@ -293,7 +293,7 @@ class Dashboard extends Component {
 			console.log("event details", CreatedEvent);
 			var sortBySold = CreatedEvent
 				.concat()
-				.sort((a, b) => b.result.sold - a.returnValues.sold);
+				.sort((a, b) => b.returnValues.sold - a.returnValues.sold);
 			let phoenixDAORevenue = CreatedEvent.filter(
 				(event_token) => event_token.returnValues.token == true
 			);

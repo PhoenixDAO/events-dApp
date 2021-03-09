@@ -10,6 +10,9 @@ import {
 
 import ipfs from "../utils/ipfs";
 
+import { API_URL, REPORT_EVENT } from "../utils/const";
+import axios from "axios";
+
 import Loading from "./Loading";
 import eventTopics from "../config/topics.json";
 
@@ -88,6 +91,7 @@ class Event extends Component {
 			approve: "",
 			buy: "",
 			open: false,
+			hideEvent: []
 		};
 		this.isCancelled = false;
 	}
@@ -321,6 +325,18 @@ class Event extends Component {
 	//
 	//   return prettyCategory;
 	// }
+	filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			console.log("get", get.data.result);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			return;
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
 	
 	render() {
 		let body = (
@@ -366,9 +382,29 @@ class Event extends Component {
 				let date = new Date(parseInt(event_data[1], 10) * 1000);
 				let max_seats = event_data[4] ? event_data[5] : "∞";
 				let disabled = false;
+				let reportedOut = " "
+				let reported=false
 				let soldOut = " ";
+				for (let j = 0; j < this.state.hideEvent.length; j++) {
+					console.log("matching",this.props.id,this.state.hideEvent[j].id)
+					if (
+						this.props.id == this.state.hideEvent[j].id
+					) {
+						reported = true;
+						disabled = true;
+					buttonText = (
+						<span>
+							<span role="img" aria-label="alert">
+								{" "}
+							</span>{" "}
+							Reported
+						</span>
+					);
+					reportedOut = <p className="reported">Reported</p>;
+					}
+				}
 				let sold = false;
-				if (
+				if (!reported && 
 					event_data[4] &&
 					Number(event_data[6]) >= Number(event_data[5])
 				) {
@@ -383,6 +419,7 @@ class Event extends Component {
 						</span>
 					);
 					soldOut = <p className="sold_out">Sold Out</p>;
+					console.log("soldeeout")
 				}
 				if (date.getTime() < new Date().getTime()) {
 					disabled = true;
@@ -439,15 +476,22 @@ class Event extends Component {
 				body = (
 					<div className="card">
 						<div className="image_wrapper">
-							<Link to={myEvent ? myEventStatURL :titleURL}>
-								<img
-									className="card-img-top event-image"
-									src={image}
-									alt={event_data[0]}
-								/>
-							</Link>
-							{soldOut}
-							{!sold && freeEvent}
+							{!reported? <Link to={myEvent ? myEventStatURL :titleURL}>
+											<img
+												className="card-img-top event-image"
+												src={image}
+												alt={event_data[0]}
+											/>
+										</Link> : 
+										<img
+											className="card-img-top event-image"
+											src={image}
+											alt={event_data[0]}
+										/>}
+							
+							{reportedOut}
+							{!reported && soldOut}
+							{!reported && 	!sold && freeEvent}
 						</div>
 
 						<div className="card-header text-muted event-header ">
@@ -465,7 +509,13 @@ class Event extends Component {
 						</div>
 
 						<div className="card-body">
-							<h5
+						{reported? <h5
+								className="card-title event-title"
+								title={event_data[0]}
+							>
+									{badge}
+									{event_data[0]}
+							</h5>: <h5
 								className="card-title event-title"
 								title={event_data[0]}
 							>
@@ -473,7 +523,7 @@ class Event extends Component {
 									{badge}
 									{event_data[0]}
 								</Link>
-							</h5>
+							</h5>}
 							{description}
 						</div>
 
@@ -576,6 +626,7 @@ class Event extends Component {
 
 	componentDidMount() {
 		this._isMounted = true;
+		this.filterHideEvent()
 		this.updateIPFS();
 		this.getPhoenixDAOMarketValue();
 	}

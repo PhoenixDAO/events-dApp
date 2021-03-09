@@ -497,10 +497,10 @@ class App extends Component {
 				.on("confirmation", (confirmationNumber, receipt) => {
 					console.log("hiiiiii Agya confirmationNumber",confirmationNumber,"and receipt",receipt)
 
-					if (confirmationNumber !== null) {
+					if (confirmationNumber == 1) {
 						txreceipt = receipt;
 						txconfirmed = confirmationNumber;
-						if (txconfirmed == 0 && txreceipt.status == true) {
+						if (txconfirmed == 1 && txreceipt.status == true) {
 							toast(
 								<NotifyEventSuccess
 									hash={txreceipt.transactionHash}
