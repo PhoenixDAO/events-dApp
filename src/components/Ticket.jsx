@@ -309,7 +309,7 @@ class Ticket extends Component {
 			let reported=false;
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
-						this.props.id== this.state.hideEvent[j].id
+						ticket_data[0]== this.state.hideEvent[j].id
 					) {
 						 reported= true;
 					}
@@ -382,10 +382,12 @@ class Ticket extends Component {
 						/>
 						<div className="card-body">
 							<h5 className="card-title event-title">
-								{/* {reported?null:
+								{!reported? 
 									<Link to={titleURL}>{event_data[0]}</Link>
-								} */}
-								{event_data[0]}
+									:
+									event_data[0]
+								}
+								{/* {event_data[0]} */}
 							</h5>
 							<div className="ticketDescription">
 								{description}
