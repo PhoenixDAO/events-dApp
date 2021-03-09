@@ -127,10 +127,13 @@ class Dashboard extends Component {
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			console.log("get", get.data.result);
-			this.setState({
-				hideEvent: get.data.result,
-			});
+			if(get.data.result.length != 0)
+			{
+				this.setState({
+					hideEvent: get.data.result,
+				});
+			}
+			
 			return;
 		} catch (error) {
 			console.log("check error", error);
@@ -158,33 +161,60 @@ class Dashboard extends Component {
 			this.loadActiveEvents();
 
 			//Listen For My Newly Created Events
-			this.state.openEvents.events
-				.CreatedEvent({
-					filter: { owner: this.account },
-					fromBlock: blockNumber,
-					toBlock: "latest",
-				})
-				.on("data", (log) =>
-					setTimeout(() => {
-						console.log("check props123", log);
-						if (this.state.isActive) {
-							this.setState({
-								MyEvents: [...this.state.MyEvents, log],
-							});
-							var newest = this.state.MyEvents;
-							var newsort = newest
-								.concat()
-								.sort((a, b) => b.blockNumber - a.blockNumber);
 
-							this.setState({
-								MyEvents: newsort,
-								active_length: this.state.MyEvents.length,
-							});
+			await openEvents
+			.getPastEvents("NewAndUpdatedEvent", {
+				filter: { owner: this.account },
+				fromBlock: 8181618,
+				toBlock: this.state.latestblocks,
+			})
+			.then(async (events) => {
+				if (this.state.isActive) {
+					console.log("eventsssss",events)
+					this.setState({
+						MyEvents: events,
+					});
+					var newest = this.state.MyEvents;
+					var newsort = newest
+						.concat()
+						.sort((a, b) => b.blockNumber - a.blockNumber);
 
-							console.log("myevents2", this.state.MyEvents);
-						}
-					}, 10000)
-				);
+					this.setState({
+						MyEvents: newsort,
+						active_length: this.state.MyEvents.length,
+					});
+
+					console.log("myevents2", this.state.MyEvents);
+			}
+		}).catch((err) => console.error(err));
+
+			// this.state.openEvents.events
+			// 	.NewAndUpdatedEvent({
+			// 		filter: { owner: this.account },
+			// 		fromBlock: blockNumber,
+			// 		toBlock: "latest",
+			// 	})
+			// 	.on("data", (log) =>
+			// 		setTimeout(() => {
+			// 			console.log("check props123", log);
+			// 			if (this.state.isActive) {
+			// 				this.setState({
+			// 					MyEvents: [...this.state.MyEvents, log],
+			// 				});
+			// 				var newest = this.state.MyEvents;
+			// 				var newsort = newest
+			// 					.concat()
+			// 					.sort((a, b) => b.blockNumber - a.blockNumber);
+
+			// 				this.setState({
+			// 					MyEvents: newsort,
+			// 					active_length: this.state.MyEvents.length,
+			// 				});
+
+			// 				console.log("myevents2", this.state.MyEvents);
+			// 			}
+			// 		}, 10000)
+			// 	);
 		}
 
 		await openEvents
@@ -291,14 +321,14 @@ class Dashboard extends Component {
 			}
 			let CreatedEvent = this.state.deletedArray;
 			console.log("event details", CreatedEvent);
-			var sortBySold = CreatedEvent
+			var sortBySold = eventDetails
 				.concat()
-				.sort((a, b) => b.result.sold - a.returnValues.sold);
-			let phoenixDAORevenue = CreatedEvent.filter(
+				.sort((a, b) => b.returnValues.sold - a.returnValues.sold);
+			let phoenixDAORevenue = eventDetails.filter(
 				(event_token) => event_token.returnValues.token == true
 			);
-			console.log("check phoen", phoenixDAORevenue);
-			let limited = CreatedEvent.filter(
+			console.log("check phoen", sortBySold);
+			let limited = eventDetails.filter(
 				(event_seats) => event_seats.returnValues.limited == true
 			);
 

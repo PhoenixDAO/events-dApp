@@ -6,6 +6,8 @@ import main from '../styles/main.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { API_URL, REPORT_EVENT } from "../utils/const";
 import axios from "axios";
+import { drizzleConnect } from "drizzle-react";
+import PropTypes from "prop-types";
 
 import Web3 from 'web3';
 import {Open_events_ABI, Open_events_Address} from '../config/OpenEvents';
@@ -26,6 +28,8 @@ class Calendars extends Component {
 
         }
         this._isMounted = false;
+        this.account = this.props.accounts[0];
+        console.log("this.account",this.account);
     }
 
     async loadBlockchain(){
@@ -112,8 +116,14 @@ class Calendars extends Component {
             .split(' ')
             .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
             .join(' ');
-	        let titleURL = "/event/"+pagetitle+"/" + event_calendar.id;
-    
+	        let titleURL;
+            console.log("event-calendar",event_calendar);
+            if (event_calendar.account=== this.account) {
+                titleURL = "/event-stat/"+pagetitle+"/" + event_calendar.id;
+            }
+            else{
+               titleURL = "/event/"+pagetitle+"/" + event_calendar.id;
+            }
             this.props.history.push(titleURL);
         }
     
@@ -157,6 +167,7 @@ class Calendars extends Component {
             start:parseInt(events_list[i].returnValues.time,10)*1000,
             end:parseInt(events_list[i].returnValues.time,10)*1000,
             allDay:true,
+            account:events_list[i].returnValues[10],
                 })
             }
             console.log("calendar event",events_calendar);
@@ -201,4 +212,15 @@ class Calendars extends Component {
         this._isMounted = false;
     }
 }
-export default Calendars;
+Calendars.contextTypes = {
+	drizzle: PropTypes.object,
+};
+
+const mapStateToProps = (state) => {
+	return {
+		accounts: state.accounts,
+	};
+};
+
+const AppContainer = drizzleConnect(Calendars, mapStateToProps);
+export default AppContainer;

@@ -8,7 +8,8 @@ import ipfs from "../utils/ipfs";
 import NotifySending from "./NotifySending";
 import NotifySuccessSending from "./NotifySuccessSending";
 import NotifyError from "./NotifyError";
-
+import { API_URL, REPORT_EVENT } from "../utils/const";
+import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -43,6 +44,7 @@ class Ticket extends Component {
 		this.ticket = this.contracts["DaoEvents"].methods.getTicket.cacheCall(
 			this.props.id
 		);
+		console.log("this.ticket",this.props.id);
 		this.event = null;
 		this.address = null;
 		this.state = {
@@ -54,11 +56,24 @@ class Ticket extends Component {
 			ipfs_problem: false,
 			card_tab: 1,
 			wrong_address: false,
-			disabledStatus: false
+			disabledStatus: false,
+			hideEvent:[],
+
 		};
 		this.isCancelled = false;
 	}
-
+	filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			console.log("get", get.data.result);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			return;
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
 	updateIPFS = () => {
 		if (
 			this.state.loaded === false &&
@@ -290,7 +305,18 @@ class Ticket extends Component {
 			let event_data = this.props.contracts["DaoEvents"].events[
 				this.event
 			].value;
+			console.log("event_data",event_data);
+			let reported=false;
+				for (let j = 0; j < this.state.hideEvent.length; j++) {
+					if (
+						this.props.id== this.state.hideEvent[j].id
+					) {
+						 reported= true;
+					}
+					console.log("reported",this.props.id,this.state.hideEvent[j].id);
 
+				}
+			
 			let rawTitle = event_data[0];
 			var titleRemovedSpaces = rawTitle;
 			titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
@@ -356,7 +382,10 @@ class Ticket extends Component {
 						/>
 						<div className="card-body">
 							<h5 className="card-title event-title">
-								<Link to={titleURL}>{event_data[0]}</Link>
+								{/* {reported?null:
+									<Link to={titleURL}>{event_data[0]}</Link>
+								} */}
+								{event_data[0]}
 							</h5>
 							<div className="ticketDescription">
 								{description}
@@ -593,6 +622,8 @@ class Ticket extends Component {
 
 	componentDidMount() {
 		this.updateEvent();
+		this.filterHideEvent();
+
 	}
 
 	componentWillUnmount() {

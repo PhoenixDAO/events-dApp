@@ -226,6 +226,8 @@ class App extends Component {
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
+						this.setState({ disabledStatus: true });
+
 						toast(<Notify hash={hash} />, {
 							position: "bottom-right",
 							autoClose: true,
