@@ -1694,6 +1694,41 @@ h4.transactions {
 	-webkit-transform: scale(0.7);
 	border: 2px dashed rgb(209, 177, 59);
 }
+.reported {
+	top: 1rem;
+	left: -6rem;
+	color:  rgb(255, 255, 255);
+	display: block;
+	position: absolute;
+	text-align: center;
+	text-decoration: none;
+	letter-spacing: 0.06rem;
+	background: linear-gradient(
+		45deg,
+		rgb(235, 11, 11),
+		rgb(202, 21, 4),
+		rgb(146, 15, 3)
+	) !important;
+	padding: 0.5em 5em 0.4em 5em;
+	-webkit-transform: rotate(-45deg) scale(0.75, 1);
+	z-index: 10;
+	height: 40px;
+	font: bold 17px/1.2 Verdana, Geneva, Tahoma, sans-serif;
+	overflow: hidden;
+}
+
+.reported:before {
+	content: "";
+	top: 0;
+	left: 0px;
+	bottom: 0;
+	right: 0px;
+	position: absolute;
+	margin: -0.3em -5em;
+	transform: scale(0.7);
+	-webkit-transform: scale(0.7);
+	border: 2px dashed rgb(255, 255, 255);
+}
 
 .not-found a {
 	color: #ff9800;

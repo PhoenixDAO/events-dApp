@@ -99,7 +99,7 @@ class Dashboard extends Component {
 		}
 
 		this.state.openEvents
-			.getPastEvents("CreatedEvent", {
+			.getPastEvents("NewAndUpdatedEvent", {
 				filter: { owner: this.account },
 				fromBlock: 5000000,
 				toBlock: this.state.latestblocks,

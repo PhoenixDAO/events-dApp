@@ -320,7 +320,7 @@ class EventPage extends Component {
 				if (confirmationNumber == 1) {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
-					if (txconfirmed == 0 && txreceipt.status == true) {
+					if (txconfirmed == 1 && txreceipt.status == true) {
 						this.setState({disabledBuying:false})
 						toast(
 							<NotifyApproveSuccess
