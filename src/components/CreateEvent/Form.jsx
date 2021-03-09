@@ -588,7 +588,7 @@ class Form extends Component {
 			disabled = true;
 		}
 		let buttonText = this.state.price != 0 ? "Buy Ticket" : "Get Ticket";
-
+		let type =this.state.type.replace(/[- )(]/g,' ');
 		return (
 			<React.Fragment>
 				<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
@@ -1155,8 +1155,8 @@ class Form extends Component {
 							<li className="list-group-item">
 								<strong>Location:</strong> {this.state.location}{" "}
 							</li>
-							<li className="list-group-item">
-								<strong>Category:</strong> {this.state.type}{" "}
+							<li className="list-group-item" style={{textTransform: "capitalize"}}>
+								<strong>Category:</strong> {type}{" "}
 							</li>
 
 							{this.state.currency == "phnx" && (

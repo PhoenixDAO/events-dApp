@@ -143,6 +143,7 @@ class MyEventStat extends Component {
 			image: null,
 			ipfs_problem: false,
 			disabledButton: false,
+			disabledBuying:false,
 			soldTicket: [],
 			latestblocks: 5000000,
 			phoenixDAO_market: [],
@@ -355,6 +356,8 @@ class MyEventStat extends Component {
 	};
 
 	giveApproval = async () => {
+		this.setState({disabledBuying:true})
+		console.log("state",this.state.disabledBuying);
 		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -375,6 +378,7 @@ class MyEventStat extends Component {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
+						this.setState({disabledBuying:false})
 						toast(
 							<NotifyApproveSuccess
 								hash={txreceipt.transactionHash}
@@ -392,6 +396,7 @@ class MyEventStat extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
+					this.setState({disabledBuying:false})
 					toast(
 						<NotifyError error={error} message={txerror.message} />,
 						{
@@ -925,7 +930,7 @@ class MyEventStat extends Component {
 										onClick={this.inquire}
 										disabled={
 											disabled ||
-											this.props.disabledStatus
+											this.props.disabledStatus||this.state.disabledBuying
 										}
 									>
 										<i className="fas fa-ticket-alt"></i>{" "}

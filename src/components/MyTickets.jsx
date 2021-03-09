@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 
 import Loading from './Loading';
 import PhoenixDAOLoader from './PhoenixDAOLoader';
-
 import Ticket from './Ticket';
 
 class MyTickets extends Component {
@@ -15,15 +14,16 @@ class MyTickets extends Component {
 	this.state = {
 		myTicket: [],
 		loading:true,
-		prevPath: -1
+		prevPath: -1,
 	}
 		this.contracts = context.drizzle.contracts;
 		this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
+		console.log("ticketsOf",this.tickets);
 		this.perPage = 6;
 		this.myRef = React.createRef()
 
 	}
-
+	
   readMoreClick(location)
   {
     this.props.history.push(location);
@@ -40,6 +40,8 @@ class MyTickets extends Component {
 	getTickets = () =>{
 	if (typeof this.props.contracts['DaoEvents'].ticketsOf[this.tickets] !== 'undefined') {
 		const myTicket = this.props.contracts['DaoEvents'].ticketsOf[this.tickets].value;
+		console.log("myTickets",myTicket);
+
 		let newsort= myTicket.concat().sort((a,b)=> b - a);
 		if(newsort!=='undefined'){
 		return newsort
@@ -51,7 +53,7 @@ class MyTickets extends Component {
 
 	render() {
 		let body = <PhoenixDAOLoader />;
-
+		
 		if (typeof this.props.contracts['DaoEvents'].ticketsOf[this.tickets] !== 'undefined') {
 			//let allTickets = this.props.contracts['DaoEvents'].ticketsOf[this.tickets].value;
 			let allTickets = this.getTickets();
@@ -173,7 +175,7 @@ class MyTickets extends Component {
 		  }
 		this._isMounted = true;
 		setTimeout(()=>this.setLoader(),1000);
-		
+
 	}
 
 	componentWillUnmount(){

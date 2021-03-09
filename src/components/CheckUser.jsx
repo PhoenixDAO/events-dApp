@@ -91,13 +91,12 @@ class CheckUser extends Component {
 					autoClose: true,
 					pauseOnHover: true,
 				});
-			this.props.history.push("/upcomingevents/1");
 			this.setState({
 				loading: false,
 			});
 		} catch (error) {
 			// console.log("error", error.response.data.responseMessage);
-			// console.log("error", error);
+			console.log("error", error);
 			toast(<NotifyReport text={error.response.data.responseMessage+"!"}/>, {
 				position: "bottom-right",
 				autoClose: true,

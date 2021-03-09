@@ -74,6 +74,7 @@ class Event extends Component {
 			description: null,
 			image: null,
 			ipfs_problem: false,
+			disabledBuying:false,
 			locations: null,
 			PhoenixDAO_market: [],
 			fee: "",
@@ -203,6 +204,7 @@ class Event extends Component {
 	};
 
 	giveApproval = async () => {
+		this.setState({disabledBuying:true})
 		this.handleClose()
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -223,6 +225,7 @@ class Event extends Component {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
+						this.setState({disabledBuying:false})
 						toast(
 							<NotifyApproveSuccess
 								hash={txreceipt.transactionHash}
@@ -241,6 +244,8 @@ class Event extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
+					this.setState({disabledBuying:false})
+
 					toast(<NotifyError error={error} message={txerror.message} />, {
 						position: "bottom-right",
 						autoClose: true,
@@ -432,7 +437,7 @@ class Event extends Component {
 								src={makeBlockie(event_data[9])}
 								alt={event_data[9]}
 							/>
-							{this.props.myEvents ? (
+							{/* {this.props.myEvents ? (
 								<Link to={myEventStatURL}>
 									<p className="myEventStat small text-truncate mb-0">
 										View Event Stats
@@ -440,7 +445,7 @@ class Event extends Component {
 								</Link>
 							) : (
 								""
-							)}
+							)} */}
 						</div>
 
 						<div className="card-body">
@@ -506,7 +511,7 @@ class Event extends Component {
 							<button
 								className="btn btn-dark"
 								onClick={this.inquire}
-								disabled={disabled || this.props.disabledStatus}
+								disabled={disabled || this.props.disabledStatus || this.state.disabledBuying}
 							>
 								<i className="fas fa-ticket-alt"></i>{" "}
 								{buttonText}

@@ -84,6 +84,7 @@ class Event extends Component {
 			ipfs_problem: false,
 			locations: null,
 			PhoenixDAO_market: [],
+			disabledBuying:false,
 			fee: "",
 			token: "",
 			openEvents_address: "",
@@ -221,6 +222,7 @@ class Event extends Component {
 	};
 
 	giveApproval = async () => {
+		this.setState({disabledBuying:true})
 		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -241,6 +243,7 @@ class Event extends Component {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
+						this.setState({disabledBuying:false})
 						toast(
 							<NotifyApproveSuccess
 								hash={txreceipt.transactionHash}
@@ -259,6 +262,7 @@ class Event extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
+					this.setState({disabledBuying:false})
 					toast(<NotifyError error={error} message={txerror.message} />, {
 						position: "bottom-right",
 						autoClose: true,
@@ -601,7 +605,7 @@ class Event extends Component {
 							<button
 								className="btn btn-dark"
 								onClick={this.inquire}
-								disabled={disabled || this.props.disabledStatus}
+								disabled={disabled || this.props.disabledStatus || this.state.disabledBuying}
 							>
 								<i className="fas fa-ticket-alt"></i>{" "}
 								{buttonText}

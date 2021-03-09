@@ -1730,8 +1730,8 @@ h4.transactions {
 	border: 2px dashed rgb(255, 255, 255);
 }
 
-.not-found a {	
-	color: #ff0000;
+.not-found a {
+	color: #ff9800;
 }
 
 .free_event {

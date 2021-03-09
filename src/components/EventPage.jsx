@@ -12,7 +12,7 @@ import NotifyApprove from "./NotifyApprove";
 import NotifySuccess from "./NotifySuccess";
 import NotifyEventSuccess from "./NotifyEventSuccess";
 import NotifyApproveSuccess from "./NotifyApproveSuccess";
-import NotifyFaucet from "./NotifyFaucet";
+import NotifyFaucet from "./NotifyFaucet";	
 import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
@@ -105,7 +105,7 @@ class EventPage extends Component {
 			soldTicket: [],
 			latestblocks: 5000000,
 			PhoenixDAO_market: [],
-
+			disabledBuying:false,
 			fee: "",
 			token: "",
 			openEvents_address: "",
@@ -300,6 +300,7 @@ class EventPage extends Component {
 	};
 
 	giveApproval = async () => {
+		this.setState({disabledBuying:true})
 		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -320,6 +321,7 @@ class EventPage extends Component {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 1 && txreceipt.status == true) {
+						this.setState({disabledBuying:false})
 						toast(
 							<NotifyApproveSuccess
 								hash={txreceipt.transactionHash}
@@ -337,6 +339,7 @@ class EventPage extends Component {
 			})
 			.on("error", (error) => {
 				if (error !== null) {
+					this.setState({disabledBuying:false})
 					txerror = error;
 					toast(<NotifyError error={error} message={txerror.message} />, {
 						position: "bottom-right",
@@ -534,7 +537,7 @@ class EventPage extends Component {
 									className="btn btn-dark"
 									onClick={this.inquire}
 									disabled={
-										disabled || this.props.disabledStatus
+										disabled || this.props.disabledStatus ||this.state.disabledBuying
 									}
 								>
 									<i className="fas fa-ticket-alt"></i>
@@ -554,10 +557,10 @@ class EventPage extends Component {
 											this.props.match.params.id
 										}
 									>
-										<button className="btn btn-dark mt-2">
+										{/* <button className="btn btn-dark mt-2">
 											<i className="fas fa-chart-bar"></i>{" "}
 											View Event Stat
-										</button>
+										</button> */}
 									</Link>
 								)}
 								<div className="event-social-share-btns-div">

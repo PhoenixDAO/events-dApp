@@ -38,7 +38,7 @@ class Form extends Component {
 			time: this.props.event[1],
 			// time:Math.floor(Date.now() / 1000),
 			timeForHumans: null,
-			currency: this.props.event.price == 0 ? "eth":"phnx",
+			currency: this.props.event.price == 0 ? "eth" : "phnx",
 			type: this.props.event.category,
 			topic: "appearance-or-signing",
 			limited: this.props.event.limited,
@@ -153,7 +153,7 @@ class Form extends Component {
 	};
 
 	handleCurrency = (event) => {
-		this.setState({free:!this.state.free});
+		this.setState({ free: !this.state.free });
 		console.log("handleCurrency====>", event.target.value);
 		if (event.target.value == "phnx") {
 			this.setState(
@@ -467,11 +467,11 @@ class Form extends Component {
 		if (
 			(this.state.currency == "phnx" && this.state.price == "") ||
 			(this.state.currency == "phnx" && this.state.price == "0") ||
-			(this.state.price == "0.0" ||
+			this.state.price == "0.0" ||
 			this.state.price == "0.00" ||
-			this.state.price == "0.000" && !this.state.free)
+			(this.state.price == "0.000" && !this.state.free)
 		)
-			 form_validation.push("price");
+			form_validation.push("price");
 		if (this.state.limited === true && this.form.seats.value < 1)
 			form_validation.push("seats");
 		if (this.state.type === "") form_validation.push("type");
@@ -605,7 +605,7 @@ class Form extends Component {
 			disabled = true;
 		}
 		// let buttonText = event_data[3] ? "Buy Ticket" : "Get Ticket";
-
+		let type = this.state.type.replace(/[- )(]/g, " ");
 		return (
 			<React.Fragment>
 				<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
@@ -872,8 +872,9 @@ class Form extends Component {
 											: "form-text text-muted"
 									}
 								>
-									{this.state.free?null:
-									"Value must be greater or equals to 0.001"}
+									{this.state.free
+										? null
+										: "Value must be greater or equals to 0.001"}
 								</small>
 							)}
 							<div className="input-group mb-3">
@@ -1155,13 +1156,13 @@ class Form extends Component {
 								{this.state.description}
 							</p>
 						</div>
-						
+
 						<ul className="list-group list-group-flush">
-						<li className="list-group-item">
+							<li className="list-group-item">
 								<strong>Location:</strong> {this.state.location}{" "}
 							</li>
-							<li className="list-group-item">
-								<strong>Category:</strong> {this.state.type}{" "}
+							<li className="list-group-item"  style={{textTransform: "capitalize"}}>
+								<strong>Category:</strong> {type}{" "}
 							</li>
 							{this.state.currency == "phnx" && (
 								<li className="list-group-item">
@@ -1209,7 +1210,9 @@ class Form extends Component {
 						</ul>
 						<div className="card-footer text-muted text-center">
 							<button className="btn btn-dark" disabled="">
-							{  this.state.currency === "eth" ?"Get Ticket":"Buy Ticket"}
+								{this.state.currency === "eth"
+									? "Get Ticket"
+									: "Buy Ticket"}
 							</button>
 						</div>
 					</div>
