@@ -26,6 +26,7 @@ class MyEvents extends Component {
 			dateNow: "",
 			prevPath: -1,
 			Deleted_Events: [],
+			disabledBuying:false,
 		};
 		this.contracts = context.drizzle.contracts;
 		this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
@@ -66,7 +67,7 @@ class MyEvents extends Component {
 			this.setState({ blocks: blockNumber - 50000 });
 			this.setState({ latestblocks: blockNumber - 1 });
 			this.loadActiveEvents();
-			console.log("Iam here");
+			console.log("Iam here",this.account);
 			//Listen For My Newly Created Events
 			openEvents.events
 				.CreatedEvent({
@@ -155,6 +156,7 @@ class MyEvents extends Component {
 		if (this._isMounted) {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
+		console.log("this.accounttttt", this.account);
 		this.state.openEvents
 			.getPastEvents("NewAndUpdatedEvent", {
 				filter: { owner: this.account },
@@ -220,7 +222,11 @@ class MyEvents extends Component {
 			}
 		);
 	};
-
+	toggleBuying=()=>{
+		this.setState({disabledBuying:!this.state.disabledBuying});
+		console.log("this.state.disabledBuying",this.state.disabledBuying);
+	}
+		
 	//Search for My Events By Name
 	updateSearch = (e) => {
 		console.log("value before", e.target.value);
@@ -322,6 +328,8 @@ class MyEvents extends Component {
 				for (let i = start; i < end; i++) {
 					updated_list.push(
 						<Event
+							toggleBuying={this.toggleBuying}
+							disabledBuying={this.state.disabledBuying}
 							disabledStatus={this.props.disabledStatus}
 							inquire={this.props.inquire}
 							key={events_list[i].returnValues.eventId}

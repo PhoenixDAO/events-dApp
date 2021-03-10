@@ -70,6 +70,7 @@ const customStyles = {
 class EventPage extends Component {
 	constructor(props, context) {
 		try {
+			console.log("this.propsssss",props)
 			var contractConfig = {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
@@ -93,6 +94,8 @@ class EventPage extends Component {
 		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.match.params.id
 		);
+		this.revenue = this.contracts["DaoEvents"].methods.eventRevenue.cacheCall(11)
+		console.log("revenue",this.revenue);
 		this.account = this.props.accounts[0];
 		this.state = {
 			load: true,
@@ -317,10 +320,10 @@ class EventPage extends Component {
 				}
 			})
 			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber == 1) {
+				if (confirmationNumber != null) {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
-					if (txconfirmed == 1 && txreceipt.status == true) {
+					if (txconfirmed == 0 && txreceipt.status == true) {
 						this.setState({disabledBuying:false})
 						toast(
 							<NotifyApproveSuccess

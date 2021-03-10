@@ -70,13 +70,13 @@ class Event extends Component {
 		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.id
 		);
-		this.organizerName = "qwerty"
+		this.organizerName = "qwerty";
 		// this.contracts["DaoEvents"].methods.getOwnerDetails.cacheCall(
 		// 	this.props.id
 		// );
 		this.account = this.props.accounts[0];
 		this.state = {
-			owner:"unknown",
+			owner: "unknown",
 			loading: false,
 			loaded: false,
 			description: null,
@@ -84,7 +84,6 @@ class Event extends Component {
 			ipfs_problem: false,
 			locations: null,
 			PhoenixDAO_market: [],
-			disabledBuying:false,
 			fee: "",
 			token: "",
 			openEvents_address: "",
@@ -92,7 +91,7 @@ class Event extends Component {
 			approve: "",
 			buy: "",
 			open: false,
-			hideEvent: []
+			hideEvent: [],
 		};
 		this.isCancelled = false;
 	}
@@ -134,7 +133,7 @@ class Event extends Component {
 					ipfs.get(this.props.ipfs)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
-							console.log("data in event",data)
+							console.log("data in event", data);
 							if (!this.isCancelled) {
 								this.setState({
 									loading: false,
@@ -142,7 +141,7 @@ class Event extends Component {
 									description: data.text,
 									image: data.image,
 									locations: data.location,
-									organizer:data.organizer
+									organizer: data.organizer,
 								});
 							}
 						})
@@ -222,7 +221,7 @@ class Event extends Component {
 	};
 
 	giveApproval = async () => {
-		this.setState({disabledBuying:true})
+		this.props.toggleBuying();
 		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -239,11 +238,11 @@ class Event extends Component {
 				}
 			})
 			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber == 1) {
+				if (confirmationNumber != null) {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
-						this.setState({disabledBuying:false})
+						this.props.toggleBuying();
 						toast(
 							<NotifyApproveSuccess
 								hash={txreceipt.transactionHash}
@@ -262,12 +261,15 @@ class Event extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
-					this.setState({disabledBuying:false})
-					toast(<NotifyError error={error} message={txerror.message} />, {
-						position: "bottom-right",
-						autoClose: true,
-						pauseOnHover: true,
-					});
+					this.props.toggleBuying();
+					toast(
+						<NotifyError error={error} message={txerror.message} />,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
 					// this.afterApprove()
 					this.setState({ disabledStatus: false });
 				}
@@ -341,7 +343,7 @@ class Event extends Component {
 			console.log("check error", error);
 		}
 	};
-	
+
 	render() {
 		let body = (
 			<div className="card">
@@ -359,17 +361,15 @@ class Event extends Component {
 			let event_data = this.props.contracts["DaoEvents"].events[
 				this.event
 			].value;
-	
 
 			// let event_data=this.tempFun()
 
-			console.log("event_data",event_data)
+			console.log("event_data", event_data);
 
-			
 			// let ownerDetails = this.props.contracts["DaoEvents"].getOwnerDetails[
 			// 	this.event
 			// ];
-			
+
 			let image = this.getImage();
 			let description = this.getDescription();
 			let locations = this.getLocation();
@@ -386,29 +386,32 @@ class Event extends Component {
 				let date = new Date(parseInt(event_data[1], 10) * 1000);
 				let max_seats = event_data[4] ? event_data[5] : "∞";
 				let disabled = false;
-				let reportedOut = " "
-				let reported=false
+				let reportedOut = " ";
+				let reported = false;
 				let soldOut = " ";
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
-					console.log("matching",this.props.id,this.state.hideEvent[j].id)
-					if (
-						this.props.id == this.state.hideEvent[j].id
-					) {
+					console.log(
+						"matching",
+						this.props.id,
+						this.state.hideEvent[j].id
+					);
+					if (this.props.id == this.state.hideEvent[j].id) {
 						reported = true;
 						disabled = true;
-					buttonText = (
-						<span>
-							<span role="img" aria-label="alert">
-								{" "}
-							</span>{" "}
-							Reported
-						</span>
-					);
-					reportedOut = <p className="reported">Reported</p>;
+						buttonText = (
+							<span>
+								<span role="img" aria-label="alert">
+									{" "}
+								</span>{" "}
+								Reported
+							</span>
+						);
+						reportedOut = <p className="reported">Reported</p>;
 					}
 				}
 				let sold = false;
-				if (!reported && 
+				if (
+					!reported &&
 					event_data[4] &&
 					Number(event_data[6]) >= Number(event_data[5])
 				) {
@@ -423,7 +426,7 @@ class Event extends Component {
 						</span>
 					);
 					soldOut = <p className="sold_out">Sold Out</p>;
-					console.log("soldeeout")
+					console.log("soldeeout");
 				}
 				if (date.getTime() < new Date().getTime()) {
 					disabled = true;
@@ -472,30 +475,33 @@ class Event extends Component {
 				let titleURL = "/event/" + pagetitle + "/" + this.props.id;
 				let myEventStatURL =
 					"/event-stat/" + pagetitle + "/" + this.props.id;
-					let myEvent = false;
-					if (event_data[9] === this.account) {
-						myEvent = true;
-					}
-	
+				let myEvent = false;
+				if (event_data[9] === this.account) {
+					myEvent = true;
+				}
+
 				body = (
 					<div className="card">
 						<div className="image_wrapper">
-							{!reported? <Link to={myEvent ? myEventStatURL :titleURL}>
-											<img
-												className="card-img-top event-image"
-												src={image}
-												alt={event_data[0]}
-											/>
-										</Link> : 
-										<img
-											className="card-img-top event-image"
-											src={image}
-											alt={event_data[0]}
-										/>}
-							
+							{!reported ? (
+								<Link to={myEvent ? myEventStatURL : titleURL}>
+									<img
+										className="card-img-top event-image"
+										src={image}
+										alt={event_data[0]}
+									/>
+								</Link>
+							) : (
+								<img
+									className="card-img-top event-image"
+									src={image}
+									alt={event_data[0]}
+								/>
+							)}
+
 							{reportedOut}
 							{!reported && soldOut}
-							{!reported && 	!sold && freeEvent}
+							{!reported && !sold && freeEvent}
 						</div>
 
 						<div className="card-header text-muted event-header ">
@@ -513,21 +519,27 @@ class Event extends Component {
 						</div>
 
 						<div className="card-body">
-						{reported? <h5
-								className="card-title event-title"
-								title={event_data[0]}
-							>
+							{reported ? (
+								<h5
+									className="card-title event-title"
+									title={event_data[0]}
+								>
 									{badge}
 									{event_data[0]}
-							</h5>: <h5
-								className="card-title event-title"
-								title={event_data[0]}
-							>
-								<Link to={myEvent ? myEventStatURL :titleURL}>
-									{badge}
-									{event_data[0]}
-								</Link>
-							</h5>}
+								</h5>
+							) : (
+								<h5
+									className="card-title event-title"
+									title={event_data[0]}
+								>
+									<Link
+										to={myEvent ? myEventStatURL : titleURL}
+									>
+										{badge}
+										{event_data[0]}
+									</Link>
+								</h5>
+							)}
 							{description}
 						</div>
 
@@ -605,7 +617,11 @@ class Event extends Component {
 							<button
 								className="btn btn-dark"
 								onClick={this.inquire}
-								disabled={disabled || this.props.disabledStatus || this.state.disabledBuying}
+								disabled={
+									disabled ||
+									this.props.disabledStatus ||
+									this.props.disabledBuying
+								}
 							>
 								<i className="fas fa-ticket-alt"></i>{" "}
 								{buttonText}
@@ -630,7 +646,7 @@ class Event extends Component {
 
 	componentDidMount() {
 		this._isMounted = true;
-		this.filterHideEvent()
+		this.filterHideEvent();
 		this.updateIPFS();
 		this.getPhoenixDAOMarketValue();
 	}

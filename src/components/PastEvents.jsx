@@ -30,6 +30,7 @@ class PastEvents extends Component {
 			past_events_copy: [],
 			prevPath: -1,
 			hideEvent: [],
+			disabledBuying: false,
 		};
 		this.contracts = context.drizzle.contracts;
 		this.eventCount = this.contracts[
@@ -177,7 +178,9 @@ class PastEvents extends Component {
 			this.props.history.push("/pastevents/" + 1);
 		});
 	};
-
+	toggleBuying = () => {
+		this.setState({ disabledBuying: !this.state.disabledBuying });
+	};
 	//Sort Past Events By Newest/Oldest
 	toggleSortDate = (e) => {
 		let { value } = e.target;
@@ -191,14 +194,14 @@ class PastEvents extends Component {
 					.concat()
 					.sort(
 						(a, b) =>
-							b.returnValues.eventId - a.returnValues.eventId
+							a.returnValues.eventId - b.returnValues.eventId
 					);
 			} else {
 				newPolls = past_events
 					.concat()
 					.sort(
 						(a, b) =>
-							a.returnValues.eventId - b.returnValues.eventId
+							b.returnValues.eventId - a.returnValues.eventId
 					);
 			}
 
@@ -276,6 +279,8 @@ class PastEvents extends Component {
 				for (let i = start; i < end; i++) {
 					updated_list.push(
 						<Event
+							toggleBuying={this.toggleBuying}
+							disabledBuying={this.state.disabledBuying}
 							key={events_list[i].returnValues.eventId}
 							id={events_list[i].returnValues.eventId}
 							ipfs={events_list[i].returnValues.ipfs}

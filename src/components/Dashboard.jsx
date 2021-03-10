@@ -36,6 +36,7 @@ class Dashboard extends Component {
 			openModal: false,
 			deletedArray: [],
 			hideEvent: [],
+			deletedArray2:[],
 		};
 
 		this.contracts = context.drizzle.contracts;
@@ -127,13 +128,12 @@ class Dashboard extends Component {
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			if(get.data.result.length != 0)
-			{
+			if (get.data.result.length != 0) {
 				this.setState({
 					hideEvent: get.data.result,
 				});
 			}
-			
+
 			return;
 		} catch (error) {
 			console.log("check error", error);
@@ -163,30 +163,39 @@ class Dashboard extends Component {
 			//Listen For My Newly Created Events
 
 			await openEvents
-			.getPastEvents("NewAndUpdatedEvent", {
-				filter: { owner: this.account },
-				fromBlock: 8181618,
-				toBlock: this.state.latestblocks,
-			})
-			.then(async (events) => {
-				if (this.state.isActive) {
-					console.log("eventsssss",events)
-					this.setState({
-						MyEvents: events,
-					});
-					var newest = this.state.MyEvents;
-					var newsort = newest
-						.concat()
-						.sort((a, b) => b.blockNumber - a.blockNumber);
+				.getPastEvents("NewAndUpdatedEvent", {
+					filter: { owner: this.account },
+					fromBlock: 8181618,
+					toBlock: this.state.latestblocks,
+				})
+				.then(async (events) => {
+					if (this.state.isActive) {
+						console.log("eventsssss", events);
+						this.setState({
+							MyEvents: events,
+						});
+						var newest = this.state.MyEvents;
+						var newsort = newest
+							.concat()
+							.sort((a, b) => b.blockNumber - a.blockNumber);
+						const result = Object.values(
+							newsort.reduce((a, c) => {
+								a[c.returnValues.eventId] ||
+									(a[c.returnValues.eventId] = Object.assign(
+										c
+									));
+								return a;
+							}, {})
+						);
+						this.setState({
+							MyEvents: result,
+							active_length: this.state.MyEvents.length,
+						});
 
-					this.setState({
-						MyEvents: newsort,
-						active_length: this.state.MyEvents.length,
-					});
-
-					console.log("myevents2", this.state.MyEvents);
-			}
-		}).catch((err) => console.error(err));
+						console.log("myevents2", this.state.MyEvents);
+					}
+				})
+				.catch((err) => console.error(err));
 
 			// this.state.openEvents.events
 			// 	.NewAndUpdatedEvent({
@@ -232,9 +241,12 @@ class Dashboard extends Component {
 				this.setState({ Deleted_Events: [] });
 			});
 		let deletedArray = [];
+		let deletedArray2 = []
+		let createdEventlen=0;
 		// var array1 = [];
 		console.log("myevents4", this.state.Deleted_Events);
 		let skip = false;
+		let skip2 = false
 		for (let i = 0; i < this.state.MyEvents.length; i++) {
 			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
@@ -242,6 +254,7 @@ class Dashboard extends Component {
 					this.state.Deleted_Events[j].returnValues.eventId
 				) {
 					skip = true;
+					skip2 = true;
 				}
 			}
 			if (!skip) {
@@ -254,12 +267,17 @@ class Dashboard extends Component {
 					}
 				}
 			}
+			if(!skip2){
+				deletedArray2.push(this.state.MyEvents[i])
+			}
 			if (!skip) {
 				deletedArray.push(this.state.MyEvents[i]);
 			}
 			skip = false;
+			skip2 = false;
 		}
 
+		console.log("deletedArray2",deletedArray2)
 		console.log("DElete length", deletedArray);
 		// var array1 = this.state.MyEvents;
 		// for (var key in this.state.MyEvents) {
@@ -271,7 +289,8 @@ class Dashboard extends Component {
 		// }
 		this.setState({
 			// top5Events: array1,
-			deletedArray: deletedArray,
+			deletedArray2:deletedArray2,
+			deletedArray:deletedArray,
 		});
 	}
 
@@ -311,19 +330,18 @@ class Dashboard extends Component {
 							.value
 					) {
 						eventDetails.push({
-							returnValues: this.props.contracts["DaoEvents"].events[
-								eventCache[i]
-							].value,
+							returnValues: this.props.contracts["DaoEvents"]
+								.events[eventCache[i]].value,
 							id: eventCount[i],
 						});
 					}
 				}
 			}
 			let CreatedEvent = this.state.deletedArray;
-			console.log("event details", CreatedEvent);
-			var sortBySold = eventDetails
-				.concat()
-				.sort((a, b) => b.returnValues.sold - a.returnValues.sold);
+			console.log("createdEvent", eventDetails.length);
+			var sortBySold = eventDetails.concat().sort(
+				(a, b) => b.returnValues.sold - a.returnValues.sold
+			);
 			let phoenixDAORevenue = eventDetails.filter(
 				(event_token) => event_token.returnValues.token == true
 			);
@@ -350,7 +368,7 @@ class Dashboard extends Component {
 						)
 				);
 			console.log("hey hey sort", sortBySold);
-			var array1 = sortBySold;
+			var array1 = CreatedEvent;
 			var array2 = this.state.deletedArray;
 			var sortBySold = array1.filter(function (val) {
 				return array2.indexOf(val.id) == -1;
@@ -427,7 +445,7 @@ class Dashboard extends Component {
 			let topEvents = array1.filter(function (val) {
 				return array2.indexOf(val.id) == -1;
 			});
-
+let CreatedLength=this.state.deletedArray2.length;
 			console.log("array sort12", topEvents);
 			loading = false;
 
@@ -652,7 +670,7 @@ class Dashboard extends Component {
 											Number Of Created Events
 										</h3>
 										<h4 className="dashboard-data">
-											{CreatedEvent.length}
+											{CreatedLength}
 										</h4>
 										<p className="dashboard-footer">
 											Events
@@ -713,13 +731,14 @@ class Dashboard extends Component {
 												{topEvents.map(
 													(event, index) => {
 														if (
-															event.returnValues.name !=
-															""
+															event.returnValues
+																.name != ""
 														) {
 															console.log(
 																"hey uo",
-																event.returnValues
-																	.name
+																event
+																	.returnValues
+																	.eventId
 															);
 															return (
 																<h4
@@ -735,7 +754,9 @@ class Dashboard extends Component {
 																	}
 																	onClick={() =>
 																		this.goTo(
-																			event.id,
+																			event
+																				.returnValues
+																				.eventId,
 																			event
 																				.returnValues
 																				.name
@@ -767,7 +788,8 @@ class Dashboard extends Component {
 													topEvents.map(
 														(event, index) => {
 															if (
-																event.returnValues
+																event
+																	.returnValues
 																	.name != ""
 															) {
 																return (
@@ -783,7 +805,9 @@ class Dashboard extends Component {
 																		}
 																		onClick={() =>
 																			this.goTo(
-																				event.id,
+																				event
+																					.returnValues
+																					.eventId,
 																				event
 																					.returnValues
 																					.name
