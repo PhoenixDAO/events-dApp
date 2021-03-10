@@ -261,6 +261,7 @@ class FindEvents extends Component {
 	//Sort Active Events By Date(Newest/Oldest)
 	toggleSortDate = (e) => {
 		let { value } = e.target;
+		console.log("toggleValue",e.target)
 		this.setState({ value }, () => {
 			const { Events_Blockchain } = this.state;
 			const { ended } = Events_Blockchain;
@@ -268,11 +269,11 @@ class FindEvents extends Component {
 
 			if (this.state.isOldestFirst) {
 				newPolls = Events_Blockchain.concat().sort(
-					(a, b) => b.returnValues.eventId - a.returnValues.eventId
+					(a, b) => a.returnValues.eventId - b.returnValues.eventId
 				);
 			} else {
 				newPolls = Events_Blockchain.concat().sort(
-					(a, b) => a.returnValues.eventId - b.returnValues.eventId
+					(a, b) => b.returnValues.eventId - a.returnValues.eventId
 				);
 			}
 

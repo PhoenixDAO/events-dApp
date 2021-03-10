@@ -191,14 +191,14 @@ class PastEvents extends Component {
 					.concat()
 					.sort(
 						(a, b) =>
-							b.returnValues.eventId - a.returnValues.eventId
+							a.returnValues.eventId - b.returnValues.eventId
 					);
 			} else {
 				newPolls = past_events
 					.concat()
 					.sort(
 						(a, b) =>
-							a.returnValues.eventId - b.returnValues.eventId
+							b.returnValues.eventId - a.returnValues.eventId
 					);
 			}
 

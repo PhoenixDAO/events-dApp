@@ -15,6 +15,7 @@ class CheckUser extends Component {
 	constructor(props, context) {
 		super(props);
 		this.contracts = context.drizzle.contracts;
+		console.log("this.propsssss",props)
 		this.state = {
 			tab: 1,
 			wrong_address: false,
@@ -91,6 +92,9 @@ class CheckUser extends Component {
 					autoClose: true,
 					pauseOnHover: true,
 				});
+			this.props.history.push("/upcomingevents/1");
+
+			// console.log()
 			this.setState({
 				loading: false,
 			});
@@ -102,6 +106,8 @@ class CheckUser extends Component {
 				autoClose: true,
 				pauseOnHover: true,
 			});
+			this.props.history.push("/upcomingevents/1");
+
 			this.setState({
 				loading: false,
 			});

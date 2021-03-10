@@ -414,6 +414,9 @@ class Form extends Component {
 	handleForm = (event) => {
 		event.preventDefault();
 		console.log("state===>", this.state);
+		// if(this.state.price.charAt(this.state.price.length-1)=="."){
+		// 	this.setState({price:this.state.price.slice(0, -1)})
+		// }
 		// const todayDate=new Date((parseInt(this.state.currentBlock.timestamp, 10) * 1000));
 		// console.log('moment.unix()',moment.unix().toString());
 		// let todayDate = moment.unix(this.state.currentBlock.timestamp).format();
@@ -456,12 +459,15 @@ class Form extends Component {
 		if (this.state.wrong_file === true || this.state.file === null)
 			form_validation.push("image");
 		if (this.state.time === 0) form_validation.push("time");
+		// console.log("this.state.price==0",this.state.price.includes("0") && !this.state.price.includes(".") && !this.state.price.includes("1")&& !this.state.price.includes("2")&& !this.state.price.includes("3")&& !this.state.price.includes("4")&& !this.state.price.includes("5")&& !this.state.price.includes("6")&& !this.state.price.includes("7")&& !this.state.price.includes("8")&& !this.state.price.includes("9"))
 		if (
 			(this.state.currency == "phnx" && this.state.price == "") ||
 			(this.state.currency == "phnx" && this.state.price == "0") ||
-			this.state.price == "0.0" ||
-			this.state.price == "0.00" ||
-			this.state.price == "0.000"
+			// this.state.price == "0.0" ||
+			// this.state.price == "0.00" ||
+			// this.state.price == "0.000" ||
+			this.state.currency == "phnx" &&this.state.price.includes("0") && this.state.price.includes(".") && !this.state.price.includes("1")&& !this.state.price.includes("2")&& !this.state.price.includes("3")&& !this.state.price.includes("4")&& !this.state.price.includes("5")&& !this.state.price.includes("6")&& !this.state.price.includes("7")&& !this.state.price.includes("8")&& !this.state.price.includes("9") ||
+			this.state.currency == "phnx" && this.state.price.includes("0") && !this.state.price.includes(".") && !this.state.price.includes("1")&& !this.state.price.includes("2")&& !this.state.price.includes("3")&& !this.state.price.includes("4")&& !this.state.price.includes("5")&& !this.state.price.includes("6")&& !this.state.price.includes("7")&& !this.state.price.includes("8")&& !this.state.price.includes("9")
 		)
 			form_validation.push("price");
 		if (this.state.limited === true && this.form.seats.value < 1)

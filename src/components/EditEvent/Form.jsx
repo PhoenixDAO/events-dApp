@@ -467,9 +467,11 @@ class Form extends Component {
 		if (
 			(this.state.currency == "phnx" && this.state.price == "") ||
 			(this.state.currency == "phnx" && this.state.price == "0") ||
-			this.state.price == "0.0" ||
-			this.state.price == "0.00" ||
-			(this.state.price == "0.000" && !this.state.free)
+			// this.state.price == "0.0" ||
+			// this.state.price == "0.00" ||
+			// this.state.price == "0.000" ||
+			this.state.currency == "phnx" && this.state.price.includes("0") && this.state.price.includes(".") && !this.state.price.includes("1")&& !this.state.price.includes("2")&& !this.state.price.includes("3")&& !this.state.price.includes("4")&& !this.state.price.includes("5")&& !this.state.price.includes("6")&& !this.state.price.includes("7")&& !this.state.price.includes("8")&& !this.state.price.includes("9") ||
+			this.state.currency == "phnx" &&this.state.price.includes("0") && !this.state.price.includes(".") && !this.state.price.includes("1")&& !this.state.price.includes("2")&& !this.state.price.includes("3")&& !this.state.price.includes("4")&& !this.state.price.includes("5")&& !this.state.price.includes("6")&& !this.state.price.includes("7")&& !this.state.price.includes("8")&& !this.state.price.includes("9")
 		)
 			form_validation.push("price");
 		if (this.state.limited === true && this.form.seats.value < 1)

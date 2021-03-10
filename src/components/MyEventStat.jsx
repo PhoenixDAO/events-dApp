@@ -117,6 +117,7 @@ class MyEventStat extends Component {
 			]
 		);
 		try {
+			console.log("this.propsssss",props)
 			var contractConfig = {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
@@ -133,6 +134,7 @@ class MyEventStat extends Component {
 		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.match.params.id
 		);
+		
 		console.log("eventstatsprops", this.props.pastEvents);
 		this.account = this.props.accounts[0];
 		this.state = {
@@ -155,10 +157,18 @@ class MyEventStat extends Component {
 			approve: "",
 			pageTransactions: [],
 			open: false,
+			revenue:0
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
+		this.GetEventsRevenue=this.GetEventsRevenue.bind(this)
+	}
+	async GetEventsRevenue(){
+		let revenue = await this.contracts["DaoEvents"].methods.eventRevenue(this.props.match.params.id).call()
+		revenue = revenue/1000000000000000000
+		this.setState({revenue})
+		console.log("revenue",revenue);
 	}
 
 	//Get SoldTicket Data
@@ -819,8 +829,14 @@ class MyEventStat extends Component {
 									weight: 5,
 									borderAlign: "center",
 									data: [
-										price * event_data[6],
-										price * (max_seats - event_data[6]),
+										// this.state.revenue
+										100
+										,
+										50
+											// price *
+											// 	(max_seats -
+											// 		event_data[6]) + this.state.revenue 
+									  
 									],
 								},
 							],
@@ -1399,14 +1415,15 @@ class MyEventStat extends Component {
 													className="event_price-image2"
 													alt="Event Price"
 												/>{" "}
-												{event_data[3]
+												{/* {event_data[3]
 													? numeral(
 															price *
 																event_data[6]
 													  ).format("0.000")
-													: price * event_data[6]}
-												{event_data[3] ? " or " : ""}
-												{event_data[3] ? (
+													: price * event_data[6]} */}
+													{numeral(this.state.revenue).format("0.000")}
+												{" or "}
+												{ 
 													<img
 														src={
 															"/images/dollarsign.png"
@@ -1414,18 +1431,14 @@ class MyEventStat extends Component {
 														className="event_price-image2"
 														alt="Event Price"
 													/>
-												) : (
-													""
-												)}
-												{event_data[3]
-													? numeral(
-															price *
-																event_data[6] *
+												}
+												{ numeral(
+															this.state.revenue *
 																this.state
 																	.phoenixDAO_market
 																	.usd
 													  ).format("0.000")
-													: ""}
+													}
 											</p>
 
 											{event_data[4] ? (
@@ -1442,19 +1455,15 @@ class MyEventStat extends Component {
 														className="event_price-image2"
 														alt="Event Price"
 													/>{" "}
-													{event_data[3]
-														? numeral(
+													{numeral(
 																price *
 																	(max_seats -
 																		event_data[6])
 														  ).format("0.000")
-														: price *
-														  (max_seats -
-																event_data[6])}
-													{event_data[3]
-														? " or "
-														: ""}
-													{event_data[3] ? (
+														}
+													{" or "
+														}
+													{
 														<img
 															src={
 																"/images/dollarsign.png"
@@ -1462,11 +1471,8 @@ class MyEventStat extends Component {
 															className="event_price-image2"
 															alt="Event Price"
 														/>
-													) : (
-														""
-													)}
-													{event_data[3]
-														? numeral(
+													}
+													{numeral(
 																price *
 																	(max_seats -
 																		event_data[6]) *
@@ -1474,7 +1480,7 @@ class MyEventStat extends Component {
 																		.phoenixDAO_market
 																		.usd
 														  ).format("0.000")
-														: ""}
+														}
 												</p>
 											) : (
 												<p
@@ -1500,16 +1506,13 @@ class MyEventStat extends Component {
 														className="event_price-image2"
 														alt="Event Price"
 													/>{" "}
-													{event_data[3]
-														? numeral(
+													{numeral(
 																price *
-																	max_seats
-														  ).format("0.000")
-														: price * max_seats}
-													{event_data[3]
-														? " or "
-														: ""}
-													{event_data[3] ? (
+																	(max_seats -
+																		event_data[6]) + this.state.revenue
+														  ).format("0.000")}
+													{ " or "}
+													{ 
 														<img
 															src={
 																"/images/dollarsign.png"
@@ -1517,18 +1520,16 @@ class MyEventStat extends Component {
 															className="event_price-image2"
 															alt="Event Price"
 														/>
-													) : (
-														""
-													)}
-													{event_data[3]
-														? numeral(
-																price *
-																	max_seats *
+													}
+													{ numeral(
+																(price *
+																(max_seats -
+																	event_data[6])+ this.state.revenue) *
 																	this.state
 																		.phoenixDAO_market
 																		.usd
 														  ).format("0.000")
-														: ""}
+														}
 												</p>
 											) : (
 												<p
@@ -1548,6 +1549,7 @@ class MyEventStat extends Component {
 									<CheckUser
 										event_id={this.props.match.params.id}
 										disabledStatus={disabled}
+										history={this.props.history}
 									/>
 								</div>
 								<hr />
@@ -1585,6 +1587,7 @@ class MyEventStat extends Component {
 			top: 0,
 			behavior: "smooth",
 		});
+		this.GetEventsRevenue()
 		console.log("myeventprops", this.props);
 		this._isMounted = true;
 		this.updateIPFS();

@@ -66,7 +66,7 @@ class MyEvents extends Component {
 			this.setState({ blocks: blockNumber - 50000 });
 			this.setState({ latestblocks: blockNumber - 1 });
 			this.loadActiveEvents();
-			console.log("Iam here");
+			console.log("Iam here",this.account);
 			//Listen For My Newly Created Events
 			openEvents.events
 				.CreatedEvent({
