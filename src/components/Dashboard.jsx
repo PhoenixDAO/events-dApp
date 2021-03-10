@@ -254,9 +254,9 @@ class Dashboard extends Component {
 					this.state.Deleted_Events[j].returnValues.eventId
 				) {
 					skip = true;
+					skip2 = true;
 				}
 			}
-			createdEventlen=this.state
 			if (!skip) {
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
@@ -264,7 +264,6 @@ class Dashboard extends Component {
 						this.state.hideEvent[j].id
 					) {
 						skip = true;
-						skip2 = true
 					}
 				}
 			}
@@ -446,7 +445,7 @@ class Dashboard extends Component {
 			let topEvents = array1.filter(function (val) {
 				return array2.indexOf(val.id) == -1;
 			});
-
+let CreatedLength=this.state.deletedArray2.length;
 			console.log("array sort12", topEvents);
 			loading = false;
 
@@ -671,7 +670,7 @@ class Dashboard extends Component {
 											Number Of Created Events
 										</h3>
 										<h4 className="dashboard-data">
-											{CreatedEvent.length}
+											{CreatedLength}
 										</h4>
 										<p className="dashboard-footer">
 											Events
