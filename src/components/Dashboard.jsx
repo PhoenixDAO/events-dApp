@@ -37,6 +37,7 @@ class Dashboard extends Component {
 			deletedArray: [],
 			hideEvent: [],
 			deletedArray2:[],
+			revenue:0
 		};
 
 		this.contracts = context.drizzle.contracts;
@@ -48,6 +49,7 @@ class Dashboard extends Component {
 		this.account = this.props.accounts[0];
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
+		this.GetEventsRevenue=this.GetEventsRevenue.bind(this)
 	}
 	handleClickOpen = () => {
 		this.setState({ open: true });
@@ -291,7 +293,8 @@ class Dashboard extends Component {
 			// top5Events: array1,
 			deletedArray2:deletedArray2,
 			deletedArray:deletedArray,
-		});
+		},()=>this.GetEventsRevenue(this.state.deletedArray));
+		
 	}
 
 	render() {
@@ -983,7 +986,7 @@ let CreatedLength=this.state.deletedArray2.length;
 											Total PHNX Revenue{" "}
 										</h3>
 										<h4 className="dashboard-data">
-											{numeral(revenue).format("0,0.00")}
+											{numeral(this.state.revenue).format("0,0.00")}
 										</h4>
 										<p className="dashboard-footer">PHNX</p>
 									</div>
@@ -1008,7 +1011,7 @@ let CreatedLength=this.state.deletedArray2.length;
 										<h4 className="dashboard-data">
 											$
 											{numeral(
-												revenue *
+												this.state.revenue *
 													this.state.PhoenixDAO_market
 														.usd
 											).format("0,0.00")}
@@ -1052,6 +1055,17 @@ let CreatedLength=this.state.deletedArray2.length;
 			</React.Fragment>
 		);
 	}
+	async GetEventsRevenue(deletedArray){
+		let revenue = 0
+		console.log("here i got deletedArray",deletedArray)
+		for(let i=0 ; i<deletedArray.length; i++){
+			revenue = Number(await this.contracts["DaoEvents"].methods.eventRevenue(deletedArray[i].returnValues.eventId).call()) + revenue
+		}
+		revenue=revenue/1000000000000000000
+		this.setState({revenue})
+		console.log("revenue",revenue);
+	}
+	
 	componentDidMount() {
 		window.scroll({
 			top: 0,
@@ -1060,6 +1074,7 @@ let CreatedLength=this.state.deletedArray2.length;
 		this._isMounted = true;
 		this.getPhoenixDAOMarketValue();
 		this.loadBockchain();
+		
 		this.filterHideEvent();
 	}
 	componentWillUnmount() {
