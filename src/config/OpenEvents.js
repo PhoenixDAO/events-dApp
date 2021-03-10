@@ -1,4 +1,4 @@
-export const Open_events_Address = '0x7A5473c28BF64ebF67Dee5Dfb65117837dC42EC8';
+export const Open_events_Address = '0x366F6d0fB643CF1488CA47937A29b7e4a9C6DFAC';
 
 export const Open_events_ABI =  [
 	{
