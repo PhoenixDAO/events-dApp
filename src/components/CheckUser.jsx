@@ -92,9 +92,7 @@ class CheckUser extends Component {
 					autoClose: true,
 					pauseOnHover: true,
 				});
-			this.props.history.push("/upcomingevents/1");
-
-			// console.log()
+				this.props.history.push("/upcomingevents/1");
 			this.setState({
 				loading: false,
 			});

@@ -384,11 +384,12 @@ class MyEventStat extends Component {
 				}
 			})
 			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber == 1) {
+				if (confirmationNumber != null) {
+					this.setState({disabledBuying:false})
+					console.log("state2",this.state.disabledBuying);
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
-						this.setState({disabledBuying:false})
 						toast(
 							<NotifyApproveSuccess
 								hash={txreceipt.transactionHash}
@@ -400,6 +401,7 @@ class MyEventStat extends Component {
 							}
 						);
 						this.afterApprove();
+
 					}
 				}
 			})
@@ -415,6 +417,8 @@ class MyEventStat extends Component {
 							pauseOnHover: true,
 						}
 					);
+					console.log("state3",this.state.disabledBuying);
+
 					// this.afterApprove()
 				}
 			});

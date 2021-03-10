@@ -33,6 +33,7 @@ class FindEvents extends Component {
 			event_copy: [],
 			prevPath: -1,
 			hideEvent: [],
+			disabledBuying: false,
 		};
 		// const a = this.props.location.pathname.split("/")
 		// console.log("this.props.location",a[a.length-1])
@@ -118,7 +119,7 @@ class FindEvents extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then(async (events) => {
-				console.log("here events",events)
+				console.log("here events", events);
 				if (this._isMounted) {
 					this.setState({ loading: true });
 					let allEvents = events;
@@ -257,7 +258,10 @@ class FindEvents extends Component {
 			this.props.history.push("/upcomingevents/" + 1);
 		});
 	};
-
+	toggleBuying = () => {
+		this.setState({ disabledBuying: !this.state.disabledBuying });
+		console.log("this.state.disabledBuying", this.state.disabledBuying);
+	};
 	//Sort Active Events By Date(Newest/Oldest)
 	toggleSortDate = (e) => {
 		let { value } = e.target;
@@ -365,6 +369,8 @@ class FindEvents extends Component {
 
 					updated_list.push(
 						<Event
+							toggleBuying={this.toggleBuying}
+							disabledBuying={this.state.disabledBuying}
 							disabledStatus={this.props.disabledStatus}
 							inquire={this.props.inquire}
 							key={events_list[i].returnValues.eventId}
@@ -373,7 +379,7 @@ class FindEvents extends Component {
 						/>
 					);
 				}
-				
+
 				// let newUpdatedList = [];
 				// for (let i = 0; i < updated_list.length; i++) {
 				// 	for (let j = 0; j < this.state.hideEvent.length; j++) {

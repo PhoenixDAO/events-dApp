@@ -41,7 +41,7 @@ class TopicLandingPage extends Component {
 			Deleted_Events: [],
 			Filtered_Events_length: 0,
 			hideEvent: [],
-
+			disabledBuying: false,
 			dateNow: "",
 		};
 
@@ -208,13 +208,13 @@ class TopicLandingPage extends Component {
 				var newsort = newest
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
-         const result = Object.values(
-		newsort.reduce((a, c) => {
-				a[c.returnValues.eventId] ||
-					(a[c.returnValues.eventId] = Object.assign(c))
-				return a;
-			}, {})
-		);
+				const result = Object.values(
+					newsort.reduce((a, c) => {
+						a[c.returnValues.eventId] ||
+							(a[c.returnValues.eventId] = Object.assign(c));
+						return a;
+					}, {})
+				);
 				if (this._isMounted) {
 					this.setState({
 						Topic_Events: result,
@@ -253,11 +253,11 @@ class TopicLandingPage extends Component {
 					.sort((a, b) => b.blockNumber - a.blockNumber);
 				const result = Object.values(
 					newsort.reduce((a, c) => {
-							a[c.returnValues.eventId] ||
-								(a[c.returnValues.eventId] = Object.assign(c))
-							return a;
-						}, {})
-					);
+						a[c.returnValues.eventId] ||
+							(a[c.returnValues.eventId] = Object.assign(c));
+						return a;
+					}, {})
+				);
 				if (this._isMounted) {
 					this.setState({
 						Topic_Events: result,
@@ -329,6 +329,12 @@ class TopicLandingPage extends Component {
 			);
 		});
 	};
+
+	toggleBuying = () => {
+		this.setState({ disabledBuying: !this.state.disabledBuying });
+		console.log("this.state.disabledBuying", this.state.disabledBuying);
+	};
+
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
@@ -408,12 +414,11 @@ class TopicLandingPage extends Component {
 							skip = true;
 						}
 					}
-					if(!skip){
+					if (!skip) {
 						for (let j = 0; j < this.state.hideEvent.length; j++) {
 							if (
 								this.state.Topic_Events[i].returnValues
-									.eventId ==
-								this.state.hideEvent[j].id
+									.eventId == this.state.hideEvent[j].id
 							) {
 								skip = true;
 							}
@@ -446,6 +451,8 @@ class TopicLandingPage extends Component {
 					for (let i = start; i < end; i++) {
 						updated_list.push(
 							<Event
+								toggleBuying={this.toggleBuying}
+								disabledBuying={this.state.disabledBuying}
 								disabledStatus={this.props.disabledStatus}
 								inquire={this.props.inquire}
 								key={events_list[i].returnValues.eventId}
