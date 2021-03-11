@@ -238,9 +238,10 @@ class Event extends Component {
 				}
 			})
 			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber != null) {
+				if (confirmationNumber == 0) {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
+					console.log("confirmationNumberrrr",confirmationNumber)
 					if (txconfirmed == 0 && txreceipt.status == true) {
 						this.props.toggleBuying();
 						toast(

@@ -356,11 +356,11 @@ class TopicLandingPage extends Component {
 
 			if (this.state.isOldestFirst) {
 				newPolls = Topic_Events.concat().sort(
-					(a, b) => b.returnValues.eventId - a.returnValues.eventId
+					(a, b) => a.returnValues.eventId - b.returnValues.eventId
 				);
 			} else {
 				newPolls = Topic_Events.concat().sort(
-					(a, b) => a.returnValues.eventId - b.returnValues.eventId
+					(a, b) => b.returnValues.eventId - a.returnValues.eventId
 				);
 			}
 
