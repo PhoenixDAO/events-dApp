@@ -384,7 +384,7 @@ class MyEventStat extends Component {
 				}
 			})
 			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber != null) {
+				if (confirmationNumber == 0) {
 					this.setState({disabledBuying:false})
 					console.log("state2",this.state.disabledBuying);
 					txreceipt = receipt;
@@ -651,6 +651,7 @@ class MyEventStat extends Component {
 				let event_data = this.props.contracts["DaoEvents"].events[
 					this.event
 				].value;
+				console.log("event_data ye aya hai",event_data)
 				let id = this.props.location.pathname.split("/")[
 					this.props.location.pathname.split("/").length - 1
 				];
@@ -833,13 +834,14 @@ class MyEventStat extends Component {
 									weight: 5,
 									borderAlign: "center",
 									data: [
-										// this.state.revenue
-										100
+										this.state.revenue
+										// 100
 										,
-										50
-											// price *
-											// 	(max_seats -
-											// 		event_data[6]) + this.state.revenue 
+										// 50
+											(price *
+												(max_seats -
+													event_data[6])) 
+													// - this.state.revenue 
 									  
 									],
 								},

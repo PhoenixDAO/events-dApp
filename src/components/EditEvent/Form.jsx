@@ -44,6 +44,7 @@ class Form extends Component {
 			limited: this.props.event.limited,
 			terms: false,
 			seatsForHumans: 0,
+			allowedSeats:this.props.event.sold,
 			seats: this.props.event.seats,
 			wrong_file: false,
 			file_name: "file.jpg",
@@ -374,7 +375,7 @@ class Form extends Component {
 		}
 		let seats = this.form.seats.value;
 		console.log("seats.length", seats.length);
-		if (seats && seats.length > 16) {
+		if ((seats && seats.length > 16) || (seats && seats < this.state.allowedSeats)) {
 			event.preventDefault();
 			return;
 		}
@@ -1045,7 +1046,7 @@ class Form extends Component {
 												: "form-text text-muted"
 										}
 									>
-										Value must be greater than 0
+										Value must be greater than number of tickets already sold
 									</small>
 
 									<input
