@@ -547,6 +547,7 @@ class MyEventStat extends Component {
 	// }
 
 	handleDelete() {
+		this.setState({disabledButton:true})
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
@@ -576,6 +577,7 @@ class MyEventStat extends Component {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
+						this.setState({disabledButton:false})
 						toast(
 							<NotifyDelete
 								hash={txreceipt.transactionHash}
@@ -594,6 +596,7 @@ class MyEventStat extends Component {
 			})
 			.on("error", (error) => {
 				if (error !== null) {
+					this.setState({disabledButton:false})
 					txerror = error;
 					toast(
 						<NotifyError error={error} message={txerror.message} />,
@@ -911,7 +914,7 @@ class MyEventStat extends Component {
 												className="btn btn-dark"
 												disabled={
 													this.state.loading ||
-													this.props.disabledStatus
+													this.props.disabledStatus||this.state.disabledButton
 												}
 											>
 												<i className="fa fa-edit"></i>{" "}
@@ -929,7 +932,7 @@ class MyEventStat extends Component {
 											className="btn btn-dark"
 											onClick={this.handleDelete}
 											disabled={
-												disabledButton ||
+												disabledButton ||this.state.disabledButton||
 												this.props.disabledStatus
 											}
 										>
@@ -950,7 +953,7 @@ class MyEventStat extends Component {
 										onClick={this.inquire}
 										disabled={
 											disabled ||
-											this.props.disabledStatus||this.state.disabledBuying
+											this.props.disabledStatus||this.state.disabledBuying||this.state.disabledButton
 										}
 									>
 										<i className="fas fa-ticket-alt"></i>{" "}
@@ -1047,7 +1050,7 @@ class MyEventStat extends Component {
 							</button> */}
 								</div>
 								<hr />
-								<div className="row">
+								{/* <div className="row"> */}
 									<div className="card event-hero-sidebar">
 										<img
 											className="card-img-top event-image"
@@ -1330,7 +1333,7 @@ class MyEventStat extends Component {
 												</p>
 											)}
 										</div>
-									</div>
+									{/* </div> */}
 
 									<div className="new-transaction-wrapper">
 										<h4 className="transactions">
