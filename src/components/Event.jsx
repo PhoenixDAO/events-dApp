@@ -92,6 +92,7 @@ class Event extends Component {
 			buy: "",
 			open: false,
 			hideEvent: [],
+			blockie: "/images/PhoenixDAO.png",
 		};
 		this.isCancelled = false;
 	}
@@ -508,7 +509,7 @@ class Event extends Component {
 						<div className="card-header text-muted event-header ">
 							<img
 								className="float-left"
-								src={makeBlockie(event_data[9])}
+								src={this.state.blockie}
 								alt={event_data[9]}
 							/>
 							{/* {this.props.myEvents ? (

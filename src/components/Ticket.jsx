@@ -58,7 +58,7 @@ class Ticket extends Component {
 			wrong_address: false,
 			disabledStatus: false,
 			hideEvent:[],
-
+			blockie: "/images/PhoenixDAO.png",
 		};
 		this.isCancelled = false;
 	}
@@ -462,7 +462,7 @@ class Ticket extends Component {
 						<div className="card-footer text-muted event-header">
 							<img
 								className="float-left"
-								src={makeBlockie(event_data[9])}
+								src={this.state.blockie}
 								alt={event_data[9]}
 							/>
 							<p className="small text-truncate mb-2">
