@@ -104,7 +104,7 @@ class Dashboard extends Component {
 		this.state.openEvents
 			.getPastEvents("NewAndUpdatedEvent", {
 				filter: { owner: this.account },
-				fromBlock: 5000000,
+				fromBlock: 8181618,
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
@@ -342,14 +342,14 @@ class Dashboard extends Component {
 			}
 			let CreatedEvent = this.state.deletedArray;
 			console.log("createdEvent", eventDetails.length);
-			var sortBySold = eventDetails.concat().sort(
+			var sortBySold = CreatedEvent.concat().sort(
 				(a, b) => b.returnValues.sold - a.returnValues.sold
 			);
-			let phoenixDAORevenue = eventDetails.filter(
+			let phoenixDAORevenue = CreatedEvent.filter(
 				(event_token) => event_token.returnValues.token == true
 			);
 			console.log("check phoen", sortBySold);
-			let limited = eventDetails.filter(
+			let limited = CreatedEvent.filter(
 				(event_seats) => event_seats.returnValues.limited == true
 			);
 
@@ -551,7 +551,7 @@ let CreatedLength=this.state.deletedArray2.length;
 						]),
 						datasets: [
 							{
-								label: "PHNX",
+								label: "Ticket Sold",
 								fontColor: "black",
 								backgroundColor: [
 									gradient,
@@ -573,12 +573,12 @@ let CreatedLength=this.state.deletedArray2.length;
 								hoverBorderWidth: 1,
 								weight: 5,
 								borderAlign: "center",
-								data: sortTopRevenue.map((event) =>
+								data: sortBySold.map((event) =>
 									parseInt(
-										event.returnValues.sold *
-											this.context.drizzle.web3.utils.fromWei(
-												event.returnValues.price
-											)
+										event.returnValues.sold 
+										// *this.context.drizzle.web3.utils.fromWei(
+										// 		event.returnValues.price
+										// 	)
 									)
 								),
 							},
@@ -589,7 +589,7 @@ let CreatedLength=this.state.deletedArray2.length;
 						labels: ["You", "Havent", "Created", "Any", "Event"],
 						datasets: [
 							{
-								label: "PHNX",
+								label: "SOLD",
 								fontColor: "black",
 								backgroundColor: [
 									gradient,
@@ -672,6 +672,7 @@ let CreatedLength=this.state.deletedArray2.length;
 											<i className="fa fa-edit"></i> Total
 											Number Of Created Events
 										</h3>
+										
 										<h4 className="dashboard-data">
 											{CreatedLength}
 										</h4>
@@ -870,7 +871,7 @@ let CreatedLength=this.state.deletedArray2.length;
 													display: true,
 													position: "top",
 													text:
-														"Based On PHNX Revenue",
+														"Based On Ticket Sold",
 													fontSize: 16,
 													lineHeight: 1.5,
 													padding: 1,

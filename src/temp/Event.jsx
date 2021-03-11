@@ -469,7 +469,7 @@ class Event extends Component {
 								</strong>{" "}
 								<a href={topicURL}>{category}</a>
 							</li>
-							<li className="list-group-item">
+							<li className="list-group-item price">
 								<strong>Price:</strong>{" "}
 								<img
 									src={"/images/" + symbol}
