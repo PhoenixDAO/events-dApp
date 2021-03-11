@@ -115,9 +115,12 @@ class EventPage extends Component {
 			buyticket: "",
 			approve: "",
 			pageTransactions: [],
+			approvalGranted: false
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
+		this.giveApproval = this.giveApproval.bind(this);
+		
 	}
 
 	//Get SoldTicket Data
@@ -319,27 +322,7 @@ class EventPage extends Component {
 					});
 				}
 			})
-			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber == 0) {
-					txreceipt = receipt;
-					txconfirmed = confirmationNumber;
-					if (txconfirmed == 0 && txreceipt.status == true) {
-						this.setState({disabledBuying:false})
-						toast(
-							<NotifyApproveSuccess
-								hash={txreceipt.transactionHash}
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
-						this.afterApprove();
-						this.setState({ disabledStatus: false });
-					}
-				}
-			})
+			.on("confirmation", (confirmationNumber, receipt) => this.onConfirmation(confirmationNumber,receipt))
 			.on("error", (error) => {
 				if (error !== null) {
 					this.setState({disabledBuying:false})
@@ -354,6 +337,24 @@ class EventPage extends Component {
 				}
 			});
 	};
+	onConfirmation(confirmationNumber,receipt){
+		console.log("confirmationNumberrrr",confirmationNumber)
+		if (confirmationNumber == 0 && receipt.status == true ) {
+			this.setState({disabledBuying:false})
+			toast(
+				<NotifyApproveSuccess
+					hash={receipt.transactionHash}
+				/>,
+				{
+					position: "bottom-right",
+					autoClose: true,
+					pauseOnHover: true,
+				}
+			);
+			// this.afterApprove();
+			this.setState({ disabledStatus: false });
+	}
+	}
 
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();

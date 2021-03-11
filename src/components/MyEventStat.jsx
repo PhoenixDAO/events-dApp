@@ -157,12 +157,14 @@ class MyEventStat extends Component {
 			approve: "",
 			pageTransactions: [],
 			open: false,
-			revenue:0
+			revenue:0,
+			approvalGranted: false
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
 		this.GetEventsRevenue=this.GetEventsRevenue.bind(this)
+		this.giveApproval = this.giveApproval.bind(this);
 	}
 	async GetEventsRevenue(){
 		let revenue = await this.contracts["DaoEvents"].methods.eventRevenue(this.props.match.params.id).call()
@@ -383,28 +385,7 @@ class MyEventStat extends Component {
 					});
 				}
 			})
-			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber == 0) {
-					this.setState({disabledBuying:false})
-					console.log("state2",this.state.disabledBuying);
-					txreceipt = receipt;
-					txconfirmed = confirmationNumber;
-					if (txconfirmed == 0 && txreceipt.status == true) {
-						toast(
-							<NotifyApproveSuccess
-								hash={txreceipt.transactionHash}
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
-						this.afterApprove();
-
-					}
-				}
-			})
+			.on("confirmation", (confirmationNumber, receipt) => this.onConfirmation(confirmationNumber,receipt))
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
@@ -423,7 +404,26 @@ class MyEventStat extends Component {
 				}
 			});
 	};
-
+	onConfirmation(confirmationNumber,receipt){
+		this.setState({disabledBuying:false})
+		console.log("state2",this.state.disabledBuying);
+		
+		console.log("confirmationNumberrrr",confirmationNumber)
+		if (confirmationNumber == 0 && receipt.status == true ) {
+			toast(
+				<NotifyApproveSuccess
+					hash={receipt.transactionHash}
+				/>,
+				{
+					position: "bottom-right",
+					autoClose: true,
+					pauseOnHover: true,
+				}
+			);
+			// this.afterApprove();
+			// this.setState({approvalGranted:true})
+	}
+	}
 	// inquire = async () => {
 	// 	let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 	// 	// let temp = this.allowance();

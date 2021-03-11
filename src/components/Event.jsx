@@ -92,8 +92,11 @@ class Event extends Component {
 			buy: "",
 			open: false,
 			hideEvent: [],
+			blockie: "/images/PhoenixDAO.png",
+			approvalGranted: false
 		};
 		this.isCancelled = false;
+		this.giveApproval = this.giveApproval.bind(this);
 	}
 
 	handleClickOpen = () => {
@@ -228,6 +231,7 @@ class Event extends Component {
 		let txerror = "";
 		this.state.approve
 			.send({ from: this.account })
+			
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
 					toast(<NotifyApprove hash={hash} />, {
@@ -237,28 +241,30 @@ class Event extends Component {
 					});
 				}
 			})
-			.on("confirmation", (confirmationNumber, receipt) => {
-				if (confirmationNumber == 0) {
-					txreceipt = receipt;
-					txconfirmed = confirmationNumber;
-					console.log("confirmationNumberrrr",confirmationNumber)
-					if (txconfirmed == 0 && txreceipt.status == true) {
-						this.props.toggleBuying();
-						toast(
-							<NotifyApproveSuccess
-								hash={txreceipt.transactionHash}
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
-						this.afterApprove();
-						this.setState({ disabledStatus: false });
-					}
-				}
-			})
+			.on('confirmation',(confirmationNumber, receipt) => this.temp(confirmationNumber,receipt))
+
+			// .on("confirmation", (confirmationNumber, receipt) => {
+			// 	if (confirmationNumber == 0) {
+			// 		txreceipt = receipt;
+			// 		txconfirmed = confirmationNumber;
+			// 		console.log("confirmationNumberrrr",confirmationNumber,this.state.approvalGranted)
+			// 		if (txconfirmed == 0 && txreceipt.status == true && !this.state.approvalGranted) {
+			// 			this.props.toggleBuying();
+			// 			toast(
+			// 				<NotifyApproveSuccess
+			// 					hash={txreceipt.transactionHash}
+			// 				/>,
+			// 				{
+			// 					position: "bottom-right",
+			// 					autoClose: true,
+			// 					pauseOnHover: true,
+			// 				}
+			// 			);
+			// 			this.afterApprove();
+			// 			this.setState({ disabledStatus: false , approvalGranted:true});
+			// 		}
+			// 	}
+			// })
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
@@ -276,6 +282,30 @@ class Event extends Component {
 				}
 			});
 	};
+	temp(confirmationNumber,receipt){
+		  // tx confirmed
+				//    txreceipt = receipt;
+				// 	txconfirmed = confirmationNumber;
+				// 	console.log("confirmationNumberrrr",confirmationNumber)
+					// if (confirmationNumber == 0 && receipt.status == true ) {
+						if (confirmationNumber === 0 && receipt.status == true) {
+							console.log("confirmationNumberrrr0",confirmationNumber)
+						this.props.toggleBuying();
+						toast(
+							<NotifyApproveSuccess
+								hash={receipt.transactionHash}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
+						// this.afterApprove();
+						this.setState({ disabledStatus: false });
+					}
+
+	}
 
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
@@ -508,7 +538,7 @@ class Event extends Component {
 						<div className="card-header text-muted event-header ">
 							<img
 								className="float-left"
-								src={makeBlockie(event_data[9])}
+								src={this.state.blockie}
 								alt={event_data[9]}
 							/>
 							{/* {this.props.myEvents ? (
