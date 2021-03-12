@@ -70,7 +70,6 @@ const customStyles = {
 class EventPage extends Component {
 	constructor(props, context) {
 		try {
-			console.log("this.propsssss",props)
 			var contractConfig = {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
@@ -95,7 +94,6 @@ class EventPage extends Component {
 			this.props.match.params.id
 		);
 		this.revenue = this.contracts["DaoEvents"].methods.eventRevenue.cacheCall(11)
-		console.log("revenue",this.revenue);
 		this.account = this.props.accounts[0];
 		this.state = {
 			load: true,
@@ -236,7 +234,6 @@ class EventPage extends Component {
 					)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
-							console.log("data in eventPage",data)
 							if (!this.isCancelled) {
 								this.setState({
 									loading: false,
@@ -301,7 +298,6 @@ class EventPage extends Component {
 		let a = await this.contracts["PHNX"].methods
 			.allowance(this.account, this.contracts["DaoEvents"].address)
 			.call();
-		console.log("allowance ==> ", a);
 		return a;
 	};
 
@@ -338,7 +334,6 @@ class EventPage extends Component {
 			});
 	};
 	onConfirmation(confirmationNumber,receipt){
-		console.log("confirmationNumberrrr",confirmationNumber)
 		if (confirmationNumber == 0 && receipt.status == true ) {
 			this.setState({disabledBuying:false})
 			toast(
@@ -359,12 +354,6 @@ class EventPage extends Component {
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 		let temp = this.allowance();
-		console.log("approve", balance);
-		console.log(
-			"buy",
-			this.props.contracts["DaoEvents"].events[this.event].value[2]
-		);
-
 		this.setState(
 			{
 				fee: this.props.contracts["DaoEvents"].events[this.event]
@@ -382,7 +371,6 @@ class EventPage extends Component {
 			},
 			async () => {
 				let temp = await this.allowance();
-				console.log("temp is ", this.props.id);
 				if ((await this.allowance()) == 0) {
 					this.handleClickOpen();
 				} else {

@@ -44,8 +44,6 @@ class Dashboard extends Component {
 		this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
 			this.props.accounts[0]
 		);
-		console.log("hey view my events now", this.events);
-
 		this.account = this.props.accounts[0];
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
@@ -121,7 +119,6 @@ class Dashboard extends Component {
 					this.setState({
 						active_length: this.state.MyEvents.length,
 					});
-					console.log("myevents", this.state.MyEvents);
 					setTimeout(() => this.setState({ loading: false }), 1000);
 				}
 			})
@@ -153,7 +150,6 @@ class Dashboard extends Component {
 			Open_events_Address
 		);
 		if (this._isMounted) {
-			console.log("check props123", openEvents);
 			this.setState({ openEvents: openEvents });
 			this.setState({ MyEvents: [] });
 
@@ -172,7 +168,6 @@ class Dashboard extends Component {
 				})
 				.then(async (events) => {
 					if (this.state.isActive) {
-						console.log("eventsssss", events);
 						this.setState({
 							MyEvents: events,
 						});
@@ -193,8 +188,6 @@ class Dashboard extends Component {
 							MyEvents: result,
 							active_length: this.state.MyEvents.length,
 						});
-
-						console.log("myevents2", this.state.MyEvents);
 					}
 				})
 				.catch((err) => console.error(err));
@@ -234,19 +227,16 @@ class Dashboard extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
-				console.log("eventsssss deletedEvents", events);
 				this.setState({ Deleted_Events: events });
 				return events;
 			})
 			.catch((err) => {
-				console.error(err);
 				this.setState({ Deleted_Events: [] });
 			});
 		let deletedArray = [];
 		let deletedArray2 = [];
 		let createdEventlen = 0;
 		// var array1 = [];
-		console.log("myevents4", this.state.Deleted_Events);
 		let skip = false;
 		let skip2 = false;
 		for (let i = 0; i < this.state.MyEvents.length; i++) {
@@ -278,9 +268,6 @@ class Dashboard extends Component {
 			skip = false;
 			skip2 = false;
 		}
-
-		console.log("deletedArray2", deletedArray2);
-		console.log("DElete length", deletedArray);
 		// var array1 = this.state.MyEvents;
 		// for (var key in this.state.MyEvents) {
 		// 	for (var key2 in deletedArray) {
@@ -301,7 +288,6 @@ class Dashboard extends Component {
 
 	render() {
 		let body = "";
-		console.log("============>", this.state);
 		if (this.state.openModal) {
 			return <UniswapModal />;
 		}
@@ -315,8 +301,6 @@ class Dashboard extends Component {
 			let eventCounts = this.props.contracts["DaoEvents"].eventsOf[
 				this.events
 			];
-			console.log("hey123", eventCounts);
-
 			var loading = true;
 			let eventCache = [];
 			let eventDetails = [];
@@ -343,14 +327,12 @@ class Dashboard extends Component {
 				}
 			}
 			let CreatedEvent = this.state.deletedArray;
-			console.log("createdEvent", eventDetails.length);
 			var sortBySold = CreatedEvent.concat().sort(
 				(a, b) => b.returnValues.sold - a.returnValues.sold
 			);
 			let phoenixDAORevenue = CreatedEvent.filter(
 				(event_token) => event_token.returnValues.token == true
 			);
-			console.log("check phoen", sortBySold);
 			let limited = CreatedEvent.filter(
 				(event_seats) => event_seats.returnValues.limited == true
 			);
@@ -372,7 +354,6 @@ class Dashboard extends Component {
 								)
 						)
 				);
-			console.log("hey hey sort", sortBySold);
 			var array1 = CreatedEvent;
 			var array2 = this.state.deletedArray;
 			// var sortBySold = array1.filter(function (val) {
@@ -381,9 +362,6 @@ class Dashboard extends Component {
 			let sortSold = [];
 			let sortTopRevenue = [];
 			let toplist = true;
-
-			console.log("hey hey sort2", sortBySold);
-
 			if (sortBySold.length <= 0) {
 				toplist = false;
 			}
@@ -397,8 +375,6 @@ class Dashboard extends Component {
 					sortSold.push(sortBySold[x]);
 				}
 			}
-			console.log("hey hey sort3", sortSold);
-
 			/*Get Top PhoenixDAO Revenue*/
 
 			if (top_PhoenixDAORevenue.length > 5) {
@@ -443,15 +419,11 @@ class Dashboard extends Component {
 			let totalEvents = array1.filter(function (val) {
 				return array2.indexOf(val.id) == -1;
 			});
-			console.log("total events", array1);
-			console.log("total events2", array2);
-
 			var array1 = sortSold;
 			let topEvents = array1.filter(function (val) {
 				return array2.indexOf(val.id) == -1;
 			});
 			let CreatedLength = this.state.deletedArray2.length;
-			console.log("array sort12", topEvents);
 			loading = false;
 
 			// Doughnut Chart Data
@@ -741,12 +713,6 @@ class Dashboard extends Component {
 															event.returnValues
 																.name != ""
 														) {
-															console.log(
-																"hey uo",
-																event
-																	.returnValues
-																	.eventId
-															);
 															return (
 																<h4
 																	className="eventTitle"
@@ -1063,7 +1029,6 @@ class Dashboard extends Component {
 	}
 	async GetEventsRevenue(deletedArray) {
 		let revenue = 0;
-		console.log("here i got deletedArray", deletedArray);
 		for (let i = 0; i < deletedArray.length; i++) {
 			revenue =
 				Number(
@@ -1074,7 +1039,6 @@ class Dashboard extends Component {
 		}
 		revenue = revenue / 1000000000000000000;
 		this.setState({ revenue });
-		console.log("revenue", revenue);
 	}
 
 	componentDidMount() {

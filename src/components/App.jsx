@@ -114,7 +114,6 @@ class App extends Component {
 			// console.log("hey check now haha", accounts);
 			if (accounts.length == 0) {
 				localStorage.removeItem("account");
-				console.log("hey check now haha0");
 			}
 		}
 		await this.loadBlockchainData();
@@ -125,8 +124,6 @@ class App extends Component {
 		for (let i = 0; i < this.props.transactionStack.length; i++) {
 			if (sent_tx.indexOf(this.props.transactionStack[i]) === -1) {
 				sent_tx.push(this.props.transactionStack[i]);
-				console.log("asasas 1");
-
 				// toast(<NotifySending hash={this.props.transactionStack[i]} />, {
 				// 	position: "bottom-right",
 				// 	autoClose: false,
@@ -144,7 +141,6 @@ class App extends Component {
 
 	//Get Account
 	async loadBlockchainData() {
-		console.log("window.ethereum", window.ethereum);
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
 			this.setState({ openSnackbar: true });
 			// window.ethereum.on("connect", function (accounts) {
@@ -157,28 +153,20 @@ class App extends Component {
 				web3 = new Web3(ethereum);
 				const accounts = await web3.eth.getAccounts();
 				const check = localStorage.getItem("account");
-				console.log("hey check now haha1", accounts);
-				console.log("hey check now haha2", check);
 				if (!check) {
 					window.location.reload();
 					localStorage.setItem("account", true);
 				}
 			} else if (typeof web3 !== "undefined") {
-				console.log("Web3 Detected!");
-				alert("alert 123 123!");
 				window.web3 = new Web3(web3.currentProvider);
 			} else {
-				console.log("No Web3 Detected");
-				alert("alert 123 123!");
 				window.web3 = new Web3(
 					new Web3.providers.HttpProvider(
 						"https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b"
 					)
 				);
 			}
-			window.ethereum.on("connect", function (accounts) {
-				console.log("on connect");
-			});
+			window.ethereum.on("connect", function (accounts) {});
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
 				window.location.reload();
@@ -260,12 +248,17 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						console.log("error",error)
-						toast(<NotifyError error={error} message={txerror.message} />, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<NotifyError
+								error={error}
+								message={txerror.message}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 				});
 			this.setState({ afterApprove: false });
@@ -320,19 +313,22 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						console.log("error",error)
-						toast(<NotifyError error={error} message={txerror.message} />, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<NotifyError
+								error={error}
+								message={txerror.message}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 						// this.afterApprove()
 						this.setState({ disabledStatus: false });
 					}
 				});
 		} else {
-			console.log("this.state.account ===>", this.state.buyticket);
-
 			this.state.buyticket
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
@@ -366,12 +362,17 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						console.log("error",error)
-						toast(<NotifyError error={error} message={txerror.message} />, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<NotifyError
+								error={error}
+								message={txerror.message}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 					this.setState({ disabledStatus: false });
 				});
@@ -472,24 +473,21 @@ class App extends Component {
 
 	//Get Value form Event Creator from child component
 	//Notify,listen for transaction status.
-	passtransaction = (transaction,type) => {
+	passtransaction = (transaction, type) => {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-		console.log("i am here",transaction)
 		this.setState({ upload: true, createEvent: transaction }, () =>
 			this.state.createEvent
 				.send({ from: this.state.account })
 
 				.on("transactionHash", (hash) => {
-					console.log("hiiiiii Agya hashhh",hash)
 					if (hash !== null) {
-						
 						this.setState({
 							upload: false,
 							done: true,
 						});
-						toast(<NotifyEvent hash={hash} type={type}/>, {
+						toast(<NotifyEvent hash={hash} type={type} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -497,8 +495,6 @@ class App extends Component {
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
-					console.log("hiiiiii Agya confirmationNumber",confirmationNumber,"and receipt",receipt)
-
 					if (confirmationNumber == 1) {
 						txreceipt = receipt;
 						txconfirmed = confirmationNumber;
@@ -506,10 +502,14 @@ class App extends Component {
 							toast(
 								<NotifyEventSuccess
 									hash={txreceipt.transactionHash}
-									createdEvent={type==="create"?txreceipt.events.CreatedEvent
-									.returnValues:txreceipt.events.NewAndUpdatedEvent
-									.returnValues}
-									
+									createdEvent={
+										type === "create"
+											? txreceipt.events.CreatedEvent
+													.returnValues
+											: txreceipt.events
+													.NewAndUpdatedEvent
+													.returnValues
+									}
 								/>,
 								{
 									position: "bottom-right",
@@ -523,13 +523,19 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						console.log("error",error)
+						console.log("error", error);
 						this.setState({ error: true });
-						toast(<NotifyError error={error} message={txerror.message} />, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<NotifyError
+								error={error}
+								message={txerror.message}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 				})
 		);
@@ -579,13 +585,18 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						console.log("error",error)
 						this.setState({ error: true });
-						toast(<NotifyError error={error} message={txerror.message} />, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<NotifyError
+								error={error}
+								message={txerror.message}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 				})
 		);
@@ -610,8 +621,6 @@ class App extends Component {
 	render() {
 		let body;
 		let connecting = false;
-
-		// console.log(randomBG,Math.random());
 		if (!this.props.drizzleStatus.initialized) {
 			body = (
 				<div>
@@ -656,8 +665,6 @@ class App extends Component {
 			(process.env.NODE_ENV === "production" &&
 				this.props.web3.networkId !== 4)
 		) {
-			console.log("web3", process.env.NODE_ENV);
-
 			body = (
 				<Switch>
 					<Route
@@ -723,7 +730,11 @@ class App extends Component {
 						exact
 						path="/event/:page/:id"
 						render={(props) => (
-							<EventPage {...props} inquire={this.inquireBuy} disabledStatus={this.state.disabledStatus}/>
+							<EventPage
+								{...props}
+								inquire={this.inquireBuy}
+								disabledStatus={this.state.disabledStatus}
+							/>
 						)}
 					/>
 					<Route exact path="/topics" component={TopicsLandingPage} />

@@ -44,7 +44,6 @@ class Ticket extends Component {
 		this.ticket = this.contracts["DaoEvents"].methods.getTicket.cacheCall(
 			this.props.id
 		);
-		console.log("this.ticket",this.props.id);
 		this.event = null;
 		this.address = null;
 		this.state = {
@@ -65,7 +64,6 @@ class Ticket extends Component {
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			console.log("get", get.data.result);
 			this.setState({
 				hideEvent: get.data.result,
 			});
@@ -192,7 +190,6 @@ class Ticket extends Component {
 				)
 				.send({ from: this.props.accounts[0] })
 				.on("transactionHash", (transactionHash) => {
-					console.log("sendticket transactionHash", transactionHash);
 					if (transactionHash !== null) {
 						toast(<NotifySending hash={transactionHash} />, {
 							position: "bottom-right",
@@ -202,9 +199,6 @@ class Ticket extends Component {
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
-					console.log("sendticket confirmation", confirmationNumber);
-					console.log("sendticket receipt", receipt);
-
 					if (confirmationNumber !== null) {
 						txreceiptApproved = receipt;
 						txconfirmedApproved = confirmationNumber;
@@ -228,8 +222,6 @@ class Ticket extends Component {
 					this.setState({ disabledStatus: false });
 				})
 				.on("error", (error) => {
-					console.log("sendticket error", error);
-
 					if (error !== null) {
 						txerror = error;
 						toast(<NotifyError error={error} message={txerror.message} />, {
@@ -273,11 +265,9 @@ class Ticket extends Component {
 		const canvas = document.getElementById(
 			event_data[0] + "-" + ticket_data[1]
 		);
-		console.log("c", canvas);
 		const pngUrl = canvas
 			.toDataURL("image/png")
 			.replace("image/png", "image/octet-stream");
-		console.log("png", pngUrl);
 		let downloadLink = document.createElement("a");
 		downloadLink.href = pngUrl;
 		downloadLink.download = "Event-Ticket.png";
@@ -305,7 +295,6 @@ class Ticket extends Component {
 			let event_data = this.props.contracts["DaoEvents"].events[
 				this.event
 			].value;
-			console.log("event_data",event_data);
 			let reported=false;
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
@@ -313,8 +302,6 @@ class Ticket extends Component {
 					) {
 						 reported= true;
 					}
-					console.log("reported",this.props.id,this.state.hideEvent[j].id);
-
 				}
 			
 			let rawTitle = event_data[0];

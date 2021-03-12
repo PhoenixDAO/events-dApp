@@ -13,7 +13,6 @@ import Done from "./Done";
 class CreateEvent extends Component {
 	constructor(props, context) {
 		super(props);
-		console.log("props recieved", this.props);
 		this.state = {
 			done: false,
 			upload: false,
@@ -52,7 +51,6 @@ class CreateEvent extends Component {
 		limited,
 		seats
 	) => {
-		console.log("in create event here index.js", organizer);
 		this.setState(
 			{
 				upload: true,
@@ -81,7 +79,6 @@ class CreateEvent extends Component {
 
 	readFile = (file) => {
 		let reader = new window.FileReader();
-		console.log(file);
 		reader.readAsDataURL(file);
 		reader.onloadend = () => this.convertAndUpload(reader);
 	};
@@ -89,14 +86,12 @@ class CreateEvent extends Component {
 	convertAndUpload = (reader) => {
 		let pinit = process.env.NODE_ENV === "production";
 
-		console.log("i am here in convertAndUpload")
 		let data = JSON.stringify({
 			image: reader.result,
 			text: this.state.data.description,
-			organizer:this.state.data.organizer,
+			organizer: this.state.data.organizer,
 			location: this.state.data.location,
 		});
-		console.log("i am here in convertAndUpload2")
 		let buffer = Buffer.from(data);
 		// let buffer2 = Buffer.from(JSON.stringify({name:"Jaffer",company:"Xord"}))
 		// ipfs.add(buffer2,{pin: pinit}).then((hash)=>{
@@ -111,7 +106,6 @@ class CreateEvent extends Component {
 					ipfs: hash[0].hash,
 				});
 				//this.uploadTransaction();
-				console.log("hash is ", hash);
 				// console.log("testing",this.contracts["DaoEvents"].methods.createEvent(
 				// 	this.state.data.name,
 				// 	this.state.data.time,
@@ -123,7 +117,6 @@ class CreateEvent extends Component {
 				// 	this.state.data.type,
 				// 	this.state.organizer
 				// ))
-				console.log("testing contract",this.state.data)
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.createEvent(
 						this.state.data.name,
@@ -133,21 +126,19 @@ class CreateEvent extends Component {
 						this.state.data.limited,
 						this.state.data.seats,
 						this.state.ipfs,
-						this.state.data.type,
+						this.state.data.type
 						// this.state.data.organizer
-					),"create"
+					),
+					"create"
 				);
 			})
 			.catch((error) => {
-				console.log("i am here error",error)
 				this.setState(
 					{
 						error: true,
 						error_text: "Transaction Rejected",
 					},
-					() => {
-						console.log(this.state.error_text);
-					}
+					() => {}
 				);
 			});
 	};
@@ -187,8 +178,6 @@ class CreateEvent extends Component {
 	transactionChecker = (id) => {
 		let tx_checker = setInterval(() => {
 			let tx = this.props.transactionStack[id];
-			console.log(tx);
-			console.log(tx_checker);
 			if (typeof tx !== "undefined") {
 				this.setState({
 					upload: false,
@@ -211,7 +200,6 @@ class CreateEvent extends Component {
 		}, 500);
 	};
 	componentDidMount() {
-		console.log("props", this.props);
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
 	}
 

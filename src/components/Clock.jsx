@@ -29,7 +29,6 @@ class Clock extends Component {
         const minutes = await Math.floor((time/1000/60) %60);
         const hours = await Math.floor(time/(1000*60*60) %24);
         const days = await Math.floor(time/(1000*60*60*24));
-        //console.log(this.props.event_unix,'days',  days, 'hours', hours, 'minutes', minutes, 'seconds',seconds );
         this.setState({days,hours,minutes,seconds,dateNow});}
     }
     
@@ -47,7 +46,7 @@ class Clock extends Component {
                     <span>⚠️ This event has already ended.</span>
                     </p>
                 </div>
-            </div>             
+            </div>              
         </div>);
                                              
      else

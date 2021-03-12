@@ -73,8 +73,6 @@ class Home extends Component {
 	// }
 
 	checkNetwork() {
-		console.log("123 this.props.web3.status", this.props.web3.status);
-		console.log("123 this.props.web3.networkId", this.props.web3.networkId);
 		if (
 			this.props.web3.status == "initialized" &&
 			this.props.web3.networkId != 4
@@ -90,14 +88,11 @@ class Home extends Component {
 
 	async connectToMetaMask() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
-			console.log("here");
-
 			let web3 = new Web3(window.ethereum);
 			try {
 				const a = await window.ethereum.enable();
 			} catch (e) {
 				if ((e.code = -32002)) {
-					console.log("eeee", e, e.message, e.code);
 					this.setState({
 						errorMessage:
 							"Connection request already pending. Please check MetaMask !",
@@ -129,13 +124,11 @@ class Home extends Component {
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			console.log("get", get.data.result);
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
 		} catch (error) {
-			console.log("check error", error);
 		}
 	};
 	async loadData() {

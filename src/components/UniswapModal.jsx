@@ -22,7 +22,6 @@ class UniswapModal extends Component {
 	}
 
 	render() {
-		console.log("hereeeeeee");
 		return (
 			<Dialog
 				open={this.props.open}

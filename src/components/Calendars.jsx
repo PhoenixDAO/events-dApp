@@ -29,7 +29,6 @@ class Calendars extends Component {
         }
         this._isMounted = false;
         this.account = this.props.accounts[0];
-        console.log("this.account",this.account);
     }
 
     async loadBlockchain(){
@@ -61,7 +60,6 @@ class Calendars extends Component {
 							}, {})
 						);
         this.setState({Events_Blockchain:result});
-        console.log("all events",this.state.Events_Blockchain);
         this.setState({loading:false})
         this.setState({active_length:this.state.Events_Blockchain.length})
         
@@ -85,12 +83,10 @@ class Calendars extends Component {
             toBlock: this.state.latestblocks,
         })
         .then((events) => {
-            console.log("eventsssss deletedEvents", events);
             this.setState({ Deleted_Events: events });
             return events;
         })
         .catch((err) => {
-            console.error(err);
             this.setState({ Deleted_Events: [] });
         });
 
@@ -98,7 +94,6 @@ class Calendars extends Component {
       filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			console.log("get", get.data.result);
 			this.setState({
 				hideEvent: get.data.result,
 			});
@@ -117,7 +112,6 @@ class Calendars extends Component {
             .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
             .join(' ');
 	        let titleURL;
-            console.log("event-calendar",event_calendar);
             if (event_calendar.account=== this.account) {
                 titleURL = "/event-stat/"+pagetitle+"/" + event_calendar.id;
             }
@@ -170,8 +164,6 @@ class Calendars extends Component {
             account:events_list[i].returnValues[10],
                 })
             }
-            console.log("calendar event",events_calendar);
-
         body = 
             <div style={{ height: '500pt'}}>
             <Calendar

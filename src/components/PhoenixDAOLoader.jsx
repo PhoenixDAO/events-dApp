@@ -21,7 +21,6 @@ function PhoenixDAOLoader() {
   return (
     <div className={classes.root}>
       <CircularProgress size={60}/>
-      {/* <CircularProgress color="warnings" /> */}
     </div>
   );
 }

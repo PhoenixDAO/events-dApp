@@ -110,14 +110,7 @@ const customStyles = {
 
 class MyEventStat extends Component {
 	constructor(props, context) {
-		console.log(
-			"props 321",
-			props.location.pathname.split("/")[
-				props.location.pathname.split("/").length - 1
-			]
-		);
 		try {
-			console.log("this.propsssss", props);
 			var contractConfig = {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
@@ -134,8 +127,6 @@ class MyEventStat extends Component {
 		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.match.params.id
 		);
-
-		console.log("eventstatsprops", this.props.pastEvents);
 		this.account = this.props.accounts[0];
 		this.state = {
 			load: true,
@@ -158,13 +149,13 @@ class MyEventStat extends Component {
 			pageTransactions: [],
 			blockie: "/images/PhoenixDAO.png",
 			open: false,
-			revenue:0,
-			approvalGranted: false
+			revenue: 0,
+			approvalGranted: false,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
-		this.GetEventsRevenue=this.GetEventsRevenue.bind(this)
+		this.GetEventsRevenue = this.GetEventsRevenue.bind(this);
 		this.giveApproval = this.giveApproval.bind(this);
 	}
 	async GetEventsRevenue() {
@@ -173,7 +164,6 @@ class MyEventStat extends Component {
 			.call();
 		revenue = revenue / 1000000000000000000;
 		this.setState({ revenue });
-		console.log("revenue", revenue);
 	}
 
 	//Get SoldTicket Data
@@ -228,9 +218,7 @@ class MyEventStat extends Component {
 				fromBlock: 5000000,
 				toBlock: this.state.latestblocks,
 			})
-			.then((events) => {
-				console.log("soldddd---", events);
-			})
+			.then((events) => {})
 			.catch((err) => console.error(err));
 
 		//Listen for Incoming Sold Tickets
@@ -296,11 +284,6 @@ class MyEventStat extends Component {
 							.value[7]
 					)
 						.then((file) => {
-							console.log(
-								this.props.contracts["DaoEvents"].events[
-									this.event
-								].value[8]
-							);
 							let data = JSON.parse(file[0].content.toString());
 							if (!this.isCancelled) {
 								this.setState({
@@ -366,13 +349,11 @@ class MyEventStat extends Component {
 		let a = await this.contracts["PHNX"].methods
 			.allowance(this.account, this.contracts["DaoEvents"].address)
 			.call();
-		console.log("allowance ==> ", a);
 		return a;
 	};
 
 	giveApproval = async () => {
 		this.setState({ disabledBuying: true });
-		console.log("state", this.state.disabledBuying);
 		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -388,7 +369,9 @@ class MyEventStat extends Component {
 					});
 				}
 			})
-			.on("confirmation", (confirmationNumber, receipt) => this.onConfirmation(confirmationNumber,receipt))
+			.on("confirmation", (confirmationNumber, receipt) =>
+				this.onConfirmation(confirmationNumber, receipt)
+			)
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
@@ -401,31 +384,22 @@ class MyEventStat extends Component {
 							pauseOnHover: true,
 						}
 					);
-					console.log("state3", this.state.disabledBuying);
 
 					// this.afterApprove()
 				}
 			});
 	};
-	onConfirmation(confirmationNumber,receipt){
-		this.setState({disabledBuying:false})
-		console.log("state2",this.state.disabledBuying);
-		
-		console.log("confirmationNumberrrr",confirmationNumber)
-		if (confirmationNumber == 0 && receipt.status == true ) {
-			toast(
-				<NotifyApproveSuccess
-					hash={receipt.transactionHash}
-				/>,
-				{
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true,
-				}
-			);
+	onConfirmation(confirmationNumber, receipt) {
+		this.setState({ disabledBuying: false });
+		if (confirmationNumber == 0 && receipt.status == true) {
+			toast(<NotifyApproveSuccess hash={receipt.transactionHash} />, {
+				position: "bottom-right",
+				autoClose: true,
+				pauseOnHover: true,
+			});
 			// this.afterApprove();
 			// this.setState({approvalGranted:true})
-	}
+		}
 	}
 	// inquire = async () => {
 	// 	let balance = await this.contracts["PHNX"].methods.totalSupply().call();
@@ -473,11 +447,6 @@ class MyEventStat extends Component {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 		// let temp = this.allowance();
 		// console.log("approve",balance)
-		console.log(
-			"buy",
-			this.props.contracts["DaoEvents"].events[this.event].value[2]
-		);
-		console.log("temp is ss", this.props.match.params.id);
 
 		this.setState(
 			{
@@ -496,7 +465,6 @@ class MyEventStat extends Component {
 			},
 			async () => {
 				let temp = await this.allowance();
-				console.log("temp is ", temp);
 				if ((await this.allowance()) == 0) {
 					this.handleClickOpen();
 				} else {
@@ -624,7 +592,6 @@ class MyEventStat extends Component {
 				<Loading />
 			</div>
 		);
-		console.log("deleted", this.props.deleted);
 		// if (this.state.deleted) {
 		// 	toast(<NotifyDelete />, {
 
@@ -657,7 +624,6 @@ class MyEventStat extends Component {
 				let event_data = this.props.contracts["DaoEvents"].events[
 					this.event
 				].value;
-				console.log("event_data ye aya hai", event_data);
 				let id = this.props.location.pathname.split("/")[
 					this.props.location.pathname.split("/").length - 1
 				];
@@ -756,8 +722,6 @@ class MyEventStat extends Component {
 					"/" +
 					this.props.match.params.id;
 				//let titleURL = "https://rinkeby.phoenixevents.io/event/" + this.props.match.params.id;
-				console.log(titleURL);
-
 				if (this.props.accounts[0] !== event_data[9]) {
 					body = (
 						<div>
@@ -1594,7 +1558,6 @@ class MyEventStat extends Component {
 			behavior: "smooth",
 		});
 		this.GetEventsRevenue();
-		console.log("myeventprops", this.props);
 		this._isMounted = true;
 		this.updateIPFS();
 		this.loadblockhain();
@@ -1603,8 +1566,6 @@ class MyEventStat extends Component {
 
 	componentDidUpdate() {
 		this.updateIPFS();
-		console.log("eventstate", this.state);
-
 		//this.afterApprove();
 	}
 
