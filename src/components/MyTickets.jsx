@@ -18,7 +18,6 @@ class MyTickets extends Component {
 	}
 		this.contracts = context.drizzle.contracts;
 		this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
-		console.log("ticketsOf",this.tickets);
 		this.perPage = 6;
 		this.myRef = React.createRef()
 
@@ -40,8 +39,6 @@ class MyTickets extends Component {
 	getTickets = () =>{
 	if (typeof this.props.contracts['DaoEvents'].ticketsOf[this.tickets] !== 'undefined') {
 		const myTicket = this.props.contracts['DaoEvents'].ticketsOf[this.tickets].value;
-		console.log("myTickets",myTicket);
-
 		let newsort= myTicket.concat().sort((a,b)=> b - a);
 		if(newsort!=='undefined'){
 		return newsort
@@ -104,7 +101,6 @@ class MyTickets extends Component {
                 		</li>
 							  );
 							  if (this.state.prevPath!=-1) {
-								console.log("prevPath",this.state.prevPath)
 								this.executeScroll({ behavior: "smooth", block: "start" });
 							  }
             			}
@@ -119,7 +115,6 @@ class MyTickets extends Component {
                 			</li>
 								  );
 								  if (this.state.prevPath!=-1) {
-									console.log("prevPath",this.state.prevPath)
 									this.executeScroll({ behavior: "smooth", block: "start" });
 								  }
            					}
@@ -133,7 +128,6 @@ class MyTickets extends Component {
 							</li>
 							);
 							if (this.state.prevPath!=-1) {
-								console.log("prevPath",this.state.prevPath)
 								this.executeScroll({ behavior: "smooth", block: "start" });
 							  }
 						}

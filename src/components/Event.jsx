@@ -136,7 +136,6 @@ class Event extends Component {
 					ipfs.get(this.props.ipfs)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
-							console.log("data in event", data);
 							if (!this.isCancelled) {
 								this.setState({
 									loading: false,
@@ -219,7 +218,6 @@ class Event extends Component {
 		let a = await this.contracts["PHNX"].methods
 			.allowance(this.account, this.contracts["DaoEvents"].address)
 			.call();
-		console.log("allowance ==> ", a);
 		return a;
 	};
 
@@ -289,7 +287,6 @@ class Event extends Component {
 				// 	console.log("confirmationNumberrrr",confirmationNumber)
 					// if (confirmationNumber == 0 && receipt.status == true ) {
 						if (confirmationNumber === 0 && receipt.status == true) {
-							console.log("confirmationNumberrrr0",confirmationNumber)
 						this.props.toggleBuying();
 						toast(
 							<NotifyApproveSuccess
@@ -309,13 +306,6 @@ class Event extends Component {
 
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
-		// let temp = this.allowance();
-		// console.log("approve",balance)
-		console.log(
-			"buy",
-			this.props.contracts["DaoEvents"].events[this.event].value[2]
-		);
-		console.log("temp is ss", this.props);
 		this.setState(
 			{
 				fee: this.props.contracts["DaoEvents"].events[this.event]
@@ -333,7 +323,6 @@ class Event extends Component {
 			},
 			async () => {
 				let temp = await this.allowance();
-				console.log("temp is ", temp);
 				if ((await this.allowance()) == 0) {
 					this.handleClickOpen();
 				} else {
@@ -365,7 +354,6 @@ class Event extends Component {
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			console.log("get", get.data.result);
 			this.setState({
 				hideEvent: get.data.result,
 			});
@@ -392,15 +380,6 @@ class Event extends Component {
 			let event_data = this.props.contracts["DaoEvents"].events[
 				this.event
 			].value;
-
-			// let event_data=this.tempFun()
-
-			console.log("event_data", event_data);
-
-			// let ownerDetails = this.props.contracts["DaoEvents"].getOwnerDetails[
-			// 	this.event
-			// ];
-
 			let image = this.getImage();
 			let description = this.getDescription();
 			let locations = this.getLocation();
@@ -421,11 +400,6 @@ class Event extends Component {
 				let reported = false;
 				let soldOut = " ";
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
-					console.log(
-						"matching",
-						this.props.id,
-						this.state.hideEvent[j].id
-					);
 					if (this.props.id == this.state.hideEvent[j].id) {
 						reported = true;
 						disabled = true;
@@ -457,7 +431,6 @@ class Event extends Component {
 						</span>
 					);
 					soldOut = <p className="sold_out">Sold Out</p>;
-					console.log("soldeeout");
 				}
 				if (date.getTime() < new Date().getTime()) {
 					disabled = true;
@@ -490,9 +463,6 @@ class Event extends Component {
 					.join(" ");
 
 				let topicURL = "/topic/" + event_data[8] + "/1";
-
-				//console.log(event_data);
-				//Friendly URL Title
 				let rawTitle = event_data[0];
 				var titleRemovedSpaces = rawTitle;
 				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");

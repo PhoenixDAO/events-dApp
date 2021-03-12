@@ -110,14 +110,7 @@ const customStyles = {
 
 class MyEventStat extends Component {
 	constructor(props, context) {
-		console.log(
-			"props 321",
-			props.location.pathname.split("/")[
-				props.location.pathname.split("/").length - 1
-			]
-		);
 		try {
-			console.log("this.propsssss",props)
 			var contractConfig = {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
@@ -134,8 +127,6 @@ class MyEventStat extends Component {
 		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.match.params.id
 		);
-		
-		console.log("eventstatsprops", this.props.pastEvents);
 		this.account = this.props.accounts[0];
 		this.state = {
 			load: true,
@@ -145,7 +136,7 @@ class MyEventStat extends Component {
 			image: null,
 			ipfs_problem: false,
 			disabledButton: false,
-			disabledBuying:false,
+			disabledBuying: false,
 			soldTicket: [],
 			latestblocks: 5000000,
 			phoenixDAO_market: [],
@@ -156,21 +147,23 @@ class MyEventStat extends Component {
 			buyticket: "",
 			approve: "",
 			pageTransactions: [],
+			blockie: "/images/PhoenixDAO.png",
 			open: false,
-			revenue:0,
-			approvalGranted: false
+			revenue: 0,
+			approvalGranted: false,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
-		this.GetEventsRevenue=this.GetEventsRevenue.bind(this)
+		this.GetEventsRevenue = this.GetEventsRevenue.bind(this);
 		this.giveApproval = this.giveApproval.bind(this);
 	}
-	async GetEventsRevenue(){
-		let revenue = await this.contracts["DaoEvents"].methods.eventRevenue(this.props.match.params.id).call()
-		revenue = revenue/1000000000000000000
-		this.setState({revenue})
-		console.log("revenue",revenue);
+	async GetEventsRevenue() {
+		let revenue = await this.contracts["DaoEvents"].methods
+			.eventRevenue(this.props.match.params.id)
+			.call();
+		revenue = revenue / 1000000000000000000;
+		this.setState({ revenue });
 	}
 
 	//Get SoldTicket Data
@@ -225,9 +218,7 @@ class MyEventStat extends Component {
 				fromBlock: 5000000,
 				toBlock: this.state.latestblocks,
 			})
-			.then((events) => {
-				console.log("soldddd---", events);
-			})
+			.then((events) => {})
 			.catch((err) => console.error(err));
 
 		//Listen for Incoming Sold Tickets
@@ -293,11 +284,6 @@ class MyEventStat extends Component {
 							.value[7]
 					)
 						.then((file) => {
-							console.log(
-								this.props.contracts["DaoEvents"].events[
-									this.event
-								].value[8]
-							);
 							let data = JSON.parse(file[0].content.toString());
 							if (!this.isCancelled) {
 								this.setState({
@@ -306,7 +292,7 @@ class MyEventStat extends Component {
 									description: data.text,
 									image: data.image,
 									locations: data.location,
-									organizer:data.organizer
+									organizer: data.organizer,
 								});
 							}
 						})
@@ -363,13 +349,11 @@ class MyEventStat extends Component {
 		let a = await this.contracts["PHNX"].methods
 			.allowance(this.account, this.contracts["DaoEvents"].address)
 			.call();
-		console.log("allowance ==> ", a);
 		return a;
 	};
 
 	giveApproval = async () => {
-		this.setState({disabledBuying:true})
-		console.log("state",this.state.disabledBuying);
+		this.setState({ disabledBuying: true });
 		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -385,11 +369,13 @@ class MyEventStat extends Component {
 					});
 				}
 			})
-			.on("confirmation", (confirmationNumber, receipt) => this.onConfirmation(confirmationNumber,receipt))
+			.on("confirmation", (confirmationNumber, receipt) =>
+				this.onConfirmation(confirmationNumber, receipt)
+			)
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
-					this.setState({disabledBuying:false})
+					this.setState({ disabledBuying: false });
 					toast(
 						<NotifyError error={error} message={txerror.message} />,
 						{
@@ -398,31 +384,22 @@ class MyEventStat extends Component {
 							pauseOnHover: true,
 						}
 					);
-					console.log("state3",this.state.disabledBuying);
 
 					// this.afterApprove()
 				}
 			});
 	};
-	onConfirmation(confirmationNumber,receipt){
-		this.setState({disabledBuying:false})
-		console.log("state2",this.state.disabledBuying);
-		
-		console.log("confirmationNumberrrr",confirmationNumber)
-		if (confirmationNumber == 0 && receipt.status == true ) {
-			toast(
-				<NotifyApproveSuccess
-					hash={receipt.transactionHash}
-				/>,
-				{
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true,
-				}
-			);
+	onConfirmation(confirmationNumber, receipt) {
+		this.setState({ disabledBuying: false });
+		if (confirmationNumber == 0 && receipt.status == true) {
+			toast(<NotifyApproveSuccess hash={receipt.transactionHash} />, {
+				position: "bottom-right",
+				autoClose: true,
+				pauseOnHover: true,
+			});
 			// this.afterApprove();
 			// this.setState({approvalGranted:true})
-	}
+		}
 	}
 	// inquire = async () => {
 	// 	let balance = await this.contracts["PHNX"].methods.totalSupply().call();
@@ -470,11 +447,6 @@ class MyEventStat extends Component {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 		// let temp = this.allowance();
 		// console.log("approve",balance)
-		console.log(
-			"buy",
-			this.props.contracts["DaoEvents"].events[this.event].value[2]
-		);
-		console.log("temp is ss", this.props.match.params.id);
 
 		this.setState(
 			{
@@ -493,7 +465,6 @@ class MyEventStat extends Component {
 			},
 			async () => {
 				let temp = await this.allowance();
-				console.log("temp is ", temp);
 				if ((await this.allowance()) == 0) {
 					this.handleClickOpen();
 				} else {
@@ -547,7 +518,7 @@ class MyEventStat extends Component {
 	// }
 
 	handleDelete() {
-		this.setState({disabledButton:true})
+		this.setState({ disabledButton: true });
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
@@ -577,7 +548,7 @@ class MyEventStat extends Component {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
-						this.setState({disabledButton:false})
+						this.setState({ disabledButton: false });
 						toast(
 							<NotifyDelete
 								hash={txreceipt.transactionHash}
@@ -596,7 +567,7 @@ class MyEventStat extends Component {
 			})
 			.on("error", (error) => {
 				if (error !== null) {
-					this.setState({disabledButton:false})
+					this.setState({ disabledButton: false });
 					txerror = error;
 					toast(
 						<NotifyError error={error} message={txerror.message} />,
@@ -621,7 +592,6 @@ class MyEventStat extends Component {
 				<Loading />
 			</div>
 		);
-		console.log("deleted", this.props.deleted);
 		// if (this.state.deleted) {
 		// 	toast(<NotifyDelete />, {
 
@@ -654,7 +624,6 @@ class MyEventStat extends Component {
 				let event_data = this.props.contracts["DaoEvents"].events[
 					this.event
 				].value;
-				console.log("event_data ye aya hai",event_data)
 				let id = this.props.location.pathname.split("/")[
 					this.props.location.pathname.split("/").length - 1
 				];
@@ -753,8 +722,6 @@ class MyEventStat extends Component {
 					"/" +
 					this.props.match.params.id;
 				//let titleURL = "https://rinkeby.phoenixevents.io/event/" + this.props.match.params.id;
-				console.log(titleURL);
-
 				if (this.props.accounts[0] !== event_data[9]) {
 					body = (
 						<div>
@@ -837,15 +804,11 @@ class MyEventStat extends Component {
 									weight: 5,
 									borderAlign: "center",
 									data: [
-										this.state.revenue
+										this.state.revenue,
 										// 100
-										,
 										// 50
-											(price *
-												(max_seats -
-													event_data[6])) 
-													// - this.state.revenue 
-									  
+										price * (max_seats - event_data[6]),
+										// - this.state.revenue
 									],
 								},
 							],
@@ -878,7 +841,8 @@ class MyEventStat extends Component {
 													done: false,
 													event: event_data,
 													price: price,
-													organizer: this.state.organizer,
+													organizer: this.state
+														.organizer,
 													eventId: id,
 													//  ...this.props.location.state,
 													//  ...this.state,
@@ -916,7 +880,8 @@ class MyEventStat extends Component {
 												className="btn btn-dark"
 												disabled={
 													this.state.loading ||
-													this.props.disabledStatus||this.state.disabledButton
+													this.props.disabledStatus ||
+													this.state.disabledButton
 												}
 											>
 												<i className="fa fa-edit"></i>{" "}
@@ -934,7 +899,8 @@ class MyEventStat extends Component {
 											className="btn btn-dark"
 											onClick={this.handleDelete}
 											disabled={
-												disabledButton ||this.state.disabledButton||
+												disabledButton ||
+												this.state.disabledButton ||
 												this.props.disabledStatus
 											}
 										>
@@ -955,7 +921,9 @@ class MyEventStat extends Component {
 										onClick={this.inquire}
 										disabled={
 											disabled ||
-											this.props.disabledStatus||this.state.disabledBuying||this.state.disabledButton
+											this.props.disabledStatus ||
+											this.state.disabledBuying ||
+											this.state.disabledButton
 										}
 									>
 										<i className="fas fa-ticket-alt"></i>{" "}
@@ -1053,98 +1021,95 @@ class MyEventStat extends Component {
 								</div>
 								<hr />
 								{/* <div className="row"> */}
-									<div className="card event-hero-sidebar">
+								<div className="card event-hero-sidebar">
+									<img
+										className="card-img-top event-image"
+										src={image}
+										alt="Event"
+									/>
+
+									<div className="card-header event-header">
 										<img
-											className="card-img-top event-image"
-											src={image}
-											alt="Event"
+											className="float-left"
+											src={this.state.blockie}
+											alt="User Identicon"
 										/>
-
-										<div className="card-header event-header">
-											<img
-												className="float-left"
-												src={makeBlockie(event_data[9])}
-												alt="User Identicon"
-											/>
-										</div>
-
-										<div className="card-body">
-											<h5 className="card-title event-title">
-												{event_data[0]}
-											</h5>
-											{description}
-										</div>
-
-										<ul className="list-group list-group-flush">
-											<li className="list-group-item ">
-												{locations}
-											</li>
-											<li className="list-group-item">
-												Category: {category}
-											</li>
-											<li className="list-group-item">
-												Organizer: {this.state.organizer}
-											</li>
-											{/* <li className="list-group-item">
-											Organizer Name: {ownerDetails}
-										</li> */}
-											<li className="list-group-item">
-												Price:{" "}
-												<img
-													src={"/images/" + symbol}
-													className="event_price-image"
-													alt="Event Price"
-												/>{" "}
-												{event_data[3]
-													? numeral(price).format(
-															"0.000"
-													  )
-													: "Free"}
-												{event_data[3] ? " or " : ""}
-												{event_data[3] ? (
-													<img
-														src={
-															"/images/dollarsign.png"
-														}
-														className="event_price-image"
-														alt="Event Price"
-													/>
-												) : (
-													""
-												)}
-												{event_data[3]
-													? numeral(
-															price *
-																this.state
-																	.phoenixDAO_market
-																	.usd
-													  ).format("0.000")
-													: ""}
-											</li>
-											<li className="list-group-item">
-												{date.toLocaleDateString()} at{" "}
-												{date.toLocaleTimeString([], {
-													hour: "2-digit",
-													minute: "2-digit",
-												})}
-											</li>
-											<li className="list-group-item">
-												Tickets: {event_data[6]}/
-												{max_seats}
-											</li>
-										</ul>
 									</div>
 
-									<div className="col-12">
-										{/* <div className="col-md-12 col-xs-12 col-sm-12 col-lg-7 clockDiv"> */}
-										{this._isMounted && (
-											<Clock
-												deadline={date}
-												event_unix={event_data[1]}
-											/>
-										)}
-										{/* </div> */}
-										{/* <div className="new-transaction-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-5" style={{padding:"0px"}}>
+									<div className="card-body">
+										<h5 className="card-title event-title">
+											{event_data[0]}
+										</h5>
+										{description}
+									</div>
+
+									<ul className="list-group list-group-flush">
+										<li className="list-group-item ">
+											{locations}
+										</li>
+										<li className="list-group-item">
+											Category: {category}
+										</li>
+										<li className="list-group-item">
+											Organizer: {this.state.organizer}
+										</li>
+										{/* <li className="list-group-item">
+											Organizer Name: {ownerDetails}
+										</li> */}
+										<li className="list-group-item">
+											Price:{" "}
+											<img
+												src={"/images/" + symbol}
+												className="event_price-image"
+												alt="Event Price"
+											/>{" "}
+											{event_data[3]
+												? numeral(price).format("0.000")
+												: "Free"}
+											{event_data[3] ? " or " : ""}
+											{event_data[3] ? (
+												<img
+													src={
+														"/images/dollarsign.png"
+													}
+													className="event_price-image"
+													alt="Event Price"
+												/>
+											) : (
+												""
+											)}
+											{event_data[3]
+												? numeral(
+														price *
+															this.state
+																.phoenixDAO_market
+																.usd
+												  ).format("0.000")
+												: ""}
+										</li>
+										<li className="list-group-item">
+											{date.toLocaleDateString()} at{" "}
+											{date.toLocaleTimeString([], {
+												hour: "2-digit",
+												minute: "2-digit",
+											})}
+										</li>
+										<li className="list-group-item">
+											Tickets: {event_data[6]}/{max_seats}
+										</li>
+									</ul>
+								</div>
+
+								<div className="col-12 clocksDiv">
+									{/* <div className="col-md-12 col-xs-12 col-sm-12 col-lg-7 clockDiv"> */}
+									{this._isMounted && (
+										<Clock
+											deadline={date}
+											event_unix={event_data[1]}
+										/>
+									)}
+									{/* </div> */}
+									{/* <div className="new-transaction-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-5" style={{padding:"0px"}}>
 										<h4 className="transactions">
 											Share your event
 										</h4>
@@ -1206,84 +1171,82 @@ class MyEventStat extends Component {
 											</WhatsappShareButton>
 										</div>
 									  </div> */}
-										<div className="new-transaction-wrapper">
-											<h4 className="transactions col-md-12 ">
-												Ticket Purchases
-											</h4>
-											{this.state.load && <Loading />}
-											{this.state.pageTransactions.map(
-												(sold, index) => (
-													<p
-														className="sold_text col-md-12"
-														key={index}
-													>
-														<img
-															className="float-left blockie"
-															src={makeBlockie(
-																sold
-																	.returnValues
-																	.buyer
-															)}
-														/>
-														<a
-															href={
-																"https://rinkeby.etherscan.io/address/" +
-																sold
-																	.returnValues
-																	.buyer
-															}
-															target="blank"
-														>
-															{sold.returnValues.buyer.slice(
-																0,
-																10
-															) + "..."}
-														</a>{" "}
-														has{" "}
-														<a
-															href={
-																"https://rinkeby.etherscan.io/tx/" +
-																sold.transactionHash
-															}
-															target="blank"
-														>
-															bought
-														</a>{" "}
-														1 ticket for{" "}
-														<strong>
-															{event_data[0]}
-														</strong>
-														.
-													</p>
-												)
-											)}
-											{!sold && (
-												<p className="sold_text col-md-12 no-tickets">
-													There are currently no
-													purchases for this ticket.
-												</p>
-											)}
-										</div>
-									</div>
-
-									<div className="pagination col-12">
-										<JwPagination
-											items={this.state.soldTicket}
-											onChangePage={this.onChangePage}
-											maxPages={5}
-											pageSize={5}
-											styles={customStyles}
-										/>
-									</div>
-
 									<div className="new-transaction-wrapper">
-										<h4 className="transactions">
-											<i className="fas fa-ticket-alt"></i>{" "}
-											Ticket Sales Info
+										<h4 className="transactions col-md-12 ">
+											Ticket Purchases
 										</h4>
 										{this.state.load && <Loading />}
-										<div className="sold_text col-12">
-											{/* <p className="myQR text-center col-md-3">
+										{this.state.pageTransactions.map(
+											(sold, index) => (
+												<p
+													className="sold_text col-md-12"
+													key={index}
+												>
+													<img
+														className="float-left blockie"
+														src={makeBlockie(
+															sold.returnValues
+																.buyer
+														)}
+													/>
+													<a
+														href={
+															"https://rinkeby.etherscan.io/address/" +
+															sold.returnValues
+																.buyer
+														}
+														target="blank"
+													>
+														{sold.returnValues.buyer.slice(
+															0,
+															10
+														) + "..."}
+													</a>{" "}
+													has{" "}
+													<a
+														href={
+															"https://rinkeby.etherscan.io/tx/" +
+															sold.transactionHash
+														}
+														target="blank"
+													>
+														bought
+													</a>{" "}
+													1 ticket for{" "}
+													<strong>
+														{event_data[0]}
+													</strong>
+													.
+												</p>
+											)
+										)}
+										{!sold && (
+											<p className="sold_text col-md-12 no-tickets">
+												There are currently no purchases
+												for this ticket.
+											</p>
+										)}
+									</div>
+								</div>
+
+								<div className="pagination col-12">
+									<JwPagination
+										items={this.state.soldTicket}
+										onChangePage={this.onChangePage}
+										maxPages={5}
+										pageSize={5}
+										styles={customStyles}
+									/>
+								</div>
+
+								<div className="new-transaction-wrapper">
+									<h4 className="transactions">
+										<i className="fas fa-ticket-alt"></i>{" "}
+										Ticket Sales Info
+									</h4>
+									{this.state.load && <Loading />}
+									<div className="sold_text col-12">
+										{/* <p className="myQR text-center col-md-3">
 											<QRCode
 												value={titleURL}
 												size={128}
@@ -1303,38 +1266,36 @@ class MyEventStat extends Component {
 											<p>Event QR-Code</p>
 										</p> */}
 
+										<p>
+											Tickets Sold: {event_data[6]}{" "}
+											Tickets
+										</p>
+
+										{event_data[4] ? (
 											<p>
-												Tickets Sold: {event_data[6]}{" "}
+												Available Tickets:{" "}
+												{max_seats - event_data[6]}{" "}
 												Tickets
 											</p>
+										) : (
+											<p>Available Tickets: Unlimited</p>
+										)}
 
-											{event_data[4] ? (
-												<p>
-													Available Tickets:{" "}
-													{max_seats - event_data[6]}{" "}
-													Tickets
-												</p>
-											) : (
-												<p>
-													Available Tickets: Unlimited
-												</p>
-											)}
-
-											{event_data[4] ? (
-												<p>
-													Total Tickets For Sale:{" "}
-													{event_data[4]
-														? max_seats
-														: "Unlimited"}{" "}
-													Tickets
-												</p>
-											) : (
-												<p>
-													Total Tickets For Sale:
-													Unlimited
-												</p>
-											)}
-										</div>
+										{event_data[4] ? (
+											<p>
+												Total Tickets For Sale:{" "}
+												{event_data[4]
+													? max_seats
+													: "Unlimited"}{" "}
+												Tickets
+											</p>
+										) : (
+											<p>
+												Total Tickets For Sale:
+												Unlimited
+											</p>
+										)}
+									</div>
 									{/* </div> */}
 
 									<div className="new-transaction-wrapper">
@@ -1430,9 +1391,11 @@ class MyEventStat extends Component {
 																event_data[6]
 													  ).format("0.000")
 													: price * event_data[6]} */}
-													{numeral(this.state.revenue).format("0.000")}
+												{numeral(
+													this.state.revenue
+												).format("0.000")}
 												{" or "}
-												{ 
+												{
 													<img
 														src={
 															"/images/dollarsign.png"
@@ -1441,13 +1404,12 @@ class MyEventStat extends Component {
 														alt="Event Price"
 													/>
 												}
-												{ numeral(
-															this.state.revenue *
-																this.state
-																	.phoenixDAO_market
-																	.usd
-													  ).format("0.000")
-													}
+												{numeral(
+													this.state.revenue *
+														this.state
+															.phoenixDAO_market
+															.usd
+												).format("0.000")}
 											</p>
 
 											{event_data[4] ? (
@@ -1465,13 +1427,11 @@ class MyEventStat extends Component {
 														alt="Event Price"
 													/>{" "}
 													{numeral(
-																price *
-																	(max_seats -
-																		event_data[6])
-														  ).format("0.000")
-														}
-													{" or "
-														}
+														price *
+															(max_seats -
+																event_data[6])
+													).format("0.000")}
+													{" or "}
 													{
 														<img
 															src={
@@ -1482,14 +1442,13 @@ class MyEventStat extends Component {
 														/>
 													}
 													{numeral(
-																price *
-																	(max_seats -
-																		event_data[6]) *
-																	this.state
-																		.phoenixDAO_market
-																		.usd
-														  ).format("0.000")
-														}
+														price *
+															(max_seats -
+																event_data[6]) *
+															this.state
+																.phoenixDAO_market
+																.usd
+													).format("0.000")}
 												</p>
 											) : (
 												<p
@@ -1516,12 +1475,13 @@ class MyEventStat extends Component {
 														alt="Event Price"
 													/>{" "}
 													{numeral(
-																price *
-																	(max_seats -
-																		event_data[6]) + this.state.revenue
-														  ).format("0.000")}
-													{ " or "}
-													{ 
+														price *
+															(max_seats -
+																event_data[6]) +
+															this.state.revenue
+													).format("0.000")}
+													{" or "}
+													{
 														<img
 															src={
 																"/images/dollarsign.png"
@@ -1530,15 +1490,16 @@ class MyEventStat extends Component {
 															alt="Event Price"
 														/>
 													}
-													{ numeral(
-																(price *
-																(max_seats -
-																	event_data[6])+ this.state.revenue) *
-																	this.state
-																		.phoenixDAO_market
-																		.usd
-														  ).format("0.000")
-														}
+													{numeral(
+														(price *
+															(max_seats -
+																event_data[6]) +
+															this.state
+																.revenue) *
+															this.state
+																.phoenixDAO_market
+																.usd
+													).format("0.000")}
 												</p>
 											) : (
 												<p
@@ -1596,8 +1557,7 @@ class MyEventStat extends Component {
 			top: 0,
 			behavior: "smooth",
 		});
-		this.GetEventsRevenue()
-		console.log("myeventprops", this.props);
+		this.GetEventsRevenue();
 		this._isMounted = true;
 		this.updateIPFS();
 		this.loadblockhain();
@@ -1606,8 +1566,6 @@ class MyEventStat extends Component {
 
 	componentDidUpdate() {
 		this.updateIPFS();
-		console.log("eventstate", this.state);
-
 		//this.afterApprove();
 	}
 

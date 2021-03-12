@@ -92,7 +92,6 @@ class TopicLandingPage extends Component {
 	}
 
 	getLastURLSegment() {
-		console.log(this.props.history.location.pathname);
 		let currentRoute = this.props.history.location.pathname;
 		let middleSegment = currentRoute.split("/");
 		//let lastSegment = currentRoute.substr(currentRoute.lastIndexOf('/') + 1);
@@ -146,12 +145,10 @@ class TopicLandingPage extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
-				console.log("eventsssss deletedEvents", events);
 				this.setState({ Deleted_Events: events });
 				return events;
 			})
 			.catch((err) => {
-				console.error(err);
 				this.setState({ Deleted_Events: [] });
 			});
 
@@ -332,13 +329,11 @@ class TopicLandingPage extends Component {
 
 	toggleBuying = () => {
 		this.setState({ disabledBuying: !this.state.disabledBuying });
-		console.log("this.state.disabledBuying", this.state.disabledBuying);
 	};
 
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			console.log("get", get.data.result);
 			this.setState({
 				hideEvent: get.data.result,
 			});

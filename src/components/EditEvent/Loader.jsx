@@ -1,6 +1,11 @@
 import React from 'react';
 
+	
 function Loader(props) {
+	window.scroll({
+		top: 0,
+		behavior: "smooth",
+	});
 	return (
 		<div className="mt-5">
 			<p className="text-center">One moment, we will upload your data.</p>

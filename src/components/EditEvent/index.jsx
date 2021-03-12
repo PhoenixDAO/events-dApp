@@ -12,7 +12,6 @@ import { Redirect } from "react-router-dom";
 class CreateEvent extends Component {
 	constructor(props, context) {
 		super(props);
-		console.log("props recieved", this.props);
 		this.state = {
 			done: false,
 			upload: false,
@@ -56,7 +55,6 @@ class CreateEvent extends Component {
 		limited,
 		seats
 	) => {
-		console.log("hey hey0", fileImg);
 		this.setState(
 			{
 				upload: true,
@@ -80,11 +78,9 @@ class CreateEvent extends Component {
 				},
 			},
 			() => {
-				console.log("data",fileHandle);
 				if (fileHandle == true) {
 					this.stageUpdater(90);
 					this.readFile(file);
-					console.log("fileImg in index",fileImg);
 				}
 				else{
 					this.stageUpdater(100);
@@ -97,7 +93,6 @@ class CreateEvent extends Component {
 
 	readFile = (file) => {
 		let reader = new window.FileReader();
-		console.log(file);
 		reader.readAsDataURL(file);
 		reader.onloadend = () => this.convertAndUpload(reader);
 	};
@@ -112,7 +107,6 @@ class CreateEvent extends Component {
 				location: this.state.data.location,
 				organizer: this.state.data.organizer
 			});
-			console.log("Iam here ")
 		} else {
 			data = JSON.stringify({
 				image: this.state.data.fileImg,
@@ -135,20 +129,6 @@ class CreateEvent extends Component {
 					ipfs: hash[0].hash,
 				});
 				//this.uploadTransaction();
-				console.log(
-					"hash is ",
-					this.state.data.eventId,
-					this.state.data.name,
-					this.state.data.time,
-					this.state.data.price,
-					this.state.data.seats,
-					this.state.ipfs,
-					this.state.data.type,
-					this.state.data.organizer,
-					this.state.data.currency,
-					this.state.data.currency === "eth"
-				);
-				
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.updateEvent(
 						this.state.data.eventId,
@@ -169,7 +149,6 @@ class CreateEvent extends Component {
 				);
 			})
 			.catch((error) => {
-				console.log("error in edit index",error)
 				this.setState(
 					{
 						error: true,
@@ -193,7 +172,6 @@ class CreateEvent extends Component {
 			this.state.data.type,
 			this.state.organizer
 		);
-		console.log("eventId", this.state.data.eventId);
 		this.transactionChecker(id);
 		this.createNewEvent();
 
@@ -218,8 +196,6 @@ class CreateEvent extends Component {
 	transactionChecker = (id) => {
 		let tx_checker = setInterval(() => {
 			let tx = this.props.transactionStack[id];
-			console.log(tx);
-			console.log(tx_checker);
 			if (typeof tx !== "undefined") {
 				this.setState({
 					upload: false,
@@ -242,7 +218,6 @@ class CreateEvent extends Component {
 		}, 500);
 	};
 	componentDidMount() {
-		console.log("indexprops", this.props);
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
 	}
 

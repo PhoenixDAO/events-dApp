@@ -15,7 +15,6 @@ class CheckUser extends Component {
 	constructor(props, context) {
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		console.log("this.propsssss",props)
 		this.state = {
 			tab: 1,
 			wrong_address: false,
@@ -41,7 +40,6 @@ class CheckUser extends Component {
 		// 	"DaoEvents"
 		// ].methods.getOwnerDetails.cacheCall(this.event);
 		this.reportEvent = this.reportEvent.bind(this);
-		console.log("view this.props", this.props);
 	}
 
 	changeTab = (tab, event) => {
@@ -52,11 +50,6 @@ class CheckUser extends Component {
 	};
 
 	checkManual = () => {
-		console.log("!this.address.value", !this.address.value);
-		console.log(
-			"!this.context.drizzle.web3.utils.isAddress(this.address.value)",
-			!this.context.drizzle.web3.utils.isAddress(this.address.value)
-		);
 		if (
 			!this.address.value ||
 			!this.context.drizzle.web3.utils.isAddress(this.address.value)
@@ -72,7 +65,6 @@ class CheckUser extends Component {
 			this.setState({
 				loading: true,
 			});
-			console.log("cehck now 123", this.event);
 			// let ownerDetails = this.props.contracts["DaoEvents"]
 			// 	.getOwnerDetails[this.event];
 			let payload = {
@@ -81,12 +73,10 @@ class CheckUser extends Component {
 				id: this.props.event_id,
 				count: 1,
 			};
-			console.log("here==>");
 			const report = await axios.post(
 				`${API_URL}${REPORT_EVENT}`,
 				payload
 			);
-			console.log("report==>", report);
 			toast(<NotifyReport text={"Report successful!"}/>, {
 					position: "bottom-right",
 					autoClose: true,
@@ -97,8 +87,6 @@ class CheckUser extends Component {
 				loading: false,
 			});
 		} catch (error) {
-			// console.log("error", error.response.data.responseMessage);
-			console.log("error", error);
 			toast(<NotifyReport text={error.response.data.responseMessage+"!"}/>, {
 				position: "bottom-right",
 				autoClose: true,
@@ -214,10 +202,6 @@ class CheckUser extends Component {
 		// if (ownerDetails != undefined) {
 		// 	ownerDetails = ownerDetails.value;
 		// }
-		// console.log("owner1",ownerDetails)
-		console.log("hey props", this.props);
-		console.log("hey props", this.event);
-		console.log("hey props", this.event_data);
 		<Snackbar
 			// open={this.state.openSnackbar1}
 			open={true}

@@ -95,7 +95,6 @@ class PastEvents extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
-				console.log("eventsssss deletedEvents", events);
 				this.setState({ Deleted_Events: events });
 				return events;
 			})
@@ -139,11 +138,6 @@ class PastEvents extends Component {
 						past_events: result,
 						past_events_copy: result,
 					});
-					console.log(
-						"eventsssss pastEvents",
-						this.state.past_events
-					);
-
 					this.setState({
 						past_length: this.state.past_events.length,
 					});
@@ -224,8 +218,6 @@ class PastEvents extends Component {
 		) {
 			//let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
 			let count = this.state.past_length;
-			console.log("pasteventlength", count);
-
 			if (this.state.loading) {
 				body = <PhoenixDAOLoader />;
 			} else if (count === 0 && !this.state.loading) {
@@ -267,8 +259,6 @@ class PastEvents extends Component {
 					skip = false;
 				}
 				events_list.reverse();
-
-				console.log("events after vfilter", events_list);
 				let updated_list = [];
 				count = events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
@@ -326,9 +316,7 @@ class PastEvents extends Component {
 									</Link>
 								</li>
 							);
-							console.log("prevPath", this.state.prevPath);
 							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -353,9 +341,7 @@ class PastEvents extends Component {
 									</Link>
 								</li>
 							);
-							console.log("prevPath", this.state.prevPath);
 							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -380,9 +366,7 @@ class PastEvents extends Component {
 									</Link>
 								</li>
 							);
-							console.log("prevPath", this.state.prevPath);
 							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -531,13 +515,11 @@ class PastEvents extends Component {
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			console.log("get", get.data.result);
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
 		} catch (error) {
-			console.log("check error", error);
 		}
 	};
 

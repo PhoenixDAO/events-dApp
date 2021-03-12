@@ -35,9 +35,6 @@ class MyEvents extends Component {
 		this.perPage = 6;
 		this.account = this.props.accounts[0];
 		this.myRef = React.createRef();
-
-		console.log("hey view my events now", this.events);
-
 		this.ActiveEvent = this.ActiveEvent.bind(this);
 		this.PastEvent = this.PastEvent.bind(this);
 		this.updateSearch = this.updateSearch.bind(this);
@@ -45,7 +42,6 @@ class MyEvents extends Component {
 
 	//Get Blockchain State
 	async loadBlockchain() {
-		console.log("check state", this.state);
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
 				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
@@ -55,7 +51,6 @@ class MyEvents extends Component {
 			Open_events_ABI,
 			Open_events_Address
 		);
-		console.log("check props events", openEvents);
 		if (this._isMounted) {
 			this.setState({ openEvents: openEvents });
 			this.setState({ MyEvents: [] });
@@ -67,7 +62,6 @@ class MyEvents extends Component {
 			this.setState({ blocks: blockNumber - 50000 });
 			this.setState({ latestblocks: blockNumber - 1 });
 			this.loadActiveEvents();
-			console.log("Iam here",this.account);
 			//Listen For My Newly Created Events
 			openEvents.events
 				.CreatedEvent({
@@ -94,15 +88,12 @@ class MyEvents extends Component {
 					}, 10000)
 				);
 		}
-		console.log("check state", this.state);
-		console.log("check state events", openEvents.getPastEvents);
 		await openEvents
 			.getPastEvents("DeletedEvent", {
 				fromBlock: 8181618,
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
-				console.log("eventsssss deletedEvents", events);
 				this.setState({ Deleted_Events: events });
 				return events;
 			})
@@ -144,7 +135,6 @@ class MyEvents extends Component {
 					this.setState({
 						active_length: this.state.MyEvents.length,
 					});
-					console.log("myevents", this.state.MyEvents);
 					setTimeout(() => this.setState({ loading: false }), 1000);
 				}
 			})
@@ -156,7 +146,6 @@ class MyEvents extends Component {
 		if (this._isMounted) {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
-		console.log("this.accounttttt", this.account);
 		this.state.openEvents
 			.getPastEvents("NewAndUpdatedEvent", {
 				filter: { owner: this.account },
@@ -224,14 +213,10 @@ class MyEvents extends Component {
 	};
 	toggleBuying=()=>{
 		this.setState({disabledBuying:!this.state.disabledBuying});
-		console.log("this.state.disabledBuying",this.state.disabledBuying);
 	}
 		
 	//Search for My Events By Name
 	updateSearch = (e) => {
-		console.log("value before", e.target.value);
-		console.log("this.state", this.state);
-
 		let { value } = e.target;
 		this.setState({ value }, () => {
 			try {
@@ -247,7 +232,6 @@ class MyEvents extends Component {
 				} else {
 					filteredEvents = this.state.check;
 				}
-				console.log("value after", e.target.value);
 			} catch (e) {}
 			this.setState({
 				MyEvents: filteredEvents,
@@ -367,7 +351,6 @@ class MyEvents extends Component {
 								</li>
 							);
 							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -393,7 +376,6 @@ class MyEvents extends Component {
 								</li>
 							);
 							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -418,9 +400,7 @@ class MyEvents extends Component {
 									</Link>
 								</li>
 							);
-							console.log("prevPath", this.state.prevPath);
 							if (this.state.prevPath != -1) {
-								// console.log("prevPath",this.state.prevPath)
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",

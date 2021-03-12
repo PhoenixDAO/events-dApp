@@ -12,6 +12,12 @@ componentWillUnmount=()=>{
 	this.props.createNewEvent2()
 }
 
+componentDidMount() {
+	window.scroll({
+		top: 0,
+		behavior: "smooth",
+	});
+}
 render(){
 	return (
 		<div className="mt-5 text-center">

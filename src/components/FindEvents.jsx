@@ -35,9 +35,7 @@ class FindEvents extends Component {
 			hideEvent: [],
 			disabledBuying: false,
 		};
-		// const a = this.props.location.pathname.split("/")
-		// console.log("this.props.location",a[a.length-1])
-		// console.log("this.props",this.props)
+
 		this.contracts = context.drizzle.contracts;
 		this.eventCount = this.contracts[
 			"DaoEvents"
@@ -104,7 +102,6 @@ class FindEvents extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
-				console.log("eventsssss deletedEvents", events);
 				this.setState({ Deleted_Events: events });
 				return events;
 			})
@@ -119,11 +116,9 @@ class FindEvents extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then(async (events) => {
-				console.log("here events", events);
 				if (this._isMounted) {
 					this.setState({ loading: true });
 					let allEvents = events;
-					console.log("eventsssss all Events", allEvents);
 					var newsort = allEvents
 						.concat()
 						.sort((a, b) => b.blockNumber - a.blockNumber)
@@ -138,7 +133,6 @@ class FindEvents extends Component {
 							return a;
 						}, {})
 					);
-					console.log("updated", result);
 					this.setState({
 						Events_Blockchain: result,
 						event_copy: result,
@@ -236,7 +230,6 @@ class FindEvents extends Component {
 		this.setState({ value }, () => {
 			try {
 				if (this.state.value !== "") {
-					console.log("event_copy", this.state.event_copy);
 					var filteredEvents = this.state.event_copy;
 					filteredEvents = filteredEvents.filter((events) => {
 						return (
@@ -260,12 +253,10 @@ class FindEvents extends Component {
 	};
 	toggleBuying = () => {
 		this.setState({ disabledBuying: !this.state.disabledBuying });
-		console.log("this.state.disabledBuying", this.state.disabledBuying);
 	};
 	//Sort Active Events By Date(Newest/Oldest)
 	toggleSortDate = (e) => {
 		let { value } = e.target;
-		console.log("toggleValue",e.target)
 		this.setState({ value }, () => {
 			const { Events_Blockchain } = this.state;
 			const { ended } = Events_Blockchain;
@@ -291,7 +282,6 @@ class FindEvents extends Component {
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			console.log("get", get.data.result);
 			this.setState({
 				hideEvent: get.data.result,
 			});
@@ -328,7 +318,6 @@ class FindEvents extends Component {
 				let currentPage = Number(this.props.match.params.page);
 				let events_list = [];
 				let skip = false;
-				console.log("this.state.hideEvent", this.state.hideEvent);
 				for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
@@ -356,7 +345,6 @@ class FindEvents extends Component {
 				}
 
 				events_list.reverse();
-				console.log("events_list", events_list);
 				let updated_list = [];
 				count = events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
@@ -365,8 +353,6 @@ class FindEvents extends Component {
 				if (end > count) end = count;
 				let pages = Math.ceil(count / this.perPage);
 				for (let i = start; i < end; i++) {
-					console.log("end4", end);
-
 					updated_list.push(
 						<Event
 							toggleBuying={this.toggleBuying}
@@ -421,7 +407,6 @@ class FindEvents extends Component {
 								</li>
 							);
 							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -447,7 +432,6 @@ class FindEvents extends Component {
 								</li>
 							);
 							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -473,7 +457,6 @@ class FindEvents extends Component {
 								</li>
 							);
 							if (this.state.prevPath != -1) {
-								console.log("prevPath", this.state.prevPath);
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",

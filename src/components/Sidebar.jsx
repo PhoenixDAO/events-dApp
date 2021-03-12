@@ -74,7 +74,6 @@ class Sidebar extends Component {
 				const a = await window.ethereum.enable();
 			} catch (e) {
 				if ((e.code = -32002)) {
-					console.log("eeee", e, e.message, e.code);
 					// window.alert(e.message)
 					this.setState({
 						errorMessage:

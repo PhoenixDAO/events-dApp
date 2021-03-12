@@ -18,7 +18,6 @@ let numeral = require("numeral");
 class Form extends Component {
 	constructor(props) {
 		super(props);
-		console.log("props in form", props);
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
@@ -69,7 +68,6 @@ class Form extends Component {
 			nextProps.currentBlock.timestamp &&
 			this.state.updateTimeStamp
 		) {
-			console.log("updating now");
 			this.setState({
 				currentBlock: nextProps.currentBlock,
 				updateTimeStamp: false,
@@ -91,8 +89,6 @@ class Form extends Component {
 		const todayDate = new Date(
 			parseInt(this.state.currentBlock.timestamp, 10) * 1000
 		);
-		console.log("Date : ", todayDate);
-
 		return todayDate;
 		// this.setState({dateDisplay:todayDate});
 	};
@@ -120,15 +116,6 @@ class Form extends Component {
 	};
 
 	handleDate = (date) => {
-		// console.log("date is d",  date._d.toString())
-		// console.log("date is i",  date._i.toString())
-		// console.log("if equal ",  date._i.toString() == date._d.toString())
-		// console.log("Date(Date.now()) is",typeof Date.now())
-		// console.log("this.state.currentBlock : ",this.state.currentBlock)
-		// console.log("date.unix() : ",date.unix())
-		// console.log("todayDay",todayDay._i/1000)
-		// let todayDay= moment.unix(this.state.currentBlock.timestamp)
-		// console.log("date by adding to timestamp",new Date(parseInt(this.state.currentBlock.timestamp+10800, 10) * 1000))
 		if (
 			typeof date === "object" &&
 			date.isValid() &&
@@ -147,15 +134,12 @@ class Form extends Component {
 				}
 				// ()=>this.setState({dateDisplay: new Date(parseInt(this.state.time, 10) * 1000)})
 			);
-			console.log("time", this.state.time);
-
 			// console.log(date)
 		}
 	};
 
 	handleCurrency = (event) => {
 		this.setState({ free: !this.state.free });
-		console.log("handleCurrency====>", event.target.value);
 		if (event.target.value == "phnx") {
 			this.setState(
 				{
@@ -163,12 +147,6 @@ class Form extends Component {
 					price: "",
 					dollarPrice: "",
 				},
-				() =>
-					console.log(
-						"currency",
-						this.state.currency,
-						this.state.price
-					)
 			);
 		} else {
 			this.setState(
@@ -176,12 +154,6 @@ class Form extends Component {
 					currency: event.target.value,
 					price: "0",
 				},
-				() =>
-					console.log(
-						"currency",
-						this.state.currency,
-						this.state.price
-					)
 			);
 		}
 	};
@@ -201,17 +173,11 @@ class Form extends Component {
 
 	handleFile = (event) => {
 		let file = event.target.files[0];
-		console.log("image", file);
-
 		if (!file) {
-			console.log("file", file);
-
 			return;
 		}
 		if (file != undefined) {
-			console.log("I am here");
 			this.setState({ fileHandle: true });
-			console.log("state", this.state.fileHandle);
 		}
 		if (
 			file.size > 1024 * 1024 ||
@@ -297,8 +263,6 @@ class Form extends Component {
 	priceChange = (event) => {
 		if (this.state.currency === "phnx") {
 			let price = event.target.value;
-			console.log("event.target.value", event.target.value);
-
 			// var reg = new RegExp("^[0-9]+$");
 			// let test = reg.test(event.target.value);
 			// if (!test && event.target.value.length != 0) {
@@ -310,13 +274,7 @@ class Form extends Component {
 			// 	return;
 			// }
 			let test = event.target.value.match(/^\d*\.?\d*$/);
-			console.log("e.target.value", event.target.value);
-			console.log("e.target.value test", test);
 			if (test == null && event.target.value.length != 0) {
-				console.log(
-					"e.target.value returned",
-					event.target.value.charAt(event.target.value.length - 1)
-				);
 				return event.preventDefault();
 			}
 			if (
@@ -326,23 +284,16 @@ class Form extends Component {
 				event.preventDefault();
 				return;
 			}
-			console.log(
-				"this.form.price.value",
-				this.form.price.value,
-				" length",
-				this.form.price.value.length
-			);
+	
 			if (event.target.value.length > 15) {
 				event.preventDefault();
 				return;
 			}
 
-			console.log("price", price);
 			this.setState(
 				{
 					price: price,
 				},
-				() => console.log("price", this.state.price)
 			);
 			let number = numeral(
 				event.target.value * this.state.PhoenixDAO_market.usd
@@ -350,7 +301,6 @@ class Form extends Component {
 			if (isNaN(number)) {
 				number = numeral(0 * 0).format("0.00");
 				this.setState({ dollarPrice: number });
-				console.log(this.state.dollarPrice);
 			} else {
 				this.setState({ dollarPrice: number });
 			}
@@ -360,21 +310,17 @@ class Form extends Component {
 				{
 					price: price,
 				},
-				() => console.log("price", this.state.price)
 			);
 		}
 	};
 
 	ticketsChange = (event) => {
 		let test = event.target.value.match(/^\d+$/);
-		console.log("e.target.value", event.target.value);
-		console.log("e.target.value test", test);
 		if (test == null && event.target.value.length != 0) {
 			this.form.seats.value = this.state.seats;
 			return event.preventDefault();
 		}
 		let seats = this.form.seats.value;
-		console.log("seats.length", seats.length);
 		if ((seats && seats.length > 16) || (seats && seats < this.state.allowedSeats)) {
 			event.preventDefault();
 			return;
@@ -426,8 +372,6 @@ class Form extends Component {
 	// 	}
 	// };
 	handleForm = (event) => {
-		console.log("edit", event);
-		console.log("editprops", this.props);
 		event.preventDefault();
 
 		let filteredDescription = "";
@@ -454,9 +398,6 @@ class Form extends Component {
 			filteredLocation = filter.clean(this.state.location);
 			this.setState({ location: filteredLocation });
 		}
-		console.log("hahaha");
-		console.log("filteredDescription form", this.form.description.value);
-		console.log("filteredDescription", filteredDescription);
 		let form_validation = [];
 		if (this.state.title === "") form_validation.push("name");
 		if (this.state.location === "") form_validation.push("location");
@@ -483,9 +424,6 @@ class Form extends Component {
 		this.setState({
 			form_validation: form_validation,
 		});
-		console.log("this.state", this.state);
-		console.log("this.form", this.form);
-		console.log("eventId", this.state.eventId);
 		if (form_validation.length === 0) {
 			this.props.createEvent(
 				this.state.fileHandle,
@@ -505,16 +443,10 @@ class Form extends Component {
 				this.form.seats ? this.form.seats.value : ""
 			);
 		}
-		console.log(
-			"hey lets go wow!!!!123...???/////",
-			form_validation.length
-		);
 		return;
 	};
 
 	render() {
-		console.log("hey hey hey", this.props);
-
 		let symbol = "PhoenixDAO.png";
 		let currency = this.state.currency === "eth" ? "ETH" : "PHNX";
 		let freeEvent = "";
@@ -1229,8 +1161,6 @@ class Form extends Component {
 			limited: this.props.event.limited,
 			seats: this.props.event.seats,
 		});
-		console.log("formprops", this.props);
-		console.log("formprops", this.props.event.limited);
 		this.getPhoenixDAOMarketValue();
 		// window.scrollTo(0, 0);
 	}

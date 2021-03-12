@@ -36,20 +36,18 @@ class Dashboard extends Component {
 			openModal: false,
 			deletedArray: [],
 			hideEvent: [],
-			deletedArray2:[],
-			revenue:0
+			deletedArray2: [],
+			revenue: 0,
 		};
 
 		this.contracts = context.drizzle.contracts;
 		this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
 			this.props.accounts[0]
 		);
-		console.log("hey view my events now", this.events);
-
 		this.account = this.props.accounts[0];
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
-		this.GetEventsRevenue=this.GetEventsRevenue.bind(this)
+		this.GetEventsRevenue = this.GetEventsRevenue.bind(this);
 	}
 	handleClickOpen = () => {
 		this.setState({ open: true });
@@ -121,7 +119,6 @@ class Dashboard extends Component {
 					this.setState({
 						active_length: this.state.MyEvents.length,
 					});
-					console.log("myevents", this.state.MyEvents);
 					setTimeout(() => this.setState({ loading: false }), 1000);
 				}
 			})
@@ -153,7 +150,6 @@ class Dashboard extends Component {
 			Open_events_Address
 		);
 		if (this._isMounted) {
-			console.log("check props123", openEvents);
 			this.setState({ openEvents: openEvents });
 			this.setState({ MyEvents: [] });
 
@@ -172,7 +168,6 @@ class Dashboard extends Component {
 				})
 				.then(async (events) => {
 					if (this.state.isActive) {
-						console.log("eventsssss", events);
 						this.setState({
 							MyEvents: events,
 						});
@@ -193,8 +188,6 @@ class Dashboard extends Component {
 							MyEvents: result,
 							active_length: this.state.MyEvents.length,
 						});
-
-						console.log("myevents2", this.state.MyEvents);
 					}
 				})
 				.catch((err) => console.error(err));
@@ -234,21 +227,18 @@ class Dashboard extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
-				console.log("eventsssss deletedEvents", events);
 				this.setState({ Deleted_Events: events });
 				return events;
 			})
 			.catch((err) => {
-				console.error(err);
 				this.setState({ Deleted_Events: [] });
 			});
 		let deletedArray = [];
-		let deletedArray2 = []
-		let createdEventlen=0;
+		let deletedArray2 = [];
+		let createdEventlen = 0;
 		// var array1 = [];
-		console.log("myevents4", this.state.Deleted_Events);
 		let skip = false;
-		let skip2 = false
+		let skip2 = false;
 		for (let i = 0; i < this.state.MyEvents.length; i++) {
 			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
@@ -269,8 +259,8 @@ class Dashboard extends Component {
 					}
 				}
 			}
-			if(!skip2){
-				deletedArray2.push(this.state.MyEvents[i])
+			if (!skip2) {
+				deletedArray2.push(this.state.MyEvents[i]);
 			}
 			if (!skip) {
 				deletedArray.push(this.state.MyEvents[i]);
@@ -278,9 +268,6 @@ class Dashboard extends Component {
 			skip = false;
 			skip2 = false;
 		}
-
-		console.log("deletedArray2",deletedArray2)
-		console.log("DElete length", deletedArray);
 		// var array1 = this.state.MyEvents;
 		// for (var key in this.state.MyEvents) {
 		// 	for (var key2 in deletedArray) {
@@ -289,17 +276,18 @@ class Dashboard extends Component {
 		// 		}
 		// 	}
 		// }
-		this.setState({
-			// top5Events: array1,
-			deletedArray2:deletedArray2,
-			deletedArray:deletedArray,
-		},()=>this.GetEventsRevenue(this.state.deletedArray));
-		
+		this.setState(
+			{
+				// top5Events: array1,
+				deletedArray2: deletedArray2,
+				deletedArray: deletedArray,
+			},
+			() => this.GetEventsRevenue(this.state.deletedArray)
+		);
 	}
 
 	render() {
 		let body = "";
-		console.log("============>", this.state);
 		if (this.state.openModal) {
 			return <UniswapModal />;
 		}
@@ -313,8 +301,6 @@ class Dashboard extends Component {
 			let eventCounts = this.props.contracts["DaoEvents"].eventsOf[
 				this.events
 			];
-			console.log("hey123", eventCounts);
-
 			var loading = true;
 			let eventCache = [];
 			let eventDetails = [];
@@ -341,14 +327,12 @@ class Dashboard extends Component {
 				}
 			}
 			let CreatedEvent = this.state.deletedArray;
-			console.log("createdEvent", eventDetails.length);
 			var sortBySold = CreatedEvent.concat().sort(
 				(a, b) => b.returnValues.sold - a.returnValues.sold
 			);
 			let phoenixDAORevenue = CreatedEvent.filter(
 				(event_token) => event_token.returnValues.token == true
 			);
-			console.log("check phoen", sortBySold);
 			let limited = CreatedEvent.filter(
 				(event_seats) => event_seats.returnValues.limited == true
 			);
@@ -370,18 +354,14 @@ class Dashboard extends Component {
 								)
 						)
 				);
-			console.log("hey hey sort", sortBySold);
 			var array1 = CreatedEvent;
 			var array2 = this.state.deletedArray;
-			var sortBySold = array1.filter(function (val) {
-				return array2.indexOf(val.id) == -1;
-			});
+			// var sortBySold = array1.filter(function (val) {
+			// 	return array2.indexOf(val.id) == -1;
+			// });
 			let sortSold = [];
 			let sortTopRevenue = [];
 			let toplist = true;
-
-			console.log("hey hey sort2", sortBySold);
-
 			if (sortBySold.length <= 0) {
 				toplist = false;
 			}
@@ -395,8 +375,6 @@ class Dashboard extends Component {
 					sortSold.push(sortBySold[x]);
 				}
 			}
-			console.log("hey hey sort3", sortSold);
-
 			/*Get Top PhoenixDAO Revenue*/
 
 			if (top_PhoenixDAORevenue.length > 5) {
@@ -441,15 +419,11 @@ class Dashboard extends Component {
 			let totalEvents = array1.filter(function (val) {
 				return array2.indexOf(val.id) == -1;
 			});
-			console.log("total events", array1);
-			console.log("total events2", array2);
-
 			var array1 = sortSold;
 			let topEvents = array1.filter(function (val) {
 				return array2.indexOf(val.id) == -1;
 			});
-let CreatedLength=this.state.deletedArray2.length;
-			console.log("array sort12", topEvents);
+			let CreatedLength = this.state.deletedArray2.length;
 			loading = false;
 
 			// Doughnut Chart Data
@@ -544,9 +518,10 @@ let CreatedLength=this.state.deletedArray2.length;
 				);
 				gradient2.addColorStop(1, "rgb(104, 160, 206)");
 				gradient2.addColorStop(0, "rgb(100, 101, 102)");
-				if (sortTopRevenue.length !== 0) {
+				if (topEvents.length !== 0) {
 					return {
-						labels: sortTopRevenue.map((event) => [
+						labels: topEvents.map((event) => [
+							// labels: sortTopRevenue.map((event) => [
 							event.returnValues.name,
 						]),
 						datasets: [
@@ -573,9 +548,9 @@ let CreatedLength=this.state.deletedArray2.length;
 								hoverBorderWidth: 1,
 								weight: 5,
 								borderAlign: "center",
-								data: sortBySold.map((event) =>
+								data: topEvents.map((event) =>
 									parseInt(
-										event.returnValues.sold 
+										event.returnValues.sold
 										// *this.context.drizzle.web3.utils.fromWei(
 										// 		event.returnValues.price
 										// 	)
@@ -672,7 +647,7 @@ let CreatedLength=this.state.deletedArray2.length;
 											<i className="fa fa-edit"></i> Total
 											Number Of Created Events
 										</h3>
-										
+
 										<h4 className="dashboard-data">
 											{CreatedLength}
 										</h4>
@@ -738,12 +713,6 @@ let CreatedLength=this.state.deletedArray2.length;
 															event.returnValues
 																.name != ""
 														) {
-															console.log(
-																"hey uo",
-																event
-																	.returnValues
-																	.eventId
-															);
 															return (
 																<h4
 																	className="eventTitle"
@@ -987,7 +956,9 @@ let CreatedLength=this.state.deletedArray2.length;
 											Total PHNX Revenue{" "}
 										</h3>
 										<h4 className="dashboard-data">
-											{numeral(this.state.revenue).format("0,0.00")}
+											{numeral(this.state.revenue).format(
+												"0,0.00"
+											)}
 										</h4>
 										<p className="dashboard-footer">PHNX</p>
 									</div>
@@ -1056,17 +1027,20 @@ let CreatedLength=this.state.deletedArray2.length;
 			</React.Fragment>
 		);
 	}
-	async GetEventsRevenue(deletedArray){
-		let revenue = 0
-		console.log("here i got deletedArray",deletedArray)
-		for(let i=0 ; i<deletedArray.length; i++){
-			revenue = Number(await this.contracts["DaoEvents"].methods.eventRevenue(deletedArray[i].returnValues.eventId).call()) + revenue
+	async GetEventsRevenue(deletedArray) {
+		let revenue = 0;
+		for (let i = 0; i < deletedArray.length; i++) {
+			revenue =
+				Number(
+					await this.contracts["DaoEvents"].methods
+						.eventRevenue(deletedArray[i].returnValues.eventId)
+						.call()
+				) + revenue;
 		}
-		revenue=revenue/1000000000000000000
-		this.setState({revenue})
-		console.log("revenue",revenue);
+		revenue = revenue / 1000000000000000000;
+		this.setState({ revenue });
 	}
-	
+
 	componentDidMount() {
 		window.scroll({
 			top: 0,
@@ -1075,7 +1049,7 @@ let CreatedLength=this.state.deletedArray2.length;
 		this._isMounted = true;
 		this.getPhoenixDAOMarketValue();
 		this.loadBockchain();
-		
+
 		this.filterHideEvent();
 	}
 	componentWillUnmount() {
