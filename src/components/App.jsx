@@ -45,6 +45,7 @@ import Snackbar from "./Snackbar";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Testnet_Token_Address,
+	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet.js";
 
 import NetworkError from "./NetworkError";
@@ -65,7 +66,7 @@ class App extends Component {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
 					PhoenixDAO_Testnet_Token_ABI,
-					PhoenixDAO_Testnet_Token_Address
+					PhoenixDAO_Mainnet_Token_Address
 				),
 			};
 			context.drizzle.addContract(contractConfig);
@@ -182,7 +183,7 @@ class App extends Component {
 
 	//get value from buyer/from child components
 	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
-		if (this.state.account.length !== 0 && this.props.web3.networkId == 4) {
+		if (this.state.account.length !== 0 && this.props.web3.networkId == 1) {
 			this.setState({ disabledStatus: true });
 			this.setState(
 				{
@@ -662,132 +663,153 @@ class App extends Component {
 		} else if (
 			(this.props.web3.status === "initialized" &&
 				Object.keys(this.props.accounts).length === 0) ||
-			(process.env.NODE_ENV === "production" &&
-				this.props.web3.networkId !== 4)
+			(
+				this.props.web3.networkId !== 1)
 		) {
+
 			body = (
-				<Switch>
-					<Route
-						exact
-						path="/upcomingevents/:page"
-						render={(props) => (
-							<FindEvents
-								{...props}
-								executeScroll={this.executeScroll}
-								inquire={this.inquireBuy}
-								disabledStatus={this.state.disabledStatus}
-							/>
-						)}
-					/>
-					<Route
-						exact
-						path="/pastevents/:page"
-						render={(props) => (
-							<PastEvents
-								{...props}
-								executeScroll={this.executeScroll}
-							/>
-						)}
-					/>
-
-					<Route
-						exact
-						path="/createevent"
-						render={(props) => (
-							<CreateEvent
-								{...props}
-								executeScroll={this.executeScroll}
-								passtransaction={this.passtransaction}
-								upload={this.state.upload}
-								disabledStatus={this.state.disabledStatus}
-								done={this.state.done}
-								disabledStatus={this.state.disabledStatus}
-								error={this.state.error}
-								account={this.state.account}
-							/>
-						)}
-					/>
-					<Route
-						exact
-						path="/editevent"
-						render={(props) => (
-							<EditEvent
-								{...props}
-								executeScroll={this.executeScroll}
-								passtransaction={this.passtransaction}
-								createNewEvent={this.createNewEvent}
-								upload={this.state.upload}
-								disabledStatus={this.state.disabledStatus}
-								done={false}
-								disabledStatus={this.state.disabledStatus}
-								error={this.state.error}
-								account={this.state.account}
-							/>
-						)}
-					/>
-
-					<Route
-						exact
-						path="/event/:page/:id"
-						render={(props) => (
-							<EventPage
-								{...props}
-								inquire={this.inquireBuy}
-								disabledStatus={this.state.disabledStatus}
-							/>
-						)}
-					/>
-					<Route exact path="/topics" component={TopicsLandingPage} />
-					<Route
-						exact
-						path="/topic/:page/:id"
-						render={(props) => (
-							<TopicLandingPage
-								{...props}
-								disabledStatus={this.state.disabledStatus}
-								inquire={this.inquireBuy}
-							/>
-						)}
-					/>
-					<Route
-						exact
-						path="/locations"
-						component={LocationsLandingPage}
-					/>
-					<Route
-						exact
-						path="/location/:page"
-						component={LocationLandingPage}
-					/>
-					<Route
-						exact
-						path="/Calendar"
-						render={(props) => (
-							<Calendars
-								{...props}
-								executeScroll={this.executeScroll}
-							/>
-						)}
-					/>
-					<Route
-						exact
-						path="/how-it-works"
-						render={(props) => (
-							<Home
-								{...props}
-								executeScroll={this.executeScroll}
-							/>
-						)}
-					/>
-					<Route
-						exact
-						path="/terms-and-conditions"
-						render={(props) => (
-							<Terms executeScroll={this.executeScroll} />
-						)}
-					/>
-				</Switch>
+				<div>
+					<Switch>
+						<Route
+							// exact
+							path="/"
+							render={(props) => (
+								<Home
+									{...props}
+									executeScroll={this.executeScroll}
+								/>
+							)}
+						/>
+						{/* <Route component={NetworkError} /> */}
+					</Switch>
+				</div>
 			);
+			connecting = true;
+
+
+			// body = (
+			// 	<Switch>
+			// 		<Route
+			// 			exact
+			// 			path="/upcomingevents/:page"
+			// 			render={(props) => (
+			// 				<FindEvents
+			// 					{...props}
+			// 					executeScroll={this.executeScroll}
+			// 					inquire={this.inquireBuy}
+			// 					disabledStatus={this.state.disabledStatus}
+			// 				/>
+			// 			)}
+			// 		/>
+			// 		<Route
+			// 			exact
+			// 			path="/pastevents/:page"
+			// 			render={(props) => (
+			// 				<PastEvents
+			// 					{...props}
+			// 					executeScroll={this.executeScroll}
+			// 				/>
+			// 			)}
+			// 		/>
+
+			// 		<Route
+			// 			exact
+			// 			path="/createevent"
+			// 			render={(props) => (
+			// 				<CreateEvent
+			// 					{...props}
+			// 					executeScroll={this.executeScroll}
+			// 					passtransaction={this.passtransaction}
+			// 					upload={this.state.upload}
+			// 					disabledStatus={this.state.disabledStatus}
+			// 					done={this.state.done}
+			// 					disabledStatus={this.state.disabledStatus}
+			// 					error={this.state.error}
+			// 					account={this.state.account}
+			// 				/>
+			// 			)}
+			// 		/>
+			// 		<Route
+			// 			exact
+			// 			path="/editevent"
+			// 			render={(props) => (
+			// 				<EditEvent
+			// 					{...props}
+			// 					executeScroll={this.executeScroll}
+			// 					passtransaction={this.passtransaction}
+			// 					createNewEvent={this.createNewEvent}
+			// 					upload={this.state.upload}
+			// 					disabledStatus={this.state.disabledStatus}
+			// 					done={false}
+			// 					disabledStatus={this.state.disabledStatus}
+			// 					error={this.state.error}
+			// 					account={this.state.account}
+			// 				/>
+			// 			)}
+			// 		/>
+
+			// 		<Route
+			// 			exact
+			// 			path="/event/:page/:id"
+			// 			render={(props) => (
+			// 				<EventPage
+			// 					{...props}
+			// 					inquire={this.inquireBuy}
+			// 					disabledStatus={this.state.disabledStatus}
+			// 				/>
+			// 			)}
+			// 		/>
+			// 		<Route exact path="/topics" component={TopicsLandingPage} />
+			// 		<Route
+			// 			exact
+			// 			path="/topic/:page/:id"
+			// 			render={(props) => (
+			// 				<TopicLandingPage
+			// 					{...props}
+			// 					disabledStatus={this.state.disabledStatus}
+			// 					inquire={this.inquireBuy}
+			// 				/>
+			// 			)}
+			// 		/>
+			// 		<Route
+			// 			exact
+			// 			path="/locations"
+			// 			component={LocationsLandingPage}
+			// 		/>
+			// 		<Route
+			// 			exact
+			// 			path="/location/:page"
+			// 			component={LocationLandingPage}
+			// 		/>
+			// 		<Route
+			// 			exact
+			// 			path="/Calendar"
+			// 			render={(props) => (
+			// 				<Calendars
+			// 					{...props}
+			// 					executeScroll={this.executeScroll}
+			// 				/>
+			// 			)}
+			// 		/>
+			// 		<Route
+			// 			exact
+			// 			path="/how-it-works"
+			// 			render={(props) => (
+			// 				<Home
+			// 					{...props}
+			// 					executeScroll={this.executeScroll}
+			// 				/>
+			// 			)}
+			// 		/>
+			// 		<Route
+			// 			exact
+			// 			path="/terms-and-conditions"
+			// 			render={(props) => (
+			// 				<Terms executeScroll={this.executeScroll} />
+			// 			)}
+			// 		/>
+			// 	</Switch>
+			// );
 		} else {
 			body = (
 				<Switch>

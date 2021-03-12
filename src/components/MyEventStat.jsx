@@ -17,6 +17,7 @@ import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Testnet_Token_Address,
+	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
 import ApprovalModal from "./approvalModal";
 
@@ -115,7 +116,7 @@ class MyEventStat extends Component {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
 					PhoenixDAO_Testnet_Token_ABI,
-					PhoenixDAO_Testnet_Token_Address
+					PhoenixDAO_Mainnet_Token_Address
 				),
 			};
 			context.drizzle.addContract(contractConfig);

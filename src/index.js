@@ -9,11 +9,13 @@ import StableToken from "./config/StableToken.json";
 const options = {
 	web3: {
 		customProvider: new Web3(
-			"https://rinkeby.infura.io/v3/98ae0677533f424ca639d5abb8ead4e7"
+			"https://mainnet.infura.io/v3/c89f216154d84b83bb9344a7d0a91108"
 		),
 	},
 
-	contracts: [OpenEvents, StableToken],
+	contracts: [OpenEvents, 
+		// StableToken
+	],
 
 	events: {
 		OpenEvents: ["CreatedEvent", "SoldTicket"],

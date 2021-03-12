@@ -9,6 +9,7 @@ import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Testnet_Token_Address,
+	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
 import { API_URL, REPORT_EVENT } from "../utils/const";
 import axios from "axios";
@@ -27,7 +28,7 @@ class Home extends Component {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
 					PhoenixDAO_Testnet_Token_ABI,
-					PhoenixDAO_Testnet_Token_Address
+					PhoenixDAO_Mainnet_Token_Address
 				),
 			};
 			context.drizzle.addContract(contractConfig);
@@ -73,12 +74,13 @@ class Home extends Component {
 	// }
 
 	checkNetwork() {
+		console.log("this.props.web3.networkId",this.props.web3.status,this.props.web3.networkId)
 		if (
 			this.props.web3.status == "initialized" &&
-			this.props.web3.networkId != 4
+			this.props.web3.networkId != 1
 		) {
 			this.setState({
-				errorMessage: "Please switch to rinkeby network !",
+				errorMessage: "Please switch to Ethereum Mainnet!",
 				openSnackbar1: false,
 				openSnackbar2: false,
 				openSnackbar3: true,

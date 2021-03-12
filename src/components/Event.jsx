@@ -6,6 +6,7 @@ import makeBlockie from "ethereum-blockies-base64";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Testnet_Token_Address,
+	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet.js";
 
 import ipfs from "../utils/ipfs";
@@ -51,7 +52,7 @@ class Event extends Component {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
 					PhoenixDAO_Testnet_Token_ABI,
-					PhoenixDAO_Testnet_Token_Address
+					PhoenixDAO_Mainnet_Token_Address
 				),
 			};
 			context.drizzle.addContract(contractConfig);
