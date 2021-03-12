@@ -733,6 +733,9 @@ input[type="number"] {
 	margin-right: 0px !important;
 	width: 100%;
 }
+.clocksDiv{
+padding: 0px;
+}
 .clockDiv {
 	align-items: flex-end;
 	display: flex;

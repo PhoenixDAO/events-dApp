@@ -104,7 +104,7 @@ class EventPage extends Component {
 			description: null,
 			image: null,
 			ipfs_problem: false,
-
+			blockie: "/images/PhoenixDAO.png",
 			soldTicket: [],
 			latestblocks: 5000000,
 			PhoenixDAO_market: [],
@@ -636,7 +636,7 @@ class EventPage extends Component {
 									<div className="card-header event-header">
 										<img
 											className="float-left"
-											src={makeBlockie(event_data[9])}
+											src={this.state.blockie}
 											alt="User Identicon"
 										/>
 									</div>
