@@ -171,7 +171,7 @@ class MyEventStat extends Component {
 	async loadblockhain() {
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
-				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
+				"wss://mainnet.infura.io/ws/v3/c89f216154d84b83bb9344a7d0a91108"
 			)
 		);
 		const openEvents = new web3.eth.Contract(
@@ -717,11 +717,11 @@ class MyEventStat extends Component {
 					.split(" ")
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(" ");
-				let titleURL =
-					"https://rinkeby.phoenixevents.io/events/" +
-					pagetitle +
-					"/" +
-					this.props.match.params.id;
+				// let titleURL =
+					// "https://rinkeby.phoenixevents.io/events/" +
+					// pagetitle +
+					// "/" +
+					// this.props.match.params.id;
 				//let titleURL = "https://rinkeby.phoenixevents.io/event/" + this.props.match.params.id;
 				if (this.props.accounts[0] !== event_data[9]) {
 					body = (
@@ -1192,7 +1192,7 @@ class MyEventStat extends Component {
 													/>
 													<a
 														href={
-															"https://rinkeby.etherscan.io/address/" +
+															"https://etherscan.io/address/" +
 															sold.returnValues
 																.buyer
 														}
@@ -1206,7 +1206,7 @@ class MyEventStat extends Component {
 													has{" "}
 													<a
 														href={
-															"https://rinkeby.etherscan.io/tx/" +
+															"https://etherscan.io/tx/" +
 															sold.transactionHash
 														}
 														target="blank"
