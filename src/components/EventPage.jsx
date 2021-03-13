@@ -126,7 +126,7 @@ class EventPage extends Component {
 	async loadblockhain() {
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
-				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
+				"wss://mainnet.infura.io/ws/v3/c89f216154d84b83bb9344a7d0a91108"
 			)
 		);
 		const openEvents = new web3.eth.Contract(

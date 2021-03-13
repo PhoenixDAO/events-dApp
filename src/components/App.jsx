@@ -163,7 +163,7 @@ class App extends Component {
 			} else {
 				window.web3 = new Web3(
 					new Web3.providers.HttpProvider(
-						"https://rinkeby.infura.io/v3/72e114745bbf4822b987489c119f858b"
+						"https://mainnet.infura.io/v3/c89f216154d84b83bb9344a7d0a91108"
 					)
 				);
 			}

@@ -456,7 +456,7 @@ class Ticket extends Component {
 								Creator:{" "}
 								<a
 									href={
-										"https://rinkeby.etherscan.io/address/" +
+										"https://etherscan.io/address/" +
 										event_data[9]
 									}
 									target="_blank"
