@@ -670,8 +670,18 @@ input[type="number"] {
 	color: rgb(255, 255, 255);
 	font-weight: 400;
 }
-
-.card:before {
+.card2 {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+.card:before ,.card2:before{
 	content: "";
 	position: absolute;
 	z-index: 0;
@@ -927,7 +937,7 @@ padding: 0px;
 	cursor: pointer;
 }
 
-.card {
+.card,.card2{
 	transition: all 0.3s;
 }
 
@@ -1444,7 +1454,7 @@ body,
 		opacity: 1;
 		z-index: 99999999999999999999999999999999 !important;
 	}
-	.card {
+	.card ,.card2{
 		max-width: 400px;
 		margin: 0 auto;
 	}
@@ -1645,7 +1655,10 @@ h4.transactions {
 .list-group-item a {
 	color: #333;
 }
-
+.card2>.list-group {
+    border-top: inherit;
+    border-bottom: inherit;
+}
 .list-group-item a:hover {
 	color: #0056b3;
 	text-decoration: underline;

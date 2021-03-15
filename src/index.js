@@ -5,12 +5,11 @@ import App from "./components/App";
 import Web3 from "web3";
 import OpenEvents from "./config/OpenEvents.json";
 import StableToken from "./config/StableToken.json";
+import {INFURA_URL} from "./config/const.js";
 
 const options = {
 	web3: {
-		customProvider: new Web3(
-			"https://mainnet.infura.io/v3/c89f216154d84b83bb9344a7d0a91108"
-		),
+		customProvider: new Web3(INFURA_URL),
 	},
 
 	contracts: [OpenEvents, 

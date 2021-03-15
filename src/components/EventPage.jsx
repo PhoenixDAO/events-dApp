@@ -45,6 +45,7 @@ import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
 import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
+import {INFURA_WEB_URL} from "../config/const.js";
 
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
@@ -126,8 +127,8 @@ class EventPage extends Component {
 	async loadblockhain() {
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
-				"wss://mainnet.infura.io/ws/v3/c89f216154d84b83bb9344a7d0a91108"
-			)
+				INFURA_WEB_URL
+				)
 		);
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,

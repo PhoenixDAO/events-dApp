@@ -11,7 +11,7 @@ import { Bar, Doughnut } from "react-chartjs-2";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import UniswapModal from "./UniswapModal";
 import topicsJson from "../config/topics.json";
-
+import {INFURA_WEB_URL} from "../config/const.js";
 let numeral = require("numeral");
 
 class Dashboard extends Component {
@@ -142,7 +142,7 @@ class Dashboard extends Component {
 		// let MyEvents = this.state;
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
-				"wss://mainnet.infura.io/ws/v3/c89f216154d84b83bb9344a7d0a91108"
+			INFURA_WEB_URL
 			)
 		);
 		const openEvents = new web3.eth.Contract(

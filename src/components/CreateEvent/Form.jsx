@@ -34,8 +34,8 @@ class Form extends Component {
 			// time:Math.floor(Date.now() / 1000),
 			timeForHumans: null,
 			currency: "phnx",
-			type: "auto-boat-and-air",
-			topic: "appearance-or-signing",
+			type: "",
+			topic: "",
 			limited: false,
 			terms: false,
 			seatsForHumans: 0,
@@ -144,20 +144,16 @@ class Form extends Component {
 
 	handleCurrency = (event) => {
 		if (event.target.value == "phnx") {
-			this.setState(
-				{
-					currency: event.target.value,
-					price: "",
-					dollarPrice: "",
-				},
-			);
+			this.setState({
+				currency: event.target.value,
+				price: "",
+				dollarPrice: "",
+			});
 		} else {
-			this.setState(
-				{
-					currency: event.target.value,
-					price: "0",
-				},
-			);
+			this.setState({
+				currency: event.target.value,
+				price: "0",
+			});
 		}
 	};
 
@@ -239,25 +235,20 @@ class Form extends Component {
 			location: location,
 		});
 	};
-
+//this is event topic
 	typeChange = (event) => {
 		let topic = event.target.value;
 
-		this.setState(
-			{
-				topic: topic,
-			},
-		);
+		this.setState({
+			topic: topic,
+		});
 	};
-
+//this is event type
 	categoryChange = (event) => {
 		let type = event.target.value;
-
-		this.setState(
-			{
-				type: type,
-			},
-		);
+		this.setState({
+			type: type,
+		});
 	};
 
 	priceChange = (event) => {
@@ -289,11 +280,9 @@ class Form extends Component {
 				event.preventDefault();
 				return;
 			}
-			this.setState(
-				{
-					price: price,
-				},
-			);
+			this.setState({
+				price: price,
+			});
 			let number = numeral(
 				event.target.value * this.state.PhoenixDAO_market.usd
 			).format("0[.]000001");
@@ -305,11 +294,9 @@ class Form extends Component {
 			}
 		} else {
 			let price = "0";
-			this.setState(
-				{
-					price: price,
-				},
-			);
+			this.setState({
+				price: price,
+			});
 		}
 	};
 
@@ -421,13 +408,37 @@ class Form extends Component {
 			// this.state.price == "0.0" ||
 			// this.state.price == "0.00" ||
 			// this.state.price == "0.000" ||
-			this.state.currency == "phnx" &&this.state.price.includes("0") && this.state.price.includes(".") && !this.state.price.includes("1")&& !this.state.price.includes("2")&& !this.state.price.includes("3")&& !this.state.price.includes("4")&& !this.state.price.includes("5")&& !this.state.price.includes("6")&& !this.state.price.includes("7")&& !this.state.price.includes("8")&& !this.state.price.includes("9") ||
-			this.state.currency == "phnx" && this.state.price.includes("0") && !this.state.price.includes(".") && !this.state.price.includes("1")&& !this.state.price.includes("2")&& !this.state.price.includes("3")&& !this.state.price.includes("4")&& !this.state.price.includes("5")&& !this.state.price.includes("6")&& !this.state.price.includes("7")&& !this.state.price.includes("8")&& !this.state.price.includes("9")
+			(this.state.currency == "phnx" &&
+				this.state.price.includes("0") &&
+				this.state.price.includes(".") &&
+				!this.state.price.includes("1") &&
+				!this.state.price.includes("2") &&
+				!this.state.price.includes("3") &&
+				!this.state.price.includes("4") &&
+				!this.state.price.includes("5") &&
+				!this.state.price.includes("6") &&
+				!this.state.price.includes("7") &&
+				!this.state.price.includes("8") &&
+				!this.state.price.includes("9")) ||
+			(this.state.currency == "phnx" &&
+				this.state.price.includes("0") &&
+				!this.state.price.includes(".") &&
+				!this.state.price.includes("1") &&
+				!this.state.price.includes("2") &&
+				!this.state.price.includes("3") &&
+				!this.state.price.includes("4") &&
+				!this.state.price.includes("5") &&
+				!this.state.price.includes("6") &&
+				!this.state.price.includes("7") &&
+				!this.state.price.includes("8") &&
+				!this.state.price.includes("9"))
 		)
 			form_validation.push("price");
 		if (this.state.limited === true && this.form.seats.value < 1)
 			form_validation.push("seats");
 		if (this.state.type === "") form_validation.push("type");
+		if (this.state.topic === "") form_validation.push("topic");
+
 		if (!this.state.terms) form_validation.push("terms");
 
 		this.setState({
@@ -546,7 +557,7 @@ class Form extends Component {
 			disabled = true;
 		}
 		let buttonText = this.state.price != 0 ? "Buy Ticket" : "Get Ticket";
-		let type =this.state.type.replace(/[- )(]/g,' ');
+		let type = this.state.type.replace(/[- )(]/g, " ");
 		return (
 			<React.Fragment>
 				<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
@@ -733,14 +744,22 @@ class Form extends Component {
 						</div>
 						<div className="form-group">
 							<label htmlFor="description">Event Type:</label>
+							{warning.topic && (
+								<small
+									style={{ color: "red" }}
+									className="form-text text-muted color-red"
+								>
+									No Type selected
+								</small>
+							)}
 							<select
-								className="form-control"
+								className={"form-control " + warning.topic}
 								id="type"
 								title="Event Type"
 								onChange={this.typeChange}
 							>
-								<option value="" disabled="disabled">
-									Select the type of the event
+								<option value="" >
+									Please select from dropdown
 								</option>
 								{eventTypes.map((Type, index) => (
 									<option value={Type.slug} key={Type.name}>
@@ -751,14 +770,23 @@ class Form extends Component {
 						</div>
 						<div className="form-group">
 							<label htmlFor="description">Event Topic:</label>
+							{warning.type && (
+								<small
+									style={{ color: "red" }}
+									className="form-text text-muted color-red"
+								>
+									No topic selected
+								</small>
+							)}
 							<select
 								className="form-control"
 								id="topic"
+								className={"form-control " + warning.type}
 								title="Event Topic"
 								onChange={this.categoryChange}
 							>
-								<option value="" disabled="disabled">
-									Select the topic of the event
+								<option value="" selected>
+									Please select from dropdown
 								</option>
 								{eventTopics.map((Topic, index) => (
 									<option value={Topic.slug} key={Topic.name}>
@@ -1080,7 +1108,7 @@ class Form extends Component {
 
 				<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 					<label>Event Preview:</label>
-					<div className="card">
+					<div className="card2">
 						<div className="image_wrapper">
 							{/* <Link to={"/event/"}> */}
 							<img
@@ -1113,7 +1141,10 @@ class Form extends Component {
 							<li className="list-group-item">
 								<strong>Location:</strong> {this.state.location}{" "}
 							</li>
-							<li className="list-group-item" style={{textTransform: "capitalize"}}>
+							<li
+								className="list-group-item"
+								style={{ textTransform: "capitalize" }}
+							>
 								<strong>Category:</strong> {type}{" "}
 							</li>
 
@@ -1160,7 +1191,7 @@ class Form extends Component {
 							</li>
 						</ul>
 						<div className="card-footer text-muted text-center">
-							<button className="btn btn-dark" disabled="">
+							<button className="btn btn-dark" disabled="true">
 								{this.state.currency === "eth"
 									? "Get Ticket"
 									: "Buy Ticket"}

@@ -711,9 +711,17 @@ class Form extends Component {
 					</div>
 					<div className="form-group">
 						<label htmlFor="description">Event Type:</label>
+						{warning.topic && (
+								<small
+									style={{ color: "red" }}
+									className="form-text text-muted color-red"
+								>
+									No Type selected
+								</small>
+							)}
 						<select
-							className="form-control"
-							id="type"
+								className={"form-control " + warning.topic}
+								id="type"
 							title="Event Type"
 							onChange={this.typeChange}
 						>
@@ -729,12 +737,21 @@ class Form extends Component {
 					</div>
 					<div className="form-group">
 						<label htmlFor="description">Event Topic:</label>
+							{warning.type && (
+								<small
+									style={{ color: "red" }}
+									className="form-text text-muted color-red"
+								>
+									No topic selected
+								</small>
+							)}
 						<select
 							className="form-control"
 							id="topic"
 							title="Event Topic"
 							onChange={this.categoryChange}
 							value={this.state.type}
+							className={"form-control " + warning.topic}
 						>
 							<option value="" disabled="disabled">
 								Select the topic of the event
@@ -1062,7 +1079,7 @@ class Form extends Component {
 
 				<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 					<label>Event Preview:</label>
-					<div className="card">
+					<div className="card2">
 						<div className="image_wrapper">
 							{/* <Link to={"/event/"}> */}
 							<img
@@ -1144,7 +1161,7 @@ class Form extends Component {
 							</li>
 						</ul>
 						<div className="card-footer text-muted text-center">
-							<button className="btn btn-dark" disabled="">
+							<button className="btn btn-dark" disabled="true">
 								{this.state.currency === "eth"
 									? "Get Ticket"
 									: "Buy Ticket"}

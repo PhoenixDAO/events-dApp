@@ -41,6 +41,7 @@ import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
 import PropTypes from "prop-types";
 import Snackbar from "./Snackbar";
+import {INFURA_URL} from "../config/const.js";
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
@@ -162,8 +163,7 @@ class App extends Component {
 				window.web3 = new Web3(web3.currentProvider);
 			} else {
 				window.web3 = new Web3(
-					new Web3.providers.HttpProvider(
-						"https://mainnet.infura.io/v3/c89f216154d84b83bb9344a7d0a91108"
+					new Web3.providers.HttpProvider(INFURA_URL
 					)
 				);
 			}
