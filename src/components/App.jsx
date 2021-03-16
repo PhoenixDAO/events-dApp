@@ -664,7 +664,7 @@ class App extends Component {
 			(this.props.web3.status === "initialized" &&
 				Object.keys(this.props.accounts).length === 0) ||
 			(
-				this.props.web3.networkId !== 1)
+				this.props.web3.networkId !== 4)
 		) {
 
 			body = (

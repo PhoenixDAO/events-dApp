@@ -76,7 +76,7 @@ class FindEvents extends Component {
 	async loadBlockchain() {
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
-			INFURA_WEB_URL)
+				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b")
 		);
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,
@@ -137,6 +137,8 @@ class FindEvents extends Component {
 						Events_Blockchain: result,
 						event_copy: result,
 					});
+				console.log("events",result)
+
 					this.setState({
 						active_length: this.state.Events_Blockchain.length,
 					});

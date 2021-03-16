@@ -17,7 +17,7 @@ let numeral = require("numeral");
 class Form extends Component {
 	constructor(props) {
 		super(props);
-
+console.log("rejectedprops",props);
 		// console.log("props.currentBlock",props.currentBlock)
 		this.form = {};
 		this.web3 = props.web3;

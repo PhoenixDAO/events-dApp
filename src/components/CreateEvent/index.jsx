@@ -85,7 +85,6 @@ class CreateEvent extends Component {
 
 	convertAndUpload = (reader) => {
 		let pinit = process.env.NODE_ENV === "production";
-
 		let data = JSON.stringify({
 			image: reader.result,
 			text: this.state.data.description,
@@ -233,10 +232,23 @@ class CreateEvent extends Component {
 			);
 		if (this.state.error || this.props.error) {
 			body = (
-				<Error
-					message={this.state.error_text}
-					createNewEvent={this.createNewEvent}
-					createNewEvent2={this.props.createNewEvent}
+				<Form
+					props={{
+						name: this.state.data.name,
+						description: this.state.data.description,
+						organizer: this.state.data.organizer,
+						location: this.state.data.location,
+						time: this.state.data.time,
+						price: this.state.data.price,
+						currency:
+							this.state.data.currency === "eth" ? false : true,
+						limited: this.state.data.limited,
+						seats: this.state.data.seats,
+						ipfs: this.state.ipfs,
+						type: this.state.data.type,
+					}}
+					createEvent={this.createEvent}
+					account={this.props.account}
 				/>
 			);
 		}
