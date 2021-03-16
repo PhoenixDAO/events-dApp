@@ -4,7 +4,9 @@ function Terms(props) {
 	props.executeScroll();
 	return (
 		<div className="termsDiv">
-			<h2 style={{fontWeight:"bold" ,fontSize:"xx-large"}}>Terms and Conditions</h2>
+			<h2 style={{ fontWeight: "bold", fontSize: "xx-large" }}>
+				Terms and Conditions
+			</h2>
 			<p>Last updated: January 23, 2021</p>
 			<p>
 				Please read these terms and conditions carefully before using
@@ -20,7 +22,7 @@ function Terms(props) {
 			</p>
 			<h3>Definitions</h3>
 			<p>For the purposes of these Terms and Conditions:</p>
-			<ul >
+			<ul>
 				<li>
 					<p>
 						<strong>Affiliate</strong> means an entity that
@@ -142,13 +144,13 @@ function Terms(props) {
 			</p>
 			<p>
 				The Company has no control over, and assumes no responsibility
-				for, the content, privacy policies, or practices of any third-party
-				websites or services. You further acknowledge and agree
-				that the Company shall not be responsible or liable, directly or
-				indirectly, for any damage or loss caused or alleged to be
-				caused by or in connection with the use of or reliance on any
-				such content, goods or services available on or through any such
-				websites or services.
+				for, the content, privacy policies, or practices of any
+				third-party websites or services. You further acknowledge and
+				agree that the Company shall not be responsible or liable,
+				directly or indirectly, for any damage or loss caused or alleged
+				to be caused by or in connection with the use of or reliance on
+				any such content, goods or services available on or through any
+				such websites or services.
 			</p>
 			<p>
 				We strongly advise You to read the terms and conditions and
@@ -303,24 +305,19 @@ function Terms(props) {
 				stop using the website and the Service.
 			</p>
 			<h2>Contact Us</h2>
-			<p>
-				If you have any questions about these Terms and Conditions, You
-				can contact us:
-			</p>
-			<ul>
-				<li>
+			{/* <ul> */}
 					<p>
-						By email:{" "}hello@phoenixdao.io
-						{/* <a
-							href="/cdn-cgi/l/email-protection"
-							class="__cf_email__"
-							data-cfemail="fb939e979794bb8b93949e9592839f9a94d59294"
+						for any enquiries or questions please contact the
+						platform moderators: 
+						<a
+							href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=events@phoenixdao.io"
+							target="_blank"
 						>
-							hello@phoenixdao.io
-						</a> */}
+							events@phoenixdao.io
+						</a>
 					</p>
-				</li>
-				<li>	
+				
+				{/* <li>	
 					<p>
 						By visiting this page on our website:{" "}
 						<a
@@ -331,8 +328,8 @@ function Terms(props) {
 					https://phoenixdao.io/
 						</a>
 					</p>
-				</li>
-			</ul>
+				</li> */}
+			{/* </ul> */}
 			<script
 				data-cfasync="false"
 				src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"

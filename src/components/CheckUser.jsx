@@ -287,15 +287,15 @@ class CheckUser extends Component {
 			if (this.state.status) {
 				message = (
 					<div className="alert alert-success" role="alert">
-						<i className="fas fa-check-circle"></i> User has ticket
-						to this event
+						<i className="fas fa-check-circle"></i> This address has a ticket to the event.
+
 					</div>
 				);
 			} else {
 				message = (
 					<div className="alert alert-danger" role="alert">
-						<i className="fas fa-times"></i> User has no ticket to
-						this event
+						<i className="fas fa-times"></i> This address has no ticket to the event.
+
 					</div>
 				);
 			}
@@ -305,7 +305,7 @@ class CheckUser extends Component {
 			<div>
 				<hr className="mt-5" />
 				<h3>Confirm Purchase</h3>
-				<p>Check if a user has purchased a ticket to this event.</p>
+				<p>Check if an address has purchased a ticket to this event.</p>
 				{message}
 				{/* <ul className="nav nav-pills nav-fill nav-justified mt-3">
 					<li className="nav-item">

@@ -8,7 +8,7 @@ import { API_URL, REPORT_EVENT } from "../utils/const";
 import axios from "axios";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
-
+import {INFURA_WEB_URL} from "../config/const";
 import Web3 from 'web3';
 import {Open_events_ABI, Open_events_Address} from '../config/OpenEvents';
 
@@ -33,7 +33,7 @@ class Calendars extends Component {
 
     async loadBlockchain(){
     
-        const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://mainnet.infura.io/ws/v3/c89f216154d84b83bb9344a7d0a91108'));
+        const web3 = new Web3(new Web3.providers.WebsocketProvider(INFURA_WEB_URL));
         const openEvents =  new web3.eth.Contract(Open_events_ABI, Open_events_Address);
         
         if (this._isMounted){

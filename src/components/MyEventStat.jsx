@@ -54,6 +54,7 @@ import NotifyNetwork from "./NotifyNetwork";
 import { ToastContainer, toast } from "react-toastify";
 import NotifyDelete from "./NotifyDelete";
 import { CircularProgress } from "@material-ui/core";
+import {INFURA_WEB_URL} from "../config/const.js";
 
 //Numerical Setting
 let numeral = require("numeral");
@@ -171,8 +172,8 @@ class MyEventStat extends Component {
 	async loadblockhain() {
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
-				"wss://mainnet.infura.io/ws/v3/c89f216154d84b83bb9344a7d0a91108"
-			)
+				INFURA_WEB_URL
+				)
 		);
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,
