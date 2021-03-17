@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import main from '../styles/main.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { API_URL, REPORT_EVENT } from "../utils/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";

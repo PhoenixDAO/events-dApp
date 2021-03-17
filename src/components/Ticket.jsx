@@ -8,7 +8,7 @@ import ipfs from "../utils/ipfs";
 import NotifySending from "./NotifySending";
 import NotifySuccessSending from "./NotifySuccessSending";
 import NotifyError from "./NotifyError";
-import { API_URL, REPORT_EVENT } from "../utils/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

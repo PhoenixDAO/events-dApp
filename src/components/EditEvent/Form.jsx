@@ -18,6 +18,8 @@ let numeral = require("numeral");
 class Form extends Component {
 	constructor(props) {
 		super(props);
+		console.log("rejectedprops",props);
+
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
