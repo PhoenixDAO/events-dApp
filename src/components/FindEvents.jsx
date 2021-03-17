@@ -3,7 +3,7 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-import { API_URL, REPORT_EVENT } from "../utils/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 // Import dApp Components
 import Loading from "./Loading";
@@ -76,8 +76,7 @@ class FindEvents extends Component {
 	async loadBlockchain() {
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
-				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b")
-		);
+INFURA_WEB_URL		));
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,
 			Open_events_Address

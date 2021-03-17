@@ -41,7 +41,7 @@ import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
 import PropTypes from "prop-types";
 import Snackbar from "./Snackbar";
-import {INFURA_URL} from "../config/const.js";
+import {INFURA_URL,GLOBAL_NETWORK_ID} from "../config/const.js";
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
@@ -183,7 +183,7 @@ class App extends Component {
 
 	//get value from buyer/from child components
 	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
-		if (this.state.account.length !== 0 && this.props.web3.networkId == 1) {
+		if (this.state.account.length !== 0 && this.props.web3.networkId == GLOBAL_NETWORK_ID) {
 			this.setState({ disabledStatus: true });
 			this.setState(
 				{
@@ -664,7 +664,7 @@ class App extends Component {
 			(this.props.web3.status === "initialized" &&
 				Object.keys(this.props.accounts).length === 0) ||
 			(
-				this.props.web3.networkId !== 4)
+				this.props.web3.networkId !== GLOBAL_NETWORK_ID)
 		) {
 
 			body = (

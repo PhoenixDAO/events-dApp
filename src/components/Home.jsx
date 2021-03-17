@@ -11,13 +11,12 @@ import {
 	PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
-import { API_URL, REPORT_EVENT } from "../utils/const";
+import { API_URL, REPORT_EVENT ,GLOBAL_NETWORK_ID} from "../config/const";
 import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar3 from "./Snackbar3";
-
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Row } from "react-bootstrap";
 
@@ -77,7 +76,7 @@ class Home extends Component {
 		console.log("this.props.web3.networkId",this.props.web3.status,this.props.web3.networkId)
 		if (
 			this.props.web3.status == "initialized" &&
-			this.props.web3.networkId != 1
+			this.props.web3.networkId != GLOBAL_NETWORK_ID
 		) {
 			this.setState({
 				errorMessage: "Please switch to Ethereum Mainnet!",

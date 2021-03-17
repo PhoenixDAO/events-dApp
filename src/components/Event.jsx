@@ -11,7 +11,7 @@ import {
 
 import ipfs from "../utils/ipfs";
 
-import { API_URL, REPORT_EVENT } from "../utils/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 
 import Loading from "./Loading";

@@ -7,7 +7,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Loading from "./Loading";
 import Snackbar from "./Snackbar";
-import { API_URL, REPORT_EVENT } from "../utils/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
 import { ToastContainer, toast } from "react-toastify";
 import NotifyReport from "./NotifyReport";
 
