@@ -125,6 +125,7 @@ class MyEventStat extends Component {
 			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
 		}
 		super(props);
+		console.log("props",props);
 		this.contracts = context.drizzle.contracts;
 		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.match.params.id
@@ -138,7 +139,6 @@ class MyEventStat extends Component {
 			image: null,
 			ipfs_problem: false,
 			disabledButton: false,
-			disabledBuying: false,
 			soldTicket: [],
 			latestblocks: 5000000,
 			phoenixDAO_market: [],
@@ -355,7 +355,7 @@ class MyEventStat extends Component {
 	};
 
 	giveApproval = async () => {
-		this.setState({ disabledBuying: true });
+this.props.toggleDisabling();
 		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -377,7 +377,7 @@ class MyEventStat extends Component {
 			.on("error", (error) => {
 				if (error !== null) {
 					txerror = error;
-					this.setState({ disabledBuying: false });
+					this.props.toggleDisabling();
 					toast(
 						<NotifyError error={error} message={txerror.message} />,
 						{
@@ -392,7 +392,7 @@ class MyEventStat extends Component {
 			});
 	};
 	onConfirmation(confirmationNumber, receipt) {
-		this.setState({ disabledBuying: false });
+		this.props.toggleDisabling();
 		if (confirmationNumber == 0 && receipt.status == true) {
 			toast(<NotifyApproveSuccess hash={receipt.transactionHash} />, {
 				position: "bottom-right",
@@ -520,7 +520,7 @@ class MyEventStat extends Component {
 	// }
 
 	handleDelete() {
-		this.setState({ disabledButton: true });
+		this.props.toggleDisabling();
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
@@ -546,11 +546,11 @@ class MyEventStat extends Component {
 				}
 			})
 			.on("confirmation", (confirmationNumber, receipt) => {
+				this.props.toggleDisabling();
 				if (confirmationNumber !== null) {
 					txreceipt = receipt;
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
-						this.setState({ disabledButton: false });
 						toast(
 							<NotifyDelete
 								hash={txreceipt.transactionHash}
@@ -568,8 +568,8 @@ class MyEventStat extends Component {
 				}
 			})
 			.on("error", (error) => {
+				this.props.toggleDisabling();
 				if (error !== null) {
-					this.setState({ disabledButton: false });
 					txerror = error;
 					toast(
 						<NotifyError error={error} message={txerror.message} />,
@@ -902,7 +902,6 @@ class MyEventStat extends Component {
 											onClick={this.handleDelete}
 											disabled={
 												disabledButton ||
-												this.state.disabledButton ||
 												this.props.disabledStatus
 											}
 										>
@@ -924,7 +923,6 @@ class MyEventStat extends Component {
 										disabled={
 											disabled ||
 											this.props.disabledStatus ||
-											this.state.disabledBuying ||
 											this.state.disabledButton
 										}
 									>

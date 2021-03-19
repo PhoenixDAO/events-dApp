@@ -336,7 +336,16 @@ class Dashboard extends Component {
 			let limited = CreatedEvent.filter(
 				(event_seats) => event_seats.returnValues.limited == true
 			);
-
+			if (limited==undefined)
+			{
+				limited=[]
+				limited.returnValues.seats=0;
+				limited.returnValues.sold=0;
+				console.log(
+					"limited",limited.returnValues
+				)
+			}
+		
 			let top_PhoenixDAORevenue = phoenixDAORevenue
 				.concat()
 				.sort(
@@ -408,10 +417,12 @@ class Dashboard extends Component {
 					accumulator + parseInt(currentValue.returnValues.sold),
 				0
 			);
+		
 			let totalSeats = limited.reduce(
 				(accumulator, currentValue) =>
 					accumulator + parseInt(currentValue.returnValues.seats),
 				0
+				
 			);
 
 			var array1 = eventDetails;
@@ -490,7 +501,7 @@ class Dashboard extends Component {
 								hoverBorderWidth: 1,
 								weight: 5,
 								borderAlign: "center",
-								data: [0, -1],
+								data: [0, 0],
 							},
 						],
 					};

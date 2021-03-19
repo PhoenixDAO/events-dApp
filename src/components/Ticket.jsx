@@ -359,7 +359,7 @@ class Ticket extends Component {
 							</h5>
 							<div style={{ height: "22px" }}>{timeStatus}</div>
 							<h5 className="text-center">
-								Your seat: {ticket_data[1]}
+								Your ticket: {ticket_data[1]}
 							</h5>
 						</div>
 						<img
