@@ -41,12 +41,12 @@ import NotifyError from "./NotifyError";
 import NotifyNetwork from "./NotifyNetwork";
 import PropTypes from "prop-types";
 import Snackbar from "./Snackbar";
-import {INFURA_URL} from "../config/const.js";
+import { INFURA_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Testnet_Token_Address,
-	PhoenixDAO_Mainnet_Token_Address
+	PhoenixDAO_Mainnet_Token_Address,
 } from "../config/phoenixDAOcontract_testnet.js";
 
 import NetworkError from "./NetworkError";
@@ -99,6 +99,7 @@ class App extends Component {
 			afterApprove: false,
 			getPhoenixDAO: "",
 			openSnackbar: false,
+			disabledStatus: false,
 		};
 		this.myRef = React.createRef();
 
@@ -163,8 +164,7 @@ class App extends Component {
 				window.web3 = new Web3(web3.currentProvider);
 			} else {
 				window.web3 = new Web3(
-					new Web3.providers.HttpProvider(INFURA_URL
-					)
+					new Web3.providers.HttpProvider(INFURA_URL)
 				);
 			}
 			window.ethereum.on("connect", function (accounts) {});
@@ -183,7 +183,10 @@ class App extends Component {
 
 	//get value from buyer/from child components
 	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
-		if (this.state.account.length !== 0 && this.props.web3.networkId == 1) {
+		if (
+			this.state.account.length !== 0 &&
+			this.props.web3.networkId == GLOBAL_NETWORK_ID
+		) {
 			this.setState({ disabledStatus: true });
 			this.setState(
 				{
@@ -541,7 +544,9 @@ class App extends Component {
 				})
 		);
 	};
-
+	toggleDisabling = () => {
+		this.setState({ disabledStatus: !this.state.disabledStatus });
+	};
 	getPhoenixDAO = (getPhoenixDAO) => {
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -623,6 +628,7 @@ class App extends Component {
 		let body;
 		let connecting = false;
 		if (!this.props.drizzleStatus.initialized) {
+			// console.log("snackbar3Props in home2")
 			body = (
 				<div>
 					<Switch>
@@ -630,9 +636,11 @@ class App extends Component {
 							// exact
 							// path="/"
 							render={(props) => (
+								
 								<Home
 									{...props}
 									executeScroll={this.executeScroll}
+									
 								/>
 							)}
 						/>
@@ -642,7 +650,9 @@ class App extends Component {
 			);
 			connecting = true;
 		} else if (this.props.web3.status === "failed") {
+
 			body = (
+				
 				<div>
 					<Switch>
 						<Route
@@ -663,10 +673,8 @@ class App extends Component {
 		} else if (
 			(this.props.web3.status === "initialized" &&
 				Object.keys(this.props.accounts).length === 0) ||
-			(
-				this.props.web3.networkId !== 4)
+			this.props.web3.networkId !== GLOBAL_NETWORK_ID
 		) {
-
 			body = (
 				<div>
 					<Switch>
@@ -677,6 +685,7 @@ class App extends Component {
 								<Home
 									{...props}
 									executeScroll={this.executeScroll}
+									// snackbar3Props={true}
 								/>
 							)}
 						/>
@@ -685,7 +694,6 @@ class App extends Component {
 				</div>
 			);
 			connecting = true;
-
 
 			// body = (
 			// 	<Switch>
@@ -822,6 +830,7 @@ class App extends Component {
 								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
 							/>
 						)}
 					/>
@@ -834,6 +843,7 @@ class App extends Component {
 								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
 							/>
 						)}
 					/>
@@ -914,6 +924,7 @@ class App extends Component {
 								{...props}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
 							/>
 						)}
 					/>
@@ -925,6 +936,7 @@ class App extends Component {
 								{...props}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
 							/>
 						)}
 					/>

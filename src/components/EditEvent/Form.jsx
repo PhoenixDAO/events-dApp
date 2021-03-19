@@ -18,6 +18,8 @@ let numeral = require("numeral");
 class Form extends Component {
 	constructor(props) {
 		super(props);
+		console.log("rejectedprops", props);
+
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
@@ -43,7 +45,7 @@ class Form extends Component {
 			limited: this.props.event.limited,
 			terms: false,
 			seatsForHumans: 0,
-			allowedSeats:this.props.event.sold,
+			allowedSeats: this.props.event.sold,
 			seats: this.props.event.seats,
 			wrong_file: false,
 			file_name: "file.jpg",
@@ -141,20 +143,16 @@ class Form extends Component {
 	handleCurrency = (event) => {
 		this.setState({ free: !this.state.free });
 		if (event.target.value == "phnx") {
-			this.setState(
-				{
-					currency: event.target.value,
-					price: "",
-					dollarPrice: "",
-				},
-			);
+			this.setState({
+				currency: event.target.value,
+				price: "",
+				dollarPrice: "",
+			});
 		} else {
-			this.setState(
-				{
-					currency: event.target.value,
-					price: "0",
-				},
-			);
+			this.setState({
+				currency: event.target.value,
+				price: "0",
+			});
 		}
 	};
 
@@ -284,17 +282,15 @@ class Form extends Component {
 				event.preventDefault();
 				return;
 			}
-	
+
 			if (event.target.value.length > 15) {
 				event.preventDefault();
 				return;
 			}
 
-			this.setState(
-				{
-					price: price,
-				},
-			);
+			this.setState({
+				price: price,
+			});
 			let number = numeral(
 				event.target.value * this.state.PhoenixDAO_market.usd
 			).format("0[.]000001");
@@ -306,11 +302,9 @@ class Form extends Component {
 			}
 		} else {
 			let price = "0";
-			this.setState(
-				{
-					price: price,
-				},
-			);
+			this.setState({
+				price: price,
+			});
 		}
 	};
 
@@ -321,7 +315,10 @@ class Form extends Component {
 			return event.preventDefault();
 		}
 		let seats = this.form.seats.value;
-		if ((seats && seats.length > 16) || (seats && seats < this.state.allowedSeats)) {
+		if (
+			(seats && seats.length > 16) ||
+			(seats && seats < this.state.allowedSeats)
+		) {
 			event.preventDefault();
 			return;
 		}
@@ -329,7 +326,11 @@ class Form extends Component {
 			seats: seats,
 		});
 	};
-
+     valid=(current)=> {
+     let yesterday = moment().subtract(1, "day");
+	  return current.isAfter(yesterday);
+	}
+	
 	// restrictMinusForTickets = (e) => {
 	// 	let test = e.target.value.match(/^\d+$/);
 	// 	console.log("e.target.value",e.target.value)
@@ -412,8 +413,30 @@ class Form extends Component {
 			// this.state.price == "0.0" ||
 			// this.state.price == "0.00" ||
 			// this.state.price == "0.000" ||
-			this.state.currency == "phnx" && this.state.price.includes("0") && this.state.price.includes(".") && !this.state.price.includes("1")&& !this.state.price.includes("2")&& !this.state.price.includes("3")&& !this.state.price.includes("4")&& !this.state.price.includes("5")&& !this.state.price.includes("6")&& !this.state.price.includes("7")&& !this.state.price.includes("8")&& !this.state.price.includes("9") ||
-			this.state.currency == "phnx" &&this.state.price.includes("0") && !this.state.price.includes(".") && !this.state.price.includes("1")&& !this.state.price.includes("2")&& !this.state.price.includes("3")&& !this.state.price.includes("4")&& !this.state.price.includes("5")&& !this.state.price.includes("6")&& !this.state.price.includes("7")&& !this.state.price.includes("8")&& !this.state.price.includes("9")
+			(this.state.currency == "phnx" &&
+				this.state.price.includes("0") &&
+				this.state.price.includes(".") &&
+				!this.state.price.includes("1") &&
+				!this.state.price.includes("2") &&
+				!this.state.price.includes("3") &&
+				!this.state.price.includes("4") &&
+				!this.state.price.includes("5") &&
+				!this.state.price.includes("6") &&
+				!this.state.price.includes("7") &&
+				!this.state.price.includes("8") &&
+				!this.state.price.includes("9")) ||
+			(this.state.currency == "phnx" &&
+				this.state.price.includes("0") &&
+				!this.state.price.includes(".") &&
+				!this.state.price.includes("1") &&
+				!this.state.price.includes("2") &&
+				!this.state.price.includes("3") &&
+				!this.state.price.includes("4") &&
+				!this.state.price.includes("5") &&
+				!this.state.price.includes("6") &&
+				!this.state.price.includes("7") &&
+				!this.state.price.includes("8") &&
+				!this.state.price.includes("9"))
 		)
 			form_validation.push("price");
 		if (this.state.limited === true && this.form.seats.value < 1)
@@ -485,10 +508,12 @@ class Form extends Component {
 					? ""
 					: "is-invalid",
 			image:
-				this.state.form_validation.indexOf("image") === -1 &&
-				!this.state.wrong_file
-					? ""
-					: "is-invalid",
+				this.state.form_validation.indexOf("image") !== -1
+					? "is-invalid"
+					: this.state.wrong_file
+					? "wrong-format"
+					: "",
+
 			time:
 				this.state.form_validation.indexOf("time") === -1
 					? ""
@@ -539,6 +564,11 @@ class Form extends Component {
 		if (this.props.account.length == 0) {
 			disabled = true;
 		}
+		let yesterday = moment().subtract(1, "day");
+		function valid(current) {
+			return current.isAfter(yesterday);
+		}
+
 		// let buttonText = event_data[3] ? "Buy Ticket" : "Get Ticket";
 		let type = this.state.type.replace(/[- )(]/g, " ");
 		return (
@@ -652,23 +682,36 @@ class Form extends Component {
 								className: "form-control " + warning.time,
 								title: "Event Date and Time",
 							}}
+							isValidDate={valid}
 							autoComplete="off"
 						/>
 					</div>
 					<div className="form-group">
 						<p>Event Cover Image:</p>
-						{warning.image && (
+						{warning.image == "is-invalid" ? (
 							<small
 								style={{ color: "red" }}
 								className="form-text text-muted color-red"
 							>
 								No image selected
 							</small>
-						)}
+						) : warning.image == "wrong-format" ? (
+							<small
+								style={{ color: "red" }}
+								className="form-text text-muted color-red"
+							>
+								Image is too big. Please upload an image up to
+								1mb in size.
+							</small>
+						) : null}
 						<div className="custom-file">
 							<input
 								type="file"
-								className={"custom-file-input " + warning.image}
+								className={
+									warning.image == "wrong-format"
+										? "custom-file-input is-invalid"
+										: "custom-file-input " + warning.image
+								}
 								id="customFile"
 								title="Event Cover Image"
 								onChange={this.handleFile}
@@ -712,16 +755,16 @@ class Form extends Component {
 					<div className="form-group">
 						<label htmlFor="description">Event Type:</label>
 						{warning.topic && (
-								<small
-									style={{ color: "red" }}
-									className="form-text text-muted color-red"
-								>
-									No Type selected
-								</small>
-							)}
+							<small
+								style={{ color: "red" }}
+								className="form-text text-muted color-red"
+							>
+								No Type selected
+							</small>
+						)}
 						<select
-								className={"form-control " + warning.topic}
-								id="type"
+							className={"form-control " + warning.topic}
+							id="type"
 							title="Event Type"
 							onChange={this.typeChange}
 						>
@@ -737,14 +780,14 @@ class Form extends Component {
 					</div>
 					<div className="form-group">
 						<label htmlFor="description">Event Topic:</label>
-							{warning.type && (
-								<small
-									style={{ color: "red" }}
-									className="form-text text-muted color-red"
-								>
-									No topic selected
-								</small>
-							)}
+						{warning.type && (
+							<small
+								style={{ color: "red" }}
+								className="form-text text-muted color-red"
+							>
+								No topic selected
+							</small>
+						)}
 						<select
 							className="form-control"
 							id="topic"
@@ -995,7 +1038,8 @@ class Form extends Component {
 												: "form-text text-muted"
 										}
 									>
-										Value must be greater than number of tickets already sold
+										Value must be greater than number of
+										tickets already sold
 									</small>
 
 									<input
@@ -1113,7 +1157,10 @@ class Form extends Component {
 							<li className="list-group-item">
 								<strong>Location:</strong> {this.state.location}{" "}
 							</li>
-							<li className="list-group-item"  style={{textTransform: "capitalize"}}>
+							<li
+								className="list-group-item"
+								style={{ textTransform: "capitalize" }}
+							>
 								<strong>Category:</strong> {type}{" "}
 							</li>
 							{this.state.currency == "phnx" && (

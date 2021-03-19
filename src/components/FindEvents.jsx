@@ -3,7 +3,7 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-import { API_URL, REPORT_EVENT } from "../utils/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 // Import dApp Components
 import Loading from "./Loading";
@@ -11,7 +11,7 @@ import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
 import Web3 from "web3";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
-import {INFURA_WEB_URL} from "../config/const.js";
+import { INFURA_WEB_URL } from "../config/const.js";
 
 // TODO: Make slides dynamic: import slidesJson from '../config/slides.json';
 import topicsJson from "../config/topics.json";
@@ -20,6 +20,7 @@ import eventCTAsJson from "../config/event_ctas.json";
 class FindEvents extends Component {
 	constructor(props, context) {
 		super(props);
+		console.log("props", props);
 		this.state = {
 			openEvents: "",
 			upload: false,
@@ -34,7 +35,6 @@ class FindEvents extends Component {
 			event_copy: [],
 			prevPath: -1,
 			hideEvent: [],
-			disabledBuying: false,
 		};
 
 		this.contracts = context.drizzle.contracts;
@@ -75,8 +75,7 @@ class FindEvents extends Component {
 	//Loads Blockhain Data,
 	async loadBlockchain() {
 		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(
-				"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b")
+			new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
 		);
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,
@@ -137,7 +136,7 @@ class FindEvents extends Component {
 						Events_Blockchain: result,
 						event_copy: result,
 					});
-				console.log("events",result)
+					console.log("events", result);
 
 					this.setState({
 						active_length: this.state.Events_Blockchain.length,
@@ -253,9 +252,7 @@ class FindEvents extends Component {
 			this.props.history.push("/upcomingevents/" + 1);
 		});
 	};
-	toggleBuying = () => {
-		this.setState({ disabledBuying: !this.state.disabledBuying });
-	};
+
 	//Sort Active Events By Date(Newest/Oldest)
 	toggleSortDate = (e) => {
 		let { value } = e.target;
@@ -357,8 +354,7 @@ class FindEvents extends Component {
 				for (let i = start; i < end; i++) {
 					updated_list.push(
 						<Event
-							toggleBuying={this.toggleBuying}
-							disabledBuying={this.state.disabledBuying}
+							toggleDisabling={this.props.toggleDisabling}
 							disabledStatus={this.props.disabledStatus}
 							inquire={this.props.inquire}
 							key={events_list[i].returnValues.eventId}

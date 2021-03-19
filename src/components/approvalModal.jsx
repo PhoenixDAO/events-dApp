@@ -43,7 +43,7 @@ class ApprovalModal extends Component {
                 Disagree
             </Button>
             <Button onClick={this.props.giveApproval} color="primary">
-                Agree
+                Agree & Approve
             </Button>
         </DialogActions>
     </Dialog>

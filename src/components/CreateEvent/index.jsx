@@ -19,10 +19,11 @@ class CreateEvent extends Component {
 			stage: 0,
 			title: null,
 			error: false,
-			error_text: "Transaction Rejected",
+			error_text: "Transaction Rejectesd",
 			ipfs: null,
 			fileImg: null,
 			data: {
+				fileHandle: false,
 				name: null,
 				description: null,
 				time: 0,
@@ -32,12 +33,15 @@ class CreateEvent extends Component {
 				limited: false,
 				seats: 0,
 				type: null,
+				file_name:null,
 			},
 		};
 		this.contracts = context.drizzle.contracts;
 	}
 
 	createEvent = (
+		fileHandle,
+		fileImg,
 		name,
 		description,
 		location,
@@ -49,15 +53,20 @@ class CreateEvent extends Component {
 		currency,
 		price,
 		limited,
-		seats
+		seats,
+		file_name,
 	) => {
+		console.log("price", price);
 		this.setState(
 			{
 				upload: true,
 				redirect: false,
 				stage: 25,
 				title: "Uploading event image...",
+				price: price,
 				data: {
+					fileHandle: fileHandle,
+					fileImg: fileImg,
 					name: name,
 					description: description,
 					time: time,
@@ -68,11 +77,18 @@ class CreateEvent extends Component {
 					seats: seats === "" ? 0 : parseInt(seats, 10),
 					type: type,
 					location: location,
+					topic:topic,
+					file_name:file_name,
 				},
 			},
 			() => {
-				this.stageUpdater(90);
-				this.readFile(file);
+				if (fileHandle == true) {
+					this.stageUpdater(90);
+					this.readFile(file);
+				} else {
+					this.stageUpdater(100);
+					this.convertAndUpload();
+				}
 			}
 		);
 	};
@@ -84,13 +100,25 @@ class CreateEvent extends Component {
 	};
 
 	convertAndUpload = (reader) => {
+		let data;
 		let pinit = process.env.NODE_ENV === "production";
-		let data = JSON.stringify({
-			image: reader.result,
-			text: this.state.data.description,
-			organizer: this.state.data.organizer,
-			location: this.state.data.location,
-		});
+		if (this.state.data.fileHandle) {
+			data = JSON.stringify({
+				image: reader.result,
+				text: this.state.data.description,
+				location: this.state.data.location,
+				organizer: this.state.data.organizer,
+				topic: this.state.data.topic,
+			});
+		} else {
+			data = JSON.stringify({
+				image: this.state.data.fileImg,
+				text: this.state.data.description,
+				location: this.state.data.location,
+				organizer: this.state.data.organizer,
+				topic: this.state.data.topic,
+			});
+		}
 		let buffer = Buffer.from(data);
 		// let buffer2 = Buffer.from(JSON.stringify({name:"Jaffer",company:"Xord"}))
 		// ipfs.add(buffer2,{pin: pinit}).then((hash)=>{
@@ -226,6 +254,25 @@ class CreateEvent extends Component {
 						<Form
 							createEvent={this.createEvent}
 							account={this.props.account}
+							data={{
+								name: this.state.data.name,
+								description: this.state.data.description,
+								organizer: this.state.data.organizer,
+								location: this.state.data.location,
+								time: this.state.data.time,
+								price: this.state.data.price,
+								currency:
+									this.state.data.currency === "eth"
+										? false
+										: true,
+								limited: this.state.data.limited,
+								seats: this.state.data.seats,
+								ipfs: this.state.ipfs,
+								type: this.state.data.type,
+								fileImg: this.state.data.fileImg,
+								topic:this.state.data.topic,
+								file_name:this.state.data.file_name,
+							}}
 						/>
 					</div>
 				</React.Fragment>
@@ -233,19 +280,22 @@ class CreateEvent extends Component {
 		if (this.state.error || this.props.error) {
 			body = (
 				<Form
-					props={{
+					data={{
 						name: this.state.data.name,
 						description: this.state.data.description,
 						organizer: this.state.data.organizer,
 						location: this.state.data.location,
 						time: this.state.data.time,
-						price: this.state.data.price,
+						price: this.state.price,
 						currency:
 							this.state.data.currency === "eth" ? false : true,
 						limited: this.state.data.limited,
 						seats: this.state.data.seats,
 						ipfs: this.state.ipfs,
 						type: this.state.data.type,
+						fileImg: this.state.data.fileImg,
+						topic:this.state.data.topic,
+						file_name:this.state.data.file_name,
 					}}
 					createEvent={this.createEvent}
 					account={this.props.account}

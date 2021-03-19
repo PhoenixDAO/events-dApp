@@ -17,40 +17,55 @@ let numeral = require("numeral");
 class Form extends Component {
 	constructor(props) {
 		super(props);
-console.log("rejectedprops",props);
+		console.log("rejectedprops", props);
+
 		// console.log("props.currentBlock",props.currentBlock)
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
-			title: "",
+			fileHandle: false,
+			title: this.props.data.name ? this.props.data.name : "",
 			title_length: 0,
 			description_length: 0,
-			organizer: "",
+			description: this.props.data.description
+				? this.props.data.description
+				: "",
+			organizer: this.props.data.description
+				? this.props.data.description
+				: "",
 			organizer_length: 0,
-			price: "",
+			price: this.props.data.price
+				? numeral(this.props.data.price).format("0.000")
+				: "",
 			dollarPrice: "",
-			location: "",
-			time: 0,
+			location: this.props.data.location ? this.props.data.location : "",
+			time: this.props.data.time ? this.props.data.time : 0,
 			// time:Math.floor(Date.now() / 1000),
 			timeForHumans: null,
 			currency: "phnx",
-			type: "",
-			topic: "",
-			limited: false,
+			type: this.props.data.type ? this.props.data.type : "",
+			topic: this.props.data.topic ? this.props.data.topic : "",
+			limited: this.props.data.limited ? this.props.data.limited : false,
 			terms: false,
 			seatsForHumans: 0,
-			seats: 0,
+			seats: this.props.data.seats ? this.props.data.seats : 0,
 			wrong_file: false,
-			file_name: null,
+			file_name: this.props.data.file_name
+				? this.props.data.file_name
+				: "",
 			file: null,
 			blockie: "/images/PhoenixDAO.png",
-			fileImg: "/images/event-placeholder.png",
+			fileImg: this.props.data.fileImg
+				? this.props.data.fileImg
+				: "/images/event-placeholder.png",
 			form_validation: [],
 			currentBlock: null,
 			updateTimeStamp: true,
-
+			free: this.props.data.price ? this.props.data.price == 0 : false,
 			PhoenixDAO_market: "",
-			dateDisplay: new Date(Date.now() + 10800000),
+			dateDisplay: this.props.data.time
+				? new Date(parseInt(this.props.data.time, 10) * 1000)
+				: new Date(Date.now() + 10800000),
 			// dateDisplay:new Date(parseInt('1577952000', 10) * 1000)
 			// dateDisplay:''
 		};
@@ -143,6 +158,7 @@ console.log("rejectedprops",props);
 	};
 
 	handleCurrency = (event) => {
+		this.setState({ free: !this.state.free });
 		if (event.target.value == "phnx") {
 			this.setState({
 				currency: event.target.value,
@@ -174,6 +190,9 @@ console.log("rejectedprops",props);
 		let file = event.target.files[0];
 		if (!file) {
 			return;
+		}
+		if (file != undefined) {
+			this.setState({ fileHandle: true });
 		}
 		if (
 			file.size > 1024 * 1024 ||
@@ -235,7 +254,7 @@ console.log("rejectedprops",props);
 			location: location,
 		});
 	};
-//this is event topic
+	//this is event topic
 	typeChange = (event) => {
 		let topic = event.target.value;
 
@@ -243,7 +262,7 @@ console.log("rejectedprops",props);
 			topic: topic,
 		});
 	};
-//this is event type
+	//this is event type
 	categoryChange = (event) => {
 		let type = event.target.value;
 		this.setState({
@@ -283,6 +302,9 @@ console.log("rejectedprops",props);
 			this.setState({
 				price: price,
 			});
+			if (this.props.price) {
+				this.props.price * this.state.PhoenixDAO_market.usd;
+			}
 			let number = numeral(
 				event.target.value * this.state.PhoenixDAO_market.usd
 			).format("0[.]000001");
@@ -315,7 +337,10 @@ console.log("rejectedprops",props);
 			seats: seats,
 		});
 	};
-
+	valid = (current) => {
+		let yesterday = moment().subtract(1, "day");
+		return current.isAfter(yesterday);
+	};
 	// restrictMinusForTickets = (e) => {
 	// 	let test = e.target.value.match(/^\d+$/);
 	// 	console.log("e.target.value",e.target.value)
@@ -357,6 +382,7 @@ console.log("rejectedprops",props);
 	// 		return;
 	// 	}
 	// };
+	
 	handleForm = (event) => {
 		event.preventDefault();
 		// if(this.state.price.charAt(this.state.price.length-1)=="."){
@@ -399,7 +425,10 @@ console.log("rejectedprops",props);
 		if (this.state.organizer === "") form_validation.push("organizer");
 		if (this.form.description.value === "")
 			form_validation.push("description");
-		if (this.state.wrong_file === true || this.state.file === null)
+		if (
+			this.state.wrong_file === true ||
+			(this.state.file === null && !this.props.data.fileImg)
+		)
 			form_validation.push("image");
 		if (this.state.time === 0) form_validation.push("time");
 		if (
@@ -446,6 +475,8 @@ console.log("rejectedprops",props);
 		});
 		if (form_validation.length === 0) {
 			this.props.createEvent(
+				this.state.fileHandle,
+				this.state.fileImg,
 				filteredTitle,
 				filteredDescription,
 				filteredLocation,
@@ -457,8 +488,10 @@ console.log("rejectedprops",props);
 				this.state.currency,
 				this.state.price,
 				this.state.limited,
-				this.form.seats ? this.form.seats.value : ""
+				this.form.seats ? this.form.seats.value : "",
+				this.state.file_name
 			);
+			console.log("filename", this.state.file_name);
 		}
 	};
 
@@ -501,10 +534,12 @@ console.log("rejectedprops",props);
 					? ""
 					: "is-invalid",
 			image:
-				this.state.form_validation.indexOf("image") === -1 &&
-				!this.state.wrong_file
-					? ""
-					: "is-invalid",
+				this.state.form_validation.indexOf("image") !== -1
+					? "is-invalid"
+					: this.state.wrong_file
+					? "wrong-format"
+					: "",
+
 			time:
 				this.state.form_validation.indexOf("time") === -1
 					? ""
@@ -603,6 +638,7 @@ console.log("rejectedprops",props);
 								className={
 									"form-control " + warning.description
 								}
+								value={this.state.description}
 								maxLength="500"
 								id="description"
 								title="Event Description"
@@ -634,6 +670,7 @@ console.log("rejectedprops",props);
 								title="Event Location"
 								onChange={this.locationChange}
 								autoComplete="off"
+								value={this.state.location}
 							/>
 							<small className="form-text text-muted">
 								{this.state.location.length}/100 characters
@@ -683,24 +720,36 @@ console.log("rejectedprops",props);
 									className: "form-control " + warning.time,
 									title: "Event Date and Time",
 								}}
+								isValidDate={this.valid} 
 								autoComplete="off"
 							/>
 						</div>
 						<div className="form-group">
 							<p>Event Cover Image:</p>
-							{warning.image && (
+							{warning.image == "is-invalid" ? (
 								<small
 									style={{ color: "red" }}
 									className="form-text text-muted color-red"
 								>
 									No image selected
 								</small>
-							)}
+							) : warning.image == "wrong-format" ? (
+								<small
+									style={{ color: "red" }}
+									className="form-text text-muted color-red"
+								>
+									Image is too big. Please upload an image up
+									to 1mb in size.
+								</small>
+							) : null}
 							<div className="custom-file">
 								<input
 									type="file"
 									className={
-										"custom-file-input " + warning.image
+										warning.image == "wrong-format"
+											? "custom-file-input is-invalid"
+											: "custom-file-input " +
+											  warning.image
 									}
 									id="customFile"
 									title="Event Cover Image"
@@ -757,8 +806,17 @@ console.log("rejectedprops",props);
 								id="type"
 								title="Event Type"
 								onChange={this.typeChange}
+								value={this.state.topic}
 							>
-								<option value="" >
+								{warning.topic && (
+									<small
+										style={{ color: "red" }}
+										className="form-text text-muted color-red"
+									>
+										No type selected
+									</small>
+								)}
+								<option value="">
 									Please select from dropdown
 								</option>
 								{eventTypes.map((Type, index) => (
@@ -783,6 +841,7 @@ console.log("rejectedprops",props);
 								id="topic"
 								className={"form-control " + warning.type}
 								title="Event Topic"
+								value={this.state.type}
 								onChange={this.categoryChange}
 							>
 								<option value="" selected>
@@ -806,7 +865,12 @@ console.log("rejectedprops",props);
 									id="payment2"
 									name="payment"
 									className="custom-control-input"
-									defaultChecked="true"
+									defaultChecked={
+										this.props.data.price &&
+										this.props.data.price == 0
+											? this.state.free
+											: true
+									}
 									value="phnx"
 									title="PHNX"
 									onChange={this.handleCurrency}
@@ -829,6 +893,7 @@ console.log("rejectedprops",props);
 									title="Ethereum"
 									onChange={this.handleCurrency}
 									autoComplete="off"
+									checked={this.state.free}
 								/>
 								<label
 									className="custom-control-label"
@@ -846,12 +911,14 @@ console.log("rejectedprops",props);
 									<small
 										style={{ marginTop: "0" }}
 										className={
-											warning.price
+											warning.price && !this.state.free
 												? "form-text text-muted color-red"
 												: "form-text text-muted"
 										}
 									>
-										Value must be greater or equals to 0.001
+										{this.state.free
+											? null
+											: "Value must be greater or equals to 0.001"}{" "}
 									</small>
 								)}
 								<div className="input-group mb-3">
@@ -881,6 +948,7 @@ console.log("rejectedprops",props);
 											ref={(input) =>
 												(this.form.price = input)
 											}
+											disabled={this.state.free}
 											autoComplete="off"
 											onChange={this.priceChange}
 										/>
@@ -947,7 +1015,16 @@ console.log("rejectedprops",props);
 											maxLength="15"
 											// onKeyUp={this.restrictMinus}
 											// onKeyPress={this.restrictMinus}
-											value={this.state.dollarPrice}
+											value={
+												this.state.price
+													? this.state
+															.PhoenixDAO_market
+															.usd *
+													  numeral(
+															this.state.price
+													  ).format("0.000")
+													: this.state.dollarPrice
+											}
 											className={
 												"form-control " + warning.price
 											}
@@ -995,6 +1072,7 @@ console.log("rejectedprops",props);
 									id="limited"
 									title="Limited tickets"
 									value="true"
+									checked={this.state.limited}
 									onChange={this.handleLimited}
 									autoComplete="off"
 								/>
@@ -1210,6 +1288,7 @@ console.log("rejectedprops",props);
 		// });
 		// this.temp();
 		this.getPhoenixDAOMarketValue();
+		console.log("state", this.state);
 		// window.scrollTo(0, 0);
 	}
 }

@@ -11,13 +11,12 @@ import {
 	PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
-import { API_URL, REPORT_EVENT } from "../utils/const";
+import { API_URL, REPORT_EVENT ,GLOBAL_NETWORK_ID} from "../config/const";
 import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar3 from "./Snackbar3";
-
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Row } from "react-bootstrap";
 
@@ -77,10 +76,10 @@ class Home extends Component {
 		console.log("this.props.web3.networkId",this.props.web3.status,this.props.web3.networkId)
 		if (
 			this.props.web3.status == "initialized" &&
-			this.props.web3.networkId != 1
+			this.props.web3.networkId != GLOBAL_NETWORK_ID
 		) {
 			this.setState({
-				errorMessage: "Please switch to Ethereum Mainnet!",
+				errorMessage: GLOBAL_NETWORK_ID==1 ? "Please switch your network to Rinkeby!": "Please switch your network to Ethereum mainnet!",
 				openSnackbar1: false,
 				openSnackbar2: false,
 				openSnackbar3: true,
@@ -284,14 +283,14 @@ class Home extends Component {
 				<div className="welcomeWrapper">
 					<div className="opaqueBackground">
 						<h2 className="welcomeHead">
-							WELCOME TO PHOENIX EVENT DAPP
+							Welcome to PhoenixDAO Events Marketplace
 						</h2>
 						<p>
 							The PhoenixDAO Events Marketplace is a dApp that
 							allows people to create events and sell tickets
 							online, with the option to make an event, paid or
 							free.
-						</p>
+						</p>s
 						<p>
 							The tickets created on this service are ERC721
 							tokens, which means that users are able to move,

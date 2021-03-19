@@ -8,7 +8,7 @@ import ipfs from "../utils/ipfs";
 import NotifySending from "./NotifySending";
 import NotifySuccessSending from "./NotifySuccessSending";
 import NotifyError from "./NotifyError";
-import { API_URL, REPORT_EVENT } from "../utils/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -359,7 +359,7 @@ class Ticket extends Component {
 							</h5>
 							<div style={{ height: "22px" }}>{timeStatus}</div>
 							<h5 className="text-center">
-								Your seat: {ticket_data[1]}
+								Your ticket: {ticket_data[1]}
 							</h5>
 						</div>
 						<img
