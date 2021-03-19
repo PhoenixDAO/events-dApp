@@ -79,7 +79,7 @@ class Home extends Component {
 			this.props.web3.networkId != GLOBAL_NETWORK_ID
 		) {
 			this.setState({
-				errorMessage: "Please switch to Ethereum Mainnet!",
+				errorMessage: GLOBAL_NETWORK_ID==1 ? "Please switch your network to Rinkeby!": "Please switch your network to Ethereum mainnet!",
 				openSnackbar1: false,
 				openSnackbar2: false,
 				openSnackbar3: true,
@@ -283,14 +283,14 @@ class Home extends Component {
 				<div className="welcomeWrapper">
 					<div className="opaqueBackground">
 						<h2 className="welcomeHead">
-							WELCOME TO PHOENIX EVENT DAPP
+							Welcome to PhoenixDAO Events Marketplace
 						</h2>
 						<p>
 							The PhoenixDAO Events Marketplace is a dApp that
 							allows people to create events and sell tickets
 							online, with the option to make an event, paid or
 							free.
-						</p>
+						</p>s
 						<p>
 							The tickets created on this service are ERC721
 							tokens, which means that users are able to move,

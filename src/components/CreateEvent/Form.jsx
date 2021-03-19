@@ -44,22 +44,28 @@ class Form extends Component {
 			timeForHumans: null,
 			currency: "phnx",
 			type: this.props.data.type ? this.props.data.type : "",
-			topic: this.props.data.topic?this.props.data.topic:"",
+			topic: this.props.data.topic ? this.props.data.topic : "",
 			limited: this.props.data.limited ? this.props.data.limited : false,
 			terms: false,
 			seatsForHumans: 0,
 			seats: this.props.data.seats ? this.props.data.seats : 0,
 			wrong_file: false,
-			file_name: this.props.data.file_name?this.props.data.file_name:"",
+			file_name: this.props.data.file_name
+				? this.props.data.file_name
+				: "",
 			file: null,
 			blockie: "/images/PhoenixDAO.png",
-			fileImg: this.props.data.fileImg?this.props.data.fileImg:"/images/event-placeholder.png",
+			fileImg: this.props.data.fileImg
+				? this.props.data.fileImg
+				: "/images/event-placeholder.png",
 			form_validation: [],
 			currentBlock: null,
 			updateTimeStamp: true,
 			free: this.props.data.price ? this.props.data.price == 0 : false,
 			PhoenixDAO_market: "",
-			dateDisplay: this.props.data.time?new Date(parseInt(this.props.data.time, 10) * 1000):new Date(Date.now() + 10800000),
+			dateDisplay: this.props.data.time
+				? new Date(parseInt(this.props.data.time, 10) * 1000)
+				: new Date(Date.now() + 10800000),
 			// dateDisplay:new Date(parseInt('1577952000', 10) * 1000)
 			// dateDisplay:''
 		};
@@ -331,7 +337,10 @@ class Form extends Component {
 			seats: seats,
 		});
 	};
-
+	valid = (current) => {
+		let yesterday = moment().subtract(1, "day");
+		return current.isAfter(yesterday);
+	};
 	// restrictMinusForTickets = (e) => {
 	// 	let test = e.target.value.match(/^\d+$/);
 	// 	console.log("e.target.value",e.target.value)
@@ -373,6 +382,7 @@ class Form extends Component {
 	// 		return;
 	// 	}
 	// };
+	
 	handleForm = (event) => {
 		event.preventDefault();
 		// if(this.state.price.charAt(this.state.price.length-1)=="."){
@@ -415,7 +425,10 @@ class Form extends Component {
 		if (this.state.organizer === "") form_validation.push("organizer");
 		if (this.form.description.value === "")
 			form_validation.push("description");
-		if (this.state.wrong_file === true || this.state.file === null)
+		if (
+			this.state.wrong_file === true ||
+			(this.state.file === null && !this.props.data.fileImg)
+		)
 			form_validation.push("image");
 		if (this.state.time === 0) form_validation.push("time");
 		if (
@@ -476,9 +489,9 @@ class Form extends Component {
 				this.state.price,
 				this.state.limited,
 				this.form.seats ? this.form.seats.value : "",
-				this.state.file_name,
+				this.state.file_name
 			);
-			console.log("filename",this.state.file_name);
+			console.log("filename", this.state.file_name);
 		}
 	};
 
@@ -521,10 +534,12 @@ class Form extends Component {
 					? ""
 					: "is-invalid",
 			image:
-			this.state.form_validation.indexOf("image") === -1 &&
-				!this.state.wrong_file &&this.props.data.fileImg!="/images/event-placeholder.png" 
-					? ""
-					: "is-invalid",
+				this.state.form_validation.indexOf("image") !== -1
+					? "is-invalid"
+					: this.state.wrong_file
+					? "wrong-format"
+					: "",
+
 			time:
 				this.state.form_validation.indexOf("time") === -1
 					? ""
@@ -705,24 +720,36 @@ class Form extends Component {
 									className: "form-control " + warning.time,
 									title: "Event Date and Time",
 								}}
+								isValidDate={this.valid} 
 								autoComplete="off"
 							/>
 						</div>
 						<div className="form-group">
 							<p>Event Cover Image:</p>
-							{warning.image && (
+							{warning.image == "is-invalid" ? (
 								<small
 									style={{ color: "red" }}
 									className="form-text text-muted color-red"
 								>
 									No image selected
 								</small>
-							)}
+							) : warning.image == "wrong-format" ? (
+								<small
+									style={{ color: "red" }}
+									className="form-text text-muted color-red"
+								>
+									Image is too big. Please upload an image up
+									to 1mb in size.
+								</small>
+							) : null}
 							<div className="custom-file">
 								<input
 									type="file"
 									className={
-										"custom-file-input " + warning.image
+										warning.image == "wrong-format"
+											? "custom-file-input is-invalid"
+											: "custom-file-input " +
+											  warning.image
 									}
 									id="customFile"
 									title="Event Cover Image"
@@ -781,14 +808,14 @@ class Form extends Component {
 								onChange={this.typeChange}
 								value={this.state.topic}
 							>
-									{warning.topic && (
-								<small
-									style={{ color: "red" }}
-									className="form-text text-muted color-red"
-								>
-									No type selected
-								</small>
-							)}
+								{warning.topic && (
+									<small
+										style={{ color: "red" }}
+										className="form-text text-muted color-red"
+									>
+										No type selected
+									</small>
+								)}
 								<option value="">
 									Please select from dropdown
 								</option>
@@ -839,8 +866,10 @@ class Form extends Component {
 									name="payment"
 									className="custom-control-input"
 									defaultChecked={
-										this.props.data.price&&	this.props.data.price==0?
-									this.state.free:true
+										this.props.data.price &&
+										this.props.data.price == 0
+											? this.state.free
+											: true
 									}
 									value="phnx"
 									title="PHNX"
