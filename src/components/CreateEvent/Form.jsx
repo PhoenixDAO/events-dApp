@@ -868,7 +868,7 @@ class Form extends Component {
 									defaultChecked={
 										this.props.data.price &&
 										this.props.data.price == 0
-											? this.state.free
+											? false
 											: true
 									}
 									value="phnx"
