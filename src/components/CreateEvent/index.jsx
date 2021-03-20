@@ -33,7 +33,7 @@ class CreateEvent extends Component {
 				limited: false,
 				seats: 0,
 				type: null,
-				file_name:null,
+				file_name: null,
 			},
 		};
 		this.contracts = context.drizzle.contracts;
@@ -54,7 +54,7 @@ class CreateEvent extends Component {
 		price,
 		limited,
 		seats,
-		file_name,
+		file_name
 	) => {
 		console.log("price", price);
 		this.setState(
@@ -77,8 +77,8 @@ class CreateEvent extends Component {
 					seats: seats === "" ? 0 : parseInt(seats, 10),
 					type: type,
 					location: location,
-					topic:topic,
-					file_name:file_name,
+					topic: topic,
+					file_name: file_name,
 				},
 			},
 			() => {
@@ -197,8 +197,20 @@ class CreateEvent extends Component {
 	}*/
 
 	createNewEvent = () => {
-		this.setState({ error: false, done: false, upload: false }, () =>
-			console.log()
+		this.setState({ error: false, done: false, upload: false, data: {
+			fileHandle: false,
+			name: null,
+			description: null,
+			time: 0,
+			currency: null,
+			price: 0,
+			organizer: null,
+			limited: false,
+			seats: 0,
+			type: null,
+			file_name: null,
+		}}, () =>
+			console.log("state",this.state)
 		);
 	};
 
@@ -241,6 +253,7 @@ class CreateEvent extends Component {
 				<Done
 					createNewEvent={this.createNewEvent}
 					createNewEvent2={this.props.createNewEvent}
+
 				/>
 			);
 		}
@@ -270,8 +283,8 @@ class CreateEvent extends Component {
 								ipfs: this.state.ipfs,
 								type: this.state.data.type,
 								fileImg: this.state.data.fileImg,
-								topic:this.state.data.topic,
-								file_name:this.state.data.file_name,
+								topic: this.state.data.topic,
+								file_name: this.state.data.file_name,
 							}}
 						/>
 					</div>
@@ -279,27 +292,31 @@ class CreateEvent extends Component {
 			);
 		if (this.state.error || this.props.error) {
 			body = (
-				<Form
-					data={{
-						name: this.state.data.name,
-						description: this.state.data.description,
-						organizer: this.state.data.organizer,
-						location: this.state.data.location,
-						time: this.state.data.time,
-						price: this.state.price,
-						currency:
-							this.state.data.currency === "eth" ? false : true,
-						limited: this.state.data.limited,
-						seats: this.state.data.seats,
-						ipfs: this.state.ipfs,
-						type: this.state.data.type,
-						fileImg: this.state.data.fileImg,
-						topic:this.state.data.topic,
-						file_name:this.state.data.file_name,
-					}}
-					createEvent={this.createEvent}
-					account={this.props.account}
-				/>
+				<div className="row">
+					<Form
+						data={{
+							name: this.state.data.name,
+							description: this.state.data.description,
+							organizer: this.state.data.organizer,
+							location: this.state.data.location,
+							time: this.state.data.time,
+							price: this.state.price,
+							currency:
+								this.state.data.currency === "eth"
+									? false
+									: true,
+							limited: this.state.data.limited,
+							seats: this.state.data.seats,
+							ipfs: this.state.ipfs,
+							type: this.state.data.type,
+							fileImg: this.state.data.fileImg,
+							topic: this.state.data.topic,
+							file_name: this.state.data.file_name,
+						}}
+						createEvent={this.createEvent}
+						account={this.props.account}
+					/>
+				</div>
 			);
 		}
 
