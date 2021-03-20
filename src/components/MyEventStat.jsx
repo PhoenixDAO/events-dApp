@@ -626,6 +626,7 @@ this.props.toggleDisabling();
 				let event_data = this.props.contracts["DaoEvents"].events[
 					this.event
 				].value;
+				console.log("event_data",event_data)
 				let id = this.props.location.pathname.split("/")[
 					this.props.location.pathname.split("/").length - 1
 				];
@@ -1450,15 +1451,47 @@ this.props.toggleDisabling();
 																.usd
 													).format("0.000")}
 												</p>
-											) : (
+											) : event_data[3]? 
+											(<p
+												className="col-md-12"
+												className="removepadding"
+											>
+												Expected Revenue For
+												Remaining Tickets: Unlimited
+											</p>)
+											:
+											(
 												<p
-													className="col-md-12"
+													className="col-md-8"
 													className="removepadding"
 												>
 													Expected Revenue For
-													Remaining Tickets: Unlimited
+													Remaining Tickets:{" "}
+													<img
+														src={
+															"/images/" + symbol
+														}
+														className="event_price-image2"
+														alt="Event Price"
+													/>{" "}
+													{numeral(
+														0
+													).format("0.000")}
+													{" or "}
+													{
+														<img
+															src={
+																"/images/dollarsign.png"
+															}
+															className="event_price-image2"
+															alt="Event Price"
+														/>
+													}
+													{numeral(
+														0
+													).format("0.000")}
 												</p>
-											)}
+											) }
 
 											{event_data[4] ? (
 												<p
@@ -1501,7 +1534,7 @@ this.props.toggleDisabling();
 																.usd
 													).format("0.000")}
 												</p>
-											) : (
+											) : event_data[3]? (
 												<p
 													className="col-md-12"
 													className="removepadding"
@@ -1509,7 +1542,52 @@ this.props.toggleDisabling();
 													Expected Revenue For Sold
 													Out Event: Unlimited
 												</p>
-											)}
+											):(
+												<p
+													className="col-md-8"
+													className="removepadding"
+												>
+													Expected Revenue For Sold
+													Out Event:{" "}
+													<img
+														src={
+															"/images/" + symbol
+														}
+														className="event_price-image2"
+														alt="Event Price"
+													/>{" "}
+													{numeral(
+														// price *
+														// 	(max_seats -
+														// 		event_data[6]) +
+															this.state.revenue
+													).format("0.000")}
+													{" or "}
+													{
+														<img
+															src={
+																"/images/dollarsign.png"
+															}
+															className="event_price-image2"
+															alt="Event Price"
+														/>
+													}
+													{numeral(
+														// (price *
+														// 	(max_seats -
+														// 		event_data[6]) +
+															this.state
+																.revenue
+																// ) 
+															// 	*
+															// this.state
+															// 	.phoenixDAO_market
+															// 	.usd
+													).format("0.000")}
+												</p>
+											)
+										
+										}
 										</div>
 									</div>
 								</div>
