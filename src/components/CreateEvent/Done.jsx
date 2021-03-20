@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 class Done extends Component {
-
 createNewEvent=()=>{
 	this.props.createNewEvent()
 	this.props.createNewEvent2()
