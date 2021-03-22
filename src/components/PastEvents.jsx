@@ -114,16 +114,16 @@ class PastEvents extends Component {
 					this.setState({ loading: true });
 
 					//var newest = events.filter((activeEvents)=>activeEvents.returnValues.time <=(dateNow));
-					var newsort = events
-						.concat()
-						.sort((a, b) => b.blockNumber - a.blockNumber)
-						.filter(
-							(pastEvents) =>
-								pastEvents.returnValues.time <= dateNow
-						);
+					// events.map((event,i)=>{
+					// 	if(event.returnValues.name == "circus"){
+					// 		console.log("eventtt",event)
+					// 	}
+						
+					// })
+					
 
 					const result = Object.values(
-						newsort.reduce((a, c) => {
+						events.reverse().reduce((a, c) => {
 							// The accumulator 'a' will contain objects as follow:
 							// {'123': {id: 123, desc: 'desc'...., qty: 2}}
 
@@ -134,10 +134,26 @@ class PastEvents extends Component {
 								(a[c.returnValues.eventId] = Object.assign(c));
 							return a;
 						}, {})
-					);
+					)
+					// result.map((event,i)=>{
+					// 	if(event.returnValues.name == "circus"){
+					// 		console.log("eventtt result",event)
+					// 	}
+					// })
+
+					var newsort = result
+					
+						.concat()
+						.sort((a, b) => b.blockNumber - a.blockNumber)
+						.filter(
+							(pastEvents) =>
+								pastEvents.returnValues.time <= dateNow
+						).reverse()
+						
+						
 					this.setState({
-						past_events: result,
-						past_events_copy: result,
+						past_events: newsort,
+						past_events_copy: newsort,
 					});
 					this.setState({
 						past_length: this.state.past_events.length,

@@ -121,6 +121,11 @@ class MyEvents extends Component {
 					(activeEvents) =>
 						activeEvents.returnValues.time >= this.state.dateNow
 				);
+				events.map((event,i)=>{
+					if(event.returnValues.name == "ccc"){
+						console.log("eventtt",event)
+					}
+				})
 				var newsort = newest
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
@@ -131,6 +136,11 @@ class MyEvents extends Component {
 						return a;
 					}, {})
 				);
+				result.map((event,i)=>{
+					if(event.returnValues.name == "ccc"){
+						console.log("eventtt result",event)
+					}
+				})
 				if (this._isMounted) {
 					this.setState({ MyEvents: result, check: result });
 					this.setState({
@@ -155,22 +165,33 @@ class MyEvents extends Component {
 			})
 			.then((events) => {
 				this.setState({ loading: true });
-				var newest = events.filter(
-					(activeEvents) =>
-						activeEvents.returnValues.time <= this.state.dateNow
-				);
-				var newsort = newest
-					.concat()
-					.sort((a, b) => b.blockNumber - a.blockNumber);
+				// events.map((event,i)=>{
+				// 	if(event.returnValues.name == "oooo"){
+				// 		console.log("eventtt",event)
+				// 	}
+				// })
+				
 				const result = Object.values(
-					newsort.reduce((a, c) => {
+					events.reverse().reduce((a, c) => {
 						a[c.returnValues.eventId] ||
 							(a[c.returnValues.eventId] = Object.assign(c));
 						return a;
 					}, {})
 				);
+				var newsort = result
+					.concat()
+					.sort((a, b) => b.blockNumber - a.blockNumber)
+					.filter(
+						(pastEvents) =>
+							pastEvents.returnValues.time <= this.state.dateNow
+					).reverse()
+				// 	newsort.map((event,i)=>{
+				// 	if(event.returnValues.name == "oooo"){
+				// 		console.log("eventtt result",newsort)
+				// 	}
+				// })
 				if (this._isMounted) {
-					this.setState({ MyEvents: result, check: result });
+					this.setState({ MyEvents: newsort, check: newsort });
 					this.setState({
 						active_length: this.state.MyEvents.length,
 					});

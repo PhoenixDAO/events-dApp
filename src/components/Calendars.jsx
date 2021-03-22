@@ -50,15 +50,28 @@ class Calendars extends Component {
       
         openEvents.getPastEvents("NewAndUpdatedEvent",{fromBlock: 5000000, toBlock:this.state.latestblocks})
         .then(events=>{
+            console.log("events",events)
         if (this._isMounted){
         this.setState({loading:true})
+        // events.map((event,i)=>{
+        //     if(event.returnValues.name == "vvv"){
+        //         console.log("eventtt",event)
+        //     }
+            
+        // })
+
         	const result = Object.values(
-						events.reduce((a, c) => {
+						events.reverse().reduce((a, c) => {
 								a[c.returnValues.eventId] ||
 									(a[c.returnValues.eventId] = Object.assign(c))
 								return a;
 							}, {})
 						);
+                        // result.map((event)=> {if(event.returnValues.name == "vvv"){
+                        // console.log("eventtt result",new Date(parseInt(event.returnValues.time,10)*1000))
+
+                        // }}
+                        // )
         this.setState({Events_Blockchain:result});
         this.setState({loading:false})
         this.setState({active_length:this.state.Events_Blockchain.length})

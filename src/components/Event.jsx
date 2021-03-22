@@ -381,6 +381,11 @@ class Event extends Component {
 			let event_data = this.props.contracts["DaoEvents"].events[
 				this.event
 			].value;
+			if(event_data.name == "vvv"){
+				console.log("result event_data",new Date(parseInt(event_data[1], 10) * 1000))
+				
+			}
+			console.log("")
 			let image = this.getImage();
 			let description = this.getDescription();
 			let locations = this.getLocation();
