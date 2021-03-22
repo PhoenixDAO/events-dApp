@@ -106,6 +106,7 @@ class Dashboard extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
+				
 				var newest = events.filter(
 					(activeEvents) =>
 						activeEvents.returnValues.time >= this.state.dateNow
@@ -171,6 +172,11 @@ class Dashboard extends Component {
 						this.setState({
 							MyEvents: events,
 						});
+						// events.map((event,i)=>{
+						// 	if(event.returnValues.name == "ccc"){
+						// 		console.log("eventtt",event)
+						// 	}
+						// })
 						var newest = this.state.MyEvents;
 						var newsort = newest
 							.concat()
@@ -184,6 +190,11 @@ class Dashboard extends Component {
 								return a;
 							}, {})
 						);
+						// result.map((event,i)=>{
+						// 	if(event.returnValues.name == "ccc"){
+						// 		console.log("eventtt result",event)
+						// 	}
+						// })
 						this.setState({
 							MyEvents: result,
 							active_length: this.state.MyEvents.length,

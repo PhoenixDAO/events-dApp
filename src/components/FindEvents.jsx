@@ -118,6 +118,11 @@ class FindEvents extends Component {
 				if (this._isMounted) {
 					this.setState({ loading: true });
 					let allEvents = events;
+
+					// events.map((event)=> {if(event.returnValues.name == "oooo"){
+                    //     console.log("eventtt",event)
+
+                    //     }})
 					var newsort = allEvents
 						.concat()
 						.sort((a, b) => b.blockNumber - a.blockNumber)
@@ -125,13 +130,19 @@ class FindEvents extends Component {
 							(activeEvents) =>
 								activeEvents.returnValues.time >= dateNow
 						);
-					const result = Object.values(
+							// console.log("newsort",newsort)
+						const result = Object.values(
 						newsort.reduce((a, c) => {
 							a[c.returnValues.eventId] ||
 								(a[c.returnValues.eventId] = Object.assign(c));
 							return a;
 						}, {})
 					);
+					// result.map((event)=> {if(event.returnValues.name == "oooo"){
+                    //     console.log("eventtt result",event)
+
+                    //     }})
+					
 					this.setState({
 						Events_Blockchain: result,
 						event_copy: result,

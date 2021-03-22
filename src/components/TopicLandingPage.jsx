@@ -239,26 +239,39 @@ class TopicLandingPage extends Component {
 			})
 			.then((events) => {
 				this.setState({ loading: true });
-				var newest = events.filter(
-					(activeEvents) =>
-						activeEvents.returnValues.time <= this.state.dateNow &&
-						activeEvents.returnValues.category ===
-							this.props.match.params.page
-				);
-				var newsort = newest
-					.concat()
-					.sort((a, b) => b.blockNumber - a.blockNumber);
+				// events.map((event,i)=>{
+				// 	if(event.returnValues.name == "circus"){
+				// 		console.log("eventtt",event)
+				// 	}
+				// })
 				const result = Object.values(
-					newsort.reduce((a, c) => {
+					events.reverse().reduce((a, c) => {
 						a[c.returnValues.eventId] ||
 							(a[c.returnValues.eventId] = Object.assign(c));
 						return a;
 					}, {})
 				);
+				// var newest = result.filter(
+				// 	(activeEvents) =>
+				// 		activeEvents.returnValues.time <= this.state.dateNow &&
+				// 		activeEvents.returnValues.category ===
+				// 			this.props.match.params.page
+				// );
+				var newsort = result
+					.concat()
+					.sort((a, b) => b.blockNumber - a.blockNumber)
+					.filter(
+						(activeEvents) =>
+							activeEvents.returnValues.time <= this.state.dateNow &&
+							activeEvents.returnValues.category ===
+								this.props.match.params.page
+					)
+					.reverse()
+				// console.log("result",result)
 				if (this._isMounted) {
 					this.setState({
-						Topic_Events: result,
-						topic_copy: result,
+						Topic_Events: newsort,
+						topic_copy: newsort,
 					});
 					this.setState({
 						active_length: this.state.Topic_Events.length,
