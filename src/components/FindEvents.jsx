@@ -119,35 +119,36 @@ class FindEvents extends Component {
 					this.setState({ loading: true });
 					let allEvents = events;
 
-					// events.map((event)=> {if(event.returnValues.name == "oooo"){
-                    //     console.log("eventtt",event)
+					events.map((event)=> {if(event.returnValues.name == "Culture"){
+                        console.log("eventtt",event)
 
-                    //     }})
-					var newsort = allEvents
+                        }})
+						const result = Object.values(
+							events.reverse().reduce((a, c) => {
+								a[c.returnValues.eventId] ||
+									(a[c.returnValues.eventId] = Object.assign(c));
+								return a;
+							}, {})
+						);
+					var newsort = result
 						.concat()
 						.sort((a, b) => b.blockNumber - a.blockNumber)
 						.filter(
 							(activeEvents) =>
 								activeEvents.returnValues.time >= dateNow
-						);
+						).reverse()
 							// console.log("newsort",newsort)
-						const result = Object.values(
-						newsort.reduce((a, c) => {
-							a[c.returnValues.eventId] ||
-								(a[c.returnValues.eventId] = Object.assign(c));
-							return a;
-						}, {})
-					);
-					// result.map((event)=> {if(event.returnValues.name == "oooo"){
-                    //     console.log("eventtt result",event)
+						
+							newsort.map((event)=> {if(event.returnValues.name == "Culture"){
+                        console.log("eventtt result",event)
 
-                    //     }})
+                        }})
 					
 					this.setState({
-						Events_Blockchain: result,
-						event_copy: result,
+						Events_Blockchain: newsort,
+						event_copy: newsort,
 					});
-					console.log("events", result);
+					console.log("events", newsort);
 
 					this.setState({
 						active_length: this.state.Events_Blockchain.length,
