@@ -862,7 +862,7 @@ class Form extends Component {
 								<small
 									style={{ marginTop: "0" }}
 									className={
-										warning.price && !this.state.free
+										warning.price && this.state.free
 											? "form-text text-muted color-red"
 											: "form-text text-muted"
 									}

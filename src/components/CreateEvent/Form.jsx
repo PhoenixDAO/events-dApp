@@ -42,7 +42,8 @@ class Form extends Component {
 			time: this.props.data.time ? this.props.data.time : 0,
 			// time:Math.floor(Date.now() / 1000),
 			timeForHumans: null,
-			currency: "phnx",
+			currency:
+				this.props.data.currency ? "phnx":"eth",
 			type: this.props.data.type ? this.props.data.type : "",
 			topic: this.props.data.topic ? this.props.data.topic : "",
 			limited: this.props.data.limited ? this.props.data.limited : false,
@@ -382,7 +383,7 @@ class Form extends Component {
 	// 		return;
 	// 	}
 	// };
-	
+
 	handleForm = (event) => {
 		event.preventDefault();
 		// if(this.state.price.charAt(this.state.price.length-1)=="."){
@@ -490,8 +491,7 @@ class Form extends Component {
 				this.state.limited,
 				this.form.seats ? this.form.seats.value : "",
 				this.state.file_name
-			);
-			console.log("filename", this.state.file_name);
+			)
 		}
 	};
 
@@ -539,7 +539,6 @@ class Form extends Component {
 					: this.state.wrong_file
 					? "wrong-format"
 					: "",
-
 			time:
 				this.state.form_validation.indexOf("time") === -1
 					? ""
@@ -559,7 +558,6 @@ class Form extends Component {
 		};
 
 		let alert;
-
 		if (this.state.form_validation.length > 0) {
 			alert = (
 				<div className="alert alert-dark mt-2" role="alert">
@@ -720,7 +718,7 @@ class Form extends Component {
 									className: "form-control " + warning.time,
 									title: "Event Date and Time",
 								}}
-								isValidDate={this.valid} 
+								isValidDate={this.valid}
 								autoComplete="off"
 							/>
 						</div>
@@ -911,7 +909,8 @@ class Form extends Component {
 									<small
 										style={{ marginTop: "0" }}
 										className={
-											warning.price && !this.state.free
+											warning.price &&
+											this.props.price == 0
 												? "form-text text-muted color-red"
 												: "form-text text-muted"
 										}
@@ -967,7 +966,6 @@ class Form extends Component {
 											}
 											id="price"
 											title={"Price in ETH"}
-											value={this.state.price}
 											autoComplete="off"
 											disabled={true}
 											// onChange={this.priceChange}
@@ -1287,8 +1285,8 @@ class Form extends Component {
 		// 	behavior: 'smooth'
 		// });
 		// this.temp();
+
 		this.getPhoenixDAOMarketValue();
-		console.log("state", this.state);
 		// window.scrollTo(0, 0);
 	}
 }
