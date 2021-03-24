@@ -55,18 +55,27 @@ class Home extends Component {
 			Deleted_Events: [],
 			upcomingEvents: 0,
 			loadingUpcomingEvents: true,
+			shownSnackbar3:false,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 		this.checkNetwork = this.checkNetwork.bind(this);
 	}
 
 	componentDidMount() {
-		setTimeout(() => this.checkNetwork(), 1000);
+		// setTimeout(() => this.checkNetwork(), 1000);
 		this.props.executeScroll();
 		this.loadData();
 		this.filterHideEvent();
 
 	}
+	componentWillReceiveProps = (nextProps) => {
+		console.log("nextProps",nextProps.web3, this.state.shownSnackbar3)
+		if (!this.state.shownSnackbar3 && nextProps.web3.status == "initialized" && nextProps.web3.networkId) {
+			console.log("hererere")
+		  this.setState({shownSnackbar3:true})
+		  this.checkNetwork()
+		}
+	  }
 
 	// componentDidUpdate(){
 	// 	this.checkNetwork()
