@@ -79,7 +79,7 @@ class Home extends Component {
 			this.props.web3.networkId != GLOBAL_NETWORK_ID
 		) {
 			this.setState({
-				errorMessage: GLOBAL_NETWORK_ID==1 ? "Please switch your network to Rinkeby!": "Please switch your network to Ethereum mainnet!",
+				errorMessage: GLOBAL_NETWORK_ID==1 ?  "Please switch your network to Ethereum mainnet!":"Please switch your network to Rinkeby!",
 				openSnackbar1: false,
 				openSnackbar2: false,
 				openSnackbar3: true,

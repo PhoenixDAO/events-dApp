@@ -316,7 +316,7 @@ class Sidebar extends Component {
 							target="blank"
 							title="GitHub"
 							className="github footer-octicon align-items-end mx-lg-4 mt-5"
-							href="https://github.com/PhoenixDAO/events-dApp"
+							href="https://github.com/PhoenixDAO/events-dApp/tree/heroku-deployment"
 						>
 							<svg
 								height="32"

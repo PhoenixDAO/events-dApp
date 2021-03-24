@@ -172,7 +172,9 @@ class App extends Component {
 				localStorage.removeItem("account");
 				window.location.reload();
 			});
-
+			// window.onfocus = () => {
+			// 	window.location.reload();
+			// }
 			window.ethereum.on("networkChanged", function (netId) {
 				window.location.reload();
 			});
