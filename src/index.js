@@ -27,24 +27,41 @@ const options = {
 		txHash: {},
 	},
 };
+// const account_login = localStorage.getItem("account");
+// let appPassword = localStorage.getItem("app_password");
+// if (
+// 	!account_login ||
+// 	!appPassword ||
+// 	appPassword != process.env.REACT_APP_PASSWORD
+// ) {
+// 	appPassword = prompt("App password");
+// 	localStorage.setItem("app_password", appPassword);
+// }
+// if (appPassword == process.env.REACT_APP_PASSWORD) {
+// const account_login = localStorage.getItem("account");
+// let appPassword = localStorage.getItem("app_password");
+// if (
+// 	!account_login ||
+// 	!appPassword ||
+// 	appPassword != process.env.REACT_APP_PASSWORD
+// ) {
+// 	appPassword = prompt("App password");
+// 	localStorage.setItem("app_password", appPassword);
+// }
+// if (appPassword == process.env.REACT_APP_PASSWORD) {
+	let message = localStorage.getItem("message");
+if(!message){
+		localStorage.setItem("message", true);
 
-const account_login = localStorage.getItem("account");
-let appPassword = localStorage.getItem("app_password");
-if (
-	!account_login ||
-	!appPassword ||
-	appPassword != process.env.REACT_APP_PASSWORD
-) {
-	appPassword = prompt("App password");
-	localStorage.setItem("app_password", appPassword);
+	alert("Side-chain scaling is coming - high gas fees will be a thing of the past.");
 }
-if (appPassword == process.env.REACT_APP_PASSWORD) {
+
 	ReactDOM.render(
 		<DrizzleProvider options={options}>
 			<App />
 		</DrizzleProvider>,
 		document.getElementById("root")
 	);
-} else {
-	console.log("Wrong password");
-}
+// } else {
+// 	console.log("Wrong password");
+// }

@@ -55,18 +55,27 @@ class Home extends Component {
 			Deleted_Events: [],
 			upcomingEvents: 0,
 			loadingUpcomingEvents: true,
+			shownSnackbar3:false,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 		this.checkNetwork = this.checkNetwork.bind(this);
 	}
 
 	componentDidMount() {
-		setTimeout(() => this.checkNetwork(), 1000);
+		// setTimeout(() => this.checkNetwork(), 1000);
 		this.props.executeScroll();
 		this.loadData();
 		this.filterHideEvent();
 
 	}
+	componentWillReceiveProps = (nextProps) => {
+		console.log("nextProps",nextProps.web3, this.state.shownSnackbar3)
+		if (!this.state.shownSnackbar3 && nextProps.web3.status == "initialized" && nextProps.web3.networkId) {
+			console.log("hererere")
+		  this.setState({shownSnackbar3:true})
+		  this.checkNetwork()
+		}
+	  }
 
 	// componentDidUpdate(){
 	// 	this.checkNetwork()
@@ -79,7 +88,7 @@ class Home extends Component {
 			this.props.web3.networkId != GLOBAL_NETWORK_ID
 		) {
 			this.setState({
-				errorMessage: GLOBAL_NETWORK_ID==1 ? "Please switch your network to Rinkeby!": "Please switch your network to Ethereum mainnet!",
+				errorMessage: GLOBAL_NETWORK_ID==1 ?  "Please switch your network to Ethereum mainnet!":"Please switch your network to Rinkeby!",
 				openSnackbar1: false,
 				openSnackbar2: false,
 				openSnackbar3: true,
