@@ -57,15 +57,17 @@ class TopicLandingPage extends Component {
 		this.ActiveEvent = this.ActiveEvent.bind(this);
 		this.PastEvent = this.PastEvent.bind(this);
 		this.toggleSortDate = this.toggleSortDate.bind(this);
+		this.myRef = React.createRef();
 
 		this.scrollTo = this.scrollTo.bind(this);
 	}
 	scrollTo() {
-		scroller.scrollTo("scroll-to-element", {
-			duration: 800,
-			delay: 0,
-			smooth: "easeInOutQuart",
-		});
+		this.myRef.current.scrollIntoView()
+		// scroller.scrollTo("scroll-to-element", {
+		// 	duration: 800,
+		// 	delay: 0,
+		// 	smooth: "easeInOutQuart",
+		// });
 	}
 
 	componentDidUpdate() {
@@ -88,6 +90,7 @@ class TopicLandingPage extends Component {
 		this.props.history.push("/topic/" + slug + "/" + 1);
 		this.theTopic = this.getTopicData();
 		this.loadBlockchain();
+		console.log("intopicclick")
 		this.scrollTo();
 	}
 
@@ -223,18 +226,20 @@ class TopicLandingPage extends Component {
 					this.setState({
 						Topic_Events: newsort,
 						topic_copy: newsort,
+						active_length: newsort.length,
 					});
-					this.setState({
-						active_length: this.state.Topic_Events.length,
-					});
+					// this.setState({
+					// 	active_length: this.state.Topic_Events.length,
+					// });
 					setTimeout(() => this.setState({ loading: false }), 1000);
 				}
 			})
 			.catch((err) => console.error(err));
 	}
 
-	//Get My Active Events on Blockchain
+	//Get My Past Events on Blockchain
 	async loadPastEvents() {
+		console.log("inLoadPastEvents")
 		if (this._isMounted) {
 			this.setState({ Topic_Events: [], active_length: 0 });
 		}
@@ -274,15 +279,16 @@ class TopicLandingPage extends Component {
 								this.props.match.params.page
 					)
 					.reverse()
-				// console.log("result",result)
+				console.log("newsort",newsort)
 				if (this._isMounted) {
 					this.setState({
 						Topic_Events: newsort,
 						topic_copy: newsort,
+						active_length: newsort.length
 					});
-					this.setState({
-						active_length: this.state.Topic_Events.length,
-					});
+					// this.setState({
+					// 	active_length: this.state.Topic_Events.length,
+					// });
 					setTimeout(() => this.setState({ loading: false }), 1000);
 				}
 			})
@@ -417,7 +423,8 @@ class TopicLandingPage extends Component {
 					</p>
 				);
 			} else {
-				let currentPage = Number(this.props.match.params.page);
+				console.log("this.props.match.params.page",this.props.match.params.id)
+				let currentPage = Number(this.props.match.params.id);
 				let events_list = [];
 				let skip = false;
 				for (let i = 0; i < this.state.Topic_Events.length; i++) {
@@ -456,10 +463,13 @@ class TopicLandingPage extends Component {
 					);
 				} else {
 					let updated_list = [];
+					console.log("events_list",events_list)
 					count = events_list.length;
+					console.log("currentPage",currentPage)
+					console.log("this.perPage",this.perPage)
 					if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-					let end = currentPage * this.perPage;
-					let start = end - this.perPage;
+					let end = currentPage * this.perPage;//6
+					let start = end - this.perPage;//0
 					if (end > count) end = count;
 					let pages = Math.ceil(count / this.perPage);
 
@@ -476,6 +486,7 @@ class TopicLandingPage extends Component {
 							/>
 						);
 					}
+					console.log("updated_list",updated_list)
 					// updated_list.reverse();
 
 					let pagination = "";
@@ -485,7 +496,7 @@ class TopicLandingPage extends Component {
 						for (let i = 1; i <= pages; i++) {
 							let active = i === currentPage ? "active" : "";
 							links.push(
-								<li className={"page-item " + active} key={i}>
+								<li className={"page-item " + active} key={i} onClick={this.scrollTo()}>
 									<Link
 										to={
 											"/topic/" +
@@ -503,7 +514,7 @@ class TopicLandingPage extends Component {
 
 						pagination = (
 							<nav>
-								<ul className="pagination justify-content-center">
+								<ul className="pagination justify-content-center" >
 									{links}
 								</ul>
 							</nav>
@@ -540,6 +551,7 @@ class TopicLandingPage extends Component {
 					{/* <Element name="scroll-to-element" className="element"> */}
 					<div
 						id="scroll-to-element"
+						ref={this.myRef}
 						className="input-group input-group-lg"
 					>
 						<div className="input-group-prepend ">

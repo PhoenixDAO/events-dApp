@@ -796,11 +796,11 @@ class Form extends Component {
 									style={{ color: "red" }}
 									className="form-text text-muted color-red"
 								>
-									No Type selected
+									No type selected
 								</small>
 							)}
 							<select
-								className={"form-control " + warning.topic}
+								className={warning.topic ? "form-control drop-down-is-invalid" : "form-control "}
 								id="type"
 								title="Event Type"
 								onChange={this.typeChange}
@@ -835,9 +835,10 @@ class Form extends Component {
 								</small>
 							)}
 							<select
-								className="form-control"
+								// className="form-control"
 								id="topic"
-								className={"form-control " + warning.type}
+								// className={"form-control " + warning.type}
+								className={warning.type ? "form-control drop-down-is-invalid" : "form-control "}
 								title="Event Topic"
 								value={this.state.type}
 								onChange={this.categoryChange}

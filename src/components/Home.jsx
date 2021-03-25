@@ -73,7 +73,7 @@ class Home extends Component {
 		if (!this.state.shownSnackbar3 && nextProps.web3.status == "initialized" && nextProps.web3.networkId) {
 			console.log("hererere")
 		  this.setState({shownSnackbar3:true})
-		  this.checkNetwork()
+		  this.checkNetwork(nextProps.web3.status,nextProps.web3.networkId)
 		}
 	  }
 
@@ -81,11 +81,11 @@ class Home extends Component {
 	// 	this.checkNetwork()
 	// }
 
-	checkNetwork() {
-		console.log("this.props.web3.networkId",this.props.web3.status,this.props.web3.networkId)
+	checkNetwork(web3Status,networkId) {
+		console.log("this.props.web3.networkId",web3Status,networkId)
 		if (
-			this.props.web3.status == "initialized" &&
-			this.props.web3.networkId != GLOBAL_NETWORK_ID
+			web3Status == "initialized" &&
+			networkId != GLOBAL_NETWORK_ID
 		) {
 			this.setState({
 				errorMessage: GLOBAL_NETWORK_ID==1 ?  "Please switch your network to Ethereum mainnet!":"Please switch your network to Rinkeby!",
