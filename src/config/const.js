@@ -2,7 +2,7 @@
 //Mainnet
 // export const INFURA_URL="https://mainnet.infura.io/v3/c89f216154d84b83bb9344a7d0a91108"
 // export const INFURA_WEB_URL="wss://mainnet.infura.io/ws/v3/c89f216154d84b83bb9344a7d0a91108"
-// export const API_URL = "http://localhost:4000/";
+// export const API_URL = "https://phoenix-event-dapp-backend.herokuapp.com/"
 // export const GLOBAL_NETWORK_ID=1;
 // export const REPORT_EVENT = "event/report";
 

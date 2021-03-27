@@ -366,7 +366,7 @@ class FindEvents extends Component {
 				for (let i = start; i < end; i++) {
 					updated_list.push(
 						<Event
-							toggleDisabling={this.props.toggleDisabling}
+							toggleBuying={this.props.toggleDisabling}
 							disabledStatus={this.props.disabledStatus}
 							inquire={this.props.inquire}
 							key={events_list[i].returnValues.eventId}
