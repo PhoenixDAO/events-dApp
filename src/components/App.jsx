@@ -629,6 +629,7 @@ class App extends Component {
 		let connecting = false;
 		if (!this.props.drizzleStatus.initialized) {
 			// console.log("snackbar3Props in home2")
+			console.log("printinggggggg in if")
 			body = (
 				<div>
 					<Switch>
@@ -650,7 +651,7 @@ class App extends Component {
 			);
 			connecting = true;
 		} else if (this.props.web3.status === "failed") {
-
+			console.log("printinggggggg in else 1")
 			body = (
 				
 				<div>
@@ -675,6 +676,7 @@ class App extends Component {
 				Object.keys(this.props.accounts).length === 0) ||
 			this.props.web3.networkId !== GLOBAL_NETWORK_ID
 		) {
+			console.log("printinggggggg in else if 2")
 			body = (
 				<div>
 					<Switch>
@@ -819,6 +821,7 @@ class App extends Component {
 			// 	</Switch>
 			// );
 		} else {
+			console.log("printinggggggg in else")
 			body = (
 				<Switch>
 					<Route

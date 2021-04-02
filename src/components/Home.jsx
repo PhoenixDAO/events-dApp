@@ -88,7 +88,7 @@ class Home extends Component {
 			networkId != GLOBAL_NETWORK_ID
 		) {
 			this.setState({
-				errorMessage: GLOBAL_NETWORK_ID==1 ?  "Please switch your network to Ethereum mainnet!":"Please switch your network to Rinkeby!",
+				errorMessage: GLOBAL_NETWORK_ID==1 ?  "Please switch your network to Ethereum Mainnet!":GLOBAL_NETWORK_ID==80001 ?"Please switch your network to Matic Testnet!": "Please switch your network to Matic Mainnet!",
 				openSnackbar1: false,
 				openSnackbar2: false,
 				openSnackbar3: true,

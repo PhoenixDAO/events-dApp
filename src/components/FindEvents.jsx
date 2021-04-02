@@ -115,6 +115,7 @@ class FindEvents extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then(async (events) => {
+				console.log("asd",events)
 				if (this._isMounted) {
 					this.setState({ loading: true });
 					let allEvents = events;

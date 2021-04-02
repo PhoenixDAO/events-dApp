@@ -1,7 +1,22 @@
-//ethereum main net
+// // matic testnet
+// export const Open_events_Address = '0x95c8185eA36B70fB386492Fc48f6fd6186Db881A';
+
+// matic testnet
+export const Open_events_Address = '0x3144d2A6BFdC92549AaC5B93029687Ea34F7aa19';
+
+// matic mainnet
+// export const Open_events_Address = 'TBD';
+
+// ethereum mainnet
 // export const Open_events_Address = '0xbdce36d77305cce80bf314279afed10ed7f56128';
-//rinkeby
-export const Open_events_Address = '0x366F6d0fB643CF1488CA47937A29b7e4a9C6DFAC';
+
+/*-------------------------------------------------------------------------------------------------*/
+
+//rinkeby testnet
+// export const Open_events_Address = '0x366F6d0fB643CF1488CA47937A29b7e4a9C6DFAC';
+
+
+
 
 export const Open_events_ABI =  [
 	{

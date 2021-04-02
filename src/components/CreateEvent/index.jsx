@@ -127,6 +127,7 @@ class CreateEvent extends Component {
 		// })
 		ipfs.add(buffer, { pin: pinit })
 			.then((hash) => {
+				console.log("hashhh",hash)
 				this.setState({
 					stage: 95,
 					title: "Creating transaction...",
@@ -144,6 +145,7 @@ class CreateEvent extends Component {
 				// 	this.state.data.type,
 				// 	this.state.organizer
 				// ))
+				// this.contracts["DaoEvents"].methods.eventsOf(
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.createEvent(
 						this.state.data.name,
@@ -160,6 +162,7 @@ class CreateEvent extends Component {
 				);
 			})
 			.catch((error) => {
+				console.log("error in convertAndUpload",error)
 				this.setState(
 					{
 						error: true,
