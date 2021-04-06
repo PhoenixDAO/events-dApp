@@ -94,37 +94,37 @@ class Dashboard extends Component {
 			.catch(console.log);
 	}
 
-	async loadActiveEvents() {
-		if (this._isMounted) {
-			this.setState({ MyEvents: [], active_length: 0, loading: true });
-		}
+	// async loadActiveEvents() {
+	// 	if (this._isMounted) {
+	// 		this.setState({ MyEvents: [], active_length: 0, loading: true });
+	// 	}
 
-		this.state.openEvents
-			.getPastEvents("NewAndUpdatedEvent", {
-				filter: { owner: this.account },
-				fromBlock: 8181618,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
+	// 	this.state.openEvents
+	// 		.getPastEvents("NewAndUpdatedEvent", {
+	// 			filter: { owner: this.account },
+	// 			fromBlock: 8181618,
+	// 			toBlock: this.state.latestblocks,
+	// 		})
+	// 		.then((events) => {
 				
-				var newest = events.filter(
-					(activeEvents) =>
-						activeEvents.returnValues.time >= this.state.dateNow
-				);
-				var newsort = newest
-					.concat()
-					.sort((a, b) => b.blockNumber - a.blockNumber);
+	// 			var newest = events.filter(
+	// 				(activeEvents) =>
+	// 					activeEvents.returnValues.time >= this.state.dateNow
+	// 			);
+	// 			var newsort = newest
+	// 				.concat()
+	// 				.sort((a, b) => b.blockNumber - a.blockNumber);
 
-				if (this._isMounted) {
-					this.setState({ MyEvents: newsort, check: newsort });
-					this.setState({
-						active_length: this.state.MyEvents.length,
-					});
-					setTimeout(() => this.setState({ loading: false }), 1000);
-				}
-			})
-			.catch((err) => console.error(err));
-	}
+	// 			if (this._isMounted) {
+	// 				this.setState({ MyEvents: newsort, check: newsort });
+	// 				this.setState({
+	// 					active_length: this.state.MyEvents.length,
+	// 				});
+	// 				setTimeout(() => this.setState({ loading: false }), 1000);
+	// 			}
+	// 		})
+	// 		.catch((err) => console.error(err));
+	// }
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
@@ -157,7 +157,7 @@ class Dashboard extends Component {
 			const blockNumber = await web3.eth.getBlockNumber();
 			this.setState({ blocks: blockNumber - 50000 });
 			this.setState({ latestblocks: blockNumber - 1 });
-			this.loadActiveEvents();
+			// this.loadActiveEvents();
 
 			//Listen For My Newly Created Events
 
@@ -165,19 +165,20 @@ class Dashboard extends Component {
 				.getPastEvents("NewAndUpdatedEvent", {
 					filter: { owner: this.account },
 					fromBlock: 8181618,
-					toBlock: this.state.latestblocks,
+					toBlock: 'latest',
 				})
 				.then(async (events) => {
+					console.log("Dashboard NewAndUpdatedEvent in dashboard",events)
 					if (this.state.isActive) {
-						this.setState({
-							MyEvents: events,
-						});
+						// this.setState({
+						// 	MyEvents: events,
+						// });
 						// events.map((event,i)=>{
 						// 	if(event.returnValues.name == "ccc"){
 						// 		console.log("eventtt",event)
 						// 	}
 						// })
-						var newest = this.state.MyEvents;
+						var newest = events;
 						var newsort = newest
 							.concat()
 							.sort((a, b) => b.blockNumber - a.blockNumber);
@@ -190,6 +191,8 @@ class Dashboard extends Component {
 								return a;
 							}, {})
 						);
+						console.log("Dashboard NewAndUpdatedEvent in dashboard after uniqueness result",result)
+
 						// result.map((event,i)=>{
 						// 	if(event.returnValues.name == "ccc"){
 						// 		console.log("eventtt result",event)
@@ -238,6 +241,7 @@ class Dashboard extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
+				console.log("Dashboard DeletedEvent in dashboard",events)
 				this.setState({ Deleted_Events: events });
 				return events;
 			})
@@ -250,6 +254,7 @@ class Dashboard extends Component {
 		// var array1 = [];
 		let skip = false;
 		let skip2 = false;
+		console.log("Dashboard NewAndUpdatedEvent in dashboard after uniqueness this.state.MyEvents",this.state.MyEvents)
 		for (let i = 0; i < this.state.MyEvents.length; i++) {
 			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
@@ -271,6 +276,7 @@ class Dashboard extends Component {
 				}
 			}
 			if (!skip2) {
+				
 				deletedArray2.push(this.state.MyEvents[i]);
 			}
 			if (!skip) {
@@ -287,10 +293,13 @@ class Dashboard extends Component {
 		// 		}
 		// 	}
 		// }
+		console.log("Dashboard DeletedEvent in dashboard",deletedArray)
+		// console.log("Dashboard DeletedEvent in dashboard deletedArray2",deletedArray2)
 		this.setState(
 			{
-				// top5Events: array1,
+				// filtered only deleted events
 				deletedArray2: deletedArray2,
+				// filtered deleted and reported events
 				deletedArray: deletedArray,
 			},
 			() => this.GetEventsRevenue(this.state.deletedArray)
@@ -309,9 +318,9 @@ class Dashboard extends Component {
 			let eventCount = this.props.contracts["DaoEvents"].eventsOf[
 				this.events
 			].value;
-			let eventCounts = this.props.contracts["DaoEvents"].eventsOf[
-				this.events
-			];
+			// let eventCounts = this.props.contracts["DaoEvents"].eventsOf[
+			// 	this.events
+			// ];
 			var loading = true;
 			let eventCache = [];
 			let eventDetails = [];
