@@ -2279,7 +2279,9 @@ h4.transactions {
 	z-index: 999;
 	cursor: pointer;
 }
-
+/* .dashboard-card:last-child:hover{
+	transform: scale(1);
+} */
 .dashboard-caption {
 	position: absolute;
 	right: 0;

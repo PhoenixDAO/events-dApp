@@ -1032,7 +1032,7 @@ class Dashboard extends Component {
 											backgroundImage:
 												"url(/images/uniswaps.jpg)",
 										}}
-										onClick={this.handleClickOpen}
+										onClick={this.props.networkId==1 ? this.handleClickOpen : ()=> {}}
 									>
 										<p className="dashboard-uniswap">
 											<i className="fas fa-sync"></i> BUY
@@ -1096,6 +1096,7 @@ const mapStateToProps = (state) => {
 	return {
 		contracts: state.contracts,
 		accounts: state.accounts,
+		networkId: state.web3.networkId
 	};
 };
 

@@ -12,6 +12,8 @@ import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { explorerWithTX, explorerWithAddress } from "../config/const";
+
 
 
 import Loading from "./Loading";
@@ -456,7 +458,7 @@ class Ticket extends Component {
 								Creator:{" "}
 								<a
 									href={
-										"https://etherscan.io/address/" +
+										explorerWithAddress +
 										event_data[9]
 									}
 									target="_blank"

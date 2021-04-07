@@ -14,6 +14,7 @@ import JwPagination from "jw-react-pagination";
 
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+import { explorerWithTX, explorerWithAddress } from "../config/const";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Testnet_Token_Address,
@@ -1192,7 +1193,7 @@ this.props.toggleDisabling();
 													/>
 													<a
 														href={
-															"https://etherscan.io/address/" +
+															explorerWithAddress +
 															sold.returnValues
 																.buyer
 														}
@@ -1206,7 +1207,7 @@ this.props.toggleDisabling();
 													has{" "}
 													<a
 														href={
-															"https://etherscan.io/tx/" +
+															explorerWithTX +
 															sold.transactionHash
 														}
 														target="blank"

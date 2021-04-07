@@ -1,6 +1,8 @@
 import React from 'react';
 import makeBlockie from 'ethereum-blockies-base64';
 import { Link } from 'react-router-dom';
+import { explorerWithTX, explorerWithAddress } from "../config/const";
+
 
 function NotifyEventSuccess(props) {
 	let rawTitle = props.createdEvent.name;
@@ -15,10 +17,10 @@ function NotifyEventSuccess(props) {
 	  let titleURL = "/event-stat/"+pagetitle+"/" + props.createdEvent.eventId;
 	return (
 		<div className="notify">
-			<a href={"https://etherscan.io/tx/" + props.hash} title={props.hash} target = "blank">
+			<a href={explorerWithTX + props.hash} title={props.hash} target = "blank">
 				<img src={makeBlockie(props.hash)} alt={props.hash} />
 			</a>
-			<a href={"https://etherscan.io/tx/" + props.hash} title={props.hash} target = "blank">Transaction success!</a>
+			<a href={explorerWithTX + props.hash} title={props.hash} target = "blank">Transaction success!</a>
             <Link to={titleURL}><p> Check out your EVENT here</p></Link>
 		</div>
 	);

@@ -5,15 +5,13 @@
 // export const API_URL = "https://phoenix-event-dapp-backend.herokuapp.com/"
 // export const GLOBAL_NETWORK_ID=1;
 // export const REPORT_EVENT = "event/report";
+// export const explorerWithTX="https://etherscan.io/tx/"
+// export const explorerWithAddress ="https://etherscan.io/address/"
+
+//Matic Mainnet
 
 
 
-//Rinkeby
-// export const INFURA_URL="https://rinkeby.infura.io/v3/c89f216154d84b83bb9344a7d0a91108"
-// export const INFURA_WEB_URL="wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
-// export const API_URL = "https://phoenix-dao-event-dapp.herokuapp.com/";
-// export const GLOBAL_NETWORK_ID=4;
-// export const REPORT_EVENT = "event/report";
 
 //Matic Test
 export const INFURA_URL="https://rpc-mumbai.matic.today" // 
@@ -28,4 +26,14 @@ export const INFURA_WEB_URL="wss://ws-mumbai.matic.today/"
 export const API_URL = "https://phoenix-dao-event-dapp.herokuapp.com/";
 export const GLOBAL_NETWORK_ID=80001;
 export const REPORT_EVENT = "event/report";
+export const explorerWithTX="https://explorer-mumbai.maticvigil.com/tx/"
+export const explorerWithAddress ="https://explorer-mumbai.maticvigil.com/address/"
 
+
+
+//Rinkeby
+// export const INFURA_URL="https://rinkeby.infura.io/v3/c89f216154d84b83bb9344a7d0a91108"
+// export const INFURA_WEB_URL="wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b"
+// export const API_URL = "https://phoenix-dao-event-dapp.herokuapp.com/";
+// export const GLOBAL_NETWORK_ID=4;
+// export const REPORT_EVENT = "event/report";
