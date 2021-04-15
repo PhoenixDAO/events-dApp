@@ -77,6 +77,7 @@ class CheckUser extends Component {
 				`${API_URL}${REPORT_EVENT}`,
 				payload
 			);
+			console.log("Consoleee notify report response",report)
 			toast(<NotifyReport text={"Report successful!"}/>, {
 					position: "bottom-right",
 					autoClose: true,
@@ -87,6 +88,8 @@ class CheckUser extends Component {
 				loading: false,
 			});
 		} catch (error) {
+			console.log("Consoleee notify report response catch",error.response)
+
 			toast(<NotifyReport text={error.response.data.responseMessage+"!"}/>, {
 				position: "bottom-right",
 				autoClose: true,

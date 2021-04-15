@@ -218,6 +218,9 @@ class Form extends Component {
 		if (title.length > 80) {
 			title = title.slice(0, 80);
 		}
+		if (title.includes("*")) {
+			return event.preventDefault();
+		}
 		this.setState({
 			title: title,
 			title_length: title.length,
@@ -229,6 +232,9 @@ class Form extends Component {
 		if (description.length > 500) {
 			description = description.slice(0, 500);
 		}
+		if (description.includes("*")) {
+			return event.preventDefault();
+		}
 		this.setState({
 			description: description,
 			description_length: description.length,
@@ -237,6 +243,9 @@ class Form extends Component {
 
 	organizerChange = (event) => {
 		let organizer = event.target.value;
+		if (organizer.includes("*")) {
+			return event.preventDefault();
+		}
 		if (organizer.length > 100) {
 			organizer = organizer.slice(0, 100);
 		}
@@ -250,6 +259,9 @@ class Form extends Component {
 		let location = event.target.value;
 		if (location.length > 100) {
 			location = location.slice(0, 100);
+		}
+		if (location.includes("*")) {
+			return event.preventDefault();
 		}
 		this.setState({
 			location: location,
@@ -401,6 +413,7 @@ class Form extends Component {
 		let filteredOrganizer = "";
 		let filteredLocation = "";
 		if (this.form.description.value !== "") {
+			console.log("this.form.description.value",this.form.description.value)
 			let filter = new Filter();
 			filteredDescription = filter.clean(this.form.description.value);
 			this.setState({ description: filteredDescription });
