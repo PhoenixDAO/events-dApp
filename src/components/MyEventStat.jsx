@@ -128,6 +128,10 @@ class MyEventStat extends Component {
 		super(props);
 		console.log("props",props);
 		this.contracts = context.drizzle.contracts;
+		console.log("this.props.match.params.id",this.props.match.params.id)
+		console.log("this.event",this.contracts["DaoEvents"].methods.events.cacheCall(
+			this.props.match.params.id
+		))
 		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.match.params.id
 		);
@@ -277,6 +281,7 @@ class MyEventStat extends Component {
 				"undefined" &&
 			!this.props.contracts["DaoEvents"].events[this.event].error
 		) {
+			// console.log("here in updateIPFS")
 			this.setState(
 				{
 					loading: true,

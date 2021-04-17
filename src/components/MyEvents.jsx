@@ -121,11 +121,12 @@ class MyEvents extends Component {
 				// 	(activeEvents) =>
 				// 		activeEvents.returnValues.time >= this.state.dateNow
 				// );
-				events.map((event,i)=>{
-					if(event.returnValues.name == "ccc"){
-						console.log("eventtt",event)
-					}
-				})
+				console.log("my events",events)
+				// events.map((event,i)=>{
+				// 	if(event.returnValues.name == "ccc"){
+				// 		console.log("eventtt",event)
+				// 	}
+				// })
 				const result = Object.values(
 					events.reverse().reduce((a, c) => {
 						a[c.returnValues.eventId] ||
