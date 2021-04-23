@@ -92,12 +92,13 @@ class EventPage extends Component {
 		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
-			this.props.match.params.id
-		);
+		// this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
+		// 	this.props.match.params.id
+		// );
 		this.revenue = this.contracts["DaoEvents"].methods.eventRevenue.cacheCall(11)
 		this.account = this.props.accounts[0];
 		this.state = {
+			blockChainEventLoaded:false,
 			load: true,
 			loading: false,
 			loaded: false,
@@ -120,7 +121,24 @@ class EventPage extends Component {
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
 		this.giveApproval = this.giveApproval.bind(this);
+		this.loadEventFromBlockchain=this.loadEventFromBlockchain.bind(this)
 		
+	}
+
+	async loadEventFromBlockchain(){
+		const web3 = new Web3(
+			new Web3.providers.WebsocketProvider(
+				INFURA_WEB_URL
+				)
+		);
+		const openEvents = new web3.eth.Contract(
+			Open_events_ABI,
+			Open_events_Address
+		);
+		const blockChainEvent= await openEvents.methods.events(this.props.match.params.id).call()
+		this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})
+		this.updateIPFS();
+		console.log("temp Event web3",blockChainEvent)
 	}
 
 	//Get SoldTicket Data
@@ -221,9 +239,7 @@ class EventPage extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["DaoEvents"].events[this.event] !==
-				"undefined" &&
-			!this.props.contracts["DaoEvents"].events[this.event].error
+			this.state.blockChainEvent 
 		) {
 			this.setState(
 				{
@@ -231,8 +247,7 @@ class EventPage extends Component {
 				},
 				() => {
 					ipfs.get(
-						this.props.contracts["DaoEvents"].events[this.event]
-							.value[7]
+						this.state.blockChainEvent[7]
 					)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
@@ -358,10 +373,12 @@ class EventPage extends Component {
 		let temp = this.allowance();
 		this.setState(
 			{
-				fee: this.props.contracts["DaoEvents"].events[this.event]
-					.value[2],
-				token: this.props.contracts["DaoEvents"].events[this.event]
-					.value[3],
+				fee: this.state.blockChainEvent[2] ,
+				// this.props.contracts["DaoEvents"].events[this.event]
+				// 	.value[2],
+				token: this.state.blockChainEvent[3], 
+				// this.props.contracts["DaoEvents"].events[this.event]
+				// 	.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
 					this.props.match.params.id	
@@ -415,10 +432,9 @@ class EventPage extends Component {
 		let body = <Loading />;
 
 		if (
-			typeof this.props.contracts["DaoEvents"].events[this.event] !==
-			"undefined"
+			this.state.blockChainEventLoaded
 		) {
-			if (this.props.contracts["DaoEvents"].events[this.event].error) {
+			if (!this.state.blockChainEvent) {
 				body = (
 					<div className="text-center mt-5">
 						<span role="img" aria-label="unicorn">
@@ -428,9 +444,10 @@ class EventPage extends Component {
 					</div>
 				);
 			} else {
-				let event_data = this.props.contracts["DaoEvents"].events[
-					this.event
-				].value;
+				let event_data =this.state.blockChainEvent
+				// let event_data = this.props.contracts["DaoEvents"].events[
+				// 	this.event
+				// ].value;
 
 				let shareUrl = window.location;
 				let title = event_data[0];
@@ -776,6 +793,7 @@ class EventPage extends Component {
 	}
 
 	componentDidMount() {
+		this.loadEventFromBlockchain()
 		window.scroll({
 			top: 0,
 			behavior: "smooth",

@@ -74,6 +74,32 @@ class FindEvents extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain() {
+		let result = await axios({
+			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			method: 'post',
+			data: {
+			  query: `
+			  {
+				events(first: 5) {
+				  id
+				  eventId
+				  name
+				  time
+				  price
+				  token
+				  limited
+				  seats
+				  sold
+				  ipfs
+				  category
+				  owner
+				  revenueOfEvent
+				}
+			  }
+			  `
+			}
+		})
+		console.log("GraphQL query",result.data.data)
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
 		);
@@ -115,7 +141,7 @@ class FindEvents extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then(async (events) => {
-				console.log("asd",events)
+				console.log("GraphQL query NewAndUpdatedEvent",events)
 				if (this._isMounted) {
 					this.setState({ loading: true });
 					let allEvents = events;

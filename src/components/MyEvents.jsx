@@ -64,30 +64,30 @@ class MyEvents extends Component {
 			this.setState({ latestblocks: blockNumber - 1 });
 			this.loadActiveEvents();
 			//Listen For My Newly Created Events
-			openEvents.events
-				.CreatedEvent({
-					filter: { owner: this.account },
-					fromBlock: blockNumber,
-					toBlock: "latest",
-				})
-				.on("data", (log) =>
-					setTimeout(() => {
-						if (this.state.isActive) {
-							this.setState({
-								MyEvents: [...this.state.MyEvents, log],
-							});
-							var newest = this.state.MyEvents;
-							var newsort = newest
-								.concat()
-								.sort((a, b) => b.blockNumber - a.blockNumber);
+			// openEvents.events
+			// 	.CreatedEvent({
+			// 		filter: { owner: this.account },
+			// 		fromBlock: blockNumber,
+			// 		toBlock: "latest",
+			// 	})
+			// 	.on("data", (log) =>
+			// 		setTimeout(() => {
+			// 			if (this.state.isActive) {
+			// 				this.setState({
+			// 					MyEvents: [...this.state.MyEvents, log],
+			// 				});
+			// 				var newest = this.state.MyEvents;
+			// 				var newsort = newest
+			// 					.concat()
+			// 					.sort((a, b) => b.blockNumber - a.blockNumber);
 
-							this.setState({
-								MyEvents: newsort,
-								active_length: this.state.MyEvents.length,
-							});
-						}
-					}, 10000)
-				);
+			// 				this.setState({
+			// 					MyEvents: newsort,
+			// 					active_length: this.state.MyEvents.length,
+			// 				});
+			// 			}
+			// 		}, 10000)
+			// 	);
 		}
 		await openEvents
 			.getPastEvents("DeletedEvent", {
@@ -143,17 +143,17 @@ class MyEvents extends Component {
 					).reverse()
 				
 					newsort.map((event,i)=>{
-					if(event.returnValues.name == "ccc"){
+					if(event.returnValues.name == "mmm"){
 						console.log("eventtt result",event)
 					}
 				})
-				if (this._isMounted) {
+				// if (this._isMounted) {
 					this.setState({ MyEvents: newsort, check: newsort });
 					this.setState({
 						active_length: this.state.MyEvents.length,
 					});
 					setTimeout(() => this.setState({ loading: false }), 1000);
-				}
+				// }
 			})
 			.catch((err) => console.error(err));
 	}

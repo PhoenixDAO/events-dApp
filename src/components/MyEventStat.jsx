@@ -129,14 +129,19 @@ class MyEventStat extends Component {
 		console.log("props",props);
 		this.contracts = context.drizzle.contracts;
 		console.log("this.props.match.params.id",this.props.match.params.id)
-		console.log("this.event",this.contracts["DaoEvents"].methods.events.cacheCall(
+		console.log("this.state.eventState",this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.match.params.id
 		))
-		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
-			this.props.match.params.id
-		);
+		// this.state.eventState = this.contracts["DaoEvents"].methods.events.cacheCall(
+		// 	this.props.match.params.id
+		// );
+		
 		this.account = this.props.accounts[0];
 		this.state = {
+			// eventState:this.contracts["DaoEvents"].methods.events.cacheCall(
+			// 	this.props.match.params.id
+			// ),
+			blockChainEventLoaded:false,
 			load: true,
 			loading: false,
 			loaded: false,
@@ -164,6 +169,7 @@ class MyEventStat extends Component {
 		this.handleDelete = this.handleDelete.bind(this);
 		this.GetEventsRevenue = this.GetEventsRevenue.bind(this);
 		this.giveApproval = this.giveApproval.bind(this);
+		this.loadEventFromBlockchain=this.loadEventFromBlockchain.bind(this)
 	}
 	async GetEventsRevenue() {
 		let revenue = await this.contracts["DaoEvents"].methods
@@ -173,8 +179,26 @@ class MyEventStat extends Component {
 		this.setState({ revenue });
 	}
 
+	async loadEventFromBlockchain(){
+		const web3 = new Web3(
+			new Web3.providers.WebsocketProvider(
+				INFURA_WEB_URL
+				)
+		);
+		const openEvents = new web3.eth.Contract(
+			Open_events_ABI,
+			Open_events_Address
+		);
+		const blockChainEvent= await openEvents.methods.events(this.props.match.params.id).call()
+		this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})
+		this.updateIPFS();
+		console.log("temp Event web3",blockChainEvent)
+	}
+
 	//Get SoldTicket Data
 	async loadblockhain() {
+
+		
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
 				INFURA_WEB_URL
@@ -202,7 +226,7 @@ class MyEventStat extends Component {
 			.getPastEvents("SoldTicket", {
 				filter: { eventId: this.props.match.params.id },
 				fromBlock: 5000000,
-				toBlock: this.state.latestblocks,
+				toBlock: 'latest',
 			})
 			.then((events) => {
 				this.setState({ load: true });
@@ -223,7 +247,7 @@ class MyEventStat extends Component {
 		openEvents
 			.getPastEvents("SoldTicket", {
 				fromBlock: 5000000,
-				toBlock: this.state.latestblocks,
+				toBlock: 'latest',
 			})
 			.then((events) => {})
 			.catch((err) => console.error(err));
@@ -274,12 +298,24 @@ class MyEventStat extends Component {
 	}
 
 	updateIPFS = () => {
+		console.log("hereeee in MyEventStats updateIPFS",this.state.loaded === false ,
+		this.state.loading === false ,
+		this.state.blockChainEvent 
+			
+			// this.props.contracts["DaoEvents"].events[this.state.eventState]
+			// 				.value[7]
+		// !this.props.contracts["DaoEvents"].events[this.state.eventState].error
+		)
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["DaoEvents"].events[this.event] !==
-				"undefined" &&
-			!this.props.contracts["DaoEvents"].events[this.event].error
+			this.state.blockChainEvent 
+			// !==
+			// 	"undefined"
+			
+			// typeof this.props.contracts["DaoEvents"].events[this.state.eventState] !==
+			// 	"undefined" &&
+			// !this.props.contracts["DaoEvents"].events[this.state.eventState].error
 		) {
 			// console.log("here in updateIPFS")
 			this.setState(
@@ -287,9 +323,11 @@ class MyEventStat extends Component {
 					loading: true,
 				},
 				() => {
+					// console.log("check state",this.state.blockChainEvent)
 					ipfs.get(
-						this.props.contracts["DaoEvents"].events[this.event]
-							.value[7]
+						this.state.blockChainEvent[7]
+						// this.props.contracts["DaoEvents"].events[this.state.eventState]
+						// 	.value[7]
 					)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
@@ -415,13 +453,13 @@ this.props.toggleDisabling();
 	// 	// console.log("approve",balance)
 	// 	console.log(
 	// 		"buy",
-	// 		this.props.contracts["DaoEvents"].events[this.event].value[2]
+	// 		this.props.contracts["DaoEvents"].events[this.state.eventState].value[2]
 	// 	);
 	// 	this.setState(
 	// 		{
-	// 			fee: this.props.contracts["DaoEvents"].events[this.event]
+	// 			fee: this.props.contracts["DaoEvents"].events[this.state.eventState]
 	// 				.value[2],
-	// 			token: this.props.contracts["DaoEvents"].events[this.event]
+	// 			token: this.props.contracts["DaoEvents"].events[this.state.eventState]
 	// 				.value[3],
 	// 			openEvents_address: this.contracts["DaoEvents"].address,
 	// 			buyticket: this.contracts["DaoEvents"].methods.buyTicket(
@@ -458,10 +496,13 @@ this.props.toggleDisabling();
 
 		this.setState(
 			{
-				fee: this.props.contracts["DaoEvents"].events[this.event]
-					.value[2],
-				token: this.props.contracts["DaoEvents"].events[this.event]
-					.value[3],
+				fee: this.state.blockChainEvent.value[2],
+				// this.props.contracts["DaoEvents"].events[this.state.eventState]
+				// 	.value[2],
+					
+				token:this.state.blockChainEvent.value[3], 
+				// this.props.contracts["DaoEvents"].events[this.state.eventState]
+				// 	.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
 					this.props.match.params.id
@@ -610,10 +651,14 @@ this.props.toggleDisabling();
 		// 	this.props.history.push("/upcomingevents/1");
 		// }
 		if (
-			typeof this.props.contracts["DaoEvents"].events[this.event] !==
-			"undefined"
+			this.state.blockChainEventLoaded
+			// typeof this.props.contracts["DaoEvents"].events[this.state.eventState] !==
+			// "undefined"
 		) {
-			if (this.props.contracts["DaoEvents"].events[this.event].error) {
+			if (
+				// this.props.contracts["DaoEvents"].events[this.state.eventState].error
+				!this.state.blockChainEvent
+				) {
 				body = (
 					<div>
 						<h2>
@@ -629,15 +674,17 @@ this.props.toggleDisabling();
 					</div>
 				);
 			} else {
-				let event_data = this.props.contracts["DaoEvents"].events[
-					this.event
-				].value;
-				console.log("event_data",event_data)
+				let event_data = this.state.blockChainEvent
+				// let event_data = this.props.contracts["DaoEvents"].events[
+				// 	this.state.eventState
+				// ].value;
+				console.log("temp Event this.state.eventState in render",this.state.eventState,event_data)
+				// event_data)
 				let id = this.props.location.pathname.split("/")[
 					this.props.location.pathname.split("/").length - 1
 				];
 				// let this.state.organizer = this.props.contracts["DaoEvents"]
-				// 	.getthis.state.organizer[this.event];
+				// 	.getthis.state.organizer[this.state.eventState];
 				// if (this.state.organizer != undefined) {
 				// 	this.state.organizer = this.state.organizer.value;
 				// }
@@ -1637,13 +1684,20 @@ this.props.toggleDisabling();
 	}
 
 	componentDidMount() {
+		this.loadEventFromBlockchain()
+		// console.log("hereeee in MyEventStats CDM",this.contracts["DaoEvents"].methods.events.cacheCall(
+		// 	this.props.match.params.id
+		// ))
+		// this.setState({eventState:this.contracts["DaoEvents"].methods.events.cacheCall(
+		// 	this.props.match.params.id
+		// )})
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
 		});
 		this.GetEventsRevenue();
 		this._isMounted = true;
-		this.updateIPFS();
+		// this.updateIPFS();
 		this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
 	}
