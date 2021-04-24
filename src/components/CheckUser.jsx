@@ -16,6 +16,7 @@ class CheckUser extends Component {
 		super(props);
 		this.contracts = context.drizzle.contracts;
 		this.state = {
+		blockChainEvent:this.props.blockChainEvent,
 			tab: 1,
 			wrong_address: false,
 			loading: false,
@@ -30,12 +31,12 @@ class CheckUser extends Component {
 		this.address = null;
 		this.ticketsOfUser = null;
 		this.listOfTickets = [];
-		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
-			this.props.event_id
-		);
-		this.event_data = this.props.contracts["DaoEvents"].events[
-			this.event
-		].value;
+		// this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
+		// 	this.props.event_id
+		// );
+		// this.event_data = this.props.contracts["DaoEvents"].events[
+		// 	this.event
+		// ].value;
 		// this.organizerName = this.contracts[
 		// 	"DaoEvents"
 		// ].methods.getOwnerDetails.cacheCall(this.event);
@@ -69,7 +70,8 @@ class CheckUser extends Component {
 			// 	.getOwnerDetails[this.event];
 			let payload = {
 				reportAccounts: this.account,
-				eventName: this.event_data.name,
+				eventName: this.state.blockChainEvent.name,
+				// eventName: this.event_data.name,
 				id: this.props.event_id,
 				count: 1,
 			};
@@ -88,13 +90,17 @@ class CheckUser extends Component {
 				loading: false,
 			});
 		} catch (error) {
-			console.log("Consoleee notify report response catch",error.response)
+			console.log("Consoleee notify report response catch",error)
 
-			toast(<NotifyReport text={error.response.data.responseMessage+"!"}/>, {
-				position: "bottom-right",
-				autoClose: true,
-				pauseOnHover: true,
-			});
+			if(error.response && error.response.data){
+				console.log("Consoleee notify report response error.response.data",error.response.data)
+				toast(<NotifyReport text={error.response.data.responseMessage+"!"}/>, {
+					position: "bottom-right",
+					autoClose: true,
+					pauseOnHover: true,
+				});
+			}
+			
 			this.props.history.push("/upcomingevents/1");
 
 			this.setState({

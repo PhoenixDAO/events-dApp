@@ -383,6 +383,7 @@ class FindEvents extends Component {
 				}
 
 				events_list.reverse();
+				console.log("events_listt",events_list)
 				let updated_list = [];
 				count = events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
@@ -399,6 +400,7 @@ class FindEvents extends Component {
 							key={events_list[i].returnValues.eventId}
 							id={events_list[i].returnValues.eventId}
 							ipfs={events_list[i].returnValues.ipfs}
+							eventData={events_list[i].returnValues}
 						/>
 					);
 				}

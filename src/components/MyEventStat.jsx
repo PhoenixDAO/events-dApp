@@ -132,6 +132,9 @@ class MyEventStat extends Component {
 		console.log("this.state.eventState",this.contracts["DaoEvents"].methods.events.cacheCall(
 			this.props.match.params.id
 		))
+		console.log("checking data",this.props.contracts["DaoEvents"].events[this.contracts["DaoEvents"].methods.events.cacheCall(
+			this.props.match.params.id
+		)])
 		// this.state.eventState = this.contracts["DaoEvents"].methods.events.cacheCall(
 		// 	this.props.match.params.id
 		// );
@@ -496,11 +499,11 @@ this.props.toggleDisabling();
 
 		this.setState(
 			{
-				fee: this.state.blockChainEvent.value[2],
+				fee: this.state.blockChainEvent[2],
 				// this.props.contracts["DaoEvents"].events[this.state.eventState]
 				// 	.value[2],
 					
-				token:this.state.blockChainEvent.value[3], 
+				token:this.state.blockChainEvent[3], 
 				// this.props.contracts["DaoEvents"].events[this.state.eventState]
 				// 	.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
@@ -1648,6 +1651,7 @@ this.props.toggleDisabling();
 								<div className="col-12">
 									<div className="mt-5"></div>
 									<CheckUser
+									blockChainEvent={this.state.blockChainEvent}
 										event_id={this.props.match.params.id}
 										disabledStatus={disabled}
 										history={this.props.history}

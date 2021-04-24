@@ -340,6 +340,7 @@ class MyEvents extends Component {
 				for (let i = start; i < end; i++) {
 					updated_list.push(
 						<Event
+							eventData={events_list[i].returnValues}
 							toggleBuying={this.toggleBuying}
 							disabledBuying={this.state.disabledBuying}
 							disabledStatus={this.props.disabledStatus}

@@ -68,15 +68,16 @@ class Event extends Component {
 		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
-			this.props.id
-		);
+		// this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
+		// 	this.props.id
+		// );
 		this.organizerName = "qwerty";
 		// this.contracts["DaoEvents"].methods.getOwnerDetails.cacheCall(
 		// 	this.props.id
 		// );
 		this.account = this.props.accounts[0];
 		this.state = {
+			eventData:props.eventData,
 			owner: "unknown",
 			loading: false,
 			loaded: false,
@@ -126,8 +127,9 @@ class Event extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["DaoEvents"].events[this.event] !==
-				"undefined"
+			this.state.eventData
+			// typeof this.props.contracts["DaoEvents"].events[this.event] !==
+			// 	"undefined"
 		) {
 			this.setState(
 				{
@@ -309,10 +311,12 @@ class Event extends Component {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 		this.setState(
 			{
-				fee: this.props.contracts["DaoEvents"].events[this.event]
-					.value[2],
-				token: this.props.contracts["DaoEvents"].events[this.event]
-					.value[3],
+				fee: this.state.eventData[3],
+				// this.props.contracts["DaoEvents"].events[this.event]
+				// 	.value[2],
+				token: this.state.eventData[4],
+				// this.props.contracts["DaoEvents"].events[this.event]
+				// 	.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
 					this.props.id
@@ -374,33 +378,35 @@ class Event extends Component {
 		);
 
 		if (
-			typeof this.props.contracts["DaoEvents"].events[this.event] !==
-				"undefined" &&
-			this.props.contracts["DaoEvents"].events[this.event].value
+			this.state.eventData
+			// typeof this.props.contracts["DaoEvents"].events[this.event] !==
+			// 	"undefined" &&
+			// this.props.contracts["DaoEvents"].events[this.event].value
 		) {
-			let event_data = this.props.contracts["DaoEvents"].events[
-				this.event
-			].value;
+			let event_data = this.state.eventData
+			// let event_data = this.props.contracts["DaoEvents"].events[
+			// 	this.event
+			// ].value;
 			if(event_data.name == "vvv"){
-				console.log("result event_data",new Date(parseInt(event_data[1], 10) * 1000))
+				console.log("result event_data",new Date(parseInt(event_data[2], 10) * 1000))
 				
 			}
 			console.log("")
 			let image = this.getImage();
 			let description = this.getDescription();
 			let locations = this.getLocation();
-			let buttonText = event_data[3] ? "Buy Ticket" : "Get Ticket";
+			let buttonText = event_data[4] ? "Buy Ticket" : "Get Ticket";
 			let freeEvent = "";
-			if (!event_data[3]) {
+			if (!event_data[4]) {
 				freeEvent = <p className="free_event">Free Event</p>;
 			}
-			if (event_data[3] !== "undefined") {
+			if (event_data[4] !== "undefined") {
 				let symbol = "PhoenixDAO.png";
-				let price = event_data[3]
-					? this.context.drizzle.web3.utils.fromWei(event_data[2])
+				let price = event_data[4]
+					? this.context.drizzle.web3.utils.fromWei(event_data[3])
 					: "Free Event";
-				let date = new Date(parseInt(event_data[1], 10) * 1000);
-				let max_seats = event_data[4] ? event_data[5] : "∞";
+				let date = new Date(parseInt(event_data[2], 10) * 1000);
+				let max_seats = event_data[5] ? event_data[6] : "∞";
 				let disabled = false;
 				let reportedOut = " ";
 				let reported = false;
@@ -423,8 +429,8 @@ class Event extends Component {
 				let sold = false;
 				if (
 					!reported &&
-					event_data[4] &&
-					Number(event_data[6]) >= Number(event_data[5])
+					event_data[5] &&
+					Number(event_data[7]) >= Number(event_data[6])
 				) {
 					sold = true;
 					disabled = true;
@@ -444,7 +450,7 @@ class Event extends Component {
 				}
 				let badge = "";
 
-				if (event_data[6] >= 2) {
+				if (event_data[7] >= 2) {
 					badge = (
 						<img
 							src="/images/fire.png"
@@ -454,7 +460,7 @@ class Event extends Component {
 					);
 				}
 
-				let rawCategory = event_data[8];
+				let rawCategory = event_data[9];
 
 				var categoryRemovedDashes = rawCategory;
 				categoryRemovedDashes = categoryRemovedDashes.replace(
@@ -468,8 +474,8 @@ class Event extends Component {
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(" ");
 
-				let topicURL = "/topic/" + event_data[8] + "/1";
-				let rawTitle = event_data[0];
+				let topicURL = "/topic/" + event_data[9] + "/1";
+				let rawTitle = event_data[1];
 				var titleRemovedSpaces = rawTitle;
 				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
 
@@ -483,7 +489,7 @@ class Event extends Component {
 				let myEventStatURL =
 					"/event-stat/" + pagetitle + "/" + this.props.id;
 				let myEvent = false;
-				if (event_data[9] === this.account) {
+				if (event_data[10] === this.account) {
 					myEvent = true;
 				}
 
@@ -495,14 +501,14 @@ class Event extends Component {
 									<img
 										className="card-img-top event-image"
 										src={image}
-										alt={event_data[0]}
+										alt={event_data[1]}
 									/>
 								</Link>
 							) : (
 								<img
 									className="card-img-top event-image"
 									src={image}
-									alt={event_data[0]}
+									alt={event_data[1]}
 								/>
 							)}
 
@@ -515,7 +521,7 @@ class Event extends Component {
 							<img
 								className="float-left"
 								src={this.state.blockie}
-								alt={event_data[9]}
+								alt={event_data[10]}
 							/>
 							{/* {this.props.myEvents ? (
 								<Link to={myEventStatURL}>
@@ -529,21 +535,21 @@ class Event extends Component {
 							{reported ? (
 								<h5
 									className="card-title event-title"
-									title={event_data[0]}
+									title={event_data[1]}
 								>
 									{badge}
-									{event_data[0]}
+									{event_data[1]}
 								</h5>
 							) : (
 								<h5
 									className="card-title event-title"
-									title={event_data[0]}
+									title={event_data[1]}
 								>
 									<Link
 										to={myEvent ? myEventStatURL : titleURL}
 									>
 										{badge}
-										{event_data[0]}
+										{event_data[1]}
 									</Link>
 								</h5>
 							)}
@@ -565,11 +571,11 @@ class Event extends Component {
 									className="event_price-image"
 									alt="Event Price Icon"
 								/>{" "}
-								{event_data[3]
+								{event_data[4]
 									? "" + numeral(price).format("0.000")
 									: "" + price}
-								{event_data[3] ? " or " : ""}
-								{event_data[3] ? (
+								{event_data[4] ? " or " : ""}
+								{event_data[4] ? (
 									<img
 										src={"/images/dollarsign.png"}
 										className="event_price-image"
@@ -578,7 +584,7 @@ class Event extends Component {
 								) : (
 									""
 								)}
-								{event_data[3]
+								{event_data[4]
 									? numeral(
 											price *
 												this.state.PhoenixDAO_market.usd
@@ -594,7 +600,7 @@ class Event extends Component {
 								})}
 							</li>
 							<li className="list-group-item">
-								<strong>Tickets Sold:</strong> {event_data[6]}/
+								<strong>Tickets Sold:</strong> {event_data[7]}/
 								{max_seats}
 							</li>
 						</ul>

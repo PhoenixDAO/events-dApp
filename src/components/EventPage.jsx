@@ -761,6 +761,7 @@ class EventPage extends Component {
 							<div className="col-12">
 								<div className="mt-5"></div>
 								<CheckUser
+									blockChainEvent={this.state.blockChainEvent}
 									disabledStatus={disabled}
 									event_id={this.props.match.params.id}
 									history={this.props.history}
