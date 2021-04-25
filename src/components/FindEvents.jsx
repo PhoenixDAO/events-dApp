@@ -74,13 +74,43 @@ class FindEvents extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain() {
-		let result = await axios({
+		// GRAPH BLOCK //
+		console.log("GraphQL query before call",Date.now())
+
+			await axios({
+				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				method: 'post',
+				data: {
+				  query: `
+				  {
+					eventsRemoveds(first: 5) {
+					  id
+					  eventId
+					}
+				  }
+				  `
+				}
+			}).then((graphDeletedEvents)=>{
+				console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+
+				if(graphDeletedEvents.data && graphDeletedEvents.data.data == 'undefined'){
+					this.setState({ Deleted_Events: [] });
+				}else{
+					this.setState({ Deleted_Events: graphDeletedEvents.data.data });
+				}
+			}).catch((err)=>{
+				console.error(err);
+				this.setState({ Deleted_Events: [] });
+			})
+			
+
+		await axios({
 			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
 			method: 'post',
 			data: {
 			  query: `
 			  {
-				events(first: 5) {
+				events(first: 15) {
 				  id
 				  eventId
 				  name
@@ -98,8 +128,59 @@ class FindEvents extends Component {
 			  }
 			  `
 			}
-		})
-		console.log("GraphQL query",result.data.data)
+		}).then((graphEvents)=>{
+			console.log("GraphQL query response",Date.now(),graphEvents.data.data)
+
+			if(graphEvents.data && graphEvents.data.data == 'undefined'){
+				this.setState({ Deleted_Events: [] });
+			}else{
+				if (this._isMounted) {
+					this.setState({ loading: true });
+				// 	let allEvents = events;
+
+				// 	events.map((event)=> {if(event.returnValues.name == "Culture"){
+                //         console.log("eventtt",event)
+
+                //         }})
+				// 		const result = Object.values(
+				// 			events.reverse().reduce((a, c) => {
+				// 				a[c.returnValues.eventId] ||
+				// 					(a[c.returnValues.eventId] = Object.assign(c));
+				// 				return a;
+				// 			}, {})
+				// 		);
+				// 	var newsort = result
+				// 		.concat()
+				// 		.sort((a, b) => b.blockNumber - a.blockNumber)
+				// 		.filter(
+				// 			(activeEvents) =>
+				// 				activeEvents.returnValues.time >= dateNow
+				// 		).reverse()
+				// 			// console.log("newsort",newsort)
+						
+				// 			newsort.map((event)=> {if(event.returnValues.name == "Culture"){
+                //         console.log("eventtt result",event)
+
+                //         }})
+					
+				// 	this.setState({
+				// 		Events_Blockchain: newsort,
+				// 		event_copy: newsort,
+				// 	});
+				// 	console.log("events", newsort);
+
+				// 	this.setState({
+				// 		active_length: this.state.Events_Blockchain.length,
+				// 	});
+					this.setState({ loading: false });
+				}
+
+			}
+
+		}).catch((err) => console.error(err))
+
+
+		// GET PAST EVENTS BLOCK //
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
 		);
@@ -108,9 +189,9 @@ class FindEvents extends Component {
 			Open_events_Address
 		);
 
-		if (this._isMounted) {
-			this.setState({ openEvents });
-		}
+		// if (this._isMounted) {
+		// 	this.setState({ openEvents });
+		// }
 		const dateTime = Date.now();
 		const dateNow = Math.floor(dateTime / 1000);
 
@@ -127,6 +208,7 @@ class FindEvents extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then((events) => {
+				console.log("GraphQL query getPast deleted events",events)
 				this.setState({ Deleted_Events: events });
 				return events;
 			})
@@ -134,6 +216,7 @@ class FindEvents extends Component {
 				console.error(err);
 				this.setState({ Deleted_Events: [] });
 			});
+
 		// listens for all events
 		await openEvents
 			.getPastEvents("NewAndUpdatedEvent", {
@@ -141,7 +224,7 @@ class FindEvents extends Component {
 				toBlock: this.state.latestblocks,
 			})
 			.then(async (events) => {
-				console.log("GraphQL query NewAndUpdatedEvent",events)
+				console.log("GraphQL query get Past NewAndUpdatedEvent",events)
 				if (this._isMounted) {
 					this.setState({ loading: true });
 					let allEvents = events;
@@ -185,84 +268,7 @@ class FindEvents extends Component {
 			})
 
 			.catch((err) => console.error(err));
-
-		// await openEvents
-		// .getPastEvents("NewAndUpdatedEvent", {
-		// 	fromBlock: 7654042,
-		// 	toBlock: this.state.latestblocks,
-		// })
-		// .then((events) => {
-		// 	console.log("new contract NewAndUpdatedEvent", events);
-		// 	this.setState({ Deleted_Events: events });
-		// 	return events;
-		// })
-		// .catch((err) => {
-		// 	console.error(err);
-		// 	this.setState({ Deleted_Events: [] });
-		// });
-
-		//filtered updated events from all events
-		// let updatedArray = [];
-
-		// for (var key in this.state.Events_Blockchain) {
-		// 	this.state.Updated_Events.filter((data) => {
-		// 		if (
-		// 			data.returnValues.eventId ==
-		// 			this.state.MyEvents[key].returnValues.eventId
-		// 		) {
-		// 			updatedArray.push(data.returnValues.eventId);
-		// 		}
-		// 	});
-		// }
-		// console.log("updated events", updatedArray);
-		//Listens for New Events
-
-		// await openEvents.events
-		// 	.CreatedEvent({
-		// 		fromBlock: this.state.blockNumber,
-		// 		toBlock: "latest",
-		// 	})
-		// 	.on("data", (log) =>
-		// 		setTimeout(() => {
-		// 			if (this._isMounted) {
-		// 				// this.setState({loading:true});
-
-		// 				this.setState({
-		// 					Events_Blockchain: [
-		// 						...this.state.Events_Blockchain,
-		// 						log,
-		// 					],
-		// 				});
-		// 				var newest = this.state.Events_Blockchain;
-		// 				var newsort = newest
-		// 					.concat()
-		// 					.sort((a, b) => b.blockNumber - a.blockNumber);
-
-		// 				//this.setState({incoming:false});
-		// 				this.setState({
-		// 					Events_Blockchain: newsort,
-		// 					event_copy: newsort,
-		// 				});
-		// 				this.setState({
-		// 					active_length: this.state.Events_Blockchain.length,
-		// 				});
-		// 			}
-		// 			//this.setState({loading:false});
-		// 		}, 10000)
-		// 	);
-	}
-
-	// async getDeletedEvents(){
-	//   await openEvents.getPastEvents("DeletedEvent", { fromBlock: 7654042, toBlock: this.state.latestblocks })
-	//   .then(events => {
-	//     console.log("eventsssss deletedEvents",events)
-	//     this.setState({ Deleted_Events: events});
-	//     return events
-	//   }).catch((err) => {
-	//     console.error(err)
-	//     this.setState({Deleted_Events:[]})
-	//   })
-	// }
+		}
 
 	//Search Active Events By Name
 	updateSearch = (e) => {

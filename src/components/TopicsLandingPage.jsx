@@ -61,7 +61,7 @@ class TopicsLandingPage extends Component {
 				let events_list = [];
 
 				for (let i = start; i < end; i++) {
-					events_list.push(<Event key={i} id={i} />);
+					events_list.push(<Event key={i} id={i} eventData={events_list[i].returnValues}/>);
 				}
 
 				let pagination = '';
