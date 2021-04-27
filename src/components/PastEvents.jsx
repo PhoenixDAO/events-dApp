@@ -67,101 +67,183 @@ class PastEvents extends Component {
 
 	//Load Blockchain Data
 	async loadBlockchain() {
-		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(
-				INFURA_WEB_URL
-				)
-		);
-		const openEvents = new web3.eth.Contract(
-			Open_events_ABI,
-			Open_events_Address
-		);
 
-		if (this._isMounted) {
-			this.setState({ openEvents });
-			this.setState({ past_events: [] });
-		}
-		const dateTime = Date.now();
-		const dateNow = Math.floor(dateTime / 1000);
+	// GRAPH BLOCK //
+	console.log("GraphQL query before call",Date.now())
 
-		const blockNumber = await web3.eth.getBlockNumber();
-		if (this._isMounted) {
-			this.setState({ blocks: blockNumber - 50000 });
-			this.setState({ latestblocks: blockNumber });
-			this.setState({ past_events: [] });
+	await axios({
+		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		method: 'post',
+		data: {
+		query: `
+		{
+			eventsRemoveds {
+			id
+			eventId
+			}
 		}
-		await openEvents
-			.getPastEvents("DeletedEvent", {
-				fromBlock: 8181618,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
-				this.setState({ Deleted_Events: events });
-				return events;
-			})
-			.catch((err) => {
-				console.error(err);
-				this.setState({ Deleted_Events: [] });
+		`
+		}
+	}).then((graphDeletedEvents)=>{
+		console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+
+		if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
+			this.setState({ Deleted_Events: [] });
+		}else{
+			this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
+		}
+	}).catch((err)=>{
+		console.error(err);
+		this.setState({ Deleted_Events: [] });
+	})
+
+
+	await axios({
+	url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+	method: 'post',
+	data: {
+	query: `
+	{
+		events {
+		id
+		eventId
+		name
+		time
+		price
+		token
+		limited
+		seats
+		sold
+		ipfs
+		category
+		owner
+		revenueOfEvent
+		}
+	}
+	`
+	}
+	}).then((graphEvents)=>{
+	console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+
+	if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+		console.log("GraphQL query -- graphEvents undefined")
+		this.setState({ past_events: [] ,past_events_copy: [],
+			past_length: 0
 			});
-		//Get Finished Events
-		openEvents
-			.getPastEvents("NewAndUpdatedEvent", {
-				fromBlock: 5000000,
-				toBlock: "latest",
-			})
-			.then((events) => {
-				if (this._isMounted) {
-					this.setState({ loading: true });
-
-					//var newest = events.filter((activeEvents)=>activeEvents.returnValues.time <=(dateNow));
-					// events.map((event,i)=>{
-					// 	if(event.returnValues.name == "circus"){
-					// 		console.log("eventtt",event)
-					// 	}
-						
-					// })
-					
-
-					const result = Object.values(
-						events.reverse().reduce((a, c) => {
-							// The accumulator 'a' will contain objects as follow:
-							// {'123': {id: 123, desc: 'desc'...., qty: 2}}
-
-							// This line checks for the current object with 'c.id'
-							// If that object doesn't exist, a new object is created with
-							// a further property called 'qty' and then we add +1
-							a[c.returnValues.eventId] ||
-								(a[c.returnValues.eventId] = Object.assign(c));
-							return a;
-						}, {})
-					)
-					// result.map((event,i)=>{
-					// 	if(event.returnValues.name == "circus"){
-					// 		console.log("eventtt result",event)
-					// 	}
-					// })
-
-					var newsort = result
-					
-						.concat()
-						.sort((a, b) => b.blockNumber - a.blockNumber)
-						.filter(
-							(pastEvents) =>
-								pastEvents.returnValues.time <= dateNow
-						).reverse()
-						
-						
+	}else{
+		if (this._isMounted) {
+			const dateTime = Date.now();
+			const dateNow = Math.floor(dateTime / 1000);
+			this.setState({ loading: true });
+		
+			let newsort = graphEvents.data.data.events
+				.concat()
+				.sort((a, b) => b.blockNumber - a.blockNumber)
+				.filter(
+					(pastEvents) =>
+					pastEvents.time < dateNow
+				)
+					console.log("GraphQL query newsort",newsort)
+			
 					this.setState({
 						past_events: newsort,
 						past_events_copy: newsort,
+						past_length: newsort.length,
 					});
-					this.setState({
-						past_length: this.state.past_events.length,
-					});
-					this.setState({ loading: false });
-				}
-			})
-			.catch((err) => console.error(err));
+			this.setState({ loading: false });
+		}
+
+	}
+
+	}).catch((err) => console.error(err))
+
+
+// GET PAST EVENTS BLOCK //
+
+		// const web3 = new Web3(
+		// 	new Web3.providers.WebsocketProvider(
+		// 		INFURA_WEB_URL
+		// 		)
+		// );
+		// const openEvents = new web3.eth.Contract(
+		// 	Open_events_ABI,
+		// 	Open_events_Address
+		// );
+
+		
+		// const dateTime = Date.now();
+		// const dateNow = Math.floor(dateTime / 1000);
+
+		// const blockNumber = await web3.eth.getBlockNumber();
+		// if (this._isMounted) {
+		// 	this.setState({ blocks: blockNumber - 50000 });
+		// 	this.setState({ latestblocks: blockNumber });
+		// 	this.setState({ past_events: [] });
+		// }
+		// await openEvents
+		// 	.getPastEvents("DeletedEvent", {
+		// 		fromBlock: 8181618,
+		// 		toBlock: this.state.latestblocks,
+		// 	})
+		// 	.then((events) => {
+		// 		this.setState({ Deleted_Events: events });
+		// 		return events;
+		// 	})
+		// 	.catch((err) => {
+		// 		console.error(err);
+		// 		this.setState({ Deleted_Events: [] });
+		// 	});
+		// //Get Finished Events
+		// openEvents
+		// 	.getPastEvents("NewAndUpdatedEvent", {
+		// 		fromBlock: 5000000,
+		// 		toBlock: "latest",
+		// 	})
+		// 	.then((events) => {
+		// 		if (this._isMounted) {
+		// 			this.setState({ loading: true });
+
+		// 			// events.map((event,i)=>{
+		// 			// 	if(event.returnValues.name == "circus"){
+		// 			// 		console.log("eventtt",event)
+		// 			// 	}
+						
+		// 			// })
+					
+
+		// 			const result = Object.values(
+		// 				events.reverse().reduce((a, c) => {
+		// 					// The accumulator 'a' will contain objects as follow:
+		// 					// {'123': {id: 123, desc: 'desc'...., qty: 2}}
+
+		// 					// This line checks for the current object with 'c.id'
+		// 					// If that object doesn't exist, a new object is created with
+		// 					// a further property called 'qty' and then we add +1
+		// 					a[c.returnValues.eventId] ||
+		// 						(a[c.returnValues.eventId] = Object.assign(c));
+		// 					return a;
+		// 				}, {})
+		// 			)
+
+		// 			var newsort = result
+					
+		// 				.concat()
+		// 				.sort((a, b) => b.blockNumber - a.blockNumber)
+		// 				.filter(
+		// 					(pastEvents) =>
+		// 						pastEvents.returnValues.time < dateNow
+		// 				).reverse()
+						
+						
+		// 			this.setState({
+		// 				past_events: newsort,
+		// 				past_events_copy: newsort,
+		// 				past_length: newsort.length,
+		// 			});
+		// 			this.setState({ loading: false });
+		// 		}
+		// 	})
+		// 	.catch((err) => console.error(err));
 	}
 
 	//Search Past Events By Name
@@ -169,11 +251,11 @@ class PastEvents extends Component {
 		let { value } = e.target;
 		this.setState({ value }, () => {
 			try {
-				if (this.state.value !== "") {
+				if (this.state.value !== "" && this.state.past_events_copy.length!=0) {
 					var filteredEvents = this.state.past_events_copy;
 					filteredEvents = filteredEvents.filter((events) => {
 						return (
-							events.returnValues.name
+							events.name
 								.toLowerCase()
 								.search(this.state.value.toLowerCase()) !== -1
 						);
@@ -205,14 +287,14 @@ class PastEvents extends Component {
 					.concat()
 					.sort(
 						(a, b) =>
-							a.returnValues.eventId - b.returnValues.eventId
+							a.eventId - b.eventId
 					);
 			} else {
 				newPolls = past_events
 					.concat()
 					.sort(
 						(a, b) =>
-							b.returnValues.eventId - a.returnValues.eventId
+							b.eventId - a.eventId
 					);
 			}
 
@@ -254,8 +336,8 @@ class PastEvents extends Component {
 				for (let i = 0; i < this.state.past_events.length; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
-							this.state.past_events[i].returnValues.eventId ==
-							this.state.Deleted_Events[j].returnValues.eventId
+							this.state.past_events[i].eventId ==
+							this.state.Deleted_Events[j].eventId
 						) {
 							skip = true;
 						}
@@ -263,7 +345,7 @@ class PastEvents extends Component {
 					if (!skip) {
 						for (let j = 0; j < this.state.hideEvent.length; j++) {
 							if (
-								this.state.past_events[i].returnValues
+								this.state.past_events[i]
 									.eventId == this.state.hideEvent[j].id
 							) {
 								skip = true;
@@ -286,11 +368,12 @@ class PastEvents extends Component {
 				for (let i = start; i < end; i++) {
 					updated_list.push(
 						<Event
+							eventData={events_list[i]}
 							toggleBuying={this.toggleBuying}
 							disabledBuying={this.state.disabledBuying}
-							key={events_list[i].returnValues.eventId}
-							id={events_list[i].returnValues.eventId}
-							ipfs={events_list[i].returnValues.ipfs}
+							key={events_list[i].eventId}
+							id={events_list[i].eventId}
+							ipfs={events_list[i].ipfs}
 						/>
 					);
 				}

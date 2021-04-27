@@ -2279,7 +2279,9 @@ h4.transactions {
 	z-index: 999;
 	cursor: pointer;
 }
-
+/* .dashboard-card:last-child:hover{
+	transform: scale(1);
+} */
 .dashboard-caption {
 	position: absolute;
 	right: 0;
@@ -2438,6 +2440,21 @@ h4.transactions {
 	border-bottom: 2px solid rgba(27, 31, 43, 0.377);
 	cursor: pointer;
 	color: white;
+	width: 267px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+	white-space: nowrap;
+}
+@media screen and (max-width: 1386px){
+	.dashboard-events-list h4 {
+	width:220px;
+	
+	}
+}
+@media screen and (max-width: 1245px){
+	.dashboard-events-list h4 {
+	width:135px;
+	}
 }
 
 .dashboard-events-list h4:hover {

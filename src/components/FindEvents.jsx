@@ -74,169 +74,184 @@ class FindEvents extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain() {
-		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
-		);
-		const openEvents = new web3.eth.Contract(
-			Open_events_ABI,
-			Open_events_Address
-		);
+		// GRAPH BLOCK //
+		console.log("GraphQL query before call",Date.now())
 
-		if (this._isMounted) {
-			this.setState({ openEvents });
-		}
-		const dateTime = Date.now();
-		const dateNow = Math.floor(dateTime / 1000);
+			await axios({
+				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				method: 'post',
+				data: {
+				  query: `
+				  {
+					eventsRemoveds {
+					  id
+					  eventId
+					}
+				  }
+				  `
+				}
+			}).then((graphDeletedEvents)=>{
+				console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 
-		const blockNumber = await web3.eth.getBlockNumber();
-		if (this._isMounted) {
-			this.setState({ blocks: blockNumber - 50000 });
-			this.setState({ latestblocks: blockNumber - 1 });
-			this.setState({ Events_Blockchain: [] });
-		}
-		//listens for deleted event
-		await openEvents
-			.getPastEvents("DeletedEvent", {
-				fromBlock: 8181618,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
-				this.setState({ Deleted_Events: events });
-				return events;
-			})
-			.catch((err) => {
+				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
+					this.setState({ Deleted_Events: [] });
+				}else{
+					this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
+				}
+			}).catch((err)=>{
 				console.error(err);
 				this.setState({ Deleted_Events: [] });
-			});
-		// listens for all events
-		await openEvents
-			.getPastEvents("NewAndUpdatedEvent", {
-				fromBlock: 8181618,
-				toBlock: this.state.latestblocks,
 			})
-			.then(async (events) => {
-				console.log("asd",events)
+			
+
+		await axios({
+			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			method: 'post',
+			data: {
+			  query: `
+			  {
+				events {
+				  id
+				  eventId
+				  name
+				  time
+				  price
+				  token
+				  limited
+				  seats
+				  sold
+				  ipfs
+				  category
+				  owner
+				  revenueOfEvent
+				}
+			  }
+			  `
+			}
+		}).then((graphEvents)=>{
+			console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+
+			if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+				console.log("GraphQL query -- graphEvents undefined")
+				this.setState({ Events_Blockchain: [] ,
+					active_length: 0,
+					event_copy: []});
+			}else{
 				if (this._isMounted) {
+					const dateTime = Date.now();
+					const dateNow = Math.floor(dateTime / 1000);
 					this.setState({ loading: true });
-					let allEvents = events;
-
-					events.map((event)=> {if(event.returnValues.name == "Culture"){
-                        console.log("eventtt",event)
-
-                        }})
-						const result = Object.values(
-							events.reverse().reduce((a, c) => {
-								a[c.returnValues.eventId] ||
-									(a[c.returnValues.eventId] = Object.assign(c));
-								return a;
-							}, {})
-						);
-					var newsort = result
+				
+					let newsort = graphEvents.data.data.events
 						.concat()
 						.sort((a, b) => b.blockNumber - a.blockNumber)
 						.filter(
 							(activeEvents) =>
-								activeEvents.returnValues.time >= dateNow
-						).reverse()
-							// console.log("newsort",newsort)
-						
-							newsort.map((event)=> {if(event.returnValues.name == "Culture"){
-                        console.log("eventtt result",event)
-
-                        }})
+								activeEvents.time >= dateNow
+						)
+							console.log("GraphQL query newsort",newsort)
 					
 					this.setState({
 						Events_Blockchain: newsort,
+						active_length: newsort.length,
 						event_copy: newsort,
-					});
-					console.log("events", newsort);
-
-					this.setState({
-						active_length: this.state.Events_Blockchain.length,
 					});
 					this.setState({ loading: false });
 				}
-			})
 
-			.catch((err) => console.error(err));
+			}
 
-		// await openEvents
-		// .getPastEvents("NewAndUpdatedEvent", {
-		// 	fromBlock: 7654042,
-		// 	toBlock: this.state.latestblocks,
-		// })
-		// .then((events) => {
-		// 	console.log("new contract NewAndUpdatedEvent", events);
-		// 	this.setState({ Deleted_Events: events });
-		// 	return events;
-		// })
-		// .catch((err) => {
-		// 	console.error(err);
-		// 	this.setState({ Deleted_Events: [] });
-		// });
+		}).catch((err) => console.error(err))
 
-		//filtered updated events from all events
-		// let updatedArray = [];
 
-		// for (var key in this.state.Events_Blockchain) {
-		// 	this.state.Updated_Events.filter((data) => {
-		// 		if (
-		// 			data.returnValues.eventId ==
-		// 			this.state.MyEvents[key].returnValues.eventId
-		// 		) {
-		// 			updatedArray.push(data.returnValues.eventId);
-		// 		}
-		// 	});
+		// GET PAST EVENTS BLOCK //
+		// const web3 = new Web3(
+		// 	new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+		// );
+		// const openEvents = new web3.eth.Contract(
+		// 	Open_events_ABI,
+		// 	Open_events_Address
+		// );
+
+		
+		// const dateTime = Date.now();
+		// const dateNow = Math.floor(dateTime / 1000);
+
+		// const blockNumber = await web3.eth.getBlockNumber();
+		// if (this._isMounted) {
+		// 	this.setState({ blocks: blockNumber - 50000 });
+		// 	this.setState({ latestblocks: blockNumber - 1 });
+		// 	// this.setState({ Events_Blockchain: [] });
 		// }
-		// console.log("updated events", updatedArray);
-		//Listens for New Events
-
-		// await openEvents.events
-		// 	.CreatedEvent({
-		// 		fromBlock: this.state.blockNumber,
-		// 		toBlock: "latest",
+		// //listens for deleted event
+		
+		// await openEvents
+		// 	.getPastEvents("DeletedEvent", {
+		// 		fromBlock: 8181618,
+		// 		toBlock: this.state.latestblocks,
 		// 	})
-		// 	.on("data", (log) =>
-		// 		setTimeout(() => {
-		// 			if (this._isMounted) {
-		// 				// this.setState({loading:true});
+		// 	.then((events) => {
+		// 		console.log("GraphQL query getPast deleted events",events)
+		// 		this.setState({ Deleted_Events: events });
+		// 		return events;
+		// 	})
+		// 	.catch((err) => {
+		// 		console.error(err);
+		// 		this.setState({ Deleted_Events: [] });
+		// 	});
 
-		// 				this.setState({
-		// 					Events_Blockchain: [
-		// 						...this.state.Events_Blockchain,
-		// 						log,
-		// 					],
-		// 				});
-		// 				var newest = this.state.Events_Blockchain;
-		// 				var newsort = newest
-		// 					.concat()
-		// 					.sort((a, b) => b.blockNumber - a.blockNumber);
+		// // listens for all events
+		
+		// await openEvents
+		// 	.getPastEvents("NewAndUpdatedEvent", {
+		// 		fromBlock: 8181618,
+		// 		toBlock: this.state.latestblocks,
+		// 	})
+		// 	.then(async (events) => {
+		// 		console.log("GraphQL query get Past NewAndUpdatedEvent",events)
+		// // 		if (this._isMounted) {
+		// // 			this.setState({ loading: true });
+		// // 			let allEvents = events;
 
-		// 				//this.setState({incoming:false});
-		// 				this.setState({
-		// 					Events_Blockchain: newsort,
-		// 					event_copy: newsort,
-		// 				});
-		// 				this.setState({
-		// 					active_length: this.state.Events_Blockchain.length,
-		// 				});
-		// 			}
-		// 			//this.setState({loading:false});
-		// 		}, 10000)
-		// 	);
-	}
+		// 			events.map((event)=> {if(event.returnValues.eventId == "1"){
+        //                 console.log("eventtt",event)
 
-	// async getDeletedEvents(){
-	//   await openEvents.getPastEvents("DeletedEvent", { fromBlock: 7654042, toBlock: this.state.latestblocks })
-	//   .then(events => {
-	//     console.log("eventsssss deletedEvents",events)
-	//     this.setState({ Deleted_Events: events});
-	//     return events
-	//   }).catch((err) => {
-	//     console.error(err)
-	//     this.setState({Deleted_Events:[]})
-	//   })
-	// }
+        //                 }})
+		// 				const result = Object.values(
+		// 					events.reverse().reduce((a, c) => {
+		// 						a[c.returnValues.eventId] ||
+		// 							(a[c.returnValues.eventId] = Object.assign(c));
+		// 						return a;
+		// 					}, {})
+		// 				);
+		// 			let newsort = result
+		// 				.concat()
+		// 				.sort((a, b) => b.blockNumber - a.blockNumber)
+		// 				.filter(
+		// 					(activeEvents) =>
+		// 						activeEvents.returnValues.time >= dateNow
+		// 				).reverse()
+		// 					// console.log("newsort",newsort)
+						
+		// 					newsort.map((event)=> {if(event.returnValues.name == "Culture"){
+        //                 console.log("eventtt result",event)
+
+        //                 }})
+					
+		// 			this.setState({
+		// 				Events_Blockchain: newsort,
+		// 				event_copy: newsort,
+		// 			});
+		// 			console.log("events", newsort);
+
+		// 			this.setState({
+		// 				active_length: this.state.Events_Blockchain.length,
+		// 			});
+		// 			this.setState({ loading: false });
+		// 		}
+			// })
+		// 	.catch((err) => console.error(err));
+		}
 
 	//Search Active Events By Name
 	updateSearch = (e) => {
@@ -245,9 +260,9 @@ class FindEvents extends Component {
 			try {
 				if (this.state.value !== "") {
 					var filteredEvents = this.state.event_copy;
-					filteredEvents = filteredEvents.filter((events) => {
+					filteredEvents = filteredEvents.filter((event) => {
 						return (
-							events.returnValues.name
+							event.name
 								.toLowerCase()
 								.search(this.state.value.toLowerCase()) !== -1
 						);
@@ -276,11 +291,11 @@ class FindEvents extends Component {
 
 			if (this.state.isOldestFirst) {
 				newPolls = Events_Blockchain.concat().sort(
-					(a, b) => a.returnValues.eventId - b.returnValues.eventId
+					(a, b) => a.eventId - b.eventId
 				);
 			} else {
 				newPolls = Events_Blockchain.concat().sort(
-					(a, b) => b.returnValues.eventId - a.returnValues.eventId
+					(a, b) => b.eventId - a.eventId
 				);
 			}
 
@@ -333,9 +348,9 @@ class FindEvents extends Component {
 				for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
-							this.state.Events_Blockchain[i].returnValues
+							this.state.Events_Blockchain[i]
 								.eventId ==
-							this.state.Deleted_Events[j].returnValues.eventId
+							this.state.Deleted_Events[j].eventId
 						) {
 							skip = true;
 						}
@@ -343,7 +358,7 @@ class FindEvents extends Component {
 					if (!skip) {
 						for (let j = 0; j < this.state.hideEvent.length; j++) {
 							if (
-								this.state.Events_Blockchain[i].returnValues
+								this.state.Events_Blockchain[i]
 									.eventId == this.state.hideEvent[j].id
 							) {
 								skip = true;
@@ -357,6 +372,7 @@ class FindEvents extends Component {
 				}
 
 				events_list.reverse();
+				console.log("events_listt",events_list)
 				let updated_list = [];
 				count = events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
@@ -370,9 +386,10 @@ class FindEvents extends Component {
 							toggleBuying={this.props.toggleDisabling}
 							disabledStatus={this.props.disabledStatus}
 							inquire={this.props.inquire}
-							key={events_list[i].returnValues.eventId}
-							id={events_list[i].returnValues.eventId}
-							ipfs={events_list[i].returnValues.ipfs}
+							key={events_list[i].eventId}
+							id={events_list[i].eventId}
+							ipfs={events_list[i].ipfs}
+							eventData={events_list[i]}
 						/>
 					);
 				}

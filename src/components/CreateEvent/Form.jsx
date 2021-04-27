@@ -218,6 +218,9 @@ class Form extends Component {
 		if (title.length > 80) {
 			title = title.slice(0, 80);
 		}
+		// if (title.includes("*")) {
+		// 	return event.preventDefault();
+		// }
 		this.setState({
 			title: title,
 			title_length: title.length,
@@ -229,6 +232,9 @@ class Form extends Component {
 		if (description.length > 500) {
 			description = description.slice(0, 500);
 		}
+		// if (description.includes("*")) {
+		// 	return event.preventDefault();
+		// }
 		this.setState({
 			description: description,
 			description_length: description.length,
@@ -237,6 +243,9 @@ class Form extends Component {
 
 	organizerChange = (event) => {
 		let organizer = event.target.value;
+		// if (organizer.includes("*")) {
+		// 	return event.preventDefault();
+		// }
 		if (organizer.length > 100) {
 			organizer = organizer.slice(0, 100);
 		}
@@ -251,6 +260,9 @@ class Form extends Component {
 		if (location.length > 100) {
 			location = location.slice(0, 100);
 		}
+		// if (location.includes("*")) {
+		// 	return event.preventDefault();
+		// }
 		this.setState({
 			location: location,
 		});
@@ -400,25 +412,51 @@ class Form extends Component {
 		let filteredTitle = "";
 		let filteredOrganizer = "";
 		let filteredLocation = "";
+		let reg=new RegExp(/^[a-z\sA-Z]+$/)
 		if (this.form.description.value !== "") {
-			let filter = new Filter();
-			filteredDescription = filter.clean(this.form.description.value);
-			this.setState({ description: filteredDescription });
+			console.log("this.form.description.value",this.form.description.value)
+			if(reg.test(this.form.description.value)){
+				let filter = new Filter();
+				filteredDescription = filter.clean(this.form.description.value);
+				this.setState({ description: filteredDescription });
+			}else{
+				// let filter = new Filter();
+			// filteredLocation = filter.clean(this.form.description.value);
+			this.setState({ description: this.form.description.value });
+			}
+			
 		}
 		if (this.state.title !== "") {
-			let filter = new Filter();
-			filteredTitle = filter.clean(this.state.title);
-			this.setState({ title: filteredTitle });
+			console.log("title is title",this.state.title)
+			console.log("title is reg.test(this.state.title) ",reg.test(this.state.title))
+			if(reg.test(this.state.title)){
+				let filter = new Filter();
+				filteredTitle = filter.clean(this.state.title);
+				this.setState({ title: filteredTitle });
+				console.log("title is filteredTitle",filteredTitle)
+			}
+			// let filter = new Filter();
+			// filteredTitle = filter.clean(this.state.title);
+			// this.setState({ title: this.state.title });
+			
 		}
 		if (this.state.organizer !== "") {
-			let filter = new Filter();
-			filteredOrganizer = filter.clean(this.state.organizer);
-			this.setState({ organizer: filteredOrganizer });
+			if(reg.test(this.state.organizer)){
+				let filter = new Filter();
+				filteredOrganizer = filter.clean(this.state.organizer);
+			}
+			// let filter = new Filter();
+			// filteredOrganizer = filter.clean(this.state.organizer);
+			// this.setState({ organizer: filteredOrganizer });
 		}
 		if (this.state.location !== "") {
-			let filter = new Filter();
+			if(reg.test(this.state.location)){
+				let filter = new Filter();
 			filteredLocation = filter.clean(this.state.location);
-			this.setState({ location: filteredLocation });
+			}
+			// let filter = new Filter();
+			// filteredLocation = filter.clean(this.state.location);
+			// this.setState({ location: filteredLocation });
 		}
 		let form_validation = [];
 		if (this.state.title === "") form_validation.push("name");
@@ -478,12 +516,12 @@ class Form extends Component {
 			this.props.createEvent(
 				this.state.fileHandle,
 				this.state.fileImg,
-				filteredTitle,
-				filteredDescription,
-				filteredLocation,
+				filteredTitle!=""?filteredTitle:this.state.title,
+				filteredDescription!=""?filteredDescription:this.form.description.value,
+				filteredLocation!=""?filteredLocation:this.state.location,
 				this.state.time,
 				this.state.file,
-				filteredOrganizer,
+				filteredOrganizer!=""?filteredOrganizer:this.state.organizer,
 				this.state.type,
 				this.state.topic,
 				this.state.currency,

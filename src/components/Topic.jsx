@@ -3,6 +3,7 @@ import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import makeBlockie from 'ethereum-blockies-base64';
+import { explorerWithTX, explorerWithAddress } from "../config/const";
 
 import ipfs from '../utils/ipfs';
 
@@ -68,7 +69,7 @@ class Topic extends Component {
 					<div className="card-header text-muted event-header">
 						<img className="float-left" src={makeBlockie(event_data[8])} alt={event_data[8]} />
 						<p className="small text-truncate mb-0">
-							Creator: <a href={"https://etherscan.io/address/" + event_data[8]} target="_blank" className="event_creator-link">
+							Creator: <a href={explorerWithAddress + event_data[8]} target="_blank" className="event_creator-link">
 								{event_data[8]}
 							</a>
 						</p>
