@@ -9,6 +9,7 @@ import {INFURA_WEB_URL} from "../config/const.js";
 
 import Event from "./Event";
 import Web3 from "web3";
+import axios from "axios";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 class MyEvents extends Component {
@@ -20,6 +21,7 @@ class MyEvents extends Component {
 			latestblocks: 6000000,
 			loading: true,
 			MyEvents: [],
+			check:[],
 			active_length: "",
 			isOldestFirst: false,
 			isActive: true,
@@ -43,65 +45,70 @@ class MyEvents extends Component {
 
 	//Get Blockchain State
 	async loadBlockchain() {
-		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(
-				INFURA_WEB_URL
-				)
-		);
-		const openEvents = new web3.eth.Contract(
-			Open_events_ABI,
-			Open_events_Address
-		);
+		// const web3 = new Web3(
+		// 	new Web3.providers.WebsocketProvider(
+		// 		INFURA_WEB_URL
+		// 		)
+		// );
+		// const openEvents = new web3.eth.Contract(
+		// 	Open_events_ABI,
+		// 	Open_events_Address
+		// );
 		if (this._isMounted) {
-			this.setState({ openEvents: openEvents });
-			this.setState({ MyEvents: [] });
-
-			const dateTime = Date.now();
-			const dateNow = Math.floor(dateTime / 1000);
-			const blockNumber = await web3.eth.getBlockNumber();
-			this.setState({ dateNow });
-			this.setState({ blocks: blockNumber - 50000 });
-			this.setState({ latestblocks: blockNumber - 1 });
-			this.loadActiveEvents();
-			//Listen For My Newly Created Events
-			// openEvents.events
-			// 	.CreatedEvent({
-			// 		filter: { owner: this.account },
-			// 		fromBlock: blockNumber,
-			// 		toBlock: "latest",
-			// 	})
-			// 	.on("data", (log) =>
-			// 		setTimeout(() => {
-			// 			if (this.state.isActive) {
-			// 				this.setState({
-			// 					MyEvents: [...this.state.MyEvents, log],
-			// 				});
-			// 				var newest = this.state.MyEvents;
-			// 				var newsort = newest
-			// 					.concat()
-			// 					.sort((a, b) => b.blockNumber - a.blockNumber);
-
-			// 				this.setState({
-			// 					MyEvents: newsort,
-			// 					active_length: this.state.MyEvents.length,
-			// 				});
-			// 			}
-			// 		}, 10000)
-			// 	);
+			// this.setState({ openEvents: openEvents });
+			this.setState({ MyEvents: [],active_length:false ,loading:true});
+			await axios({
+				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				method: 'post',
+				data: {
+				  query: `
+				  {
+					eventsRemoveds {
+					  id
+					  eventId
+					}
+				  }
+				  `
+				}
+			}).then((graphDeletedEvents)=>{
+				console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+	
+				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
+					this.setState({ Deleted_Events: [] });
+				}else{
+					this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
+				}
+			}).catch((err)=>{
+				console.error("graph error here",err);
+				this.setState({ Deleted_Events: [],loading:false });
+			})
+			console.log("Graph this.state.isActive",this.state.isActive)
+			if (this.state.isActive) {
+				this.loadActiveEvents();
+			} else {
+				this.loadPastEvents();
+			}
+			// const dateTime = Date.now();
+			// const dateNow = Math.floor(dateTime / 1000);
+			// const blockNumber = await web3.eth.getBlockNumber();
+			// this.setState({ dateNow });
+			// this.setState({ blocks: blockNumber - 50000 });
+			// this.setState({ latestblocks: blockNumber - 1 });
+			
 		}
-		await openEvents
-			.getPastEvents("DeletedEvent", {
-				fromBlock: 8181618,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
-				this.setState({ Deleted_Events: events });
-				return events;
-			})
-			.catch((err) => {
-				console.error(err);
-				this.setState({ Deleted_Events: [] });
-			});
+		// await openEvents
+		// 	.getPastEvents("DeletedEvent", {
+		// 		fromBlock: 8181618,
+		// 		toBlock: this.state.latestblocks,
+		// 	})
+		// 	.then((events) => {
+		// 		this.setState({ Deleted_Events: events });
+		// 		return events;
+		// 	})
+		// 	.catch((err) => {
+		// 		console.error(err);
+		// 		this.setState({ Deleted_Events: [] });
+		// 	});
 	}
 
 	//Get My Active Events on Blockchain
@@ -110,52 +117,112 @@ class MyEvents extends Component {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
 
-		this.state.openEvents
-			.getPastEvents("NewAndUpdatedEvent", {
-				filter: { owner: this.account },
-				fromBlock: 5000000,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
-				// var newest = events.filter(
-				// 	(activeEvents) =>
-				// 		activeEvents.returnValues.time >= this.state.dateNow
-				// );
-				console.log("my events",events)
-				// events.map((event,i)=>{
-				// 	if(event.returnValues.name == "ccc"){
-				// 		console.log("eventtt",event)
-				// 	}
-				// })
-				const result = Object.values(
-					events.reverse().reduce((a, c) => {
-						a[c.returnValues.eventId] ||
-							(a[c.returnValues.eventId] = Object.assign(c));
-						return a;
-					}, {})
-				);
-				var newsort = result
+// GRAPH BLOCK //
+console.log("GraphQL query before call",Date.now())
+
+		
+
+
+		await axios({
+		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		method: 'post',
+		data: {
+			//users(account:${this.account}) {
+				
+			query: `{
+				users {
+			  id
+			  account
+			  userEvents {
+				id
+				eventId
+				name
+				time
+				price
+				token
+				limited
+				seats
+				sold
+				ipfs
+				category
+				owner
+				revenueOfEvent
+			  }
+			}
+		  }`
+		}
+		}).then((graphEvents)=>{
+		console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
+		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+			console.log("GraphQL query -- graphEvents undefined")
+			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
+		}else{
+			if (this._isMounted) {
+				const dateTime = Date.now();
+				const dateNow = Math.floor(dateTime / 1000);
+				// this.setState({ loading: true });
+				let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
+				console.log("graph userEvents",userEvents)
+				if(userEvents){
+					let newsort = userEvents.userEvents
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber)
 					.filter(
 						(activeEvents) =>
-							activeEvents.returnValues.time >= this.state.dateNow
-					).reverse()
+							activeEvents.time >= dateNow
+					)
+						console.log("GraphQL query newsort",newsort)
+
+							this.setState({
+								MyEvents: newsort,
+								check: newsort,
+								active_length: newsort.length,
+							});
+				}
 				
-					newsort.map((event,i)=>{
-					if(event.returnValues.name == "mmm"){
-						console.log("eventtt result",event)
-					}
-				})
-				// if (this._isMounted) {
-					this.setState({ MyEvents: newsort, check: newsort });
-					this.setState({
-						active_length: this.state.MyEvents.length,
-					});
-					setTimeout(() => this.setState({ loading: false }), 1000);
-				// }
-			})
-			.catch((err) => console.error(err));
+				this.setState({ loading: false });
+			}
+
+		}
+
+		}).catch((err) => {
+			this.setState({ loading: false });
+			console.error("graph some error",err)})
+
+		// .getPastEvents (Active Events) BLOCK //
+		// this.state.openEvents
+		// 	.getPastEvents("NewAndUpdatedEvent", {
+		// 		filter: { owner: this.account },
+		// 		fromBlock: 5000000,
+		// 		toBlock: this.state.latestblocks,
+		// 	})
+		// 	.then((events) => {
+		// 		console.log("my events",events)
+
+		// 		const result = Object.values(
+		// 			events.reverse().reduce((a, c) => {
+		// 				a[c.returnValues.eventId] ||
+		// 					(a[c.returnValues.eventId] = Object.assign(c));
+		// 				return a;
+		// 			}, {})
+		// 		);
+		// 		var newsort = result
+		// 			.concat()
+		// 			.sort((a, b) => b.blockNumber - a.blockNumber)
+		// 			.filter(
+		// 				(activeEvents) =>
+		// 					activeEvents.returnValues.time >= this.state.dateNow
+		// 			).reverse()
+				
+		// 			newsort.map((event,i)=>{
+		// 			if(event.returnValues.name == "mmm"){
+		// 				console.log("eventtt result",event)
+		// 			}
+		// 		})
+		// 			this.setState({ MyEvents: newsort, check: newsort ,active_length: newsort.length,});
+		// 			setTimeout(() => this.setState({ loading: false }), 1000);
+		// 	})
+		// 	.catch((err) => console.error(err));
 	}
 
 	//Get My Concluded Events on Blockchain
@@ -163,48 +230,111 @@ class MyEvents extends Component {
 		if (this._isMounted) {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
-		this.state.openEvents
-			.getPastEvents("NewAndUpdatedEvent", {
-				filter: { owner: this.account },
-				fromBlock: 5000000,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
-				this.setState({ loading: true });
-				// events.map((event,i)=>{
-				// 	if(event.returnValues.name == "oooo"){
-				// 		console.log("eventtt",event)
-				// 	}
-				// })
-				
-				const result = Object.values(
-					events.reverse().reduce((a, c) => {
-						a[c.returnValues.eventId] ||
-							(a[c.returnValues.eventId] = Object.assign(c));
-						return a;
-					}, {})
-				);
-				var newsort = result
+				// GRAPH BLOCK //
+		console.log("GraphQL query before call",Date.now())
+
+		await axios({
+		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		method: 'post',
+		data: {
+		query: 
+		
+		`{
+			users {
+			  id
+			  account
+			  userEvents {
+				id
+				eventId
+				name
+				time
+				price
+				token
+				limited
+				seats
+				sold
+				ipfs
+				category
+				owner
+				revenueOfEvent
+			  }
+			}
+		  }`
+		
+		}
+		}).then((graphEvents)=>{
+			console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
+
+		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+			console.log("GraphQL query -- graphEvents undefined")
+			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
+		}else{
+			if (this._isMounted) {
+				const dateTime = Date.now();
+				const dateNow = Math.floor(dateTime / 1000);
+				// this.setState({ loading: true });
+
+				let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
+				if(userEvents){
+					let newsort = userEvents.userEvents
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber)
 					.filter(
-						(pastEvents) =>
-							pastEvents.returnValues.time <= this.state.dateNow
-					).reverse()
-				// 	newsort.map((event,i)=>{
-				// 	if(event.returnValues.name == "oooo"){
-				// 		console.log("eventtt result",newsort)
-				// 	}
-				// })
-				if (this._isMounted) {
-					this.setState({ MyEvents: newsort, check: newsort });
-					this.setState({
-						active_length: this.state.MyEvents.length,
-					});
-					setTimeout(() => this.setState({ loading: false }), 1000);
+						(activeEvents) =>
+							activeEvents.time < dateNow
+					)
+						console.log("GraphQL query newsort",newsort)
+
+							this.setState({
+								MyEvents: newsort,
+								check: newsort,
+								active_length: newsort.length,
+							});
 				}
-			})
-			.catch((err) => console.error(err));
+				
+				this.setState({ loading: false });
+			}
+
+		}
+
+		}).catch((err) => {
+			this.setState({ loading: false });
+			console.error("graph some error",err)})
+
+		// .getPastEvents (Past Events) BLOCK //
+		// this.state.openEvents
+		// 	.getPastEvents("NewAndUpdatedEvent", {
+		// 		filter: { owner: this.account },
+		// 		fromBlock: 5000000,
+		// 		toBlock: this.state.latestblocks,
+		// 	})
+		// 	.then((events) => {
+		// 		this.setState({ loading: true });
+				
+		// 		const result = Object.values(
+		// 			events.reverse().reduce((a, c) => {
+		// 				a[c.returnValues.eventId] ||
+		// 					(a[c.returnValues.eventId] = Object.assign(c));
+		// 				return a;
+		// 			}, {})
+		// 		);
+		// 		var newsort = result
+		// 			.concat()
+		// 			.sort((a, b) => b.blockNumber - a.blockNumber)
+		// 			.filter(
+		// 				(pastEvents) =>
+		// 					pastEvents.returnValues.time <= this.state.dateNow
+		// 			).reverse()
+
+		// 		if (this._isMounted) {
+		// 			this.setState({ MyEvents: newsort, check: newsort });
+		// 			this.setState({
+		// 				active_length: this.state.MyEvents.length,
+		// 			});
+		// 			setTimeout(() => this.setState({ loading: false }), 1000);
+		// 		}
+		// 	})
+		// 	.catch((err) => console.error(err));
 	}
 	//Display My Concluded Events
 	PastEvent = (e) => {
@@ -248,11 +378,11 @@ class MyEvents extends Component {
 		let { value } = e.target;
 		this.setState({ value }, () => {
 			try {
-				if (this.state.value !== "") {
+				if (this.state.value !== "" && this.state.check.length !=0) {
 					var filteredEvents = this.state.check;
 					filteredEvents = filteredEvents.filter((events) => {
 						return (
-							events.returnValues.name
+							events.name
 								.toLowerCase()
 								.search(this.state.value.toLowerCase()) !== -1
 						);
@@ -318,8 +448,8 @@ class MyEvents extends Component {
 				for (let i = 0; i < count; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
-							this.state.MyEvents[i].returnValues.eventId ==
-							this.state.Deleted_Events[j].returnValues.eventId
+							this.state.MyEvents[i].eventId ==
+							this.state.Deleted_Events[j].eventId
 						) {
 							skip = true;
 						}
@@ -340,14 +470,14 @@ class MyEvents extends Component {
 				for (let i = start; i < end; i++) {
 					updated_list.push(
 						<Event
-							eventData={events_list[i].returnValues}
+							eventData={events_list[i]}
 							toggleBuying={this.toggleBuying}
 							disabledBuying={this.state.disabledBuying}
 							disabledStatus={this.props.disabledStatus}
 							inquire={this.props.inquire}
-							key={events_list[i].returnValues.eventId}
-							id={events_list[i].returnValues.eventId}
-							ipfs={events_list[i].returnValues.ipfs}
+							key={events_list[i].eventId}
+							id={events_list[i].eventId}
+							ipfs={events_list[i].ipfs}
 						/>
 					);
 				}

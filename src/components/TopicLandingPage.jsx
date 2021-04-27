@@ -26,7 +26,7 @@ import topicsJson from "../config/topics.json";
 class TopicLandingPage extends Component {
 	constructor(props, context) {
 		super(props);
-
+		console.log("i am here")
 		this.state = {
 			openEvents: "",
 			blocks: 5000000,
@@ -113,189 +113,338 @@ class TopicLandingPage extends Component {
 
 	//Loadblockchain Data
 	async loadBlockchain() {
-		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(
-		INFURA_WEB_URL
-				)
-		);
-		const openEvents = new web3.eth.Contract(
-			Open_events_ABI,
-			Open_events_Address
-		);
+		// const web3 = new Web3(
+		// 	new Web3.providers.WebsocketProvider(
+		// INFURA_WEB_URL
+		// 		)
+		// );
+		// const openEvents = new web3.eth.Contract(
+		// 	Open_events_ABI,
+		// 	Open_events_Address
+		// );
 
 		if (this._isMounted) {
-			this.setState({ openEvents });
-			this.setState({ Topic_Events: [], active_length: 0 });
+			// this.setState({ openEvents });
+			this.setState({ loading:true,Topic_Events: [], active_length: 0 });
 
-			const dateTime = Date.now();
-			const dateNow = Math.floor(dateTime / 1000);
-			const blockNumber = await web3.eth.getBlockNumber();
+			// const dateTime = Date.now();
+			// const dateNow = Math.floor(dateTime / 1000);
+			// const blockNumber = await web3.eth.getBlockNumber();
 
-			this.setState({ dateNow });
-			this.setState({ blocks: blockNumber });
-			this.setState({ latestblocks: blockNumber - 1 });
-			this.setState({ Topic_Events: [] });
+			// this.setState({ dateNow });
+			// this.setState({ blocks: blockNumber });
+			// this.setState({ latestblocks: blockNumber - 1 });
+			// this.setState({ Topic_Events: [] });
 
-			if (this.state.isActive) {
-				this.loadActiveEvents();
-			} else {
-				this.loadPastEvents();
-			}
+			
 		}
-		await openEvents
-			.getPastEvents("DeletedEvent", {
-				fromBlock: 8181618,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
-				this.setState({ Deleted_Events: events });
-				return events;
-			})
-			.catch((err) => {
-				this.setState({ Deleted_Events: [] });
-			});
+		await axios({
+			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			method: 'post',
+			data: {
+			  query: `
+			  {
+				eventsRemoveds {
+				  id
+				  eventId
+				}
+			  }
+			  `
+			}
+		}).then((graphDeletedEvents)=>{
+			console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 
-		openEvents.events
-			.CreatedEvent({ fromBlock: this.state.blocks, toBlock: "latest" })
-			.on("data", (log) =>
-				setTimeout(() => {
-					if (
-						this.state.isActive &&
-						log.returnValues.category ===
-							this.props.match.params.page
-					) {
-						this.setState({
-							Topic_Events: [...this.state.Topic_Events, log],
-						});
-						var newest = this.state.Topic_Events;
-						var newsort = newest
-							.concat()
-							.sort((a, b) => b.blockNumber - a.blockNumber);
-						if (this._isMounted) {
-							//this.setState({incoming:false});
-							this.setState({
-								Topic_Events: newsort,
-								topic_copy: newsort,
-							});
-							this.setState({
-								active_length: this.state.Topic_Events.length,
-							});
-						}
-					}
-				}, 10000)
-			);
+			if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
+				this.setState({ Deleted_Events: [] });
+			}else{
+				this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
+			}
+		}).catch((err)=>{
+			console.error(err);
+			this.setState({ Deleted_Events: [] });
+		})
+		console.log("Graph this.state.isActive",this.state.isActive)
+		if (this.state.isActive) {
+			this.loadActiveEvents();
+		} else {
+			this.loadPastEvents();
+		}
+		// await openEvents
+		// 	.getPastEvents("DeletedEvent", {
+		// 		fromBlock: 8181618,
+		// 		toBlock: this.state.latestblocks,
+		// 	})
+		// 	.then((events) => {
+		// 		this.setState({ Deleted_Events: events });
+		// 		return events;
+		// 	})
+		// 	.catch((err) => {
+		// 		this.setState({ Deleted_Events: [] });
+		// 	});
+
+		// openEvents.events
+		// 	.CreatedEvent({ fromBlock: this.state.blocks, toBlock: "latest" })
+		// 	.on("data", (log) =>
+		// 		setTimeout(() => {
+		// 			if (
+		// 				this.state.isActive &&
+		// 				log.returnValues.category ===
+		// 					this.props.match.params.page
+		// 			) {
+		// 				this.setState({
+		// 					Topic_Events: [...this.state.Topic_Events, log],
+		// 				});
+		// 				var newest = this.state.Topic_Events;
+		// 				var newsort = newest
+		// 					.concat()
+		// 					.sort((a, b) => b.blockNumber - a.blockNumber);
+		// 				if (this._isMounted) {
+		// 					//this.setState({incoming:false});
+		// 					this.setState({
+		// 						Topic_Events: newsort,
+		// 						topic_copy: newsort,
+		// 					});
+		// 					this.setState({
+		// 						active_length: this.state.Topic_Events.length,
+		// 					});
+		// 				}
+		// 			}
+		// 		}, 10000)
+		// 	);
 	}
 
 	//Get My Active Events on Blockchain
 	async loadActiveEvents() {
 		if (this._isMounted) {
-			this.setState({ Topic_Events: [], active_length: 0 });
+			this.setState({ loading: true,Topic_Events: [], active_length: 0 });
 		}
+		// GRAPH BLOCK //
+		console.log("GraphQL query before call",Date.now())
 
-		this.state.openEvents
-			.getPastEvents("NewAndUpdatedEvent", {
-				fromBlock: 5000000,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
-				this.setState({ loading: true });
-				// var newest = events.filter(
-				// 	(activeEvents) =>
-				// 		activeEvents.returnValues.time >= this.state.dateNow &&
-				// 		activeEvents.returnValues.category ===
-				// 			this.props.match.params.page
-				// );
-				const result = Object.values(
-					events.reverse().reduce((a, c) => {
-						a[c.returnValues.eventId] ||
-							(a[c.returnValues.eventId] = Object.assign(c));
-						return a;
-					}, {})
-				);
-				var newsort = result
+		
+
+
+		await axios({
+		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		method: 'post',
+		data: {
+  		query: `
+  		{
+			events {
+			  id
+			  eventId
+			  name
+			  time
+	 		price
+			  token
+	 		 limited
+			  seats
+			  sold
+	 		 ipfs
+	  		category
+	 		 owner
+	 		 revenueOfEvent
+			}
+ 		 }
+  	`
+		}
+		}).then((graphEvents)=>{
+		console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+
+		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+			console.log("GraphQL query -- graphEvents undefined")
+			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
+		}else{
+			if (this._isMounted) {
+				const dateTime = Date.now();
+				const dateNow = Math.floor(dateTime / 1000);
+				// this.setState({ loading: true });
+	
+				let newsort = graphEvents.data.data.events
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber)
 					.filter(
 						(activeEvents) =>
-							activeEvents.returnValues.time >= this.state.dateNow &&
-							activeEvents.returnValues.category ===
-								this.props.match.params.page
-					).reverse()
+							activeEvents.time >= dateNow &&
+							activeEvents.category ===
+									this.props.match.params.page
+					)
+						console.log("GraphQL query newsort",newsort)
+		
+						if (this._isMounted) {
+							this.setState({
+								Topic_Events: newsort,
+								topic_copy: newsort,
+								active_length: newsort.length,
+								loading:false,
+							});
+						}
+				this.setState({ loading: false });
+			}
+
+		}
+
+		}).catch((err) => {
+			this.setState({ loading: false });
+			console.error("graph some error",err)})
+
+
+		// .getPastEvents (Active Events) BLOCK //
+		// this.state.openEvents
+		// 	.getPastEvents("NewAndUpdatedEvent", {
+		// 		fromBlock: 5000000,
+		// 		toBlock: this.state.latestblocks,
+		// 	})
+		// 	.then((events) => {
+		// 		this.setState({ loading: true });
+		// 		const result = Object.values(
+		// 			events.reverse().reduce((a, c) => {
+		// 				a[c.returnValues.eventId] ||
+		// 					(a[c.returnValues.eventId] = Object.assign(c));
+		// 				return a;
+		// 			}, {})
+		// 		);
+		// 		const dateTime = Date.now();
+		// 		const dateNow = Math.floor(dateTime / 1000);
+		// 		var newsort = result
+		// 			.concat()
+		// 			.sort((a, b) => b.blockNumber - a.blockNumber)
+		// 			.filter(
+		// 				(activeEvents) =>
+		// 					activeEvents.returnValues.time >= dateNow &&
+		// 					activeEvents.returnValues.category ===
+		// 						this.props.match.params.page
+		// 			).reverse()
 				
-				if (this._isMounted) {
-					this.setState({
-						Topic_Events: newsort,
-						topic_copy: newsort,
-						active_length: newsort.length,
-					});
-					// this.setState({
-					// 	active_length: this.state.Topic_Events.length,
-					// });
-					setTimeout(() => this.setState({ loading: false }), 1000);
-				}
-			})
-			.catch((err) => console.error(err));
+		// 		if (this._isMounted) {
+		// 			this.setState({
+		// 				Topic_Events: newsort,
+		// 				topic_copy: newsort,
+		// 				active_length: newsort.length,
+		// 			});
+		// 			setTimeout(() => this.setState({ loading: false }), 1000);
+		// 		}
+		// 	})
+		// 	.catch((err) => console.error(err));
 	}
 
-	//Get My Past Events on Blockchain
+	// Get My Past Events on Blockchain
 	async loadPastEvents() {
 		console.log("inLoadPastEvents")
 		if (this._isMounted) {
-			this.setState({ Topic_Events: [], active_length: 0 });
+			this.setState({ loading:true,Topic_Events: [], active_length: 0 });
 		}
 
-		this.state.openEvents
-			.getPastEvents("NewAndUpdatedEvent", {
-				fromBlock: 5000000,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
-				this.setState({ loading: true });
-				// events.map((event,i)=>{
-				// 	if(event.returnValues.name == "circus"){
-				// 		console.log("eventtt",event)
-				// 	}
-				// })
-				const result = Object.values(
-					events.reverse().reduce((a, c) => {
-						a[c.returnValues.eventId] ||
-							(a[c.returnValues.eventId] = Object.assign(c));
-						return a;
-					}, {})
-				);
-				// var newest = result.filter(
-				// 	(activeEvents) =>
-				// 		activeEvents.returnValues.time <= this.state.dateNow &&
-				// 		activeEvents.returnValues.category ===
-				// 			this.props.match.params.page
-				// );
-				var newsort = result
+		// GRAPH BLOCK //
+		console.log("GraphQL query before call",Date.now())
+
+				
+
+
+		await axios({
+		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		method: 'post',
+		data: {
+		query: `
+		{
+			events {
+			id
+			eventId
+			name
+			time
+			price
+			token
+			limited
+			seats
+			sold
+			ipfs
+			category
+			owner
+			revenueOfEvent
+			}
+		}
+		`
+		}
+		}).then((graphEvents)=>{
+		console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+
+		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+			console.log("GraphQL query -- graphEvents undefined")
+			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
+		}else{
+			if (this._isMounted) {
+				const dateTime = Date.now();
+				const dateNow = Math.floor(dateTime / 1000);
+				// this.setState({ loading: true });
+
+				let newsort = graphEvents.data.data.events
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber)
 					.filter(
 						(activeEvents) =>
-							activeEvents.returnValues.time <= this.state.dateNow &&
-							activeEvents.returnValues.category ===
-								this.props.match.params.page
+							activeEvents.time < dateNow &&
+							activeEvents.category ===
+									this.props.match.params.page
 					)
-					.reverse()
-				console.log("newsort",newsort)
-				if (this._isMounted) {
-					this.setState({
-						Topic_Events: newsort,
-						topic_copy: newsort,
-						active_length: newsort.length
-					});
-					// this.setState({
-					// 	active_length: this.state.Topic_Events.length,
-					// });
-					setTimeout(() => this.setState({ loading: false }), 1000);
-				}
-			})
-			.catch((err) => console.error(err));
+						console.log("GraphQL query newsort",newsort)
+
+						if (this._isMounted) {
+							this.setState({
+								Topic_Events: newsort,
+								topic_copy: newsort,
+								active_length: newsort.length,
+								loading:false,
+							});
+						}
+				this.setState({ loading: false });
+			}
+
+		}
+
+		}).catch((err) => console.error(err))
+
+		// .getPastEvents (Past Events) BLOCK //
+		// this.state.openEvents
+		// 	.getPastEvents("NewAndUpdatedEvent", {
+		// 		fromBlock: 5000000,
+		// 		toBlock: this.state.latestblocks,
+		// 	})
+		// 	.then((events) => {
+		// 		this.setState({ loading: true });
+		// 		const result = Object.values(
+		// 			events.reverse().reduce((a, c) => {
+		// 				a[c.returnValues.eventId] ||
+		// 					(a[c.returnValues.eventId] = Object.assign(c));
+		// 				return a;
+		// 			}, {})
+		// 		);
+		// 		const dateTime = Date.now();
+		// 		const dateNow = Math.floor(dateTime / 1000);
+		// 		var newsort = result
+		// 			.concat()
+		// 			.sort((a, b) => b.blockNumber - a.blockNumber)
+		// 			.filter(
+		// 				(activeEvents) =>
+		// 					activeEvents.returnValues.time <= dateNow &&
+		// 					activeEvents.returnValues.category ===
+		// 						this.props.match.params.page
+		// 			)
+		// 			.reverse()
+		// 		console.log("newsort",newsort)
+		// 		if (this._isMounted) {
+		// 			this.setState({
+		// 				Topic_Events: newsort,
+		// 				topic_copy: newsort,
+		// 				active_length: newsort.length
+		// 			});
+		// 			setTimeout(() => this.setState({ loading: false }), 1000);
+		// 		}
+		// 	})
+		// 	.catch((err) => console.error(err));
 	}
 
-	//Display My Close Events
+	// Display My Close Events
+	
 	PastEvent = (e) => {
 		this.setState(
 			{
@@ -330,11 +479,11 @@ class TopicLandingPage extends Component {
 		let { value } = e.target;
 		this.setState({ value }, () => {
 			try {
-				if (this.state.value !== "") {
+				if (this.state.value !== "" && this.state.topic_copy.length!=0) {
 					var filteredEvents = this.state.topic_copy;
 					filteredEvents = filteredEvents.filter((events) => {
 						return (
-							events.returnValues.name
+							events.name
 								.toLowerCase()
 								.search(this.state.value.toLowerCase()) !== -1
 						);
@@ -377,11 +526,11 @@ class TopicLandingPage extends Component {
 
 			if (this.state.isOldestFirst) {
 				newPolls = Topic_Events.concat().sort(
-					(a, b) => a.returnValues.eventId - b.returnValues.eventId
+					(a, b) => a.eventId - b.eventId
 				);
 			} else {
 				newPolls = Topic_Events.concat().sort(
-					(a, b) => b.returnValues.eventId - a.returnValues.eventId
+					(a, b) => b.eventId - a.eventId
 				);
 			}
 
@@ -411,6 +560,7 @@ class TopicLandingPage extends Component {
 		) {
 			let count = this.state.active_length;
 			if (this.state.loading) {
+				console.log("graph loading",this.state.loading)
 				body = <PhoenixDAOLoader />;
 			} else if (count === 0 && !this.state.loading) {
 				body = (
@@ -430,8 +580,8 @@ class TopicLandingPage extends Component {
 				for (let i = 0; i < this.state.Topic_Events.length; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
-							this.state.Topic_Events[i].returnValues.eventId ==
-							this.state.Deleted_Events[j].returnValues.eventId
+							this.state.Topic_Events[i].eventId ==
+							this.state.Deleted_Events[j].eventId
 						) {
 							skip = true;
 						}
@@ -439,7 +589,7 @@ class TopicLandingPage extends Component {
 					if (!skip) {
 						for (let j = 0; j < this.state.hideEvent.length; j++) {
 							if (
-								this.state.Topic_Events[i].returnValues
+								this.state.Topic_Events[i]
 									.eventId == this.state.hideEvent[j].id
 							) {
 								skip = true;
@@ -476,14 +626,14 @@ class TopicLandingPage extends Component {
 					for (let i = start; i < end; i++) {
 						updated_list.push(
 							<Event
-							eventData={events_list[i].returnValues}
+							eventData={events_list[i]}
 								toggleBuying={this.toggleBuying}
 								disabledBuying={this.state.disabledBuying}
 								disabledStatus={this.props.disabledStatus}
 								inquire={this.props.inquire}
-								key={events_list[i].returnValues.eventId}
-								id={events_list[i].returnValues.eventId}
-								ipfs={events_list[i].returnValues.ipfs}
+								key={events_list[i].eventId}
+								id={events_list[i].eventId}
+								ipfs={events_list[i].ipfs}
 							/>
 						);
 					}

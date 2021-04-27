@@ -10,6 +10,9 @@ import NotifySuccessSending from "./NotifySuccessSending";
 import NotifyError from "./NotifyError";
 import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
+import Web3 from "web3";
+import {INFURA_WEB_URL} from "../config/const.js";
+import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { explorerWithTX, explorerWithAddress } from "../config/const";
@@ -48,7 +51,9 @@ class Ticket extends Component {
 		);
 		this.event = null;
 		this.address = null;
+		this.account = this.props.accounts[0];
 		this.state = {
+			blockChainEvent: null,
 			loading: false,
 			loaded: false,
 			description: null,
@@ -78,8 +83,9 @@ class Ticket extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			typeof this.props.contracts["DaoEvents"].events[this.event] !==
-				"undefined"
+			this.state.blockChainEvent !== null
+			// typeof this.props.contracts["DaoEvents"].events[this.event] !==
+			// 	"undefined"
 		) {
 			this.setState(
 				{
@@ -87,8 +93,9 @@ class Ticket extends Component {
 				},
 				() => {
 					ipfs.get(
-						this.props.contracts["DaoEvents"].events[this.event]
-							.value[7]
+						this.state.blockChainEvent[7]
+						// this.props.contracts["DaoEvents"].events[this.event]
+						// 	.value[7]
 					)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
@@ -238,18 +245,34 @@ class Ticket extends Component {
 		}
 	};
 
-	updateEvent = () => {
+	updateEvent = async () => {
 		if (
 			typeof this.props.contracts["DaoEvents"].getTicket[this.ticket] !==
 				"undefined" &&
-			this.event === null
+				this.state.blockChainEvent === null
+			// this.event === null
 		) {
-			this.event = this.contracts[
+			this.event = await this.contracts[
 				"DaoEvents"
 			].methods.events.cacheCall(
 				this.props.contracts["DaoEvents"].getTicket[this.ticket]
 					.value[0]
 			);
+			const web3 = new Web3(
+				new Web3.providers.WebsocketProvider(
+					INFURA_WEB_URL
+					)
+			);
+			const openEvents = new web3.eth.Contract(
+				Open_events_ABI,
+				Open_events_Address
+			);
+			const blockChainEvent= await openEvents.methods.events(this.props.contracts["DaoEvents"].getTicket[this.ticket]
+			.value[0]).call()
+			this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})
+
+			console.log("Ticket this.event",this.event,"blockChainEvent",blockChainEvent)
+			
 		}
 
 		if (this.event !== null) {
@@ -262,8 +285,9 @@ class Ticket extends Component {
 		let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 			this.ticket
 		].value;
-		let event_data = this.props.contracts["DaoEvents"].events[this.event]
-			.value;
+		// let event_data = this.props.contracts["DaoEvents"].events[this.event]
+		// 	.value;
+		let event_data = this.state.blockChainEvent
 		const canvas = document.getElementById(
 			event_data[0] + "-" + ticket_data[1]
 		);
@@ -287,16 +311,16 @@ class Ticket extends Component {
 			</div>
 		);
 		if (
-			this.event !== null &&
+			// this.event !== null &&
+			this.state.blockChainEvent !== null &&
 			typeof this.props.contracts["DaoEvents"].events[this.event] !==
 				"undefined"
 		) {
 			let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 				this.ticket
 			].value;
-			let event_data = this.props.contracts["DaoEvents"].events[
-				this.event
-			].value;
+			let event_data = this.state.blockChainEvent
+			console.log("Ticket event_data",event_data)
 			let reported=false;
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
@@ -315,7 +339,13 @@ class Ticket extends Component {
 				.split(" ")
 				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 				.join(" ");
-			let titleURL = "/event/" + pagetitle + "/" + ticket_data[0];
+				let titleURL = "/event/" + pagetitle + "/" + ticket_data[0];
+				let myEventStatURL = "/event-stat/" + pagetitle + "/" + ticket_data[0];
+				let myEvent = false;
+				if (event_data.owner.toLowerCase() == this.account.toLowerCase()) {
+					myEvent = true;
+				}
+			// let titleURL = "/event/" + pagetitle + "/" + ticket_data[0];
 			let shareUrl = window.location.origin + titleURL;
 
 			let card_body;
@@ -372,7 +402,7 @@ class Ticket extends Component {
 						<div className="card-body">
 							<h5 className="card-title event-title">
 								{!reported? 
-									<Link to={titleURL}>{event_data[0]}</Link>
+									<Link to={myEvent ? myEventStatURL : titleURL}>{event_data[0]}</Link>
 									:
 									event_data[0]
 								}

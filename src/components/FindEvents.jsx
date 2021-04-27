@@ -83,7 +83,7 @@ class FindEvents extends Component {
 				data: {
 				  query: `
 				  {
-					eventsRemoveds(first: 5) {
+					eventsRemoveds {
 					  id
 					  eventId
 					}
@@ -93,10 +93,10 @@ class FindEvents extends Component {
 			}).then((graphDeletedEvents)=>{
 				console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 
-				if(graphDeletedEvents.data && graphDeletedEvents.data.data == 'undefined'){
+				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 					this.setState({ Deleted_Events: [] });
 				}else{
-					this.setState({ Deleted_Events: graphDeletedEvents.data.data });
+					this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
 				}
 			}).catch((err)=>{
 				console.error(err);
@@ -110,7 +110,7 @@ class FindEvents extends Component {
 			data: {
 			  query: `
 			  {
-				events(first: 15) {
+				events {
 				  id
 				  eventId
 				  name
@@ -129,49 +129,33 @@ class FindEvents extends Component {
 			  `
 			}
 		}).then((graphEvents)=>{
-			console.log("GraphQL query response",Date.now(),graphEvents.data.data)
+			console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
-			if(graphEvents.data && graphEvents.data.data == 'undefined'){
-				this.setState({ Deleted_Events: [] });
+			if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+				console.log("GraphQL query -- graphEvents undefined")
+				this.setState({ Events_Blockchain: [] ,
+					active_length: 0,
+					event_copy: []});
 			}else{
 				if (this._isMounted) {
+					const dateTime = Date.now();
+					const dateNow = Math.floor(dateTime / 1000);
 					this.setState({ loading: true });
-				// 	let allEvents = events;
-
-				// 	events.map((event)=> {if(event.returnValues.name == "Culture"){
-                //         console.log("eventtt",event)
-
-                //         }})
-				// 		const result = Object.values(
-				// 			events.reverse().reduce((a, c) => {
-				// 				a[c.returnValues.eventId] ||
-				// 					(a[c.returnValues.eventId] = Object.assign(c));
-				// 				return a;
-				// 			}, {})
-				// 		);
-				// 	var newsort = result
-				// 		.concat()
-				// 		.sort((a, b) => b.blockNumber - a.blockNumber)
-				// 		.filter(
-				// 			(activeEvents) =>
-				// 				activeEvents.returnValues.time >= dateNow
-				// 		).reverse()
-				// 			// console.log("newsort",newsort)
-						
-				// 			newsort.map((event)=> {if(event.returnValues.name == "Culture"){
-                //         console.log("eventtt result",event)
-
-                //         }})
+				
+					let newsort = graphEvents.data.data.events
+						.concat()
+						.sort((a, b) => b.blockNumber - a.blockNumber)
+						.filter(
+							(activeEvents) =>
+								activeEvents.time >= dateNow
+						)
+							console.log("GraphQL query newsort",newsort)
 					
-				// 	this.setState({
-				// 		Events_Blockchain: newsort,
-				// 		event_copy: newsort,
-				// 	});
-				// 	console.log("events", newsort);
-
-				// 	this.setState({
-				// 		active_length: this.state.Events_Blockchain.length,
-				// 	});
+					this.setState({
+						Events_Blockchain: newsort,
+						active_length: newsort.length,
+						event_copy: newsort,
+					});
 					this.setState({ loading: false });
 				}
 
@@ -181,93 +165,92 @@ class FindEvents extends Component {
 
 
 		// GET PAST EVENTS BLOCK //
-		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
-		);
-		const openEvents = new web3.eth.Contract(
-			Open_events_ABI,
-			Open_events_Address
-		);
+		// const web3 = new Web3(
+		// 	new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+		// );
+		// const openEvents = new web3.eth.Contract(
+		// 	Open_events_ABI,
+		// 	Open_events_Address
+		// );
 
+		
+		// const dateTime = Date.now();
+		// const dateNow = Math.floor(dateTime / 1000);
+
+		// const blockNumber = await web3.eth.getBlockNumber();
 		// if (this._isMounted) {
-		// 	this.setState({ openEvents });
+		// 	this.setState({ blocks: blockNumber - 50000 });
+		// 	this.setState({ latestblocks: blockNumber - 1 });
+		// 	// this.setState({ Events_Blockchain: [] });
 		// }
-		const dateTime = Date.now();
-		const dateNow = Math.floor(dateTime / 1000);
+		// //listens for deleted event
+		
+		// await openEvents
+		// 	.getPastEvents("DeletedEvent", {
+		// 		fromBlock: 8181618,
+		// 		toBlock: this.state.latestblocks,
+		// 	})
+		// 	.then((events) => {
+		// 		console.log("GraphQL query getPast deleted events",events)
+		// 		this.setState({ Deleted_Events: events });
+		// 		return events;
+		// 	})
+		// 	.catch((err) => {
+		// 		console.error(err);
+		// 		this.setState({ Deleted_Events: [] });
+		// 	});
 
-		const blockNumber = await web3.eth.getBlockNumber();
-		if (this._isMounted) {
-			this.setState({ blocks: blockNumber - 50000 });
-			this.setState({ latestblocks: blockNumber - 1 });
-			this.setState({ Events_Blockchain: [] });
-		}
-		//listens for deleted event
-		await openEvents
-			.getPastEvents("DeletedEvent", {
-				fromBlock: 8181618,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
-				console.log("GraphQL query getPast deleted events",events)
-				this.setState({ Deleted_Events: events });
-				return events;
-			})
-			.catch((err) => {
-				console.error(err);
-				this.setState({ Deleted_Events: [] });
-			});
+		// // listens for all events
+		
+		// await openEvents
+		// 	.getPastEvents("NewAndUpdatedEvent", {
+		// 		fromBlock: 8181618,
+		// 		toBlock: this.state.latestblocks,
+		// 	})
+		// 	.then(async (events) => {
+		// 		console.log("GraphQL query get Past NewAndUpdatedEvent",events)
+		// // 		if (this._isMounted) {
+		// // 			this.setState({ loading: true });
+		// // 			let allEvents = events;
 
-		// listens for all events
-		await openEvents
-			.getPastEvents("NewAndUpdatedEvent", {
-				fromBlock: 8181618,
-				toBlock: this.state.latestblocks,
-			})
-			.then(async (events) => {
-				console.log("GraphQL query get Past NewAndUpdatedEvent",events)
-				if (this._isMounted) {
-					this.setState({ loading: true });
-					let allEvents = events;
+		// 			events.map((event)=> {if(event.returnValues.eventId == "1"){
+        //                 console.log("eventtt",event)
 
-					events.map((event)=> {if(event.returnValues.name == "Culture"){
-                        console.log("eventtt",event)
-
-                        }})
-						const result = Object.values(
-							events.reverse().reduce((a, c) => {
-								a[c.returnValues.eventId] ||
-									(a[c.returnValues.eventId] = Object.assign(c));
-								return a;
-							}, {})
-						);
-					var newsort = result
-						.concat()
-						.sort((a, b) => b.blockNumber - a.blockNumber)
-						.filter(
-							(activeEvents) =>
-								activeEvents.returnValues.time >= dateNow
-						).reverse()
-							// console.log("newsort",newsort)
+        //                 }})
+		// 				const result = Object.values(
+		// 					events.reverse().reduce((a, c) => {
+		// 						a[c.returnValues.eventId] ||
+		// 							(a[c.returnValues.eventId] = Object.assign(c));
+		// 						return a;
+		// 					}, {})
+		// 				);
+		// 			let newsort = result
+		// 				.concat()
+		// 				.sort((a, b) => b.blockNumber - a.blockNumber)
+		// 				.filter(
+		// 					(activeEvents) =>
+		// 						activeEvents.returnValues.time >= dateNow
+		// 				).reverse()
+		// 					// console.log("newsort",newsort)
 						
-							newsort.map((event)=> {if(event.returnValues.name == "Culture"){
-                        console.log("eventtt result",event)
+		// 					newsort.map((event)=> {if(event.returnValues.name == "Culture"){
+        //                 console.log("eventtt result",event)
 
-                        }})
+        //                 }})
 					
-					this.setState({
-						Events_Blockchain: newsort,
-						event_copy: newsort,
-					});
-					console.log("events", newsort);
+		// 			this.setState({
+		// 				Events_Blockchain: newsort,
+		// 				event_copy: newsort,
+		// 			});
+		// 			console.log("events", newsort);
 
-					this.setState({
-						active_length: this.state.Events_Blockchain.length,
-					});
-					this.setState({ loading: false });
-				}
-			})
-
-			.catch((err) => console.error(err));
+		// 			this.setState({
+		// 				active_length: this.state.Events_Blockchain.length,
+		// 			});
+		// 			this.setState({ loading: false });
+		// 		}
+			// })
+		// 	.catch((err) => console.error(err));
 		}
 
 	//Search Active Events By Name
@@ -277,9 +260,9 @@ class FindEvents extends Component {
 			try {
 				if (this.state.value !== "") {
 					var filteredEvents = this.state.event_copy;
-					filteredEvents = filteredEvents.filter((events) => {
+					filteredEvents = filteredEvents.filter((event) => {
 						return (
-							events.returnValues.name
+							event.name
 								.toLowerCase()
 								.search(this.state.value.toLowerCase()) !== -1
 						);
@@ -308,11 +291,11 @@ class FindEvents extends Component {
 
 			if (this.state.isOldestFirst) {
 				newPolls = Events_Blockchain.concat().sort(
-					(a, b) => a.returnValues.eventId - b.returnValues.eventId
+					(a, b) => a.eventId - b.eventId
 				);
 			} else {
 				newPolls = Events_Blockchain.concat().sort(
-					(a, b) => b.returnValues.eventId - a.returnValues.eventId
+					(a, b) => b.eventId - a.eventId
 				);
 			}
 
@@ -365,9 +348,9 @@ class FindEvents extends Component {
 				for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
-							this.state.Events_Blockchain[i].returnValues
+							this.state.Events_Blockchain[i]
 								.eventId ==
-							this.state.Deleted_Events[j].returnValues.eventId
+							this.state.Deleted_Events[j].eventId
 						) {
 							skip = true;
 						}
@@ -375,7 +358,7 @@ class FindEvents extends Component {
 					if (!skip) {
 						for (let j = 0; j < this.state.hideEvent.length; j++) {
 							if (
-								this.state.Events_Blockchain[i].returnValues
+								this.state.Events_Blockchain[i]
 									.eventId == this.state.hideEvent[j].id
 							) {
 								skip = true;
@@ -403,10 +386,10 @@ class FindEvents extends Component {
 							toggleBuying={this.props.toggleDisabling}
 							disabledStatus={this.props.disabledStatus}
 							inquire={this.props.inquire}
-							key={events_list[i].returnValues.eventId}
-							id={events_list[i].returnValues.eventId}
-							ipfs={events_list[i].returnValues.ipfs}
-							eventData={events_list[i].returnValues}
+							key={events_list[i].eventId}
+							id={events_list[i].eventId}
+							ipfs={events_list[i].ipfs}
+							eventData={events_list[i]}
 						/>
 					);
 				}
