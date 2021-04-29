@@ -1,7 +1,7 @@
 import React from 'react';
 import makeBlockie from 'ethereum-blockies-base64';
 import { Link } from 'react-router-dom';
-import { explorerWithTX, explorerWithAddress } from "../config/const";
+import { explorerWithTX } from "../config/const";
 
 
 function NotifySuccessFaucet(props) {

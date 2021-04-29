@@ -16,8 +16,6 @@ render(){
 			<h3 className="mt-5">Ooops, we have an error!</h3>
             <p className="emoji2"><span role="img" aria-label="sweat">😓</span></p>
 			<p>Something went wrong!</p> <Link
-											// className="col-4"
-											// style={{ display: "grid" }}
 											to={{
 												pathname: "/editevent",
 												state: this.props

@@ -1,6 +1,6 @@
 import React from 'react';
 import makeBlockie from 'ethereum-blockies-base64';
-import { explorerWithTX, explorerWithAddress } from "../config/const";
+import { explorerWithTX } from "../config/const";
 
 function NotifyFaucet(props) {
 	return (

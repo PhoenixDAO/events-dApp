@@ -2,25 +2,17 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import Carousel from "react-bootstrap/Carousel";
 import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
-// Import dApp Components
-import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
-import Web3 from "web3";
-import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
-import { INFURA_WEB_URL } from "../config/const.js";
 
 // TODO: Make slides dynamic: import slidesJson from '../config/slides.json';
 import topicsJson from "../config/topics.json";
-import eventCTAsJson from "../config/event_ctas.json";
 
 class FindEvents extends Component {
 	constructor(props, context) {
 		super(props);
-		console.log("props", props);
 		this.state = {
 			openEvents: "",
 			upload: false,
@@ -68,15 +60,12 @@ class FindEvents extends Component {
 
 	caruselClick(location) {
 		this.props.history.push(location);
-		// window.scrollTo(0, 80);
 	}
 	executeScroll = () => this.myRef.current.scrollIntoView();
 
 	//Loads Blockhain Data,
 	async loadBlockchain() {
 		// GRAPH BLOCK //
-		console.log("GraphQL query before call",Date.now())
-
 			await axios({
 				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
 				method: 'post',
@@ -91,8 +80,6 @@ class FindEvents extends Component {
 				  `
 				}
 			}).then((graphDeletedEvents)=>{
-				console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
-
 				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 					this.setState({ Deleted_Events: [] });
 				}else{
@@ -129,10 +116,7 @@ class FindEvents extends Component {
 			  `
 			}
 		}).then((graphEvents)=>{
-			console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
-
 			if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-				console.log("GraphQL query -- graphEvents undefined")
 				this.setState({ Events_Blockchain: [] ,
 					active_length: 0,
 					event_copy: []});
@@ -148,9 +132,7 @@ class FindEvents extends Component {
 						.filter(
 							(activeEvents) =>
 								activeEvents.time >= dateNow
-						)
-							console.log("GraphQL query newsort",newsort)
-					
+						)					
 					this.setState({
 						Events_Blockchain: newsort,
 						active_length: newsort.length,
@@ -162,95 +144,6 @@ class FindEvents extends Component {
 			}
 
 		}).catch((err) => console.error(err))
-
-
-		// GET PAST EVENTS BLOCK //
-		// const web3 = new Web3(
-		// 	new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
-		// );
-		// const openEvents = new web3.eth.Contract(
-		// 	Open_events_ABI,
-		// 	Open_events_Address
-		// );
-
-		
-		// const dateTime = Date.now();
-		// const dateNow = Math.floor(dateTime / 1000);
-
-		// const blockNumber = await web3.eth.getBlockNumber();
-		// if (this._isMounted) {
-		// 	this.setState({ blocks: blockNumber - 50000 });
-		// 	this.setState({ latestblocks: blockNumber - 1 });
-		// 	// this.setState({ Events_Blockchain: [] });
-		// }
-		// //listens for deleted event
-		
-		// await openEvents
-		// 	.getPastEvents("DeletedEvent", {
-		// 		fromBlock: 8181618,
-		// 		toBlock: this.state.latestblocks,
-		// 	})
-		// 	.then((events) => {
-		// 		console.log("GraphQL query getPast deleted events",events)
-		// 		this.setState({ Deleted_Events: events });
-		// 		return events;
-		// 	})
-		// 	.catch((err) => {
-		// 		console.error(err);
-		// 		this.setState({ Deleted_Events: [] });
-		// 	});
-
-		// // listens for all events
-		
-		// await openEvents
-		// 	.getPastEvents("NewAndUpdatedEvent", {
-		// 		fromBlock: 8181618,
-		// 		toBlock: this.state.latestblocks,
-		// 	})
-		// 	.then(async (events) => {
-		// 		console.log("GraphQL query get Past NewAndUpdatedEvent",events)
-		// // 		if (this._isMounted) {
-		// // 			this.setState({ loading: true });
-		// // 			let allEvents = events;
-
-		// 			events.map((event)=> {if(event.returnValues.eventId == "1"){
-        //                 console.log("eventtt",event)
-
-        //                 }})
-		// 				const result = Object.values(
-		// 					events.reverse().reduce((a, c) => {
-		// 						a[c.returnValues.eventId] ||
-		// 							(a[c.returnValues.eventId] = Object.assign(c));
-		// 						return a;
-		// 					}, {})
-		// 				);
-		// 			let newsort = result
-		// 				.concat()
-		// 				.sort((a, b) => b.blockNumber - a.blockNumber)
-		// 				.filter(
-		// 					(activeEvents) =>
-		// 						activeEvents.returnValues.time >= dateNow
-		// 				).reverse()
-		// 					// console.log("newsort",newsort)
-						
-		// 					newsort.map((event)=> {if(event.returnValues.name == "Culture"){
-        //                 console.log("eventtt result",event)
-
-        //                 }})
-					
-		// 			this.setState({
-		// 				Events_Blockchain: newsort,
-		// 				event_copy: newsort,
-		// 			});
-		// 			console.log("events", newsort);
-
-		// 			this.setState({
-		// 				active_length: this.state.Events_Blockchain.length,
-		// 			});
-		// 			this.setState({ loading: false });
-		// 		}
-			// })
-		// 	.catch((err) => console.error(err));
 		}
 
 	//Search Active Events By Name
@@ -327,7 +220,6 @@ class FindEvents extends Component {
 			] !== "undefined" &&
 			this.state.active_length !== "undefined"
 		) {
-			//let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
 			let count = this.state.Events_Blockchain.length;
 			if (this.state.loading) {
 				body = <PhoenixDAOLoader />;
@@ -372,7 +264,6 @@ class FindEvents extends Component {
 				}
 
 				events_list.reverse();
-				console.log("events_listt",events_list)
 				let updated_list = [];
 				count = events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
@@ -393,20 +284,6 @@ class FindEvents extends Component {
 						/>
 					);
 				}
-
-				// let newUpdatedList = [];
-				// for (let i = 0; i < updated_list.length; i++) {
-				// 	for (let j = 0; j < this.state.hideEvent.length; j++) {
-				// 		if (updated_list[i].key == this.state.hideEvent[j].id) {
-				// 			skip = true;
-				// 		}
-				// 	}
-				// 	if (!skip) {
-				// 		newUpdatedList.push(updated_list[i]);
-				// 	}
-				// 	skip = false;
-				// }
-				// console.log("hewy", newUpdatedList);
 
 				let pagination = "";
 				if (pages > 1) {

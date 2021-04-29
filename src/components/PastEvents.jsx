@@ -2,17 +2,11 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import Carousel from "react-bootstrap/Carousel";
 import axios from "axios";
 import { API_URL, REPORT_EVENT } from "../config/const";
 // Import dApp Components
-import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
-import {INFURA_WEB_URL} from "../config/const.js";
-
 import Event from "./Event";
-import Web3 from "web3";
-import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 // TODO: Make slides dynamic: import slidesJson from '../config/slides.json';
 import topicsJson from "../config/topics.json";
@@ -61,7 +55,6 @@ class PastEvents extends Component {
 
 	caruselClick(location) {
 		this.props.history.push(location);
-		// window.scrollTo(0, 80);
 	}
 	executeScroll = () => this.myRef.current.scrollIntoView();
 
@@ -69,8 +62,6 @@ class PastEvents extends Component {
 	async loadBlockchain() {
 
 	// GRAPH BLOCK //
-	console.log("GraphQL query before call",Date.now())
-
 	await axios({
 		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
 		method: 'post',
@@ -85,8 +76,6 @@ class PastEvents extends Component {
 		`
 		}
 	}).then((graphDeletedEvents)=>{
-		console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
-
 		if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 			this.setState({ Deleted_Events: [] });
 		}else{
@@ -123,10 +112,7 @@ class PastEvents extends Component {
 	`
 	}
 	}).then((graphEvents)=>{
-	console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
-
 	if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-		console.log("GraphQL query -- graphEvents undefined")
 		this.setState({ past_events: [] ,past_events_copy: [],
 			past_length: 0
 			});
@@ -142,9 +128,7 @@ class PastEvents extends Component {
 				.filter(
 					(pastEvents) =>
 					pastEvents.time < dateNow
-				)
-					console.log("GraphQL query newsort",newsort)
-			
+				)			
 					this.setState({
 						past_events: newsort,
 						past_events_copy: newsort,
@@ -156,94 +140,6 @@ class PastEvents extends Component {
 	}
 
 	}).catch((err) => console.error(err))
-
-
-// GET PAST EVENTS BLOCK //
-
-		// const web3 = new Web3(
-		// 	new Web3.providers.WebsocketProvider(
-		// 		INFURA_WEB_URL
-		// 		)
-		// );
-		// const openEvents = new web3.eth.Contract(
-		// 	Open_events_ABI,
-		// 	Open_events_Address
-		// );
-
-		
-		// const dateTime = Date.now();
-		// const dateNow = Math.floor(dateTime / 1000);
-
-		// const blockNumber = await web3.eth.getBlockNumber();
-		// if (this._isMounted) {
-		// 	this.setState({ blocks: blockNumber - 50000 });
-		// 	this.setState({ latestblocks: blockNumber });
-		// 	this.setState({ past_events: [] });
-		// }
-		// await openEvents
-		// 	.getPastEvents("DeletedEvent", {
-		// 		fromBlock: 8181618,
-		// 		toBlock: this.state.latestblocks,
-		// 	})
-		// 	.then((events) => {
-		// 		this.setState({ Deleted_Events: events });
-		// 		return events;
-		// 	})
-		// 	.catch((err) => {
-		// 		console.error(err);
-		// 		this.setState({ Deleted_Events: [] });
-		// 	});
-		// //Get Finished Events
-		// openEvents
-		// 	.getPastEvents("NewAndUpdatedEvent", {
-		// 		fromBlock: 5000000,
-		// 		toBlock: "latest",
-		// 	})
-		// 	.then((events) => {
-		// 		if (this._isMounted) {
-		// 			this.setState({ loading: true });
-
-		// 			// events.map((event,i)=>{
-		// 			// 	if(event.returnValues.name == "circus"){
-		// 			// 		console.log("eventtt",event)
-		// 			// 	}
-						
-		// 			// })
-					
-
-		// 			const result = Object.values(
-		// 				events.reverse().reduce((a, c) => {
-		// 					// The accumulator 'a' will contain objects as follow:
-		// 					// {'123': {id: 123, desc: 'desc'...., qty: 2}}
-
-		// 					// This line checks for the current object with 'c.id'
-		// 					// If that object doesn't exist, a new object is created with
-		// 					// a further property called 'qty' and then we add +1
-		// 					a[c.returnValues.eventId] ||
-		// 						(a[c.returnValues.eventId] = Object.assign(c));
-		// 					return a;
-		// 				}, {})
-		// 			)
-
-		// 			var newsort = result
-					
-		// 				.concat()
-		// 				.sort((a, b) => b.blockNumber - a.blockNumber)
-		// 				.filter(
-		// 					(pastEvents) =>
-		// 						pastEvents.returnValues.time < dateNow
-		// 				).reverse()
-						
-						
-		// 			this.setState({
-		// 				past_events: newsort,
-		// 				past_events_copy: newsort,
-		// 				past_length: newsort.length,
-		// 			});
-		// 			this.setState({ loading: false });
-		// 		}
-		// 	})
-		// 	.catch((err) => console.error(err));
 	}
 
 	//Search Past Events By Name
@@ -307,7 +203,6 @@ class PastEvents extends Component {
 
 	render() {
 		let body = <PhoenixDAOLoader />;
-
 		if (
 			typeof this.props.contracts["DaoEvents"].getEventsCount[
 				this.eventCount
@@ -315,7 +210,6 @@ class PastEvents extends Component {
 			this.state.active_length !== "undefined" &&
 			this.state.loading !== true
 		) {
-			//let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
 			let count = this.state.past_length;
 			if (this.state.loading) {
 				body = <PhoenixDAOLoader />;
@@ -377,19 +271,6 @@ class PastEvents extends Component {
 						/>
 					);
 				}
-
-				// let newUpdatedList = [];
-				// for (let i = 0; i < updated_list.length; i++) {
-				// 	for (let j = 0; j < this.state.hideEvent.length; j++) {
-				// 		if (updated_list[i].key == this.state.hideEvent[j].id) {
-				// 			skip = true;
-				// 		}
-				// 	}
-				// 	if (!skip) {
-				// 		newUpdatedList.push(updated_list[i]);
-				// 	}
-				// 	skip = false;
-				// }
 				let pagination = "";
 				if (pages > 1) {
 					let links = [];

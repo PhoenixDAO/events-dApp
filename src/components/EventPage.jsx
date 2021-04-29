@@ -6,18 +6,10 @@ import makeBlockie from "ethereum-blockies-base64";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 
-import Notify from "./Notify";
-import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
-import NotifySuccess from "./NotifySuccess";
-import NotifyEventSuccess from "./NotifyEventSuccess";
 import NotifyApproveSuccess from "./NotifyApproveSuccess";
-import NotifyFaucet from "./NotifyFaucet";	
-import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
-import NotifyNetwork from "./NotifyNetwork";
 
-import { ToastContainer, toast } from "react-toastify";
 import ApprovalModal from "./approvalModal";
 
 import {
@@ -46,12 +38,12 @@ import Clock from "./Clock";
 import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
 import {INFURA_WEB_URL} from "../config/const.js";
+import { toast } from "react-toastify";
 
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
-	PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
 
@@ -80,21 +72,10 @@ class EventPage extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-			//Importing PhoenixDAO/OMG contracts
-			// **** ENDS UP HERE, SO THIS WORKS
-			/*console.log(
-			  "SUCCESS",
-			  PhoenixDAO_Testnet_Token_Address,
-			  context.drizzle.contracts
-			);*/
 		} catch (e) {
-			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
 		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		// this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
-		// 	this.props.match.params.id
-		// );
 		this.revenue = this.contracts["DaoEvents"].methods.eventRevenue.cacheCall(11)
 		this.account = this.props.accounts[0];
 		this.state = {
@@ -138,7 +119,6 @@ class EventPage extends Component {
 		const blockChainEvent= await openEvents.methods.events(this.props.match.params.id).call()
 		this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})
 		this.updateIPFS();
-		console.log("temp Event web3",blockChainEvent)
 	}
 
 	//Get SoldTicket Data
@@ -374,11 +354,7 @@ class EventPage extends Component {
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2] ,
-				// this.props.contracts["DaoEvents"].events[this.event]
-				// 	.value[2],
 				token: this.state.blockChainEvent[3], 
-				// this.props.contracts["DaoEvents"].events[this.event]
-				// 	.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
 					this.props.match.params.id	
@@ -445,21 +421,10 @@ class EventPage extends Component {
 				);
 			} else {
 				let event_data =this.state.blockChainEvent
-				// let event_data = this.props.contracts["DaoEvents"].events[
-				// 	this.event
-				// ].value;
-
 				let shareUrl = window.location;
 				let title = event_data[0];
-				// let ownerDetails = this.props.contracts["DaoEvents"]
-				// 	.getOwnerDetails[this.event];
-				// if (ownerDetails != undefined) {
-				// 	ownerDetails = ownerDetails.value;
-				// console.log("owner",ownerDetails);
-				// }
 				let image = this.getImage();
 				let description = this.getDescription();
-				// let organizer = this.getOrganizer();
 				let locations = this.getLocation();
 				let buttonText = event_data[3] ? " Buy Ticket" : " Get Ticket";
 				let symbol = event_data[3]
@@ -541,9 +506,6 @@ class EventPage extends Component {
 					body = (
 						<div className="row">
 							<div className="col-12">
-								{/* <h3>{event_data[0]}</h3>
-           		 <br />
-           		 {description} */}
 								<button
 									className="btn btn-dark"
 									onClick={this.inquire}
@@ -568,10 +530,6 @@ class EventPage extends Component {
 											this.props.match.params.id
 										}
 									>
-										{/* <button className="btn btn-dark mt-2">
-											<i className="fas fa-chart-bar"></i>{" "}
-											View Event Stat
-										</button> */}
 									</Link>
 								)}
 								<div className="event-social-share-btns-div">
@@ -807,7 +765,6 @@ class EventPage extends Component {
 
 	componentDidUpdate() {
 		this.updateIPFS();
-		//this.afterApprove();
 	}
 
 	componentWillUnmount() {

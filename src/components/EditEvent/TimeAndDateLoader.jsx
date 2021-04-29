@@ -1,13 +1,11 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-// Inspired by the former Facebook spinners.
 const useStylesFacebook = makeStyles((theme) => ({
   root: {
     position: 'relative',
     width: "max-content",
-    // margin: '0 !important'
     marginRight:"3px"
   },
   bottom: {

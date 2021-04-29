@@ -11,7 +11,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "../styles/main.css";
 
 import Sidebar from "./Sidebar";
-import Event from "./Event";
 import Home from "./Home";
 import FindEvents from "./FindEvents";
 import PastEvents from "./PastEvents";
@@ -45,18 +44,13 @@ import { INFURA_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
-	PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address,
 } from "../config/phoenixDAOcontract_testnet.js";
 
 import NetworkError from "./NetworkError";
-import LoadingApp from "./LoadingApp";
 import PageNotFound from "./PageNotFound";
-import { X_OK } from "constants";
 let ethereum = window.ethereum;
 let web3 = window.web3;
-let interval;
-
 const items = ["slide1.png", "slide2.png", "slide3.png", "slide4.png"];
 const randomBG = items[Math.floor(Math.random() * items.length)];
 
@@ -71,15 +65,8 @@ class App extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-			//Importing PhoenixDAO contracts
-			// **** ENDS UP HERE, SO THIS WORKS
-			/*console.log(
-			  "SUCCESS",
-			  PhoenixDAO_Testnet_Token_Address,
-			  context.drizzle.contracts
-			);*/
+	
 		} catch (e) {
-			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
 		}
 		super(props);
 		this.state = {
@@ -110,11 +97,9 @@ class App extends Component {
 	}
 
 	async componentDidMount() {
-		// this.executeScroll()
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
-			// console.log("hey check now haha", accounts);
 			if (accounts.length == 0) {
 				localStorage.removeItem("account");
 			}
@@ -127,11 +112,6 @@ class App extends Component {
 		for (let i = 0; i < this.props.transactionStack.length; i++) {
 			if (sent_tx.indexOf(this.props.transactionStack[i]) === -1) {
 				sent_tx.push(this.props.transactionStack[i]);
-				// toast(<NotifySending hash={this.props.transactionStack[i]} />, {
-				// 	position: "bottom-right",
-				// 	autoClose: false,
-				// 	pauseOnHover: true,
-				// });
 			}
 		}
 
@@ -146,10 +126,6 @@ class App extends Component {
 	async loadBlockchainData() {
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
 			this.setState({ openSnackbar: true });
-			// window.ethereum.on("connect", function (accounts) {
-			// 	console.log("on connect");
-			// 	window.location.reload();
-			// });
 		} else {
 			if (typeof ethereum !== "undefined") {
 				const a = await ethereum.enable();
@@ -213,7 +189,6 @@ class App extends Component {
 			let txreceiptApproved = "";
 			let txconfirmedApproved = "";
 			let txerror = "";
-			//if(this.state.afterApprove)
 			this.state.buyticket
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
@@ -328,7 +303,6 @@ class App extends Component {
 								pauseOnHover: true,
 							}
 						);
-						// this.afterApprove()
 						this.setState({ disabledStatus: false });
 					}
 				});
@@ -381,98 +355,6 @@ class App extends Component {
 					this.setState({ disabledStatus: false });
 				});
 		}
-
-		// console.log(this.contracts)
-
-		// if (this.state.token) {
-
-		// 	this.state.approve.send({ from: this.state.account })
-		// 	.on('transactionHash', (hash) => {
-		// 			if (hash !== null) {
-		// 				toast(<NotifyApprove hash={hash} />, {
-		// 					position: "bottom-right",
-		// 					autoClose: true,
-		// 					pauseOnHover: true
-
-		// 				})
-		// 			}
-		// 		})
-		// 	.on('confirmation', (confirmationNumber, receipt) => {
-		// 			if (confirmationNumber !== null) {
-		// 				txreceipt = receipt
-		// 				txconfirmed = confirmationNumber
-		// 				if (txconfirmed == 0 && txreceipt.status == true) {
-
-		// 					toast(<NotifyApproveSuccess hash={txreceipt.transactionHash} />,
-		// 						{
-		// 							position: "bottom-right",
-		// 							autoClose: true,
-		// 							pauseOnHover: true
-		// 						})
-		// 					this.afterApprove()
-		// 					this.setState({ disabledStatus: false })
-		// 				}
-
-		// 			}
-		// 		})
-		// 	.on('error', (error) => {
-		// 		if (error !== null) {
-		// 			txerror = error
-		// 			toast(<NotifyError message={txerror.message} />,
-		// 				{
-		// 					position: "bottom-right",
-		// 					autoClose: true,
-		// 					pauseOnHover: true
-		// 				})
-		// 			// this.afterApprove()
-		// 			this.setState({ disabledStatus: false })
-		// 		}
-		// 	})
-
-		// }
-		// else {
-
-		// 	this.state.buyticket.send({ value: this.state.fee, from: this.state.account })
-
-		// 		.on('transactionHash', (hash) => {
-		// 			if (hash !== null) {
-		// 				toast(<Notify hash={hash} />, {
-		// 					position: "bottom-right",
-		// 					autoClose: true,
-		// 					pauseOnHover: true
-
-		// 				})
-		// 			}
-		// 		})
-		// 		.on('confirmation', (confirmationNumber, receipt) => {
-		// 			if (confirmationNumber !== null) {
-		// 				txreceipt = receipt
-		// 				txconfirmed = confirmationNumber
-		// 				if (txconfirmed == 0 && txreceipt.status == true) {
-		// 					toast(<NotifySuccess hash={txreceipt.transactionHash} />,
-		// 						{
-		// 							position: "bottom-right",
-		// 							autoClose: true,
-		// 							pauseOnHover: true
-		// 						})
-		// 					this.setState({ disabledStatus: false })
-		// 				}
-
-		// 			}
-		// 		})
-		// 		.on('error', (error) => {
-		// 			if (error !== null) {
-		// 				txerror = error
-		// 				toast(<NotifyError message={txerror.message} />,
-		// 					{
-		// 						position: "bottom-right",
-		// 						autoClose: true,
-		// 						pauseOnHover: true
-		// 					})
-		// 			}
-		// 			this.setState({ disabledStatus: false })
-		// 		})
-		// }
 	};
 
 	//Get Value form Event Creator from child component
@@ -628,14 +510,10 @@ class App extends Component {
 		let body;
 		let connecting = false;
 		if (!this.props.drizzleStatus.initialized) {
-			// console.log("snackbar3Props in home2")
-			console.log("printinggggggg in if")
 			body = (
 				<div>
 					<Switch>
 						<Route
-							// exact
-							// path="/"
 							render={(props) => (
 								
 								<Home
@@ -645,13 +523,11 @@ class App extends Component {
 								/>
 							)}
 						/>
-						{/* <Route component={LoadingApp} /> */}
 					</Switch>
 				</div>
 			);
 			connecting = true;
 		} else if (this.props.web3.status === "failed") {
-			console.log("printinggggggg in else 1")
 			body = (
 				
 				<div>
@@ -676,152 +552,23 @@ class App extends Component {
 				Object.keys(this.props.accounts).length === 0) ||
 			this.props.web3.networkId !== GLOBAL_NETWORK_ID
 		) {
-			console.log("printinggggggg in else if 2")
 			body = (
 				<div>
 					<Switch>
 						<Route
-							// exact
 							path="/"
 							render={(props) => (
 								<Home
 									{...props}
 									executeScroll={this.executeScroll}
-									// snackbar3Props={true}
 								/>
 							)}
 						/>
-						{/* <Route component={NetworkError} /> */}
 					</Switch>
 				</div>
 			);
 			connecting = true;
-
-			// body = (
-			// 	<Switch>
-			// 		<Route
-			// 			exact
-			// 			path="/upcomingevents/:page"
-			// 			render={(props) => (
-			// 				<FindEvents
-			// 					{...props}
-			// 					executeScroll={this.executeScroll}
-			// 					inquire={this.inquireBuy}
-			// 					disabledStatus={this.state.disabledStatus}
-			// 				/>
-			// 			)}
-			// 		/>
-			// 		<Route
-			// 			exact
-			// 			path="/pastevents/:page"
-			// 			render={(props) => (
-			// 				<PastEvents
-			// 					{...props}
-			// 					executeScroll={this.executeScroll}
-			// 				/>
-			// 			)}
-			// 		/>
-
-			// 		<Route
-			// 			exact
-			// 			path="/createevent"
-			// 			render={(props) => (
-			// 				<CreateEvent
-			// 					{...props}
-			// 					executeScroll={this.executeScroll}
-			// 					passtransaction={this.passtransaction}
-			// 					upload={this.state.upload}
-			// 					disabledStatus={this.state.disabledStatus}
-			// 					done={this.state.done}
-			// 					disabledStatus={this.state.disabledStatus}
-			// 					error={this.state.error}
-			// 					account={this.state.account}
-			// 				/>
-			// 			)}
-			// 		/>
-			// 		<Route
-			// 			exact
-			// 			path="/editevent"
-			// 			render={(props) => (
-			// 				<EditEvent
-			// 					{...props}
-			// 					executeScroll={this.executeScroll}
-			// 					passtransaction={this.passtransaction}
-			// 					createNewEvent={this.createNewEvent}
-			// 					upload={this.state.upload}
-			// 					disabledStatus={this.state.disabledStatus}
-			// 					done={false}
-			// 					disabledStatus={this.state.disabledStatus}
-			// 					error={this.state.error}
-			// 					account={this.state.account}
-			// 				/>
-			// 			)}
-			// 		/>
-
-			// 		<Route
-			// 			exact
-			// 			path="/event/:page/:id"
-			// 			render={(props) => (
-			// 				<EventPage
-			// 					{...props}
-			// 					inquire={this.inquireBuy}
-			// 					disabledStatus={this.state.disabledStatus}
-			// 				/>
-			// 			)}
-			// 		/>
-			// 		<Route exact path="/topics" component={TopicsLandingPage} />
-			// 		<Route
-			// 			exact
-			// 			path="/topic/:page/:id"
-			// 			render={(props) => (
-			// 				<TopicLandingPage
-			// 					{...props}
-			// 					disabledStatus={this.state.disabledStatus}
-			// 					inquire={this.inquireBuy}
-			// 				/>
-			// 			)}
-			// 		/>
-			// 		<Route
-			// 			exact
-			// 			path="/locations"
-			// 			component={LocationsLandingPage}
-			// 		/>
-			// 		<Route
-			// 			exact
-			// 			path="/location/:page"
-			// 			component={LocationLandingPage}
-			// 		/>
-			// 		<Route
-			// 			exact
-			// 			path="/Calendar"
-			// 			render={(props) => (
-			// 				<Calendars
-			// 					{...props}
-			// 					executeScroll={this.executeScroll}
-			// 				/>
-			// 			)}
-			// 		/>
-			// 		<Route
-			// 			exact
-			// 			path="/how-it-works"
-			// 			render={(props) => (
-			// 				<Home
-			// 					{...props}
-			// 					executeScroll={this.executeScroll}
-			// 				/>
-			// 			)}
-			// 		/>
-			// 		<Route
-			// 			exact
-			// 			path="/terms-and-conditions"
-			// 			render={(props) => (
-			// 				<Terms executeScroll={this.executeScroll} />
-			// 			)}
-			// 		/>
-			// 	</Switch>
-			// );
 		} else {
-			console.log("printinggggggg in else")
 			body = (
 				<Switch>
 					<Route

@@ -6,10 +6,7 @@ import ipfs from "../../utils/ipfs";
 
 import Form from "./Form";
 import Loader from "./Loader";
-import Error from "./Error";
 import Done from "./Done";
-//import { Redirect } from 'react-router-dom';
-
 class CreateEvent extends Component {
 	constructor(props, context) {
 		super(props);
@@ -56,7 +53,6 @@ class CreateEvent extends Component {
 		seats,
 		file_name
 	) => {
-		console.log("price", price);
 		this.setState(
 			{
 				upload: true,
@@ -120,32 +116,13 @@ class CreateEvent extends Component {
 			});
 		}
 		let buffer = Buffer.from(data);
-		// let buffer2 = Buffer.from(JSON.stringify({name:"Jaffer",company:"Xord"}))
-		// ipfs.add(buffer2,{pin: pinit}).then((hash)=>{
-		// 	console.log("hash is buffer2",hash);
-
-		// })
 		ipfs.add(buffer, { pin: pinit })
 			.then((hash) => {
-				console.log("hashhh",hash)
 				this.setState({
 					stage: 95,
 					title: "Creating transaction...",
 					ipfs: hash[0].hash,
 				});
-				//this.uploadTransaction();
-				// console.log("testing",this.contracts["DaoEvents"].methods.createEvent(
-				// 	this.state.data.name,
-				// 	this.state.data.time,
-				// 	this.state.data.price,
-				// 	this.state.data.currency === "eth" ? false : true,
-				// 	this.state.data.limited,
-				// 	this.state.data.seats,
-				// 	this.state.ipfs,
-				// 	this.state.data.type,
-				// 	this.state.organizer
-				// ))
-				// this.contracts["DaoEvents"].methods.eventsOf(
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.createEvent(
 						this.state.data.name,
@@ -156,13 +133,11 @@ class CreateEvent extends Component {
 						this.state.data.seats,
 						this.state.ipfs,
 						this.state.data.type
-						// this.state.data.organizer
 					),
 					"create"
 				);
 			})
 			.catch((error) => {
-				console.log("error in convertAndUpload",error)
 				this.setState(
 					{
 						error: true,
@@ -187,18 +162,7 @@ class CreateEvent extends Component {
 		);
 
 		this.transactionChecker(id);
-		//this.setRedirect();
 	};
-
-	/*setRedirect=()=>{
-		this.setState({
-			redirect: true
-		  })
-		if(this.state.redirect){
-			return <Redirect to='/'/>
-		}
-	}*/
-
 	createNewEvent = () => {
 		this.setState({ error: false, done: false, upload: false, data: {
 			fileHandle: false,

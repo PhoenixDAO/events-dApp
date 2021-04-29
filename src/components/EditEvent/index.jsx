@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import Form from "./Form";
 import ipfs from "../../utils/ipfs";
 import Loader from "./Loader";
-import Error from "./Error";
 import Done from "./Done";
 import { Redirect } from "react-router-dom";
 
@@ -116,11 +115,6 @@ class CreateEvent extends Component {
 			});
 		}
 		let buffer = Buffer.from(data);
-		// let buffer2 = Buffer.from(JSON.stringify({name:"Jaffer",company:"Xord"}))
-		// ipfs.add(buffer2,{pin: pinit}).then((hash)=>{
-		// 	console.log("hash is buffer2",hash);
-
-		// })
 		ipfs.add(buffer, { pin: pinit })
 			.then((hash) => {
 				this.setState({
@@ -128,7 +122,6 @@ class CreateEvent extends Component {
 					title: "Creating transaction...",
 					ipfs: hash[0].hash,
 				});
-				//this.uploadTransaction();
 				this.props.passtransaction(
 					this.contracts["DaoEvents"].methods.updateEvent(
 						this.state.data.eventId,
@@ -136,15 +129,9 @@ class CreateEvent extends Component {
 						this.state.data.price,
 						this.state.data.currency === "eth" ? false : true,
 						this.state.data.limited,
-						// false,
-						// false,
 						this.state.data.seats,
 						this.state.ipfs,
 						this.state.data.type,
-						// false,
-						// false
-						
-						// this.state.data.organizer
 					),"edit"
 				);
 			})
@@ -252,11 +239,13 @@ class CreateEvent extends Component {
 			);
 		if (this.state.error || this.props.error) {
 			body = (
+				<div className="row">
 				<Form
 							createEvent={this.createEvent}
 							account={this.props.account}
 							{...this.props.location.state}
 						/>
+						</div>
 			);
 		}
 

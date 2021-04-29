@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import makeBlockie from "ethereum-blockies-base64";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
-	PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet.js";
 
@@ -15,26 +13,11 @@ import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 
 import Loading from "./Loading";
-import eventTopics from "../config/topics.json";
-
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 
-import Notify from "./Notify";
-import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
-import NotifySuccess from "./NotifySuccess";
-import NotifyEventSuccess from "./NotifyEventSuccess";
 import NotifyApproveSuccess from "./NotifyApproveSuccess";
-import NotifyFaucet from "./NotifyFaucet";
-import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
-import NotifyNetwork from "./NotifyNetwork";
 import ApprovalModal from "./approvalModal";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -75,7 +58,6 @@ class Event extends Component {
 		// this.contracts["DaoEvents"].methods.getOwnerDetails.cacheCall(
 		// 	this.props.id
 		// );
-		console.log("this.props.eventData 123",this.props.eventData,this.props.accounts[0])
 		this.account = this.props.accounts[0];
 		this.state = {
 			eventData:props.eventData,
@@ -388,11 +370,6 @@ class Event extends Component {
 			// let event_data = this.props.contracts["DaoEvents"].events[
 			// 	this.event
 			// ].value;
-			if(event_data.name == "vvv"){
-				console.log("result event_data",new Date(parseInt(event_data.time, 10) * 1000))
-				
-			}
-			console.log("")
 			let image = this.getImage();
 			let description = this.getDescription();
 			let locations = this.getLocation();
@@ -407,7 +384,6 @@ class Event extends Component {
 					? this.context.drizzle.web3.utils.fromWei(event_data.price)
 					: "Free Event";
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
-				console.log("this.props.eventData",parseInt(event_data.time, 10))
 				let max_seats = event_data.limited ? event_data.seats : "∞";
 				let disabled = false;
 				let reportedOut = " ";
@@ -491,7 +467,6 @@ class Event extends Component {
 				let myEventStatURL =
 					"/event-stat/" + pagetitle + "/" + this.props.id;
 				let myEvent = false;
-				console.log("this.props.eventData 123 now check event_data",event_data.owner.toLowerCase(),"now account",this.account.toLowerCase(),event_data.owner.toLowerCase() == this.account.toLowerCase())
 				if (event_data.owner.toLowerCase() == this.account.toLowerCase()) {
 					myEvent = true;
 				}
