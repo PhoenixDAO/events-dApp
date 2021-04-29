@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import {Calendar,momentLocalizer} from 'react-big-calendar';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
-import main from '../styles/main.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
-import {INFURA_WEB_URL} from "../config/const";
-import Web3 from 'web3';
-import {Open_events_ABI, Open_events_Address} from '../config/OpenEvents';
 
 class Calendars extends Component {
     constructor(props) {
@@ -33,8 +28,6 @@ class Calendars extends Component {
 
     async loadBlockchain() {
 		// GRAPH BLOCK //
-		console.log("GraphQL query before call",Date.now())
-
 			await axios({
 				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
 				method: 'post',
@@ -49,8 +42,6 @@ class Calendars extends Component {
 				  `
 				}
 			}).then((graphDeletedEvents)=>{
-				console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
-
 				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 					this.setState({ Deleted_Events: [] });
 				}else{
@@ -87,10 +78,7 @@ class Calendars extends Component {
 			  `
 			}
 		}).then((graphEvents)=>{
-			console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
-
 			if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-				console.log("GraphQL query -- graphEvents undefined")
 				this.setState({ Events_Blockchain: [] ,
 					active_length: 0,
 					event_copy: []});
@@ -109,168 +97,8 @@ class Calendars extends Component {
 			}
 
 		}).catch((err) => console.error(err))
-
-
-		// GET PAST EVENTS BLOCK //
-		// const web3 = new Web3(
-		// 	new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
-		// );
-		// const openEvents = new web3.eth.Contract(
-		// 	Open_events_ABI,
-		// 	Open_events_Address
-		// );
-
-		
-		// const dateTime = Date.now();
-		// const dateNow = Math.floor(dateTime / 1000);
-
-		// const blockNumber = await web3.eth.getBlockNumber();
-		// if (this._isMounted) {
-		// 	this.setState({ blocks: blockNumber - 50000 });
-		// 	this.setState({ latestblocks: blockNumber - 1 });
-		// 	this.setState({ Events_Blockchain: [] });
-		// }
-		//listens for deleted event
-		
-		// await openEvents
-		// 	.getPastEvents("DeletedEvent", {
-		// 		fromBlock: 8181618,
-		// 		toBlock: this.state.latestblocks,
-		// 	})
-		// 	.then((events) => {
-		// 		console.log("GraphQL query getPast deleted events",events)
-		// 		this.setState({ Deleted_Events: events });
-		// 		return events;
-		// 	})
-		// 	.catch((err) => {
-		// 		console.error(err);
-		// 		this.setState({ Deleted_Events: [] });
-		// 	});
-
-		// listens for all events
-		
-		// await openEvents
-		// 	.getPastEvents("NewAndUpdatedEvent", {
-		// 		fromBlock: 8181618,
-		// 		toBlock: this.state.latestblocks,
-		// 	})
-		// 	.then(async (events) => {
-		// 		console.log("GraphQL query get Past NewAndUpdatedEvent",events)
-		// 		if (this._isMounted) {
-		// 			this.setState({ loading: true });
-		// 			let allEvents = events;
-
-		// 			events.map((event)=> {if(event.returnValues.name == "Culture"){
-        //                 console.log("eventtt",event)
-
-        //                 }})
-		// 				const result = Object.values(
-		// 					events.reverse().reduce((a, c) => {
-		// 						a[c.returnValues.eventId] ||
-		// 							(a[c.returnValues.eventId] = Object.assign(c));
-		// 						return a;
-		// 					}, {})
-		// 				);
-		// 			let newsort = result
-		// 				.concat()
-		// 				.sort((a, b) => b.blockNumber - a.blockNumber)
-		// 				.filter(
-		// 					(activeEvents) =>
-		// 						activeEvents.returnValues.time >= dateNow
-		// 				).reverse()
-		// 					// console.log("newsort",newsort)
-						
-		// 					newsort.map((event)=> {if(event.returnValues.name == "Culture"){
-        //                 console.log("eventtt result",event)
-
-        //                 }})
-					
-		// 			this.setState({
-		// 				Events_Blockchain: newsort,
-		// 				event_copy: newsort,
-		// 			});
-		// 			console.log("events", newsort);
-
-		// 			this.setState({
-		// 				active_length: this.state.Events_Blockchain.length,
-		// 			});
-		// 			this.setState({ loading: false });
-		// 		}
-		// 	})
-		// 	.catch((err) => console.error(err));
 		}
 
-
-    // async loadBlockchain(){
-    
-    //     const web3 = new Web3(new Web3.providers.WebsocketProvider(INFURA_WEB_URL));
-    //     const openEvents =  new web3.eth.Contract(Open_events_ABI, Open_events_Address);
-        
-    //     if (this._isMounted){
-    //     this.setState({openEvents});
-    //     this.setState({Events_Blockchain:[]});}
-    //     const dateTime = Date.now();
-    //     const dateNow = Math.floor(dateTime / 1000);
-        
-    //     const blockNumber = await web3.eth.getBlockNumber();
-    //     if (this._isMounted){
-    //     this.setState({blocks:blockNumber - 50000});
-    //     this.setState({latestblocks:blockNumber - 1});
-    //     this.setState({Events_Blockchain:[]});}
-      
-    //     openEvents.getPastEvents("NewAndUpdatedEvent",{fromBlock: 5000000, toBlock:this.state.latestblocks})
-    //     .then(events=>{
-    //         console.log("events",events)
-    //     if (this._isMounted){
-    //     this.setState({loading:true})
-    //     // events.map((event,i)=>{
-    //     //     if(event.returnValues.name == "vvv"){
-    //     //         console.log("eventtt",event)
-    //     //     }
-            
-    //     // })
-
-    //     	const result = Object.values(
-	// 					events.reverse().reduce((a, c) => {
-	// 							a[c.returnValues.eventId] ||
-	// 								(a[c.returnValues.eventId] = Object.assign(c))
-	// 							return a;
-	// 						}, {})
-	// 					);
-    //                     // result.map((event)=> {if(event.returnValues.name == "vvv"){
-    //                     // console.log("eventtt result",new Date(parseInt(event.returnValues.time,10)*1000))
-
-    //                     // }}
-    //                     // )
-    //     this.setState({Events_Blockchain:result,loading:false,active_length:result.length});
-    //     }
-         
-    //     }).catch((err)=>console.error(err))
-    
-    //     //Listens for New Events
-    //     // openEvents.events.CreatedEvent({fromBlock: blockNumber, toBlock:'latest'})
-    //     // .on('data', (log) => setTimeout(()=> {
-    //     // if (this._isMounted){
-    //     // this.setState({loading:true});
-    //     // this.setState({Events_Blockchain:[...this.state.Events_Blockchain,log]});
-    //     // this.setState({active_length:this.state.Events_Blockchain.length})}
-    //     // this.setState({loading:false});
-    //     // },10000))
-
-    //     await openEvents
-    //     .getPastEvents("DeletedEvent", {
-    //         fromBlock: 8181618,
-    //         toBlock: this.state.latestblocks,
-    //     })
-    //     .then((events) => {
-    //         this.setState({ Deleted_Events: events });
-    //         return events;
-    //     })
-    //     .catch((err) => {
-    //         this.setState({ Deleted_Events: [] });
-    //     });
-
-    //   }
       filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
@@ -369,10 +197,6 @@ class Calendars extends Component {
 
     componentDidMount(){
         this.props.executeScroll();
-        // window.scroll({
-		// 	top: 0,
-		// 	behavior: 'smooth'
-		//   });
         this._isMounted = true;
         this.loadBlockchain();
         this.filterHideEvent();

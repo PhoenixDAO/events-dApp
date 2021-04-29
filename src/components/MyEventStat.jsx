@@ -9,7 +9,7 @@ import Web3 from "web3";
 import Loading from "./Loading";
 import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
-import { Bar, Doughnut, Chart } from "react-chartjs-2";
+import { Doughnut, Chart } from "react-chartjs-2";
 import JwPagination from "jw-react-pagination";
 
 import CheckUser from "./CheckUser";
@@ -17,7 +17,6 @@ import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import { explorerWithTX, explorerWithAddress } from "../config/const";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
-	PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
 import ApprovalModal from "./approvalModal";
@@ -42,17 +41,10 @@ import {
 	WhatsappIcon,
 } from "react-share";
 
-import Notify from "./Notify";
-import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
-import NotifySuccess from "./NotifySuccess";
-import NotifyEventSuccess from "./NotifyEventSuccess";
 import NotifyApproveSuccess from "./NotifyApproveSuccess";
-import NotifyFaucet from "./NotifyFaucet";
-import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
-import NotifyNetwork from "./NotifyNetwork";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import NotifyDelete from "./NotifyDelete";
 import { CircularProgress } from "@material-ui/core";
 import {INFURA_WEB_URL} from "../config/const.js";
@@ -123,27 +115,11 @@ class MyEventStat extends Component {
 			};
 			context.drizzle.addContract(contractConfig);
 		} catch (e) {
-			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
 		}
 		super(props);
-		console.log("props",props);
 		this.contracts = context.drizzle.contracts;
-		console.log("this.props.match.params.id",this.props.match.params.id)
-		console.log("this.state.eventState",this.contracts["DaoEvents"].methods.events.cacheCall(
-			this.props.match.params.id
-		))
-		console.log("checking data",this.props.contracts["DaoEvents"].events[this.contracts["DaoEvents"].methods.events.cacheCall(
-			this.props.match.params.id
-		)])
-		// this.state.eventState = this.contracts["DaoEvents"].methods.events.cacheCall(
-		// 	this.props.match.params.id
-		// );
-		
 		this.account = this.props.accounts[0];
 		this.state = {
-			// eventState:this.contracts["DaoEvents"].methods.events.cacheCall(
-			// 	this.props.match.params.id
-			// ),
 			blockChainEventLoaded:false,
 			load: true,
 			loading: false,
@@ -195,7 +171,6 @@ class MyEventStat extends Component {
 		const blockChainEvent= await openEvents.methods.events(this.props.match.params.id).call()
 		this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})
 		this.updateIPFS();
-		console.log("temp Event web3",blockChainEvent)
 	}
 
 	//Get SoldTicket Data
@@ -263,7 +238,6 @@ class MyEventStat extends Component {
 				toBlock: "latest",
 			})
 			.on("data", (log) => {
-				// console.log('total tickets ', log)
 				setTimeout(() => {
 					this.setState({ load: true });
 
@@ -301,36 +275,18 @@ class MyEventStat extends Component {
 	}
 
 	updateIPFS = () => {
-		console.log("hereeee in MyEventStats updateIPFS",this.state.loaded === false ,
-		this.state.loading === false ,
-		this.state.blockChainEvent 
-			
-			// this.props.contracts["DaoEvents"].events[this.state.eventState]
-			// 				.value[7]
-		// !this.props.contracts["DaoEvents"].events[this.state.eventState].error
-		)
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
 			this.state.blockChainEvent 
-			// !==
-			// 	"undefined"
-			
-			// typeof this.props.contracts["DaoEvents"].events[this.state.eventState] !==
-			// 	"undefined" &&
-			// !this.props.contracts["DaoEvents"].events[this.state.eventState].error
 		) {
-			// console.log("here in updateIPFS")
 			this.setState(
 				{
 					loading: true,
 				},
 				() => {
-					// console.log("check state",this.state.blockChainEvent)
 					ipfs.get(
 						this.state.blockChainEvent[7]
-						// this.props.contracts["DaoEvents"].events[this.state.eventState]
-						// 	.value[7]
 					)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
@@ -433,8 +389,6 @@ this.props.toggleDisabling();
 							pauseOnHover: true,
 						}
 					);
-
-					// this.afterApprove()
 				}
 			});
 	};
@@ -446,66 +400,15 @@ this.props.toggleDisabling();
 				autoClose: true,
 				pauseOnHover: true,
 			});
-			// this.afterApprove();
-			// this.setState({approvalGranted:true})
 		}
 	}
-	// inquire = async () => {
-	// 	let balance = await this.contracts["PHNX"].methods.totalSupply().call();
-	// 	// let temp = this.allowance();
-	// 	// console.log("approve",balance)
-	// 	console.log(
-	// 		"buy",
-	// 		this.props.contracts["DaoEvents"].events[this.state.eventState].value[2]
-	// 	);
-	// 	this.setState(
-	// 		{
-	// 			fee: this.props.contracts["DaoEvents"].events[this.state.eventState]
-	// 				.value[2],
-	// 			token: this.props.contracts["DaoEvents"].events[this.state.eventState]
-	// 				.value[3],
-	// 			openEvents_address: this.contracts["DaoEvents"].address,
-	// 			buyticket: this.contracts["DaoEvents"].methods.buyTicket(
-	// 				this.props.id
-	// 			),
-	// 			approve: this.contracts["PHNX"].methods.approve(
-	// 				this.contracts["DaoEvents"].address,
-	// 				balance
-	// 			),
-	// 		},
-	// 		async () => {
-	// 			let temp = await this.allowance();
-	// 			console.log("temp is ", temp);
-	// 			if ((await this.allowance()) == 0) {
-	// 				this.handleClickOpen();
-	// 			} else {
-	// 				this.props.inquire(
-	// 					this.props.id,
-	// 					this.state.fee,
-	// 					this.state.token,
-	// 					this.state.openEvents_address,
-	// 					this.state.buyticket,
-	// 					this.state.approve
-	// 				);
-	// 			}
-	// 		}
-	// 	);
-	// };
 
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
-		// let temp = this.allowance();
-		// console.log("approve",balance)
-
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
-				// this.props.contracts["DaoEvents"].events[this.state.eventState]
-				// 	.value[2],
-					
 				token:this.state.blockChainEvent[3], 
-				// this.props.contracts["DaoEvents"].events[this.state.eventState]
-				// 	.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
 					this.props.match.params.id
@@ -555,20 +458,6 @@ this.props.toggleDisabling();
 	onChangePage(pageTransactions) {
 		this.setState({ pageTransactions });
 	}
-
-	// handleDelete() {
-	// 	console.log("delete pressed");
-	// 	let id = this.props.location.pathname.split("/")[
-	// 		this.props.location.pathname.split("/").length - 1
-	// 	];
-	// 	let transactionId = this.contracts[
-	// 		"DaoEvents"
-	// 	].methods.deleteEvent.cacheSend(id);
-	// 	this.setState({ hash: transactionId });
-	// 	this.transactionChecker(transactionId);
-	// 	// this.props.history.push("/upcomingevents/1");
-	// }
-
 	handleDelete() {
 		this.props.toggleDisabling();
 		let txreceipt = "";
@@ -644,22 +533,10 @@ this.props.toggleDisabling();
 				<Loading />
 			</div>
 		);
-		// if (this.state.deleted) {
-		// 	toast(<NotifyDelete />, {
-
-		// 		position: "bottom-right",
-		// 		autoClose: true,
-		// 		pauseOnHover: true,
-		// 	});
-		// 	this.props.history.push("/upcomingevents/1");
-		// }
 		if (
 			this.state.blockChainEventLoaded
-			// typeof this.props.contracts["DaoEvents"].events[this.state.eventState] !==
-			// "undefined"
 		) {
 			if (
-				// this.props.contracts["DaoEvents"].events[this.state.eventState].error
 				!this.state.blockChainEvent
 				) {
 				body = (
@@ -678,19 +555,9 @@ this.props.toggleDisabling();
 				);
 			} else {
 				let event_data = this.state.blockChainEvent
-				// let event_data = this.props.contracts["DaoEvents"].events[
-				// 	this.state.eventState
-				// ].value;
-				console.log("temp Event this.state.eventState in render",this.state.eventState,event_data)
-				// event_data)
 				let id = this.props.location.pathname.split("/")[
 					this.props.location.pathname.split("/").length - 1
 				];
-				// let this.state.organizer = this.props.contracts["DaoEvents"]
-				// 	.getthis.state.organizer[this.state.eventState];
-				// if (this.state.organizer != undefined) {
-				// 	this.state.organizer = this.state.organizer.value;
-				// }
 				let image = this.getImage();
 				let description = this.getDescription();
 				let locations = this.getLocation();
@@ -775,33 +642,9 @@ this.props.toggleDisabling();
 					.split(" ")
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(" ");
-				// let titleURL =
-					// "https://rinkeby.phoenixevents.io/events/" +
-					// pagetitle +
-					// "/" +
-					// this.props.match.params.id;
-				//let titleURL = "https://rinkeby.phoenixevents.io/event/" + this.props.match.params.id;
 				if (this.props.accounts[0] !== event_data[9]) {
 					body = (
 						<div>
-							{/* <h2>
-								<i className="fa fa-calendar-alt"></i> Event
-							</h2>
-							<hr />
-							<div className="mt-5 text-center">
-								<h3 className="mt-5">Access Denied!</h3>
-								<p className="emoji">
-									<span role="img" aria-label="sweat">
-										😓
-									</span>
-								</p>
-								<p>You do not have access to this page.</p>
-								<p>
-									If you are the owner of this event & wish to
-									view the page, please sign in with{" "}
-									<b>Metamask</b>.
-								</p>
-							</div>  */}
 							<h2>
 								<i className="fa fa-calendar-alt"></i> Event
 							</h2>
@@ -880,20 +723,9 @@ this.props.toggleDisabling();
 								<h2 className="col-lg-6 col-md-6 col-sm-4 col-xs-4">
 									<i className="fa fa-calendar-alt"></i> Event
 								</h2>
-
-								{/* <h3>{event_data[0]}</h3>
-            			<br />
-           				{description} */}
-								{/* <button className="btn btn-dark" onClick={this.inquire} disabled={disabled}><i className="fas fa-ticket-alt"></i>{buttonText}</button> */}
-								{/* <label className="pl-2 small">{deleted}</label>
-            			<br/>
-            			<br/>
-           				<br/> */}
 								{date.getTime() > new Date().getTime() ? (
 									<div className=" editButtons text-muted col-lg-6 col-md-6 col-xs-12 col-sm-8 text-center">
 										<Link
-											// className="col-4"
-											// style={{ display: "grid" }}
 											to={{
 												pathname: "/editevent",
 												state: {
@@ -903,8 +735,6 @@ this.props.toggleDisabling();
 													organizer: this.state
 														.organizer,
 													eventId: id,
-													//  ...this.props.location.state,
-													//  ...this.state,
 													description: this.state
 														.description,
 													image: this.state.image,
@@ -971,9 +801,6 @@ this.props.toggleDisabling();
 							<hr />
 							<div className="row">
 								<div className="col-12">
-									{/* <h3>{event_data[0]}</h3>
-           		 <br />
-           		 {description} */}
 									<button
 										className="btn btn-dark"
 										onClick={this.inquire}
@@ -991,21 +818,6 @@ this.props.toggleDisabling();
 									</label>
 
 									<br />
-									{/* {myEvent === true && (
-									<Link
-										to={
-											"/event-stat/" +
-											pagetitle +
-											"/" +
-											this.props.match.params.id
-										}
-									>
-										<button className="btn btn-dark mt-2">
-											<i className="fas fa-chart-bar"></i>{" "}
-											View Event Stat
-										</button>
-									</Link>
-								)} */}
 									<div className="event-social-share-btns-div">
 										<EmailShareButton
 											url={shareUrl}
@@ -1066,18 +878,8 @@ this.props.toggleDisabling();
 
 									<br />
 									<br />
-
-									{/* <button
-								className="btn btn-dark"
-								onClick={this.inquire}
-								disabled={disabled || this.props.disabledStatus}
-							>
-								<i className="fas fa-ticket-alt"></i>{" "}
-								{buttonText}
-							</button> */}
 								</div>
 								<hr />
-								{/* <div className="row"> */}
 								<div className="card event-hero-sidebar">
 									<img
 										className="card-img-top event-image"
@@ -1110,9 +912,6 @@ this.props.toggleDisabling();
 										<li className="list-group-item">
 											Organizer: {this.state.organizer}
 										</li>
-										{/* <li className="list-group-item">
-											Organizer Name: {ownerDetails}
-										</li> */}
 										<li className="list-group-item">
 											Price:{" "}
 											<img
@@ -1158,76 +957,12 @@ this.props.toggleDisabling();
 								</div>
 
 								<div className="col-12 clocksDiv">
-									{/* <div className="col-md-12 col-xs-12 col-sm-12 col-lg-7 clockDiv"> */}
 									{this._isMounted && (
 										<Clock
 											deadline={date}
 											event_unix={event_data[1]}
 										/>
 									)}
-									{/* </div> */}
-									{/* <div className="new-transaction-wrapper col-md-12 col-xs-12 col-sm-12 col-lg-5" style={{padding:"0px"}}>
-										<h4 className="transactions">
-											Share your event
-										</h4>
-										<div className="event-social-share-btns-div">
-											<EmailShareButton
-												url={shareUrl}
-												title={title}
-												resetButtonStyle={false}
-											>
-												<EmailIcon size={32} round />
-											</EmailShareButton>
-
-											<FacebookShareButton
-												url={shareUrl}
-												title={title}
-												resetButtonStyle={false}
-											>
-												<FacebookIcon size={32} round />
-											</FacebookShareButton>
-
-											<LinkedinShareButton
-												url={shareUrl}
-												title={title}
-												resetButtonStyle={false}
-											>
-												<LinkedinIcon size={32} round />
-											</LinkedinShareButton>
-
-											<RedditShareButton
-												url={shareUrl}
-												title={title}
-												resetButtonStyle={false}
-											>
-												<RedditIcon size={32} round />
-											</RedditShareButton>
-
-											<TelegramShareButton
-												url={shareUrl}
-												title={title}
-												resetButtonStyle={false}
-											>
-												<TelegramIcon size={32} round />
-											</TelegramShareButton>
-
-											<TwitterShareButton
-												url={shareUrl}
-												title={title}
-												resetButtonStyle={false}
-											>
-												<TwitterIcon size={32} round />
-											</TwitterShareButton>
-
-											<WhatsappShareButton
-												url={shareUrl}
-												title={title}
-												resetButtonStyle={false}
-											>
-												<WhatsappIcon size={32} round />
-											</WhatsappShareButton>
-										</div>
-									  </div> */}
 									<div className="new-transaction-wrapper">
 										<h4 className="transactions col-md-12 ">
 											Ticket Purchases
@@ -1303,26 +1038,6 @@ this.props.toggleDisabling();
 									</h4>
 									{this.state.load && <Loading />}
 									<div className="sold_text col-12">
-										{/* <p className="myQR text-center col-md-3">
-											<QRCode
-												value={titleURL}
-												size={128}
-												bgColor="transparent"
-												fgColor="black"
-												level={"H"}
-												imageSettings={{
-													src:
-														"/images/PhoenixDAO.png",
-													height: 34,
-													width: 34,
-													x: null,
-													y: 53,
-													excavate: false,
-												}}
-											/>
-											<p>Event QR-Code</p>
-										</p> */}
-
 										<p>
 											Tickets Sold: {event_data[6]}{" "}
 											Tickets
@@ -1353,8 +1068,6 @@ this.props.toggleDisabling();
 											</p>
 										)}
 									</div>
-									{/* </div> */}
-
 									<div className="new-transaction-wrapper">
 										<h4 className="transactions">
 											<i className="fas fa-hand-holding-usd"></i>{" "}
@@ -1442,12 +1155,6 @@ this.props.toggleDisabling();
 													className="event_price-image2"
 													alt="Event Price"
 												/>{" "}
-												{/* {event_data[3]
-													? numeral(
-															price *
-																event_data[6]
-													  ).format("0.000")
-													: price * event_data[6]} */}
 												{numeral(
 													this.state.revenue
 												).format("0.000")}
@@ -1613,9 +1320,6 @@ this.props.toggleDisabling();
 														alt="Event Price"
 													/>{" "}
 													{numeral(
-														// price *
-														// 	(max_seats -
-														// 		event_data[6]) +
 															this.state.revenue
 													).format("0.000")}
 													{" or "}
@@ -1629,16 +1333,8 @@ this.props.toggleDisabling();
 														/>
 													}
 													{numeral(
-														// (price *
-														// 	(max_seats -
-														// 		event_data[6]) +
 															this.state
 																.revenue
-																// ) 
-															// 	*
-															// this.state
-															// 	.phoenixDAO_market
-															// 	.usd
 													).format("0.000")}
 												</p>
 											)
@@ -1680,7 +1376,6 @@ this.props.toggleDisabling();
 					handleClose={this.handleClose}
 					giveApproval={this.giveApproval}
 				/>
-				{/* <hr /> */}
 				{body}
 				<hr />
 			</div>
@@ -1689,26 +1384,18 @@ this.props.toggleDisabling();
 
 	componentDidMount() {
 		this.loadEventFromBlockchain()
-		// console.log("hereeee in MyEventStats CDM",this.contracts["DaoEvents"].methods.events.cacheCall(
-		// 	this.props.match.params.id
-		// ))
-		// this.setState({eventState:this.contracts["DaoEvents"].methods.events.cacheCall(
-		// 	this.props.match.params.id
-		// )})
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
 		});
 		this.GetEventsRevenue();
 		this._isMounted = true;
-		// this.updateIPFS();
 		this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
 	}
 
 	componentDidUpdate() {
 		this.updateIPFS();
-		//this.afterApprove();
 	}
 
 	componentWillUnmount() {
