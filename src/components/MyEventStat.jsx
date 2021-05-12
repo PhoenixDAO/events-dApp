@@ -15,7 +15,7 @@ import JwPagination from "jw-react-pagination";
 
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
-import { explorerWithTX, explorerWithAddress } from "../config/const";
+import { explorerWithTX, explorerWithAddress ,graphURL} from "../config/const";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	// PhoenixDAO_Testnet_Token_Address,
@@ -234,7 +234,7 @@ class MyEventStat extends Component {
 		// 	})
 		// 	.then((events) => {
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `

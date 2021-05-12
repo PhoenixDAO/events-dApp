@@ -4,7 +4,8 @@ import {Calendar,momentLocalizer} from 'react-big-calendar';
 import moment from 'moment';
 // import main from '../styles/main.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { API_URL, REPORT_EVENT } from "../config/const";
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
+
 import axios from "axios";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
@@ -36,7 +37,7 @@ class Calendars extends Component {
 		// console.log("GraphQL query before call",Date.now())
 
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `
@@ -63,7 +64,7 @@ class Calendars extends Component {
 			
 
 		await axios({
-			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			url: graphURL,
 			method: 'post',
 			data: {
 			  query: `

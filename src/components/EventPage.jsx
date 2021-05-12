@@ -46,7 +46,7 @@ import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
 import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
-import {INFURA_WEB_URL} from "../config/const.js";
+import {INFURA_WEB_URL,graphURL} from "../config/const.js";
 
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
@@ -177,7 +177,7 @@ class EventPage extends Component {
 		// 	})
 		// 	.then((events) => {
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `

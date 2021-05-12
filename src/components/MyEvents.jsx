@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
-// import {INFURA_WEB_URL} from "../config/const.js";
+import {INFURA_WEB_URL,graphURL} from "../config/const.js";
 
 import Event from "./Event";
 // import Web3 from "web3";
@@ -58,7 +58,7 @@ class MyEvents extends Component {
 			// this.setState({ openEvents: openEvents });
 			this.setState({ MyEvents: [],active_length:false ,loading:true});
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `
@@ -124,7 +124,7 @@ class MyEvents extends Component {
 
 
 		await axios({
-		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		url: graphURL,
 		method: 'post',
 		data: {
 			//users(account:${this.account}) {
@@ -234,7 +234,7 @@ class MyEvents extends Component {
 		// console.log("GraphQL query before call",Date.now())
 
 		await axios({
-		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		url: graphURL,
 		method: 'post',
 		data: {
 		query: 

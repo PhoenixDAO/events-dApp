@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import Carousel from "react-bootstrap/Carousel";
 import axios from "axios";
-import { API_URL, REPORT_EVENT } from "../config/const";
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 // Import dApp Components
 // import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
@@ -72,7 +72,7 @@ class PastEvents extends Component {
 	// console.log("GraphQL query before call",Date.now())
 
 	await axios({
-		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		url: graphURL,
 		method: 'post',
 		data: {
 		query: `
@@ -99,7 +99,7 @@ class PastEvents extends Component {
 
 
 	await axios({
-	url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+	url: graphURL,
 	method: 'post',
 	data: {
 	query: `

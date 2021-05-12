@@ -3,7 +3,7 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-import { API_URL, REPORT_EVENT } from "../config/const";
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 import axios from "axios";
 // import Web3 from "web3";
 // import Loading from "./Loading";
@@ -161,7 +161,7 @@ class Dashboard extends Component {
 			// Graph BLOCK
 			this.setState({ MyEvents: [],active_length:false ,loading:true});
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `
@@ -190,7 +190,7 @@ class Dashboard extends Component {
 			//Listen For My Newly Created Events
 
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 					//users(account:${this.account}) {

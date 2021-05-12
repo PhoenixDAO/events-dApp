@@ -7,7 +7,7 @@ import axios from "axios";
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
-import { API_URL, REPORT_EVENT } from "../config/const";
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 // import {INFURA_WEB_URL} from "../config/const.js";
 // import Web3 from "web3";
 // import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
@@ -139,7 +139,7 @@ class TopicLandingPage extends Component {
 			
 		}
 		await axios({
-			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			url: graphURL,
 			method: 'post',
 			data: {
 			  query: `
@@ -225,7 +225,7 @@ class TopicLandingPage extends Component {
 
 
 		await axios({
-		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		url: graphURL,
 		method: 'post',
 		data: {
   		query: `
@@ -342,7 +342,7 @@ class TopicLandingPage extends Component {
 
 
 		await axios({
-		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		url: graphURL,
 		method: 'post',
 		data: {
 		query: `

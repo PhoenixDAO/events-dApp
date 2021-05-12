@@ -11,7 +11,7 @@ import {
 	// PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
-import { API_URL, REPORT_EVENT ,GLOBAL_NETWORK_ID} from "../config/const";
+import { API_URL, REPORT_EVENT ,GLOBAL_NETWORK_ID,graphURL} from "../config/const";
 import axios from "axios";
 // import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Snackbar from "./Snackbar";
@@ -143,7 +143,7 @@ class Home extends Component {
 	};
 	async getAllEvents(){
 		let Events_Blockchain=await axios({
-			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			url: graphURL,
 			method: 'post',
 			data: {
 			  query: `
@@ -188,7 +188,7 @@ class Home extends Component {
 	}
 	async getAllDeletedEvents(){
 		let Deleted_Events=await axios({
-			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			url: graphURL,
 			method: 'post',
 			data: {
 			  query: `
@@ -228,7 +228,7 @@ class Home extends Component {
 			// 	toBlock: 'latest',
 			// });
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `

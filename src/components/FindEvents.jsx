@@ -3,7 +3,7 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import Carousel from "react-bootstrap/Carousel";
-import { API_URL, REPORT_EVENT } from "../config/const";
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 import axios from "axios";
 // Import dApp Components
 // import Loading from "./Loading";
@@ -78,7 +78,7 @@ class FindEvents extends Component {
 		// console.log("GraphQL query before call",Date.now())
 
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `
@@ -105,7 +105,7 @@ class FindEvents extends Component {
 			
 
 		await axios({
-			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			url: graphURL,
 			method: 'post',
 			data: {
 			  query: `
