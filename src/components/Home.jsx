@@ -8,17 +8,17 @@ import { drizzleConnect } from "drizzle-react";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
-	PhoenixDAO_Testnet_Token_Address,
+	// PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
 import { API_URL, REPORT_EVENT ,GLOBAL_NETWORK_ID} from "../config/const";
 import axios from "axios";
-import PhoenixDAOLoader from "./PhoenixDAOLoader";
+// import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar3 from "./Snackbar3";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Row } from "react-bootstrap";
+// import { Row } from "react-bootstrap";
 
 class Home extends Component {
 	constructor(props, context) {
@@ -69,9 +69,9 @@ class Home extends Component {
 
 	}
 	componentWillReceiveProps = (nextProps) => {
-		console.log("nextProps",nextProps.web3, this.state.shownSnackbar3)
+		// console.log("nextProps",nextProps.web3, this.state.shownSnackbar3)
 		if (!this.state.shownSnackbar3 && nextProps.web3.status == "initialized" && nextProps.web3.networkId) {
-			console.log("hererere")
+			// console.log("hererere")
 		  this.setState({shownSnackbar3:true})
 		  this.checkNetwork(nextProps.web3.status,nextProps.web3.networkId)
 		}
@@ -82,13 +82,13 @@ class Home extends Component {
 	// }
 
 	checkNetwork(web3Status,networkId) {
-		console.log("this.props.web3.networkId",web3Status,networkId)
+		// console.log("this.props.web3.networkId",web3Status,networkId)
 		if (
 			web3Status == "initialized" &&
 			networkId != GLOBAL_NETWORK_ID
 		) {
 			this.setState({
-				errorMessage: GLOBAL_NETWORK_ID==1 ?  "Please switch your network to Ethereum Mainnet!":GLOBAL_NETWORK_ID==80001 ?"Please switch your network to Matic Testnet!": "Please switch your network to Matic Mainnet!",
+				errorMessage: GLOBAL_NETWORK_ID==137 ?  "Please switch your network to Matic Mainnet!":GLOBAL_NETWORK_ID==80001 ?"Please switch your network to Matic Testnet!": "Please switch your network to Matic Mainnet!",
 				openSnackbar1: false,
 				openSnackbar2: false,
 				openSnackbar3: true,
@@ -141,6 +141,78 @@ class Home extends Component {
 		} catch (error) {
 		}
 	};
+	async getAllEvents(){
+		let Events_Blockchain=await axios({
+			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			method: 'post',
+			data: {
+			  query: `
+			  {
+				events {
+				  id
+				  eventId
+				  name
+				  time
+				  price
+				  token
+				  limited
+				  seats
+				  sold
+				  ipfs
+				  category
+				  owner
+				  revenueOfEvent
+				}
+			  }
+			  `
+			}
+		}).then((graphEvents)=>{
+			// console.log("graph graphEvents",graphEvents)
+			if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+				return []
+			}else{
+					const dateTime = Date.now();
+					const dateNow = Math.floor(dateTime / 1000);
+				
+					let newsort = graphEvents.data.data.events
+						.concat()
+						.sort((a, b) => b.blockNumber - a.blockNumber)
+					return newsort;
+					
+
+			}
+		}).catch((err) => {console.error(err)
+		return []
+		})
+		return Events_Blockchain
+	}
+	async getAllDeletedEvents(){
+		let Deleted_Events=await axios({
+			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			method: 'post',
+			data: {
+			  query: `
+			  {
+				eventsRemoveds {
+				  id
+				  eventId
+				}
+			  }
+			  `
+			}
+		}).then((graphDeletedEvents)=>{
+
+			if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
+				return []
+			}else{
+				return graphDeletedEvents.data.data.eventsRemoveds 
+			}
+		}).catch((err)=>{
+			console.error(err);
+			return []
+		})
+		return Deleted_Events
+	}
 	async loadData() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			let web3 = new Web3(window.ethereum);
@@ -151,44 +223,94 @@ class Home extends Component {
 
 			const blockNumber = await web3.eth.getBlockNumber();
 
-			let totalTickets = await openEvents.getPastEvents("SoldTicket", {
-				fromBlock: 8181618,
-				toBlock: blockNumber,
-			});
-			let allTicketBuyers = totalTickets.map((tt) => {
-				return tt.returnValues[0];
-			});
+			// let totalTickets = await openEvents.getPastEvents("SoldTicket", {
+			// 	fromBlock: 8181618,
+			// 	toBlock: 'latest',
+			// });
+			await axios({
+				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				method: 'post',
+				data: {
+				  query: `
+				  {
+					events {
+					  eventId
+					  sold
+					  buyers
+					}
+				  }
+				  `
+				}
+			}).then(async(graphEvents)=>{
+				// console.log("mere soldTickets by Id",graphEvents.data.data.events)
+				let totalTicketSold=0;
+				graphEvents.data.data.events.map((event) =>{
+					// console.log("mere event.sold in loop",event.sold) 
+					totalTicketSold=totalTicketSold+Number(event.sold)
+					// console.log("mere totalTicketSold in loop",totalTicketSold) 
+				})
+			// console.log("mere totalTickets",totalTicketSold)
+			// let allTicketBuyers = totalTickets.map((tt) => {
+			// 	return tt[0];
+			// });
 
-			this.setState({
-				totalTickets: allTicketBuyers.length,
-				loadingTotalTickets: false,
-			});
-
+			// this
+			let allTicketBuyers=[]
+			graphEvents.data.data.events.map((event)=>{
+				// console.log("mere event aya",event)
+				allTicketBuyers=allTicketBuyers.concat(event.buyers)
+				// console.log("mere event aya2",allTicketBuyers)
+			})
+			// allTicketBuyers.concat(graphEvents.data.data.events[i].buyer)graphEvents.data.data.events.map((event)=> event.buyers.map((buyerArray,i)=> buyerArray[i]))
+			// console.log("mere allTicketBuyers",allTicketBuyers)
+			// this
+			
 			let uniqueAllTicketBuyers = [...new Set(allTicketBuyers)];
 
-			const dateTime = Date.now();
-			const dateNow = Math.floor(dateTime / 1000);
+			// console.log("mere uniqueAllTicketBuyers",uniqueAllTicketBuyers)
+			this.setState({
+				totalTickets: totalTicketSold,
+				loadingTotalTickets: false,
+			});
+			
+		
+			
+			// let Events_Blockchain =[]
+			// let Deleted_Events=[]
 
 			// Get All events
-			let Events_Blockchain = await openEvents.getPastEvents("CreatedEvent", {
-				fromBlock: 7000000,
-				toBlock: blockNumber,
-			});
-
+			let Events_Blockchain=await this.getAllEvents()
+			
 			//Get Deleted Events
-			let Deleted_Events = await openEvents.getPastEvents("DeletedEvent", {
-				fromBlock: 8181618,
-				toBlock: blockNumber,
-			});
+			let Deleted_Events=await this.getAllDeletedEvents()
+
+			// console.log("mere new",Events_Blockchain,Deleted_Events	)
+			const dateTime = Date.now();
+			const dateNow = Math.floor(dateTime / 1000);
+			// console.log("consolingg",Deleted_Events,Events_Blockchain)
+
+			// // Get All events
+			// Events_Blockchain = await openEvents
+			//.getPastEvents("CreatedEvent", {
+			// 	fromBlock: 7000000,
+			// 	toBlock: blockNumber,
+			// });
+
+			// //Get Deleted Events
+			// Deleted_Events = await openEvents
+			//.getPastEvents("DeletedEvent", {
+			// 	fromBlock: 8181618,
+			// 	toBlock: blockNumber,
+			// });
 			//filtered event
 			let allEvents = [];
 			let skip = false;
 			for (let i =0; i < Events_Blockchain.length; i++) {
 				for (let j = 0; j < Deleted_Events.length; j++) {
 					if (
-						Events_Blockchain[i].returnValues
+						Events_Blockchain[i]
 							.eventId ==
-						Deleted_Events[j].returnValues.eventId
+						Deleted_Events[j].eventId
 					) {
 						skip = true;
 					}
@@ -196,7 +318,7 @@ class Home extends Component {
 				if(!skip){
 					for (let j = 0; j < this.state.hideEvent.length; j++) {
 						if (
-							Events_Blockchain[i].returnValues
+							Events_Blockchain[i]
 								.eventId ==
 							this.state.hideEvent[j].id
 						) {
@@ -215,7 +337,7 @@ class Home extends Component {
 				.concat()
 				.sort((a, b) => b.blockNumber - a.blockNumber)
 				.filter(
-					(pastEvents) => pastEvents.returnValues.time <= dateNow
+					(pastEvents) => pastEvents.time <= dateNow
 				);
 
 			this.setState({
@@ -228,7 +350,7 @@ class Home extends Component {
 				.concat()
 				.sort((a, b) => b.blockNumber - a.blockNumber)
 				.filter(
-					(activeEvents) => activeEvents.returnValues.time >= dateNow
+					(activeEvents) => activeEvents.time >= dateNow
 				);
 			// await openEvents
 			// 	.getPastEvents("DeletedEvent", {
@@ -251,10 +373,11 @@ class Home extends Component {
 				upcomingEvents: upcomingEvents.length,
 				loadingUpcomingEvents: false,
 			});
-
+			// console.log("Home allEvents", allEvents)
 			let ownersOfAllEvents = allEvents.map((tt) => {
-				return tt.returnValues[0];
+				return tt.owner;
 			});
+			// console.log("Home ownersOfAllEvents",ownersOfAllEvents)
 
 			let uniqueOwnersOfAllEvents = [...new Set(ownersOfAllEvents)];
 
@@ -268,6 +391,15 @@ class Home extends Component {
 				activeUsers: uniqueAllUser.length,
 				loadingActiveUsers: false,
 			});
+		}).catch((err)=>{
+			// console.log("mere error",err)
+			this.setState({
+				loadingActiveUsers: false,
+				loadingUpcomingEvents: false,
+				loadingPastEvents: false,
+				loadingTotalTickets: false,
+			})
+	})
 		}
 	}
 

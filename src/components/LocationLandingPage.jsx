@@ -46,7 +46,7 @@ class LocationLandingPage extends Component {
   }
 
   getLastURLSegment() {
-    console.log(this.props.history.location.pathname);
+    // console.log(this.props.history.location.pathname);
     let currentRoute = this.props.history.location.pathname;
     let lastSegment = currentRoute.substr(currentRoute.lastIndexOf('/') + 1);
 

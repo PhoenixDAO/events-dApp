@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
 import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
-import Web3 from "web3";
-import Loading from "./Loading";
+// import Web3 from "web3";
+// import Loading from "./Loading";
 import { Bar, Doughnut } from "react-chartjs-2";
-import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+// import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import UniswapModal from "./UniswapModal";
 import topicsJson from "../config/topics.json";
-import {INFURA_WEB_URL} from "../config/const.js";
+// import {INFURA_WEB_URL} from "../config/const.js";
 let numeral = require("numeral");
 
 class Dashboard extends Component {
@@ -136,7 +136,7 @@ class Dashboard extends Component {
 
 			return;
 		} catch (error) {
-			console.log("check error", error);
+			// console.log("check error", error);
 		}
 	};
 	async loadBockchain() {
@@ -174,7 +174,7 @@ class Dashboard extends Component {
 				  `
 				}
 			}).then((graphDeletedEvents)=>{
-				console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 	
 				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 					this.setState({ Deleted_Events: [] });
@@ -218,9 +218,9 @@ class Dashboard extends Component {
 				  }`
 				}
 				}).then((graphEvents)=>{
-				console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
+				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 				if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-					console.log("GraphQL query -- graphEvents undefined")
+					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 				}else{
 					if (this._isMounted) {
@@ -228,13 +228,13 @@ class Dashboard extends Component {
 						const dateNow = Math.floor(dateTime / 1000);
 						// this.setState({ loading: true });
 						let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
-						console.log("graph userEvents",userEvents)
+						// console.log("graph userEvents",userEvents)
 						if(userEvents){
 							let newsort = userEvents.userEvents
 							.concat()
 							.sort((a, b) => b.blockNumber - a.blockNumber)
 							
-								console.log("GraphQL query newsort",newsort)
+								// console.log("GraphQL query newsort",newsort)
 		
 									this.setState({
 										MyEvents: newsort,
@@ -342,7 +342,7 @@ class Dashboard extends Component {
 		// var array1 = [];
 		let skip = false;
 		let skip2 = false;
-		console.log("Dashboard NewAndUpdatedEvent in dashboard after uniqueness this.state.MyEvents",this.state.MyEvents)
+		// console.log("Dashboard NewAndUpdatedEvent in dashboard after uniqueness this.state.MyEvents",this.state.MyEvents)
 		for (let i = 0; i < this.state.MyEvents.length; i++) {
 			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
@@ -381,7 +381,7 @@ class Dashboard extends Component {
 		// 		}
 		// 	}
 		// }
-		console.log("Dashboard DeletedEvent in dashboard",deletedArray)
+		// console.log("Dashboard DeletedEvent in dashboard",deletedArray)
 		// console.log("Dashboard DeletedEvent in dashboard deletedArray2",deletedArray2)
 		this.setState(
 			{
@@ -449,9 +449,9 @@ class Dashboard extends Component {
 				limited=[]
 				limited.seats=0;
 				limited.sold=0;
-				console.log(
-					"limited",limited
-				)
+				// console.log(
+				// 	"limited",limited
+				// )
 			}
 		
 			let top_PhoenixDAORevenue = phoenixDAORevenue

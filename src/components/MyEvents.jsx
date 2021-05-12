@@ -5,12 +5,12 @@ import PropTypes from "prop-types";
 
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
-import {INFURA_WEB_URL} from "../config/const.js";
+// import {INFURA_WEB_URL} from "../config/const.js";
 
 import Event from "./Event";
-import Web3 from "web3";
+// import Web3 from "web3";
 import axios from "axios";
-import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+// import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 class MyEvents extends Component {
 	constructor(props, context) {
@@ -71,7 +71,7 @@ class MyEvents extends Component {
 				  `
 				}
 			}).then((graphDeletedEvents)=>{
-				console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 	
 				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 					this.setState({ Deleted_Events: [] });
@@ -82,7 +82,7 @@ class MyEvents extends Component {
 				console.error("graph error here",err);
 				this.setState({ Deleted_Events: [],loading:false });
 			})
-			console.log("Graph this.state.isActive",this.state.isActive)
+			// console.log("Graph this.state.isActive",this.state.isActive)
 			if (this.state.isActive) {
 				this.loadActiveEvents();
 			} else {
@@ -118,7 +118,7 @@ class MyEvents extends Component {
 		}
 
 // GRAPH BLOCK //
-console.log("GraphQL query before call",Date.now())
+// console.log("GraphQL query before call",Date.now())
 
 		
 
@@ -152,9 +152,9 @@ console.log("GraphQL query before call",Date.now())
 		  }`
 		}
 		}).then((graphEvents)=>{
-		console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
+		// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-			console.log("GraphQL query -- graphEvents undefined")
+			// console.log("GraphQL query -- graphEvents undefined")
 			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 		}else{
 			if (this._isMounted) {
@@ -162,7 +162,7 @@ console.log("GraphQL query before call",Date.now())
 				const dateNow = Math.floor(dateTime / 1000);
 				// this.setState({ loading: true });
 				let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
-				console.log("graph userEvents",userEvents)
+				// console.log("graph userEvents",userEvents)
 				if(userEvents){
 					let newsort = userEvents.userEvents
 					.concat()
@@ -171,7 +171,7 @@ console.log("GraphQL query before call",Date.now())
 						(activeEvents) =>
 							activeEvents.time >= dateNow
 					)
-						console.log("GraphQL query newsort",newsort)
+						// console.log("GraphQL query newsort",newsort)
 
 							this.setState({
 								MyEvents: newsort,
@@ -231,7 +231,7 @@ console.log("GraphQL query before call",Date.now())
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
 				// GRAPH BLOCK //
-		console.log("GraphQL query before call",Date.now())
+		// console.log("GraphQL query before call",Date.now())
 
 		await axios({
 		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
@@ -263,10 +263,10 @@ console.log("GraphQL query before call",Date.now())
 		
 		}
 		}).then((graphEvents)=>{
-			console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
+			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 
 		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-			console.log("GraphQL query -- graphEvents undefined")
+			// console.log("GraphQL query -- graphEvents undefined")
 			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 		}else{
 			if (this._isMounted) {
@@ -283,7 +283,7 @@ console.log("GraphQL query before call",Date.now())
 						(activeEvents) =>
 							activeEvents.time < dateNow
 					)
-						console.log("GraphQL query newsort",newsort)
+						// console.log("GraphQL query newsort",newsort)
 
 							this.setState({
 								MyEvents: newsort,

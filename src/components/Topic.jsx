@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { drizzleConnect } from 'drizzle-react';
-import PropTypes from 'prop-types';
+// import { drizzleConnect } from 'drizzle-react';
+// import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import makeBlockie from 'ethereum-blockies-base64';
 import { explorerWithTX, explorerWithAddress } from "../config/const";
 
-import ipfs from '../utils/ipfs';
+// import ipfs from '../utils/ipfs';
 
 import Loading from './Loading';
 

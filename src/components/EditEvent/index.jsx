@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Form from "./Form";
 import ipfs from "../../utils/ipfs";
 import Loader from "./Loader";
-import Error from "./Error";
+// import Error from "./Error";
 import Done from "./Done";
 import { Redirect } from "react-router-dom";
 
@@ -155,10 +155,10 @@ class CreateEvent extends Component {
 						error_text: "Transaction Rejected",
 					},
 					() => {
-						console.log(this.state.error_text);
+						// console.log(this.state.error_text);
 					}
 				);
-				console.log(error);
+				// console.log(error);
 			});
 	};
 
@@ -252,11 +252,13 @@ class CreateEvent extends Component {
 			);
 		if (this.state.error || this.props.error) {
 			body = (
+				<div className="row">
 				<Form
 							createEvent={this.createEvent}
 							account={this.props.account}
 							{...this.props.location.state}
 						/>
+											</div>
 			);
 		}
 
