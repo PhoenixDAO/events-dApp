@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import {Calendar,momentLocalizer} from 'react-big-calendar';
+// import { Link } from 'react-router-dom';
 import moment from 'moment';
+// import main from '../styles/main.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { API_URL, REPORT_EVENT } from "../config/const";
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
+
 import axios from "axios";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
+// import {INFURA_WEB_URL} from "../config/const";
+// import Web3 from 'web3';
+// import {Open_events_ABI, Open_events_Address} from '../config/OpenEvents';
 
 class Calendars extends Component {
     constructor(props) {
@@ -28,8 +34,10 @@ class Calendars extends Component {
 
     async loadBlockchain() {
 		// GRAPH BLOCK //
+		// console.log("GraphQL query before call",Date.now())
+
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `
@@ -42,6 +50,8 @@ class Calendars extends Component {
 				  `
 				}
 			}).then((graphDeletedEvents)=>{
+				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+
 				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 					this.setState({ Deleted_Events: [] });
 				}else{
@@ -54,7 +64,7 @@ class Calendars extends Component {
 			
 
 		await axios({
-			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			url: graphURL,
 			method: 'post',
 			data: {
 			  query: `
@@ -78,7 +88,10 @@ class Calendars extends Component {
 			  `
 			}
 		}).then((graphEvents)=>{
+			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+
 			if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+				// console.log("GraphQL query -- graphEvents undefined")
 				this.setState({ Events_Blockchain: [] ,
 					active_length: 0,
 					event_copy: []});
@@ -107,7 +120,7 @@ class Calendars extends Component {
 			});
 			return;
 		} catch (error) {
-			console.log("check error", error);
+			// console.log("check error", error);
 		}
 	};
 	

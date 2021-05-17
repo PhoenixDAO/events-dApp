@@ -1,9 +1,9 @@
 import React from 'react';
-import makeBlockie from 'ethereum-blockies-base64';
-import { Link } from 'react-router-dom';
+// import makeBlockie from 'ethereum-blockies-base64';
+// import { Link } from 'react-router-dom';
 
 function NotifyError(props) {
-	console.log("props in notifyerror",props)
+	// console.log("props in notifyerror",props)
 	return (
 		<div className="notify">			
             <p className="emoji2"><span role="img" aria-label="sweat">😓</span></p>

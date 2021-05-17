@@ -4,9 +4,12 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
+import {INFURA_WEB_URL,graphURL} from "../config/const.js";
 
 import Event from "./Event";
+// import Web3 from "web3";
 import axios from "axios";
+// import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 class MyEvents extends Component {
 	constructor(props, context) {
@@ -44,7 +47,7 @@ class MyEvents extends Component {
 		if (this._isMounted) {
 			this.setState({ MyEvents: [],active_length:false ,loading:true});
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `
@@ -57,6 +60,7 @@ class MyEvents extends Component {
 				  `
 				}
 			}).then((graphDeletedEvents)=>{
+				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 	
 				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 					this.setState({ Deleted_Events: [] });
@@ -66,6 +70,7 @@ class MyEvents extends Component {
 			}).catch((err)=>{
 				this.setState({ Deleted_Events: [],loading:false });
 			})
+			// console.log("Graph this.state.isActive",this.state.isActive)
 			if (this.state.isActive) {
 				this.loadActiveEvents();
 			} else {
@@ -79,11 +84,15 @@ class MyEvents extends Component {
 		if (this._isMounted) {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
+
+// GRAPH BLOCK //
+// console.log("GraphQL query before call",Date.now())
+
 		
 
 
 		await axios({
-		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		url: graphURL,
 		method: 'post',
 		data: {				
 			query: `{
@@ -109,7 +118,9 @@ class MyEvents extends Component {
 		  }`
 		}
 		}).then((graphEvents)=>{
+		// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+			// console.log("GraphQL query -- graphEvents undefined")
 			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 		}else{
 			if (this._isMounted) {
@@ -148,8 +159,10 @@ class MyEvents extends Component {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
 				// GRAPH BLOCK //
+		// console.log("GraphQL query before call",Date.now())
+
 		await axios({
-		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		url: graphURL,
 		method: 'post',
 		data: {
 		query: 
@@ -178,8 +191,10 @@ class MyEvents extends Component {
 		
 		}
 		}).then((graphEvents)=>{
+			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 
 		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+			// console.log("GraphQL query -- graphEvents undefined")
 			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 		}else{
 			if (this._isMounted) {

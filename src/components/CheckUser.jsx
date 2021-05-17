@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import QrReader from "react-qr-reader";
 import CircularProgress from "@material-ui/core/CircularProgress";
+// import PhoenixDAOLoader from "./PhoenixDAOLoader";
+// import Loading from "./Loading";
 import Snackbar from "./Snackbar";
 import { API_URL, REPORT_EVENT } from "../config/const";
 import { toast } from "react-toastify";
@@ -65,6 +67,7 @@ class CheckUser extends Component {
 				`${API_URL}${REPORT_EVENT}`,
 				payload
 			);
+			// console.log("Consoleee notify report response",report)
 			toast(<NotifyReport text={"Report successful!"}/>, {
 					position: "bottom-right",
 					autoClose: true,
@@ -75,7 +78,10 @@ class CheckUser extends Component {
 				loading: false,
 			});
 		} catch (error) {
+			// console.log("Consoleee notify report response catch",error)
+
 			if(error.response && error.response.data){
+				// console.log("Consoleee notify report response error.response.data",error.response.data)
 				toast(<NotifyReport text={error.response.data.responseMessage+"!"}/>, {
 					position: "bottom-right",
 					autoClose: true,

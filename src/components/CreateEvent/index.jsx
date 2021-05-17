@@ -53,6 +53,7 @@ class CreateEvent extends Component {
 		seats,
 		file_name
 	) => {
+		// console.log("price", price);
 		this.setState(
 			{
 				upload: true,
@@ -118,6 +119,7 @@ class CreateEvent extends Component {
 		let buffer = Buffer.from(data);
 		ipfs.add(buffer, { pin: pinit })
 			.then((hash) => {
+				// console.log("hashhh",hash)
 				this.setState({
 					stage: 95,
 					title: "Creating transaction...",
@@ -138,6 +140,7 @@ class CreateEvent extends Component {
 				);
 			})
 			.catch((error) => {
+				// console.log("error in convertAndUpload",error)
 				this.setState(
 					{
 						error: true,
@@ -177,7 +180,7 @@ class CreateEvent extends Component {
 			type: null,
 			file_name: null,
 		}}, () =>
-			console.log("state",this.state)
+			console.log()
 		);
 	};
 

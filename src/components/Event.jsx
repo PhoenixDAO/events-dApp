@@ -13,14 +13,29 @@ import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 
 import Loading from "./Loading";
+// import eventTopics from "../config/topics.json";
+
+// import Button from "@material-ui/core/Button";
+// import Dialog from "@material-ui/core/Dialog";
+// import DialogActions from "@material-ui/core/DialogActions";
+// import DialogContent from "@material-ui/core/DialogContent";
+// import DialogContentText from "@material-ui/core/DialogContentText";
+// import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 
+// import Notify from "./Notify";
+// import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
+// import NotifySuccess from "./NotifySuccess";
+// import NotifyEventSuccess from "./NotifyEventSuccess";
 import NotifyApproveSuccess from "./NotifyApproveSuccess";
+// import NotifyFaucet from "./NotifyFaucet";
+// import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
+// import NotifyNetwork from "./NotifyNetwork";
 import ApprovalModal from "./approvalModal";
 
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 
 let numeral = require("numeral");
 
@@ -58,6 +73,7 @@ class Event extends Component {
 		// this.contracts["DaoEvents"].methods.getOwnerDetails.cacheCall(
 		// 	this.props.id
 		// );
+		// console.log("this.props.eventData 123",this.props.eventData,this.props.accounts[0])
 		this.account = this.props.accounts[0];
 		this.state = {
 			eventData:props.eventData,
@@ -347,7 +363,7 @@ class Event extends Component {
 			});
 			return;
 		} catch (error) {
-			console.log("check error", error);
+			// console.log("check error", error);
 		}
 	};
 
@@ -384,6 +400,7 @@ class Event extends Component {
 					? this.context.drizzle.web3.utils.fromWei(event_data.price)
 					: "Free Event";
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
+				// console.log("this.props.eventData",parseInt(event_data.time, 10))
 				let max_seats = event_data.limited ? event_data.seats : "∞";
 				let disabled = false;
 				let reportedOut = " ";

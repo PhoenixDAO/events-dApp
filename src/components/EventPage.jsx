@@ -5,11 +5,20 @@ import makeBlockie from "ethereum-blockies-base64";
 
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
+import axios from "axios";
 
+// import Notify from "./Notify";
+// import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
+// import NotifySuccess from "./NotifySuccess";
+// import NotifyEventSuccess from "./NotifyEventSuccess";
 import NotifyApproveSuccess from "./NotifyApproveSuccess";
+// import NotifyFaucet from "./NotifyFaucet";	
+// import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
+// import NotifyNetwork from "./NotifyNetwork";
 
+import {  toast } from "react-toastify";
 import ApprovalModal from "./approvalModal";
 
 import {
@@ -37,8 +46,7 @@ import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
 import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
-import {INFURA_WEB_URL} from "../config/const.js";
-import { toast } from "react-toastify";
+import {INFURA_WEB_URL,graphURL} from "../config/const.js";
 
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
@@ -119,10 +127,13 @@ class EventPage extends Component {
 		const blockChainEvent= await openEvents.methods.events(this.props.match.params.id).call()
 		this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})
 		this.updateIPFS();
+		// console.log("temp Event web3",blockChainEvent)
 	}
 
 	//Get SoldTicket Data
 	async loadblockhain() {
+
+		
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
 				INFURA_WEB_URL
@@ -137,7 +148,6 @@ class EventPage extends Component {
 			this.setState({ openEvents });
 			this.setState({ phoenixDAOTransfer: [] });
 		}
-
 		const blockNumber = await web3.eth.getBlockNumber();
 		if (this._isMounted) {
 			this.setState({
@@ -147,58 +157,82 @@ class EventPage extends Component {
 			});
 		}
 
-		openEvents
-			.getPastEvents("SoldTicket", {
-				filter: { eventId: this.props.match.params.id },
-				fromBlock: 5000000,
-				toBlock: this.state.latestblocks,
-			})
-			.then((events) => {
+		// openEvents
+		// 	.getPastEvents("SoldTicket", {
+		// 		filter: { eventId: this.props.match.params.id },
+		// 		fromBlock: 5000000,
+		// 		toBlock: 'latest',
+		// 	})
+		// 	.then((events) => {
+			await axios({
+				url: graphURL,
+				method: 'post',
+				data: {
+				  query: `
+				  {
+					events {
+					  eventId
+					  price
+					  token
+					  sold
+					  buyers
+					}
+				  }
+				  `
+				}
+			}).then((graphEvents)=>{
+				// console.log("mere soldTickets by Id",graphEvents.data.data.events)
+				let tickets = graphEvents.data.data.events.find((event) => event.eventId == this.props.match.params.id)
+				
+				
 				this.setState({ load: true });
-				var newest = events;
-				var newsort = newest
+				var newsort = tickets.buyers
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
 				if (this._isMounted) {
-					this.setState({ soldTicket: newsort, check: newsort });
-					this.setState({ load: false });
-					this.setState({
-						active_length: this.state.soldTicket.length,
-					});
+					this.setState({ load: false,soldTicket: newsort, active_length: newsort.length,check: newsort });
+					
 				}
 			})
-			.catch((err) => console.error(err));
+			.catch((err) => console.error("mere here",err));
+
+		// openEvents
+		// 	.getPastEvents("SoldTicket", {
+		// 		fromBlock: 5000000,
+		// 		toBlock: 'latest',
+		// 	})
+		// 	.then((events) => {console.log("mere soldTickets without Id",events)})
+		// 	.catch((err) => console.error(err));
 
 		//Listen for Incoming Sold Tickets
-		openEvents.events
-			.SoldTicket({
-				filter: { eventId: this.props.match.params.id },
-				fromBlock: blockNumber,
-				toBlock: "latest",
-			})
-			.on(
-				"data",
-				(log) =>
-					setTimeout(() => {
-						this.setState({ load: true });
+		// openEvents.events
+		// 	.SoldTicket({
+		// 		filter: { eventId: this.props.match.params.id },
+		// 		fromBlock: blockNumber,
+		// 		toBlock: "latest",
+		// 	})
+		// 	.on("data", (log) => {
+		// 		console.log('mere soldTickets listner', log)
+		// 		setTimeout(() => {
+		// 			this.setState({ load: true });
 
-						this.setState({
-							soldTicket: [...this.state.soldTicket, log],
-						});
-						var newest = this.state.soldTicket;
-						var newsort = newest
-							.concat()
-							.sort((a, b) => b.blockNumber - a.blockNumber);
-						if (this._isMounted) {
-							this.setState({ soldTicket: newsort });
-							this.setState({
-								active_length: this.state.soldTicket.length,
-							});
-						}
-						this.setState({ load: false });
-					}),
-				15000
-			);
+		// 			this.setState({
+		// 				soldTicket: [...this.state.soldTicket, log],
+		// 			});
+		// 			var newest = this.state.soldTicket;
+		// 			var newsort = newest
+		// 				.concat()
+		// 				.sort((a, b) => b.blockNumber - a.blockNumber);
+		// 			if (this._isMounted) {
+		// 				this.setState({ soldTicket: newsort });
+		// 				this.setState({
+		// 					active_length: this.state.soldTicket.length,
+		// 				});
+		// 			}
+		// 			this.setState({ load: false });
+		// 		}),
+		// 			15000;
+		// 	});
 	}
 
 	//get market cap & dollar value of PhoenixDAO
@@ -688,7 +722,7 @@ class EventPage extends Component {
 												<img
 													className="float-left blockie"
 													src={makeBlockie(
-														sold.returnValues.buyer
+														sold
 													)}
 												/>{" "}
 												Someone bought 1 ticket for{" "}

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+// import Carousel from 'react-bootstrap/Carousel'
+
 import Loading from './Loading';
 import Event from './Event';
 

@@ -1,35 +1,32 @@
+//Ethereum Mainnet
 
-//Mainnet
 // export const INFURA_URL="https://mainnet.infura.io/v3/c89f216154d84b83bb9344a7d0a91108"
 // export const INFURA_WEB_URL="wss://mainnet.infura.io/ws/v3/c89f216154d84b83bb9344a7d0a91108"
-export const API_URL = "https://phoenix-event-dapp-backend.herokuapp.com/"
 // export const GLOBAL_NETWORK_ID=1;
-// export const REPORT_EVENT = "event/report";
 // export const explorerWithTX="https://etherscan.io/tx/"
 // export const explorerWithAddress ="https://etherscan.io/address/"
 
 //Matic Mainnet
 
-
-
+// export const INFURA_URL="https://rpc-mainnet.maticvigil.com"
+// export const INFURA_WEB_URL="wss://rpc-mainnet.matic.quiknode.pro"
+// export const GLOBAL_NETWORK_ID=137;
+// export const API_URL = "https://phoenix-event-dapp-backend.herokuapp.com/"
+// export const REPORT_EVENT = "event/report";
+// export const explorerWithTX="https://explorer-mainnet.maticvigil.com/tx/"
+// export const explorerWithAddress ="https://explorer-mainnet.maticvigil.com/address/"
+// export const graphURL="https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp"
 
 //Matic Test
+
 export const INFURA_URL="https://rpc-mumbai.matic.today" // 
-// export const INFURA_URL="https://rpc-mumbai.maticvigil.com/"
-// export const INFURA_URL="https://matic-testnet-archive-rpc.bwarelabs.com"
-// export const INFURA_URL="https://matic-mumbai.p2pify.com" 
-
 export const INFURA_WEB_URL="wss://ws-mumbai.matic.today/"
-// export const INFURA_WEB_URL= "wss:matic-testnet-archive-ws.bwarelabs.com/" //problematic link (sometimes)
-// export const INFURA_WEB_URL="wss://ws-matic-mumbai.p2pify.com/"
-
-// export const API_URL = "https://phoenix-dao-event-dapp.herokuapp.com/";
+export const API_URL = "https://phoenix-event-dapp-backend.herokuapp.com/"
 export const GLOBAL_NETWORK_ID=80001;
 export const REPORT_EVENT = "event/report";
 export const explorerWithTX="https://explorer-mumbai.maticvigil.com/tx/"
 export const explorerWithAddress ="https://explorer-mumbai.maticvigil.com/address/"
-
-
+export const graphURL="https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp2"
 
 //Rinkeby
 // export const INFURA_URL="https://rinkeby.infura.io/v3/c89f216154d84b83bb9344a7d0a91108"

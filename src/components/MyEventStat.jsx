@@ -5,18 +5,20 @@ import makeBlockie from "ethereum-blockies-base64";
 import { Link } from "react-router-dom";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
+import axios from "axios";
 
 import Loading from "./Loading";
 import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
-import { Doughnut, Chart } from "react-chartjs-2";
+import {  Doughnut, Chart } from "react-chartjs-2";
 import JwPagination from "jw-react-pagination";
 
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
-import { explorerWithTX, explorerWithAddress } from "../config/const";
+import { explorerWithTX, explorerWithAddress ,graphURL} from "../config/const";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
+	// PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
 import ApprovalModal from "./approvalModal";
@@ -41,10 +43,17 @@ import {
 	WhatsappIcon,
 } from "react-share";
 
+// import Notify from "./Notify";
+// import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
+// import NotifySuccess from "./NotifySuccess";
+// import NotifyEventSuccess from "./NotifyEventSuccess";
 import NotifyApproveSuccess from "./NotifyApproveSuccess";
+// import NotifyFaucet from "./NotifyFaucet";
+// import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
-import { toast } from "react-toastify";
+// import NotifyNetwork from "./NotifyNetwork";
+import { ToastContainer, toast } from "react-toastify";
 import NotifyDelete from "./NotifyDelete";
 import { CircularProgress } from "@material-ui/core";
 import {INFURA_WEB_URL} from "../config/const.js";
@@ -52,7 +61,7 @@ import {INFURA_WEB_URL} from "../config/const.js";
 //Numerical Setting
 let numeral = require("numeral");
 //QR Code
-let QRCode = require("qrcode.react");
+// let QRCode = require("qrcode.react");
 
 //Dougnut Chart Percentage
 var originalDoughnutDraw = Chart.controllers.doughnut.prototype.draw;
@@ -117,7 +126,19 @@ class MyEventStat extends Component {
 		} catch (e) {
 		}
 		super(props);
+		// console.log("props",props);
 		this.contracts = context.drizzle.contracts;
+		// console.log("this.props.match.params.id",this.props.match.params.id)
+		// console.log("this.state.eventState",this.contracts["DaoEvents"].methods.events.cacheCall(
+		// 	this.props.match.params.id
+		// ))
+		// console.log("checking data",this.props.contracts["DaoEvents"].events[this.contracts["DaoEvents"].methods.events.cacheCall(
+		// 	this.props.match.params.id
+		// )])
+		// this.state.eventState = this.contracts["DaoEvents"].methods.events.cacheCall(
+		// 	this.props.match.params.id
+		// );
+		
 		this.account = this.props.accounts[0];
 		this.state = {
 			blockChainEventLoaded:false,
@@ -171,6 +192,7 @@ class MyEventStat extends Component {
 		const blockChainEvent= await openEvents.methods.events(this.props.match.params.id).call()
 		this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})
 		this.updateIPFS();
+		// console.log("temp Event web3",blockChainEvent)
 	}
 
 	//Get SoldTicket Data
@@ -200,64 +222,82 @@ class MyEventStat extends Component {
 			});
 		}
 
-		openEvents
-			.getPastEvents("SoldTicket", {
-				filter: { eventId: this.props.match.params.id },
-				fromBlock: 5000000,
-				toBlock: 'latest',
-			})
-			.then((events) => {
+		// openEvents
+		// 	.getPastEvents("SoldTicket", {
+		// 		filter: { eventId: this.props.match.params.id },
+		// 		fromBlock: 5000000,
+		// 		toBlock: 'latest',
+		// 	})
+		// 	.then((events) => {
+			await axios({
+				url: graphURL,
+				method: 'post',
+				data: {
+				  query: `
+				  {
+					events {
+					  eventId
+					  price
+					  token
+					  sold
+					  buyers
+					}
+				  }
+				  `
+				}
+			}).then((graphEvents)=>{
+				// console.log("mere soldTickets by Id",graphEvents.data.data.events)
+				let tickets = graphEvents.data.data.events.find((event) => event.eventId == this.props.match.params.id)
+				
+				
 				this.setState({ load: true });
-				var newest = events;
-				var newsort = newest
+				var newsort = tickets.buyers
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
 				if (this._isMounted) {
-					this.setState({ soldTicket: newsort, check: newsort });
-					this.setState({ load: false });
-					this.setState({
-						active_length: this.state.soldTicket.length,
-					});
+					this.setState({ load: false,soldTicket: newsort, active_length: newsort.length,check: newsort });
+					
 				}
 			})
-			.catch((err) => console.error(err));
+			.catch((err) => console.error("mere here",err));
 
-		openEvents
-			.getPastEvents("SoldTicket", {
-				fromBlock: 5000000,
-				toBlock: 'latest',
-			})
-			.then((events) => {})
-			.catch((err) => console.error(err));
+		// openEvents
+		// 	.getPastEvents("SoldTicket", {
+		// 		fromBlock: 5000000,
+		// 		toBlock: 'latest',
+		// 	})
+		// 	.then((events) => {console.log("mere soldTickets without Id",events)})
+		// 	.catch((err) => console.error(err));
 
 		//Listen for Incoming Sold Tickets
-		openEvents.events
-			.SoldTicket({
-				filter: { eventId: this.props.match.params.id },
-				fromBlock: blockNumber,
-				toBlock: "latest",
-			})
-			.on("data", (log) => {
-				setTimeout(() => {
-					this.setState({ load: true });
+		// openEvents.events
+		// 	.SoldTicket({
+		// 		filter: { eventId: this.props.match.params.id },
+		// 		fromBlock: blockNumber,
+		// 		toBlock: "latest",
+		// 	})
+		// 	.on("data", (log) => {
+		// 		console.log('mere soldTickets listner', log)
+		// 		setTimeout(() => {
+		// 			this.setState({ load: true });
 
-					this.setState({
-						soldTicket: [...this.state.soldTicket, log],
-					});
-					var newest = this.state.soldTicket;
-					var newsort = newest
-						.concat()
-						.sort((a, b) => b.blockNumber - a.blockNumber);
-					if (this._isMounted) {
-						this.setState({ soldTicket: newsort });
-						this.setState({
-							active_length: this.state.soldTicket.length,
-						});
-					}
-					this.setState({ load: false });
-				}),
-					15000;
-			});
+		// 			this.setState({
+		// 				soldTicket: [...this.state.soldTicket, log],
+		// 			});
+		// 			var newest = this.state.soldTicket;
+		// 			var newsort = newest
+		// 				.concat()
+		// 				.sort((a, b) => b.blockNumber - a.blockNumber);
+		// 			if (this._isMounted) {
+		// 				this.setState({ soldTicket: newsort });
+		// 				this.setState({
+		// 					active_length: this.state.soldTicket.length,
+		// 				});
+		// 			}
+		// 			this.setState({ load: false });
+		// 		}),
+		// 			15000;
+		// 	});
 	}
 
 	//get market cap & dollar value of PhoenixDAO
@@ -275,6 +315,10 @@ class MyEventStat extends Component {
 	}
 
 	updateIPFS = () => {
+		// console.log("hereeee in MyEventStats updateIPFS",this.state.loaded === false ,
+		// this.state.loading === false ,
+		// this.state.blockChainEvent 
+		// )
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
@@ -555,6 +599,11 @@ this.props.toggleDisabling();
 				);
 			} else {
 				let event_data = this.state.blockChainEvent
+				// let event_data = this.props.contracts["DaoEvents"].events[
+				// 	this.state.eventState
+				// ].value;
+				// console.log("temp Event this.state.eventState in render",this.state.eventState,event_data)
+				// event_data)
 				let id = this.props.location.pathname.split("/")[
 					this.props.location.pathname.split("/").length - 1
 				];
@@ -977,19 +1026,17 @@ this.props.toggleDisabling();
 													<img
 														className="float-left blockie"
 														src={makeBlockie(
-															sold.returnValues
-																.buyer
+															sold
 														)}
 													/>
 													<a
 														href={
 															explorerWithAddress +
-															sold.returnValues
-																.buyer
+															sold
 														}
 														target="blank"
 													>
-														{sold.returnValues.buyer.slice(
+														{sold.slice(
 															0,
 															10
 														) + "..."}

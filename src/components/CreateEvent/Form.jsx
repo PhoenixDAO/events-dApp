@@ -13,6 +13,9 @@ let numeral = require("numeral");
 class Form extends Component {
 	constructor(props) {
 		super(props);
+		// console.log("rejectedprops", props);
+
+		// console.log("props.currentBlock",props.currentBlock)
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
@@ -306,7 +309,8 @@ class Form extends Component {
 		let filteredLocation = "";
 		let reg = new RegExp(/^[a-z\sA-Z]+$/)
 		if (this.form.description.value !== "") {
-			if (reg.test(this.form.description.value)) {
+			// console.log("this.form.description.value",this.form.description.value)
+			if(reg.test(this.form.description.value)){
 				let filter = new Filter();
 				filteredDescription = filter.clean(this.form.description.value);
 				this.setState({ description: filteredDescription });
@@ -316,10 +320,13 @@ class Form extends Component {
 
 		}
 		if (this.state.title !== "") {
-			if (reg.test(this.state.title)) {
+			// console.log("title is title",this.state.title)
+			// console.log("title is reg.test(this.state.title) ",reg.test(this.state.title))
+			if(reg.test(this.state.title)){
 				let filter = new Filter();
 				filteredTitle = filter.clean(this.state.title);
 				this.setState({ title: filteredTitle });
+				// console.log("title is filteredTitle",filteredTitle)
 			}
 		}
 		if (this.state.organizer !== "") {

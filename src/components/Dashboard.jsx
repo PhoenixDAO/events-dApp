@@ -2,11 +2,16 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { API_URL, REPORT_EVENT } from "../config/const";
+import Carousel from "react-bootstrap/Carousel";
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 import axios from "axios";
+// import Web3 from "web3";
+// import Loading from "./Loading";
 import { Bar, Doughnut } from "react-chartjs-2";
+// import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import UniswapModal from "./UniswapModal";
 import topicsJson from "../config/topics.json";
+// import {INFURA_WEB_URL} from "../config/const.js";
 let numeral = require("numeral");
 
 class Dashboard extends Component {
@@ -99,7 +104,7 @@ class Dashboard extends Component {
 
 			return;
 		} catch (error) {
-			console.log("check error", error);
+			// console.log("check error", error);
 		}
 	};
 	async loadBockchain() {
@@ -108,7 +113,7 @@ class Dashboard extends Component {
 			// Graph BLOCK
 			this.setState({ MyEvents: [],active_length:false ,loading:true});
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `
@@ -121,6 +126,7 @@ class Dashboard extends Component {
 				  `
 				}
 			}).then((graphDeletedEvents)=>{
+				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 	
 				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 					this.setState({ Deleted_Events: [] });
@@ -136,7 +142,7 @@ class Dashboard extends Component {
 			//Listen For My Newly Created Events
 
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {						
 					query: `{
@@ -162,17 +168,23 @@ class Dashboard extends Component {
 				  }`
 				}
 				}).then((graphEvents)=>{
+				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 				if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 				}else{
 					if (this._isMounted) {
 						const dateTime = Date.now();
 						const dateNow = Math.floor(dateTime / 1000);
 						let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
+						// console.log("graph userEvents",userEvents)
 						if(userEvents){
 							let newsort = userEvents.userEvents
 							.concat()
-							.sort((a, b) => b.blockNumber - a.blockNumber)		
+							.sort((a, b) => b.blockNumber - a.blockNumber)
+							
+								// console.log("GraphQL query newsort",newsort)
+		
 									this.setState({
 										MyEvents: newsort,
 										active_length: newsort.length,
@@ -193,6 +205,7 @@ class Dashboard extends Component {
 		let createdEventlen = 0;
 		let skip = false;
 		let skip2 = false;
+		// console.log("Dashboard NewAndUpdatedEvent in dashboard after uniqueness this.state.MyEvents",this.state.MyEvents)
 		for (let i = 0; i < this.state.MyEvents.length; i++) {
 			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
@@ -223,6 +236,16 @@ class Dashboard extends Component {
 			skip = false;
 			skip2 = false;
 		}
+		// var array1 = this.state.MyEvents;
+		// for (var key in this.state.MyEvents) {
+		// 	for (var key2 in deletedArray) {
+		// 		if (deletedArray[key] != this.state.MyEvents[key2]) {
+		// 			array1.splice(key, 1);
+		// 		}
+		// 	}
+		// }
+		// console.log("Dashboard DeletedEvent in dashboard",deletedArray)
+		// console.log("Dashboard DeletedEvent in dashboard deletedArray2",deletedArray2)
 		this.setState(
 			{
 				// filtered only deleted events
@@ -286,6 +309,9 @@ class Dashboard extends Component {
 				limited=[]
 				limited.seats=0;
 				limited.sold=0;
+				// console.log(
+				// 	"limited",limited
+				// )
 			}
 		
 			let top_PhoenixDAORevenue = phoenixDAORevenue
