@@ -21,11 +21,9 @@ class LocationLandingPage extends Component {
   }
 
   componentDidUpdate() {
-    //this.theTopic = this.getTopicData();
   }
 
   componentDidMount() {
-    //this.theTopic = this.getTopicData();
     window.scroll({
 			top: 0,
 			behavior: 'smooth'
@@ -47,6 +45,7 @@ class LocationLandingPage extends Component {
 
   getLastURLSegment() {
     // console.log(this.props.history.location.pathname);
+
     let currentRoute = this.props.history.location.pathname;
     let lastSegment = currentRoute.substr(currentRoute.lastIndexOf('/') + 1);
 

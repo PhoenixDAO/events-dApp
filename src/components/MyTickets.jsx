@@ -22,6 +22,7 @@ class MyTickets extends Component {
 		this.contracts = context.drizzle.contracts;
 		this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
 		// console.log("checking",this.props.contracts['DaoEvents'].ticketsOf[this.tickets])
+
 		this.perPage = 6;
 		this.myRef = React.createRef()
 		this.loadTicketsFromBlockchain=this.loadTicketsFromBlockchain.bind(this)
@@ -30,31 +31,7 @@ class MyTickets extends Component {
   readMoreClick(location)
   {
     this.props.history.push(location);
-    // window.scrollTo(0, 0);
   }
-
-//   setLoader(){
-// 	if(this._isMounted){
-// 	this.setState({
-// 		blockChainTicketsLoaded:false});
-// 		}
-//   	}
-
-// 	getTickets = () =>{
-// 	if (
-// 		//typeof this.props.contracts['DaoEvents'].ticketsOf[this.tickets] !== 'undefined'
-// 		this.state.blockChainTickets
-// 		) {
-// 		// const myTicket = this.props.contracts['DaoEvents'].ticketsOf[this.tickets].value;
-// 		const myTicket = this.state.blockChainTickets
-// 		let newsort= myTicket.concat().sort((a,b)=> b - a);
-// 		if(newsort!=='undefined'){
-// 		return newsort
-// 		}
-// 	}
-
-//   }
-
   async loadTicketsFromBlockchain(){
 	const web3 = new Web3(
 		new Web3.providers.WebsocketProvider(
@@ -65,7 +42,6 @@ class MyTickets extends Component {
 		Open_events_ABI,
 		Open_events_Address
 	);
-	// this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
 	const blockChainTickets= await openEvents.methods.ticketsOf(this.props.accounts[0]).call()
 	const newsort= blockChainTickets.concat().sort((a,b)=> b - a);
 	this.setState({blockChainTickets:newsort,blockChainTicketsLoaded:false})
@@ -79,11 +55,8 @@ class MyTickets extends Component {
 		let body = <PhoenixDAOLoader />;
 		
 		if (
-			// typeof this.props.contracts['DaoEvents'].ticketsOf[this.tickets] !== 'undefined'
 			this.state.myTicket			
 			) {
-			//let allTickets = this.props.contracts['DaoEvents'].ticketsOf[this.tickets].value;
-			// let allTickets = this.getTickets();
 			if(this.state.blockChainTicketsLoaded){
 				body =
 				<div>
@@ -118,8 +91,6 @@ class MyTickets extends Component {
 					let ticket = parseInt(this.state.blockChainTickets[i], 10);
 					tickets.push(<Ticket key={ticket} id={ticket} ticketData={this.state.blockChainTickets[i]}/>);
 				}
-				//tickets.reverse();
-
 				let pagination;
 				if (pages > 1) {
 					let links = [];
@@ -196,13 +167,11 @@ class MyTickets extends Component {
 		);
 	}
 	componentDidMount(){
-		// this.getTickets()
 		this.loadTicketsFromBlockchain()
 		if (this.state.prevPath==-1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		  }
 		this._isMounted = true;
-		// setTimeout(()=>this.setLoader(),1000);
 
 	}
 

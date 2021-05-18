@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 
-import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import {INFURA_WEB_URL,graphURL} from "../config/const.js";
 
@@ -11,6 +10,7 @@ import Event from "./Event";
 // import Web3 from "web3";
 import axios from "axios";
 // import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+
 
 class MyEvents extends Component {
 	constructor(props, context) {
@@ -45,17 +45,7 @@ class MyEvents extends Component {
 
 	//Get Blockchain State
 	async loadBlockchain() {
-		// const web3 = new Web3(
-		// 	new Web3.providers.WebsocketProvider(
-		// 		INFURA_WEB_URL
-		// 		)
-		// );
-		// const openEvents = new web3.eth.Contract(
-		// 	Open_events_ABI,
-		// 	Open_events_Address
-		// );
 		if (this._isMounted) {
-			// this.setState({ openEvents: openEvents });
 			this.setState({ MyEvents: [],active_length:false ,loading:true});
 			await axios({
 				url: graphURL,
@@ -79,7 +69,6 @@ class MyEvents extends Component {
 					this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
 				}
 			}).catch((err)=>{
-				console.error("graph error here",err);
 				this.setState({ Deleted_Events: [],loading:false });
 			})
 			// console.log("Graph this.state.isActive",this.state.isActive)
@@ -88,27 +77,7 @@ class MyEvents extends Component {
 			} else {
 				this.loadPastEvents();
 			}
-			// const dateTime = Date.now();
-			// const dateNow = Math.floor(dateTime / 1000);
-			// const blockNumber = await web3.eth.getBlockNumber();
-			// this.setState({ dateNow });
-			// this.setState({ blocks: blockNumber - 50000 });
-			// this.setState({ latestblocks: blockNumber - 1 });
-			
 		}
-		// await openEvents
-		// 	.getPastEvents("DeletedEvent", {
-		// 		fromBlock: 8181618,
-		// 		toBlock: this.state.latestblocks,
-		// 	})
-		// 	.then((events) => {
-		// 		this.setState({ Deleted_Events: events });
-		// 		return events;
-		// 	})
-		// 	.catch((err) => {
-		// 		console.error(err);
-		// 		this.setState({ Deleted_Events: [] });
-		// 	});
 	}
 
 	//Get My Active Events on Blockchain
@@ -126,9 +95,7 @@ class MyEvents extends Component {
 		await axios({
 		url: graphURL,
 		method: 'post',
-		data: {
-			//users(account:${this.account}) {
-				
+		data: {				
 			query: `{
 				users {
 			  id
@@ -155,12 +122,12 @@ class MyEvents extends Component {
 		// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
 			// console.log("GraphQL query -- graphEvents undefined")
+
 			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 		}else{
 			if (this._isMounted) {
 				const dateTime = Date.now();
 				const dateNow = Math.floor(dateTime / 1000);
-				// this.setState({ loading: true });
 				let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
 				// console.log("graph userEvents",userEvents)
 				if(userEvents){
@@ -187,42 +154,8 @@ class MyEvents extends Component {
 
 		}).catch((err) => {
 			this.setState({ loading: false });
-			console.error("graph some error",err)})
+		})
 
-		// .getPastEvents (Active Events) BLOCK //
-		// this.state.openEvents
-		// 	.getPastEvents("NewAndUpdatedEvent", {
-		// 		filter: { owner: this.account },
-		// 		fromBlock: 5000000,
-		// 		toBlock: this.state.latestblocks,
-		// 	})
-		// 	.then((events) => {
-		// 		console.log("my events",events)
-
-		// 		const result = Object.values(
-		// 			events.reverse().reduce((a, c) => {
-		// 				a[c.returnValues.eventId] ||
-		// 					(a[c.returnValues.eventId] = Object.assign(c));
-		// 				return a;
-		// 			}, {})
-		// 		);
-		// 		var newsort = result
-		// 			.concat()
-		// 			.sort((a, b) => b.blockNumber - a.blockNumber)
-		// 			.filter(
-		// 				(activeEvents) =>
-		// 					activeEvents.returnValues.time >= this.state.dateNow
-		// 			).reverse()
-				
-		// 			newsort.map((event,i)=>{
-		// 			if(event.returnValues.name == "mmm"){
-		// 				console.log("eventtt result",event)
-		// 			}
-		// 		})
-		// 			this.setState({ MyEvents: newsort, check: newsort ,active_length: newsort.length,});
-		// 			setTimeout(() => this.setState({ loading: false }), 1000);
-		// 	})
-		// 	.catch((err) => console.error(err));
 	}
 
 	//Get My Concluded Events on Blockchain
@@ -272,8 +205,6 @@ class MyEvents extends Component {
 			if (this._isMounted) {
 				const dateTime = Date.now();
 				const dateNow = Math.floor(dateTime / 1000);
-				// this.setState({ loading: true });
-
 				let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
 				if(userEvents){
 					let newsort = userEvents.userEvents
@@ -291,7 +222,6 @@ class MyEvents extends Component {
 								active_length: newsort.length,
 							});
 				}
-				
 				this.setState({ loading: false });
 			}
 
@@ -299,42 +229,7 @@ class MyEvents extends Component {
 
 		}).catch((err) => {
 			this.setState({ loading: false });
-			console.error("graph some error",err)})
-
-		// .getPastEvents (Past Events) BLOCK //
-		// this.state.openEvents
-		// 	.getPastEvents("NewAndUpdatedEvent", {
-		// 		filter: { owner: this.account },
-		// 		fromBlock: 5000000,
-		// 		toBlock: this.state.latestblocks,
-		// 	})
-		// 	.then((events) => {
-		// 		this.setState({ loading: true });
-				
-		// 		const result = Object.values(
-		// 			events.reverse().reduce((a, c) => {
-		// 				a[c.returnValues.eventId] ||
-		// 					(a[c.returnValues.eventId] = Object.assign(c));
-		// 				return a;
-		// 			}, {})
-		// 		);
-		// 		var newsort = result
-		// 			.concat()
-		// 			.sort((a, b) => b.blockNumber - a.blockNumber)
-		// 			.filter(
-		// 				(pastEvents) =>
-		// 					pastEvents.returnValues.time <= this.state.dateNow
-		// 			).reverse()
-
-		// 		if (this._isMounted) {
-		// 			this.setState({ MyEvents: newsort, check: newsort });
-		// 			this.setState({
-		// 				active_length: this.state.MyEvents.length,
-		// 			});
-		// 			setTimeout(() => this.setState({ loading: false }), 1000);
-		// 		}
-		// 	})
-		// 	.catch((err) => console.error(err));
+		})
 	}
 	//Display My Concluded Events
 	PastEvent = (e) => {
@@ -422,26 +317,6 @@ class MyEvents extends Component {
 				);
 			} else {
 				let count = this.state.MyEvents.length;
-				// let currentPage = Number(this.props.match.params.page);
-				// if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-
-				// let end = currentPage * this.perPage;
-				// let start = end - this.perPage;
-				// if (end > count) end = count;
-				// let pages = Math.ceil(count / this.perPage);
-
-				// let myEvents = [];
-
-				// for (let i = start; i < end; i++) {
-				// 	myEvents.push(<Event disabledStatus={this.props.disabledStatus}
-				// 		inquire={this.props.inquire}
-				// 		key={this.state.MyEvents[i].returnValues.eventId}
-				// 		id={this.state.MyEvents[i].returnValues.eventId}
-				// 		ipfs={this.state.MyEvents[i].returnValues.ipfs}
-				// 		myEvents={true} />);
-				// }
-
-				//events.reverse();
 				let currentPage = Number(this.props.match.params.page);
 				let events_list = [];
 				let skip = false;
@@ -481,7 +356,6 @@ class MyEvents extends Component {
 						/>
 					);
 				}
-				// events_list.reverse();
 
 				let pagination;
 

@@ -3,9 +3,9 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import makeBlockie from "ethereum-blockies-base64";
+
 import {
 	PhoenixDAO_Testnet_Token_ABI,
-	PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet.js";
 
@@ -408,6 +408,7 @@ class Event extends Component {
 					: "Free Event";
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
 				// console.log("this.props.eventData",parseInt(event_data.time, 10))
+
 				let max_seats = event_data.limited ? event_data.seats : "∞";
 				let disabled = false;
 				let reportedOut = " ";
@@ -492,6 +493,7 @@ class Event extends Component {
 					"/event-stat/" + pagetitle + "/" + this.props.id;
 				let myEvent = false;
 				// console.log("this.props.eventData 123 now check event_data",event_data.owner.toLowerCase(),"now account",this.account.toLowerCase(),event_data.owner.toLowerCase() == this.account.toLowerCase())
+
 				if (event_data.owner.toLowerCase() == this.account.toLowerCase()) {
 					myEvent = true;
 				}
