@@ -2,11 +2,19 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+// import Carousel from "react-bootstrap/Carousel";
+
 import axios from "axios";
-import { API_URL, REPORT_EVENT } from "../config/const";
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 // Import dApp Components
+
+// import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
+// import {INFURA_WEB_URL} from "../config/const.js";
+
 import Event from "./Event";
+// import Web3 from "web3";
+// import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 // TODO: Make slides dynamic: import slidesJson from '../config/slides.json';
 import topicsJson from "../config/topics.json";
@@ -63,7 +71,7 @@ class PastEvents extends Component {
 
 	// GRAPH BLOCK //
 	await axios({
-		url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+		url: graphURL,
 		method: 'post',
 		data: {
 		query: `
@@ -88,7 +96,7 @@ class PastEvents extends Component {
 
 
 	await axios({
-	url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+	url: graphURL,
 	method: 'post',
 	data: {
 	query: `
@@ -112,7 +120,11 @@ class PastEvents extends Component {
 	`
 	}
 	}).then((graphEvents)=>{
+	// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+
 	if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+		// console.log("GraphQL query -- graphEvents undefined")
+
 		this.setState({ past_events: [] ,past_events_copy: [],
 			past_length: 0
 			});
@@ -128,7 +140,10 @@ class PastEvents extends Component {
 				.filter(
 					(pastEvents) =>
 					pastEvents.time < dateNow
-				)			
+				)
+					// console.log("GraphQL query newsort",newsort)
+			
+
 					this.setState({
 						past_events: newsort,
 						past_events_copy: newsort,

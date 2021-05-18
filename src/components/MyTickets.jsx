@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { drizzleConnect } from 'drizzle-react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+
+// import Loading from './Loading';
 import PhoenixDAOLoader from './PhoenixDAOLoader';
 import Ticket from './Ticket';
 import Web3 from "web3";
@@ -19,6 +21,8 @@ class MyTickets extends Component {
 	}
 		this.contracts = context.drizzle.contracts;
 		this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
+		// console.log("checking",this.props.contracts['DaoEvents'].ticketsOf[this.tickets])
+
 		this.perPage = 6;
 		this.myRef = React.createRef()
 		this.loadTicketsFromBlockchain=this.loadTicketsFromBlockchain.bind(this)
@@ -41,6 +45,8 @@ class MyTickets extends Component {
 	const blockChainTickets= await openEvents.methods.ticketsOf(this.props.accounts[0]).call()
 	const newsort= blockChainTickets.concat().sort((a,b)=> b - a);
 	this.setState({blockChainTickets:newsort,blockChainTicketsLoaded:false})
+	// this.updateIPFS();
+	// console.log("temp Event web3",newsort)
 }
 
   executeScroll = () => this.myRef.current.scrollIntoView()
@@ -66,6 +72,7 @@ class MyTickets extends Component {
 					</div>
 				;
 			} else {
+				// console.log('MyTickets blockChainTickets',this.state.blockChainTickets)
 				let count = this.state.blockChainTickets.length;
 
 				let currentPage = Number(this.props.match.params.page);
@@ -80,6 +87,7 @@ class MyTickets extends Component {
 				let tickets = [];
 
 				for (let i = start; i < end; i++) {
+					// console.log("ticketData this.state.blockChainTickets[i]",this.state.blockChainTickets[i])
 					let ticket = parseInt(this.state.blockChainTickets[i], 10);
 					tickets.push(<Ticket key={ticket} id={ticket} ticketData={this.state.blockChainTickets[i]}/>);
 				}

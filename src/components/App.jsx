@@ -550,7 +550,7 @@ class App extends Component {
 		} else if (
 			(this.props.web3.status === "initialized" &&
 				Object.keys(this.props.accounts).length === 0) ||
-			this.props.web3.networkId !== GLOBAL_NETWORK_ID
+			this.props.web3.networkId != GLOBAL_NETWORK_ID
 		) {
 			body = (
 				<div>

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+// import makeBlockie from "ethereum-blockies-base64";
+
 import "../styles/Ticket.css";
 import ipfs from "../utils/ipfs";
 import NotifySending from "./NotifySending";
@@ -12,7 +14,7 @@ import axios from "axios";
 import Web3 from "web3";
 import {INFURA_WEB_URL} from "../config/const.js";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
-import { toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {  explorerWithAddress } from "../config/const";
 
@@ -75,7 +77,7 @@ class Ticket extends Component {
 			});
 			return;
 		} catch (error) {
-			console.log("check error", error);
+			// console.log("check error", error);
 		}
 	};
 	updateIPFS = () => {
@@ -263,7 +265,10 @@ class Ticket extends Component {
 			);
 			const blockChainEvent= await openEvents.methods.events(this.props.contracts["DaoEvents"].getTicket[this.ticket]
 			.value[0]).call()
-			this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})			
+			this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})
+
+			// console.log("Ticket this.event",this.event,"blockChainEvent",blockChainEvent)
+			
 		}
 
 		if (this.event !== null) {
@@ -308,6 +313,7 @@ class Ticket extends Component {
 				this.ticket
 			].value;
 			let event_data = this.state.blockChainEvent
+			// console.log("Ticket event_data",event_data)
 			let reported=false;
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (

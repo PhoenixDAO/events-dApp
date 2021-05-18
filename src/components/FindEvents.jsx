@@ -2,17 +2,26 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { API_URL, REPORT_EVENT } from "../config/const";
+// import Carousel from "react-bootstrap/Carousel";
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 import axios from "axios";
+// Import dApp Components
+// import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
+// import Web3 from "web3";
+// import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+// import { INFURA_WEB_URL } from "../config/const.js";
 
 // TODO: Make slides dynamic: import slidesJson from '../config/slides.json';
 import topicsJson from "../config/topics.json";
+// import eventCTAsJson from "../config/event_ctas.json";
 
 class FindEvents extends Component {
 	constructor(props, context) {
 		super(props);
+		// console.log("props", props);
+
 		this.state = {
 			openEvents: "",
 			upload: false,
@@ -66,8 +75,10 @@ class FindEvents extends Component {
 	//Loads Blockhain Data,
 	async loadBlockchain() {
 		// GRAPH BLOCK //
+		// console.log("GraphQL query before call",Date.now())
+
 			await axios({
-				url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+				url: graphURL,
 				method: 'post',
 				data: {
 				  query: `
@@ -80,6 +91,9 @@ class FindEvents extends Component {
 				  `
 				}
 			}).then((graphDeletedEvents)=>{
+				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+
+
 				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 					this.setState({ Deleted_Events: [] });
 				}else{
@@ -92,7 +106,7 @@ class FindEvents extends Component {
 			
 
 		await axios({
-			url: 'https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp',
+			url: graphURL,
 			method: 'post',
 			data: {
 			  query: `
@@ -116,7 +130,10 @@ class FindEvents extends Component {
 			  `
 			}
 		}).then((graphEvents)=>{
+			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+
 			if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+				// console.log("GraphQL query -- graphEvents undefined")
 				this.setState({ Events_Blockchain: [] ,
 					active_length: 0,
 					event_copy: []});
@@ -132,7 +149,9 @@ class FindEvents extends Component {
 						.filter(
 							(activeEvents) =>
 								activeEvents.time >= dateNow
-						)					
+						)
+							// console.log("GraphQL query newsort",newsort)
+					
 					this.setState({
 						Events_Blockchain: newsort,
 						active_length: newsort.length,
@@ -264,6 +283,7 @@ class FindEvents extends Component {
 				}
 
 				events_list.reverse();
+				// console.log("events_listt",events_list)
 				let updated_list = [];
 				count = events_list.length;
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;

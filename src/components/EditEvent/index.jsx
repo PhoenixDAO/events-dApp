@@ -142,10 +142,10 @@ class CreateEvent extends Component {
 						error_text: "Transaction Rejected",
 					},
 					() => {
-						console.log(this.state.error_text);
+						// console.log(this.state.error_text);
 					}
 				);
-				console.log(error);
+				// console.log(error);
 			});
 	};
 
@@ -245,7 +245,8 @@ class CreateEvent extends Component {
 							account={this.props.account}
 							{...this.props.location.state}
 						/>
-						</div>
+											</div>
+
 			);
 		}
 

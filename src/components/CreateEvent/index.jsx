@@ -177,7 +177,7 @@ class CreateEvent extends Component {
 			type: null,
 			file_name: null,
 		}}, () =>
-			console.log("state",this.state)
+			console.log()
 		);
 	};
 
