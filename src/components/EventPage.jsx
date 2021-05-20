@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import makeBlockie from "ethereum-blockies-base64";
+import Button from '@material-ui/core/Button';
 
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
-
+import "../styles/eventPage.css";
 // import Notify from "./Notify";
 // import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
@@ -30,6 +31,7 @@ import {
 	TwitterShareButton,
 	WhatsappShareButton,
 } from "react-share";
+import { withStyles } from "@material-ui/core/styles";
 
 import {
 	EmailIcon,
@@ -69,6 +71,11 @@ const customStyles = {
 	},
 };
 
+const styles = theme => ({
+	root: {
+		backgroundColor: "red"
+	}
+});
 class EventPage extends Component {
 	constructor(props, context) {
 		try {
@@ -111,6 +118,7 @@ class EventPage extends Component {
 		this.onChangePage = this.onChangePage.bind(this);
 		this.giveApproval = this.giveApproval.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this)
+		const { classes } = props;
 
 	}
 
@@ -439,6 +447,8 @@ class EventPage extends Component {
 	}
 
 	render() {
+		const { classes } = this.props;
+
 		let body = <Loading />;
 
 		if (
@@ -539,23 +549,33 @@ class EventPage extends Component {
 				if (this.props.match.params.page === pagetitle) {
 					body = (
 						<div className="row">
-							<div className="row">
+							<div className="row header">
 								<h2>
 									{event_data[0]}
 								</h2>
-								<hr />
+								<div>
+
+									<Button variant="contained" color="primary">
+										Share Event
+                                 </Button>
+									<Button
+										variant="outlined"
+										color="primary"
+										className="btn btn-dark"
+										onClick={this.inquire}
+										disabled={
+											disabled || this.props.disabledStatus || this.state.disabledBuying
+										}
+									>
+										<i className="fas fa-ticket-alt"></i>
+										{buttonText}
+									</Button>
+								</div>
 							</div>
+							<hr />
+
 							<div className="col-12">
-								<button
-									className="btn btn-dark"
-									onClick={this.inquire}
-									disabled={
-										disabled || this.props.disabledStatus || this.state.disabledBuying
-									}
-								>
-									<i className="fas fa-ticket-alt"></i>
-									{buttonText}
-								</button>
+
 								<label className="pl-2 small">
 									{disabledStatus}
 								</label>
@@ -822,4 +842,5 @@ const mapStateToProps = (state) => {
 };
 
 const AppContainer = drizzleConnect(EventPage, mapStateToProps);
-export default AppContainer;
+// export default AppContainer;
+export default withStyles(styles, { withTheme: true })(AppContainer);

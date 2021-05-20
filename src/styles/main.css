@@ -513,7 +513,7 @@ input[type="number"] {
 }
 
 .page-wrapper-inner {
-	padding: 60px 60px 10px 60px;
+	padding: 0px 60px 10px 60px;
 }
 /* @media screen and (max-width: 767px) {
                 .page-wrapper-inner {

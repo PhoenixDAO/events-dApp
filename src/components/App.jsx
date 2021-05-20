@@ -775,7 +775,7 @@ class App extends Component {
 						connect={this.loadBlockchainData}
 					/>
 					<div id="page-content-wrapper" className="sidebar-open">
-						<div
+						{/* <div
 							id="bgImage"
 							ref="bgImage"
 							style={{
@@ -791,8 +791,8 @@ class App extends Component {
 							/>
 							<h1>PhoenixDAO Events Marketplace</h1>
 							<p>What are you going to do?</p>
-						</div>
-						<div className="container-fluid">
+						</div> */}
+						<div className="container">
 							<div className="page-wrapper-inner">
 								<div>
 									{body}
