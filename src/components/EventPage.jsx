@@ -52,7 +52,6 @@ import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
-	PhoenixDAO_Testnet_Token_Address,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
 
@@ -81,21 +80,10 @@ class EventPage extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-			//Importing PhoenixDAO/OMG contracts
-			// **** ENDS UP HERE, SO THIS WORKS
-			/*console.log(
-			  "SUCCESS",
-			  PhoenixDAO_Testnet_Token_Address,
-			  context.drizzle.contracts
-			);*/
 		} catch (e) {
-			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
 		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		// this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
-		// 	this.props.match.params.id
-		// );
 		this.revenue = this.contracts["DaoEvents"].methods.eventRevenue.cacheCall(11)
 		this.account = this.props.accounts[0];
 		this.state = {
@@ -400,11 +388,7 @@ class EventPage extends Component {
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2] ,
-				// this.props.contracts["DaoEvents"].events[this.event]
-				// 	.value[2],
 				token: this.state.blockChainEvent[3], 
-				// this.props.contracts["DaoEvents"].events[this.event]
-				// 	.value[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
 					this.props.match.params.id	
@@ -471,21 +455,10 @@ class EventPage extends Component {
 				);
 			} else {
 				let event_data =this.state.blockChainEvent
-				// let event_data = this.props.contracts["DaoEvents"].events[
-				// 	this.event
-				// ].value;
-
 				let shareUrl = window.location;
 				let title = event_data[0];
-				// let ownerDetails = this.props.contracts["DaoEvents"]
-				// 	.getOwnerDetails[this.event];
-				// if (ownerDetails != undefined) {
-				// 	ownerDetails = ownerDetails.value;
-				// console.log("owner",ownerDetails);
-				// }
 				let image = this.getImage();
 				let description = this.getDescription();
-				// let organizer = this.getOrganizer();
 				let locations = this.getLocation();
 				let buttonText = event_data[3] ? " Buy Ticket" : " Get Ticket";
 				let symbol = event_data[3]
@@ -567,9 +540,6 @@ class EventPage extends Component {
 					body = (
 						<div className="row">
 							<div className="col-12">
-								{/* <h3>{event_data[0]}</h3>
-           		 <br />
-           		 {description} */}
 								<button
 									className="btn btn-dark"
 									onClick={this.inquire}
@@ -594,10 +564,6 @@ class EventPage extends Component {
 											this.props.match.params.id
 										}
 									>
-										{/* <button className="btn btn-dark mt-2">
-											<i className="fas fa-chart-bar"></i>{" "}
-											View Event Stat
-										</button> */}
 									</Link>
 								)}
 								<div className="event-social-share-btns-div">
@@ -833,7 +799,6 @@ class EventPage extends Component {
 
 	componentDidUpdate() {
 		this.updateIPFS();
-		//this.afterApprove();
 	}
 
 	componentWillUnmount() {

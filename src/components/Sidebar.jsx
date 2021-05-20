@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 import makeBlockie from "ethereum-blockies-base64";
 import Web3 from 'web3'
@@ -27,8 +27,6 @@ class Sidebar extends Component {
 		} else {
 			activeClassName = "nav-item";
 		}
-
-		//console.log(this);
 	}
 
 	toggleSidebarClass = (closeOnly) => {
@@ -74,7 +72,6 @@ class Sidebar extends Component {
 				const a = await window.ethereum.enable();
 			} catch (e) {
 				if ((e.code = -32002)) {
-					// window.alert(e.message)
 					this.setState({
 						errorMessage:
 							"Connection request already pending. Please check MetaMask !",
@@ -139,7 +136,6 @@ class Sidebar extends Component {
 							</span>
 						</NavLink>
 					</div>
-					{/* {this.props.account} */}
 				</div>
 			);
 		}
@@ -222,7 +218,6 @@ class Sidebar extends Component {
 									to="/topics"
 									className="nav-link"
 									activeClassName="nav-link-active"
-									//isActive={() => ['/topics','/topic/music/1','/topic/charity-and-causes/1','/topic/parties/1','/topic/sports-and-fitness/1'].includes(this.context.router.route.location.pathname)}
 									isActive={() =>
 										this.context.router.route.location.pathname.split(
 											"/topic/"
@@ -242,9 +237,6 @@ class Sidebar extends Component {
 									<span className="toggleHidden">Topics</span>
 								</NavLink>
 							</li>
-							{/* <li>
-								<NavLink to="/locations" className="nav-link" activeClassName="nav-link-active" onClick={() => { this.sidebarClick(this) }}><i className="fa fa-map-marker-alt"></i> <span className="toggleHidden">Locations</span></NavLink>
-							</li> */}
 							<li>
 								<NavLink
 									to="/calendar"
@@ -421,7 +413,6 @@ class Sidebar extends Component {
 									to="/topics"
 									className="nav-link"
 									activeClassName="nav-link-active"
-									//isActive={() => ['/topics','/topic/music/1','/topic/charity-and-causes/1','/topic/parties/1','/topic/sports-and-fitness/1'].includes(this.context.router.route.location.pathname)}
 									isActive={() =>
 										this.context.router.route.location.pathname.split(
 											"/topic/"
@@ -441,9 +432,6 @@ class Sidebar extends Component {
 									<span className="toggleHidden">Topics</span>
 								</NavLink>
 							</li>
-							{/* <li>
-							<NavLink to="/locations" className="nav-link" activeClassName="nav-link-active" onClick={() => {this.sidebarClick(this)}}><i className="fa fa-map-marker-alt" title="Locations"></i> <span className="toggleHidden">Locations</span></NavLink>
-						</li> */}
 							<li>
 								<NavLink
 									to="/calendar"
@@ -589,9 +577,6 @@ class Sidebar extends Component {
 									</span>
 								</NavLink>
 							</li>
-							{/* <li className="nav-item">
-							<NavLink to="/token" className="nav-link" activeClassName="nav-link-active"><img src="/images/PhoenixDAO.png" className="sidebar_PhoenixDAO-logo" alt="PhoenixDAO Token Logo" title="PHNX Faucet" /> <span className="toggleHidden">Get PHNX Tokens</span></NavLink>
-						</li> */}
 						</ul>
 
 						<ul className="nav flex-column ">

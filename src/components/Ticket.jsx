@@ -3,6 +3,7 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import makeBlockie from "ethereum-blockies-base64";
+
 import "../styles/Ticket.css";
 import ipfs from "../utils/ipfs";
 import NotifySending from "./NotifySending";
@@ -15,7 +16,7 @@ import {INFURA_WEB_URL} from "../config/const.js";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { explorerWithTX, explorerWithAddress } from "../config/const";
+import {  explorerWithAddress } from "../config/const";
 
 
 
@@ -84,8 +85,6 @@ class Ticket extends Component {
 			this.state.loaded === false &&
 			this.state.loading === false &&
 			this.state.blockChainEvent !== null
-			// typeof this.props.contracts["DaoEvents"].events[this.event] !==
-			// 	"undefined"
 		) {
 			this.setState(
 				{
@@ -94,8 +93,6 @@ class Ticket extends Component {
 				() => {
 					ipfs.get(
 						this.state.blockChainEvent[7]
-						// this.props.contracts["DaoEvents"].events[this.event]
-						// 	.value[7]
 					)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
@@ -250,7 +247,6 @@ class Ticket extends Component {
 			typeof this.props.contracts["DaoEvents"].getTicket[this.ticket] !==
 				"undefined" &&
 				this.state.blockChainEvent === null
-			// this.event === null
 		) {
 			this.event = await this.contracts[
 				"DaoEvents"
@@ -278,15 +274,13 @@ class Ticket extends Component {
 		if (this.event !== null) {
 			this.updateIPFS();
 		}
-		//<img src="/images/qr.jpg" width="150" alt="qr code" />
 	};
 
 	downloadQR = () => {
 		let ticket_data = this.props.contracts["DaoEvents"].getTicket[
 			this.ticket
 		].value;
-		// let event_data = this.props.contracts["DaoEvents"].events[this.event]
-		// 	.value;
+
 		let event_data = this.state.blockChainEvent
 		const canvas = document.getElementById(
 			event_data[0] + "-" + ticket_data[1]
@@ -311,7 +305,6 @@ class Ticket extends Component {
 			</div>
 		);
 		if (
-			// this.event !== null &&
 			this.state.blockChainEvent !== null &&
 			typeof this.props.contracts["DaoEvents"].events[this.event] !==
 				"undefined"
@@ -345,7 +338,6 @@ class Ticket extends Component {
 				if (event_data.owner.toLowerCase() == this.account.toLowerCase()) {
 					myEvent = true;
 				}
-			// let titleURL = "/event/" + pagetitle + "/" + ticket_data[0];
 			let shareUrl = window.location.origin + titleURL;
 
 			let card_body;
@@ -406,7 +398,6 @@ class Ticket extends Component {
 									:
 									event_data[0]
 								}
-								{/* {event_data[0]} */}
 							</h5>
 							<div className="ticketDescription">
 								{description}
@@ -513,57 +504,6 @@ class Ticket extends Component {
 				card_body = (
 					<div>
 						<div className="card-body">
-							{/* <h5 className="text-center">
-								Download Digital Ticket:
-							</h5>
-							<p className="text-center">
-								<a onClick={this.downloadQR}>
-									<img
-										src="/images/add-to-apple-wallet-logo.png"
-										width="140px"
-										height="40px"
-										alt="apple wallet logo"
-									/>
-								</a>
-							</p>
-							<div className="form-group">
-								<p className="myTicketQR text-center">
-									<QRCode
-										id={
-											event_data[0] + "-" + ticket_data[1]
-										}
-										value={
-											"Event Name: " +
-											event_data[0] +
-											", " +
-											"Event Date: " +
-											date.toLocaleDateString() +
-											", " +
-											"Event Time: " +
-											date.toLocaleTimeString() +
-											", " +
-											"Event Location: " +
-											this.state.location +
-											", " +
-											"Ticket Number: " +
-											ticket_data[1]
-										}
-										size={180}
-										level={"H"}
-										bgColor="transparent"
-										fgColor="black"
-										imageSettings={{
-											src: "/images/PhoenixDAO.png",
-											height: 34,
-											width: 34,
-											x: null,
-											y: 75,
-											excavate: false,
-										}}
-									/>
-								</p>
-							</div> */}
-
 							<h5 className="text-center">
 								<b>Send or Transfer Ticket:</b>
 							</h5>

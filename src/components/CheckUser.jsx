@@ -6,6 +6,7 @@ import QrReader from "react-qr-reader";
 import CircularProgress from "@material-ui/core/CircularProgress";
 // import PhoenixDAOLoader from "./PhoenixDAOLoader";
 // import Loading from "./Loading";
+
 import Snackbar from "./Snackbar";
 import { API_URL, REPORT_EVENT } from "../config/const";
 import { toast } from "react-toastify";
@@ -31,15 +32,6 @@ class CheckUser extends Component {
 		this.address = null;
 		this.ticketsOfUser = null;
 		this.listOfTickets = [];
-		// this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
-		// 	this.props.event_id
-		// );
-		// this.event_data = this.props.contracts["DaoEvents"].events[
-		// 	this.event
-		// ].value;
-		// this.organizerName = this.contracts[
-		// 	"DaoEvents"
-		// ].methods.getOwnerDetails.cacheCall(this.event);
 		this.reportEvent = this.reportEvent.bind(this);
 	}
 
@@ -66,12 +58,9 @@ class CheckUser extends Component {
 			this.setState({
 				loading: true,
 			});
-			// let ownerDetails = this.props.contracts["DaoEvents"]
-			// 	.getOwnerDetails[this.event];
 			let payload = {
 				reportAccounts: this.account,
 				eventName: this.state.blockChainEvent.name,
-				// eventName: this.event_data.name,
 				id: this.props.event_id,
 				count: 1,
 			};
@@ -79,7 +68,7 @@ class CheckUser extends Component {
 				`${API_URL}${REPORT_EVENT}`,
 				payload
 			);
-			// console.log("Consoleee notify report response",report)
+
 			toast(<NotifyReport text={"Report successful!"}/>, {
 					position: "bottom-right",
 					autoClose: true,
@@ -94,6 +83,7 @@ class CheckUser extends Component {
 
 			if(error.response && error.response.data){
 				// console.log("Consoleee notify report response error.response.data",error.response.data)
+
 				toast(<NotifyReport text={error.response.data.responseMessage+"!"}/>, {
 					position: "bottom-right",
 					autoClose: true,
@@ -131,10 +121,6 @@ class CheckUser extends Component {
 			status: false,
 		});
 	};
-
-	// filterHideEvents = async () => {
-	// 	const get=await
-	// };
 
 	checkTickets = () => {
 		if (
@@ -205,17 +191,9 @@ class CheckUser extends Component {
 	};
 
 	render() {
-		// let ownerDetails = this.props.contracts["DaoEvents"].getOwnerDetails[
-		// 	this.event
-		// ];
-		// if (ownerDetails != undefined) {
-		// 	ownerDetails = ownerDetails.value;
-		// }
 		<Snackbar
-			// open={this.state.openSnackbar1}
 			open={true}
 			message={"You have alredy report this event"}
-			// handleClose={() => this.handleSnackbarClose(1)}
 		/>;
 		let body, message;
 		if (this.state.tab === 1) {
@@ -316,14 +294,6 @@ class CheckUser extends Component {
 				<h3>Confirm Purchase</h3>
 				<p>Check if an address has purchased a ticket to this event.</p>
 				{message}
-				{/* <ul className="nav nav-pills nav-fill nav-justified mt-3">
-					<li className="nav-item">
-						<a href="" className={"nav-link " + (this.state.tab === 1 ? 'active' : '')} onClick={(e) => this.changeTab(1, e)}>Enter Address</a>
-					</li>
-					<li className="nav-item">
-						<a href="" className={"nav-link " + (this.state.tab === 2 ? 'active' : '')} onClick={(e) => this.changeTab(2, e)}>QR Scanner</a>
-					</li>
-				</ul> */}
 				{body}
 			</div>
 		);
@@ -335,7 +305,6 @@ class CheckUser extends Component {
 
 	componentDidMount() {
 		this.checkTickets();
-		// this.filterHideEvents();
 	}
 }
 

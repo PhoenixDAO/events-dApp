@@ -9,16 +9,15 @@ import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	// PhoenixDAO_Testnet_Token_Address,
+
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
 import { API_URL, REPORT_EVENT ,GLOBAL_NETWORK_ID,graphURL} from "../config/const";
 import axios from "axios";
-// import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar3 from "./Snackbar3";
 import CircularProgress from "@material-ui/core/CircularProgress";
-// import { Row } from "react-bootstrap";
 
 class Home extends Component {
 	constructor(props, context) {
@@ -32,7 +31,6 @@ class Home extends Component {
 			};
 			context.drizzle.addContract(contractConfig);
 		} catch (e) {
-			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
 		}
 		super(props);
 		this.contracts = context.drizzle.contracts;
@@ -62,7 +60,6 @@ class Home extends Component {
 	}
 
 	componentDidMount() {
-		// setTimeout(() => this.checkNetwork(), 1000);
 		this.props.executeScroll();
 		this.loadData();
 		this.filterHideEvent();
@@ -72,17 +69,16 @@ class Home extends Component {
 		// console.log("nextProps",nextProps.web3, this.state.shownSnackbar3)
 		if (!this.state.shownSnackbar3 && nextProps.web3.status == "initialized" && nextProps.web3.networkId) {
 			// console.log("hererere")
+
 		  this.setState({shownSnackbar3:true})
 		  this.checkNetwork(nextProps.web3.status,nextProps.web3.networkId)
 		}
 	  }
 
-	// componentDidUpdate(){
-	// 	this.checkNetwork()
-	// }
-
 	checkNetwork(web3Status,networkId) {
+
 		// console.log("this.props.web3.networkId",web3Status,networkId)
+
 		if (
 			web3Status == "initialized" &&
 			networkId != GLOBAL_NETWORK_ID
@@ -352,22 +348,6 @@ class Home extends Component {
 				.filter(
 					(activeEvents) => activeEvents.time >= dateNow
 				);
-			// await openEvents
-			// 	.getPastEvents("DeletedEvent", {
-			// 		fromBlock: 7654042,
-			// 		toBlock: this.state.latestblocks,
-			// 	})
-			// 	.then((events) => {
-			// 		console.log("eventsssss deletedEvents", events);
-			// 		this.setState({ Deleted_Events: events });
-			// 		return events;
-			// 	})
-			// 	.catch((err) => {
-			// 		console.error(err);
-			// 		this.setState({ Deleted_Events: [] });
-			// 	});
-			// console.log("open", openEvents);
-			// let deletedEventLength = this.state.Deleted_Events.length;
 
 			this.setState({
 				upcomingEvents: upcomingEvents.length,
@@ -567,7 +547,6 @@ class Home extends Component {
 												Connect to MetaMask
 											</h3>
 											<h4 className="dashboard-data">
-												{/* {eventCount.length} */}
 											</h4>
 											<p className="dashboard-footer">
 												Events
@@ -635,7 +614,6 @@ class Home extends Component {
 												className="welcome-img"
 											></img>
 										</h3>
-										{/* style={{justifyContent: "center",display: "flex",flexDirection: "row"}} */}
 										<p
 											className="mt-0 headings"
 											style={{ margin: "0px" }}
