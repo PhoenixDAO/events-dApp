@@ -22,17 +22,9 @@ import Loading from "./Loading";
 // import DialogContentText from "@material-ui/core/DialogContentText";
 // import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-
-// import Notify from "./Notify";
-// import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
-// import NotifySuccess from "./NotifySuccess";
-// import NotifyEventSuccess from "./NotifyEventSuccess";
 import NotifyApproveSuccess from "./NotifyApproveSuccess";
-// import NotifyFaucet from "./NotifyFaucet";
-// import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
-// import NotifyNetwork from "./NotifyNetwork";
 import ApprovalModal from "./approvalModal";
 
 import {  toast } from "react-toastify";

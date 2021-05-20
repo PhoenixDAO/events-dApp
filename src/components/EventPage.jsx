@@ -18,7 +18,7 @@ import NotifyApproveSuccess from "./NotifyApproveSuccess";
 import NotifyError from "./NotifyError";
 // import NotifyNetwork from "./NotifyNetwork";
 
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import ApprovalModal from "./approvalModal";
 
 import {
@@ -46,7 +46,7 @@ import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
 import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
-import {INFURA_WEB_URL,graphURL} from "../config/const.js";
+import { INFURA_WEB_URL, graphURL } from "../config/const.js";
 
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
@@ -87,7 +87,7 @@ class EventPage extends Component {
 		this.revenue = this.contracts["DaoEvents"].methods.eventRevenue.cacheCall(11)
 		this.account = this.props.accounts[0];
 		this.state = {
-			blockChainEventLoaded:false,
+			blockChainEventLoaded: false,
 			load: true,
 			loading: false,
 			loaded: false,
@@ -98,7 +98,7 @@ class EventPage extends Component {
 			soldTicket: [],
 			latestblocks: 5000000,
 			PhoenixDAO_market: [],
-			disabledBuying:false,
+			disabledBuying: false,
 			fee: "",
 			token: "",
 			openEvents_address: "",
@@ -110,22 +110,22 @@ class EventPage extends Component {
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
 		this.giveApproval = this.giveApproval.bind(this);
-		this.loadEventFromBlockchain=this.loadEventFromBlockchain.bind(this)
-		
+		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this)
+
 	}
 
-	async loadEventFromBlockchain(){
+	async loadEventFromBlockchain() {
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
 				INFURA_WEB_URL
-				)
+			)
 		);
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,
 			Open_events_Address
 		);
-		const blockChainEvent= await openEvents.methods.events(this.props.match.params.id).call()
-		this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})
+		const blockChainEvent = await openEvents.methods.events(this.props.match.params.id).call()
+		this.setState({ blockChainEvent: blockChainEvent, blockChainEventLoaded: true })
 		this.updateIPFS();
 		// console.log("temp Event web3",blockChainEvent)
 	}
@@ -133,11 +133,11 @@ class EventPage extends Component {
 	//Get SoldTicket Data
 	async loadblockhain() {
 
-		
+
 		const web3 = new Web3(
 			new Web3.providers.WebsocketProvider(
 				INFURA_WEB_URL
-				)
+			)
 		);
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,
@@ -164,11 +164,11 @@ class EventPage extends Component {
 		// 		toBlock: 'latest',
 		// 	})
 		// 	.then((events) => {
-			await axios({
-				url: graphURL,
-				method: 'post',
-				data: {
-				  query: `
+		await axios({
+			url: graphURL,
+			method: 'post',
+			data: {
+				query: `
 				  {
 					events {
 					  eventId
@@ -179,22 +179,22 @@ class EventPage extends Component {
 					}
 				  }
 				  `
-				}
-			}).then((graphEvents)=>{
-				// console.log("mere soldTickets by Id",graphEvents.data.data.events)
-				let tickets = graphEvents.data.data.events.find((event) => event.eventId == this.props.match.params.id)
-				
-				
-				this.setState({ load: true });
-				var newsort = tickets.buyers
-					.concat()
-					.sort((a, b) => b.blockNumber - a.blockNumber);
-				if (this._isMounted) {
-					this.setState({ load: false,soldTicket: newsort, active_length: newsort.length,check: newsort });
-					
-				}
-			})
-			.catch((err) => console.error("mere here",err));
+			}
+		}).then((graphEvents) => {
+			// console.log("mere soldTickets by Id",graphEvents.data.data.events)
+			let tickets = graphEvents.data.data.events.find((event) => event.eventId == this.props.match.params.id)
+
+
+			this.setState({ load: true });
+			var newsort = tickets.buyers
+				.concat()
+				.sort((a, b) => b.blockNumber - a.blockNumber);
+			if (this._isMounted) {
+				this.setState({ load: false, soldTicket: newsort, active_length: newsort.length, check: newsort });
+
+			}
+		})
+			.catch((err) => console.error("mere here", err));
 
 		// openEvents
 		// 	.getPastEvents("SoldTicket", {
@@ -253,7 +253,7 @@ class EventPage extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			this.state.blockChainEvent 
+			this.state.blockChainEvent
 		) {
 			this.setState(
 				{
@@ -272,7 +272,7 @@ class EventPage extends Component {
 									description: data.text,
 									image: data.image,
 									locations: data.location,
-									organizer:data.organizer
+									organizer: data.organizer
 								});
 							}
 						})
@@ -333,7 +333,7 @@ class EventPage extends Component {
 	};
 
 	giveApproval = async () => {
-		this.setState({disabledBuying:true})
+		this.setState({ disabledBuying: true })
 		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -349,10 +349,10 @@ class EventPage extends Component {
 					});
 				}
 			})
-			.on("confirmation", (confirmationNumber, receipt) => this.onConfirmation(confirmationNumber,receipt))
+			.on("confirmation", (confirmationNumber, receipt) => this.onConfirmation(confirmationNumber, receipt))
 			.on("error", (error) => {
 				if (error !== null) {
-					this.setState({disabledBuying:false})
+					this.setState({ disabledBuying: false })
 					txerror = error;
 					toast(<NotifyError error={error} message={txerror.message} />, {
 						position: "bottom-right",
@@ -364,9 +364,9 @@ class EventPage extends Component {
 				}
 			});
 	};
-	onConfirmation(confirmationNumber,receipt){
-		if (confirmationNumber == 0 && receipt.status == true ) {
-			this.setState({disabledBuying:false})
+	onConfirmation(confirmationNumber, receipt) {
+		if (confirmationNumber == 0 && receipt.status == true) {
+			this.setState({ disabledBuying: false })
 			toast(
 				<NotifyApproveSuccess
 					hash={receipt.transactionHash}
@@ -379,7 +379,7 @@ class EventPage extends Component {
 			);
 			// this.afterApprove();
 			this.setState({ disabledStatus: false });
-	}
+		}
 	}
 
 	inquire = async () => {
@@ -387,11 +387,11 @@ class EventPage extends Component {
 		let temp = this.allowance();
 		this.setState(
 			{
-				fee: this.state.blockChainEvent[2] ,
-				token: this.state.blockChainEvent[3], 
+				fee: this.state.blockChainEvent[2],
+				token: this.state.blockChainEvent[3],
 				openEvents_address: this.contracts["DaoEvents"].address,
 				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
-					this.props.match.params.id	
+					this.props.match.params.id
 				),
 				approve: this.contracts["PHNX"].methods.approve(
 					this.contracts["DaoEvents"].address,
@@ -454,7 +454,7 @@ class EventPage extends Component {
 					</div>
 				);
 			} else {
-				let event_data =this.state.blockChainEvent
+				let event_data = this.state.blockChainEvent
 				let shareUrl = window.location;
 				let title = event_data[0];
 				let image = this.getImage();
@@ -539,12 +539,18 @@ class EventPage extends Component {
 				if (this.props.match.params.page === pagetitle) {
 					body = (
 						<div className="row">
+							<div className="row">
+								<h2>
+									{event_data[0]}
+								</h2>
+								<hr />
+							</div>
 							<div className="col-12">
 								<button
 									className="btn btn-dark"
 									onClick={this.inquire}
 									disabled={
-										disabled || this.props.disabledStatus ||this.state.disabledBuying
+										disabled || this.props.disabledStatus || this.state.disabledBuying
 									}
 								>
 									<i className="fas fa-ticket-alt"></i>
@@ -682,11 +688,11 @@ class EventPage extends Component {
 											)}
 											{event_data[3]
 												? numeral(
-														price *
-															this.state
-																.PhoenixDAO_market
-																.usd
-												  ).format("0.000")
+													price *
+													this.state
+														.PhoenixDAO_market
+														.usd
+												).format("0.000")
 												: ""}
 										</li>
 										<li className="list-group-item">
@@ -699,7 +705,7 @@ class EventPage extends Component {
 										<li className="list-group-item">
 											Tickets: {event_data[6]}/{max_seats}
 										</li>
-										
+
 									</ul>
 								</div>
 								{this._isMounted && (
@@ -775,10 +781,6 @@ class EventPage extends Component {
 					handleClose={this.handleClose}
 					giveApproval={this.giveApproval}
 				/>
-				<h2>
-					<i className="fa fa-calendar-alt"></i> Event
-				</h2>
-				<hr />
 				{body}
 				<hr />
 			</div>

@@ -7,9 +7,6 @@ import axios from "axios";
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
-<<<<<<< HEAD
-import { API_URL, REPORT_EVENT } from "../config/const";
-=======
 import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 // import {INFURA_WEB_URL} from "../config/const.js";
 // import Web3 from "web3";
@@ -24,16 +21,11 @@ import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 // } from "react-scroll";
 // import {  Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 import topicsJson from "../config/topics.json";
 
 class TopicLandingPage extends Component {
 	constructor(props, context) {
 		super(props);
-<<<<<<< HEAD
-=======
-		// console.log("i am here")
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 		this.state = {
 			openEvents: "",
 			blocks: 5000000,
@@ -89,10 +81,6 @@ class TopicLandingPage extends Component {
 		this.props.history.push("/topic/" + slug + "/" + 1);
 		this.theTopic = this.getTopicData();
 		this.loadBlockchain();
-<<<<<<< HEAD
-=======
-		// console.log("intopicclick")
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 		this.scrollTo();
 	}
 
@@ -132,11 +120,6 @@ class TopicLandingPage extends Component {
 			  `
 			}
 		}).then((graphDeletedEvents)=>{
-<<<<<<< HEAD
-=======
-			// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
-
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 			if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 				this.setState({ Deleted_Events: [] });
 			}else{
@@ -146,10 +129,6 @@ class TopicLandingPage extends Component {
 			console.error(err);
 			this.setState({ Deleted_Events: [] });
 		})
-<<<<<<< HEAD
-=======
-		// console.log("Graph this.state.isActive",this.state.isActive)
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 		if (this.state.isActive) {
 			this.loadActiveEvents();
 		} else {
@@ -163,14 +142,6 @@ class TopicLandingPage extends Component {
 			this.setState({ loading: true,Topic_Events: [], active_length: 0 });
 		}
 		// GRAPH BLOCK //
-<<<<<<< HEAD
-=======
-		// console.log("GraphQL query before call",Date.now())
-
-		
-
-
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 		await axios({
 		url: graphURL,
 		method: 'post',
@@ -196,15 +167,10 @@ class TopicLandingPage extends Component {
   	`
 		}
 		}).then((graphEvents)=>{
-<<<<<<< HEAD
-
-		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-=======
 		// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
 		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
 			// console.log("GraphQL query -- graphEvents undefined")
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 		}else{
 			if (this._isMounted) {
@@ -218,13 +184,9 @@ class TopicLandingPage extends Component {
 							activeEvents.time >= dateNow &&
 							activeEvents.category ===
 									this.props.match.params.page
-<<<<<<< HEAD
-					)		
-=======
 					)
 						// console.log("GraphQL query newsort",newsort)
 		
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 						if (this._isMounted) {
 							this.setState({
 								Topic_Events: newsort,
@@ -244,23 +206,17 @@ class TopicLandingPage extends Component {
 
 	// Get My Past Events on Blockchain
 	async loadPastEvents() {
-<<<<<<< HEAD
-=======
 		// console.log("inLoadPastEvents")
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 		if (this._isMounted) {
 			this.setState({ loading:true,Topic_Events: [], active_length: 0 });
 		}
 
 		// GRAPH BLOCK //
-<<<<<<< HEAD
-=======
 		// console.log("GraphQL query before call",Date.now())
 
 				
 
 
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 		await axios({
 		url: graphURL,
 		method: 'post',
@@ -286,15 +242,10 @@ class TopicLandingPage extends Component {
 		`
 		}
 		}).then((graphEvents)=>{
-<<<<<<< HEAD
-
-		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-=======
 		// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
 		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
 			// console.log("GraphQL query -- graphEvents undefined")
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 		}else{
 			if (this._isMounted) {
@@ -309,11 +260,8 @@ class TopicLandingPage extends Component {
 							activeEvents.category ===
 									this.props.match.params.page
 					)
-<<<<<<< HEAD
-=======
 						// console.log("GraphQL query newsort",newsort)
 
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 						if (this._isMounted) {
 							this.setState({
 								Topic_Events: newsort,
@@ -401,10 +349,7 @@ class TopicLandingPage extends Component {
 			});
 			return;
 		} catch (error) {
-<<<<<<< HEAD
-=======
 			// console.log("check error", error);
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 		}
 	};
 	//Sort Active Events By Date(Newest/Oldest)
@@ -443,10 +388,7 @@ class TopicLandingPage extends Component {
 		) {
 			let count = this.state.active_length;
 			if (this.state.loading) {
-<<<<<<< HEAD
-=======
 				// console.log("graph loading",this.state.loading)
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 				body = <PhoenixDAOLoader />;
 			} else if (count === 0 && !this.state.loading) {
 				body = (
@@ -459,10 +401,7 @@ class TopicLandingPage extends Component {
 					</p>
 				);
 			} else {
-<<<<<<< HEAD
-=======
 				// console.log("this.props.match.params.page",this.props.match.params.id)
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 				let currentPage = Number(this.props.match.params.id);
 				let events_list = [];
 				let skip = false;
@@ -502,14 +441,10 @@ class TopicLandingPage extends Component {
 					);
 				} else {
 					let updated_list = [];
-<<<<<<< HEAD
-					count = events_list.length;
-=======
 					// console.log("events_list",events_list)
 					count = events_list.length;
 					// console.log("currentPage",currentPage)
 					// console.log("this.perPage",this.perPage)
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 					if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 					let end = currentPage * this.perPage;
 					let start = end - this.perPage;
@@ -530,11 +465,8 @@ class TopicLandingPage extends Component {
 							/>
 						);
 					}
-<<<<<<< HEAD
-=======
 					// console.log("updated_list",updated_list)
 					// updated_list.reverse();
->>>>>>> f94498758fc3063c02a6814971cc21956223ef41
 
 					let pagination = "";
 					if (pages > 1) {
