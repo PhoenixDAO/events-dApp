@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
-	PhoenixDAO_Mainnet_Token_Address
+	PhoenixDAO_Mainnet_Token_Address,
 } from "../config/phoenixDAOcontract_testnet.js";
 
 import ipfs from "../utils/ipfs";
@@ -27,7 +27,10 @@ import NotifyApproveSuccess from "./NotifyApproveSuccess";
 import NotifyError from "./NotifyError";
 import ApprovalModal from "./approvalModal";
 
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
+
+//eventCard
+import EventCard from "./common/EventCard";
 
 let numeral = require("numeral");
 
@@ -68,7 +71,7 @@ class Event extends Component {
 		// console.log("this.props.eventData 123",this.props.eventData,this.props.accounts[0])
 		this.account = this.props.accounts[0];
 		this.state = {
-			eventData:props.eventData,
+			eventData: props.eventData,
 			owner: "unknown",
 			loading: false,
 			loaded: false,
@@ -86,7 +89,7 @@ class Event extends Component {
 			open: false,
 			hideEvent: [],
 			blockie: "/images/PhoenixDAO.png",
-			approvalGranted: false
+			approvalGranted: false,
 		};
 		this.isCancelled = false;
 		this.giveApproval = this.giveApproval.bind(this);
@@ -203,7 +206,8 @@ class Event extends Component {
 			);
 		if (this.state.locations !== null) {
 			let place = this.state.locations;
-			locations = <strong>Location: {place}</strong>;
+			// locations = <strong>Location: {place}</strong>;
+			locations = place;
 		}
 		return locations;
 	};
@@ -223,7 +227,7 @@ class Event extends Component {
 		let txerror = "";
 		this.state.approve
 			.send({ from: this.account })
-			
+
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
 					toast(<NotifyApprove hash={hash} />, {
@@ -233,7 +237,9 @@ class Event extends Component {
 					});
 				}
 			})
-			.on('confirmation',(confirmationNumber, receipt) => this.temp(confirmationNumber,receipt))
+			.on("confirmation", (confirmationNumber, receipt) =>
+				this.temp(confirmationNumber, receipt)
+			)
 
 			// .on("confirmation", (confirmationNumber, receipt) => {
 			// 	if (confirmationNumber == 0) {
@@ -274,28 +280,22 @@ class Event extends Component {
 				}
 			});
 	};
-	temp(confirmationNumber,receipt){
-		  // tx confirmed
-				//    txreceipt = receipt;
-				// 	txconfirmed = confirmationNumber;
-				// 	console.log("confirmationNumberrrr",confirmationNumber)
-					// if (confirmationNumber == 0 && receipt.status == true ) {
-						if (confirmationNumber === 0 && receipt.status == true) {
-						this.props.toggleBuying();
-						toast(
-							<NotifyApproveSuccess
-								hash={receipt.transactionHash}
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
-						// this.afterApprove();
-						this.setState({ disabledStatus: false });
-					}
-
+	temp(confirmationNumber, receipt) {
+		// tx confirmed
+		//    txreceipt = receipt;
+		// 	txconfirmed = confirmationNumber;
+		// 	console.log("confirmationNumberrrr",confirmationNumber)
+		// if (confirmationNumber == 0 && receipt.status == true ) {
+		if (confirmationNumber === 0 && receipt.status == true) {
+			this.props.toggleBuying();
+			toast(<NotifyApproveSuccess hash={receipt.transactionHash} />, {
+				position: "bottom-right",
+				autoClose: true,
+				pauseOnHover: true,
+			});
+			// this.afterApprove();
+			this.setState({ disabledStatus: false });
+		}
 	}
 
 	inquire = async () => {
@@ -360,6 +360,8 @@ class Event extends Component {
 	};
 
 	render() {
+		const { classes } = this.props;
+
 		let body = (
 			<div className="card">
 				<div className="card-body">
@@ -374,14 +376,14 @@ class Event extends Component {
 			// 	"undefined" &&
 			// this.props.contracts["DaoEvents"].events[this.event].value
 		) {
-			let event_data = this.state.eventData
+			let event_data = this.state.eventData;
 			// let event_data = this.props.contracts["DaoEvents"].events[
 			// 	this.event
 			// ].value;
 			let image = this.getImage();
 			let description = this.getDescription();
 			let locations = this.getLocation();
-			let buttonText = event_data.token? "Buy Ticket" : "Get Ticket";
+			let buttonText = event_data.token ? "Buy Ticket" : "Get Ticket";
 			let freeEvent = "";
 			if (!event_data.token) {
 				freeEvent = <p className="free_event">Free Event</p>;
@@ -476,122 +478,142 @@ class Event extends Component {
 				let myEventStatURL =
 					"/event-stat/" + pagetitle + "/" + this.props.id;
 				let myEvent = false;
-				if (event_data.owner.toLowerCase() == this.account.toLowerCase()) {
+				if (
+					event_data.owner.toLowerCase() == this.account.toLowerCase()
+				) {
 					myEvent = true;
 				}
 
 				body = (
-					<div className="card">
-						<div className="image_wrapper">
-							{!reported ? (
-								<Link to={myEvent ? myEventStatURL : titleURL}>
+					<div>
+						{/* new card */}
+						<EventCard
+							event_data={event_data}
+							date={date}
+							image={image}
+							locations={locations}
+						/>
+						{/* old card */}
+						<div className="card">
+							<div className="image_wrapper">
+								{!reported ? (
+									<Link
+										to={myEvent ? myEventStatURL : titleURL}
+									>
+										<img
+											className="card-img-top event-image"
+											src={image}
+											alt={event_data.name}
+										/>
+									</Link>
+								) : (
 									<img
 										className="card-img-top event-image"
 										src={image}
 										alt={event_data.name}
 									/>
-								</Link>
-							) : (
+								)}
+
+								{reportedOut}
+								{!reported && soldOut}
+								{!reported && !sold && freeEvent}
+							</div>
+
+							<div className="card-header text-muted event-header ">
 								<img
-									className="card-img-top event-image"
-									src={image}
-									alt={event_data.name}
+									className="float-left"
+									src={this.state.blockie}
+									alt={event_data.owner}
 								/>
-							)}
-
-							{reportedOut}
-							{!reported && soldOut}
-							{!reported && !sold && freeEvent}
-						</div>
-
-						<div className="card-header text-muted event-header ">
-							<img
-								className="float-left"
-								src={this.state.blockie}
-								alt={event_data.owner}
-							/>
-							{/* {this.props.myEvents ? (
+								{/* {this.props.myEvents ? (
 								<Link to={myEventStatURL}>
 								</Link>
 							) : (
 								""
 							)} */}
-						</div>
+							</div>
 
-						<div className="card-body">
-							{reported ? (
-								<h5
-									className="card-title event-title"
-									title={event_data.name}
-								>
-									{badge}
-									{event_data.name}
-								</h5>
-							) : (
-								<h5
-									className="card-title event-title"
-									title={event_data.name}
-								>
-									<Link
-										to={myEvent ? myEventStatURL : titleURL}
+							<div className="card-body">
+								{reported ? (
+									<h5
+										className="card-title event-title"
+										title={event_data.name}
 									>
 										{badge}
 										{event_data.name}
-									</Link>
-								</h5>
-							)}
-							{description}
-						</div>
-
-						<ul className="list-group list-group-flush">
-							<li className="list-group-item ">{locations}</li>
-							<li className="list-group-item category">
-								<strong style={{ paddingRight: "3px" }}>
-									Category:{" "}
-								</strong>{" "}
-								<a href={topicURL}>{category}</a>
-							</li>
-							<li className="list-group-item">
-								<strong>Price:</strong>{" "}
-								<img
-									src={"/images/" + symbol}
-									className="event_price-image"
-									alt="Event Price Icon"
-								/>{" "}
-								{event_data.token
-									? "" + numeral(price).format("0.000")
-									: "" + price}
-								{event_data.token ? " or " : ""}
-								{event_data.token ? (
-									<img
-										src={"/images/dollarsign.png"}
-										className="event_price-image"
-										alt="Event Price"
-									/>
+									</h5>
 								) : (
-									""
+									<h5
+										className="card-title event-title"
+										title={event_data.name}
+									>
+										<Link
+											to={
+												myEvent
+													? myEventStatURL
+													: titleURL
+											}
+										>
+											{badge}
+											{event_data.name}
+										</Link>
+									</h5>
 								)}
-								{event_data.token
-									? numeral(
-											price *
-												this.state.PhoenixDAO_market.usd
-									  ).format("0.000")
-									: ""}
-							</li>
-							<li className="list-group-item date">
-								<strong>Date:</strong>{" "}
-								{date.toLocaleDateString()} at{" "}
-								{date.toLocaleTimeString([], {
-									hour: "2-digit",
-									minute: "2-digit",
-								})}
-							</li>
-							<li className="list-group-item">
-								<strong>Tickets Sold:</strong> {event_data.sold}/
-								{max_seats}
-							</li>
-						</ul>
-						{/* {this.props.myEvents ? (
+								{description}
+							</div>
+
+							<ul className="list-group list-group-flush">
+								<li className="list-group-item ">
+									{locations}
+								</li>
+								<li className="list-group-item category">
+									<strong style={{ paddingRight: "3px" }}>
+										Category:{" "}
+									</strong>{" "}
+									<a href={topicURL}>{category}</a>
+								</li>
+								<li className="list-group-item">
+									<strong>Price:</strong>{" "}
+									<img
+										src={"/images/" + symbol}
+										className="event_price-image"
+										alt="Event Price Icon"
+									/>{" "}
+									{event_data.token
+										? "" + numeral(price).format("0.000")
+										: "" + price}
+									{event_data.token ? " or " : ""}
+									{event_data.token ? (
+										<img
+											src={"/images/dollarsign.png"}
+											className="event_price-image"
+											alt="Event Price"
+										/>
+									) : (
+										""
+									)}
+									{event_data.token
+										? numeral(
+												price *
+													this.state.PhoenixDAO_market
+														.usd
+										  ).format("0.000")
+										: ""}
+								</li>
+								<li className="list-group-item date">
+									<strong>Date:</strong>{" "}
+									{date.toLocaleDateString()} at{" "}
+									{date.toLocaleTimeString([], {
+										hour: "2-digit",
+										minute: "2-digit",
+									})}
+								</li>
+								<li className="list-group-item">
+									<strong>Tickets Sold:</strong>{" "}
+									{event_data.sold}/{max_seats}
+								</li>
+							</ul>
+							{/* {this.props.myEvents ? (
 							<div className=" editButtons text-muted text-center">
 								<Link
 									className="col-6"
@@ -613,19 +635,20 @@ class Event extends Component {
 							</div>
 						) : null} */}
 
-						<div className="card-footer text-muted text-center">
-							<button
-								className="btn btn-dark"
-								onClick={this.inquire}
-								disabled={
-									disabled ||
-									this.props.disabledStatus ||
-									this.props.disabledBuying
-								}
-							>
-								<i className="fas fa-ticket-alt"></i>{" "}
-								{buttonText}
-							</button>
+							<div className="card-footer text-muted text-center">
+								<button
+									className="btn btn-dark"
+									onClick={this.inquire}
+									disabled={
+										disabled ||
+										this.props.disabledStatus ||
+										this.props.disabledBuying
+									}
+								>
+									<i className="fas fa-ticket-alt"></i>{" "}
+									{buttonText}
+								</button>
+							</div>
 						</div>
 					</div>
 				);
