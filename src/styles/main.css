@@ -1,11 +1,28 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400");
+@font-face {
+    font-family: "Aeonik";
+    src: url("../custom-font/Aeonik/Aeonik-Medium.otf");
+    /* Legacy iOS */
+}
+
+@font-face {
+    font-family: "AeonikBold";
+    src: url("../custom-font/Aeonik/Aeonik-Bold.otf");
+    /* Legacy iOS */
+}
+
+@font-face {
+    font-family: "AeonikReg";
+    src: url("../custom-font/Aeonik/Aeonik-Regular.otf");
+    /* Legacy iOS */
+}
 html {
 	scroll-behavior: smooth;
 }
 
 body {
 	background-color: #fafafa;
-	font-family: "Nunito Sans", sans-serif;
+	font-family: "AeonikReg", sans-serif;
 	color: #333;
 	font-weight: 300;
 }
@@ -161,11 +178,6 @@ input[type="number"] {
 	cursor: pointer;
 }
 
-.event-image {
-	/* width: 370px; */
-	height: 225px;
-	object-fit: fill;
-}
 
 .event-title {
 	white-space: nowrap;
@@ -227,6 +239,7 @@ input[type="number"] {
 	height: 18px;
 	margin-right: 0;
 	margin-top: -3px;
+	margin-right: 3px;
 }
 
 .event_price-image2 {
@@ -527,19 +540,6 @@ input[type="number"] {
 		padding-right: 20px;
 		padding-left: 70px;
 	}
-}
-
-.branding {
-	z-index: 999999 !important;
-	position: inherit;
-	color: #fff;
-	text-shadow: 2px 2px 24px #000;
-	max-width: 1600px;
-	margin: 0 auto;
-}
-
-.branding p {
-	font-size: 1.2rem;
 }
 
 #wrapper.toggled #page-content-wrapper {
@@ -1011,12 +1011,12 @@ button.read-more:hover {
 	cursor: pointer;
 }
 
-.branding-logo {
+/* .branding-logo {	
 	float: left;
 	width: 38px;
 	margin-top: 5px;
 	margin-right: 10px;
-}
+} */
 
 @media (max-width: 575px) and (min-width: 399px) {
 	.branding-logo {
@@ -1319,13 +1319,7 @@ body,
 	}
 }
 
-@media (min-width: 1100px) {
-	.event-hero-sidebar .event-image {
-		height: 40vw !important;
-		width: inherit;
-		object-fit: fill;
-	}
-}
+
 
 @media (max-width: 1600px) {
 	.carousel-caption h3 {

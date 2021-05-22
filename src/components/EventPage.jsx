@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import makeBlockie from "ethereum-blockies-base64";
-import Button from '@material-ui/core/Button';
-
+import { Button, Grid, Paper } from '@material-ui/core';
+import { ShoppingCartOutlined, LaunchOutlined, ModeCommentOutlined } from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
@@ -18,7 +18,7 @@ import NotifyApproveSuccess from "./NotifyApproveSuccess";
 // import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
 // import NotifyNetwork from "./NotifyNetwork";
-
+import { CalendarTodayOutlined, ScheduleOutlined, LocationOnOutlined, PersonOutlined, ConfirmationNumberOutlined } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import ApprovalModal from "./approvalModal";
 
@@ -72,8 +72,70 @@ const customStyles = {
 };
 
 const styles = theme => ({
-	root: {
-		backgroundColor: "red"
+	share: {
+
+		width: "180px",
+		height: "45px",
+		fontWeight: 700,
+		color: '#413AE2',
+		BorderColor: "#413AE2"
+	},
+	buy: {
+		marginLeft: "13px",
+		fontWeight: 700,
+		width: "180px",
+		height: "45px",
+		backgroundColor: "#413AE2",
+	},
+	description: {
+		marginTop: "35px",
+	},
+	paper: {
+		padding: theme.spacing(2),
+		textAlign: 'center',
+		color: theme.palette.text.secondary,
+		height: "100%"
+	},
+	eventHeading: {
+		marginBottom: "0px",
+		marginTop: "22px",
+		color: "#56555D",
+		fontSize: "14px",
+		"& .MuiSvgIcon-root": {
+			fontSize: "16px",
+			verticalAlign: "sub"
+		}
+	},
+	ticketPrice: {
+		fontSize: "18px",
+		marginBottom: "0px",
+		color: "#56555D"
+	},
+	eventDetails: {
+		backgroundColor: "white",
+		borderRadius: "5px",
+		marginTop: "35px",
+		padding: "30px"
+	},
+	eventinfo: {
+		fontSize: "22px",
+		fontWeight: "700"
+	},
+	PhnxPrice: {
+		fontSize: "22px",
+		fontWeight: "700",
+		color: "#413AE2"
+	},
+	categoryGrid: {
+		backgroundColor: "white",
+		borderRadius: "8px",
+		padding: "10px",
+		marginTop: "40px"
+
+	},
+	socialDiv: {
+		display: "flex",
+		justifyContent: "space-between"
 	}
 });
 class EventPage extends Component {
@@ -437,7 +499,7 @@ class EventPage extends Component {
 			);
 		if (this.state.locations !== null) {
 			let place = this.state.locations;
-			locations = <span>Location: {place}</span>;
+			locations = <span>{place}</span>;
 		}
 		return locations;
 	};
@@ -472,8 +534,8 @@ class EventPage extends Component {
 				let locations = this.getLocation();
 				let buttonText = event_data[3] ? " Buy Ticket" : " Get Ticket";
 				let symbol = event_data[3]
-					? "PhoenixDAO.png"
-					: "PhoenixDAO.png";
+					? "PhoenixDAO.svg"
+					: "PhoenixDAO.svg";
 				let price = this.context.drizzle.web3.utils.fromWei(
 					event_data[2]
 				);
@@ -548,34 +610,33 @@ class EventPage extends Component {
 
 				if (this.props.match.params.page === pagetitle) {
 					body = (
-						<div className="row">
-							<div className="row header">
+						<Grid>
+							<Grid className="header2">
 								<h2>
 									{event_data[0]}
 								</h2>
 								<div>
-
-									<Button variant="contained" color="primary">
-										Share Event
+									<Button variant="outlined" className={classes.share} color="primary" >
+										<LaunchOutlined />	Share Event
                                  </Button>
 									<Button
-										variant="outlined"
+										variant="contained"
 										color="primary"
-										className="btn btn-dark"
+										style={{ marginRight: "10px" }}
+										className={classes.buy}
 										onClick={this.inquire}
 										disabled={
 											disabled || this.props.disabledStatus || this.state.disabledBuying
 										}
 									>
-										<i className="fas fa-ticket-alt"></i>
+										<ShoppingCartOutlined style={{ marginRight: "10px" }} />
 										{buttonText}
 									</Button>
+
 								</div>
-							</div>
-							<hr />
+							</Grid>
 
-							<div className="col-12">
-
+							<Grid style={{ marginBottom: "40px", marginTop: "40px" }}>
 								<label className="pl-2 small">
 									{disabledStatus}
 								</label>
@@ -592,7 +653,91 @@ class EventPage extends Component {
 									>
 									</Link>
 								)}
-								<div className="event-social-share-btns-div">
+								<Grid lg={12}>
+									<img
+										className="card-img-top event-image"
+										src={image}
+										alt="Event"
+									/>
+								</Grid>
+								<Grid container style={{
+									borderBottom: "1px solid #E4E4E7", paddingBottom: "50px"
+								}}>
+
+									<Grid lg={9} className={classes.description}>
+										{description}
+
+									</Grid>
+									<Grid lg={3} className={classes.eventDetails}>
+										<p className={classes.ticketPrice}>
+											<img
+												src={"/images/phoenixdao.svg"}
+												className="event_price-image"
+												alt="Event Price"
+											/>TICKET PRICE
+										</p>
+										<p className={classes.eventinfo}>
+											<span className={classes.PhnxPrice} >{event_data[3]
+												? numeral(price).format("0.000") + "PHNX"
+												: "FREE"}
+											</span>
+											<div style={{ color: "#56555D", fontSize: "14px" }}>
+												{event_data[3]
+													? "$" + numeral(
+														price *
+														this.state
+															.PhoenixDAO_market
+															.usd
+													).format("0.000")
+													: ""}
+											</div>
+										</p>
+										<p className={classes.eventHeading}> <CalendarTodayOutlined /> Date
+										</p>
+										<p className={classes.eventinfo}>	{date.toLocaleDateString()}
+										</p>
+										<p className={classes.eventHeading}><ScheduleOutlined /> Time</p>
+										<p className={classes.eventinfo}>		{date.toLocaleTimeString([], {
+											hour: "2-digit",
+											minute: "2-digit",
+										})}</p>
+										<p className={classes.eventHeading}><LocationOnOutlined /> Location</p>
+										<p className={classes.eventinfo}>{locations}</p>
+										<p className={classes.eventHeading}><PersonOutlined />Organizer</p>
+										<p className={classes.eventinfo}>{this.state.organizer}</p>
+										<p className={classes.eventHeading}><ConfirmationNumberOutlined />Tickets Bought</p>
+										<p className={classes.eventinfo}>{event_data[6]}/{max_seats}</p>
+									</Grid>
+
+
+								</Grid>
+								<Grid className={classes.socialDiv}>
+									<Grid className={classes.categoryGrid}>
+										<div>
+											<ModeCommentOutlined />
+													Topic
+												</div>
+										<div>{category}</div>
+									</Grid>
+									<Grid>
+										
+										<div className="imageHolder">
+
+											<a
+												aria-label="Homepage"
+												target="blank"
+												title="GitHub"
+												href="https://github.com/PhoenixDAO/events-dApp/tree/heroku-deployment"
+											>
+												<img src="./images/navbar/github.svg" />
+											</a>
+										</div>
+									</Grid>
+								</Grid>
+							</Grid>
+
+
+							{/* <div className="event-social-share-btns-div">
 									<EmailShareButton
 										url={shareUrl}
 										title={title}
@@ -649,12 +794,14 @@ class EventPage extends Component {
 										<WhatsappIcon size={32} round />
 									</WhatsappShareButton>
 								</div>
-
 								<br />
-								<br />
-
-								<div className="card event-hero-sidebar">
+								<br /> 
+							<div className="card event-hero-sidebar">
 									<img
+										className="card-img-top event-image"
+										src={image}
+										alt="Event"
+									/><img
 										className="card-img-top event-image"
 										src={image}
 										alt="Event"
@@ -727,8 +874,8 @@ class EventPage extends Component {
 										</li>
 
 									</ul>
-								</div>
-								{this._isMounted && (
+								</div> 
+								{/* {this._isMounted && (
 									<Clock
 										deadline={date}
 										event_unix={event_data[1]}
@@ -773,9 +920,9 @@ class EventPage extends Component {
 										pageSize={5}
 										styles={customStyles}
 									/>
-								</div>
-							</div>
-
+								</div> 
+							 </div> 
+							 
 							<div className="col-12">
 								<div className="mt-5"></div>
 								<CheckUser
@@ -785,8 +932,8 @@ class EventPage extends Component {
 									history={this.props.history}
 								/>
 							</div>
-							<hr />
-						</div>
+								*/}
+						</Grid>
 					);
 				} else {
 					body = <EventNotFound />;
@@ -802,7 +949,6 @@ class EventPage extends Component {
 					giveApproval={this.giveApproval}
 				/>
 				{body}
-				<hr />
 			</div>
 		);
 	}
