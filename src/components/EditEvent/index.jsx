@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import Form from "./Form";
 import ipfs from "../../utils/ipfs";
 import Loader from "./Loader";
-// import Error from "./Error";
 import Done from "./Done";
 import { Redirect } from "react-router-dom";
 
@@ -233,6 +232,7 @@ class CreateEvent extends Component {
 						<Form
 							createEvent={this.createEvent}
 							account={this.props.account}
+							disabledStatus={this.props.disabledStatus}
 							{...this.props.location.state}
 						/>
 					</div>
@@ -244,9 +244,11 @@ class CreateEvent extends Component {
 				<Form
 							createEvent={this.createEvent}
 							account={this.props.account}
+							disabledStatus={this.props.disabledStatus}
 							{...this.props.location.state}
 						/>
 											</div>
+
 			);
 		}
 

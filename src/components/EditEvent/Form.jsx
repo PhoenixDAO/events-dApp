@@ -15,6 +15,7 @@ class Form extends Component {
 		super(props);
 		// console.log("rejectedprops", props);
 
+
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
@@ -307,6 +308,7 @@ class Form extends Component {
 		let reg=new RegExp(/^[a-z\sA-Z]+$/)
 		if (this.form.description.value !== "") {
 			// console.log("this.form.description.value",this.form.description.value)
+
 			if(reg.test(this.form.description.value)){
 				let filter = new Filter();
 				filteredDescription = filter.clean(this.form.description.value);
@@ -319,11 +321,14 @@ class Form extends Component {
 		if (this.state.title !== "") {
 			// console.log("title is title",this.state.title)
 			// console.log("title is reg.test(this.state.title) ",reg.test(this.state.title))
+
 			if(reg.test(this.state.title)){
 				let filter = new Filter();
 				filteredTitle = filter.clean(this.state.title);
 				this.setState({ title: filteredTitle });
+
 				// console.log("title is filteredTitle",filteredTitle)
+
 			}
 		}
 		if (this.state.organizer !== "") {
@@ -387,6 +392,7 @@ class Form extends Component {
 		if (form_validation.length === 0) {
 			// console.log("filteredOrganizer",filteredOrganizer)
 		// console.log("filteredOrganizer this.state.organizer",this.state.organizer)
+
 			this.props.createEvent(
 				this.state.fileHandle,
 				this.state.fileImg,
@@ -995,7 +1001,7 @@ class Form extends Component {
 						className="btn btn-outline-dark"
 						title="Make Your Event Live"
 						onClick={this.handleForm}
-						disabled={disabled}
+						disabled={disabled || this.props.disabledStatus}
 					>
 						Update Your Event
 					</button>

@@ -3,12 +3,14 @@ body{
 }
 
 .header2{
+    margin-left: -2px;
+    margin-right: -1px;
+    z-index: 1;
     display: flex;
     justify-content: space-between;
-    width: 73%;
     border-bottom: 1px solid #E4E4E7;
     padding-bottom: 10px;
-    position: fixed;
+    position: sticky;
     top: 0;
     padding-top: 40px;
     background-color: #FCFCFD;
@@ -38,4 +40,33 @@ body{
 	height: 400px;
 	object-fit: fill;
     border-radius: 8px;
+}
+.iconHolder{
+	width:50px;
+	height: 50px;
+	border-radius: 50%;
+	background: linear-gradient(270deg, rgba(94, 91, 255, 0.12) 0%, rgba(124, 118, 255, 0) 131.25%);;
+	justify-content: center;
+    align-items: center;
+   display: flex;
+   margin-left:11px;
+   border: none;
+
+}
+.iconHolder i{
+    font-size: 23px;
+}
+@media screen and (max-width: 600px) {
+.header2{
+    display: block;
+}
+.iconHolder i{
+    font-size: 16px;
+}
+.iconHolder {
+    width:40px;
+    height: 40px;
+    display: inline;
+    margin-bottom: 5px;
+}
 }

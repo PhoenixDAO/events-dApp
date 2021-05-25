@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
-import makeBlockie from "ethereum-blockies-base64";
-import Web3 from 'web3'
+import Web3 from 'web3';
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
-import { Clear, DashboardOutlined, ModeCommentOutlined, TodayOutlined, ListAltOutlined, InfoOutlined, ForumOutlined } from '@material-ui/icons';
+import { Menu, DashboardOutlined, ModeCommentOutlined, TodayOutlined, ListAltOutlined, InfoOutlined, ForumOutlined } from '@material-ui/icons';
 import '../styles/navbar.css'
 class Sidebar extends Component {
 	constructor(props, context) {
@@ -126,7 +125,7 @@ class Sidebar extends Component {
 							<img src="./images/metamask.svg" className="bird" />
 							<span
 								style={{
-									marginLeft: "10px",
+									marginLeft: "20px",
 									fontSize: "15px",
 									marginTop: "8px",
 									fontWeight: "bold"
@@ -171,7 +170,7 @@ class Sidebar extends Component {
 							}}
 						>
 
-							<Clear className="icon" />
+							<Menu className="icon" />
 						</div>
 						<div className="user-status mt-5">{user}</div>
 						<div className="menu mt-5">
@@ -388,7 +387,7 @@ class Sidebar extends Component {
 								this.toggleSidebarClass(false);
 							}}
 						>
-							<Clear className="icon" />
+							<Menu className="icon" />
 						</div>
 						<div className="user-status mt-5">{user}</div>
 						<div className="menu mt-5">

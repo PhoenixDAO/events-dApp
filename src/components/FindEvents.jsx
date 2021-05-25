@@ -381,7 +381,7 @@ class FindEvents extends Component {
 										}
 										className="page-link"
 									>
-										{1}
+										{i}
 									</Link>
 								</li>
 							);

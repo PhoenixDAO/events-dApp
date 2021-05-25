@@ -363,6 +363,7 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
+		this.setState({disabledStatus:true})
 		this.setState({ upload: true, createEvent: transaction }, () =>
 			this.state.createEvent
 				.send({ from: this.state.account })
@@ -404,6 +405,7 @@ class App extends Component {
 								}
 							);
 						}
+						this.setState({disabledStatus:false})
 					}
 				})
 				.on("error", (error) => {
@@ -423,6 +425,7 @@ class App extends Component {
 							}
 						);
 					}
+					this.setState({disabledStatus:false})
 				})
 		);
 	};
@@ -510,8 +513,6 @@ class App extends Component {
 		let body;
 		let connecting = false;
 		if (!this.props.drizzleStatus.initialized) {
-			// console.log("snackbar3Props in home2")
-			// console.log("printinggggggg in if")
 			body = (
 				<div>
 					<Switch>
@@ -530,7 +531,6 @@ class App extends Component {
 			);
 			connecting = true;
 		} else if (this.props.web3.status === "failed") {
-			// console.log("printinggggggg in else 1")
 			body = (
 				
 				<div>
@@ -555,8 +555,6 @@ class App extends Component {
 				Object.keys(this.props.accounts).length === 0) ||
 			this.props.web3.networkId != GLOBAL_NETWORK_ID
 		) {
-			// console.log("printinggggggg in else if 2",this.props.web3.status === "initialized",
-			// Object.keys(this.props.accounts).length === 0,this.props.web3.networkId != GLOBAL_NETWORK_ID)
 			body = (
 				<div>
 					<Switch>
@@ -574,7 +572,6 @@ class App extends Component {
 			);
 			connecting = true;
 		} else {
-			// console.log("printinggggggg in else")
 			body = (
 				<Switch>
 					<Route
@@ -653,7 +650,7 @@ class App extends Component {
 								upload={this.state.upload}
 								disabledStatus={this.state.disabledStatus}
 								done={this.state.done}
-								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
 								error={this.state.error}
 								account={this.state.account}
 							/>
@@ -775,7 +772,7 @@ class App extends Component {
 						connect={this.loadBlockchainData}
 					/>
 					<div id="page-content-wrapper" className="sidebar-open">
-						{/* <div
+						<div
 							id="bgImage"
 							ref="bgImage"
 							style={{
@@ -791,8 +788,8 @@ class App extends Component {
 							/>
 							<h1>PhoenixDAO Events Marketplace</h1>
 							<p>What are you going to do?</p>
-						</div> */}
-						<div className="container">
+						</div>
+						<div className="container-fluid">
 							<div className="page-wrapper-inner">
 								<div>
 									{body}

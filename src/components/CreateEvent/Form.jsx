@@ -13,9 +13,6 @@ let numeral = require("numeral");
 class Form extends Component {
 	constructor(props) {
 		super(props);
-		// console.log("rejectedprops", props);
-
-		// console.log("props.currentBlock",props.currentBlock)
 		this.form = {};
 		this.web3 = props.web3;
 		this.state = {
@@ -184,13 +181,19 @@ class Form extends Component {
 
 	titleChange = (event) => {
 		let title = event.target.value;
+		let reg = new RegExp(/^[a-z\sA-Z0-9]+$/)
+		console.log("event.target.value",event.target.value)
+
 		if (title.length > 80) {
 			title = title.slice(0, 80);
 		}
-		this.setState({
-			title: title,
-			title_length: title.length,
-		});
+		if(reg.test(title) || title== ""){
+			this.setState({
+				title: title,
+				title_length: title.length,
+			});
+		}
+		
 	};
 
 	descriptionChange = (event) => {
@@ -307,10 +310,20 @@ class Form extends Component {
 		let filteredTitle = "";
 		let filteredOrganizer = "";
 		let filteredLocation = "";
-		let reg = new RegExp(/^[a-z\sA-Z]+$/)
-		if (this.form.description.value !== "") {
+		let regForAlphanumericAndString = new RegExp(/^[a-z\sA-Z]+$/)
+		let regToRestrictOnlySpaces = new RegExp(/^[\s]*$/)
+		let validTitle=this.state.title !== "" && !regToRestrictOnlySpaces.test(this.state.title);
+		console.log("CE validTitle",validTitle)
+		let validOrganizer=this.state.organizer !== ""&& !regToRestrictOnlySpaces.test(this.state.organizer)
+		let validLocation=this.state.location !== ""&& !regToRestrictOnlySpaces.test(this.state.location)
+
+		// let reg = new RegExp(/^[\s]*$/)
+		// reg.test(str)
+		
+		if (this.form.description.value !== "" && !regToRestrictOnlySpaces.test(this.form.description.value)) {
 			// console.log("this.form.description.value",this.form.description.value)
-			if(reg.test(this.form.description.value)){
+			if(regForAlphanumericAndString.test(this.form.description.value)){
+
 				let filter = new Filter();
 				filteredDescription = filter.clean(this.form.description.value);
 				this.setState({ description: filteredDescription });
@@ -319,32 +332,32 @@ class Form extends Component {
 			}
 
 		}
-		if (this.state.title !== "") {
+		if (validTitle) {
 			// console.log("title is title",this.state.title)
-			// console.log("title is reg.test(this.state.title) ",reg.test(this.state.title))
-			if(reg.test(this.state.title)){
+			// console.log("title is regForAlphanumericAndString.test(this.state.title) ",regForAlphanumericAndString.test(this.state.title))
+			if(regForAlphanumericAndString.test(this.state.title)){
 				let filter = new Filter();
 				filteredTitle = filter.clean(this.state.title);
 				this.setState({ title: filteredTitle });
 				// console.log("title is filteredTitle",filteredTitle)
 			}
 		}
-		if (this.state.organizer !== "") {
-			if (reg.test(this.state.organizer)) {
+		if (validOrganizer) {
+			if (regForAlphanumericAndString.test(this.state.organizer)) {
 				let filter = new Filter();
 				filteredOrganizer = filter.clean(this.state.organizer);
 			}
 		}
-		if (this.state.location !== "") {
-			if (reg.test(this.state.location)) {
+		if (validLocation) {
+			if (regForAlphanumericAndString.test(this.state.location)) {
 				let filter = new Filter();
 				filteredLocation = filter.clean(this.state.location);
 			}
 		}
 		let form_validation = [];
-		if (this.state.title === "") form_validation.push("name");
-		if (this.state.location === "") form_validation.push("location");
-		if (this.state.organizer === "") form_validation.push("organizer");
+		if (!validTitle) form_validation.push("name");
+		if (!validLocation) form_validation.push("location");
+		if (!validOrganizer) form_validation.push("organizer");
 		if (this.form.description.value === "")
 			form_validation.push("description");
 		if (
@@ -388,7 +401,7 @@ class Form extends Component {
 		if (this.state.topic === "") form_validation.push("topic");
 
 		if (!this.state.terms) form_validation.push("terms");
-
+			console.log("CE form_validation",form_validation)
 		this.setState({
 			form_validation: form_validation,
 		});
