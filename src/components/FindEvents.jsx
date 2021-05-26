@@ -19,16 +19,51 @@ import topicsJson from "../config/topics.json";
 
 //Material UI styles
 import { withStyles } from "@material-ui/core/styles";
-import { AppBar, Tabs, Tab, Typography, Box } from "@material-ui/core";
+import {
+	AppBar,
+	Tabs,
+	Tab,
+	Typography,
+	Box,
+	Divider,
+	TextField,
+	InputAdornment,
+	IconButton,
+	Button,
+} from "@material-ui/core";
 import Slider from "./common/Slider";
+import phnxLogo from "./Images/phnxlogo.svg";
+import roundlogo from "./Images/roundlogo.svg";
+import SearchIcon from "@material-ui/icons/Search";
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = (theme) => ({
 	root: {
 		flexGrow: 1,
 		width: "100%",
 	},
-	indicator: {
-		backgroundColor: "white",
+	appBar: {
+		"&.MuiPaper-elevation4": {
+			boxShadow: "none",
+		},
+	},
+	tabBar: {
+		"&:hover, &:focus ": {
+			outline: "none",
+		},
+		" &:active ": {
+			borderBottom: "2.5px solid #413AE2",
+		},
+		"&.MuiTab-textColorPrimary.Mui-selected": {
+			color: "#413AE2",
+			borderBottom: "2.5px solid #413AE2",
+		},
+	},
+	margin: {
+		margin: theme.spacing(1),
+	},
+	button: {
+		margin: theme.spacing(1),
 	},
 });
 
@@ -477,18 +512,68 @@ class FindEvents extends Component {
 						/>
 					</div> */}
 
-					<div style={{ display: "flex" }}>
-						<h4>logo</h4>
+					<br />
+					<br />
+					<br />
 
-						<h5>PhoenixDAO Events Marketplace</h5>
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+						}}
+					>
+						<div style={{ display: "flex" }}>
+							<img src={roundlogo} alt="phnx logo" />
+							<span>&nbsp;&nbsp;&nbsp;</span>
+							<h2
+								style={{
+									fontWeight: 700,
+									color: "#1E1E22",
+								}}
+							>
+								PhoenixDAO Events Marketplace
+							</h2>
+						</div>
 
-						<h5>search</h5>
+						<div style={{ display: "flex", alignItems: "center" }}>
+							<TextField
+								className={classes.margin}
+								id="input-with-icon-textfield"
+								variant="outlined"
+								placeholder="Search for events"
+								size="medium"
+								InputProps={{
+									startAdornment: (
+										<InputAdornment position="start">
+											<SearchIcon />
+										</InputAdornment>
+									),
+								}}
+							/>
+
+							<Button
+								variant="contained"
+								color="primary"
+								size="large"
+								className={classes.button}
+								startIcon={<AddIcon fontSize='large' />}
+							>
+								Connect Wallet
+							</Button>
+						</div>
 					</div>
+
+					<br />
 
 					{/* tabs */}
 					<div>
 						<div className={classes.root}>
-							<AppBar position="static" color="default">
+							<AppBar
+								position="static"
+								className={classes.appBar}
+								color="transparent"
+							>
 								<Tabs
 									value={this.state.selectedTab}
 									onChange={this.onTabChange.bind(this)}
@@ -497,35 +582,54 @@ class FindEvents extends Component {
 									variant="scrollable"
 									scrollButtons="auto"
 									aria-label="scrollable auto tabs example"
-									classes={{
-										indicator: classes.indicator,
-									}}
 								>
-									<Tab label="All Events" {...a11yProps(0)} />
 									<Tab
+										className={classes.tabBar}
+										label="All Events"
+										{...a11yProps(0)}
+									/>
+									<Tab
+										className={classes.tabBar}
 										label="Near to you"
 										{...a11yProps(1)}
 									/>
-									<Tab label="Today" {...a11yProps(2)} />
-									<Tab label="This Week" {...a11yProps(3)} />
-									<Tab label="This Month" {...a11yProps(4)} />
 									<Tab
+										className={classes.tabBar}
+										label="Today"
+										{...a11yProps(2)}
+									/>
+									<Tab
+										className={classes.tabBar}
+										label="This Week"
+										{...a11yProps(3)}
+									/>
+									<Tab
+										className={classes.tabBar}
+										label="This Month"
+										{...a11yProps(4)}
+									/>
+									<Tab
+										className={classes.tabBar}
 										label="Paid Events"
 										{...a11yProps(5)}
 									/>
 									<Tab
+										className={classes.tabBar}
 										label="Free Events"
 										{...a11yProps(6)}
 									/>
 									<Tab
+										className={classes.tabBar}
 										label="Online Events"
 										{...a11yProps(7)}
 									/>
 									<Tab
+										className={classes.tabBar}
 										label="Physical Events"
 										{...a11yProps(8)}
 									/>
 								</Tabs>
+								<Divider light />
 							</AppBar>
 						</div>
 					</div>

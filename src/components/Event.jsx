@@ -492,7 +492,17 @@ class Event extends Component {
 							date={date}
 							image={image}
 							locations={locations}
+							myEvent={myEvent}
+							myEventStatURL={myEventStatURL}
+							titleURL={titleURL}
+							max_seats={max_seats}
 						/>
+					</div>
+				);
+
+				//old card body
+				let bodyOld = (
+					<div>
 						{/* old card */}
 						<div className="card">
 							<div className="image_wrapper">
