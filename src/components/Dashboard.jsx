@@ -12,6 +12,7 @@ import { Bar, Doughnut } from "react-chartjs-2";
 import UniswapModal from "./UniswapModal";
 import topicsJson from "../config/topics.json";
 // import {INFURA_WEB_URL} from "../config/const.js";
+
 let numeral = require("numeral");
 
 class Dashboard extends Component {
@@ -126,7 +127,6 @@ class Dashboard extends Component {
 				  `
 				}
 			}).then((graphDeletedEvents)=>{
-				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 	
 				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
 					this.setState({ Deleted_Events: [] });
@@ -171,6 +171,7 @@ class Dashboard extends Component {
 				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 				if(!graphEvents.data || graphEvents.data.data == 'undefined'){
 					// console.log("GraphQL query -- graphEvents undefined")
+
 					this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 				}else{
 					if (this._isMounted) {
@@ -185,6 +186,7 @@ class Dashboard extends Component {
 							
 								// console.log("GraphQL query newsort",newsort)
 		
+
 									this.setState({
 										MyEvents: newsort,
 										active_length: newsort.length,
@@ -206,6 +208,7 @@ class Dashboard extends Component {
 		let skip = false;
 		let skip2 = false;
 		// console.log("Dashboard NewAndUpdatedEvent in dashboard after uniqueness this.state.MyEvents",this.state.MyEvents)
+
 		for (let i = 0; i < this.state.MyEvents.length; i++) {
 			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
@@ -246,6 +249,7 @@ class Dashboard extends Component {
 		// }
 		// console.log("Dashboard DeletedEvent in dashboard",deletedArray)
 		// console.log("Dashboard DeletedEvent in dashboard deletedArray2",deletedArray2)
+
 		this.setState(
 			{
 				// filtered only deleted events
@@ -312,6 +316,7 @@ class Dashboard extends Component {
 				// console.log(
 				// 	"limited",limited
 				// )
+
 			}
 		
 			let top_PhoenixDAORevenue = phoenixDAORevenue
@@ -976,9 +981,13 @@ class Dashboard extends Component {
 										}}
 										onClick={this.props.networkId==1 ? this.handleClickOpen : ()=> {}}
 									>
-										<p className="dashboard-uniswap">
+										{/* <p className="dashboard-uniswap">
 											<i className="fas fa-sync"></i> BUY
 											PHNX WITH UNISWAP
+										</p> */}
+										<p className="dashboard-uniswap">
+											<i className="fas fa-sync"></i> BUY
+											PHNX WITH QuickSwap
 										</p>
 									</div>
 								</div>

@@ -2,15 +2,49 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
+import { AppBar, Tabs, Tab, Typography, Box } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
-import {INFURA_WEB_URL,graphURL} from "../config/const.js";
+import { INFURA_WEB_URL, graphURL } from "../config/const.js";
 
 import Event from "./Event";
 // import Web3 from "web3";
 import axios from "axios";
+import FindEvents from "./FindEvents";
 // import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+function a11yProps(index) {
+	return {
+		id: `scrollable-auto-tab-${index}`,
+		"aria-controls": `scrollable-auto-tabpanel-${index}`,
+	};
+}
+function TabPanel(props) {
+	const { children, value, index, ...other } = props;
 
+	return (
+		<div
+			role="tabpanel"
+			hidden={value !== index}
+			id={`simple-tabpanel-${index}`}
+			aria-labelledby={`simple-tab-${index}`}
+			{...other}
+		>
+			{value === index && (
+				<Box p={3}>
+					<Typography>{children}</Typography>
+				</Box>
+			)}
+		</div>
+	);
+}
+const styles = theme => ({
+	AppBar: {
+		"&.MuiPaper-elevation4": {
+			boxShadow: "none",
+		}
+	}
+});
 class MyEvents extends Component {
 	constructor(props, context) {
 		super(props);
@@ -20,7 +54,7 @@ class MyEvents extends Component {
 			latestblocks: 6000000,
 			loading: true,
 			MyEvents: [],
-			check:[],
+			check: [],
 			active_length: "",
 			isOldestFirst: false,
 			isActive: true,
@@ -28,7 +62,9 @@ class MyEvents extends Component {
 			dateNow: "",
 			prevPath: -1,
 			Deleted_Events: [],
-			disabledBuying:false,
+			disabledBuying: false,
+			selectedTab: 0,
+
 		};
 		this.contracts = context.drizzle.contracts;
 		this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
@@ -45,12 +81,12 @@ class MyEvents extends Component {
 	//Get Blockchain State
 	async loadBlockchain() {
 		if (this._isMounted) {
-			this.setState({ MyEvents: [],active_length:false ,loading:true});
+			this.setState({ MyEvents: [], active_length: false, loading: true });
 			await axios({
 				url: graphURL,
 				method: 'post',
 				data: {
-				  query: `
+					query: `
 				  {
 					eventsRemoveds {
 					  id
@@ -59,16 +95,16 @@ class MyEvents extends Component {
 				  }
 				  `
 				}
-			}).then((graphDeletedEvents)=>{
+			}).then((graphDeletedEvents) => {
 				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
-	
-				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
+
+				if (!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined') {
 					this.setState({ Deleted_Events: [] });
-				}else{
+				} else {
 					this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
 				}
-			}).catch((err)=>{
-				this.setState({ Deleted_Events: [],loading:false });
+			}).catch((err) => {
+				this.setState({ Deleted_Events: [], loading: false });
 			})
 			// console.log("Graph this.state.isActive",this.state.isActive)
 			if (this.state.isActive) {
@@ -84,18 +120,13 @@ class MyEvents extends Component {
 		if (this._isMounted) {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
-
-// GRAPH BLOCK //
-// console.log("GraphQL query before call",Date.now())
-
-		
-
-
+		// GRAPH BLOCK //
+		// console.log("GraphQL query before call",Date.now())
 		await axios({
-		url: graphURL,
-		method: 'post',
-		data: {				
-			query: `{
+			url: graphURL,
+			method: 'post',
+			data: {
+				query: `{
 				users {
 			  id
 			  account
@@ -116,36 +147,36 @@ class MyEvents extends Component {
 			  }
 			}
 		  }`
-		}
-		}).then((graphEvents)=>{
-		// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
-		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-			// console.log("GraphQL query -- graphEvents undefined")
-			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
-		}else{
-			if (this._isMounted) {
-				const dateTime = Date.now();
-				const dateNow = Math.floor(dateTime / 1000);
-				let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
-				if(userEvents){
-					let newsort = userEvents.userEvents
-					.concat()
-					.sort((a, b) => b.blockNumber - a.blockNumber)
-					.filter(
-						(activeEvents) =>
-							activeEvents.time >= dateNow
-					)
-							this.setState({
-								MyEvents: newsort,
-								check: newsort,
-								active_length: newsort.length,
-							});
-				}
-				
-				this.setState({ loading: false });
 			}
+		}).then((graphEvents) => {
+			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
+			if (!graphEvents.data || graphEvents.data.data == 'undefined') {
+				// console.log("GraphQL query -- graphEvents undefined")
+				this.setState({ loading: false, Topic_Events: [], active_length: 0 });
+			} else {
+				if (this._isMounted) {
+					const dateTime = Date.now();
+					const dateNow = Math.floor(dateTime / 1000);
+					let userEvents = graphEvents.data.data.users.find((user) => user.account.toLowerCase() == this.account.toLowerCase())
+					if (userEvents) {
+						let newsort = userEvents.userEvents
+							.concat()
+							.sort((a, b) => b.blockNumber - a.blockNumber)
+							.filter(
+								(activeEvents) =>
+									activeEvents.time >= dateNow
+							)
+						this.setState({
+							MyEvents: newsort,
+							check: newsort,
+							active_length: newsort.length,
+						});
+					}
 
-		}
+					this.setState({ loading: false });
+				}
+
+			}
 
 		}).catch((err) => {
 			this.setState({ loading: false });
@@ -158,16 +189,16 @@ class MyEvents extends Component {
 		if (this._isMounted) {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
-				// GRAPH BLOCK //
+		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
 
 		await axios({
-		url: graphURL,
-		method: 'post',
-		data: {
-		query: 
-		
-		`{
+			url: graphURL,
+			method: 'post',
+			data: {
+				query:
+
+					`{
 			users {
 			  id
 			  account
@@ -188,37 +219,37 @@ class MyEvents extends Component {
 			  }
 			}
 		  }`
-		
-		}
-		}).then((graphEvents)=>{
+
+			}
+		}).then((graphEvents) => {
 			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 
-		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-			// console.log("GraphQL query -- graphEvents undefined")
-			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
-		}else{
-			if (this._isMounted) {
-				const dateTime = Date.now();
-				const dateNow = Math.floor(dateTime / 1000);
-				let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
-				if(userEvents){
-					let newsort = userEvents.userEvents
-					.concat()
-					.sort((a, b) => b.blockNumber - a.blockNumber)
-					.filter(
-						(activeEvents) =>
-							activeEvents.time < dateNow
-					)
-							this.setState({
-								MyEvents: newsort,
-								check: newsort,
-								active_length: newsort.length,
-							});
+			if (!graphEvents.data || graphEvents.data.data == 'undefined') {
+				// console.log("GraphQL query -- graphEvents undefined")
+				this.setState({ loading: false, Topic_Events: [], active_length: 0 });
+			} else {
+				if (this._isMounted) {
+					const dateTime = Date.now();
+					const dateNow = Math.floor(dateTime / 1000);
+					let userEvents = graphEvents.data.data.users.find((user) => user.account.toLowerCase() == this.account.toLowerCase())
+					if (userEvents) {
+						let newsort = userEvents.userEvents
+							.concat()
+							.sort((a, b) => b.blockNumber - a.blockNumber)
+							.filter(
+								(activeEvents) =>
+									activeEvents.time < dateNow
+							)
+						this.setState({
+							MyEvents: newsort,
+							check: newsort,
+							active_length: newsort.length,
+						});
+					}
+					this.setState({ loading: false });
 				}
-				this.setState({ loading: false });
-			}
 
-		}
+			}
 
 		}).catch((err) => {
 			this.setState({ loading: false });
@@ -257,16 +288,16 @@ class MyEvents extends Component {
 			}
 		);
 	};
-	toggleBuying=()=>{
-		this.setState({disabledBuying:!this.state.disabledBuying});
+	toggleBuying = () => {
+		this.setState({ disabledBuying: !this.state.disabledBuying });
 	}
-		
+
 	//Search for My Events By Name
 	updateSearch = (e) => {
 		let { value } = e.target;
 		this.setState({ value }, () => {
 			try {
-				if (this.state.value !== "" && this.state.check.length !=0) {
+				if (this.state.value !== "" && this.state.check.length != 0) {
 					var filteredEvents = this.state.check;
 					filteredEvents = filteredEvents.filter((events) => {
 						return (
@@ -278,7 +309,7 @@ class MyEvents extends Component {
 				} else {
 					filteredEvents = this.state.check;
 				}
-			} catch (e) {}
+			} catch (e) { }
 			this.setState({
 				MyEvents: filteredEvents,
 				active_length: filteredEvents.length,
@@ -287,10 +318,12 @@ class MyEvents extends Component {
 		});
 	};
 	executeScroll = () => this.myRef.current.scrollIntoView();
-
+	onTabChange = (event, newValue) => {
+		this.setState({ selectedTab: newValue });
+	};
 	render() {
+		const { classes } = this.props;
 		let body = <PhoenixDAOLoader />;
-
 		if (
 			typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
 			"undefined"
@@ -467,7 +500,44 @@ class MyEvents extends Component {
 
 		return (
 			<div className="event-page-wrapper">
-				<h2 className="col-md-10" ref={this.myRef}>
+				<h2 className="main-heading">
+					My Created Events
+				</h2>
+
+				<AppBar position="static" className={classes.AppBar} color="transparent">
+					<Tabs
+						value={this.state.selectedTab}
+						onChange={this.onTabChange.bind(this)}
+						indicatorColor="primary"
+						textColor="primary"
+						variant="scrollable"
+						scrollButtons="auto"
+						aria-label="scrollable auto tabs example"
+					>
+						<Tab label="All Events" {...a11yProps(0)} />
+						<Tab
+							label="Upcoming Events"
+							{...a11yProps(1)}
+						/>
+						<Tab label="Past Events" {...a11yProps(2)} />
+
+					</Tabs>
+				</AppBar>
+				<TabPanel value={this.state.selectedTab} index={0}>
+					Item Two
+
+				</TabPanel>
+				<TabPanel value={this.state.selectedTab} index={1}>
+
+					<FindEvents {...this.props}
+
+					/>
+
+				</TabPanel>
+				<TabPanel value={this.state.selectedTab} index={2}>
+					Item Three
+                </TabPanel>
+				{/* <h2 className="col-md-10" ref={this.myRef}>
 					{this.state.isActive ? (
 						<i className="fa fa-calendar-alt "></i>
 					) : (
@@ -507,7 +577,7 @@ class MyEvents extends Component {
 				</div>
 
 				<hr />
-				{body}
+				{body} */}
 			</div>
 		);
 	}
@@ -537,4 +607,4 @@ const mapStateToProps = (state) => {
 };
 
 const AppContainer = drizzleConnect(MyEvents, mapStateToProps);
-export default AppContainer;
+export default withStyles(styles, { withTheme: true })(AppContainer);

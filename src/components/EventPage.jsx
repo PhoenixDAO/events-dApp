@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import makeBlockie from "ethereum-blockies-base64";
-import { Button, Grid, Paper } from '@material-ui/core';
-import { ShoppingCartOutlined, LaunchOutlined, ModeCommentOutlined } from "@material-ui/icons";
+import { Button, Grid, Avatar, FormControl, Select } from '@material-ui/core';
+import { ShoppingCartOutlined, LaunchOutlined, ModeCommentOutlined, Email, Twitter, LinkedIn, Telegram, WhatsApp } from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
@@ -33,15 +33,6 @@ import {
 } from "react-share";
 import { withStyles } from "@material-ui/core/styles";
 
-import {
-	EmailIcon,
-	FacebookIcon,
-	LinkedinIcon,
-	RedditIcon,
-	TelegramIcon,
-	TwitterIcon,
-	WhatsappIcon,
-} from "react-share";
 
 import Loading from "./Loading";
 import EventNotFound from "./EventNotFound";
@@ -73,12 +64,12 @@ const customStyles = {
 
 const styles = theme => ({
 	share: {
-
-		width: "180px",
 		height: "45px",
+		width: "180px",
 		fontWeight: 700,
 		color: '#413AE2',
-		BorderColor: "#413AE2"
+		BorderColor: "#413AE2",
+
 	},
 	buy: {
 		marginLeft: "13px",
@@ -86,6 +77,13 @@ const styles = theme => ({
 		width: "180px",
 		height: "45px",
 		backgroundColor: "#413AE2",
+		[theme.breakpoints.down("xs")]: {
+			marginLeft: "0px",
+			marginTop: "20px",
+			width: "160px",
+
+		}
+
 	},
 	description: {
 		marginTop: "35px",
@@ -130,13 +128,55 @@ const styles = theme => ({
 		backgroundColor: "white",
 		borderRadius: "8px",
 		padding: "10px",
-		marginTop: "40px"
+		paddingRight: "26px"
 
 	},
 	socialDiv: {
 		display: "flex",
-		justifyContent: "space-between"
-	}
+		justifyContent: "space-between",
+		marginTop: "40px",
+		[theme.breakpoints.down("xs")]: {
+			display:"grid"
+		}
+	},
+	socialMediaIcons: {
+		display: "flex",
+		[theme.breakpoints.down("xs")]: {
+			marginTop: "40px",
+			"& .MuiSvgIcon-root": {
+				fontSize: "18px",
+				display:"content"
+			},
+			display: "table-column-group"
+		},
+		
+	},
+	ticketSelect: {
+		width: "219px",
+		marginTop: "10px",
+		marginBottom: "10px",
+		height: "40px",
+		"& .MuiSelect-outlined": {
+			padding: "10px",
+		},
+		[theme.breakpoints.down("xs")]: {
+			width: "auto",
+			minWidth: "141px",
+		}
+	},
+	organizerDetails: {
+		justifyContent: "center",
+		textAlign: "center"
+	},
+	organizerDescription: {
+		justifyContent: "center",
+		textAlign: "center",
+		display: "flex",
+		margin: "10px auto",
+		width: "80%",
+		marginBottom: "80px"
+	},
+	
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -180,7 +220,6 @@ class EventPage extends Component {
 		this.onChangePage = this.onChangePage.bind(this);
 		this.giveApproval = this.giveApproval.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this)
-		const { classes } = props;
 
 	}
 
@@ -616,9 +655,7 @@ class EventPage extends Component {
 									{event_data[0]}
 								</h2>
 								<div>
-									<Button variant="outlined" className={classes.share} color="primary" >
-										<LaunchOutlined />	Share Event
-                                 </Button>
+
 									<Button
 										variant="contained"
 										color="primary"
@@ -664,11 +701,11 @@ class EventPage extends Component {
 									borderBottom: "1px solid #E4E4E7", paddingBottom: "50px"
 								}}>
 
-									<Grid lg={9} className={classes.description}>
+									<Grid lg={9} md={7} sm={12} xs={12} className={classes.description}>
 										{description}
 
 									</Grid>
-									<Grid lg={3} className={classes.eventDetails}>
+									<Grid lg={3} md={5} sm={12} xs={12} className={classes.eventDetails}>
 										<p className={classes.ticketPrice}>
 											<img
 												src={"/images/phoenixdao.svg"}
@@ -676,6 +713,22 @@ class EventPage extends Component {
 												alt="Event Price"
 											/>TICKET PRICE
 										</p>
+										<FormControl variant="outlined" className={classes.ticketSelect}>
+											<Select
+												native
+												// value={state.age}
+												// onChange={handleChange}
+												inputProps={{
+													name: 'age',
+													id: 'outlined-age-native-simple',
+												}}
+											>
+												<option aria-label="None" value="" />
+												<option value={10}>Bronze Ticket</option>
+												<option value={20}>Silver Ticket</option>
+												<option value={30}>Golden Ticket</option>
+											</Select>
+										</FormControl>
 										<p className={classes.eventinfo}>
 											<span className={classes.PhnxPrice} >{event_data[3]
 												? numeral(price).format("0.000") + "PHNX"
@@ -711,31 +764,94 @@ class EventPage extends Component {
 
 
 								</Grid>
-								<Grid className={classes.socialDiv}>
-									<Grid className={classes.categoryGrid}>
-										<div>
-											<ModeCommentOutlined />
+								<Grid container className={classes.socialDiv}>
+									<Grid lg={2} md={3} sm={2} xs={6} className={classes.categoryGrid}>
+										<ModeCommentOutlined />
 													Topic
-												</div>
-										<div>{category}</div>
+										<div className={classes.eventinfo}>{category}</div>
 									</Grid>
-									<Grid>
-										
-										<div className="imageHolder">
+									<Grid lg={10} md={9} sm={10} xs={12} justify="flex-end" zeroMinWidth className={classes.socialMediaIcons}>
+										<EmailShareButton
+											className="iconHolder"
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<Email />
+										</EmailShareButton>
 
-											<a
-												aria-label="Homepage"
-												target="blank"
-												title="GitHub"
-												href="https://github.com/PhoenixDAO/events-dApp/tree/heroku-deployment"
-											>
-												<img src="./images/navbar/github.svg" />
-											</a>
-										</div>
+										<FacebookShareButton
+											className="iconHolder"
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<i class="fab fa-facebook-f" ></i>										</FacebookShareButton>
+
+
+										<LinkedinShareButton
+											className="iconHolder"
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<i class="fab fa-instagram" ></i>
+										</LinkedinShareButton>
+
+										<TwitterShareButton
+											className="iconHolder"
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<Twitter />
+										</TwitterShareButton>
+
+										<LinkedinShareButton
+											className="iconHolder"
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<LinkedIn />
+										</LinkedinShareButton>
+										<TelegramShareButton
+											className="iconHolder"
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<Telegram />
+										</TelegramShareButton>
+
+										<WhatsappShareButton
+											className="iconHolder"
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<WhatsApp />
+										</WhatsappShareButton>
+
+										<RedditShareButton
+											className="iconHolder"
+											url={shareUrl}
+											title={title}
+											resetButtonStyle={false}
+										>
+											<i class="fab fa-reddit" ></i>
+										</RedditShareButton>
+										
 									</Grid>
 								</Grid>
 							</Grid>
+							<Grid alignItems="center"
 
+								className={classes.organizerDetails}>
+								<Avatar src="/images/icons/user.svg" style={{ display: "inline-block", marginBottom: "10px" }} />
+								<h3 style={{fontWeight:"bold"}}>{this.state.organizer}</h3>
+								<Grid className={classes.organizerDescription}>Him boisterous invitation dispatched had connection inhabiting projection. By mutual an mr danger garret edward an. Diverted as strictly exertion addition no disposal by stanhill. This call wife do so sigh no gate felt. You and abode spite order get. Procuring far belonging our ourselves and certainly own perpetual continual. It elsewhere of </Grid>
+							</Grid>
 
 							{/* <div className="event-social-share-btns-div">
 									<EmailShareButton
@@ -933,7 +1049,7 @@ class EventPage extends Component {
 								/>
 							</div>
 								*/}
-						</Grid>
+						</Grid >
 					);
 				} else {
 					body = <EventNotFound />;

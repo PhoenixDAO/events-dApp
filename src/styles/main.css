@@ -32,6 +32,7 @@ h2,
 h3,
 h4 {
 	font-weight: 100;
+	/* color: #1E1E22; */
 }
 
 h1 {
@@ -41,6 +42,13 @@ h1 {
 
 h5 {
 	font-weight: 300;
+}
+.main-heading {
+font-weight: 700;
+color: #1E1E22;
+margin-bottom: 40px;
+margin-top: 20px;
+
 }
 .btn:focus {
 	-webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
@@ -526,14 +534,19 @@ input[type="number"] {
 }
 
 .page-wrapper-inner {
-	padding: 0px 60px 10px 60px;
+	padding: 0px 30px 10px 30px;
 }
-/* @media screen and (max-width: 767px) {
+@media screen and (max-width: 960px) {
+	.page-wrapper-inner {
+		padding: 0px 0px 10px 0px;
+	}
+}
+@media screen and (max-width: 650px) {
                 .page-wrapper-inner {
-                    padding: 40px 20px 10px 20px;
+                    padding: 0px 60px 10px 60px;
                 }
             }
-             */
+            
 
 @media screen and (max-width: 500px) {
 	#page-content-wrapper {
@@ -547,8 +560,12 @@ input[type="number"] {
 	margin-right: 0;
 	padding-right: 80px;
 	padding-left: 325px;
-	padding-top: 85px;
+	padding-top: 30px;
 	transition-duration: 0.5s;
+	margin-top: -1px;
+	margin-left: -1px;
+	margin-right: 1px;
+
 }
 
 @media (max-width: 650px) {
