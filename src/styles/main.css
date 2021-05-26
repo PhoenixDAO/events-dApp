@@ -43,6 +43,13 @@ h1 {
 h5 {
 	font-weight: 300;
 }
+.main-heading {
+font-weight: 700;
+color: #1E1E22;
+margin-bottom: 40px;
+margin-top: 20px;
+
+}
 .btn:focus {
 	-webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
 	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;

@@ -33,15 +33,6 @@ import {
 } from "react-share";
 import { withStyles } from "@material-ui/core/styles";
 
-import {
-	EmailIcon,
-	FacebookIcon,
-	LinkedinIcon,
-	RedditIcon,
-	TelegramIcon,
-	TwitterIcon,
-	WhatsappIcon,
-} from "react-share";
 
 import Loading from "./Loading";
 import EventNotFound from "./EventNotFound";
@@ -229,7 +220,6 @@ class EventPage extends Component {
 		this.onChangePage = this.onChangePage.bind(this);
 		this.giveApproval = this.giveApproval.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this)
-		const { classes } = props;
 
 	}
 
