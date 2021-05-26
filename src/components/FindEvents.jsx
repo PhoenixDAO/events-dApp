@@ -27,6 +27,9 @@ const useStyles = (theme) => ({
 		flexGrow: 1,
 		width: "100%",
 	},
+	indicator: {
+		backgroundColor: "white",
+	},
 });
 
 function a11yProps(index) {
@@ -494,6 +497,9 @@ class FindEvents extends Component {
 									variant="scrollable"
 									scrollButtons="auto"
 									aria-label="scrollable auto tabs example"
+									classes={{
+										indicator: classes.indicator,
+									}}
 								>
 									<Tab label="All Events" {...a11yProps(0)} />
 									<Tab

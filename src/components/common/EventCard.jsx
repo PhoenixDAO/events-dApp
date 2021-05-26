@@ -12,6 +12,7 @@ import {
 	CardHeader,
 	Avatar,
 	IconButton,
+	Box,
 } from "@material-ui/core";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
@@ -38,37 +39,42 @@ const EventCard = ({ event_data, date, image, locations }) => {
 					<CardMedia
 						component="img"
 						alt={event_data.name}
-						height="140"
+						height="200"
 						image={image}
 						title={event_data.name}
 					/>
-					<div>
-						<Typography
+					<div
+						style={{
+							position: "absolute",
+							bottom: 0,
+							left: 0,
+							right: 0,
+						}}
+					>
+						<div
 							style={{
-								color: "#fff",
-								position: "absolute",
-								bottom: 0,
+								display: "flex",
+								justifyContent: "space-between",
+								padding: 10,
+								backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)`,
 							}}
 						>
-							<ConfirmationNumberOutlinedIcon
-								style={{ margin: 5 }}
-								fontSize="medium"
-							/>
-							30/20K
-						</Typography>
-						<Typography
-							style={{
-								color: "#fff",
-								position: "absolute",
-								bottom: 0,
-								right: 0,
-							}}
-						>
-							<FavoriteBorderIcon
-								style={{ margin: 5 }}
-								fontSize="large"
-							/>
-						</Typography>
+							<Typography
+								style={{
+									color: "#fff",
+								}}
+							>
+								<ConfirmationNumberOutlinedIcon fontSize="large" />
+								30/20K
+							</Typography>
+							<Typography
+								style={{
+									color: "#fff",
+								}}
+							>
+								<FavoriteBorderIcon fontSize="large" />
+							</Typography>
+						</div>
 					</div>
 				</div>
 
