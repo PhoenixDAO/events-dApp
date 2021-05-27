@@ -30,12 +30,14 @@ import {
 	InputAdornment,
 	IconButton,
 	Button,
+	useScrollTrigger,
 } from "@material-ui/core";
 import Slider from "./common/Slider";
 import phnxLogo from "./Images/phnxlogo.svg";
 import roundlogo from "./Images/roundlogo.svg";
 import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
+import { StickyContainer, Sticky } from "react-sticky";
 
 const useStyles = (theme) => ({
 	root: {
@@ -511,7 +513,6 @@ class FindEvents extends Component {
 							aria-describedby="inputGroup-sizing-sm"
 						/>
 					</div> */}
-
 					<br />
 					<br />
 					<br />
@@ -536,7 +537,12 @@ class FindEvents extends Component {
 							</h2>
 						</div>
 
-						<div style={{ display: "flex", alignItems: "center" }}>
+						<div
+							style={{
+								display: "flex",
+								alignItems: "center",
+							}}
+						>
 							<TextField
 								className={classes.margin}
 								id="input-with-icon-textfield"
@@ -557,20 +563,18 @@ class FindEvents extends Component {
 								color="primary"
 								size="large"
 								className={classes.button}
-								startIcon={<AddIcon fontSize='large' />}
+								startIcon={<AddIcon fontSize="large" />}
 							>
 								Connect Wallet
 							</Button>
 						</div>
 					</div>
-
 					<br />
-
 					{/* tabs */}
 					<div>
 						<div className={classes.root}>
 							<AppBar
-								position="static"
+								position="sticky"
 								className={classes.appBar}
 								color="transparent"
 							>
@@ -633,20 +637,16 @@ class FindEvents extends Component {
 							</AppBar>
 						</div>
 					</div>
-
 					<br />
 					<br />
 					<br />
-
 					{/* slider */}
 					<div>
 						<Slider />
 					</div>
-
 					<br />
 					<br />
 					<br />
-
 					<div>
 						<div className="row row_mobile">
 							<h2 className="col-lg-10 col-md-9 col-sm-8">
@@ -672,10 +672,8 @@ class FindEvents extends Component {
 
 						{body}
 					</div>
-
 					<br />
 					<br />
-
 					{/* <div className="topics-wrapper">
 						<h2>
 							<i className="fa fa-calendar-alt"></i> Popular

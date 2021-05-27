@@ -29,6 +29,11 @@ const useStyles = makeStyles((theme) => ({
 	avatar: {
 		backgroundColor: "red",
 	},
+	text: {
+		color: "#4E4E55",
+		fontSize: 17,
+		fontWeight: 500,
+	},
 }));
 
 const EventCard = ({
@@ -79,10 +84,13 @@ const EventCard = ({
 								<Typography
 									style={{
 										color: "#fff",
+										fontSize: 17,
+										fontWeight: 500,
 									}}
 								>
 									<ConfirmationNumberOutlinedIcon fontSize="large" />
-									{max_seats}/{event_data.sold}
+									<span>&nbsp;</span>
+									{event_data.sold}/{max_seats}
 								</Typography>
 								<Typography
 									style={{
@@ -102,7 +110,15 @@ const EventCard = ({
 								justifyContent: "space-between",
 							}}
 						>
-							<Typography variant="h6" component="h2">
+							<Typography
+								variant="h6"
+								component="h2"
+								style={{
+									color: "#1E1E22",
+									fontSize: 17,
+									fontWeight: 700,
+								}}
+							>
 								{event_data.sold >= 2 ? (
 									<img
 										src="/images/fire.png"
@@ -114,6 +130,7 @@ const EventCard = ({
 								)}
 								{event_data.name}
 							</Typography>
+
 							<Typography
 								style={{ color: "#413AE2" }}
 								variant="body1"
@@ -130,6 +147,7 @@ const EventCard = ({
 							color="textSecondary"
 							component="p"
 							gutterBottom
+							className={classes.text}
 						>
 							<DateRangeIcon fontSize="small" />{" "}
 							<span>&nbsp;</span>
@@ -141,6 +159,7 @@ const EventCard = ({
 							color="textSecondary"
 							component="p"
 							gutterBottom
+							className={classes.text}
 						>
 							<AccessTimeIcon fontSize="small" />{" "}
 							<span>&nbsp;</span>
@@ -155,6 +174,8 @@ const EventCard = ({
 							color="textSecondary"
 							component="p"
 							gutterBottom
+							noWrap
+							className={classes.text}
 						>
 							<LocationOnOutlinedIcon fontSize="small" />{" "}
 							<span>&nbsp;</span>
