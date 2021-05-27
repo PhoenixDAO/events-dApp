@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
-import { AppBar, Tabs, Tab, Typography, Box } from "@material-ui/core";
+import { AppBar, Tabs, Tab, Typography, Box,Divider } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
@@ -42,7 +42,29 @@ const styles = theme => ({
 	AppBar: {
 		"&.MuiPaper-elevation4": {
 			boxShadow: "none",
-		}
+		},
+		
+	},
+	tabBar:{
+			"&:hover, &:focus ": {
+			outline: "none",
+		
+			},
+			" &:active ": {
+				borderBottom: "2.5px solid #413AE2",
+
+				},
+			"&.MuiTab-textColorPrimary.Mui-selected":{
+				color:"#413AE2",
+				borderBottom: "2.5px solid #413AE2",
+
+		},
+		
+fontWeight:700,
+textTransform:"Capitalize",
+fontFamily:"AeonikReg"
+
+	
 	}
 });
 class MyEvents extends Component {
@@ -514,14 +536,20 @@ class MyEvents extends Component {
 						scrollButtons="auto"
 						aria-label="scrollable auto tabs example"
 					>
-						<Tab label="All Events" {...a11yProps(0)} />
+						<Tab 						className={classes.tabBar}
+label="All Events" {...a11yProps(0)} />
 						<Tab
+												className={classes.tabBar}
+
 							label="Upcoming Events"
 							{...a11yProps(1)}
 						/>
-						<Tab label="Past Events" {...a11yProps(2)} />
+						<Tab 
+												className={classes.tabBar}
+												label="Past Events" {...a11yProps(2)} />
 
 					</Tabs>
+					<Divider light/>
 				</AppBar>
 				<TabPanel value={this.state.selectedTab} index={0}>
 					Item Two
