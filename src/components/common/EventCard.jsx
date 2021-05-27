@@ -9,6 +9,8 @@ import {
 	CardContent,
 	CardActions,
 	Button,
+	Divider,
+	Grid,
 	Typography,
 	CardHeader,
 	Avatar,
@@ -29,6 +31,14 @@ const useStyles = makeStyles((theme) => ({
 	avatar: {
 		backgroundColor: "red",
 	},
+	myEventDiv: {
+		marginTop: "20px",
+		"& .MuiTypography-body2":{
+			fontSize:"17px",
+			fontWeight:"700"
+		}
+	},
+
 }));
 
 const EventCard = ({
@@ -82,7 +92,7 @@ const EventCard = ({
 									}}
 								>
 									<ConfirmationNumberOutlinedIcon fontSize="large" />
-									{max_seats}/{event_data.sold}
+									{event_data.sold}/{max_seats}
 								</Typography>
 								<Typography
 									style={{
@@ -160,6 +170,21 @@ const EventCard = ({
 							<span>&nbsp;</span>
 							{locations}
 						</Typography>
+						{myEvent ? (
+							<Grid className={classes.myEventDiv}>
+								<Divider style={{marginBottom:"20px"}} />
+								<Typography
+									variant="body2"
+									color="textSecondary"
+									component="p"
+									gutterBottom
+								>
+									{"Ticket Sold: "}
+									<span>&nbsp;</span>
+									{event_data.sold}/{max_seats}
+								</Typography>
+							</Grid>
+						) : null}
 					</CardContent>
 				</CardActionArea>
 			</Card>

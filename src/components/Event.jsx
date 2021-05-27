@@ -88,6 +88,7 @@ class Event extends Component {
 			buy: "",
 			open: false,
 			hideEvent: [],
+			revenue: 0,
 			blockie: "/images/PhoenixDAO.png",
 			approvalGranted: false,
 		};
@@ -102,6 +103,13 @@ class Event extends Component {
 	handleClose = () => {
 		this.setState({ open: false });
 	};
+	async GetEventsRevenue() {
+		let revenue = await this.contracts["DaoEvents"].methods
+			.eventRevenue(this.props.match.params.id)
+			.call();
+		revenue = revenue / 1000000000000000000;
+		this.setState({ revenue });
+	}
 
 	//get market cap & dollar value of PHNX
 	async getPhoenixDAOMarketValue() {

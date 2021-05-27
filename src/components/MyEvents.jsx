@@ -2,11 +2,15 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
-import { AppBar, Tabs, Tab, Typography, Box,Divider } from "@material-ui/core";
+import {
+	AppBar, Tabs, Tab, Typography, Box, Divider, TextField,
+	InputAdornment,
+} from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import { INFURA_WEB_URL, graphURL } from "../config/const.js";
+import SearchIcon from "@material-ui/icons/Search";
 
 import Event from "./Event";
 // import Web3 from "web3";
@@ -32,7 +36,7 @@ function TabPanel(props) {
 		>
 			{value === index && (
 				<Box p={3}>
-					<Typography>{children}</Typography>
+					<Typography component={'div'} >{children}</Typography>
 				</Box>
 			)}
 		</div>
@@ -43,28 +47,32 @@ const styles = theme => ({
 		"&.MuiPaper-elevation4": {
 			boxShadow: "none",
 		},
-		
-	},
-	tabBar:{
-			"&:hover, &:focus ": {
-			outline: "none",
-		
-			},
-			" &:active ": {
-				borderBottom: "2.5px solid #413AE2",
 
-				},
-			"&.MuiTab-textColorPrimary.Mui-selected":{
-				color:"#413AE2",
-				borderBottom: "2.5px solid #413AE2",
+	},
+	tabBar: {
+		"&:hover, &:focus ": {
+			outline: "none",
 
 		},
-		
-fontWeight:700,
-textTransform:"Capitalize",
-fontFamily:"AeonikReg"
+		" &:active ": {
+			borderBottom: "2.5px solid #413AE2",
 
-	
+		},
+		"&.MuiTab-textColorPrimary.Mui-selected": {
+			color: "#413AE2",
+			borderBottom: "2.5px solid #413AE2",
+
+		},
+
+		fontWeight: 700,
+		textTransform: "Capitalize",
+		fontFamily: "AeonikReg"
+
+
+	},
+	searchRow: {
+		display: "flex",
+		justifyContent: "space-between"
 	}
 });
 class MyEvents extends Component {
@@ -280,7 +288,7 @@ class MyEvents extends Component {
 	//Display My Concluded Events
 	PastEvent = (e) => {
 		let value = "";
-
+		console.log("past event");
 		this.setState(
 			{
 				isActive: false,
@@ -342,6 +350,13 @@ class MyEvents extends Component {
 	executeScroll = () => this.myRef.current.scrollIntoView();
 	onTabChange = (event, newValue) => {
 		this.setState({ selectedTab: newValue });
+		if (newValue == 1) {
+			this.ActiveEvent();
+		}
+		if (newValue == 2) {
+			this.PastEvent();
+
+		}
 	};
 	render() {
 		const { classes } = this.props;
@@ -401,6 +416,7 @@ class MyEvents extends Component {
 							key={events_list[i].eventId}
 							id={events_list[i].eventId}
 							ipfs={events_list[i].ipfs}
+							MyEvents={true}
 						/>
 					);
 				}
@@ -522,10 +538,27 @@ class MyEvents extends Component {
 
 		return (
 			<div className="event-page-wrapper">
-				<h2 className="main-heading">
-					My Created Events
-				</h2>
-
+				<div className={classes.searchRow}>
+					<h2 className="main-heading">
+						My Created Events
+				    </h2>
+					<TextField
+						className={classes.margin}
+						id="input-with-icon-textfield"
+						variant="outlined"
+						placeholder="Search for events"
+						size="medium"
+						onChange={this.updateSearch.bind(this)}
+						value={this.state.value}
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position="start">
+									<SearchIcon style={{ color: "#C1C1C1" }} />
+								</InputAdornment>
+							),
+						}}
+					/>
+				</div>
 				<AppBar position="static" className={classes.AppBar} color="transparent">
 					<Tabs
 						value={this.state.selectedTab}
@@ -535,36 +568,35 @@ class MyEvents extends Component {
 						variant="scrollable"
 						scrollButtons="auto"
 						aria-label="scrollable auto tabs example"
+						style={{ height: "40px" }}
 					>
-						<Tab 						className={classes.tabBar}
-label="All Events" {...a11yProps(0)} />
+						<Tab className={classes.tabBar}
+							label="All Events" {...a11yProps(0)} />
 						<Tab
-												className={classes.tabBar}
+							className={classes.tabBar}
 
 							label="Upcoming Events"
 							{...a11yProps(1)}
 						/>
-						<Tab 
-												className={classes.tabBar}
-												label="Past Events" {...a11yProps(2)} />
+						<Tab
+							className={classes.tabBar}
+							label="Past Events" {...a11yProps(2)} />
 
 					</Tabs>
-					<Divider light/>
+					<Divider light />
 				</AppBar>
 				<TabPanel value={this.state.selectedTab} index={0}>
-					Item Two
-
+					<div>
+					{body}
+					</div>
 				</TabPanel>
 				<TabPanel value={this.state.selectedTab} index={1}>
-
-					<FindEvents {...this.props}
-
-					/>
-
+					{body}
+					{/* <FindEvents {...this.props}/> */}
 				</TabPanel>
 				<TabPanel value={this.state.selectedTab} index={2}>
-					Item Three
-                </TabPanel>
+					{body}
+				</TabPanel>
 				{/* <h2 className="col-md-10" ref={this.myRef}>
 					{this.state.isActive ? (
 						<i className="fa fa-calendar-alt "></i>
