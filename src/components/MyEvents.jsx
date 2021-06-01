@@ -416,7 +416,7 @@ class MyEvents extends Component {
 							key={events_list[i].eventId}
 							id={events_list[i].eventId}
 							ipfs={events_list[i].ipfs}
-							MyEvents={true}
+							myEvents={true}
 						/>
 					);
 				}
@@ -570,8 +570,7 @@ class MyEvents extends Component {
 						aria-label="scrollable auto tabs example"
 						style={{ height: "40px" }}
 					>
-						<Tab className={classes.tabBar}
-							label="All Events" {...a11yProps(0)} />
+						
 						<Tab
 							className={classes.tabBar}
 

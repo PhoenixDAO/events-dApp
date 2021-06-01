@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
-import makeBlockie from "ethereum-blockies-base64";
+import SocialMedia from "./common/SocialMedia";
 import { Button, Grid, Avatar, FormControl, Select } from '@material-ui/core';
 import { ShoppingCartOutlined, LaunchOutlined, ModeCommentOutlined, Email, Twitter, LinkedIn, Telegram, WhatsApp } from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
@@ -21,16 +21,6 @@ import NotifyError from "./NotifyError";
 import { CalendarTodayOutlined, ScheduleOutlined, LocationOnOutlined, PersonOutlined, ConfirmationNumberOutlined } from "@material-ui/icons";
 import { toast } from "react-toastify";
 import ApprovalModal from "./approvalModal";
-
-import {
-	EmailShareButton,
-	FacebookShareButton,
-	LinkedinShareButton,
-	RedditShareButton,
-	TelegramShareButton,
-	TwitterShareButton,
-	WhatsappShareButton,
-} from "react-share";
 import { withStyles } from "@material-ui/core/styles";
 
 
@@ -136,21 +126,10 @@ const styles = theme => ({
 		justifyContent: "space-between",
 		marginTop: "40px",
 		[theme.breakpoints.down("xs")]: {
-			display:"grid"
+			display: "grid"
 		}
 	},
-	socialMediaIcons: {
-		display: "flex",
-		[theme.breakpoints.down("xs")]: {
-			marginTop: "40px",
-			"& .MuiSvgIcon-root": {
-				fontSize: "18px",
-				display:"content"
-			},
-			display: "table-column-group"
-		},
-		
-	},
+
 	ticketSelect: {
 		width: "219px",
 		marginTop: "10px",
@@ -176,7 +155,7 @@ const styles = theme => ({
 		width: "80%",
 		marginBottom: "80px"
 	},
-	
+
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -566,8 +545,6 @@ class EventPage extends Component {
 				);
 			} else {
 				let event_data = this.state.blockChainEvent
-				let shareUrl = window.location;
-				let title = event_data[0];
 				let image = this.getImage();
 				let description = this.getDescription();
 				let locations = this.getLocation();
@@ -770,78 +747,9 @@ class EventPage extends Component {
 													Topic
 										<div className={classes.eventinfo}>{category}</div>
 									</Grid>
-									<Grid lg={10} md={9} sm={10} xs={12} justify="flex-end" zeroMinWidth className={classes.socialMediaIcons}>
-										<EmailShareButton
-											className="iconHolder"
-											url={shareUrl}
-											title={title}
-											resetButtonStyle={false}
-										>
-											<Email />
-										</EmailShareButton>
+									<Grid lg={10} md={9} sm={10} xs={12}>
 
-										<FacebookShareButton
-											className="iconHolder"
-											url={shareUrl}
-											title={title}
-											resetButtonStyle={false}
-										>
-											<i class="fab fa-facebook-f" ></i>										</FacebookShareButton>
-
-
-										<LinkedinShareButton
-											className="iconHolder"
-											url={shareUrl}
-											title={title}
-											resetButtonStyle={false}
-										>
-											<i class="fab fa-instagram" ></i>
-										</LinkedinShareButton>
-
-										<TwitterShareButton
-											className="iconHolder"
-											url={shareUrl}
-											title={title}
-											resetButtonStyle={false}
-										>
-											<Twitter />
-										</TwitterShareButton>
-
-										<LinkedinShareButton
-											className="iconHolder"
-											url={shareUrl}
-											title={title}
-											resetButtonStyle={false}
-										>
-											<LinkedIn />
-										</LinkedinShareButton>
-										<TelegramShareButton
-											className="iconHolder"
-											url={shareUrl}
-											title={title}
-											resetButtonStyle={false}
-										>
-											<Telegram />
-										</TelegramShareButton>
-
-										<WhatsappShareButton
-											className="iconHolder"
-											url={shareUrl}
-											title={title}
-											resetButtonStyle={false}
-										>
-											<WhatsApp />
-										</WhatsappShareButton>
-
-										<RedditShareButton
-											className="iconHolder"
-											url={shareUrl}
-											title={title}
-											resetButtonStyle={false}
-										>
-											<i class="fab fa-reddit" ></i>
-										</RedditShareButton>
-										
+										<SocialMedia />
 									</Grid>
 								</Grid>
 							</Grid>
@@ -849,7 +757,7 @@ class EventPage extends Component {
 
 								className={classes.organizerDetails}>
 								<Avatar src="/images/icons/user.svg" style={{ display: "inline-block", marginBottom: "10px" }} />
-								<h3 style={{fontWeight:"bold"}}>{this.state.organizer}</h3>
+								<h3 style={{ fontWeight: "bold" }}>{this.state.organizer}</h3>
 								<Grid className={classes.organizerDescription}>Him boisterous invitation dispatched had connection inhabiting projection. By mutual an mr danger garret edward an. Diverted as strictly exertion addition no disposal by stanhill. This call wife do so sigh no gate felt. You and abode spite order get. Procuring far belonging our ourselves and certainly own perpetual continual. It elsewhere of </Grid>
 							</Grid>
 
