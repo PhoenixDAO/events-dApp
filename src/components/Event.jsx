@@ -88,11 +88,15 @@ class Event extends Component {
 			buy: "",
 			open: false,
 			hideEvent: [],
+			revenue: 0,
 			blockie: "/images/PhoenixDAO.png",
 			approvalGranted: false,
+			phoenixDAO_market: [],
+
 		};
 		this.isCancelled = false;
 		this.giveApproval = this.giveApproval.bind(this);
+
 	}
 
 	handleClickOpen = () => {
@@ -102,6 +106,13 @@ class Event extends Component {
 	handleClose = () => {
 		this.setState({ open: false });
 	};
+	async GetEventsRevenue() {
+		let revenue = await this.contracts["DaoEvents"].methods
+			.eventRevenue(this.props.match.params.id)
+			.call();
+		revenue = revenue / 1000000000000000000;
+		this.setState({ revenue });
+	}
 
 	//get market cap & dollar value of PHNX
 	async getPhoenixDAOMarketValue() {
@@ -111,7 +122,7 @@ class Event extends Component {
 			.then((res) => res.json())
 			.then((data) => {
 				if (this._isMounted) {
-					this.setState({ PhoenixDAO_market: data.phoenixdao });
+					this.setState({ phoenixDAO_market: data.phoenixdao });
 				}
 			})
 			.catch(console.log);
@@ -483,192 +494,195 @@ class Event extends Component {
 				) {
 					myEvent = true;
 				}
-
+				let dollarRevenue=this.state.phoenixDAO_market.usd *this.state.revenue;
 				body = (
 					<div>
+
 						{/* new card */}
 						<EventCard
 							event_data={event_data}
 							date={date}
 							image={image}
 							locations={locations}
-							myEvent={myEvent}
+							myEvent={this.props.myEvents}
 							myEventStatURL={myEventStatURL}
 							titleURL={titleURL}
 							max_seats={max_seats}
+							revenue={this.state.revenue}
+							dollarRevenue={dollarRevenue}
 						/>
 					</div>
 				);
 
 				//old card body
 				// let bodyOld = (
-					// <.>
-					// 	<div>
-					// 		{/* old card */}
-					// 		<div className="card">
-					// 			<div className="image_wrapper">
-					// 				{!reported ? (
-					// 					<Link
-					// 						to={
-					// 							myEvent
-					// 								? myEventStatURL
-					// 								: titleURL
-					// 						}
-					// 					>
-					// 						<img
-					// 							className="card-img-top event-image"
-					// 							src={image}
-					// 							alt={event_data.name}
-					// 						/>
-					// 					</Link>
-					// 				) : (
-					// 					<img
-					// 						className="card-img-top event-image"
-					// 						src={image}
-					// 						alt={event_data.name}
-					// 					/>
-					// 				)}
+				// <.>
+				// 	<div>
+				// 		{/* old card */}
+				// 		<div className="card">
+				// 			<div className="image_wrapper">
+				// 				{!reported ? (
+				// 					<Link
+				// 						to={
+				// 							myEvent
+				// 								? myEventStatURL
+				// 								: titleURL
+				// 						}
+				// 					>
+				// 						<img
+				// 							className="card-img-top event-image"
+				// 							src={image}
+				// 							alt={event_data.name}
+				// 						/>
+				// 					</Link>
+				// 				) : (
+				// 					<img
+				// 						className="card-img-top event-image"
+				// 						src={image}
+				// 						alt={event_data.name}
+				// 					/>
+				// 				)}
 
-					// 				{reportedOut}
-					// 				{!reported && soldOut}
-					// 				{!reported && !sold && freeEvent}
-					// 			</div>
+				// 				{reportedOut}
+				// 				{!reported && soldOut}
+				// 				{!reported && !sold && freeEvent}
+				// 			</div>
 
-					// 			<div className="card-header text-muted event-header ">
-					// 				<img
-					// 					className="float-left"
-					// 					src={this.state.blockie}
-					// 					alt={event_data.owner}
-					// 				/>
-					// 				{/* {this.props.myEvents ? (
-					// 			<Link to={myEventStatURL}>
-					// 			</Link>
-					// 		) : (
-					// 			""
-					// 		)} */}
-					// 			</div>
+				// 			<div className="card-header text-muted event-header ">
+				// 				<img
+				// 					className="float-left"
+				// 					src={this.state.blockie}
+				// 					alt={event_data.owner}
+				// 				/>
+				// 				{/* {this.props.this.props. ? (
+				// 			<Link to={myEventStatURL}>
+				// 			</Link>
+				// 		) : (
+				// 			""
+				// 		)} */}
+				// 			</div>
 
-					// 			<div className="card-body">
-					// 				{reported ? (
-					// 					<h5
-					// 						className="card-title event-title"
-					// 						title={event_data.name}
-					// 					>
-					// 						{badge}
-					// 						{event_data.name}
-					// 					</h5>
-					// 				) : (
-					// 					<h5
-					// 						className="card-title event-title"
-					// 						title={event_data.name}
-					// 					>
-					// 						<Link
-					// 							to={
-					// 								myEvent
-					// 									? myEventStatURL
-					// 									: titleURL
-					// 							}
-					// 						>
-					// 							{badge}
-					// 							{event_data.name}
-					// 						</Link>
-					// 					</h5>
-					// 				)}
-					// 				{description}
-					// 			</div>
+				// 			<div className="card-body">
+				// 				{reported ? (
+				// 					<h5
+				// 						className="card-title event-title"
+				// 						title={event_data.name}
+				// 					>
+				// 						{badge}
+				// 						{event_data.name}
+				// 					</h5>
+				// 				) : (
+				// 					<h5
+				// 						className="card-title event-title"
+				// 						title={event_data.name}
+				// 					>
+				// 						<Link
+				// 							to={
+				// 								myEvent
+				// 									? myEventStatURL
+				// 									: titleURL
+				// 							}
+				// 						>
+				// 							{badge}
+				// 							{event_data.name}
+				// 						</Link>
+				// 					</h5>
+				// 				)}
+				// 				{description}
+				// 			</div>
 
-					// 			<ul className="list-group list-group-flush">
-					// 				<li className="list-group-item ">
-					// 					{locations}
-					// 				</li>
-					// 				<li className="list-group-item category">
-					// 					<strong style={{ paddingRight: "3px" }}>
-					// 						Category:{" "}
-					// 					</strong>{" "}
-					// 					<a href={topicURL}>{category}</a>
-					// 				</li>
-					// 				<li className="list-group-item">
-					// 					<strong>Price:</strong>{" "}
-					// 					<img
-					// 						src={"/images/" + symbol}
-					// 						className="event_price-image"
-					// 						alt="Event Price Icon"
-					// 					/>{" "}
-					// 					{event_data.token
-					// 						? "" +
-					// 						  numeral(price).format("0.000")
-					// 						: "" + price}
-					// 					{event_data.token ? " or " : ""}
-					// 					{event_data.token ? (
-					// 						<img
-					// 							src={"/images/dollarsign.png"}
-					// 							className="event_price-image"
-					// 							alt="Event Price"
-					// 						/>
-					// 					) : (
-					// 						""
-					// 					)}
-					// 					{event_data.token
-					// 						? numeral(
-					// 								price *
-					// 									this.state
-					// 										.PhoenixDAO_market
-					// 										.usd
-					// 						  ).format("0.000")
-					// 						: ""}
-					// 				</li>
-					// 				<li className="list-group-item date">
-					// 					<strong>Date:</strong>{" "}
-					// 					{date.toLocaleDateString()} at{" "}
-					// 					{date.toLocaleTimeString([], {
-					// 						hour: "2-digit",
-					// 						minute: "2-digit",
-					// 					})}
-					// 				</li>
-					// 				<li className="list-group-item">
-					// 					<strong>Tickets Sold:</strong>{" "}
-					// 					{event_data.sold}/{max_seats}
-					// 				</li>
-					// 			</ul>
-					// 			{/* {this.props.myEvents ? (
-					// 		<div className=" editButtons text-muted text-center">
-					// 			<Link
-					// 				className="col-6"
-					// 				to={{
-					// 					pathname: "/editevent",
-					// 					state: { event: event_data ,...this.state,price:price},
-					// 				}}
-					// 			>
-					// 				<button className="btn btn-dark col-12">
-					// 					<i className="fa fa-edit"></i> Edit
-					// 				</button>
-					// 			</Link>
-					// 			<button
-					// 				className="btn btn-dark col-6"
-					// 				onClick={this.inquire}
-					// 			>
-					// 				<i className="fas fa-trash-alt"></i> Delete
-					// 			</button>
-					// 		</div>
-					// 	) : null} */}
+				// 			<ul className="list-group list-group-flush">
+				// 				<li className="list-group-item ">
+				// 					{locations}
+				// 				</li>
+				// 				<li className="list-group-item category">
+				// 					<strong style={{ paddingRight: "3px" }}>
+				// 						Category:{" "}
+				// 					</strong>{" "}
+				// 					<a href={topicURL}>{category}</a>
+				// 				</li>
+				// 				<li className="list-group-item">
+				// 					<strong>Price:</strong>{" "}
+				// 					<img
+				// 						src={"/images/" + symbol}
+				// 						className="event_price-image"
+				// 						alt="Event Price Icon"
+				// 					/>{" "}
+				// 					{event_data.token
+				// 						? "" +
+				// 						  numeral(price).format("0.000")
+				// 						: "" + price}
+				// 					{event_data.token ? " or " : ""}
+				// 					{event_data.token ? (
+				// 						<img
+				// 							src={"/images/dollarsign.png"}
+				// 							className="event_price-image"
+				// 							alt="Event Price"
+				// 						/>
+				// 					) : (
+				// 						""
+				// 					)}
+				// 					{event_data.token
+				// 						? numeral(
+				// 								price *
+				// 									this.state
+				// 										.PhoenixDAO_market
+				// 										.usd
+				// 						  ).format("0.000")
+				// 						: ""}
+				// 				</li>
+				// 				<li className="list-group-item date">
+				// 					<strong>Date:</strong>{" "}
+				// 					{date.toLocaleDateString()} at{" "}
+				// 					{date.toLocaleTimeString([], {
+				// 						hour: "2-digit",
+				// 						minute: "2-digit",
+				// 					})}
+				// 				</li>
+				// 				<li className="list-group-item">
+				// 					<strong>Tickets Sold:</strong>{" "}
+				// 					{event_data.sold}/{max_seats}
+				// 				</li>
+				// 			</ul>
+				// 			{/* {this.props.this.props. ? (
+				// 		<div className=" editButtons text-muted text-center">
+				// 			<Link
+				// 				className="col-6"
+				// 				to={{
+				// 					pathname: "/editevent",
+				// 					state: { event: event_data ,...this.state,price:price},
+				// 				}}
+				// 			>
+				// 				<button className="btn btn-dark col-12">
+				// 					<i className="fa fa-edit"></i> Edit
+				// 				</button>
+				// 			</Link>
+				// 			<button
+				// 				className="btn btn-dark col-6"
+				// 				onClick={this.inquire}
+				// 			>
+				// 				<i className="fas fa-trash-alt"></i> Delete
+				// 			</button>
+				// 		</div>
+				// 	) : null} */}
 
-					// 			<div className="card-footer text-muted text-center">
-					// 				<button
-					// 					className="btn btn-dark"
-					// 					onClick={this.inquire}
-					// 					disabled={
-					// 						disabled ||
-					// 						this.props.disabledStatus ||
-					// 						this.props.disabledBuying
-					// 					}
-					// 				>
-					// 					<i className="fas fa-ticket-alt"></i>{" "}
-					// 					{buttonText}
-					// 				</button>
-					// 			</div>
-					// 		</div>
-					// 	</div>
-					// </.>
+				// 			<div className="card-footer text-muted text-center">
+				// 				<button
+				// 					className="btn btn-dark"
+				// 					onClick={this.inquire}
+				// 					disabled={
+				// 						disabled ||
+				// 						this.props.disabledStatus ||
+				// 						this.props.disabledBuying
+				// 					}
+				// 				>
+				// 					<i className="fas fa-ticket-alt"></i>{" "}
+				// 					{buttonText}
+				// 				</button>
+				// 			</div>
+				// 		</div>
+				// 	</div>
+				// </.>
 				// );
 			}
 		}
