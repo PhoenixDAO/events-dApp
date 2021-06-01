@@ -37,9 +37,18 @@ import phnxLogo from "./Images/phnxlogo.svg";
 import roundlogo from "./Images/roundlogo.svg";
 import SearchIcon from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
-import { StickyContainer, Sticky } from "react-sticky";
+
 
 const useStyles = (theme) => ({
+	sticky: {
+		position: "sticky",
+		zIndex: 1,
+		top: 0,
+		display: "flex",
+		flexDirection: "column",
+		background: `#fff !important`,
+		opacity: `1 !important`,
+	},
 	root: {
 		flexGrow: 1,
 		width: "100%",
@@ -61,11 +70,17 @@ const useStyles = (theme) => ({
 			borderBottom: "2.5px solid #413AE2",
 		},
 	},
-	margin: {
+	textField: {
 		margin: theme.spacing(1),
 	},
 	button: {
 		margin: theme.spacing(1),
+		// maxHeight: 54,
+		// maxWidth: 230,
+	},
+	input: {
+		// maxHeight: 54,
+		// maxWidth: 233,
 	},
 });
 
@@ -300,6 +315,9 @@ class FindEvents extends Component {
 	};
 
 	render() {
+		//when user is not connectd hide connect wallet button
+		console.log("accounts---->", this.props.accounts);
+
 		const { classes } = this.props;
 		let body = <PhoenixDAOLoader />;
 
@@ -513,140 +531,151 @@ class FindEvents extends Component {
 							aria-describedby="inputGroup-sizing-sm"
 						/>
 					</div> */}
-					<br />
-					<br />
-					<br />
 
-					<div
-						style={{
-							display: "flex",
-							justifyContent: "space-between",
-							alignItems: "center",
-						}}
-					>
-						<div style={{ display: "flex" }}>
-							<img src={roundlogo} alt="phnx logo" />
-							<span>&nbsp;&nbsp;&nbsp;</span>
-							<h2
+					<div className={classes.sticky}>
+						<div>
+							<br />
+							<br />
+							<br />
+							<div
 								style={{
-									fontWeight: 700,
-									color: "#1E1E22",
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
 								}}
 							>
-								PhoenixDAO Events Marketplace
-							</h2>
-						</div>
+								<div style={{ display: "flex" }}>
+									<img src={roundlogo} alt="phnx logo" />
+									<span>&nbsp;&nbsp;&nbsp;</span>
+									<h2
+										style={{
+											fontWeight: 700,
+											color: "#1E1E22",
+										}}
+									>
+										PhoenixDAO Events Marketplace
+									</h2>
+								</div>
 
-						<div
-							style={{
-								display: "flex",
-								alignItems: "center",
-							}}
-						>
-							<TextField
-								className={classes.margin}
-								id="input-with-icon-textfield"
-								variant="outlined"
-								placeholder="Search for events"
-								size="medium"
-								InputProps={{
-									startAdornment: (
-										<InputAdornment position="start">
-											<SearchIcon />
-										</InputAdornment>
-									),
-								}}
-							/>
-
-							<Button
-								variant="contained"
-								color="primary"
-								size="large"
-								className={classes.button}
-								startIcon={<AddIcon fontSize="large" />}
-							>
-								Connect Wallet
-							</Button>
-						</div>
-					</div>
-					<br />
-					{/* tabs */}
-					<div>
-						<div className={classes.root}>
-							<AppBar
-								position="sticky"
-								className={classes.appBar}
-								color="transparent"
-							>
-								<Tabs
-									value={this.state.selectedTab}
-									onChange={this.onTabChange.bind(this)}
-									indicatorColor="primary"
-									textColor="primary"
-									variant="scrollable"
-									scrollButtons="auto"
-									aria-label="scrollable auto tabs example"
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+									}}
 								>
-									<Tab
-										className={classes.tabBar}
-										label="All Events"
-										{...a11yProps(0)}
+									<TextField
+										className={classes.textField}
+										id="input-with-icon-textfield"
+										variant="outlined"
+										placeholder="Search for events"
+										size="medium"
+										InputProps={{
+											className: classes.input,
+											startAdornment: (
+												<InputAdornment position="start">
+													<SearchIcon />
+												</InputAdornment>
+											),
+										}}
 									/>
-									<Tab
-										className={classes.tabBar}
-										label="Near to you"
-										{...a11yProps(1)}
-									/>
-									<Tab
-										className={classes.tabBar}
-										label="Today"
-										{...a11yProps(2)}
-									/>
-									<Tab
-										className={classes.tabBar}
-										label="This Week"
-										{...a11yProps(3)}
-									/>
-									<Tab
-										className={classes.tabBar}
-										label="This Month"
-										{...a11yProps(4)}
-									/>
-									<Tab
-										className={classes.tabBar}
-										label="Paid Events"
-										{...a11yProps(5)}
-									/>
-									<Tab
-										className={classes.tabBar}
-										label="Free Events"
-										{...a11yProps(6)}
-									/>
-									<Tab
-										className={classes.tabBar}
-										label="Online Events"
-										{...a11yProps(7)}
-									/>
-									<Tab
-										className={classes.tabBar}
-										label="Physical Events"
-										{...a11yProps(8)}
-									/>
-								</Tabs>
-								<Divider light />
-							</AppBar>
+
+									<Button
+										variant="contained"
+										color="primary"
+										size="large"
+										className={classes.button}
+										startIcon={<AddIcon fontSize="large" />}
+									>
+										Connect Wallet
+									</Button>
+								</div>
+							</div>
+						</div>
+
+						<br />
+
+						{/* tabs */}
+						<div>
+							<div className={classes.root}>
+								<AppBar
+									position="sticky"
+									className={classes.appBar}
+									color="transparent"
+								>
+									<Tabs
+										value={this.state.selectedTab}
+										onChange={this.onTabChange.bind(this)}
+										indicatorColor="primary"
+										textColor="primary"
+										variant="scrollable"
+										scrollButtons="auto"
+										aria-label="scrollable auto tabs example"
+									>
+										<Tab
+											className={classes.tabBar}
+											label="All Events"
+											{...a11yProps(0)}
+										/>
+										<Tab
+											className={classes.tabBar}
+											label="Near to you"
+											{...a11yProps(1)}
+										/>
+										<Tab
+											className={classes.tabBar}
+											label="Today"
+											{...a11yProps(2)}
+										/>
+										<Tab
+											className={classes.tabBar}
+											label="This Week"
+											{...a11yProps(3)}
+										/>
+										<Tab
+											className={classes.tabBar}
+											label="This Month"
+											{...a11yProps(4)}
+										/>
+										<Tab
+											className={classes.tabBar}
+											label="Paid Events"
+											{...a11yProps(5)}
+										/>
+										<Tab
+											className={classes.tabBar}
+											label="Free Events"
+											{...a11yProps(6)}
+										/>
+										<Tab
+											className={classes.tabBar}
+											label="Online Events"
+											{...a11yProps(7)}
+										/>
+										<Tab
+											className={classes.tabBar}
+											label="Physical Events"
+											{...a11yProps(8)}
+										/>
+									</Tabs>
+									<Divider light />
+								</AppBar>
+							</div>
 						</div>
 					</div>
+
 					<br />
 					<br />
 					<br />
 					{/* slider */}
 					<div>
-						<Slider />
+						<div>
+							<Slider />
+						</div>
 					</div>
 					<br />
 					<br />
 					<br />
+
 					<div>
 						<div className="row row_mobile">
 							<h2 className="col-lg-10 col-md-9 col-sm-8">

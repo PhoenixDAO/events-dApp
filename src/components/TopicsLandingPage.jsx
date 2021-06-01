@@ -1,55 +1,136 @@
-import React, { Component } from 'react';
-import { drizzleConnect } from 'drizzle-react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import React, { Component } from "react";
+import { drizzleConnect } from "drizzle-react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 // import Carousel from 'react-bootstrap/Carousel'
 
-import Loading from './Loading';
-import Event from './Event';
+import Loading from "./Loading";
+import Event from "./Event";
 
-import topicsJson from '../config/topics.json';
+import topicsJson from "../config/topics.json";
+
+// material UI styles
+import { withStyles } from "@material-ui/core/styles";
+import {
+	AppBar,
+	Tabs,
+	Tab,
+	Typography,
+	Box,
+	Divider,
+	TextField,
+	InputAdornment,
+	IconButton,
+	Button,
+	useScrollTrigger,
+} from "@material-ui/core";
+import Slider from "./common/Slider";
+import phnxLogo from "./Images/phnxlogo.svg";
+import roundlogo from "./Images/roundlogo.svg";
+import SearchIcon from "@material-ui/icons/Search";
+import AddIcon from "@material-ui/icons/Add";
+import TopicCard from "./common/TopicCard";
+
+const useStyles = (theme) => ({
+	sticky: {
+		position: "sticky",
+		zIndex: 1,
+		top: 0,
+		display: "flex",
+		flexDirection: "column",
+		background: `#fff !important`,
+		opacity: `1 !important`,
+	},
+	root: {
+		flexGrow: 1,
+		width: "100%",
+	},
+	appBar: {
+		"&.MuiPaper-elevation4": {
+			boxShadow: "none",
+		},
+	},
+	tabBar: {
+		"&:hover, &:focus ": {
+			outline: "none",
+		},
+		" &:active ": {
+			borderBottom: "2.5px solid #413AE2",
+		},
+		"&.MuiTab-textColorPrimary.Mui-selected": {
+			color: "#413AE2",
+			borderBottom: "2.5px solid #413AE2",
+		},
+	},
+	textField: {
+		margin: theme.spacing(1),
+	},
+	button: {
+		margin: theme.spacing(1),
+		// maxHeight: 54,
+		// maxWidth: 230,
+	},
+	input: {
+		// maxHeight: 54,
+		// maxWidth: 233,
+	},
+});
 
 class TopicsLandingPage extends Component {
-  constructor(props, context) {
-      super(props);
-	    this.contracts = context.drizzle.contracts;
-	    this.eventCount = this.contracts['DaoEvents'].methods.getEventsCount.cacheCall();
-	    this.perPage = 6;
-      this.topicClick = this.topicClick.bind(this);
-      this.compare = this.compare.bind(this)
+	constructor(props, context) {
+		super(props);
+		this.contracts = context.drizzle.contracts;
+		this.eventCount =
+			this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+		this.perPage = 6;
+		this.topicClick = this.topicClick.bind(this);
+		this.compare = this.compare.bind(this);
 	}
 
-  topicClick(slug) {
-    this.props.history.push("/topic/"+slug+"/"+1);
-    window.scrollTo(0, 180);
-    
-  }
+	topicClick(slug) {
+		this.props.history.push("/topic/" + slug + "/" + 1);
+		window.scrollTo(0, 180);
+	}
 
-  caruselClick(location)
-  {
-    this.props.history.push(location);
-    window.scrollTo(0, 80);
-  }
-  compare( a, b ) {
-    if ( a.last_nom < b.last_nom ){
-      return -1;
-    }
-    if ( a.last_nom > b.last_nom ){
-      return 1;
-    }
-    return 0;
-  }
+	caruselClick(location) {
+		this.props.history.push(location);
+		window.scrollTo(0, 80);
+	}
+	compare(a, b) {
+		if (a.last_nom < b.last_nom) {
+			return -1;
+		}
+		if (a.last_nom > b.last_nom) {
+			return 1;
+		}
+		return 0;
+	}
 
 	render() {
+		const { classes } = this.props;
 		let body = <Loading />;
 
-		if (typeof this.props.contracts['DaoEvents'].getEventsCount[this.eventCount] !== 'undefined') {
-
-			let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
+		if (
+			typeof this.props.contracts["DaoEvents"].getEventsCount[
+				this.eventCount
+			] !== "undefined"
+		) {
+			let count = Number(
+				this.props.contracts["DaoEvents"].getEventsCount[
+					this.eventCount
+				].value
+			);
 			if (count === 0) {
-				body = <p className="text-center not-found"><span role="img" aria-label="thinking">🤔</span>&nbsp;No events found. <a href="/createevent">Try creating one.</a></p>;
+				body = (
+					<p className="text-center not-found">
+						<span role="img" aria-label="thinking">
+							🤔
+						</span>
+						&nbsp;No events found.{" "}
+						<a href="/createevent">Try creating one.</a>
+					</p>
+				);
 			} else {
-
 				let currentPage = Number(this.props.match.params.page);
 				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 
@@ -61,50 +142,52 @@ class TopicsLandingPage extends Component {
 				let events_list = [];
 
 				for (let i = start; i < end; i++) {
-					events_list.push(<Event key={i} id={i} 
-            />);
+					events_list.push(<Event key={i} id={i} />);
 				}
 
-				let pagination = '';
+				let pagination = "";
 				if (pages > 1) {
 					let links = [];
 
 					for (let i = 1; i <= pages; i++) {
-						let active = i === currentPage ? 'active' : '';
+						let active = i === currentPage ? "active" : "";
 						links.push(
 							<li className={"page-item " + active} key={i}>
-								<Link to={"/upcomingevents/" + i} className="page-link">{i}</Link>
+								<Link
+									to={"/upcomingevents/" + i}
+									className="page-link"
+								>
+									{i}
+								</Link>
 							</li>
 						);
 					}
 
-					pagination =
+					pagination = (
 						<nav>
 							<ul className="pagination justify-content-center">
 								{links}
 							</ul>
 						</nav>
-					;
+					);
 				}
 
-				body =
-					<div >
-						<div className="row user-list mt-4">
-							{events_list}
-						</div>
+				body = (
+					<div>
+						<div className="row user-list mt-4">{events_list}</div>
 						{pagination}
 					</div>
-				;
+				);
 			}
 		}
 
-		return(
-      <React.Fragment>
-			<div className="retract-page-inner-wrapper-alternative topicsDiv">
-      <div className="topics-wrapper">
-      <h2><i className="fa fa-calendar-alt"></i> Popular Topics</h2>
-      <hr />
-      <div className="row user-list mt-4">
+		return (
+			<React.Fragment>
+				<div className="retract-page-inner-wrapper-alternative topicsDiv">
+					<div className="topics-wrapper">
+						{/* <h2><i className="fa fa-calendar-alt"></i> Popular Topics</h2>
+      <hr /> */}
+						{/* <div className="row user-list mt-4">
       {
         topicsJson && topicsJson
           .filter(topic => topic.popular === "true")
@@ -113,57 +196,180 @@ class TopicsLandingPage extends Component {
               <div className="col-lg-4 pb-4 d-flex align-items-stretch" key={topic.slug}>
                 <div className="topic" style={{ backgroundImage: "url(/images/topics/" + topic.image +")"}} onClick={() => {this.topicClick(topic.slug)}}>
                 <div className="topic-caption"><h3>{topic.name}</h3><button className="btn sort_button">View Topic</button></div>
-
                 </div>
               </div>
             );
           })
       }
-      </div>
-      <br /><br />
+      </div> */}
 
-      <h2><i className="fa fa-calendar-alt"></i> All Topics</h2>
-      <hr />
-      <div className="row user-list mt-4">
+						{/* top sticky header */}
+						<div className={classes.sticky}>
+							<div>
+								<br />
+								<br />
+								<br />
+								<div
+									style={{
+										display: "flex",
+										justifyContent: "space-between",
+										alignItems: "center",
+									}}
+								>
+									<div>
+										<h2
+											style={{
+												fontWeight: 700,
+												color: "#1E1E22",
+											}}
+										>
+											Topics
+										</h2>
+									</div>
 
-        {
-          topicsJson && topicsJson
-            .map((topic, index) => {
-              return (
-                <div className="col-lg-4 pb-4 d-flex align-items-stretch" key={topic.slug}>
-                  <div className="topic" style={{ backgroundImage: "url(/images/topics/" + topic.image +")"}} onClick={() => {this.topicClick(topic.slug)}}>
-                  <div className="topic-caption"><h3>{topic.name}</h3><button className="btn sort_button">View Topic</button></div>
+									<div
+										style={{
+											display: "flex",
+											alignItems: "center",
+										}}
+									>
+										<TextField
+											className={classes.textField}
+											id="input-with-icon-textfield"
+											variant="outlined"
+											placeholder="Search for events"
+											size="medium"
+											InputProps={{
+												className: classes.input,
+												startAdornment: (
+													<InputAdornment position="start">
+														<SearchIcon />
+													</InputAdornment>
+												),
+											}}
+										/>
 
-                  </div>
-                </div>
-              );
-            })
-        }
-        </div>
-      </div>
-    </div>
+										<Button
+											variant="contained"
+											color="primary"
+											size="large"
+											className={classes.button}
+											startIcon={
+												<AddIcon fontSize="large" />
+											}
+										>
+											Connect Wallet
+										</Button>
+									</div>
+								</div>
+								<br />
+								<Divider light />
+							</div>
+						</div>
 
-    </React.Fragment>
+						<br />
+						<br />
+						<br />
+						{/* slider */}
+						<div>
+							<div>
+								<Slider />
+							</div>
+						</div>
+						<br />
+						<br />
+						<br />
+
+						{/* <h2>All Topics</h2> */}
+						{/* <div className="row user-list mt-4">
+							{topicsJson &&
+								topicsJson.map((topic, index) => {
+									return (
+										<div
+											className="col-lg-4 pb-4 d-flex align-items-stretch"
+											key={topic.slug}
+										>
+											<TopicCard
+												image={
+													"images/topics/" +
+													topic.image
+												}
+												name={topic.name}
+											/>
+											<div
+												className="topic"
+												style={{
+													backgroundImage:
+														"url(/images/topics/" +
+														topic.image +
+														")",
+												}}
+												onClick={() => {
+													this.topicClick(topic.slug);
+												}}
+											>
+												<div className="topic-caption">
+													<h3>{topic.name}</h3>
+													<button className="btn sort_button">
+														View Topic
+													</button>
+												</div>
+											</div>
+										</div>
+									);
+								})}
+						</div> */}
+
+						<div>
+							<div className="row row_mobile">
+								<h2 className="col-lg-10 col-md-9 col-sm-8">
+									All Topics
+								</h2>
+							</div>
+							<br />
+							<br />
+							<div>
+								<div className="row user-list mt-4">
+									{topicsJson &&
+										topicsJson.map((topic, index) => {
+											return (
+												<div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4">
+													<TopicCard
+														image={
+															"images/topics/" +
+															topic.image
+														}
+														name={topic.name}
+													/>
+												</div>
+											);
+										})}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</React.Fragment>
 		);
-  }
-  componentDidMount() {
+	}
+	componentDidMount() {
 		window.scroll({
 			top: 0,
-			behavior: 'smooth'
-		  });
+			behavior: "smooth",
+		});
 	}
 }
 
 TopicsLandingPage.contextTypes = {
-    drizzle: PropTypes.object
-}
+	drizzle: PropTypes.object,
+};
 
-const mapStateToProps = state => {
-    return {
+const mapStateToProps = (state) => {
+	return {
 		contracts: state.contracts,
-		accounts: state.accounts
-    };
+		accounts: state.accounts,
+	};
 };
 
 const AppContainer = drizzleConnect(TopicsLandingPage, mapStateToProps);
-export default AppContainer;
+export default withStyles(useStyles)(AppContainer);
