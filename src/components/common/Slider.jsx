@@ -6,6 +6,10 @@ import slider2 from "../Images/slider2.svg";
 import slider3 from "../Images/slider3.svg";
 
 const useStyles = makeStyles((theme) => ({
+	root: {
+		flexGrow: 1,
+		width: "100%",
+	},
 	carouselCaption: {
 		display: "flex",
 		flexDirection: "column",
@@ -27,8 +31,12 @@ const Slider = () => {
 	const classes = useStyles();
 
 	return (
-		<div>
-			<Carousel prevIcon={<span />} nextIcon={<span />}>
+		<div className={classes.root}>
+			<Carousel
+				prevIcon={<span />}
+				nextIcon={<span />}
+				style={{ zIndex: 0 }}
+			>
 				<Carousel.Item interval={1000}>
 					<img
 						className="d-block w-100"
