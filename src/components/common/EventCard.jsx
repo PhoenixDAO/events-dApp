@@ -17,19 +17,25 @@ import {
 	Box,
 	Link,
 } from "@material-ui/core";
-import { DateRange, AccessTime, LocationOnOutlined, ConfirmationNumberOutlined, FavoriteBorder, LaunchSharp } from "@material-ui/icons";
+import {
+	DateRange,
+	AccessTime,
+	LocationOnOutlined,
+	ConfirmationNumberOutlined,
+	FavoriteBorder,
+	LaunchSharp,
+} from "@material-ui/icons";
 import ShareModal from "../common/ShareModal";
 const useStyles = makeStyles((theme) => ({
 	root: {
 		maxWidth: 345,
 		"& .MuiCardContent-root": {
-			padding: "16px 16px 0px"
-		}
+			padding: "16px 16px 0px",
+		},
 	},
 	avatar: {
 		backgroundColor: "red",
 	},
-
 
 	text: {
 		color: "#4E4E55",
@@ -38,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	shareButton: {
 		"&:hover": {
-			backgroundColor: "transparent"
+			backgroundColor: "transparent",
 		},
 		textTransform: "Capitalize",
 		textAlign: "center",
@@ -50,11 +56,9 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 17,
 		fontWeight: 500,
 		"&:focus": {
-			outline: "none"
-		  }
-
-	}
-
+			outline: "none",
+		},
+	},
 }));
 
 const EventCard = ({
@@ -67,22 +71,24 @@ const EventCard = ({
 	titleURL,
 	max_seats,
 	revenue,
-	dollarRevenue
+	dollarRevenue,
 }) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 	const handleClickOpen = (e) => {
 		setOpen(true);
-		e.preventDefault()
+		e.preventDefault();
 	};
 	const handleClose = () => {
 		setOpen(false);
 	};
 	return (
 		<div>
-			<ShareModal open={open}
+			<ShareModal
+				open={open}
 				handleClose={handleClose}
-				titleURL={titleURL} />
+				titleURL={titleURL}
+			/>
 			<Link
 				underline="none"
 				component={RouterLink}
@@ -131,7 +137,9 @@ const EventCard = ({
 											color: "#fff",
 										}}
 									>
-										{!myEvent ? <FavoriteBorder fontSize="large" />:null}
+										{!myEvent ? (
+											<FavoriteBorder fontSize="large" />
+										) : null}
 									</Typography>
 								</div>
 							</div>
@@ -171,7 +179,7 @@ const EventCard = ({
 									component="h2"
 								>
 									Free
-							</Typography>
+								</Typography>
 							</div>
 
 							<br />
@@ -206,10 +214,10 @@ const EventCard = ({
 							<Typography
 								variant="body2"
 								color="textSecondary"
-								component="p"
+								component="div"
 								gutterBottom
 								noWrap
-								style={{paddingBottom:"16px"}}
+								style={{ paddingBottom: "16px" }}
 								className={classes.text}
 							>
 								<LocationOnOutlined fontSize="small" />{" "}
@@ -217,7 +225,7 @@ const EventCard = ({
 								{locations}
 							</Typography>
 							{myEvent ? (
-								<Grid>
+								<Grid item>
 									<Divider style={{ marginBottom: "20px" }} />
 									<Typography
 										variant="body2"
@@ -225,7 +233,6 @@ const EventCard = ({
 										component="p"
 										gutterBottom
 										className={classes.text}
-
 									>
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
@@ -237,10 +244,9 @@ const EventCard = ({
 										component="p"
 										gutterBottom
 										className={classes.text}
-
 									>
 										PHNX Revenue: {revenue} PHNX
-								</Typography>
+									</Typography>
 									<Typography
 										variant="body2"
 										color="textSecondary"
@@ -253,13 +259,19 @@ const EventCard = ({
 									</Typography>
 									<Divider />
 
-									<Button className={classes.shareButton}
-									 onClick={handleClickOpen}
-									  >
-										<LaunchSharp style={{ marginRight: "7px" ,fontSize:"19px"}} />	Share Event
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
 									</Button>
 								</Grid>
-
 							) : null}
 						</CardContent>
 					</CardActionArea>

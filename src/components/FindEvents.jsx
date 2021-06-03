@@ -23,21 +23,17 @@ import {
 	AppBar,
 	Tabs,
 	Tab,
-	Typography,
-	Box,
 	Divider,
-	TextField,
-	InputAdornment,
-	IconButton,
-	Button,
-	useScrollTrigger,
+	InputLabel,
+	MenuItem,
+	FormHelperText,
+	FormControl,
+	Select,
 } from "@material-ui/core";
 import Slider from "./common/Slider";
-import phnxLogo from "./Images/phnxlogo.svg";
 import roundlogo from "./Images/roundlogo.svg";
-import SearchIcon from "@material-ui/icons/Search";
-import AddIcon from "@material-ui/icons/Add";
-
+import ConnectWalletButton from "./common/ConnectWalletButton";
+import SearchBar from "./common/SearchBar";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -46,7 +42,7 @@ const useStyles = (theme) => ({
 		top: 0,
 		display: "flex",
 		flexDirection: "column",
-		background: `#fff !important`,
+		background: `#fafafa !important`,
 		opacity: `1 !important`,
 	},
 	root: {
@@ -70,17 +66,12 @@ const useStyles = (theme) => ({
 			borderBottom: "2.5px solid #413AE2",
 		},
 	},
-	textField: {
+	formControl: {
 		margin: theme.spacing(1),
+		minWidth: 120,
 	},
-	button: {
-		margin: theme.spacing(1),
-		// maxHeight: 54,
-		// maxWidth: 230,
-	},
-	input: {
-		// maxHeight: 54,
-		// maxWidth: 233,
+	selectEmpty: {
+		marginTop: theme.spacing(2),
 	},
 });
 
@@ -92,6 +83,8 @@ function a11yProps(index) {
 }
 
 class FindEvents extends Component {
+	// _isMounted = false;
+
 	constructor(props, context) {
 		super(props);
 		// console.log("props", props);
@@ -220,26 +213,24 @@ class FindEvents extends Component {
 						event_copy: [],
 					});
 				} else {
-					if (this._isMounted) {
-						const dateTime = Date.now();
-						const dateNow = Math.floor(dateTime / 1000);
-						this.setState({ loading: true });
+					// if (this._isMounted) {
+					const dateTime = Date.now();
+					const dateNow = Math.floor(dateTime / 1000);
+					this.setState({ loading: true });
 
-						let newsort = graphEvents.data.data.events
-							.concat()
-							.sort((a, b) => b.blockNumber - a.blockNumber)
-							.filter(
-								(activeEvents) => activeEvents.time >= dateNow
-							);
-						// console.log("GraphQL query newsort",newsort)
+					let newsort = graphEvents.data.data.events
+						.concat()
+						.sort((a, b) => b.blockNumber - a.blockNumber)
+						.filter((activeEvents) => activeEvents.time >= dateNow);
+					// console.log("GraphQL query newsort",newsort)
 
-						this.setState({
-							Events_Blockchain: newsort,
-							active_length: newsort.length,
-							event_copy: newsort,
-						});
-						this.setState({ loading: false });
-					}
+					this.setState({
+						Events_Blockchain: newsort,
+						active_length: newsort.length,
+						event_copy: newsort,
+					});
+					this.setState({ loading: false });
+					// }
 				}
 			})
 			.catch((err) => console.error(err));
@@ -316,7 +307,7 @@ class FindEvents extends Component {
 
 	render() {
 		//when user is not connectd hide connect wallet button
-		console.log("accounts---->", this.props.accounts);
+		// console.log("accounts---->", this.props.accounts);
 
 		const { classes } = this.props;
 		let body = <PhoenixDAOLoader />;
@@ -563,31 +554,9 @@ class FindEvents extends Component {
 										alignItems: "center",
 									}}
 								>
-									<TextField
-										className={classes.textField}
-										id="input-with-icon-textfield"
-										variant="outlined"
-										placeholder="Search for events"
-										size="medium"
-										InputProps={{
-											className: classes.input,
-											startAdornment: (
-												<InputAdornment position="start">
-													<SearchIcon />
-												</InputAdornment>
-											),
-										}}
-									/>
+									<SearchBar />
 
-									<Button
-										variant="contained"
-										color="primary"
-										size="large"
-										className={classes.button}
-										startIcon={<AddIcon fontSize="large" />}
-									>
-										Connect Wallet
-									</Button>
+									<ConnectWalletButton />
 								</div>
 							</div>
 						</div>
@@ -682,6 +651,23 @@ class FindEvents extends Component {
 								{/* <i className="fa fa-calendar-alt"></i>  */}
 								Upcoming Events
 							</h2>
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "center",
+								}}
+							>
+								{/* <p>Sort:</p> */}
+								<select
+									name="category"
+									// value={category}
+									// onChange={event => handleCategoryChange(event.target.value)}
+								>
+									<option id="0">All Events</option>
+									<option id="1">Trending Events</option>
+									<option id="2">Popular Events</option>
+								</select>
+							</div>
 							{/* <button
 								className="btn sort_button btn-dark col-lg-2 col-md-3 col-sm-3"
 								value={this.state.value}
@@ -762,13 +748,18 @@ class FindEvents extends Component {
 		if (this.state.prevPath == -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}
-		this._isMounted = true;
+		// this._isMounted = true;
 		this.loadBlockchain();
 		this.filterHideEvent();
 	}
 
 	componentWillUnmount() {
-		this._isMounted = false;
+		// this._isMounted = false;
+
+		// fix Warning: Can't perform a React state update on an unmounted component
+		this.setState = (state, callback) => {
+			return;
+		};
 	}
 }
 
