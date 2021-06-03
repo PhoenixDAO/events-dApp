@@ -16,6 +16,8 @@ import {
 	Link,
 } from "@material-ui/core";
 
+import EventNoteIcon from "@material-ui/icons/EventNote";
+
 const useStyles = makeStyles((theme) => ({
 	root: {
 		maxWidth: 345,
@@ -64,6 +66,7 @@ const TopicCard = ({ image, name }) => {
 						gutterBottom
 						className={classes.text}
 					>
+						<EventNoteIcon fontSize="large" /> <span>&nbsp;</span>
 						12 Events
 					</Typography>
 				</CardContent>
