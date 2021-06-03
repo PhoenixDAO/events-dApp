@@ -2530,7 +2530,8 @@ h4.transactions {
 	text-shadow: 2px 2px 12px rgb(235, 227, 236) !important;
 	font-weight: 800;
 	font-size: 1.1rem !important;
-	color: rgb(172, 55, 166);
+	color: #000;
+	/* color: rgb(172, 55, 166); */
 }
 
 .dashboard-caption a {

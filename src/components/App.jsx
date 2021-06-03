@@ -363,6 +363,7 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
+		this.setState({disabledStatus:true})
 		this.setState({ upload: true, createEvent: transaction }, () =>
 			this.state.createEvent
 				.send({ from: this.state.account })
@@ -404,6 +405,7 @@ class App extends Component {
 								}
 							);
 						}
+						this.setState({disabledStatus:false})
 					}
 				})
 				.on("error", (error) => {
@@ -423,6 +425,7 @@ class App extends Component {
 							}
 						);
 					}
+					this.setState({disabledStatus:false})
 				})
 		);
 	};
@@ -647,7 +650,7 @@ class App extends Component {
 								upload={this.state.upload}
 								disabledStatus={this.state.disabledStatus}
 								done={this.state.done}
-								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
 								error={this.state.error}
 								account={this.state.account}
 							/>

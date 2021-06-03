@@ -106,7 +106,7 @@ class Sidebar extends Component {
 				</div>
 				<p className="mt-3 small connection">
 					<span className="toggleHidden">
-						You are not connected to the Ethereum network. Please
+						You are not connected to the Matic Mainnet. Please
 						check MetaMask.
 					</span>
 				</p>

@@ -36,7 +36,8 @@ class UniswapModal extends Component {
                 ></i>
 
 				<iframe
-					src="https://app.uniswap.org/#/swap?outputCurrency=0xfe1b6ABc39E46cEc54d275efB4b29B33be176c2A"
+					// src="https://app.uniswap.org/#/swap?outputCurrency=0xfe1b6ABc39E46cEc54d275efB4b29B33be176c2A"
+					src="https://quickswap.exchange/#/swap?inputCurrency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&outputCurrency=0x92c59f1cc9a322670cca29594e4d994d48bdfd36"
 					height="660px"
 					width="100%"
                     className="frame"

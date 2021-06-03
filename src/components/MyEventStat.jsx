@@ -449,6 +449,7 @@ this.props.toggleDisabling();
 				autoClose: true,
 				pauseOnHover: true,
 			});
+			this.props.toggleDisabling();
 		}
 	}
 
@@ -1048,16 +1049,16 @@ this.props.toggleDisabling();
 														) + "..."}
 													</a>{" "}
 													has{" "}
+													{/* {console.log("pageTransaction sold",sold)}
 													<a
 														href={
-															explorerWithTX +
-															sold.transactionHash
+															`${explorerWithTX}${sold.transactionHash}`
 														}
 														target="blank"
-													>
+													> */}
 														bought
-													</a>{" "}
-													1 ticket for{" "}
+													{/* </a> */}
+													{" "}1 ticket for{" "}
 													<strong>
 														{event_data[0]}
 													</strong>

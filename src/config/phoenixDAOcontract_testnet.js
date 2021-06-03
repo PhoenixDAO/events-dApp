@@ -1,8 +1,8 @@
 // matic testnet
-export const PhoenixDAO_Mainnet_Token_Address = '0x3B002f4e7902b95CbC673Bff68Ef2987ef825e2b';
+// export const PhoenixDAO_Mainnet_Token_Address = '0x3B002f4e7902b95CbC673Bff68Ef2987ef825e2b';
 
 // matic mainnet
-// export const PhoenixDAO_Mainnet_Token_Address = '0x92C59F1cC9A322670CCa29594e4D994d48BDFd36';
+export const PhoenixDAO_Mainnet_Token_Address = '0x92C59F1cC9A322670CCa29594e4D994d48BDFd36';
 // export const PhoenixDAO_Testnet_Token_ABI = [
 // 	{
 // 		"inputs": [],
