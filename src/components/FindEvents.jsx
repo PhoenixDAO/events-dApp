@@ -136,7 +136,9 @@ class FindEvents extends Component {
 	caruselClick(location) {
 		this.props.history.push(location);
 	}
-	executeScroll = () => this.myRef.current.scrollIntoView();
+	executeScroll = () => {
+		this.myRef.current.scrollIntoView();
+	};
 
 	//Loads Blockhain Data,
 	async loadBlockchain() {
@@ -388,6 +390,7 @@ class FindEvents extends Component {
 					let links = [];
 
 					if (pages > 5 && currentPage >= 3) {
+						console.log("pag pages > 5 && currentPage >= 3");
 						for (
 							let i = currentPage - 2;
 							i <= currentPage + 2 && i <= pages;
@@ -417,6 +420,7 @@ class FindEvents extends Component {
 							}
 						}
 					} else if (pages > 5 && currentPage < 3) {
+						console.log("pag pages > 5 && currentPage < 3");
 						for (let i = 1; i <= 5 && i <= pages; i++) {
 							let active = i === currentPage ? "active" : "";
 							links.push(
@@ -442,6 +446,7 @@ class FindEvents extends Component {
 							}
 						}
 					} else {
+						console.log("pag else");
 						for (let i = 1; i <= pages; i++) {
 							let active = i === currentPage ? "active" : "";
 							links.push(
@@ -635,6 +640,10 @@ class FindEvents extends Component {
 					<br />
 					<br />
 					<br />
+					
+					{/* scrollToTop while click on pagination */}
+					<div ref={this.myRef} />
+
 					{/* slider */}
 					<div>
 						<div>
