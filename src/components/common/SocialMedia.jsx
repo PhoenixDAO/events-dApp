@@ -31,7 +31,7 @@ const SocialMedia = ({ title }) => {
     const classes = useStyles();
     let shareUrl = window.location;
     return (
-        <Grid  justify="flex-end" className={classes.socialMediaIcons}>
+        <Grid  container justify="flex-end" className={classes.socialMediaIcons}>
             <EmailShareButton
                 className="iconHolder"
                 url={shareUrl}
@@ -47,7 +47,7 @@ const SocialMedia = ({ title }) => {
                 title={title}
                 resetButtonStyle={false}
             >
-                <i class="fab fa-facebook-f" ></i>
+                <i className="fab fa-facebook-f" ></i>
             </FacebookShareButton>
 
 
@@ -57,7 +57,7 @@ const SocialMedia = ({ title }) => {
                 title={title}
                 resetButtonStyle={false}
             >
-                <i class="fab fa-instagram" ></i>
+                <i className="fab fa-instagram" ></i>
             </LinkedinShareButton>
 
             <TwitterShareButton
@@ -101,7 +101,7 @@ const SocialMedia = ({ title }) => {
                 title={title}
                 resetButtonStyle={false}
             >
-                <i class="fab fa-reddit" ></i>
+                <i className="fab fa-reddit" ></i>
             </RedditShareButton>
 
         </Grid>

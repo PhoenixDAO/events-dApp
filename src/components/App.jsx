@@ -49,6 +49,7 @@ import {
 
 import NetworkError from "./NetworkError";
 import PageNotFound from "./PageNotFound";
+import  Favorites  from "./Favorite.jsx";
 let ethereum = window.ethereum;
 let web3 = window.web3;
 const items = ["slide1.png", "slide2.png", "slide3.png", "slide4.png"];
@@ -739,6 +740,16 @@ class App extends Component {
 						path="/dashboard"
 						component={Dashboard}
 						account={this.state.account}
+					/>
+					<Route
+						exact
+						path="/favorites"
+						component={Favorites}
+						executeScroll={this.executeScroll}
+						inquire={this.inquireBuy}
+						disabledStatus={this.state.disabledStatus}
+						toggleDisabling={this.toggleDisabling}
+
 					/>
 					<Route
 						exact

@@ -97,7 +97,8 @@ const EventCard = ({
 	dollarRevenue,
 	ticket,
 	sendTicket2,
-	eventId
+	eventId,
+	myFavorites
 }) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
@@ -119,7 +120,7 @@ const EventCard = ({
 	};
 	return (
 		<div>
-			  <ShareModal open={open}
+			<ShareModal open={open}
 				handleClose={handleClose}
 				titleURL={titleURL} />
 			<SendTicket
@@ -128,7 +129,7 @@ const EventCard = ({
 				open={open2}
 				handleClose={handleClose2}
 				eventTitle={event_data.name}
-			/> 
+			/>
 
 			<Link
 				underline="none"
@@ -264,7 +265,9 @@ const EventCard = ({
 								<span>&nbsp;</span>
 								{locations}
 							</Typography>
-							{myEvent ? (
+							{/* For my events page */}
+							{(myEvent) 
+							? (
 								<Grid item>
 									<Divider style={{ marginBottom: "20px" }} />
 									<Typography
@@ -298,8 +301,6 @@ const EventCard = ({
 										Dollar Revenue: $ {dollarRevenue}
 									</Typography>
 									<Divider />
-
-
 									<Button className={classes.shareButton}
 										onClick={handleClickOpen}
 									>
@@ -307,7 +308,9 @@ const EventCard = ({
 									</Button>
 								</Grid>
 
-							) : ticket ? (
+							)
+							// For my ticket page
+							 : ticket ? (
 								<Grid item className={classes.row}>
 									<Button className={classes.shareButton}
 										onClick={handleClickOpen}
@@ -321,6 +324,16 @@ const EventCard = ({
 							   </Button>
 								</Grid>
 
+							)
+							// For my Favorite page 
+							: myFavorites ? (
+								<Grid item className={classes.row}>
+									<Button className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp style={{ marginRight: "7px", fontSize: "19px" }} />	Share Event
+							</Button>
+								</Grid >
 							) : null}
 						</CardContent>
 					</CardActionArea>

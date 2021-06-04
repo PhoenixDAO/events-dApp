@@ -230,11 +230,13 @@ class Ticket extends Component {
 	};
 
 	updateEvent = async () => {
+		console.log("ticket")
 		if (
 			typeof this.props.contracts["DaoEvents"].getTicket[this.ticket] !==
 			"undefined" &&
 			this.state.blockChainEvent === null
 		) {
+			console.log("ticket in if")
 			this.event = await this.contracts[
 				"DaoEvents"
 			].methods.events.cacheCall(
@@ -251,7 +253,6 @@ class Ticket extends Component {
 
 
 		}
-
 		if (this.event !== null) {
 			this.updateIPFS();
 		}
