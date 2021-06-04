@@ -232,6 +232,7 @@ class CreateEvent extends Component {
 						<Form
 							createEvent={this.createEvent}
 							account={this.props.account}
+							disabledStatus={this.props.disabledStatus}
 							{...this.props.location.state}
 						/>
 					</div>
@@ -243,6 +244,7 @@ class CreateEvent extends Component {
 				<Form
 							createEvent={this.createEvent}
 							account={this.props.account}
+							disabledStatus={this.props.disabledStatus}
 							{...this.props.location.state}
 						/>
 											</div>

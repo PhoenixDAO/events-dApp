@@ -411,7 +411,7 @@ class Home extends Component {
 							allows people to create events and sell tickets
 							online, with the option to make an event, paid or
 							free.
-						</p>s
+						</p>
 						<p>
 							The tickets created on this service are ERC721
 							tokens, which means that users are able to move,
@@ -419,9 +419,9 @@ class Home extends Component {
 						</p>
 						<p>
 							The PhoenixDAO Events Marketplace is a dApp powered
-							by the Ethereum blockchain. In order to create
+							by the Matic Network. In order to create
 							events or purchase tickets, you are required have an
-							Ethereum wallet. If you do not have one currently,
+							wallet. If you do not have one currently,
 							you can use{" "}
 							{typeof InstallTrigger !== "undefined" ? (
 								<a

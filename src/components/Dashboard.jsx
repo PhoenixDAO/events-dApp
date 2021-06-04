@@ -977,14 +977,21 @@ class Dashboard extends Component {
 										className="dashboard-caption"
 										style={{
 											backgroundImage:
-												"url(/images/uniswaps.jpg)",
+												"url(/images/quickswap.jpg)",
+												backgroundRepeat:"round"
 										}}
-										onClick={this.props.networkId==1 ? this.handleClickOpen : ()=> {}}
+										// onClick={this.props.networkId==1 ? this.handleClickOpen : ()=> {}}
+										onClick={this.handleClickOpen}
+
 									>
-										<p className="dashboard-uniswap">
+										{/* <p className="dashboard-uniswap">
 											<i className="fas fa-sync"></i> BUY
 											PHNX WITH UNISWAP
-										</p>
+										</p> */}
+										{/* <p className="dashboard-uniswap">
+											<i className="fas fa-sync"></i> BUY
+											PHNX WITH QuickSwap
+										</p> */}
 									</div>
 								</div>
 							</div>

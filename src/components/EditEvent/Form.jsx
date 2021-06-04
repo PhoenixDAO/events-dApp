@@ -1001,7 +1001,7 @@ class Form extends Component {
 						className="btn btn-outline-dark"
 						title="Make Your Event Live"
 						onClick={this.handleForm}
-						disabled={disabled}
+						disabled={disabled || this.props.disabledStatus}
 					>
 						Update Your Event
 					</button>
