@@ -9,6 +9,8 @@ import Done from "./Done";
 import { Redirect } from "react-router-dom";
 
 class CreateEvent extends Component {
+	tx_checkerInterval=0;
+	updaterInterval=0;
 	constructor(props, context) {
 		super(props);
 		this.state = {
@@ -181,29 +183,33 @@ class CreateEvent extends Component {
 	};
 
 	transactionChecker = (id) => {
-		let tx_checker = setInterval(() => {
+		this.tx_checkerInterval = setInterval(() => {
 			let tx = this.props.transactionStack[id];
 			if (typeof tx !== "undefined") {
 				this.setState({
 					upload: false,
 					done: true,
 				});
-				clearInterval(tx_checker);
+				clearInterval(this.tx_checkerInterval);
 			}
 		}, 100);
 	};
 
 	stageUpdater = (max) => {
-		let updater = setInterval(() => {
+		this.updaterInterval = setInterval(() => {
 			if (this.state.stage < max) {
 				this.setState({
 					stage: this.state.stage + 1,
 				});
 			} else {
-				clearInterval(updater);
+				clearInterval(this.updaterInterval);
 			}
 		}, 500);
 	};
+	componentWillUnmount(){
+		clearInterval(this.updaterInterval)
+		clearInterval(this.tx_checkerInterval)
+	}
 	componentDidMount() {
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
 	}

@@ -85,31 +85,21 @@ const styles = (theme) => ({
 });
 
 const DialogTitle = withStyles(styles)((props) => {
-	const { children, classes, onClose, ...other } = props;
+  const { children, classes, onClose, ...other } = props;
 
-	return (
-		<MuiDialogTitle disableTypography className={classes.root} {...other}>
-			<Typography variant="h6">{children}</Typography>
-			{console.log("onclose", onClose)}
-			{onClose ? (
-				<IconButton
-					aria-label="close"
-					className={classes.closeButton}
-					onClick={onClose}
-				>
-					<CloseIcon />
-				</IconButton>
-			) : (
-				<IconButton
-					aria-label="close"
-					className={classes.closeButton}
-					onClick={onClose}
-				>
-					<CloseIcon />
-				</IconButton>
-			)}
-		</MuiDialogTitle>
-	);
+  return (
+    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+      <Typography variant="h6">{children}</Typography>
+      {onClose ? (
+        <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+          <CloseIcon />
+        </IconButton>
+      ) : <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+        <CloseIcon />
+      </IconButton>}
+    </MuiDialogTitle>
+  );
+
 });
 
 const DialogContent = withStyles((theme) => ({
@@ -118,112 +108,73 @@ const DialogContent = withStyles((theme) => ({
 	},
 }))(MuiDialogContent);
 
-// const DialogActions = withStyles((theme) => ({
-//   root: {
-//     margin: 0,
-//     padding: theme.spacing(1),
-//     padding: "20px"
-//   },
 
-// }))(MuiDialogActions);
 
 export default function ShareModal({ handleClose, open, titleURL }) {
-	const [isCopied, setIsCopied] = useState(false);
 
-	const classes = useStyles();
-	const onCopyText = () => {
-		setIsCopied(true);
-		setTimeout(() => {
-			setIsCopied(false);
-		}, 1000);
-	};
-	let URL = "events.phoenixdao.io" + titleURL;
-	return (
-		<div>
-			{/* {console.log("props", open)} */}
-			<Dialog
-				onClose={handleClose}
-				aria-labelledby="customized-dialog-title"
-				open={open}
-			>
-				<DialogTitle
-					id="customized-dialog-title"
-					className={classes.header}
-					onClose={handleClose}
-				>
-					<img
-						src={roundlogo}
-						className={classes.logo}
-						alt="phnx logo"
-					/>
-					PhoenixDAO
-					<h2 className={classes.sharelink}>Share Event Link</h2>
-				</DialogTitle>
-				<DialogContent>
-					<Typography gutterBottom className={classes.eventUrl}>
-						Event Url
-					</Typography>
-					<FormControl
-						variant="outlined"
-						lg={12}
-						className={classes.UrlField}
-					>
-						<TextField
-							id="outlined-helperText"
-							label=""
-							value={URL}
-							defaultValue={URL}
-							variant="outlined"
-							// endAdornment={<InputAdornment position="end">    <i class="far fa-copy"></i>    </InputAdornment>}
+  const [isCopied, setIsCopied] = useState(false);
 
-							InputProps={{
-								endAdornment: (
-									<InputAdornment position="end">
-										<CopyToClipboard
-											text={URL}
-											onCopy={onCopyText}
-										>
-											<IconButton
-												className={classes.copyButton}
-												aria-label="copy text"
-											>
-												<span
-													style={
-														isCopied
-															? {
-																	fontSize:
-																		"14px",
-															  }
-															: {
-																	color: "#413AE2",
-															  }
-													}
-												>
-													{isCopied ? (
-														"Copied!"
-													) : (
-														<i class="far fa-copy fa-md"></i>
-													)}
-												</span>
-											</IconButton>
-										</CopyToClipboard>
-									</InputAdornment>
-								),
-							}}
-						/>
-					</FormControl>
+  const classes = useStyles();
+  const onCopyText = () => {
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1000);
+  };
+  let URL = "events.phoenixdao.io" + titleURL
+  return (
+    <div>
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
+        <DialogTitle id="customized-dialog-title" className={classes.header} onClose={handleClose}>
+          <img src={roundlogo} className={classes.logo} alt="phnx logo" />
+  PhoenixDAO
+  <h2 className={classes.sharelink}>
+            Share Event Link
+  </h2>
+        </DialogTitle>
+        <DialogContent>
+          <Typography gutterBottom className={classes.eventUrl}>
+            Event Url
 
-					<Grid item lg={12} className={classes.SocialMediaDiv}>
-						<SocialMedia />
-					</Grid>
-					<h5 className={classes.share}>Share on Social Media</h5>
-				</DialogContent>
-				{/* <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Save changes
-          </Button>
-        </DialogActions> */}
-			</Dialog>
-		</div>
-	);
+          </Typography>
+          <FormControl variant="outlined"  className={classes.UrlField}>
+
+            <TextField
+              id="outlined-helperText"
+              label=""
+              value={URL}
+              defaultValue={URL}
+              variant="outlined"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end" >
+                    <CopyToClipboard text={URL} onCopy={onCopyText}>
+
+                      <IconButton
+                        className={classes.copyButton}
+                        aria-label="copy text"
+                      >
+                        <span style={isCopied ? { fontSize: "14px" } : { color: "#413AE2" }}>{isCopied ? "Copied!" : <i class="far fa-copy fa-md"></i>
+                        }</span>
+
+                      </IconButton>
+                    </CopyToClipboard>
+
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </FormControl>
+
+          <Grid lg={12} item className={classes.SocialMediaDiv}>
+            <SocialMedia />
+          </Grid>
+          <h5 className={classes.share}>Share on Social Media</h5>
+        </DialogContent>
+
+      </Dialog>
+    </div>
+  );
+
+	
 }

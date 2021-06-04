@@ -358,75 +358,74 @@ class App extends Component {
 	//Get Value form Event Creator from child component
 	//Notify,listen for transaction status.
 	passtransaction = (transaction, type) => {
-		let txreceipt = "";
-		let txconfirmed = "";
-		let txerror = "";
-		this.setState({ disabledStatus: true });
-		this.setState({ upload: true, createEvent: transaction }, () =>
-			this.state.createEvent
-				.send({ from: this.state.account })
-
-				.on("transactionHash", (hash) => {
-					if (hash !== null) {
-						this.setState({
-							upload: false,
-							done: true,
-						});
-						toast(<NotifyEvent hash={hash} type={type} />, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
-					}
-				})
-				.on("confirmation", (confirmationNumber, receipt) => {
-					if (confirmationNumber == 1) {
-						txreceipt = receipt;
-						txconfirmed = confirmationNumber;
-						if (txconfirmed == 1 && txreceipt.status == true) {
-							toast(
-								<NotifyEventSuccess
-									hash={txreceipt.transactionHash}
-									createdEvent={
-										type === "create"
-											? txreceipt.events.CreatedEvent
-													.returnValues
-											: txreceipt.events
-													.NewAndUpdatedEvent
-													.returnValues
-									}
-								/>,
-								{
-									position: "bottom-right",
-									autoClose: true,
-									pauseOnHover: true,
-								}
-							);
-						}
-						this.setState({ disabledStatus: false });
-					}
-				})
-				.on("error", (error) => {
-					if (error !== null) {
-						txerror = error;
-						console.log("error", error);
-						this.setState({ error: true });
-						toast(
-							<NotifyError
-								error={error}
-								message={txerror.message}
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
-					}
-					this.setState({ disabledStatus: false });
-				})
-		);
-	};
+        let txreceipt = "";
+        let txconfirmed = "";
+        let txerror = "";
+        this.setState({disabledStatus:true})
+        this.setState({ upload: true, createEvent: transaction }, () =>
+            this.state.createEvent
+                .send({ from: this.state.account })
+                .on("transactionHash", (hash) => {
+                    if (hash !== null) {
+                        this.setState({
+                            upload: false,
+                            done: true,
+                        });
+                        toast(<NotifyEvent hash={hash} type={type} />, {
+                            position: "bottom-right",
+                            autoClose: true,
+                            pauseOnHover: true,
+                        });
+                    }
+                })
+                .on("confirmation", (confirmationNumber, receipt) => {
+                    if (confirmationNumber == 1) {
+                        txreceipt = receipt;
+                        txconfirmed = confirmationNumber;
+                        if (txconfirmed == 1 && txreceipt.status == true) {
+                            toast(
+                                <NotifyEventSuccess
+                                    hash={txreceipt.transactionHash}
+                                    createdEvent={
+                                        type === "create"
+                                            ? txreceipt.events.CreatedEvent
+                                                    .returnValues
+                                            : txreceipt.events
+                                                    .NewAndUpdatedEvent
+                                                    .returnValues
+                                    }
+                                />,
+                                {
+                                    position: "bottom-right",
+                                    autoClose: true,
+                                    pauseOnHover: true,
+                                }
+                            );
+                        }
+                        this.setState({disabledStatus:false})
+                    }
+                })
+                .on("error", (error) => {
+                    if (error !== null) {
+                        txerror = error;
+                        console.log("error", error);
+                        this.setState({ error: true });
+                        toast(
+                            <NotifyError
+                                error={error}
+                                message={txerror.message}
+                            />,
+                            {
+                                position: "bottom-right",
+                                autoClose: true,
+                                pauseOnHover: true,
+                            }
+                        );
+                    }
+                    this.setState({disabledStatus:false})
+                })
+        );
+    };		
 	toggleDisabling = () => {
 		this.setState({ disabledStatus: !this.state.disabledStatus });
 	};

@@ -9,6 +9,7 @@ import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	// PhoenixDAO_Testnet_Token_Address,
+
 	PhoenixDAO_Mainnet_Token_Address,
 } from "../config/phoenixDAOcontract_testnet";
 import {
@@ -18,12 +19,10 @@ import {
 	graphURL,
 } from "../config/const";
 import axios from "axios";
-// import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar3 from "./Snackbar3";
 import CircularProgress from "@material-ui/core/CircularProgress";
-// import { Row } from "react-bootstrap";
 
 class Home extends Component {
 	constructor(props, context) {
@@ -77,21 +76,21 @@ class Home extends Component {
 			nextProps.web3.networkId
 		) {
 			// console.log("hererere")
-			this.setState({ shownSnackbar3: true });
-			this.checkNetwork(nextProps.web3.status, nextProps.web3.networkId);
+
+		  this.setState({shownSnackbar3:true})
+		  this.checkNetwork(nextProps.web3.status,nextProps.web3.networkId)
+
 		}
 	};
 
-	componentWillUnmount() {
-		// fix Warning: Can't perform a React state update on an unmounted component
-		this.setState = (state, callback) => {
-			return;
-		};
-	}
+	checkNetwork(web3Status,networkId) {
 
-	checkNetwork(web3Status, networkId) {
 		// console.log("this.props.web3.networkId",web3Status,networkId)
-		if (web3Status == "initialized" && networkId != GLOBAL_NETWORK_ID) {
+
+		if (
+			web3Status == "initialized" &&
+			networkId != GLOBAL_NETWORK_ID
+		) {
 			this.setState({
 				errorMessage:
 					GLOBAL_NETWORK_ID == 137
@@ -430,7 +429,6 @@ class Home extends Component {
 							online, with the option to make an event, paid or
 							free.
 						</p>
-						s
 						<p>
 							The tickets created on this service are ERC721
 							tokens, which means that users are able to move,
@@ -438,9 +436,9 @@ class Home extends Component {
 						</p>
 						<p>
 							The PhoenixDAO Events Marketplace is a dApp powered
-							by the Ethereum blockchain. In order to create
+							by the Matic Network. In order to create
 							events or purchase tickets, you are required have an
-							Ethereum wallet. If you do not have one currently,
+							wallet. If you do not have one currently,
 							you can use{" "}
 							{typeof InstallTrigger !== "undefined" ? (
 								<a

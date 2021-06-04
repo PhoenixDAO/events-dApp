@@ -17,15 +17,10 @@ import {
 	Box,
 	Link,
 } from "@material-ui/core";
-import {
-	DateRange,
-	AccessTime,
-	LocationOnOutlined,
-	ConfirmationNumberOutlined,
-	FavoriteBorder,
-	LaunchSharp,
-} from "@material-ui/icons";
+import { DateRange, AccessTime, LocationOnOutlined, ConfirmationNumberOutlined, FavoriteBorder, LaunchSharp, Send } from "@material-ui/icons";
+
 import ShareModal from "../common/ShareModal";
+import SendTicket from "../common/SendTicket";
 const useStyles = makeStyles((theme) => ({
 	root: {
 		maxWidth: 345,
@@ -37,6 +32,13 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: "red",
 	},
 
+	row: {
+		display: "flex",
+		borderTop: "1px solid #E4E4E7",
+		marginLeft: "-16px",
+		marginRight: "-16px",
+		padding: "0px 16px"
+	},
 	text: {
 		color: "#4E4E55",
 		fontSize: 17,
@@ -51,14 +53,35 @@ const useStyles = makeStyles((theme) => ({
 		display: "flex",
 		alignItems: "center",
 		width: "100%",
-		padding: "10px",
 		color: "#4E4E55",
 		fontSize: 17,
 		fontWeight: 500,
 		"&:focus": {
-			outline: "none",
-		},
+			outline: "none"
+		}
+
 	},
+	sendTicket: {
+		"&:hover": {
+			backgroundColor: "transparent"
+		},
+		textTransform: "Capitalize",
+		textAlign: "center",
+		display: "flex",
+		alignItems: "center",
+		width: "100%",
+		color: "#4E4E55",
+		fontSize: 17,
+		fontWeight: 500,
+		"&:focus": {
+			outline: "none"
+		},
+		borderLeft: "1px solid #E4E4E7",
+		borderRadius: "0px",
+
+	}
+
+
 }));
 
 const EventCard = ({
@@ -72,9 +95,14 @@ const EventCard = ({
 	max_seats,
 	revenue,
 	dollarRevenue,
+	ticket,
+	sendTicket2,
+	eventId
 }) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
+	const [open2, setOpen2] = useState(false);
+
 	const handleClickOpen = (e) => {
 		setOpen(true);
 		e.preventDefault();
@@ -82,13 +110,26 @@ const EventCard = ({
 	const handleClose = () => {
 		setOpen(false);
 	};
+	const handleClickOpen2 = (e) => {
+		setOpen2(true);
+		e.preventDefault()
+	};
+	const handleClose2 = () => {
+		setOpen2(false);
+	};
 	return (
 		<div>
-			<ShareModal
-				open={open}
+			  <ShareModal open={open}
 				handleClose={handleClose}
-				titleURL={titleURL}
-			/>
+				titleURL={titleURL} />
+			<SendTicket
+				sendTicket2={sendTicket2}
+				eventId={eventId}
+				open={open2}
+				handleClose={handleClose2}
+				eventTitle={event_data.name}
+			/> 
+
 			<Link
 				underline="none"
 				component={RouterLink}
@@ -137,9 +178,8 @@ const EventCard = ({
 											color: "#fff",
 										}}
 									>
-										{!myEvent ? (
-											<FavoriteBorder fontSize="large" />
-										) : null}
+										{!myEvent ? <FavoriteBorder fontSize="large" /> : null}
+
 									</Typography>
 								</div>
 							</div>
@@ -259,19 +299,28 @@ const EventCard = ({
 									</Typography>
 									<Divider />
 
-									<Button
-										className={classes.shareButton}
+
+									<Button className={classes.shareButton}
 										onClick={handleClickOpen}
 									>
-										<LaunchSharp
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Share Event
+										<LaunchSharp style={{ marginRight: "7px", fontSize: "19px" }} />	Share Event
 									</Button>
 								</Grid>
+
+							) : ticket ? (
+								<Grid item className={classes.row}>
+									<Button className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp style={{ marginRight: "7px", fontSize: "19px" }} />	Share Event
+							   </Button>
+									<Button className={classes.sendTicket}
+										onClick={handleClickOpen2}
+									>
+										<Send style={{ marginRight: "7px", fontSize: "19px" }} />	Send Ticket
+							   </Button>
+								</Grid>
+
 							) : null}
 						</CardContent>
 					</CardActionArea>

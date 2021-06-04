@@ -175,7 +175,10 @@ input[type="number"] {
 .event-social-share-btns-div {
 	padding: 8px 0px 0px 1px;
 }
-
+/* .searchRow {
+	display: "flex";
+	justify-content: "space-between";
+} */
 .social-share-btns-div button,
 .event-social-share-btns-div button {
 	background-color: transparent;
@@ -220,6 +223,35 @@ input[type="number"] {
 	margin-left: -7px;
 }
 
+/* sticky header */
+.header3{
+    margin-left: -2px;
+    margin-right: -1px;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #E4E4E7;
+    padding-bottom: 10px;
+    position: sticky;
+    top: 0;
+    padding-top: 40px;
+    background-color: #FCFCFD;
+}
+.header3 h2{
+    font-weight: 700;
+    color: black;
+}
+@media screen and (max-width: 600px) {
+	.header3{
+		display: block;
+	}
+}
+@media screen and (max-width: 370px) {
+	.header3{
+		margin-left: -20px;
+		margin-right: -20px;
+		margin-top: 1px;	}
+}
 .header_PhoenixDAO-logo {
 	width: 38px;
 	margin-right: 0;
@@ -531,6 +563,14 @@ input[type="number"] {
 	max-width: 1600px;
 	padding-left: 0px;
 	padding-right: 0px;
+}
+.dashboard-uniswap {
+    padding-top: 50px;
+    text-shadow: 2px 2px 12px rgb(235, 227, 236) !important;
+    font-weight: 800;
+    font-size: 1.1rem !important;
+    color: #000;
+    /* color: rgb(172, 55, 166); */
 }
 
 .page-wrapper-inner {
@@ -1311,6 +1351,7 @@ body,
 	padding-left: 105px;
 	padding-right: 60px;
 	transition-duration: 0.75s;
+	padding-top: 0px !important;
 }
 
 .github {
