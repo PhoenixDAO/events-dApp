@@ -305,7 +305,7 @@ const EventCard = ({
 								</Grid>
 
 							) : ticket ? (
-								<Grid className={classes.row}>
+								<Grid item className={classes.row}>
 									<Button className={classes.shareButton}
 										onClick={handleClickOpen}
 									>

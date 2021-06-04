@@ -20,25 +20,6 @@ import EventCard from "./common/EventCard.jsx";
 
 
 import Loading from "./Loading";
-import {
-	EmailShareButton,
-	FacebookShareButton,
-	LinkedinShareButton,
-	RedditShareButton,
-	TelegramShareButton,
-	TwitterShareButton,
-	WhatsappShareButton,
-} from "react-share";
-
-import {
-	EmailIcon,
-	FacebookIcon,
-	LinkedinIcon,
-	RedditIcon,
-	TelegramIcon,
-	TwitterIcon,
-	WhatsappIcon,
-} from "react-share";
 
 var QRCode = require("qrcode.react");
 
@@ -48,6 +29,11 @@ class Ticket extends Component {
 		this.contracts = context.drizzle.contracts;
 		this.ticket = this.contracts["DaoEvents"].methods.getTicket.cacheCall(
 			this.props.id
+		);
+		this.web3=new Web3(
+			new Web3.providers.WebsocketProvider(
+				INFURA_WEB_URL
+			)
 		);
 		this.event = null;
 		this.address = null;
@@ -255,12 +241,7 @@ class Ticket extends Component {
 				this.props.contracts["DaoEvents"].getTicket[this.ticket]
 					.value[0]
 			);
-			const web3 = new Web3(
-				new Web3.providers.WebsocketProvider(
-					INFURA_WEB_URL
-				)
-			);
-			const openEvents = new web3.eth.Contract(
+			const openEvents = new this.web3.eth.Contract(
 				Open_events_ABI,
 				Open_events_Address
 			);
@@ -275,6 +256,7 @@ class Ticket extends Component {
 			this.updateIPFS();
 		}
 	};
+	
 
 	downloadQR = () => {
 		let ticket_data = this.props.contracts["DaoEvents"].getTicket[

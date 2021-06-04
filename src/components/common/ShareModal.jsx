@@ -140,7 +140,7 @@ export default function ShareModal({ handleClose, open, titleURL }) {
             Event Url
 
           </Typography>
-          <FormControl variant="outlined" lg={12} className={classes.UrlField}>
+          <FormControl variant="outlined"  className={classes.UrlField}>
 
             <TextField
               id="outlined-helperText"
@@ -169,7 +169,7 @@ export default function ShareModal({ handleClose, open, titleURL }) {
             />
           </FormControl>
 
-          <Grid lg={12} className={classes.SocialMediaDiv}>
+          <Grid lg={12} item className={classes.SocialMediaDiv}>
             <SocialMedia />
           </Grid>
           <h5 className={classes.share}>Share on Social Media</h5>
