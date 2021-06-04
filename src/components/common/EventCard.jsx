@@ -18,14 +18,15 @@ import {
 	Link,
 } from "@material-ui/core";
 import { DateRange, AccessTime, LocationOnOutlined, ConfirmationNumberOutlined, FavoriteBorder, LaunchSharp, Send } from "@material-ui/icons";
+
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
 const useStyles = makeStyles((theme) => ({
 	root: {
 		maxWidth: 345,
 		"& .MuiCardContent-root": {
-			padding: "16px 16px 0px"
-		}
+			padding: "16px 16px 0px",
+		},
 	},
 	avatar: {
 		backgroundColor: "red",
@@ -45,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	shareButton: {
 		"&:hover": {
-			backgroundColor: "transparent"
+			backgroundColor: "transparent",
 		},
 		textTransform: "Capitalize",
 		textAlign: "center",
@@ -80,6 +81,7 @@ const useStyles = makeStyles((theme) => ({
 
 	}
 
+
 }));
 
 const EventCard = ({
@@ -103,7 +105,7 @@ const EventCard = ({
 
 	const handleClickOpen = (e) => {
 		setOpen(true);
-		e.preventDefault()
+		e.preventDefault();
 	};
 	const handleClose = () => {
 		setOpen(false);
@@ -127,6 +129,7 @@ const EventCard = ({
 				handleClose={handleClose2}
 				eventTitle={event_data.name}
 			/> 
+
 			<Link
 				underline="none"
 				component={RouterLink}
@@ -176,6 +179,7 @@ const EventCard = ({
 										}}
 									>
 										{!myEvent ? <FavoriteBorder fontSize="large" /> : null}
+
 									</Typography>
 								</div>
 							</div>
@@ -215,7 +219,7 @@ const EventCard = ({
 									component="h2"
 								>
 									Free
-							</Typography>
+								</Typography>
 							</div>
 
 							<br />
@@ -250,7 +254,7 @@ const EventCard = ({
 							<Typography
 								variant="body2"
 								color="textSecondary"
-								component="p"
+								component="div"
 								gutterBottom
 								noWrap
 								style={{ paddingBottom: "16px" }}
@@ -261,7 +265,7 @@ const EventCard = ({
 								{locations}
 							</Typography>
 							{myEvent ? (
-								<Grid>
+								<Grid item>
 									<Divider style={{ marginBottom: "20px" }} />
 									<Typography
 										variant="body2"
@@ -269,7 +273,6 @@ const EventCard = ({
 										component="p"
 										gutterBottom
 										className={classes.text}
-
 									>
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
@@ -281,10 +284,9 @@ const EventCard = ({
 										component="p"
 										gutterBottom
 										className={classes.text}
-
 									>
 										PHNX Revenue: {revenue} PHNX
-								</Typography>
+									</Typography>
 									<Typography
 										variant="body2"
 										color="textSecondary"
@@ -296,6 +298,7 @@ const EventCard = ({
 										Dollar Revenue: $ {dollarRevenue}
 									</Typography>
 									<Divider />
+
 
 									<Button className={classes.shareButton}
 										onClick={handleClickOpen}
@@ -317,6 +320,7 @@ const EventCard = ({
 										<Send style={{ marginRight: "7px", fontSize: "19px" }} />	Send Ticket
 							   </Button>
 								</Grid>
+
 							) : null}
 						</CardContent>
 					</CardActionArea>

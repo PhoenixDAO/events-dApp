@@ -11,25 +11,11 @@ import topicsJson from "../config/topics.json";
 
 // material UI styles
 import { withStyles } from "@material-ui/core/styles";
-import {
-	AppBar,
-	Tabs,
-	Tab,
-	Typography,
-	Box,
-	Divider,
-	TextField,
-	InputAdornment,
-	IconButton,
-	Button,
-	useScrollTrigger,
-} from "@material-ui/core";
+import { Divider } from "@material-ui/core";
 import Slider from "./common/Slider";
-import phnxLogo from "./Images/phnxlogo.svg";
-import roundlogo from "./Images/roundlogo.svg";
-import SearchIcon from "@material-ui/icons/Search";
-import AddIcon from "@material-ui/icons/Add";
 import TopicCard from "./common/TopicCard";
+import ConnectWalletButton from "./common/ConnectWalletButton";
+import SearchBar from "./common/SearchBar";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -38,7 +24,7 @@ const useStyles = (theme) => ({
 		top: 0,
 		display: "flex",
 		flexDirection: "column",
-		background: `#fff !important`,
+		background: `#fafafa !important`,
 		opacity: `1 !important`,
 	},
 	root: {
@@ -61,18 +47,6 @@ const useStyles = (theme) => ({
 			color: "#413AE2",
 			borderBottom: "2.5px solid #413AE2",
 		},
-	},
-	textField: {
-		margin: theme.spacing(1),
-	},
-	button: {
-		margin: theme.spacing(1),
-		// maxHeight: 54,
-		// maxWidth: 230,
-	},
-	input: {
-		// maxHeight: 54,
-		// maxWidth: 233,
 	},
 });
 
@@ -183,8 +157,12 @@ class TopicsLandingPage extends Component {
 
 		return (
 			<React.Fragment>
-				<div className="retract-page-inner-wrapper-alternative topicsDiv">
-					<div className="topics-wrapper">
+				<div
+				// className="retract-page-inner-wrapper-alternative topicsDiv"
+				>
+					<div
+					// className="topics-wrapper"
+					>
 						{/* <h2><i className="fa fa-calendar-alt"></i> Popular Topics</h2>
       <hr /> */}
 						{/* <div className="row user-list mt-4">
@@ -233,33 +211,9 @@ class TopicsLandingPage extends Component {
 											alignItems: "center",
 										}}
 									>
-										<TextField
-											className={classes.textField}
-											id="input-with-icon-textfield"
-											variant="outlined"
-											placeholder="Search for events"
-											size="medium"
-											InputProps={{
-												className: classes.input,
-												startAdornment: (
-													<InputAdornment position="start">
-														<SearchIcon />
-													</InputAdornment>
-												),
-											}}
-										/>
+										<SearchBar />
 
-										<Button
-											variant="contained"
-											color="primary"
-											size="large"
-											className={classes.button}
-											startIcon={
-												<AddIcon fontSize="large" />
-											}
-										>
-											Connect Wallet
-										</Button>
+										<ConnectWalletButton />
 									</div>
 								</div>
 								<br />
@@ -333,7 +287,10 @@ class TopicsLandingPage extends Component {
 									{topicsJson &&
 										topicsJson.map((topic, index) => {
 											return (
-												<div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4">
+												<div
+													key={topic.slug}
+													className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
+												>
 													<TopicCard
 														image={
 															"images/topics/" +

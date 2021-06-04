@@ -39,6 +39,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 class Event extends Component {
+	// _isMounted = false;
+
 	constructor(props, context) {
 		try {
 			var contractConfig = {
@@ -92,11 +94,9 @@ class Event extends Component {
 			blockie: "/images/PhoenixDAO.png",
 			approvalGranted: false,
 			phoenixDAO_market: [],
-
 		};
 		this.isCancelled = false;
 		this.giveApproval = this.giveApproval.bind(this);
-
 	}
 
 	handleClickOpen = () => {
@@ -121,9 +121,9 @@ class Event extends Component {
 		)
 			.then((res) => res.json())
 			.then((data) => {
-				if (this._isMounted) {
-					this.setState({ phoenixDAO_market: data.phoenixdao });
-				}
+				// if (this._isMounted) {
+				this.setState({ phoenixDAO_market: data.phoenixdao });
+				// }
 			})
 			.catch(console.log);
 	}
@@ -208,12 +208,12 @@ class Event extends Component {
 		let locations = [];
 		if (this.state.ipfs_problem)
 			locations = (
-				<p className="text-center mb-0 event-description">
-					<span role="img" aria-label="monkey">
-						🙊
-					</span>
-					We can not load location
-				</p>
+				<div className="text-center mb-0 event-description">
+					<div role="img" aria-label="monkey">
+						<span> 🙊 </span>
+					</div>
+					<div>We can not load location</div>
+				</div>
 			);
 		if (this.state.locations !== null) {
 			let place = this.state.locations;
@@ -494,10 +494,10 @@ class Event extends Component {
 				) {
 					myEvent = true;
 				}
-				let dollarRevenue=this.state.phoenixDAO_market.usd *this.state.revenue;
+				let dollarRevenue =
+					this.state.phoenixDAO_market.usd * this.state.revenue;
 				body = (
 					<div>
-
 						{/* new card */}
 						<EventCard
 							event_data={event_data}
@@ -700,7 +700,7 @@ class Event extends Component {
 	}
 
 	componentDidMount() {
-		this._isMounted = true;
+		// this._isMounted = true;
 		this.filterHideEvent();
 		this.updateIPFS();
 		this.getPhoenixDAOMarketValue();
@@ -713,7 +713,12 @@ class Event extends Component {
 
 	componentWillUnmount() {
 		this.isCancelled = true;
-		this._isMounted = false;
+		// this._isMounted = false;
+
+		// fix Warning: Can't perform a React state update on an unmounted component
+		this.setState = (state, callback) => {
+			return;
+		};
 	}
 }
 

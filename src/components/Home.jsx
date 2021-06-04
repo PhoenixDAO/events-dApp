@@ -10,9 +10,14 @@ import {
 	PhoenixDAO_Testnet_Token_ABI,
 	// PhoenixDAO_Testnet_Token_Address,
 
-	PhoenixDAO_Mainnet_Token_Address
+	PhoenixDAO_Mainnet_Token_Address,
 } from "../config/phoenixDAOcontract_testnet";
-import { API_URL, REPORT_EVENT ,GLOBAL_NETWORK_ID,graphURL} from "../config/const";
+import {
+	API_URL,
+	REPORT_EVENT,
+	GLOBAL_NETWORK_ID,
+	graphURL,
+} from "../config/const";
 import axios from "axios";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
@@ -30,8 +35,7 @@ class Home extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {
-		}
+		} catch (e) {}
 		super(props);
 		this.contracts = context.drizzle.contracts;
 
@@ -47,13 +51,13 @@ class Home extends Component {
 
 			activeUsers: 0,
 			loadingActiveUsers: true,
-			hideEvent:[],
+			hideEvent: [],
 			pastEvents: 0,
 			loadingPastEvents: true,
 			Deleted_Events: [],
 			upcomingEvents: 0,
 			loadingUpcomingEvents: true,
-			shownSnackbar3:false,
+			shownSnackbar3: false,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 		this.checkNetwork = this.checkNetwork.bind(this);
@@ -63,17 +67,21 @@ class Home extends Component {
 		this.props.executeScroll();
 		this.loadData();
 		this.filterHideEvent();
-
 	}
 	componentWillReceiveProps = (nextProps) => {
 		// console.log("nextProps",nextProps.web3, this.state.shownSnackbar3)
-		if (!this.state.shownSnackbar3 && nextProps.web3.status == "initialized" && nextProps.web3.networkId) {
+		if (
+			!this.state.shownSnackbar3 &&
+			nextProps.web3.status == "initialized" &&
+			nextProps.web3.networkId
+		) {
 			// console.log("hererere")
 
 		  this.setState({shownSnackbar3:true})
 		  this.checkNetwork(nextProps.web3.status,nextProps.web3.networkId)
+
 		}
-	  }
+	};
 
 	checkNetwork(web3Status,networkId) {
 
@@ -84,7 +92,12 @@ class Home extends Component {
 			networkId != GLOBAL_NETWORK_ID
 		) {
 			this.setState({
-				errorMessage: GLOBAL_NETWORK_ID==137 ?  "Please switch your network to Matic Mainnet!":GLOBAL_NETWORK_ID==80001 ?"Please switch your network to Matic Testnet!": "Please switch your network to Matic Mainnet!",
+				errorMessage:
+					GLOBAL_NETWORK_ID == 137
+						? "Please switch your network to Matic Mainnet!"
+						: GLOBAL_NETWORK_ID == 80001
+						? "Please switch your network to Matic Testnet!"
+						: "Please switch your network to Matic Mainnet!",
 				openSnackbar1: false,
 				openSnackbar2: false,
 				openSnackbar3: true,
@@ -134,15 +147,14 @@ class Home extends Component {
 				hideEvent: get.data.result,
 			});
 			return;
-		} catch (error) {
-		}
+		} catch (error) {}
 	};
-	async getAllEvents(){
-		let Events_Blockchain=await axios({
+	async getAllEvents() {
+		let Events_Blockchain = await axios({
 			url: graphURL,
-			method: 'post',
+			method: "post",
 			data: {
-			  query: `
+				query: `
 			  {
 				events {
 				  id
@@ -160,54 +172,59 @@ class Home extends Component {
 				  revenueOfEvent
 				}
 			  }
-			  `
-			}
-		}).then((graphEvents)=>{
-			// console.log("graph graphEvents",graphEvents)
-			if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-				return []
-			}else{
+			  `,
+			},
+		})
+			.then((graphEvents) => {
+				// console.log("graph graphEvents",graphEvents)
+				if (!graphEvents.data || graphEvents.data.data == "undefined") {
+					return [];
+				} else {
 					const dateTime = Date.now();
 					const dateNow = Math.floor(dateTime / 1000);
-				
+
 					let newsort = graphEvents.data.data.events
 						.concat()
-						.sort((a, b) => b.blockNumber - a.blockNumber)
+						.sort((a, b) => b.blockNumber - a.blockNumber);
 					return newsort;
-					
-
-			}
-		}).catch((err) => {console.error(err)
-		return []
-		})
-		return Events_Blockchain
+				}
+			})
+			.catch((err) => {
+				console.error(err);
+				return [];
+			});
+		return Events_Blockchain;
 	}
-	async getAllDeletedEvents(){
-		let Deleted_Events=await axios({
+	async getAllDeletedEvents() {
+		let Deleted_Events = await axios({
 			url: graphURL,
-			method: 'post',
+			method: "post",
 			data: {
-			  query: `
+				query: `
 			  {
 				eventsRemoveds {
 				  id
 				  eventId
 				}
 			  }
-			  `
-			}
-		}).then((graphDeletedEvents)=>{
-
-			if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
-				return []
-			}else{
-				return graphDeletedEvents.data.data.eventsRemoveds 
-			}
-		}).catch((err)=>{
-			console.error(err);
-			return []
+			  `,
+			},
 		})
-		return Deleted_Events
+			.then((graphDeletedEvents) => {
+				if (
+					!graphDeletedEvents.data ||
+					!graphDeletedEvents.data.data == "undefined"
+				) {
+					return [];
+				} else {
+					return graphDeletedEvents.data.data.eventsRemoveds;
+				}
+			})
+			.catch((err) => {
+				console.error(err);
+				return [];
+			});
+		return Deleted_Events;
 	}
 	async loadData() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
@@ -225,9 +242,9 @@ class Home extends Component {
 			// });
 			await axios({
 				url: graphURL,
-				method: 'post',
+				method: "post",
 				data: {
-				  query: `
+					query: `
 				  {
 					events {
 					  eventId
@@ -235,151 +252,151 @@ class Home extends Component {
 					  buyers
 					}
 				  }
-				  `
-				}
-			}).then(async(graphEvents)=>{
-				// console.log("mere soldTickets by Id",graphEvents.data.data.events)
-				let totalTicketSold=0;
-				graphEvents.data.data.events.map((event) =>{
-					// console.log("mere event.sold in loop",event.sold) 
-					totalTicketSold=totalTicketSold+Number(event.sold)
-					// console.log("mere totalTicketSold in loop",totalTicketSold) 
-				})
-			// console.log("mere totalTickets",totalTicketSold)
-			// let allTicketBuyers = totalTickets.map((tt) => {
-			// 	return tt[0];
-			// });
-
-			// this
-			let allTicketBuyers=[]
-			graphEvents.data.data.events.map((event)=>{
-				// console.log("mere event aya",event)
-				allTicketBuyers=allTicketBuyers.concat(event.buyers)
-				// console.log("mere event aya2",allTicketBuyers)
+				  `,
+				},
 			})
-			// allTicketBuyers.concat(graphEvents.data.data.events[i].buyer)graphEvents.data.data.events.map((event)=> event.buyers.map((buyerArray,i)=> buyerArray[i]))
-			// console.log("mere allTicketBuyers",allTicketBuyers)
-			// this
-			
-			let uniqueAllTicketBuyers = [...new Set(allTicketBuyers)];
+				.then(async (graphEvents) => {
+					// console.log("mere soldTickets by Id",graphEvents.data.data.events)
+					let totalTicketSold = 0;
+					graphEvents.data.data.events.map((event) => {
+						// console.log("mere event.sold in loop",event.sold)
+						totalTicketSold = totalTicketSold + Number(event.sold);
+						// console.log("mere totalTicketSold in loop",totalTicketSold)
+					});
+					// console.log("mere totalTickets",totalTicketSold)
+					// let allTicketBuyers = totalTickets.map((tt) => {
+					// 	return tt[0];
+					// });
 
-			// console.log("mere uniqueAllTicketBuyers",uniqueAllTicketBuyers)
-			this.setState({
-				totalTickets: totalTicketSold,
-				loadingTotalTickets: false,
-			});
-			
-		
-			
-			// let Events_Blockchain =[]
-			// let Deleted_Events=[]
+					// this
+					let allTicketBuyers = [];
+					graphEvents.data.data.events.map((event) => {
+						// console.log("mere event aya",event)
+						allTicketBuyers = allTicketBuyers.concat(event.buyers);
+						// console.log("mere event aya2",allTicketBuyers)
+					});
+					// allTicketBuyers.concat(graphEvents.data.data.events[i].buyer)graphEvents.data.data.events.map((event)=> event.buyers.map((buyerArray,i)=> buyerArray[i]))
+					// console.log("mere allTicketBuyers",allTicketBuyers)
+					// this
 
-			// Get All events
-			let Events_Blockchain=await this.getAllEvents()
-			
-			//Get Deleted Events
-			let Deleted_Events=await this.getAllDeletedEvents()
+					let uniqueAllTicketBuyers = [...new Set(allTicketBuyers)];
 
-			// console.log("mere new",Events_Blockchain,Deleted_Events	)
-			const dateTime = Date.now();
-			const dateNow = Math.floor(dateTime / 1000);
-			// console.log("consolingg",Deleted_Events,Events_Blockchain)
+					// console.log("mere uniqueAllTicketBuyers",uniqueAllTicketBuyers)
+					this.setState({
+						totalTickets: totalTicketSold,
+						loadingTotalTickets: false,
+					});
 
-			// // Get All events
-			// Events_Blockchain = await openEvents
-			//.getPastEvents("CreatedEvent", {
-			// 	fromBlock: 7000000,
-			// 	toBlock: blockNumber,
-			// });
+					// let Events_Blockchain =[]
+					// let Deleted_Events=[]
 
-			// //Get Deleted Events
-			// Deleted_Events = await openEvents
-			//.getPastEvents("DeletedEvent", {
-			// 	fromBlock: 8181618,
-			// 	toBlock: blockNumber,
-			// });
-			//filtered event
-			let allEvents = [];
-			let skip = false;
-			for (let i =0; i < Events_Blockchain.length; i++) {
-				for (let j = 0; j < Deleted_Events.length; j++) {
-					if (
-						Events_Blockchain[i]
-							.eventId ==
-						Deleted_Events[j].eventId
-					) {
-						skip = true;
-					}
-				}
-				if(!skip){
-					for (let j = 0; j < this.state.hideEvent.length; j++) {
-						if (
-							Events_Blockchain[i]
-								.eventId ==
-							this.state.hideEvent[j].id
-						) {
-							skip = true;
+					// Get All events
+					let Events_Blockchain = await this.getAllEvents();
+
+					//Get Deleted Events
+					let Deleted_Events = await this.getAllDeletedEvents();
+
+					// console.log("mere new",Events_Blockchain,Deleted_Events	)
+					const dateTime = Date.now();
+					const dateNow = Math.floor(dateTime / 1000);
+					// console.log("consolingg",Deleted_Events,Events_Blockchain)
+
+					// // Get All events
+					// Events_Blockchain = await openEvents
+					//.getPastEvents("CreatedEvent", {
+					// 	fromBlock: 7000000,
+					// 	toBlock: blockNumber,
+					// });
+
+					// //Get Deleted Events
+					// Deleted_Events = await openEvents
+					//.getPastEvents("DeletedEvent", {
+					// 	fromBlock: 8181618,
+					// 	toBlock: blockNumber,
+					// });
+					//filtered event
+					let allEvents = [];
+					let skip = false;
+					for (let i = 0; i < Events_Blockchain.length; i++) {
+						for (let j = 0; j < Deleted_Events.length; j++) {
+							if (
+								Events_Blockchain[i].eventId ==
+								Deleted_Events[j].eventId
+							) {
+								skip = true;
+							}
 						}
+						if (!skip) {
+							for (
+								let j = 0;
+								j < this.state.hideEvent.length;
+								j++
+							) {
+								if (
+									Events_Blockchain[i].eventId ==
+									this.state.hideEvent[j].id
+								) {
+									skip = true;
+								}
+							}
+						}
+						if (!skip) {
+							allEvents.push(Events_Blockchain[i]);
+						}
+						skip = false;
 					}
-				}
-				if (!skip) {
-					allEvents.push(Events_Blockchain[i]);
-				}
-				skip = false;
-			}
 
-			// Get Past events
-			let pastEvents = allEvents
-				.concat()
-				.sort((a, b) => b.blockNumber - a.blockNumber)
-				.filter(
-					(pastEvents) => pastEvents.time <= dateNow
-				);
+					// Get Past events
+					let pastEvents = allEvents
+						.concat()
+						.sort((a, b) => b.blockNumber - a.blockNumber)
+						.filter((pastEvents) => pastEvents.time <= dateNow);
 
-			this.setState({
-				pastEvents: pastEvents.length,
-				loadingPastEvents: false,
-			});
+					this.setState({
+						pastEvents: pastEvents.length,
+						loadingPastEvents: false,
+					});
 
-			// Get upcoming events
-			let upcomingEvents = allEvents
-				.concat()
-				.sort((a, b) => b.blockNumber - a.blockNumber)
-				.filter(
-					(activeEvents) => activeEvents.time >= dateNow
-				);
+					// Get upcoming events
+					let upcomingEvents = allEvents
+						.concat()
+						.sort((a, b) => b.blockNumber - a.blockNumber)
+						.filter((activeEvents) => activeEvents.time >= dateNow);
 
-			this.setState({
-				upcomingEvents: upcomingEvents.length,
-				loadingUpcomingEvents: false,
-			});
-			// console.log("Home allEvents", allEvents)
-			let ownersOfAllEvents = allEvents.map((tt) => {
-				return tt.owner;
-			});
-			// console.log("Home ownersOfAllEvents",ownersOfAllEvents)
+					this.setState({
+						upcomingEvents: upcomingEvents.length,
+						loadingUpcomingEvents: false,
+					});
+					// console.log("Home allEvents", allEvents)
+					let ownersOfAllEvents = allEvents.map((tt) => {
+						return tt.owner;
+					});
+					// console.log("Home ownersOfAllEvents",ownersOfAllEvents)
 
-			let uniqueOwnersOfAllEvents = [...new Set(ownersOfAllEvents)];
+					let uniqueOwnersOfAllEvents = [
+						...new Set(ownersOfAllEvents),
+					];
 
-			let AllUsers = uniqueAllTicketBuyers.concat(
-				uniqueOwnersOfAllEvents
-			);
+					let AllUsers = uniqueAllTicketBuyers.concat(
+						uniqueOwnersOfAllEvents
+					);
 
-			let uniqueAllUser = [...new Set(AllUsers)];
+					let uniqueAllUser = [...new Set(AllUsers)];
 
-			this.setState({
-				activeUsers: uniqueAllUser.length,
-				loadingActiveUsers: false,
-			});
-		}).catch((err)=>{
-			// console.log("mere error",err)
-			this.setState({
-				loadingActiveUsers: false,
-				loadingUpcomingEvents: false,
-				loadingPastEvents: false,
-				loadingTotalTickets: false,
-			})
-	})
+					this.setState({
+						activeUsers: uniqueAllUser.length,
+						loadingActiveUsers: false,
+					});
+				})
+				.catch((err) => {
+					// console.log("mere error",err)
+					this.setState({
+						loadingActiveUsers: false,
+						loadingUpcomingEvents: false,
+						loadingPastEvents: false,
+						loadingTotalTickets: false,
+					});
+				});
 		}
 	}
 
@@ -466,7 +483,7 @@ class Home extends Component {
 												}
 											></img>
 										</h3>
-										<p
+										<div
 											className="mt-0 headings"
 											style={{ margin: "0px" }}
 										>
@@ -474,12 +491,12 @@ class Home extends Component {
 												<CircularProgress
 													size={20}
 													type={"home"}
-													color={"white"}
+													color={"primary"}
 												/>
 											) : (
 												this.state.pastEvents
 											)}
-										</p>
+										</div>
 										<p
 											className="mt-0 headings"
 											style={{ marginTop: "0px" }}
@@ -546,8 +563,7 @@ class Home extends Component {
 											>
 												Connect to MetaMask
 											</h3>
-											<h4 className="dashboard-data">
-											</h4>
+											<h4 className="dashboard-data"></h4>
 											<p className="dashboard-footer">
 												Events
 											</p>
@@ -571,7 +587,7 @@ class Home extends Component {
 											<i className="fas fa-calendar-alt welcome-img"></i>
 										</h3>
 
-										<p
+										<div
 											className="mt-0 headings"
 											style={{ margin: "0px" }}
 										>
@@ -580,12 +596,12 @@ class Home extends Component {
 												<CircularProgress
 													size={20}
 													type={"home"}
-													color={"white"}
+													color={"primary"}
 												/>
 											) : (
 												this.state.upcomingEvents
 											)}
-										</p>
+										</div>
 										<p
 											className="mt-0 headings"
 											style={{ marginTop: "0px" }}
@@ -614,7 +630,7 @@ class Home extends Component {
 												className="welcome-img"
 											></img>
 										</h3>
-										<p
+										<div
 											className="mt-0 headings"
 											style={{ margin: "0px" }}
 										>
@@ -622,12 +638,12 @@ class Home extends Component {
 												<CircularProgress
 													size={20}
 													type={"home"}
-													color={"white"}
+													color={"primary"}
 												/>
 											) : (
 												this.state.activeUsers
 											)}
-										</p>
+										</div>
 										<p
 											className="mt-0 headings"
 											style={{ marginTop: "0px" }}
@@ -685,7 +701,7 @@ class Home extends Component {
 												className="welcome-img"
 											></img>
 										</h3>
-										<p
+										<div
 											className="mt-0 headings"
 											style={{ margin: "0px" }}
 										>
@@ -693,12 +709,12 @@ class Home extends Component {
 												<CircularProgress
 													size={20}
 													type={"home"}
-													color={"white"}
+													color={"primary"}
 												/>
 											) : (
 												this.state.totalTickets
 											)}
-										</p>
+										</div>
 										<p
 											className="mt-0 headings"
 											style={{ marginTop: "0px" }}

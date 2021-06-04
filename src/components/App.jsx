@@ -65,9 +65,7 @@ class App extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-	
-		} catch (e) {
-		}
+		} catch (e) {}
 		super(props);
 		this.state = {
 			sent_tx: [],
@@ -427,7 +425,7 @@ class App extends Component {
                     this.setState({disabledStatus:false})
                 })
         );
-    };
+    };		
 	toggleDisabling = () => {
 		this.setState({ disabledStatus: !this.state.disabledStatus });
 	};
@@ -516,12 +514,10 @@ class App extends Component {
 				<div>
 					<Switch>
 						<Route
-							render={(props) => (
-								
+							component={(props) => (
 								<Home
 									{...props}
 									executeScroll={this.executeScroll}
-									
 								/>
 							)}
 						/>
@@ -531,13 +527,12 @@ class App extends Component {
 			connecting = true;
 		} else if (this.props.web3.status === "failed") {
 			body = (
-				
 				<div>
 					<Switch>
 						<Route
 							exact
 							path="/"
-							render={(props) => (
+							component={(props) => (
 								<Home
 									{...props}
 									executeScroll={this.executeScroll}
@@ -559,7 +554,7 @@ class App extends Component {
 					<Switch>
 						<Route
 							path="/"
-							render={(props) => (
+							component={(props) => (
 								<Home
 									{...props}
 									executeScroll={this.executeScroll}
@@ -702,7 +697,12 @@ class App extends Component {
 							/>
 						)}
 					/>
-					<Route exact path="/topics" component={TopicsLandingPage} />
+					<Route
+						exact
+						path="/topics"
+						//  component={TopicsLandingPage}
+						component={(props) => <TopicsLandingPage {...props} />}
+					/>
 					<Route
 						exact
 						path="/topic/:page/:id"
@@ -743,7 +743,7 @@ class App extends Component {
 					<Route
 						exact
 						path="/how-it-works"
-						render={(props) => (
+						component={(props) => (
 							<Home
 								{...props}
 								executeScroll={this.executeScroll}
