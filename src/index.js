@@ -27,8 +27,8 @@ const options = {
 		txHash: {},
 	},
 };
-const account_login = localStorage.getItem("account");
-let appPassword = localStorage.getItem("app_password");
+// const account_login = localStorage.getItem("account");
+// let appPassword = localStorage.getItem("app_password");
 // if (
 // 	!account_login ||
 // 	!appPassword ||
@@ -50,16 +50,6 @@ let appPassword = localStorage.getItem("app_password");
 // }
 // if (appPassword == process.env.REACT_APP_PASSWORD) {
 
-
-
-
-// 	let message = localStorage.getItem("message");
-// if(!message){
-// 		localStorage.setItem("message", true);
-
-// 	alert("Side-chain scaling is coming - high gas fees will be a thing of the past.");
-// }
-
 	ReactDOM.render(
 		<DrizzleProvider options={options}>
 			<App />
@@ -70,3 +60,4 @@ let appPassword = localStorage.getItem("app_password");
 // 	alert("Wrong password");
 // }
 // }
+

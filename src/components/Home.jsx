@@ -9,16 +9,15 @@ import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	// PhoenixDAO_Testnet_Token_Address,
+
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
 import { API_URL, REPORT_EVENT ,GLOBAL_NETWORK_ID,graphURL} from "../config/const";
 import axios from "axios";
-// import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar3 from "./Snackbar3";
 import CircularProgress from "@material-ui/core/CircularProgress";
-// import { Row } from "react-bootstrap";
 
 class Home extends Component {
 	constructor(props, context) {
@@ -70,13 +69,16 @@ class Home extends Component {
 		// console.log("nextProps",nextProps.web3, this.state.shownSnackbar3)
 		if (!this.state.shownSnackbar3 && nextProps.web3.status == "initialized" && nextProps.web3.networkId) {
 			// console.log("hererere")
+
 		  this.setState({shownSnackbar3:true})
 		  this.checkNetwork(nextProps.web3.status,nextProps.web3.networkId)
 		}
 	  }
 
 	checkNetwork(web3Status,networkId) {
+
 		// console.log("this.props.web3.networkId",web3Status,networkId)
+
 		if (
 			web3Status == "initialized" &&
 			networkId != GLOBAL_NETWORK_ID
@@ -409,7 +411,7 @@ class Home extends Component {
 							allows people to create events and sell tickets
 							online, with the option to make an event, paid or
 							free.
-						</p>s
+						</p>
 						<p>
 							The tickets created on this service are ERC721
 							tokens, which means that users are able to move,
@@ -417,9 +419,9 @@ class Home extends Component {
 						</p>
 						<p>
 							The PhoenixDAO Events Marketplace is a dApp powered
-							by the Ethereum blockchain. In order to create
+							by the Matic Network. In order to create
 							events or purchase tickets, you are required have an
-							Ethereum wallet. If you do not have one currently,
+							wallet. If you do not have one currently,
 							you can use{" "}
 							{typeof InstallTrigger !== "undefined" ? (
 								<a

@@ -627,7 +627,7 @@ class EventPage extends Component {
 				if (this.props.match.params.page === pagetitle) {
 					body = (
 						<Grid>
-							<Grid className="header2">
+							<Grid className="header3">
 								<h2>
 									{event_data[0]}
 								</h2>

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 
 class Clock extends Component {
+    interval1=0;
     constructor(props) {
         super(props);
         this.state = {
@@ -17,7 +18,8 @@ class Clock extends Component {
 
     componentDidMount(){
         this._isMounted = true;
-        if(this._isMounted){setInterval(()=>this.getTimeUntil(this.props.deadline),1000)}
+        if(this._isMounted){
+            this.interval1=setInterval(()=>this.getTimeUntil(this.props.deadline),1000)}
     }
     
     async getTimeUntil(deadline){
@@ -33,6 +35,7 @@ class Clock extends Component {
     }
     
     componentWillUnmount(){
+        clearInterval(this.interval1)
         this._isMounted = false;
     }
     

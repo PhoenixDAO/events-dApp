@@ -72,7 +72,8 @@ const styles = theme => ({
 	},
 	searchRow: {
 		display: "flex",
-		justifyContent: "space-between"
+		justifyContent: "space-between",
+		paddingTop:"40px"
 	}
 });
 class MyEvents extends Component {

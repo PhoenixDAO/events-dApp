@@ -7,15 +7,20 @@ import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
 import { FormControl, TextField, InputAdornment, Grid } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import { Send } from "@material-ui/icons";
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import roundlogo from "../Images/roundlogo.svg";
 import { makeStyles } from "@material-ui/core/styles";
-import SocialMedia from './SocialMedia';
-import { CopyToClipboard } from "react-copy-to-clipboard";
+
 
 const useStyles = makeStyles((theme) => ({
-
+  root: {
+    "& .MuiPaper-root":
+    {
+      width: "100%",
+    }
+  },
   header: {
     justifyContent: "center",
     alignItems: "center",
@@ -34,16 +39,16 @@ const useStyles = makeStyles((theme) => ({
   sharelink: {
     fontWeight: "900",
     color: "#413AE2",
-    paddingTop: "12px",
+    padding: "12px 0px",
   },
   logo: {
     width: "22px",
     height: "22px",
     marginRight: "7px"
   },
-  eventUrl: {
+  eventTitle: {
     textAlign: "center",
-    fontSize: "14px",
+    fontSize: "17px",
     color: "#4E4E55"
   },
   SocialMediaDiv: {
@@ -63,7 +68,26 @@ const useStyles = makeStyles((theme) => ({
       outline: "none"
     }
   },
+  ethereum: {
+    fontSize: "14px",
+    color: "#73727D"
+  },
+  send: {
+    marginLeft: "13px",
+    fontWeight: 700,
+    width: "100%",
+    height: "45px",
+    backgroundColor: "#413AE2",
+    [theme.breakpoints.down("xs")]: {
+      marginLeft: "0px",
+      marginTop: "20px",
+      width: "160px",
+      "&:focus": {
+        outline: "none"
+      }
+    }
 
+  },
 
 
 
@@ -92,6 +116,7 @@ const DialogTitle = withStyles(styles)((props) => {
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
       <Typography variant="h6">{children}</Typography>
+      {console.log("onclose", onClose)}
       {onClose ? (
         <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
           <CloseIcon />
@@ -111,70 +136,71 @@ const DialogContent = withStyles((theme) => ({
 
 }))(MuiDialogContent);
 
+const DialogActions = withStyles((theme) => ({
+  root: {
+    margin: 0,
+    padding: theme.spacing(1),
+    padding: "20px"
+  },
 
+}))(MuiDialogActions);
 
-export default function ShareModal({ handleClose, open, titleURL }) {
-
-  const [isCopied, setIsCopied] = useState(false);
-
+export default function sendTicket({ handleClose, open, eventTitle, sendTicket2, eventId }) {
+  const [address, setAddress] = useState("");
   const classes = useStyles();
-  const onCopyText = () => {
-    setIsCopied(true);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 1000);
-  };
-  let URL = "events.phoenixdao.io" + titleURL
+
+  const accountChange = (event) => {
+    setAddress(event.target.value);
+    console.log("address", address);
+  }
+  const send = () => {
+
+    console.log("props", sendTicket2)
+    handleClose();
+    sendTicket2(address, eventId);
+  }
   return (
-    <div>
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle id="customized-dialog-title" className={classes.header} onClose={handleClose}>
+    <div >
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} className={classes.root} >
+        <DialogTitle id="customized-dialog-title" className={classes.header} onClose={handleClose} >
           <img src={roundlogo} className={classes.logo} alt="phnx logo" />
   PhoenixDAO
   <h2 className={classes.sharelink}>
-            Share Event Link
+            Send Ticket
   </h2>
+
+          <Typography gutterBottom className={classes.eventTitle}>
+            {eventTitle}
+          </Typography>
         </DialogTitle>
         <DialogContent>
-          <Typography gutterBottom className={classes.eventUrl}>
-            Event Url
+          <h5 className={classes.ethereum}>ETHEREUM ADDRESS</h5>
 
-          </Typography>
           <FormControl variant="outlined" lg={12} className={classes.UrlField}>
 
             <TextField
               id="outlined-helperText"
               label=""
-              value={URL}
-              defaultValue={URL}
+              onChange={accountChange}
+              value={address}
               variant="outlined"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end" >
-                    <CopyToClipboard text={URL} onCopy={onCopyText}>
-
-                      <IconButton
-                        className={classes.copyButton}
-                        aria-label="copy text"
-                      >
-                        <span style={isCopied ? { fontSize: "14px" } : { color: "#413AE2" }}>{isCopied ? "Copied!" : <i class="far fa-copy fa-md"></i>
-                        }</span>
-
-                      </IconButton>
-                    </CopyToClipboard>
-
-                  </InputAdornment>
-                ),
-              }}
             />
           </FormControl>
-
-          <Grid lg={12} className={classes.SocialMediaDiv}>
-            <SocialMedia />
-          </Grid>
-          <h5 className={classes.share}>Share on Social Media</h5>
         </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginRight: "10px" }}
+            className={classes.send}
 
+            onClick={send}
+          >
+            <Send style={{ marginRight: "7px", fontSize: "19px" }} />
+										Send Ticket
+									</Button>
+
+        </DialogActions>
       </Dialog>
     </div>
   );
