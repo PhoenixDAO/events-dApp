@@ -7,8 +7,13 @@ import AddIcon from "@material-ui/icons/Add";
 const useStyles = makeStyles((theme) => ({
 	button: {
 		margin: theme.spacing(1),
+		background: "#413AE2",
+		color: "white",
 		// maxHeight: 54,
 		// maxWidth: 230,
+		"&:focus": {
+			outline: "none",
+		},
 	},
 }));
 
