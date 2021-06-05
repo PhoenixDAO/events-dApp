@@ -24,8 +24,9 @@ const useStyles = (theme) => ({
 		top: 0,
 		display: "flex",
 		flexDirection: "column",
-		background: `#fafafa !important`,
+		background: `#FCFCFD !important`,
 		opacity: `1 !important`,
+		marginLeft: -2,
 	},
 	root: {
 		flexGrow: 1,
