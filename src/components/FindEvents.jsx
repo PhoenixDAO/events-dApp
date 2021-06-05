@@ -29,6 +29,7 @@ import {
 	FormHelperText,
 	FormControl,
 	Select,
+	Grid,
 } from "@material-ui/core";
 import Slider from "./common/Slider";
 import roundlogo from "./Images/roundlogo.svg";
@@ -42,8 +43,9 @@ const useStyles = (theme) => ({
 		top: 0,
 		display: "flex",
 		flexDirection: "column",
-		background: `#fafafa !important`,
+		background: `#FCFCFD !important`,
 		opacity: `1 !important`,
+		marginLeft: -2,
 	},
 	root: {
 		flexGrow: 1,
@@ -528,12 +530,14 @@ class FindEvents extends Component {
 						/>
 					</div> */}
 
+					{/* sticky bar start */}
 					<div className={classes.sticky}>
 						<div>
 							<br />
 							<br />
 							<br />
-							<div
+
+							{/* <div
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
@@ -563,7 +567,15 @@ class FindEvents extends Component {
 
 									<ConnectWalletButton />
 								</div>
-							</div>
+							</div> */}
+
+							<Grid container>
+								<Grid item>
+									LOGO PhoenixDAO Events Marketplace
+								</Grid>
+								<Grid item>SearchBar</Grid>
+								<Grid item>Connect Wallet</Grid>
+							</Grid>
 						</div>
 
 						<br />
@@ -636,11 +648,12 @@ class FindEvents extends Component {
 							</div>
 						</div>
 					</div>
+					{/* sticky bar ends */}
 
 					<br />
 					<br />
 					<br />
-					
+
 					{/* scrollToTop while click on pagination */}
 					<div ref={this.myRef} />
 
