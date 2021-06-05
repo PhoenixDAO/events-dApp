@@ -66,7 +66,7 @@ const TopicCard = ({ image, name }) => {
 						gutterBottom
 						className={classes.text}
 					>
-						<EventNoteIcon fontSize="large" /> <span>&nbsp;</span>
+						<EventNoteIcon fontSize="small" /> <span>&nbsp;</span>
 						12 Events
 					</Typography>
 				</CardContent>
