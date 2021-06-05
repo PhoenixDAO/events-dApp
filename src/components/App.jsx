@@ -180,7 +180,7 @@ class App extends Component {
 			});
 		}
 	};
-
+	
 	//TransferFrom when buying with PhoenixDAO
 	//After Approval
 	afterApprove = () =>
@@ -587,6 +587,19 @@ class App extends Component {
 						path="/upcomingevents/:page"
 						render={(props) => (
 							<FindEvents
+								{...props}
+								executeScroll={this.executeScroll}
+								inquire={this.inquireBuy}
+								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
+							/>
+						)}
+					/>
+						<Route
+						exact
+						path="/favorite/:page"
+						render={(props) => (
+							<Favorites
 								{...props}
 								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}

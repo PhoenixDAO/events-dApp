@@ -21,9 +21,12 @@
 
 export const INFURA_URL="https://rpc-mumbai.matic.today" // 
 export const INFURA_WEB_URL="wss://ws-mumbai.matic.today/"
-export const API_URL = "https://phoenix-event-dapp-backend.herokuapp.com/"
+
+export const API_URL = "https://phoenix-event-dapp-backend-tst.herokuapp.com/"
 export const GLOBAL_NETWORK_ID=80001;
 export const REPORT_EVENT = "event/report";
+export const GET_USER_DETAIL ="user/details";
+export const addToFavourites ="user/addToFavourites";
 export const explorerWithTX="https://explorer-mumbai.maticvigil.com/tx/"
 export const explorerWithAddress ="https://explorer-mumbai.maticvigil.com/address/"
 export const graphURL="https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp2"

@@ -484,6 +484,7 @@ class MyEventCard extends Component {
 							date={date}
 							image={image}
 							locations={locations}
+							eventId={this.props.id}
 						/>
 						{/* old card */}
 						<div className="card">

@@ -511,6 +511,7 @@ class Event extends Component {
 							revenue={this.state.revenue}
 							dollarRevenue={dollarRevenue}
 							myFavorites={this.props.myFavorites}
+							eventId={this.props.id}
 						/>
 					</div>
 				);

@@ -97,6 +97,7 @@ class MyEvents extends Component {
 			selectedTab: 0,
 
 		};
+		console.log("qwe",this.props.accounts[0])
 		this.contracts = context.drizzle.contracts;
 		this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
 			this.props.accounts[0]

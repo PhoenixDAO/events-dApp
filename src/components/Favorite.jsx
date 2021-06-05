@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
+import { API_URL, REPORT_EVENT, graphURL,GET_USER_DETAIL } from "../config/const";
 import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
@@ -91,6 +91,7 @@ class Favorites extends Component {
         this.myRef = React.createRef();
 
         this.toggleSortDate = this.toggleSortDate.bind(this);
+        this.getUserFavoritesEvent=this.getUserFavoritesEvent.bind(this);
     }
 
     topicClick(slug) {
@@ -241,7 +242,7 @@ class Favorites extends Component {
                 Events_Blockchain: filteredEvents,
                 active_length: filteredEvents.length,
             });
-            this.props.history.push("/upcomingevents/" + 1);
+            this.props.history.push("/favorite/" + 1);
         });
     };
 
@@ -281,7 +282,29 @@ class Favorites extends Component {
             console.log("check error", error);
         }
     };
-
+    // filterFavoriteEvent = async () => {
+    //     try {
+    //         const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+    //         this.setState({
+    //             hideEvent: get.data.result,
+    //         });
+    //         return;
+    //     } catch (error) {
+    //         console.log("check error", error);
+    //     }
+    // };
+    getUserFavoritesEvent = async () => {
+        try {
+            const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`,{address:this.props.accounts[0],networkId:this.props.web3.networkId});
+            this.setState({
+                UserFavoriteEvents: get.data.result,
+            });
+			console.log("data",get.data)
+            return;
+        } catch (error) {
+            console.log("check error", error);
+        }
+    };
     onTabChange = (event, newValue) => {
         this.setState({ selectedTab: newValue });
     };
@@ -379,7 +402,7 @@ class Favorites extends Component {
                             links.push(
                                 <li className={"page-item " + active} key={i}>
                                     <Link
-                                        to={"/upcomingevents/" + i}
+                                        to={"/favorite/" + i}
                                         onClick={() =>
                                             this.setState({
                                                 prevPath: currentPage,
@@ -404,7 +427,7 @@ class Favorites extends Component {
                             links.push(
                                 <li className={"page-item " + active} key={i}>
                                     <Link
-                                        to={"/upcomingevents/" + i}
+                                        to={"/favorite/" + i}
                                         onClick={() =>
                                             this.setState({
                                                 prevPath: currentPage,
@@ -429,7 +452,7 @@ class Favorites extends Component {
                             links.push(
                                 <li className={"page-item " + active} key={i}>
                                     <Link
-                                        to={"/upcomingevents/" + i}
+                                        to={"/favorite/" + i}
                                         onClick={() =>
                                             this.setState({
                                                 prevPath: currentPage,
@@ -503,12 +526,13 @@ class Favorites extends Component {
     }
 
     componentDidMount() {
-        if (this.state.prevPath == -1) {
-            this.props.executeScroll({ behavior: "smooth", block: "start" });
-        }
+        // if (this.state.prevPath == -1) {
+        //     this.props.executeScroll({ behavior: "smooth", block: "start" });
+        // }
         // this._isMounted = true;
         this.loadBlockchain();
         this.filterHideEvent();
+        this.getUserFavoritesEvent();
     }
 
     componentWillUnmount() {
@@ -529,6 +553,7 @@ const mapStateToProps = (state) => {
     return {
         contracts: state.contracts,
         accounts: state.accounts,
+        web3:state.web3,
     };
 };
 
