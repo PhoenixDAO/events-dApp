@@ -174,14 +174,14 @@ const EventCard = (props, context) => {
 			let payload = {
 				address: props.accounts,
 				networkId: props.networkId,
-				id: eventId,
+				eventId: eventId,
 			};
+			
 			const addFavourite = await axios.post(
 				`${API_URL}${addToFavourites}`,
 				payload
 			);
-			console.log("Consoleee notify report response", addFavourite)
-			toast(<NotifyReport text={"Report successful!"} />, {
+			toast(<NotifyReport text={"Event add to favourites"} />, {
 				position: "bottom-right",
 				autoClose: true,
 				pauseOnHover: true,

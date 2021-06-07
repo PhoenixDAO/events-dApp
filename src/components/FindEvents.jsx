@@ -537,7 +537,7 @@ class FindEvents extends Component {
 							<br />
 							<br />
 
-							{/* <div
+							 <div
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
@@ -567,15 +567,15 @@ class FindEvents extends Component {
 
 									<ConnectWalletButton />
 								</div>
-							</div> */}
+							</div> 
 
-							<Grid container>
+							{/* <Grid container>
 								<Grid item>
 									LOGO PhoenixDAO Events Marketplace
 								</Grid>
 								<Grid item>SearchBar</Grid>
 								<Grid item>Connect Wallet</Grid>
-							</Grid>
+							</Grid> */}
 						</div>
 
 						<br />

@@ -161,7 +161,7 @@ class MyTickets extends Component {
 						<h2>
 							My Tickets
 								</h2>
-<SearchBar/>
+						<SearchBar />
 					</Grid>
 
 
