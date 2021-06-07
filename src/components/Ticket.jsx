@@ -251,7 +251,6 @@ class Ticket extends Component {
 
 
 		}
-
 		if (this.event !== null) {
 			this.updateIPFS();
 		}

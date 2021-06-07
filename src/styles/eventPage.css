@@ -22,7 +22,7 @@ body{
 }
 .event-image {
 	/* width: 370px; */
-	height: 400px;
+	height: 350px;
 	object-fit: fill;
     border-radius: 8px;
 }

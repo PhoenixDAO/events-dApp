@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Web3 from 'web3';
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
-import { Menu, DashboardOutlined, ModeCommentOutlined, TodayOutlined, ListAltOutlined, InfoOutlined, ForumOutlined } from '@material-ui/icons';
+import { Menu, DashboardOutlined, ModeCommentOutlined, TodayOutlined, ListAltOutlined, InfoOutlined, ForumOutlined,FavoriteBorder } from '@material-ui/icons';
 import '../styles/navbar.css'
 class Sidebar extends Component {
 	constructor(props, context) {
@@ -555,6 +555,21 @@ class Sidebar extends Component {
 										></i>{" "}
 										<span className="toggleHidden">
 											My Tickets
+									</span>
+									</NavLink>
+								</li>
+								<li>
+									<NavLink
+										to="/favorites"
+										className="nav-link"
+										activeClassName="nav-link-active"
+										onClick={() => {
+											this.toggleSidebarClass(true);
+										}}
+									>
+										<FavoriteBorder/>{"  "}
+										<span className="toggleHidden">
+											Favourites
 									</span>
 									</NavLink>
 								</li>

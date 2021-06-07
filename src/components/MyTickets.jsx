@@ -8,6 +8,7 @@ import Web3 from "web3";
 import { INFURA_WEB_URL } from "../config/const.js";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import { Grid } from "@material-ui/core";
+import SearchBar from './common/SearchBar';
 
 class MyTickets extends Component {
 	constructor(props, context) {
@@ -160,8 +161,9 @@ class MyTickets extends Component {
 						<h2>
 							My Tickets
 								</h2>
-
+						<SearchBar />
 					</Grid>
+
 
 					{body}
 				</div>

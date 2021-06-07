@@ -706,7 +706,7 @@ class EventPage extends Component {
 												<option value={30}>Golden Ticket</option>
 											</Select>
 										</FormControl>
-										<p className={classes.eventinfo}>
+										<div className={classes.eventinfo}>
 											<span className={classes.PhnxPrice} >{event_data[3]
 												? numeral(price).format("0.000") + "PHNX"
 												: "FREE"}
@@ -721,7 +721,7 @@ class EventPage extends Component {
 													).format("0.000")
 													: ""}
 											</div>
-										</p>
+										</div>
 										<p className={classes.eventHeading}> <CalendarTodayOutlined /> Date
 										</p>
 										<p className={classes.eventinfo}>	{date.toLocaleDateString()}

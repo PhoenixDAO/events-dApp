@@ -510,6 +510,8 @@ class Event extends Component {
 							max_seats={max_seats}
 							revenue={this.state.revenue}
 							dollarRevenue={dollarRevenue}
+							myFavorites={this.props.myFavorites}
+							eventId={this.props.id}
 						/>
 					</div>
 				);
