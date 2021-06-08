@@ -63,8 +63,9 @@ class TopicsLandingPage extends Component {
 	}
 
 	topicClick(slug) {
-		this.props.history.push("/topic/" + slug + "/" + 1);
-		window.scrollTo(0, 180);
+		console.log("/topic/" + slug + "/" + 1);
+		// this.props.history.push("/topic/" + slug + "/" + 1);
+		// window.scrollTo(0, 180);
 	}
 
 	caruselClick(location) {
@@ -280,7 +281,25 @@ class TopicsLandingPage extends Component {
 								<h2 className="col-lg-10 col-md-9 col-sm-8">
 									All Topics
 								</h2>
+								<div
+									style={{
+										display: "flex",
+										justifyContent: "center",
+									}}
+								>
+									{/* <p>Sort:</p> */}
+									<select
+										name="category"
+										// value={category}
+										// onChange={event => handleCategoryChange(event.target.value)}
+									>
+										<option id="0">All Topics</option>
+										<option id="1">Trending Topics</option>
+									
+									</select>
+								</div>
 							</div>
+
 							<br />
 							<br />
 							<div>
@@ -298,6 +317,7 @@ class TopicsLandingPage extends Component {
 															topic.image
 														}
 														name={topic.name}
+														slug={topic.slug}
 													/>
 												</div>
 											);

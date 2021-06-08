@@ -23,7 +23,16 @@ import {
 	Box,
 	Link,
 } from "@material-ui/core";
-import { DateRange, AccessTime, LocationOnOutlined, ConfirmationNumberOutlined, FavoriteBorder, Favorite, LaunchSharp, Send } from "@material-ui/icons";
+import {
+	DateRange,
+	AccessTime,
+	LocationOnOutlined,
+	ConfirmationNumberOutlined,
+	FavoriteBorder,
+	Favorite,
+	LaunchSharp,
+	Send,
+} from "@material-ui/icons";
 
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
@@ -45,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 		borderTop: "1px solid #E4E4E7",
 		marginLeft: "-16px",
 		marginRight: "-16px",
-		padding: "0px 16px"
+		padding: "0px 16px",
 	},
 	text: {
 		color: "#4E4E55",
@@ -65,13 +74,12 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 17,
 		fontWeight: 500,
 		"&:focus": {
-			outline: "none"
-		}
-
+			outline: "none",
+		},
 	},
 	sendTicket: {
 		"&:hover": {
-			backgroundColor: "transparent"
+			backgroundColor: "transparent",
 		},
 		textTransform: "Capitalize",
 		textAlign: "center",
@@ -82,11 +90,10 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 17,
 		fontWeight: 500,
 		"&:focus": {
-			outline: "none"
+			outline: "none",
 		},
 		borderLeft: "1px solid #E4E4E7",
 		borderRadius: "0px",
-
 	},
 	FavoriteIcon: {
 		border: "none",
@@ -98,19 +105,18 @@ const useStyles = makeStyles((theme) => ({
 		width: "32px",
 		height: "32px",
 		"&:focus": {
-			outline: "none"
-		}
+			outline: "none",
+		},
 	},
 	eventinfo: {
 		fontSize: "22px",
-		fontWeight: "700"
+		fontWeight: "700",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
 		fontWeight: "700",
-		color: "#413AE2"
+		color: "#413AE2",
 	},
-
 }));
 
 const EventCard = (props, context) => {
@@ -128,11 +134,15 @@ const EventCard = (props, context) => {
 		ticket,
 		sendTicket2,
 		eventId,
-		myFavorites
+		myFavorites,
 	} = props;
+
+	// console.log(myEvent, myEventStatURL, titleURL);
+
 	useEffect(() => {
 		// getAccounts();
 	});
+
 	const classes = useStyles();
 	const [Icon, changeIcon] = useState(false);
 	const [open, setOpen] = useState(false);
@@ -146,7 +156,7 @@ const EventCard = (props, context) => {
 	};
 	const handleClickOpen2 = (e) => {
 		setOpen2(true);
-		e.preventDefault()
+		e.preventDefault();
 	};
 	const handleClose2 = () => {
 		setOpen2(false);
@@ -176,7 +186,7 @@ const EventCard = (props, context) => {
 				networkId: props.networkId,
 				eventId: eventId,
 			};
-			
+
 			const addFavourite = await axios.post(
 				`${API_URL}${addToFavourites}`,
 				payload
@@ -195,11 +205,16 @@ const EventCard = (props, context) => {
 
 			if (error.response && error.response.data) {
 				// console.log("Consoleee notify report response error.response.data",error.response.data)
-				toast(<NotifyReport text={error.response.data.responseMessage + "!"} />, {
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true,
-				});
+				toast(
+					<NotifyReport
+						text={error.response.data.responseMessage + "!"}
+					/>,
+					{
+						position: "bottom-right",
+						autoClose: true,
+						pauseOnHover: true,
+					}
+				);
 			}
 
 			// this.props.history.push("/upcomingevents/1");
@@ -207,14 +222,15 @@ const EventCard = (props, context) => {
 			// this.setState({
 			// 	loading: false,
 			// });
-		};
-
-	}
+		}
+	};
 	return (
 		<div>
-			<ShareModal open={open}
+			<ShareModal
+				open={open}
 				handleClose={handleClose}
-				titleURL={titleURL} />
+				titleURL={titleURL}
+			/>
 			<SendTicket
 				sendTicket2={sendTicket2}
 				eventId={eventId}
@@ -266,16 +282,22 @@ const EventCard = (props, context) => {
 										<span>&nbsp;</span>
 										{event_data.sold}/{max_seats}
 									</Typography>
-									{!myEvent ?
-										(<Typography
+									{!myEvent ? (
+										<Typography
 											className={classes.FavoriteIcon}
 											component="button"
 											onClick={addTofavorite}
 										>
-											{Icon ? <Favorite fontSize="small" style={{ color: "#413AE2" }} /> : <FavoriteBorder fontSize="small" />}
-
-										</Typography>)
-										: null}
+											{Icon ? (
+												<Favorite
+													fontSize="small"
+													style={{ color: "#413AE2" }}
+												/>
+											) : (
+												<FavoriteBorder fontSize="small" />
+											)}
+										</Typography>
+									) : null}
 								</div>
 							</div>
 						</div>
@@ -376,75 +398,98 @@ const EventCard = (props, context) => {
 								{locations}
 							</Typography>
 							{/* For my events page */}
-							{(myEvent)
-								? (
-									<Grid item>
-										<Divider style={{ marginBottom: "20px" }} />
-										<Typography
-											variant="body2"
-											color="textSecondary"
-											component="p"
-											gutterBottom
-											className={classes.text}
-										>
-											{"Ticket Sold: "}
-											<span>&nbsp;</span>
-											{event_data.sold}/{max_seats}
-										</Typography>
-										<Typography
-											variant="body2"
-											color="textSecondary"
-											component="p"
-											gutterBottom
-											className={classes.text}
-										>
-											PHNX Revenue: {revenue} PHNX
+							{myEvent ? (
+								<Grid item>
+									<Divider style={{ marginBottom: "20px" }} />
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										component="p"
+										gutterBottom
+										className={classes.text}
+									>
+										{"Ticket Sold: "}
+										<span>&nbsp;</span>
+										{event_data.sold}/{max_seats}
 									</Typography>
-										<Typography
-											variant="body2"
-											color="textSecondary"
-											component="p"
-											gutterBottom
-											className={classes.text}
-											style={{ marginBottom: "20px" }}
-										>
-											Dollar Revenue: $ {dollarRevenue}
-										</Typography>
-										<Divider />
-										<Button className={classes.shareButton}
-											onClick={handleClickOpen}
-										>
-											<LaunchSharp style={{ marginRight: "7px", fontSize: "19px" }} />	Share Event
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										component="p"
+										gutterBottom
+										className={classes.text}
+									>
+										PHNX Revenue: {revenue} PHNX
+									</Typography>
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										component="p"
+										gutterBottom
+										className={classes.text}
+										style={{ marginBottom: "20px" }}
+									>
+										Dollar Revenue: $ {dollarRevenue}
+									</Typography>
+									<Divider />
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
 									</Button>
-									</Grid>
-
-								)
-								// For my ticket page
-								: ticket ? (
-									<Grid item className={classes.row}>
-										<Button className={classes.shareButton}
-											onClick={handleClickOpen}
-										>
-											<LaunchSharp style={{ marginRight: "7px", fontSize: "19px" }} />	Share Event
-							   </Button>
-										<Button className={classes.sendTicket}
-											onClick={handleClickOpen2}
-										>
-											<Send style={{ marginRight: "7px", fontSize: "19px" }} />	Send Ticket
-							   </Button>
-									</Grid>
-
-								)
-									// For my Favorite page 
-									: myFavorites ? (
-										<Grid item className={classes.row}>
-											<Button className={classes.shareButton}
-												onClick={handleClickOpen}
-											>
-												<LaunchSharp style={{ marginRight: "7px", fontSize: "19px" }} />	Share Event
-							</Button>
-										</Grid >
-									) : null}
+								</Grid>
+							) : // For my ticket page
+							ticket ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+									<Button
+										className={classes.sendTicket}
+										onClick={handleClickOpen2}
+									>
+										<Send
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Send Ticket
+									</Button>
+								</Grid>
+							) : // For my Favorite page
+							myFavorites ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+								</Grid>
+							) : null}
 						</CardContent>
 					</CardActionArea>
 				</Card>
@@ -456,17 +501,14 @@ EventCard.contextTypes = {
 	drizzle: PropTypes.object,
 };
 const mapStateToProps = (state) => {
-	console.log("accounts", state.web3.networkId);
+	// console.log("accounts", state.web3.networkId);
 
 	return {
-
 		contracts: state.contracts,
 		accounts: state.accounts[0],
 
 		networkId: state.web3.networkId,
-
 	};
-
 };
 
 const AppContainer = drizzleConnect(EventCard, mapStateToProps);
