@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { API_URL, REPORT_EVENT, graphURL,GET_USER_DETAIL } from "../config/const";
+import { API_URL, REPORT_EVENT, graphURL, GET_USER_DETAIL } from "../config/const";
 import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
@@ -12,6 +12,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 
 import SearchBar from "./common/SearchBar";
+import { ThumbsUpDownOutlined } from "@material-ui/icons";
 
 const useStyles = (theme) => ({
     sticky: {
@@ -75,12 +76,14 @@ class Favorites extends Component {
             Events_Blockchain: [],
             Deleted_Events: [],
             Updated_Events: [],
+            UserFavoriteEvents: [],
             active_length: "",
             isOldestFirst: false,
             event_copy: [],
             prevPath: -1,
             hideEvent: [],
             selectedTab: 0,
+            reload: false
         };
 
         this.contracts = context.drizzle.contracts;
@@ -89,9 +92,9 @@ class Favorites extends Component {
         this.perPage = 6;
         this.topicClick = this.topicClick.bind(this);
         this.myRef = React.createRef();
-
         this.toggleSortDate = this.toggleSortDate.bind(this);
-        this.getUserFavoritesEvent=this.getUserFavoritesEvent.bind(this);
+        this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
+        this.reloadData = this.reloadData.bind(this);
     }
 
     topicClick(slug) {
@@ -245,7 +248,7 @@ class Favorites extends Component {
             this.props.history.push("/favorite/" + 1);
         });
     };
-
+  
     //Sort Active Events By Date(Newest/Oldest)
     toggleSortDate = (e) => {
         let { value } = e.target;
@@ -282,6 +285,7 @@ class Favorites extends Component {
             console.log("check error", error);
         }
     };
+    
     // filterFavoriteEvent = async () => {
     //     try {
     //         const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
@@ -295,16 +299,23 @@ class Favorites extends Component {
     // };
     getUserFavoritesEvent = async () => {
         try {
-            const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`,{address:this.props.accounts[0],networkId:this.props.web3.networkId});
+            const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`, { address: this.props.accounts[0], networkId: this.props.web3.networkId });
             this.setState({
-                UserFavoriteEvents: get.data.result,
+                UserFavoriteEvents: get.data.result.favourites,
             });
-			console.log("data",get.data)
+
             return;
         } catch (error) {
             console.log("check error", error);
         }
     };
+    reloadData = () => {
+        this.setState({ reload: !this.state.reload })
+        if (this.state.reload) {
+            this.getUserFavoritesEvent();
+
+        }
+    }
     onTabChange = (event, newValue) => {
         this.setState({ selectedTab: newValue });
     };
@@ -363,11 +374,13 @@ class Favorites extends Component {
                     }
                     skip = false;
                 }
+                //get favourite events from filtered event list array 
+                let favoriteEvents = events_list.filter(item => this.state.UserFavoriteEvents.includes(item.eventId));
 
-                events_list.reverse();
-                // console.log("events_listt",events_list)
+                favoriteEvents.reverse();
+                // console.log("events_listt",favoriteEvents)
                 let updated_list = [];
-                count = events_list.length;
+                count = favoriteEvents.length;
                 if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
                 let end = currentPage * this.perPage;
                 let start = end - this.perPage;
@@ -379,14 +392,17 @@ class Favorites extends Component {
                             toggleBuying={this.props.toggleDisabling}
                             disabledStatus={this.props.disabledStatus}
                             inquire={this.props.inquire}
-                            key={events_list[i].eventId}
-                            id={events_list[i].eventId}
-                            ipfs={events_list[i].ipfs}
-                            eventData={events_list[i]}
+                            key={favoriteEvents[i].eventId}
+                            id={favoriteEvents[i].eventId}
+                            ipfs={favoriteEvents[i].ipfs}
+                            eventData={favoriteEvents[i]}
                             myFavorites={true}
+                            reloadData={this.reloadData}
+                            reload={this.state.reload}
                         />
                     );
                 }
+                console.log("loading2", this.state.loading);
 
                 let pagination = "";
                 if (pages > 1) {
@@ -534,7 +550,12 @@ class Favorites extends Component {
         this.filterHideEvent();
         this.getUserFavoritesEvent();
     }
-
+    componentDidUpdate() {
+        if (this.state.reloadData) {
+            console.log("here")
+            this.getUserFavoritesEvent();
+        }
+    }
     componentWillUnmount() {
         // this._isMounted = false;
 
@@ -553,7 +574,7 @@ const mapStateToProps = (state) => {
     return {
         contracts: state.contracts,
         accounts: state.accounts,
-        web3:state.web3,
+        web3: state.web3,
     };
 };
 

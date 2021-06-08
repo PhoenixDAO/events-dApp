@@ -3,10 +3,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import { API_URL, addToFavourites } from "../../config/const";
+import { API_URL, ADD_TO_FAVOURITES , REMOVE_FROM_FAVOURITES } from "../../config/const";
 import { toast } from "react-toastify";
 import NotifyReport from "../NotifyReport";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 import {
 	Card,
@@ -33,6 +34,7 @@ import {
 	LaunchSharp,
 	Send,
 } from "@material-ui/icons";
+
 
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
@@ -135,18 +137,18 @@ const EventCard = (props, context) => {
 		sendTicket2,
 		eventId,
 		myFavorites,
+		favoriteEvent
 	} = props;
 
-	// console.log(myEvent, myEventStatURL, titleURL);
-
 	useEffect(() => {
-		// getAccounts();
-	});
-
+		setIcon(favoriteEvent);
+	  }, [favoriteEvent]);
 	const classes = useStyles();
-	const [Icon, changeIcon] = useState(false);
+	const [Icon, setIcon] = useState(false);
+
 	const [open, setOpen] = useState(false);
 	const [open2, setOpen2] = useState(false);
+// changeIcon(favoriteEvent);
 	const handleClickOpen = (e) => {
 		setOpen(true);
 		e.preventDefault();
@@ -161,46 +163,48 @@ const EventCard = (props, context) => {
 	const handleClose2 = () => {
 		setOpen2(false);
 	};
-	// 	const getAccounts = async () => {
-	// 		const accounts = await context.drizzle.web3.eth.getAccounts();
-	// 		// console.log("account", this.props.accounts);
-	// 	console.log("account", context.drizzle);
-
-	// const getAddres
-	// 		setAddress(accounts[0]);
-
-	// 	}
-	// let price = context.drizzle.web3.utils.fromWei(
-	// 	event_data[2]
-	// );
+console.log("my favorite Ico",Icon);
 	const addTofavorite = async (e) => {
 		e.preventDefault();
-
-		changeIcon(!Icon);
+		setIcon(!Icon);
 		try {
-			// this.setState({
-			// 	loading: true,
-			// });
 			let payload = {
 				address: props.accounts,
 				networkId: props.networkId,
 				eventId: eventId,
 			};
 
-			const addFavourite = await axios.post(
-				`${API_URL}${addToFavourites}`,
-				payload
-			);
-			toast(<NotifyReport text={"Event add to favourites"} />, {
-				position: "bottom-right",
-				autoClose: true,
-				pauseOnHover: true,
-			});
-			// this.props.history.push("/upcomingevents/1");
-			// this.setState({
-			// 	loading: false,
-			// });
-		} catch (error) {
+			//for add to favourite
+			if(!Icon)
+			{
+				const addFavourite = await axios.post(
+					`${API_URL}${ADD_TO_FAVOURITES}`,
+					payload
+				);
+				toast(<NotifyReport text={"Event add to favourites"} />, {
+					position: "bottom-right",
+					autoClose: true,
+					pauseOnHover: true,
+				});
+			}
+			//for remove from favourites
+			else{
+				const removeFromFavourite = await axios.post(
+					`${API_URL}${REMOVE_FROM_FAVOURITES}`,
+					payload
+				);
+				props.reloadData();
+
+				toast(<NotifyReport text={"Event remove from favourites"} />, {
+					position: "bottom-right",
+					autoClose: true,
+					pauseOnHover: true,
+				});
+			}
+
+		
+		} 
+		catch (error) {
 			// console.log("Consoleee notify report response catch",error)
 
 			if (error.response && error.response.data) {
@@ -288,16 +292,11 @@ const EventCard = (props, context) => {
 											component="button"
 											onClick={addTofavorite}
 										>
-											{Icon ? (
-												<Favorite
-													fontSize="small"
-													style={{ color: "#413AE2" }}
-												/>
-											) : (
-												<FavoriteBorder fontSize="small" />
-											)}
-										</Typography>
-									) : null}
+
+											{Icon ? <Favorite fontSize="small" style={{ color: "#413AE2" }} /> : <FavoriteBorder fontSize="small" />}
+{Icon}
+										</Typography>)
+										: null}
 								</div>
 							</div>
 						</div>
@@ -501,7 +500,6 @@ EventCard.contextTypes = {
 	drizzle: PropTypes.object,
 };
 const mapStateToProps = (state) => {
-	// console.log("accounts", state.web3.networkId);
 
 	return {
 		contracts: state.contracts,
