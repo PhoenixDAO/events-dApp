@@ -537,7 +537,7 @@ class FindEvents extends Component {
 							<br />
 							<br />
 
-							 <div
+							<div
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
@@ -567,7 +567,7 @@ class FindEvents extends Component {
 
 									<ConnectWalletButton />
 								</div>
-							</div> 
+							</div>
 
 							{/* <Grid container>
 								<Grid item>
@@ -705,12 +705,9 @@ class FindEvents extends Component {
 						<br />
 						<br />
 
-						{/* <hr /> */}
-
 						{body}
 					</div>
-					<br />
-					<br />
+
 					{/* <div className="topics-wrapper">
 						<h2>
 							<i className="fa fa-calendar-alt"></i> Popular

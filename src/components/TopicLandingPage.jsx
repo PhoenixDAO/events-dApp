@@ -7,7 +7,7 @@ import axios from "axios";
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
-import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
+import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 // import {INFURA_WEB_URL} from "../config/const.js";
 // import Web3 from "web3";
 // import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
@@ -22,6 +22,49 @@ import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 // import {  Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 import topicsJson from "../config/topics.json";
+
+// material UI styles
+import { withStyles } from "@material-ui/core/styles";
+import { Divider, IconButton } from "@material-ui/core";
+import Slider from "./common/Slider";
+import ConnectWalletButton from "./common/ConnectWalletButton";
+import SearchBar from "./common/SearchBar";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
+
+const useStyles = (theme) => ({
+	sticky: {
+		position: "sticky",
+		zIndex: 1,
+		top: 0,
+		display: "flex",
+		flexDirection: "column",
+		background: `#FCFCFD !important`,
+		opacity: `1 !important`,
+		marginLeft: -2,
+	},
+	root: {
+		flexGrow: 1,
+		width: "100%",
+	},
+	appBar: {
+		"&.MuiPaper-elevation4": {
+			boxShadow: "none",
+		},
+	},
+	tabBar: {
+		"&:hover, &:focus ": {
+			outline: "none",
+		},
+		" &:active ": {
+			borderBottom: "2.5px solid #413AE2",
+		},
+		"&.MuiTab-textColorPrimary.Mui-selected": {
+			color: "#413AE2",
+			borderBottom: "2.5px solid #413AE2",
+		},
+	},
+});
 
 class TopicLandingPage extends Component {
 	constructor(props, context) {
@@ -45,9 +88,8 @@ class TopicLandingPage extends Component {
 		};
 
 		this.contracts = context.drizzle.contracts;
-		this.eventCount = this.contracts[
-			"DaoEvents"
-		].methods.getEventsCount.cacheCall();
+		this.eventCount =
+			this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 		this.theTopic = this.getTopicData();
@@ -59,13 +101,18 @@ class TopicLandingPage extends Component {
 		this.myRef = React.createRef();
 
 		this.scrollTo = this.scrollTo.bind(this);
-	}
-	scrollTo() {
-		this.myRef.current.scrollIntoView()
+		this.goBack = this.goBack.bind(this); // i think you are missing this
 	}
 
-	componentDidUpdate() {
+	scrollTo() {
+		this.myRef.current.scrollIntoView();
 	}
+
+	goBack() {
+		this.props.history.goBack();
+	}
+
+	componentDidUpdate() {}
 
 	componentDidMount() {
 		this.scrollTo();
@@ -102,33 +149,44 @@ class TopicLandingPage extends Component {
 
 	//Loadblockchain Data
 	async loadBlockchain() {
-
 		if (this._isMounted) {
-			this.setState({ loading:true,Topic_Events: [], active_length: 0 });
+			this.setState({
+				loading: true,
+				Topic_Events: [],
+				active_length: 0,
+			});
 		}
 		await axios({
 			url: graphURL,
-			method: 'post',
+			method: "post",
 			data: {
-			  query: `
+				query: `
 			  {
 				eventsRemoveds {
 				  id
 				  eventId
 				}
 			  }
-			  `
-			}
-		}).then((graphDeletedEvents)=>{
-			if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
-				this.setState({ Deleted_Events: [] });
-			}else{
-				this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
-			}
-		}).catch((err)=>{
-			console.error(err);
-			this.setState({ Deleted_Events: [] });
+			  `,
+			},
 		})
+			.then((graphDeletedEvents) => {
+				if (
+					!graphDeletedEvents.data ||
+					!graphDeletedEvents.data.data == "undefined"
+				) {
+					this.setState({ Deleted_Events: [] });
+				} else {
+					this.setState({
+						Deleted_Events:
+							graphDeletedEvents.data.data.eventsRemoveds,
+					});
+				}
+			})
+			.catch((err) => {
+				console.error(err);
+				this.setState({ Deleted_Events: [] });
+			});
 		if (this.state.isActive) {
 			this.loadActiveEvents();
 		} else {
@@ -139,14 +197,18 @@ class TopicLandingPage extends Component {
 	//Get My Active Events on Blockchain
 	async loadActiveEvents() {
 		if (this._isMounted) {
-			this.setState({ loading: true,Topic_Events: [], active_length: 0 });
+			this.setState({
+				loading: true,
+				Topic_Events: [],
+				active_length: 0,
+			});
 		}
 		// GRAPH BLOCK //
 		await axios({
-		url: graphURL,
-		method: 'post',
-		data: {
-  		query: `
+			url: graphURL,
+			method: "post",
+			data: {
+				query: `
   		{
 			events {
 			  id
@@ -164,64 +226,70 @@ class TopicLandingPage extends Component {
 	 		 revenueOfEvent
 			}
  		 }
-  	`
-		}
-		}).then((graphEvents)=>{
-		// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+  	`,
+			},
+		})
+			.then((graphEvents) => {
+				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
-		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-			// console.log("GraphQL query -- graphEvents undefined")
-			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
-		}else{
-			if (this._isMounted) {
-				const dateTime = Date.now();
-				const dateNow = Math.floor(dateTime / 1000);	
-				let newsort = graphEvents.data.data.events
-					.concat()
-					.sort((a, b) => b.blockNumber - a.blockNumber)
-					.filter(
-						(activeEvents) =>
-							activeEvents.time >= dateNow &&
-							activeEvents.category ===
-									this.props.match.params.page
-					)
+				if (!graphEvents.data || graphEvents.data.data == "undefined") {
+					// console.log("GraphQL query -- graphEvents undefined")
+					this.setState({
+						loading: false,
+						Topic_Events: [],
+						active_length: 0,
+					});
+				} else {
+					if (this._isMounted) {
+						const dateTime = Date.now();
+						const dateNow = Math.floor(dateTime / 1000);
+						let newsort = graphEvents.data.data.events
+							.concat()
+							.sort((a, b) => b.blockNumber - a.blockNumber)
+							.filter(
+								(activeEvents) =>
+									activeEvents.time >= dateNow &&
+									activeEvents.category ===
+										this.props.match.params.page
+							);
 						// console.log("GraphQL query newsort",newsort)
-		
+
 						if (this._isMounted) {
 							this.setState({
 								Topic_Events: newsort,
 								topic_copy: newsort,
 								active_length: newsort.length,
-								loading:false,
+								loading: false,
 							});
 						}
+						this.setState({ loading: false });
+					}
+				}
+			})
+			.catch((err) => {
 				this.setState({ loading: false });
-			}
-
-		}
-
-		}).catch((err) => {
-			this.setState({ loading: false });})
+			});
 	}
 
 	// Get My Past Events on Blockchain
 	async loadPastEvents() {
 		// console.log("inLoadPastEvents")
 		if (this._isMounted) {
-			this.setState({ loading:true,Topic_Events: [], active_length: 0 });
+			this.setState({
+				loading: true,
+				Topic_Events: [],
+				active_length: 0,
+			});
 		}
 
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
 
-				
-
-
 		await axios({
-		url: graphURL,
-		method: 'post',
-		data: {
-		query: `
+			url: graphURL,
+			method: "post",
+			data: {
+				query: `
 		{
 			events {
 			id
@@ -239,27 +307,32 @@ class TopicLandingPage extends Component {
 			revenueOfEvent
 			}
 		}
-		`
-		}
-		}).then((graphEvents)=>{
-		// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+		`,
+			},
+		})
+			.then((graphEvents) => {
+				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
-		if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-			// console.log("GraphQL query -- graphEvents undefined")
-			this.setState({ loading:false, Topic_Events: [], active_length: 0 });
-		}else{
-			if (this._isMounted) {
-				const dateTime = Date.now();
-				const dateNow = Math.floor(dateTime / 1000);
-				let newsort = graphEvents.data.data.events
-					.concat()
-					.sort((a, b) => b.blockNumber - a.blockNumber)
-					.filter(
-						(activeEvents) =>
-							activeEvents.time < dateNow &&
-							activeEvents.category ===
-									this.props.match.params.page
-					)
+				if (!graphEvents.data || graphEvents.data.data == "undefined") {
+					// console.log("GraphQL query -- graphEvents undefined")
+					this.setState({
+						loading: false,
+						Topic_Events: [],
+						active_length: 0,
+					});
+				} else {
+					if (this._isMounted) {
+						const dateTime = Date.now();
+						const dateNow = Math.floor(dateTime / 1000);
+						let newsort = graphEvents.data.data.events
+							.concat()
+							.sort((a, b) => b.blockNumber - a.blockNumber)
+							.filter(
+								(activeEvents) =>
+									activeEvents.time < dateNow &&
+									activeEvents.category ===
+										this.props.match.params.page
+							);
 						// console.log("GraphQL query newsort",newsort)
 
 						if (this._isMounted) {
@@ -267,19 +340,18 @@ class TopicLandingPage extends Component {
 								Topic_Events: newsort,
 								topic_copy: newsort,
 								active_length: newsort.length,
-								loading:false,
+								loading: false,
 							});
 						}
-				this.setState({ loading: false });
-			}
-
-		}
-
-		}).catch((err) => console.error(err))
+						this.setState({ loading: false });
+					}
+				}
+			})
+			.catch((err) => console.error(err));
 	}
 
 	// Display My Close Events
-	
+
 	PastEvent = (e) => {
 		this.setState(
 			{
@@ -314,7 +386,10 @@ class TopicLandingPage extends Component {
 		let { value } = e.target;
 		this.setState({ value }, () => {
 			try {
-				if (this.state.value !== "" && this.state.topic_copy.length!=0) {
+				if (
+					this.state.value !== "" &&
+					this.state.topic_copy.length != 0
+				) {
 					var filteredEvents = this.state.topic_copy;
 					filteredEvents = filteredEvents.filter((events) => {
 						return (
@@ -376,8 +451,8 @@ class TopicLandingPage extends Component {
 		});
 	};
 
-
 	render() {
+		const { classes } = this.props;
 		let body = <Loading />;
 		const topic = this.theTopic;
 
@@ -417,8 +492,8 @@ class TopicLandingPage extends Component {
 					if (!skip) {
 						for (let j = 0; j < this.state.hideEvent.length; j++) {
 							if (
-								this.state.Topic_Events[i]
-									.eventId == this.state.hideEvent[j].id
+								this.state.Topic_Events[i].eventId ==
+								this.state.hideEvent[j].id
 							) {
 								skip = true;
 							}
@@ -454,7 +529,7 @@ class TopicLandingPage extends Component {
 					for (let i = start; i < end; i++) {
 						updated_list.push(
 							<Event
-							eventData={events_list[i]}
+								eventData={events_list[i]}
 								toggleBuying={this.toggleBuying}
 								disabledBuying={this.state.disabledBuying}
 								disabledStatus={this.props.disabledStatus}
@@ -475,7 +550,11 @@ class TopicLandingPage extends Component {
 						for (let i = 1; i <= pages; i++) {
 							let active = i === currentPage ? "active" : "";
 							links.push(
-								<li className={"page-item " + active} key={i} onClick={this.scrollTo()}>
+								<li
+									className={"page-item " + active}
+									key={i}
+									onClick={this.scrollTo()}
+								>
 									<Link
 										to={
 											"/topic/" +
@@ -493,7 +572,7 @@ class TopicLandingPage extends Component {
 
 						pagination = (
 							<nav>
-								<ul className="pagination justify-content-center" >
+								<ul className="pagination justify-content-center">
 									{links}
 								</ul>
 							</nav>
@@ -514,20 +593,87 @@ class TopicLandingPage extends Component {
 
 		return (
 			<React.Fragment>
-				<div className="retract-page-inner-wrapper">
+				{/* <div className="retract-page-inner-wrapper">
 					<div className="topic-hero-wrapper">
 						<img
 							src={"/images/topics/" + this.theTopic["image"]}
 							alt={topic.name}
 						/>
 					</div>
-				</div>
+				</div> */}
 
 				<div className="retract-page-inner-wrapper-alternative dash topicsDiv">
+					{/* top sticky header */}
+					<div className={classes.sticky}>
+						<div>
+							<br />
+							<br />
+							<br />
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "space-between",
+									alignItems: "center",
+								}}
+							>
+								<div>
+									<h2
+										style={{
+											fontWeight: 700,
+											color: "#1E1E22",
+										}}
+									>
+										<IconButton
+											aria-label="delete"
+											onClick={this.goBack}
+										>
+											<KeyboardBackspaceIcon
+												fontSize="large"
+												style={{ fill: "#1E1E22" }}
+											/>
+										</IconButton>
+										<span>&nbsp;&nbsp;</span>
+										{topic.name}
+									</h2>
+								</div>
+
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+									}}
+								>
+									<SearchBar />
+
+									<ConnectWalletButton />
+								</div>
+							</div>
+							<br />
+							<Divider light />
+						</div>
+					</div>
+
+					<br />
 					<br />
 					<br />
 
 					<div
+						id="scroll-to-element"
+						ref={this.myRef}
+						// className="input-group input-group-lg"
+					/>
+
+					{/* slider */}
+					<div>
+						<div>
+							<Slider />
+						</div>
+					</div>
+					<br />
+					<br />
+					<br />
+
+					{/* <div
 						id="scroll-to-element"
 						ref={this.myRef}
 						className="input-group input-group-lg"
@@ -548,12 +694,10 @@ class TopicLandingPage extends Component {
 							aria-label="Large"
 							aria-describedby="inputGroup-sizing-sm"
 						/>
-					</div>
-					<br />
-					<br />
+					</div> */}
 
 					<div>
-						<h2 className="">
+						{/* <h2 className="">
 							<i
 								className={
 									this.state.isActive
@@ -563,9 +707,9 @@ class TopicLandingPage extends Component {
 							></i>
 							{this.state.isActive ? " Active" : " Past"} Events
 							In The <strong>{topic.name}</strong> Topic
-						</h2>
+						</h2> */}
 
-						<div className="row row_mobile mt-4 mb-2">
+						{/* <div className="row row_mobile mt-4 mb-2">
 							<button
 								className="btn sort_button col-md-2 mx-2 mt-2 activeButton"
 								onClick={this.ActiveEvent}
@@ -588,15 +732,39 @@ class TopicLandingPage extends Component {
 									? "Sort: Oldest"
 									: "Sort: Newest"}
 							</button>
+						</div> */}
+
+						<div className="row row_mobile">
+							<h2 className="col-lg-10 col-md-9 col-sm-8">
+								{/* <i className="fa fa-calendar-alt"></i>  */}
+								{topic.name}
+							</h2>
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "center",
+								}}
+							>
+								{/* <p>Sort:</p> */}
+								<select
+									name="category"
+									// value={category}
+									// onChange={event => handleCategoryChange(event.target.value)}
+								>
+									<option id="0">All Events</option>
+									<option id="1">Trending Events</option>
+									<option id="2">Near you</option>
+								</select>
+							</div>
 						</div>
 
-						<hr />
+						<br />
+						<br />
+
 						{body}
 					</div>
 
-					<br />
-					<br />
-
+					{/* 
 					<div className="topics-wrapper">
 						<h2>
 							<i className="fa fa-calendar-alt"></i> More Topics
@@ -631,7 +799,7 @@ class TopicLandingPage extends Component {
 								</div>
 							))}
 						</div>
-					</div>
+					</div> */}
 				</div>
 			</React.Fragment>
 		);
@@ -650,4 +818,4 @@ const mapStateToProps = (state) => {
 };
 
 const AppContainer = drizzleConnect(TopicLandingPage, mapStateToProps);
-export default AppContainer;
+export default withStyles(useStyles)(AppContainer);
