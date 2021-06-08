@@ -9,9 +9,8 @@ import {
 
 import ipfs from "../utils/ipfs";
 
-import { API_URL, REPORT_EVENT } from "../config/const";
+import { API_URL, REPORT_EVENT, GET_USER_DETAIL } from "../config/const";
 import axios from "axios";
-
 import Loading from "./Loading";
 // import eventTopics from "../config/topics.json";
 
@@ -94,9 +93,14 @@ class Event extends Component {
 			blockie: "/images/PhoenixDAO.png",
 			approvalGranted: false,
 			phoenixDAO_market: [],
+			myFavorites:this.props.myFavorites,
+			UserFavoriteEvents:[]
 		};
+		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
+
 		this.isCancelled = false;
 		this.giveApproval = this.giveApproval.bind(this);
+		console.log("props",this.props)
 	}
 
 	handleClickOpen = () => {
@@ -369,7 +373,20 @@ class Event extends Component {
 			// console.log("check error", error);
 		}
 	};
+	getUserFavoritesEvent = async () => {
+        try {
+            const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`, 
+			{ address: this.props.accounts[0], networkId: this.props.web3.networkId });
+            this.setState({
+                UserFavoriteEvents: get.data.result.favourites,
+            });
 
+            return;
+        } catch (error) {
+            console.log("check error", error);
+        }
+    };
+	
 	render() {
 		const { classes } = this.props;
 
@@ -496,6 +513,14 @@ class Event extends Component {
 				}
 				let dollarRevenue =
 					this.state.phoenixDAO_market.usd * this.state.revenue;
+					console.log("userFavourite event",this.state.UserFavoriteEvents);
+					let favouriteEvent= this.state.UserFavoriteEvents.indexOf(this.props.id) != -1; 
+console.log("favourite Event",this.props.myFavorites,favouriteEvent);
+// 				let favoriteEvent = this.state.UserFavoriteEvents.filter(
+// 					(item)=>{
+// 						return item == this.props.id
+// 					});
+// console.log("itemid",this.props.id,favoriteEvent[0])
 				body = (
 					<div>
 						{/* new card */}
@@ -511,7 +536,10 @@ class Event extends Component {
 							revenue={this.state.revenue}
 							dollarRevenue={dollarRevenue}
 							myFavorites={this.props.myFavorites}
+							favoriteEvent={favouriteEvent}
 							eventId={this.props.id}
+							reloadData={this.props.reloadData}
+                            reload={this.props.reload}
 						/>
 					</div>
 				);
@@ -706,6 +734,8 @@ class Event extends Component {
 		this.filterHideEvent();
 		this.updateIPFS();
 		this.getPhoenixDAOMarketValue();
+		this.getUserFavoritesEvent();
+
 	}
 
 	componentDidUpdate() {
@@ -733,6 +763,8 @@ const mapStateToProps = (state) => {
 		contracts: state.contracts,
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
+		web3: state.web3,
+
 	};
 };
 
