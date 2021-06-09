@@ -97,10 +97,8 @@ class Event extends Component {
 			UserFavoriteEvents:[]
 		};
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
-
 		this.isCancelled = false;
 		this.giveApproval = this.giveApproval.bind(this);
-		console.log("props",this.props)
 	}
 
 	handleClickOpen = () => {
@@ -513,14 +511,7 @@ class Event extends Component {
 				}
 				let dollarRevenue =
 					this.state.phoenixDAO_market.usd * this.state.revenue;
-					console.log("userFavourite event",this.state.UserFavoriteEvents);
 					let favouriteEvent= this.state.UserFavoriteEvents.indexOf(this.props.id) != -1; 
-console.log("favourite Event",this.props.myFavorites,favouriteEvent);
-// 				let favoriteEvent = this.state.UserFavoriteEvents.filter(
-// 					(item)=>{
-// 						return item == this.props.id
-// 					});
-// console.log("itemid",this.props.id,favoriteEvent[0])
 				body = (
 					<div>
 						{/* new card */}

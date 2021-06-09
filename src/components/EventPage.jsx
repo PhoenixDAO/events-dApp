@@ -58,6 +58,7 @@ import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Mainnet_Token_Address,
 } from "../config/phoenixDAOcontract_testnet";
+import BuyTicket from "./common/BuyTicket";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 
 let numeral = require("numeral");
@@ -645,10 +646,39 @@ class EventPage extends Component {
 					.split(" ")
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(" ");
-
+				let event_date = date.toLocaleDateString();
+				let time = date.toLocaleTimeString([], {
+					hour: "2-digit",
+					minute: "2-digit",
+				});
+				let priceGrid=<div className={classes.eventinfo}>
+											<span className={classes.PhnxPrice} >{event_data[3]
+												? numeral(price).format("0.000") + "PHNX"
+												: "FREE"}
+											</span>
+											<div style={{ color: "#56555D", fontSize: "14px" }}>
+												{event_data[3]
+													? "$" + numeral(
+														price *
+														this.state
+															.PhoenixDAO_market
+															.usd
+													).format("0.000")
+													: ""}
+											</div>
+										</div>;
 				if (this.props.match.params.page === pagetitle) {
 					body = (
 						<Grid>
+							<BuyTicket
+								open={this.state.open}
+								handleClose={this.handleClose}
+								image={image}
+								eventTitle={event_data[0]}
+								date={event_date}
+								time={time}
+								price={priceGrid} 
+								buy={this.inquire}/>
 							<Grid className="header3">
 								<h2>
 									<IconButton
@@ -669,7 +699,7 @@ class EventPage extends Component {
 										color="primary"
 										style={{ marginRight: "10px" }}
 										className={classes.buy}
-										onClick={this.inquire}
+										onClick={this.handleClickOpen}
 										disabled={
 											disabled ||
 											this.props.disabledStatus ||
@@ -771,69 +801,19 @@ class EventPage extends Component {
 												</option>
 											</Select>
 										</FormControl>
-										<div className={classes.eventinfo}>
-											<span className={classes.PhnxPrice}>
-												{event_data[3]
-													? numeral(price).format(
-															"0.000"
-													  ) + "PHNX"
-													: "FREE"}
-											</span>
-											<div
-												style={{
-													color: "#56555D",
-													fontSize: "14px",
-												}}
-											>
-												{event_data[3]
-													? "$" +
-													  numeral(
-															price *
-																this.state
-																	.PhoenixDAO_market
-																	.usd
-													  ).format("0.000")
-													: ""}
-											</div>
-										</div>
-										<p className={classes.eventHeading}>
-											{" "}
-											<CalendarTodayOutlined /> Date
+										{priceGrid}
+										<p className={classes.eventHeading}> <CalendarTodayOutlined /> Date
 										</p>
-										<p className={classes.eventinfo}>
-											{" "}
-											{date.toLocaleDateString()}
+										<p className={classes.eventinfo}>	{event_date}
 										</p>
-										<p className={classes.eventHeading}>
-											<ScheduleOutlined /> Time
-										</p>
-										<p className={classes.eventinfo}>
-											{" "}
-											{date.toLocaleTimeString([], {
-												hour: "2-digit",
-												minute: "2-digit",
-											})}
-										</p>
-										<p className={classes.eventHeading}>
-											<LocationOnOutlined /> Location
-										</p>
-										<p className={classes.eventinfo}>
-											{locations}
-										</p>
-										<p className={classes.eventHeading}>
-											<PersonOutlined />
-											Organizer
-										</p>
-										<p className={classes.eventinfo}>
-											{this.state.organizer}
-										</p>
-										<p className={classes.eventHeading}>
-											<ConfirmationNumberOutlined />
-											Tickets Bought
-										</p>
-										<p className={classes.eventinfo}>
-											{event_data[6]}/{max_seats}
-										</p>
+										<p className={classes.eventHeading}><ScheduleOutlined /> Time</p>
+										<p className={classes.eventinfo}>		{time}</p>
+										<p className={classes.eventHeading}><LocationOnOutlined /> Location</p>
+										<p className={classes.eventinfo}>{locations}</p>
+										<p className={classes.eventHeading}><PersonOutlined />Organizer</p>
+										<p className={classes.eventinfo}>{this.state.organizer}</p>
+										<p className={classes.eventHeading}><ConfirmationNumberOutlined />Tickets Bought</p>
+										<p className={classes.eventinfo}>{event_data[6]}/{max_seats}</p>
 									</Grid>
 								</Grid>
 								<Grid container className={classes.socialDiv}>
@@ -1093,6 +1073,7 @@ class EventPage extends Component {
 					handleClose={this.handleClose}
 					giveApproval={this.giveApproval}
 				/>
+
 				{body}
 			</div>
 		);
