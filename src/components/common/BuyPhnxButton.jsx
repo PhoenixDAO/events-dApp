@@ -19,7 +19,7 @@ const BuyPhnxButton = () => {
 			color="primary"
 			size="large"
 			className={classes.button}
-			startIcon={<p>PHNX LOGO</p>}
+			// startIcon={<p>PHNX LOGO</p>}
 		>
 			Buy PHNX
 		</Button>
