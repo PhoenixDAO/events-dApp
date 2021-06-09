@@ -54,27 +54,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "initial",
 
   },
-  SocialMediaDiv: {
-    margin: "30px 0px 20px",
-  },
-  UrlField: {
-    width: "100%",
-    margin: "0px auto"
-  },
-  share: {
-    color: "#4E4E55",
-    textAlign: "center",
-    marginBottom: "60px"
-  },
-  copyButton: {
-    "&:focus": {
-      outline: "none"
-    }
-  },
-  ethereum: {
-    fontSize: "14px",
-    color: "#73727D"
-  },
+
   send: {
     marginLeft: "13px",
     fontWeight: 700,
@@ -128,6 +108,7 @@ const useStyles = makeStyles((theme) => ({
     borderTopLeftRadius:"12px"
 
   },
+  
   details:{
     justifyContent:"space-between",
     padding:"9px 15px",
@@ -190,14 +171,9 @@ const DialogActions = withStyles((theme) => ({
 
 }))(MuiDialogActions);
 
-export default function BuyTicket({ handleClose, open, eventTitle, sendTicket2, eventId, image, date, time,price,buy }) {
+export default function BuyTicket({ handleClose, open, eventTitle, image, date, time,price,buy }) {
   const [address, setAddress] = useState("");
   const classes = useStyles();
-  console.log("price", price);
-  const accountChange = (event) => {
-    setAddress(event.target.value);
-    console.log("address", address);
-  }
   const buyTicket = () => {
     handleClose();
     buy();
@@ -211,14 +187,14 @@ export default function BuyTicket({ handleClose, open, eventTitle, sendTicket2, 
                 <h2 className={classes.sharelink}>
             Buy Ticket
                 </h2>
-          <Typography gutterBottom className={classes.eventTitle}>
+          <Typography gutterBottom className={classes.eventTitle} style={{color:"#73727D",fontWeight: "500"}}>
             You’re about to purchase this ticket
             </Typography>
 
         </DialogTitle>
         <DialogContent>
           <div className={classes.eventHolder}>
-            <img src={image} alt={eventTitle} className={classes.eventImage} />
+            <img src={image} alt={eventTitle}  className={classes.eventImage} />
             <Grid className={classes.details}>
 
               <div >
