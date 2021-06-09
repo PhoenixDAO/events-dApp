@@ -2,8 +2,24 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import SocialMedia from "./common/SocialMedia";
-import { Button, Grid, Avatar, FormControl, Select } from '@material-ui/core';
-import { ShoppingCartOutlined, LaunchOutlined, ModeCommentOutlined, Email, Twitter, LinkedIn, Telegram, WhatsApp } from "@material-ui/icons";
+import {
+	Button,
+	Grid,
+	Avatar,
+	FormControl,
+	Select,
+	IconButton,
+} from "@material-ui/core";
+import {
+	ShoppingCartOutlined,
+	LaunchOutlined,
+	ModeCommentOutlined,
+	Email,
+	Twitter,
+	LinkedIn,
+	Telegram,
+	WhatsApp,
+} from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
@@ -14,15 +30,20 @@ import NotifyApprove from "./NotifyApprove";
 // import NotifySuccess from "./NotifySuccess";
 // import NotifyEventSuccess from "./NotifyEventSuccess";
 import NotifyApproveSuccess from "./NotifyApproveSuccess";
-// import NotifyFaucet from "./NotifyFaucet";	
+// import NotifyFaucet from "./NotifyFaucet";
 // import NotifySuccessFaucet from "./NotifySuccessFaucet";
 import NotifyError from "./NotifyError";
 // import NotifyNetwork from "./NotifyNetwork";
-import { CalendarTodayOutlined, ScheduleOutlined, LocationOnOutlined, PersonOutlined, ConfirmationNumberOutlined } from "@material-ui/icons";
+import {
+	CalendarTodayOutlined,
+	ScheduleOutlined,
+	LocationOnOutlined,
+	PersonOutlined,
+	ConfirmationNumberOutlined,
+} from "@material-ui/icons";
 import { toast } from "react-toastify";
 import ApprovalModal from "./approvalModal";
 import { withStyles } from "@material-ui/core/styles";
-
 
 import Loading from "./Loading";
 import EventNotFound from "./EventNotFound";
@@ -35,8 +56,9 @@ import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
-	PhoenixDAO_Mainnet_Token_Address
+	PhoenixDAO_Mainnet_Token_Address,
 } from "../config/phoenixDAOcontract_testnet";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 
 let numeral = require("numeral");
 
@@ -52,14 +74,13 @@ const customStyles = {
 	},
 };
 
-const styles = theme => ({
+const styles = (theme) => ({
 	share: {
 		height: "45px",
 		width: "180px",
 		fontWeight: 700,
-		color: '#413AE2',
+		color: "#413AE2",
 		BorderColor: "#413AE2",
-
 	},
 	buy: {
 		marginLeft: "13px",
@@ -71,18 +92,16 @@ const styles = theme => ({
 			marginLeft: "0px",
 			marginTop: "20px",
 			width: "160px",
-
-		}
-
+		},
 	},
 	description: {
 		marginTop: "35px",
 	},
 	paper: {
 		padding: theme.spacing(2),
-		textAlign: 'center',
+		textAlign: "center",
 		color: theme.palette.text.secondary,
-		height: "100%"
+		height: "100%",
 	},
 	eventHeading: {
 		marginBottom: "0px",
@@ -91,43 +110,42 @@ const styles = theme => ({
 		fontSize: "14px",
 		"& .MuiSvgIcon-root": {
 			fontSize: "16px",
-			verticalAlign: "sub"
-		}
+			verticalAlign: "sub",
+		},
 	},
 	ticketPrice: {
 		fontSize: "18px",
 		marginBottom: "0px",
-		color: "#56555D"
+		color: "#56555D",
 	},
 	eventDetails: {
 		backgroundColor: "white",
 		borderRadius: "5px",
 		marginTop: "35px",
-		padding: "30px"
+		padding: "30px",
 	},
 	eventinfo: {
 		fontSize: "22px",
-		fontWeight: "700"
+		fontWeight: "700",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
 		fontWeight: "700",
-		color: "#413AE2"
+		color: "#413AE2",
 	},
 	categoryGrid: {
 		backgroundColor: "white",
 		borderRadius: "8px",
 		padding: "10px",
-		paddingRight: "26px"
-
+		paddingRight: "26px",
 	},
 	socialDiv: {
 		display: "flex",
 		justifyContent: "space-between",
 		marginTop: "40px",
 		[theme.breakpoints.down("xs")]: {
-			display: "grid"
-		}
+			display: "grid",
+		},
 	},
 
 	ticketSelect: {
@@ -141,11 +159,11 @@ const styles = theme => ({
 		[theme.breakpoints.down("xs")]: {
 			width: "auto",
 			minWidth: "141px",
-		}
+		},
 	},
 	organizerDetails: {
 		justifyContent: "center",
-		textAlign: "center"
+		textAlign: "center",
 	},
 	organizerDescription: {
 		justifyContent: "center",
@@ -153,9 +171,8 @@ const styles = theme => ({
 		display: "flex",
 		margin: "10px auto",
 		width: "80%",
-		marginBottom: "80px"
+		marginBottom: "80px",
 	},
-
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -168,11 +185,11 @@ class EventPage extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {
-		}
+		} catch (e) {}
 		super(props);
 		this.contracts = context.drizzle.contracts;
-		this.revenue = this.contracts["DaoEvents"].methods.eventRevenue.cacheCall(11)
+		this.revenue =
+			this.contracts["DaoEvents"].methods.eventRevenue.cacheCall(11);
 		this.account = this.props.accounts[0];
 		this.state = {
 			blockChainEventLoaded: false,
@@ -193,39 +210,42 @@ class EventPage extends Component {
 			buyticket: "",
 			approve: "",
 			pageTransactions: [],
-			approvalGranted: false
+			approvalGranted: false,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
 		this.giveApproval = this.giveApproval.bind(this);
-		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this)
+		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this);
+		this.goBack = this.goBack.bind(this); // i think you are missing this
+	}
 
+	goBack() {
+		this.props.history.goBack();
 	}
 
 	async loadEventFromBlockchain() {
 		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(
-				INFURA_WEB_URL
-			)
+			new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
 		);
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,
 			Open_events_Address
 		);
-		const blockChainEvent = await openEvents.methods.events(this.props.match.params.id).call()
-		this.setState({ blockChainEvent: blockChainEvent, blockChainEventLoaded: true })
+		const blockChainEvent = await openEvents.methods
+			.events(this.props.match.params.id)
+			.call();
+		this.setState({
+			blockChainEvent: blockChainEvent,
+			blockChainEventLoaded: true,
+		});
 		this.updateIPFS();
 		// console.log("temp Event web3",blockChainEvent)
 	}
 
 	//Get SoldTicket Data
 	async loadblockhain() {
-
-
 		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(
-				INFURA_WEB_URL
-			)
+			new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
 		);
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,
@@ -254,7 +274,7 @@ class EventPage extends Component {
 		// 	.then((events) => {
 		await axios({
 			url: graphURL,
-			method: 'post',
+			method: "post",
 			data: {
 				query: `
 				  {
@@ -266,22 +286,28 @@ class EventPage extends Component {
 					  buyers
 					}
 				  }
-				  `
-			}
-		}).then((graphEvents) => {
-			// console.log("mere soldTickets by Id",graphEvents.data.data.events)
-			let tickets = graphEvents.data.data.events.find((event) => event.eventId == this.props.match.params.id)
-
-
-			this.setState({ load: true });
-			var newsort = tickets.buyers
-				.concat()
-				.sort((a, b) => b.blockNumber - a.blockNumber);
-			if (this._isMounted) {
-				this.setState({ load: false, soldTicket: newsort, active_length: newsort.length, check: newsort });
-
-			}
+				  `,
+			},
 		})
+			.then((graphEvents) => {
+				// console.log("mere soldTickets by Id",graphEvents.data.data.events)
+				let tickets = graphEvents.data.data.events.find(
+					(event) => event.eventId == this.props.match.params.id
+				);
+
+				this.setState({ load: true });
+				var newsort = tickets.buyers
+					.concat()
+					.sort((a, b) => b.blockNumber - a.blockNumber);
+				if (this._isMounted) {
+					this.setState({
+						load: false,
+						soldTicket: newsort,
+						active_length: newsort.length,
+						check: newsort,
+					});
+				}
+			})
 			.catch((err) => console.error("mere here", err));
 
 		// openEvents
@@ -348,9 +374,7 @@ class EventPage extends Component {
 					loading: true,
 				},
 				() => {
-					ipfs.get(
-						this.state.blockChainEvent[7]
-					)
+					ipfs.get(this.state.blockChainEvent[7])
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
 							if (!this.isCancelled) {
@@ -360,7 +384,7 @@ class EventPage extends Component {
 									description: data.text,
 									image: data.image,
 									locations: data.location,
-									organizer: data.organizer
+									organizer: data.organizer,
 								});
 							}
 						})
@@ -421,7 +445,7 @@ class EventPage extends Component {
 	};
 
 	giveApproval = async () => {
-		this.setState({ disabledBuying: true })
+		this.setState({ disabledBuying: true });
 		this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -437,16 +461,21 @@ class EventPage extends Component {
 					});
 				}
 			})
-			.on("confirmation", (confirmationNumber, receipt) => this.onConfirmation(confirmationNumber, receipt))
+			.on("confirmation", (confirmationNumber, receipt) =>
+				this.onConfirmation(confirmationNumber, receipt)
+			)
 			.on("error", (error) => {
 				if (error !== null) {
-					this.setState({ disabledBuying: false })
+					this.setState({ disabledBuying: false });
 					txerror = error;
-					toast(<NotifyError error={error} message={txerror.message} />, {
-						position: "bottom-right",
-						autoClose: true,
-						pauseOnHover: true,
-					});
+					toast(
+						<NotifyError error={error} message={txerror.message} />,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
 					// this.afterApprove()
 					this.setState({ disabledStatus: false });
 				}
@@ -454,17 +483,12 @@ class EventPage extends Component {
 	};
 	onConfirmation(confirmationNumber, receipt) {
 		if (confirmationNumber == 0 && receipt.status == true) {
-			this.setState({ disabledBuying: false })
-			toast(
-				<NotifyApproveSuccess
-					hash={receipt.transactionHash}
-				/>,
-				{
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true,
-				}
-			);
+			this.setState({ disabledBuying: false });
+			toast(<NotifyApproveSuccess hash={receipt.transactionHash} />, {
+				position: "bottom-right",
+				autoClose: true,
+				pauseOnHover: true,
+			});
 			// this.afterApprove();
 			this.setState({ disabledStatus: false });
 		}
@@ -531,9 +555,7 @@ class EventPage extends Component {
 
 		let body = <Loading />;
 
-		if (
-			this.state.blockChainEventLoaded
-		) {
+		if (this.state.blockChainEventLoaded) {
 			if (!this.state.blockChainEvent) {
 				body = (
 					<div className="text-center mt-5">
@@ -544,7 +566,7 @@ class EventPage extends Component {
 					</div>
 				);
 			} else {
-				let event_data = this.state.blockChainEvent
+				let event_data = this.state.blockChainEvent;
 				let image = this.getImage();
 				let description = this.getDescription();
 				let locations = this.getLocation();
@@ -629,10 +651,19 @@ class EventPage extends Component {
 						<Grid>
 							<Grid className="header3">
 								<h2>
+									<IconButton
+										aria-label="delete"
+										onClick={this.goBack}
+									>
+										<KeyboardBackspaceIcon
+											fontSize="large"
+											style={{ fill: "#1E1E22" }}
+										/>
+									</IconButton>
+									<span>&nbsp;&nbsp;</span>
 									{event_data[0]}
 								</h2>
 								<div>
-
 									<Button
 										variant="contained"
 										color="primary"
@@ -640,17 +671,25 @@ class EventPage extends Component {
 										className={classes.buy}
 										onClick={this.inquire}
 										disabled={
-											disabled || this.props.disabledStatus || this.state.disabledBuying
+											disabled ||
+											this.props.disabledStatus ||
+											this.state.disabledBuying
 										}
 									>
-										<ShoppingCartOutlined style={{ marginRight: "10px" }} />
+										<ShoppingCartOutlined
+											style={{ marginRight: "10px" }}
+										/>
 										{buttonText}
 									</Button>
-
 								</div>
 							</Grid>
 
-							<Grid style={{ marginBottom: "40px", marginTop: "40px" }}>
+							<Grid
+								style={{
+									marginBottom: "40px",
+									marginTop: "40px",
+								}}
+							>
 								<label className="pl-2 small">
 									{disabledStatus}
 								</label>
@@ -664,8 +703,7 @@ class EventPage extends Component {
 											"/" +
 											this.props.match.params.id
 										}
-									>
-									</Link>
+									></Link>
 								)}
 								<Grid lg={12}>
 									<img
@@ -674,91 +712,174 @@ class EventPage extends Component {
 										alt="Event"
 									/>
 								</Grid>
-								<Grid container style={{
-									borderBottom: "1px solid #E4E4E7", paddingBottom: "50px"
-								}}>
-
-									<Grid lg={9} md={7} sm={12} xs={12} className={classes.description}>
+								<Grid
+									container
+									style={{
+										borderBottom: "1px solid #E4E4E7",
+										paddingBottom: "50px",
+									}}
+								>
+									<Grid
+										lg={9}
+										md={7}
+										sm={12}
+										xs={12}
+										className={classes.description}
+									>
 										{description}
-
 									</Grid>
-									<Grid lg={3} md={5} sm={12} xs={12} className={classes.eventDetails}>
+									<Grid
+										lg={3}
+										md={5}
+										sm={12}
+										xs={12}
+										className={classes.eventDetails}
+									>
 										<p className={classes.ticketPrice}>
 											<img
 												src={"/images/phoenixdao.svg"}
 												className="event_price-image"
 												alt="Event Price"
-											/>TICKET PRICE
+											/>
+											TICKET PRICE
 										</p>
-										<FormControl variant="outlined" className={classes.ticketSelect}>
+										<FormControl
+											variant="outlined"
+											className={classes.ticketSelect}
+										>
 											<Select
 												native
 												// value={state.age}
 												// onChange={handleChange}
 												inputProps={{
-													name: 'age',
-													id: 'outlined-age-native-simple',
+													name: "age",
+													id: "outlined-age-native-simple",
 												}}
 											>
-												<option aria-label="None" value="" />
-												<option value={10}>Bronze Ticket</option>
-												<option value={20}>Silver Ticket</option>
-												<option value={30}>Golden Ticket</option>
+												<option
+													aria-label="None"
+													value=""
+												/>
+												<option value={10}>
+													Bronze Ticket
+												</option>
+												<option value={20}>
+													Silver Ticket
+												</option>
+												<option value={30}>
+													Golden Ticket
+												</option>
 											</Select>
 										</FormControl>
 										<div className={classes.eventinfo}>
-											<span className={classes.PhnxPrice} >{event_data[3]
-												? numeral(price).format("0.000") + "PHNX"
-												: "FREE"}
-											</span>
-											<div style={{ color: "#56555D", fontSize: "14px" }}>
+											<span className={classes.PhnxPrice}>
 												{event_data[3]
-													? "$" + numeral(
-														price *
-														this.state
-															.PhoenixDAO_market
-															.usd
-													).format("0.000")
+													? numeral(price).format(
+															"0.000"
+													  ) + "PHNX"
+													: "FREE"}
+											</span>
+											<div
+												style={{
+													color: "#56555D",
+													fontSize: "14px",
+												}}
+											>
+												{event_data[3]
+													? "$" +
+													  numeral(
+															price *
+																this.state
+																	.PhoenixDAO_market
+																	.usd
+													  ).format("0.000")
 													: ""}
 											</div>
 										</div>
-										<p className={classes.eventHeading}> <CalendarTodayOutlined /> Date
+										<p className={classes.eventHeading}>
+											{" "}
+											<CalendarTodayOutlined /> Date
 										</p>
-										<p className={classes.eventinfo}>	{date.toLocaleDateString()}
+										<p className={classes.eventinfo}>
+											{" "}
+											{date.toLocaleDateString()}
 										</p>
-										<p className={classes.eventHeading}><ScheduleOutlined /> Time</p>
-										<p className={classes.eventinfo}>		{date.toLocaleTimeString([], {
-											hour: "2-digit",
-											minute: "2-digit",
-										})}</p>
-										<p className={classes.eventHeading}><LocationOnOutlined /> Location</p>
-										<p className={classes.eventinfo}>{locations}</p>
-										<p className={classes.eventHeading}><PersonOutlined />Organizer</p>
-										<p className={classes.eventinfo}>{this.state.organizer}</p>
-										<p className={classes.eventHeading}><ConfirmationNumberOutlined />Tickets Bought</p>
-										<p className={classes.eventinfo}>{event_data[6]}/{max_seats}</p>
+										<p className={classes.eventHeading}>
+											<ScheduleOutlined /> Time
+										</p>
+										<p className={classes.eventinfo}>
+											{" "}
+											{date.toLocaleTimeString([], {
+												hour: "2-digit",
+												minute: "2-digit",
+											})}
+										</p>
+										<p className={classes.eventHeading}>
+											<LocationOnOutlined /> Location
+										</p>
+										<p className={classes.eventinfo}>
+											{locations}
+										</p>
+										<p className={classes.eventHeading}>
+											<PersonOutlined />
+											Organizer
+										</p>
+										<p className={classes.eventinfo}>
+											{this.state.organizer}
+										</p>
+										<p className={classes.eventHeading}>
+											<ConfirmationNumberOutlined />
+											Tickets Bought
+										</p>
+										<p className={classes.eventinfo}>
+											{event_data[6]}/{max_seats}
+										</p>
 									</Grid>
-
-
 								</Grid>
 								<Grid container className={classes.socialDiv}>
-									<Grid lg={2} md={3} sm={2} xs={6} className={classes.categoryGrid}>
+									<Grid
+										lg={2}
+										md={3}
+										sm={2}
+										xs={6}
+										className={classes.categoryGrid}
+									>
 										<ModeCommentOutlined />
-													Topic
-										<div className={classes.eventinfo}>{category}</div>
+										Topic
+										<div className={classes.eventinfo}>
+											{category}
+										</div>
 									</Grid>
 									<Grid lg={10} md={9} sm={10} xs={12}>
-
 										<SocialMedia />
 									</Grid>
 								</Grid>
 							</Grid>
-							<Grid alignItems="center"
-
-								className={classes.organizerDetails}>
-								<Avatar src="/images/icons/user.svg" style={{ display: "inline-block", marginBottom: "10px" }} />
-								<h3 style={{ fontWeight: "bold" }}>{this.state.organizer}</h3>
-								<Grid className={classes.organizerDescription}>Him boisterous invitation dispatched had connection inhabiting projection. By mutual an mr danger garret edward an. Diverted as strictly exertion addition no disposal by stanhill. This call wife do so sigh no gate felt. You and abode spite order get. Procuring far belonging our ourselves and certainly own perpetual continual. It elsewhere of </Grid>
+							<Grid
+								alignItems="center"
+								className={classes.organizerDetails}
+							>
+								<Avatar
+									src="/images/icons/user.svg"
+									style={{
+										display: "inline-block",
+										marginBottom: "10px",
+									}}
+								/>
+								<h3 style={{ fontWeight: "bold" }}>
+									{this.state.organizer}
+								</h3>
+								<Grid className={classes.organizerDescription}>
+									Him boisterous invitation dispatched had
+									connection inhabiting projection. By mutual
+									an mr danger garret edward an. Diverted as
+									strictly exertion addition no disposal by
+									stanhill. This call wife do so sigh no gate
+									felt. You and abode spite order get.
+									Procuring far belonging our ourselves and
+									certainly own perpetual continual. It
+									elsewhere of{" "}
+								</Grid>
 							</Grid>
 
 							{/* <div className="event-social-share-btns-div">
@@ -957,7 +1078,7 @@ class EventPage extends Component {
 								/>
 							</div>
 								*/}
-						</Grid >
+						</Grid>
 					);
 				} else {
 					body = <EventNotFound />;
@@ -978,7 +1099,7 @@ class EventPage extends Component {
 	}
 
 	componentDidMount() {
-		this.loadEventFromBlockchain()
+		this.loadEventFromBlockchain();
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
