@@ -163,7 +163,6 @@ const EventCard = (props, context) => {
 	const handleClose2 = () => {
 		setOpen2(false);
 	};
-console.log("my favorite Ico",Icon);
 	const addTofavorite = async (e) => {
 		e.preventDefault();
 		setIcon(!Icon);

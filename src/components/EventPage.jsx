@@ -3,7 +3,7 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import SocialMedia from "./common/SocialMedia";
 import { Button, Grid, Avatar, FormControl, Select } from '@material-ui/core';
-import { ShoppingCartOutlined, LaunchOutlined, ModeCommentOutlined, Email, Twitter, LinkedIn, Telegram, WhatsApp } from "@material-ui/icons";
+import { ShoppingCartOutlined, ModeCommentOutlined } from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
@@ -37,6 +37,7 @@ import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Mainnet_Token_Address
 } from "../config/phoenixDAOcontract_testnet";
+import BuyTicket from "./common/BuyTicket";
 
 let numeral = require("numeral");
 
@@ -623,10 +624,39 @@ class EventPage extends Component {
 					.split(" ")
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(" ");
-
+				let event_date = date.toLocaleDateString();
+				let time = date.toLocaleTimeString([], {
+					hour: "2-digit",
+					minute: "2-digit",
+				});
+				let priceGrid=<div className={classes.eventinfo}>
+											<span className={classes.PhnxPrice} >{event_data[3]
+												? numeral(price).format("0.000") + "PHNX"
+												: "FREE"}
+											</span>
+											<div style={{ color: "#56555D", fontSize: "14px" }}>
+												{event_data[3]
+													? "$" + numeral(
+														price *
+														this.state
+															.PhoenixDAO_market
+															.usd
+													).format("0.000")
+													: ""}
+											</div>
+										</div>;
 				if (this.props.match.params.page === pagetitle) {
 					body = (
 						<Grid>
+							<BuyTicket
+								open={this.state.open}
+								handleClose={this.handleClose}
+								image={image}
+								eventTitle={event_data[0]}
+								date={event_date}
+								time={time}
+								price={priceGrid} 
+								buy={this.inquire}/>
 							<Grid className="header3">
 								<h2>
 									{event_data[0]}
@@ -638,7 +668,7 @@ class EventPage extends Component {
 										color="primary"
 										style={{ marginRight: "10px" }}
 										className={classes.buy}
-										onClick={this.inquire}
+										onClick={this.handleClickOpen}
 										disabled={
 											disabled || this.props.disabledStatus || this.state.disabledBuying
 										}
@@ -706,31 +736,13 @@ class EventPage extends Component {
 												<option value={30}>Golden Ticket</option>
 											</Select>
 										</FormControl>
-										<div className={classes.eventinfo}>
-											<span className={classes.PhnxPrice} >{event_data[3]
-												? numeral(price).format("0.000") + "PHNX"
-												: "FREE"}
-											</span>
-											<div style={{ color: "#56555D", fontSize: "14px" }}>
-												{event_data[3]
-													? "$" + numeral(
-														price *
-														this.state
-															.PhoenixDAO_market
-															.usd
-													).format("0.000")
-													: ""}
-											</div>
-										</div>
+										{priceGrid}
 										<p className={classes.eventHeading}> <CalendarTodayOutlined /> Date
 										</p>
-										<p className={classes.eventinfo}>	{date.toLocaleDateString()}
+										<p className={classes.eventinfo}>	{event_date}
 										</p>
 										<p className={classes.eventHeading}><ScheduleOutlined /> Time</p>
-										<p className={classes.eventinfo}>		{date.toLocaleTimeString([], {
-											hour: "2-digit",
-											minute: "2-digit",
-										})}</p>
+										<p className={classes.eventinfo}>		{time}</p>
 										<p className={classes.eventHeading}><LocationOnOutlined /> Location</p>
 										<p className={classes.eventinfo}>{locations}</p>
 										<p className={classes.eventHeading}><PersonOutlined />Organizer</p>
@@ -972,6 +984,7 @@ class EventPage extends Component {
 					handleClose={this.handleClose}
 					giveApproval={this.giveApproval}
 				/>
+
 				{body}
 			</div>
 		);
