@@ -5,9 +5,16 @@ import { Button } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
 	button: {
 		margin: theme.spacing(1),
+		textTransform: "initial",
+		fontWeight: "600",
+		background: "#413AE2",
+		padding: "8px 35px",
 		// maxHeight: 54,
 		// maxWidth: 230,
 	},
+	phoenix: {
+		height: "21px"
+	}
 }));
 
 const BuyPhnxButton = () => {
@@ -19,7 +26,11 @@ const BuyPhnxButton = () => {
 			color="primary"
 			size="large"
 			className={classes.button}
-			startIcon={<p>PHNX LOGO</p>}
+			startIcon={<img
+				src={"/images/phoenixdao.svg"}
+				className={classes.phoenix}
+				alt="Event Price"
+			/>}
 		>
 			Buy PHNX
 		</Button>

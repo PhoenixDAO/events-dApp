@@ -9,7 +9,7 @@ import "startbootstrap-simple-sidebar/css/simple-sidebar.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/main.css";
-
+import Analytics from "../components/Analytics";
 import Sidebar from "./Sidebar";
 import Home from "./Home";
 import FindEvents from "./FindEvents";
@@ -750,8 +750,8 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/dashboard"
-						component={Dashboard}
+						path="/analytics"
+						component={Analytics}
 						account={this.state.account}
 					/>
 					<Route
