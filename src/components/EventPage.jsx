@@ -12,13 +12,7 @@ import {
 } from "@material-ui/core";
 import {
 	ShoppingCartOutlined,
-	LaunchOutlined,
 	ModeCommentOutlined,
-	Email,
-	Twitter,
-	LinkedIn,
-	Telegram,
-	WhatsApp,
 } from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
