@@ -1,6 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import roundlogo from "../Images/roundlogo.svg";
 
 const useStyles = makeStyles((theme) => ({
 	button: {
@@ -9,6 +11,10 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: "600",
 		background: "#413AE2",
 		padding: "8px 35px",
+		paddingInline: "40px",
+
+		
+		border: "1px solid #413AE2",
 		// maxHeight: 54,
 		// maxWidth: 230,
 	},
@@ -26,11 +32,8 @@ const BuyPhnxButton = () => {
 			color="primary"
 			size="large"
 			className={classes.button}
-			startIcon={<img
-				src={"/images/phoenixdao.svg"}
-				className={classes.phoenix}
-				alt="Event Price"
-			/>}
+
+			startIcon={<img style={{height:"24px"}}src={roundlogo} alt="phnx logo" />}
 		>
 			Buy PHNX
 		</Button>

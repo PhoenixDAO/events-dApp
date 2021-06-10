@@ -6,9 +6,12 @@ import "react-datetime/css/react-datetime.css";
 import { FacebookCircularProgress } from "./TimeAndDateLoader";
 import eventTypes from "../../config/types.json";
 import eventTopics from "../../config/topics.json";
+
+//revamp
+import MyStepper from "./MyStepper";
+
 var moment = require("moment");
 var Filter = require("bad-words");
-
 let numeral = require("numeral");
 class Form extends Component {
 	constructor(props) {
@@ -34,8 +37,7 @@ class Form extends Component {
 			location: this.props.data.location ? this.props.data.location : "",
 			time: this.props.data.time ? this.props.data.time : 0,
 			timeForHumans: null,
-			currency:
-				this.props.data.currency ? "phnx" : "eth",
+			currency: this.props.data.currency ? "phnx" : "eth",
 			type: this.props.data.type ? this.props.data.type : "",
 			topic: this.props.data.topic ? this.props.data.topic : "",
 			limited: this.props.data.limited ? this.props.data.limited : false,
@@ -112,15 +114,13 @@ class Form extends Component {
 			this.state.currentBlock &&
 			this.state.currentBlock.timestamp &&
 			date.unix() >
-			moment.unix(this.state.currentBlock.timestamp + 10800)._i / 1000
+				moment.unix(this.state.currentBlock.timestamp + 10800)._i / 1000
 		) {
-			this.setState(
-				{
-					dateDisplay: new Date(parseInt(date.unix(), 10) * 1000),
-					timeForHumans: date.time,
-					time: date.unix(),
-				}
-			);
+			this.setState({
+				dateDisplay: new Date(parseInt(date.unix(), 10) * 1000),
+				timeForHumans: date.time,
+				time: date.unix(),
+			});
 		}
 	};
 
@@ -181,19 +181,18 @@ class Form extends Component {
 
 	titleChange = (event) => {
 		let title = event.target.value;
-		let reg = new RegExp(/^[a-z\sA-Z0-9]+$/)
-		console.log("event.target.value",event.target.value)
+		let reg = new RegExp(/^[a-z\sA-Z0-9]+$/);
+		console.log("event.target.value", event.target.value);
 
 		if (title.length > 80) {
 			title = title.slice(0, 80);
 		}
-		if(reg.test(title) || title== ""){
+		if (reg.test(title) || title == "") {
 			this.setState({
 				title: title,
 				title_length: title.length,
 			});
 		}
-		
 	};
 
 	descriptionChange = (event) => {
@@ -310,32 +309,39 @@ class Form extends Component {
 		let filteredTitle = "";
 		let filteredOrganizer = "";
 		let filteredLocation = "";
-		let regForAlphanumericAndString = new RegExp(/^[a-z\sA-Z]+$/)
-		let regToRestrictOnlySpaces = new RegExp(/^[\s]*$/)
-		let validTitle=this.state.title !== "" && !regToRestrictOnlySpaces.test(this.state.title);
-		console.log("CE validTitle",validTitle)
-		let validOrganizer=this.state.organizer !== ""&& !regToRestrictOnlySpaces.test(this.state.organizer)
-		let validLocation=this.state.location !== ""&& !regToRestrictOnlySpaces.test(this.state.location)
+		let regForAlphanumericAndString = new RegExp(/^[a-z\sA-Z]+$/);
+		let regToRestrictOnlySpaces = new RegExp(/^[\s]*$/);
+		let validTitle =
+			this.state.title !== "" &&
+			!regToRestrictOnlySpaces.test(this.state.title);
+		console.log("CE validTitle", validTitle);
+		let validOrganizer =
+			this.state.organizer !== "" &&
+			!regToRestrictOnlySpaces.test(this.state.organizer);
+		let validLocation =
+			this.state.location !== "" &&
+			!regToRestrictOnlySpaces.test(this.state.location);
 
 		// let reg = new RegExp(/^[\s]*$/)
 		// reg.test(str)
-		
-		if (this.form.description.value !== "" && !regToRestrictOnlySpaces.test(this.form.description.value)) {
-			// console.log("this.form.description.value",this.form.description.value)
-			if(regForAlphanumericAndString.test(this.form.description.value)){
 
+		if (
+			this.form.description.value !== "" &&
+			!regToRestrictOnlySpaces.test(this.form.description.value)
+		) {
+			// console.log("this.form.description.value",this.form.description.value)
+			if (regForAlphanumericAndString.test(this.form.description.value)) {
 				let filter = new Filter();
 				filteredDescription = filter.clean(this.form.description.value);
 				this.setState({ description: filteredDescription });
 			} else {
 				this.setState({ description: this.form.description.value });
 			}
-
 		}
 		if (validTitle) {
 			// console.log("title is title",this.state.title)
 			// console.log("title is regForAlphanumericAndString.test(this.state.title) ",regForAlphanumericAndString.test(this.state.title))
-			if(regForAlphanumericAndString.test(this.state.title)){
+			if (regForAlphanumericAndString.test(this.state.title)) {
 				let filter = new Filter();
 				filteredTitle = filter.clean(this.state.title);
 				this.setState({ title: filteredTitle });
@@ -401,7 +407,7 @@ class Form extends Component {
 		if (this.state.topic === "") form_validation.push("topic");
 
 		if (!this.state.terms) form_validation.push("terms");
-			console.log("CE form_validation",form_validation)
+		console.log("CE form_validation", form_validation);
 		this.setState({
 			form_validation: form_validation,
 		});
@@ -410,11 +416,15 @@ class Form extends Component {
 				this.state.fileHandle,
 				this.state.fileImg,
 				filteredTitle != "" ? filteredTitle : this.state.title,
-				filteredDescription != "" ? filteredDescription : this.form.description.value,
+				filteredDescription != ""
+					? filteredDescription
+					: this.form.description.value,
 				filteredLocation != "" ? filteredLocation : this.state.location,
 				this.state.time,
 				this.state.file,
-				filteredOrganizer != "" ? filteredOrganizer : this.state.organizer,
+				filteredOrganizer != ""
+					? filteredOrganizer
+					: this.state.organizer,
 				this.state.type,
 				this.state.topic,
 				this.state.currency,
@@ -422,7 +432,7 @@ class Form extends Component {
 				this.state.limited,
 				this.form.seats ? this.form.seats.value : "",
 				this.state.file_name
-			)
+			);
 		}
 	};
 
@@ -468,8 +478,8 @@ class Form extends Component {
 				this.state.form_validation.indexOf("image") !== -1
 					? "is-invalid"
 					: this.state.wrong_file
-						? "wrong-format"
-						: "",
+					? "wrong-format"
+					: "",
 			time:
 				this.state.form_validation.indexOf("time") === -1
 					? ""
@@ -524,6 +534,18 @@ class Form extends Component {
 		let type = this.state.type.replace(/[- )(]/g, " ");
 		return (
 			<React.Fragment>
+				<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
+					<br />
+					<br />
+					<br />
+					<MyStepper />
+				</div>
+
+				<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
+					<br />
+					<p>Event Preview</p>
+				</div>
+
 				<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
 					<form>
 						<div className="form-group">
@@ -678,7 +700,7 @@ class Form extends Component {
 										warning.image == "wrong-format"
 											? "custom-file-input is-invalid"
 											: "custom-file-input " +
-											warning.image
+											  warning.image
 									}
 									id="customFile"
 									title="Event Cover Image"
@@ -731,7 +753,11 @@ class Form extends Component {
 								</small>
 							)}
 							<select
-								className={warning.topic ? "form-control drop-down-is-invalid" : "form-control "}
+								className={
+									warning.topic
+										? "form-control drop-down-is-invalid"
+										: "form-control "
+								}
 								id="type"
 								title="Event Type"
 								onChange={this.typeChange}
@@ -767,7 +793,11 @@ class Form extends Component {
 							)}
 							<select
 								id="topic"
-								className={warning.type ? "form-control drop-down-is-invalid" : "form-control "}
+								className={
+									warning.type
+										? "form-control drop-down-is-invalid"
+										: "form-control "
+								}
 								title="Event Topic"
 								value={this.state.type}
 								onChange={this.categoryChange}
@@ -795,7 +825,7 @@ class Form extends Component {
 									className="custom-control-input"
 									defaultChecked={
 										this.props.data.price &&
-											this.props.data.price == 0
+										this.props.data.price == 0
 											? false
 											: true
 									}
@@ -839,7 +869,7 @@ class Form extends Component {
 										style={{ marginTop: "0" }}
 										className={
 											warning.price &&
-												this.props.price == 0
+											this.props.price == 0
 												? "form-text text-muted color-red"
 												: "form-text text-muted"
 										}
@@ -913,11 +943,11 @@ class Form extends Component {
 											value={
 												this.state.price
 													? this.state
-														.PhoenixDAO_market
-														.usd *
-													numeral(
-														this.state.price
-													).format("0.000")
+															.PhoenixDAO_market
+															.usd *
+													  numeral(
+															this.state.price
+													  ).format("0.000")
 													: this.state.dollarPrice
 											}
 											className={
