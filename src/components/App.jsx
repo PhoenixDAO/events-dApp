@@ -12,6 +12,7 @@ import "../styles/main.css";
 import Analytics from "../components/Analytics";
 import Sidebar from "./Sidebar";
 import Home from "./Home";
+import Guide from "./Guide";
 import FindEvents from "./FindEvents";
 import PastEvents from "./PastEvents";
 import MyTickets from "./MyTickets";
@@ -766,9 +767,9 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/how-it-works"
+						path="/guide"
 						component={(props) => (
-							<Home
+							<Guide
 								{...props}
 								executeScroll={this.executeScroll}
 							/>

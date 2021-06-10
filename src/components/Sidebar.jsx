@@ -294,7 +294,7 @@ class Sidebar extends Component {
 							<ul className="nav flex-column">
 								<li>
 									<NavLink
-										to="/how-it-works"
+										to="/guide"
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
@@ -596,7 +596,7 @@ class Sidebar extends Component {
 							<ul className="nav flex-column">
 								<li>
 									<NavLink
-										to="/how-it-works"
+										to="/guide"
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
