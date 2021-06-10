@@ -7,6 +7,12 @@ import {
 	Button,
 	Typography,
 	Divider,
+	TextField,
+	Radio,
+	RadioGroup,
+	FormControlLabel,
+	FormControl,
+	FormLabel,
 } from "@material-ui/core";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
@@ -38,6 +44,10 @@ const useStyles = makeStyles((theme) => ({
 		display: "flex",
 		justifyContent: "space-between",
 	},
+	mainStepperContainer: {
+		marginLeft: theme.spacing(5),
+		marginRight: theme.spacing(5),
+	},
 }));
 
 const MyStepper = () => {
@@ -62,6 +72,46 @@ const MyStepper = () => {
 			<div>
 				<h3 className={classes.title}>Event Datails</h3>
 				<Divider light />
+				<br />
+				<label>EVENT NAME</label>
+				<TextField
+					id="outlined-basic"
+					// label="Event Name"
+					fullWidth
+					variant="outlined"
+				/>
+				<br />
+				<br />
+				<label>EVENT ORGANIZER</label>
+				<TextField
+					id="outlined-basic"
+					// label="Event Organizer"
+					fullWidth
+					variant="outlined"
+				/>
+				<br />
+				<br />
+				<FormControl component="fieldset">
+					<FormLabel component="legend">labelPlacement</FormLabel>
+					<RadioGroup
+						row
+						aria-label="position"
+						name="position"
+						defaultValue="top"
+					>
+						<FormControlLabel
+							value="end"
+							control={<Radio color="primary" />}
+							label="End"
+						/>
+
+						<FormControlLabel
+							value="start"
+							control={<Radio color="primary" />}
+							label="End"
+						/>
+					</RadioGroup>
+				</FormControl>
 			</div>
 		);
 	};
@@ -125,7 +175,7 @@ const MyStepper = () => {
 					</Step>
 				))}
 			</Stepper>
-			<div>
+			<div className={classes.mainStepperContainer}>
 				<br />
 				{activeStep === steps.length ? (
 					<div>
