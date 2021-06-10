@@ -7,9 +7,41 @@ import ipfs from "../../utils/ipfs";
 import Form from "./Form";
 import Loader from "./Loader";
 import Done from "./Done";
+
+// material UI styles
+import { withStyles } from "@material-ui/core/styles";
+import { Divider } from "@material-ui/core";
+import BuyPhnxButton from "../common/BuyPhnxButton";
+
+const useStyles = (theme) => ({
+	sticky: {
+		position: "sticky",
+		zIndex: 1,
+		top: 0,
+		display: "flex",
+		flexDirection: "column",
+		background: `#FCFCFD !important`,
+		opacity: `1 !important`,
+		marginLeft: -2,
+	},
+	root: {
+		flexGrow: 1,
+		width: "100%",
+	},
+	main: {
+		display: "flex",
+		justifyContent: "space-between",
+		alignItems: "center",
+	},
+	title: {
+		fontWeight: 700,
+		color: "#1E1E22",
+	},
+});
+
 class CreateEvent extends Component {
-	tx_checkerInterval=0;
-	updaterInterval=0;
+	tx_checkerInterval = 0;
+	updaterInterval = 0;
 	constructor(props, context) {
 		super(props);
 		this.state = {
@@ -169,20 +201,26 @@ class CreateEvent extends Component {
 		this.transactionChecker(id);
 	};
 	createNewEvent = () => {
-		this.setState({ error: false, done: false, upload: false, data: {
-			fileHandle: false,
-			name: null,
-			description: null,
-			time: 0,
-			currency: null,
-			price: 0,
-			organizer: null,
-			limited: false,
-			seats: 0,
-			type: null,
-			file_name: null,
-		}}, () =>
-			console.log()
+		this.setState(
+			{
+				error: false,
+				done: false,
+				upload: false,
+				data: {
+					fileHandle: false,
+					name: null,
+					description: null,
+					time: 0,
+					currency: null,
+					price: 0,
+					organizer: null,
+					limited: false,
+					seats: 0,
+					type: null,
+					file_name: null,
+				},
+			},
+			() => console.log()
 		);
 	};
 
@@ -210,15 +248,17 @@ class CreateEvent extends Component {
 			}
 		}, 500);
 	};
-	componentWillUnmount(){
-		clearInterval(this.tx_checkerInterval)
-		clearInterval(this.updaterInterval)
+	componentWillUnmount() {
+		clearInterval(this.tx_checkerInterval);
+		clearInterval(this.updaterInterval);
 	}
 	componentDidMount() {
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
 	}
 
 	render() {
+		const { classes } = this.props;
+
 		let disabled = true;
 		if (this.props.account.length !== 0) {
 			disabled = false;
@@ -229,7 +269,6 @@ class CreateEvent extends Component {
 				<Done
 					createNewEvent={this.createNewEvent}
 					createNewEvent2={this.props.createNewEvent}
-
 				/>
 			);
 		}
@@ -298,9 +337,27 @@ class CreateEvent extends Component {
 
 		return (
 			<div className="home-wrapper">
-				<h2>
+				{/* <h2>
 					<i className="fa fa-edit"></i> Create Event
-				</h2>
+				</h2> */}
+
+				{/* top sticky header */}
+				<div className={classes.sticky}>
+					<div>
+						<br />
+						<br />
+						<div className={classes.main}>
+							<div>
+								<h2 className={classes.title}>Create Event</h2>
+							</div>
+							<div>
+								<BuyPhnxButton />
+							</div>
+						</div>
+						<Divider light />
+					</div>
+				</div>
+
 				{disabled && (
 					<div className="alert-connection col-lg-6 mb-6">
 						<div className="connection-box">
@@ -315,7 +372,7 @@ class CreateEvent extends Component {
 					</div>
 				)}
 
-				<hr />
+				{/* <hr /> */}
 				{body}
 			</div>
 		);
@@ -334,4 +391,4 @@ const mapStateToProps = (state) => {
 };
 
 const AppContainer = drizzleConnect(CreateEvent, mapStateToProps);
-export default AppContainer;
+export default withStyles(useStyles)(AppContainer);
