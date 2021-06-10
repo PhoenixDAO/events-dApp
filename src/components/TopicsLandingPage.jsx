@@ -194,6 +194,7 @@ class TopicsLandingPage extends Component {
 										display: "flex",
 										justifyContent: "space-between",
 										alignItems: "center",
+										paddingBottom:"5px"
 									}}
 								>
 									<div>
@@ -218,7 +219,6 @@ class TopicsLandingPage extends Component {
 										<ConnectWalletButton />
 									</div>
 								</div>
-								<br />
 								<Divider light />
 							</div>
 						</div>
@@ -295,7 +295,6 @@ class TopicsLandingPage extends Component {
 									>
 										<option id="0">All Topics</option>
 										<option id="1">Trending Topics</option>
-									
 									</select>
 								</div>
 							</div>

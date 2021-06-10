@@ -4,37 +4,7 @@ import { Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 
-import { drizzleConnect } from "drizzle-react";
-
-// import "../styles/main.css";
-
 const useStyles = makeStyles((theme) => ({
-	AppBar: {
-		"&.MuiPaper-elevation4": {
-			boxShadow: "none",
-		},
-	},
-	tabBar: {
-		"&:hover, &:focus ": {
-			outline: "none",
-		},
-		" &:active ": {
-			borderBottom: "2.5px solid #413AE2",
-		},
-		"&.MuiTab-textColorPrimary.Mui-selected": {
-			color: "#413AE2",
-			borderBottom: "2.5px solid #413AE2",
-		},
-
-		fontWeight: 700,
-		textTransform: "Capitalize",
-		fontFamily: "AeonikReg",
-	},
-	searchRow: {
-		display: "flex",
-		justifyContent: "space-between",
-		paddingTop: "40px",
-	},
 	termsContainer: {
 		display: "flex",
 		justifyContent: "space-between",
@@ -82,14 +52,6 @@ const Terms = (props) => {
 	const classes = useStyles();
 	const pageRefs = useRef({});
 
-	// props.executeScroll();
-	// React.useEffect(() => {
-	// 	if (error && fieldRef.current) {
-	// 		fieldRef.current.scrollIntoView({
-	// 			behavior: "smooth",
-	// 		  });
-	// 	}
-	//   }, [error])
 	function scrollIntoView(type) {
 		pageRefs.current[type].scrollIntoView({
 			behavior: "smooth",
@@ -110,8 +72,8 @@ const Terms = (props) => {
 			</div>
 			<Grid container>
 				<Grid
-				className={classes.temp}
-					style={{ overflow: "scroll" }}
+					className={classes.temp}
+					style={{ overflow: "scroll",height:"83vh" }}
 					lg={8}
 					md={8}
 					sm={6}
@@ -635,7 +597,7 @@ const Terms = (props) => {
 					{/* </ul> */}
 				</Grid>
 				<Grid
-				className={classes.temp}
+					className={classes.temp}
 					style={{ overflow: "scroll", height: "720px" }}
 					lg={4}
 					md={8}

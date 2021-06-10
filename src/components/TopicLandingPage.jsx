@@ -614,6 +614,7 @@ class TopicLandingPage extends Component {
 									display: "flex",
 									justifyContent: "space-between",
 									alignItems: "center",
+									paddingBottom:"5px"
 								}}
 							>
 								<div>
@@ -648,7 +649,6 @@ class TopicLandingPage extends Component {
 									<ConnectWalletButton />
 								</div>
 							</div>
-							<br />
 							<Divider light />
 						</div>
 					</div>
