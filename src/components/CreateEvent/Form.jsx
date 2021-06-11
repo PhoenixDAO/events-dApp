@@ -436,7 +436,7 @@ class Form extends Component {
 		}
 	};
 
-	render() {
+	render() {																			
 		let symbol = "PhoenixDAO.png";
 		let currency = this.state.currency === "eth" ? "ETH" : "PHNX";
 		let freeEvent = "";
