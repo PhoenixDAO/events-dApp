@@ -13,6 +13,7 @@ import Analytics from "../components/Analytics";
 import Sidebar from "./Sidebar";
 import Home from "./Home";
 import Guide from "./Guide";
+import FAQ from "./FAQ";
 import FindEvents from "./FindEvents";
 import PastEvents from "./PastEvents";
 import MyTickets from "./MyTickets";
@@ -770,6 +771,16 @@ class App extends Component {
 						path="/guide"
 						component={(props) => (
 							<Guide
+								{...props}
+								executeScroll={this.executeScroll}
+							/>
+						)}
+					/>
+					<Route
+						exact
+						path="/faq"
+						component={(props) => (
+							<FAQ
 								{...props}
 								executeScroll={this.executeScroll}
 							/>
