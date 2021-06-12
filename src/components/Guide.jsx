@@ -5,10 +5,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-	termsContainer: {
-		display: "flex",
-		justifyContent: "space-between",
-	},
 	termsHeader: {
 		display: "flex",
 		justifyContent: "space-between",
@@ -22,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 		background: `#FCFCFD !important`,
 		opacity: `1 !important`,
-		paddingBottom:"5px"
+		paddingBottom: "10px",
 	},
 	menu: {
 		padding: "10px",
@@ -47,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 		"&::-webkit-scrollbar": {
 			display: "none",
 		},
-		overflow: "scroll"
+		overflow: "scroll",
 	},
 	videoResponsive: {
 		overflow: "hidden",
@@ -65,17 +61,17 @@ const useStyles = makeStyles((theme) => ({
 		height: "88%",
 		position: "absolute",
 	},
-	centerItems:{
+	centerItems: {
 		textAlign: "center",
 		paddingTop: "25px",
-		paddingBottom: "25px"
+		paddingBottom: "25px",
 	},
-	walkThroughHeading:{
-		fontSize : "20px",
+	walkThroughHeading: {
+		fontSize: "20px",
 		fontWeight: "900",
-		lineHeight: "30px"
+		lineHeight: "30px",
 	},
-	alignTextWithVideo:{width:"88%",marginLeft:"30px"}
+	alignTextWithVideo: { width: "88%", marginLeft: "30px" },
 }));
 const Terms = (props) => {
 	const classes = useStyles();
@@ -96,149 +92,148 @@ const Terms = (props) => {
 					</h2>
 					<BuyPhnxButton />
 				</div>
-					<Divider light />
+				<Divider light />
 			</div>
 			<Grid container>
 				<Grid
 					className={classes.hideScroll}
+					style={{ height: "88vh" }}
 					lg={8}
 					md={8}
 					sm={6}
 					xs={12}
 				>
 					<div className={classes.centerItems}>
-					<div className={classes.videoResponsive}>
-						<iframe
-							// style={{
-							// 	left: 0,
-							// 	top: 0,
-							// 	height: "100%",
-							// 	width: "100%",
-							// 	position: "absolute"
-							//   }}
-							className={classes.videoResponsiveIframe}
-							id="video"
-							width="230"
-							heigh="154"
-							src={
-								"https://www.youtube.com/embed/" + "cB-ZRijjIMY"
+						<div className={classes.videoResponsive}>
+							<iframe
+								className={classes.videoResponsiveIframe}
+								id="video"
+								width="230"
+								heigh="154"
+								src={
+									"https://www.youtube.com/embed/" +
+									"cB-ZRijjIMY"
+								}
+								frameBorder="0"
+								allow="accelerometer, autoplay; encrypted-media; gyroscope; picture-in-picture"
+								allowFullScreen
+							/>
+						</div>
+						<strong className={classes.walkThroughHeading}>
+							Walk through video
+						</strong>
+					</div>
+					<div className={classes.alignTextWithVideo}>
+						<h2
+							ref={(el) =>
+								(pageRefs.current = {
+									...pageRefs.current,
+									InstallationAndConfiguration: el,
+								})
 							}
-							frameBorder="0"
-							allow="accelerometer, autoplay; encrypted-media; gyroscope; picture-in-picture"
-							allowFullScreen
-						/>
+						>
+							Installation and Configuration
+						</h2>
+						<h3
+							ref={(el) =>
+								(pageRefs.current = {
+									...pageRefs.current,
+									Installation: el,
+								})
+							}
+						>
+							MetaMask Installation
+						</h3>
+						<p>
+							An Ethereum Wallet in your Browser. MetaMask is a
+							browser extension for storing cryptocurrencies and
+							accessing Ethereum enabled distributed applications
+							or "dApps" in your browser.
+						</p>
+						<ul>
+							<li>
+								Go to your browser extensions and search for
+								MetaMask and then add that extension to the
+								browser. Alternatively visit www.metamask.io to
+								download directly from their website.
+							</li>
+						</ul>
+
+						<p>[ Image to be entered ]</p>
+
+						<h3
+							ref={(el) =>
+								(pageRefs.current = {
+									...pageRefs.current,
+									Configuration: el,
+								})
+							}
+						>
+							MetaMask Configuration
+						</h3>
+
+						<ul>
+							<li>
+								Initially, you will be asked to import the
+								wallet or create a new one.
+							</li>
+							<li>
+								If you have already created a wallet before then
+								import it using it’s private key otherwise
+								select to create a new one.
+							</li>
+							<li>
+								MetaMask will provide you with the secret phrase
+								this is required for recovering a private key.
+								Download it, memorize it or write it down
+								someplace safe and make sure no one else can get
+								access to it. If you are to lose this and lose
+								access to your funds they are lost!
+							</li>
+						</ul>
+
+						<p>[ 2 IMAGES TO BE ENTERED ]</p>
+						<ul>
+							<li>
+								On the next step it will ask you to enter the
+								phras in the same order as it was originally
+								presented.
+							</li>
+							<li>
+								And then just after readin and agreeing to their
+								terms and conditions Boom!, your decentralized
+								walled is created on MetaMask. To access import
+								PropTypes from 'prop-types' click on the
+								MetaMask icon on the top right cornet of your
+								browser (where you will also find you other
+								extensions.)
+							</li>
+						</ul>
+						<h2
+							ref={(el) =>
+								(pageRefs.current = {
+									...pageRefs.current,
+									Getting: el,
+								})
+							}
+						>
+							Getting into app and connecting wallet - Ethereum /
+							Polygon configurations.
+						</h2>
+						<h3>Ethereum main-net</h3>
+						<ul>
+							<li>
+								Open the PhoenixDAO Events Marketplace dApp.
+							</li>
+							<li>Select MetaMask to connect the wallet.</li>
+							<li>
+								Select the account you want to connect to and
+								click next.
+							</li>
+						</ul>
+
+						<p>[ IMAGE TO BE ENTERED ]</p>
 					</div>
-					<strong className={classes.walkThroughHeading}>Walk through video</strong>
-					</div>
-					<div className={classes.alignTextWithVideo} >
-
-					<h2
-						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								InstallationAndConfiguration: el,
-							})
-						}
-					>
-						Installation and Configuration
-					</h2>
-					<h3
-						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Installation: el,
-							})
-						}
-					>
-						MetaMask Installation
-					</h3>
-					<p>
-						An Ethereum Wallet in your Browser. MetaMask is a
-						browser extension for storing cryptocurrencies and
-						accessing Ethereum enabled distributed applications or
-						"dApps" in your browser.
-					</p>
-					<ul>
-						<li>
-							Go to your browser extensions and search for
-							MetaMask and then add that extension to the browser.
-							Alternatively visit www.metamask.io to download
-							directly from their website.
-						</li>
-					</ul>
-
-					<p>[ Image to be entered ]</p>
-
-					<h3
-						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Configuration: el,
-							})
-						}
-					>
-						MetaMask Configuration
-					</h3>
-
-					<ul>
-						<li>
-							Initially, you will be asked to import the wallet or
-							create a new one.
-						</li>
-						<li>
-							If you have already created a wallet before then
-							import it using it’s private key otherwise select to
-							create a new one.
-						</li>
-						<li>
-							MetaMask will provide you with the secret phrase
-							this is required for recovering a private key.
-							Download it, memorize it or write it down someplace
-							safe and make sure no one else can get access to it.
-							If you are to lose this and lose access to your
-							funds they are lost!
-						</li>
-					</ul>
-
-					<p>[ 2 IMAGES TO BE ENTERED ]</p>
-					<ul>
-						<li>
-							On the next step it will ask you to enter the phras
-							in the same order as it was originally presented.
-						</li>
-						<li>
-							And then just after readin and agreeing to their
-							terms and conditions Boom!, your decentralized
-							walled is created on MetaMask. To access import
-							PropTypes from 'prop-types' click on the MetaMask
-							icon on the top right cornet of your browser (where
-							you will also find you other extensions.)
-						</li>
-					</ul>
-					<h2
-						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Getting: el,
-							})
-						}
-					>
-						Getting into app and connecting wallet - Ethereum /
-						Polygon configurations.
-					</h2>
-					<h3>Ethereum main-net</h3>
-					<ul>
-						<li>Open the PhoenixDAO Events Marketplace dApp.</li>
-						<li>Select MetaMask to connect the wallet.</li>
-						<li>
-							Select the account you want to connect to and click
-							next.
-						</li>
-					</ul>
-
-					<p>[ IMAGE TO BE ENTERED ]</p>
-					</div>
-
 				</Grid>
 				<Grid
 					className={classes.hideScroll}

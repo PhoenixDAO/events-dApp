@@ -611,7 +611,7 @@ class Sidebar extends Component {
 								</li>
 								<li>
 									<NavLink
-										to="/faqs"
+										to="/faq"
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {

@@ -5,10 +5,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-	termsContainer: {
-		display: "flex",
-		justifyContent: "space-between",
-	},
 	termsHeader: {
 		display: "flex",
 		justifyContent: "space-between",
@@ -22,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 
 		background: `#FCFCFD !important`,
 		opacity: `1 !important`,
+		paddingBottom: "10px",
 	},
 	menu: {
 		padding: "10px",
@@ -42,10 +39,11 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "17px",
 		color: "#4E4E55",
 	},
-	temp: {
+	hideScroll: {
 		"&::-webkit-scrollbar": {
 			display: "none",
 		},
+		overflow: "scroll",
 	},
 }));
 const Terms = (props) => {
@@ -67,13 +65,12 @@ const Terms = (props) => {
 					</h2>
 					<BuyPhnxButton />
 				</div>
-				<br />
 				<Divider light />
 			</div>
 			<Grid container>
 				<Grid
-					className={classes.temp}
-					style={{ overflow: "scroll",height:"83vh" }}
+					className={classes.hideScroll}
+					style={{ height: "88vh" }}
 					lg={8}
 					md={8}
 					sm={6}
@@ -597,8 +594,8 @@ const Terms = (props) => {
 					{/* </ul> */}
 				</Grid>
 				<Grid
-					className={classes.temp}
-					style={{ overflow: "scroll", height: "720px" }}
+					className={classes.hideScroll}
+					style={{ height: "720px" }}
 					lg={4}
 					md={8}
 					sm={6}
