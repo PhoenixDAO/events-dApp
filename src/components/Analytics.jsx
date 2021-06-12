@@ -12,13 +12,15 @@ import {
 } from "@material-ui/core";
 import BuyPHNXButton from "./common/BuyPhnxButton"
 import { KeyboardBackspace } from "@material-ui/icons";
-
+// import {Graph} from "../utils/graph";
+import { Line } from 'react-chartjs-2';
+import EventsAnalytics from "./EventsAnalytics";
 
 const useStyles = makeStyles((theme) => ({
     content: {
         backgroundColor: "white",
         margin: "40px 0px",
-        padding: "40px",
+        padding: "50px",
         borderRadius: "8px"
     },
     select: {
@@ -39,6 +41,8 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: "space-between",
         width: "100%",
         alignItems: "flexEnd",
+        marginBottom: "25px",
+
 
     },
     heading: {
@@ -47,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
         color: "#413AE2",
         fontSize: "28px",
         fontWeight: "600",
-        marginBottom: "20px"
     },
     box: {
         border: "1px solid #E4E4E7",
@@ -60,16 +63,18 @@ const useStyles = makeStyles((theme) => ({
             border: "8px solid #F2F2FD",
             outline: "none"
         },
-        backgroundColor: "white"
+        backgroundColor: "white",
+        maxWidth: "31%",
+        textAlign: "inherit"
     },
     yellow: {
         borderLeft: "4px solid #E5AB00",
     },
-    blue:{
+    blue: {
         borderLeft: "4px solid #413AE2",
 
     },
-    purple:{
+    purple: {
         borderLeft: "4px solid #963AE2",
 
     },
@@ -101,8 +106,8 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "14px",
         color: "#73727D",
         paddingTop: "15px"
-
-    }
+    },
+   
 }));
 
 const Analytics = (props, context) => {
@@ -113,12 +118,99 @@ const Analytics = (props, context) => {
     } = props;
 
     useEffect(() => {
-    });
+        getPhnxRevenue();
+
+    }, []);
     const classes = useStyles();
+    const [graphData, setGraphData] = useState("");
     const goBack = () => {
         this.props.history.goBack();
     }
+    //for graph datasets
+    let dataset = [];
+    const getPhnxRevenue = () => {
+        dataset = [1, 2, 34, 5, 6, 7]
+        setGraphData(dataset);
+    }
+    const getDollarRevenue = () => {
+        dataset = [2, 5, 2, 8, 3, 2]
+        setGraphData(dataset);
+    }
+    const getSoldTickets = () => {
+        dataset = [4, 7, 8, 93, 32, 21];
+        setGraphData(dataset);
+    }
 
+    const chartOptions = {
+        // capBezierPoints: true,
+        legend: {
+            display: false,
+        },
+        scales: {
+            yAxes: [{
+                gridLines: {
+                    drawBorder: true,
+                    display: true,
+                    borderDash: [8, 4],
+                },
+                ticks: {
+                    display: true,
+                    fontColor: "black",
+                    fontWeight: "700",
+                    fontSize: 16
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'REVENUE',
+                    fontSize: 14,
+                    fontColor: "#73727D",
+                }
+            }],
+            xAxes: [{
+                gridLines: {
+                    drawBorder: false,
+                    display: false,
+                },
+                ticks: {
+                    display: true, //this will remove only the label
+                    fontColor: "black",
+                    fontWeight: "700",
+                    fontSize: 16
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'DATE',
+                    fontSize: 14,
+                    fontColor: "#73727D"
+                }
+            }],
+        },
+    };
+    const data = (canvas) => {
+        const ctx = canvas.getContext('2d')
+        var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, '#F2F2FD');
+        gradient.addColorStop(1, 'rgba(242, 242, 253, 0)');
+
+        return {
+            labels: ["jan", "feb", "march", "april", "may"],
+
+            datasets: [
+                {
+                    backgroundColor: gradient,
+                    pointColor: "#fff",
+                    fill: 'start',
+                    pointHighlightStroke: "#ff6c23",
+                    pointRadius: 7,
+                    pointBackgroundColor: "white",
+                    data: graphData,
+                    type: 'line',
+                    borderColor: '#7E7AEB',
+                    borderWidth: 2,
+                },
+            ]
+        }
+    }
 
     return (
         <div>
@@ -180,8 +272,8 @@ const Analytics = (props, context) => {
                         </Select>
                     </FormControl>
                 </Grid>
-                <Grid container>
-                    <Grid lg={4} className={[classes.box, classes.yellow]} component="button">
+                <Grid container style={{ justifyContent: "space-evenly" }}>
+                    <Grid lg={4} item className={[classes.box, classes.yellow]} onClick={getDollarRevenue} component="button">
                         <img
                             src={"/images/icons/Dollar.png"}
                             className={classes.phoenix}
@@ -195,35 +287,42 @@ const Analytics = (props, context) => {
 
                         <Typography className={classes.status}>You made an extra $300k in the last 7 days</Typography>
                     </Grid>
-                    <Grid lg={4} className={[classes.box, classes.blue]} component="button">
+                    <Grid lg={4} item className={[classes.box, classes.blue]} onClick={getPhnxRevenue} component="button">
                         <img
                             src={"/images/icons/Dollar.png"}
                             className={classes.phoenix}
                             alt="Event Price"
                         />
-                        <Typography className={classes.dollar}>Dollar Revenue</Typography>
+                        <Typography className={classes.dollar}>PHNX Revenue</Typography>
                         <div style={{ display: "flex", alignItems: "center" }}>
-                            <Typography className={classes.total}>$2640</Typography>
+                            <Typography className={classes.total}>2640PHNX</Typography>
                             <Typography className={classes.red}>+10%</Typography>
                         </div>
 
-                        <Typography className={classes.status}>You made an extra $300k in the last 7 days</Typography>
+                        <Typography className={classes.status}>You made an extra $300k in the last 7 days
+                    </Typography>
                     </Grid>
-                    <Grid lg={4} className={[classes.box, classes.purple]} component="button">
+                    <Grid lg={4} item className={[classes.box, classes.purple]} onClick={getSoldTickets} component="button">
                         <img
                             src={"/images/icons/Dollar.png"}
                             className={classes.phoenix}
                             alt="Event Price"
                         />
-                        <Typography className={classes.dollar}>Dollar Revenue</Typography>
+                        <Typography className={classes.dollar}>Tickets Sold</Typography>
                         <div style={{ display: "flex", alignItems: "center" }}>
-                            <Typography className={classes.total}>$2640</Typography>
-                            <Typography className={classes.red}>+10%</Typography>
+                            <Typography className={classes.total}>640</Typography>
+                            <Typography className={classes.green}>+10%</Typography>
                         </div>
 
-                        <Typography className={classes.status}>You made an extra $300k in the last 7 days</Typography>
+                        <Typography className={classes.status}>You sold 5 Tickets less this last 7 days
+                    </Typography>
                     </Grid>
                 </Grid>
+                <Grid container style={{ margin: "70px 0px" }}>
+                    <Line data={data} options={chartOptions} />
+
+                </Grid>
+               <EventsAnalytics/>
             </Grid>
         </div>
     );
