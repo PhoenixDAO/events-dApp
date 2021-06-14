@@ -1,69 +1,129 @@
 import React, { Component } from 'react';
 import {Calendar,momentLocalizer} from 'react-big-calendar';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import moment from 'moment';
-import main from '../styles/main.css'
+// import main from '../styles/main.css'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 
-import Web3 from 'web3';
-import {Open_events_ABI, Open_events_Address} from '../config/OpenEvents';
+import axios from "axios";
+import { drizzleConnect } from "drizzle-react";
+import PropTypes from "prop-types";
+// import {INFURA_WEB_URL} from "../config/const";
+// import Web3 from 'web3';
+// import {Open_events_ABI, Open_events_Address} from '../config/OpenEvents';
 
 class Calendars extends Component {
     constructor(props) {
 
         super(props);
         this.state = {
-           
+            hideEvent: [],
+
             Events_Blockchain:[],
             activeEvents:'',
             latestblocks:6000000,
             blocks:5000000,
             events:[],
+            Deleted_Events: [],
+
         }
         this._isMounted = false;
+        this.account = this.props.accounts[0];
     }
 
-    async loadBlockchain(){
-    
-        const web3 = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b'));
-        const openEvents =  new web3.eth.Contract(Open_events_ABI, Open_events_Address);
-        
-        if (this._isMounted){
-        this.setState({openEvents});
-        this.setState({Events_Blockchain:[]});}
-        const dateTime = Date.now();
-        const dateNow = Math.floor(dateTime / 1000);
-        
-        const blockNumber = await web3.eth.getBlockNumber();
-        if (this._isMounted){
-        this.setState({blocks:blockNumber - 50000});
-        this.setState({latestblocks:blockNumber - 1});
-        this.setState({Events_Blockchain:[]});}
-      
-        openEvents.getPastEvents("CreatedEvent",{fromBlock: 5000000, toBlock:this.state.latestblocks})
-        .then(events=>{
-        if (this._isMounted){
-        this.setState({loading:true})
-        this.setState({Events_Blockchain:events});
-        this.setState({loading:false})
-        this.setState({active_length:this.state.Events_Blockchain.length})
-        
-        }
-         
-        }).catch((err)=>console.error(err))
-    
-        //Listens for New Events
-        openEvents.events.CreatedEvent({fromBlock: blockNumber, toBlock:'latest'})
-        .on('data', (log) => setTimeout(()=> {
-        if (this._isMounted){
-        this.setState({loading:true});
-        this.setState({Events_Blockchain:[...this.state.Events_Blockchain,log]});
-        this.setState({active_length:this.state.Events_Blockchain.length})}
-        this.setState({loading:false});
-        },10000))
-      }
-    
-    
+    async loadBlockchain() {
+		// GRAPH BLOCK //
+		// console.log("GraphQL query before call",Date.now())
+
+			await axios({
+				url: graphURL,
+				method: 'post',
+				data: {
+				  query: `
+				  {
+					eventsRemoveds {
+					  id
+					  eventId
+					}
+				  }
+				  `
+				}
+			}).then((graphDeletedEvents)=>{
+				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+
+				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
+					this.setState({ Deleted_Events: [] });
+				}else{
+					this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
+				}
+			}).catch((err)=>{
+				console.error(err);
+				this.setState({ Deleted_Events: [] });
+			})
+			
+
+		await axios({
+			url: graphURL,
+			method: 'post',
+			data: {
+			  query: `
+			  {
+				events {
+				  id
+				  eventId
+				  name
+				  time
+				  price
+				  token
+				  limited
+				  seats
+				  sold
+				  ipfs
+				  category
+				  owner
+				  revenueOfEvent
+				}
+			  }
+			  `
+			}
+		}).then((graphEvents)=>{
+			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+
+			if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+				// console.log("GraphQL query -- graphEvents undefined")
+				this.setState({ Events_Blockchain: [] ,
+					active_length: 0,
+					event_copy: []});
+			}else{
+				if (this._isMounted) {
+				
+					
+					
+					this.setState({
+						Events_Blockchain: graphEvents.data.data.events,
+						active_length: graphEvents.data.data.events.length,
+						event_copy: graphEvents.data.data.events,
+					});
+				}
+
+			}
+
+		}).catch((err) => console.error(err))
+		}
+
+      filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			return;
+		} catch (error) {
+			// console.log("check error", error);
+		}
+	};
+	
     goToEvent = (event_calendar)=>{
             let rawTitle = event_calendar.title;
             var titleRemovedSpaces = rawTitle;
@@ -72,8 +132,13 @@ class Calendars extends Component {
             .split(' ')
             .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
             .join(' ');
-	        let titleURL = "/event/"+pagetitle+"/" + event_calendar.id;
-    
+	        let titleURL;
+            if (event_calendar.account.toLowerCase()=== this.account.toLowerCase()) {
+                titleURL = "/event-stat/"+pagetitle+"/" + event_calendar.id;
+            }
+            else{
+               titleURL = "/event/"+pagetitle+"/" + event_calendar.id;
+            }
             this.props.history.push(titleURL);
         }
     
@@ -82,17 +147,44 @@ class Calendars extends Component {
         const localizer = momentLocalizer(moment) // or globalizeLocalizer
         {
         let events_calendar = []
-
-        for(var i = 0;i<this.state.Events_Blockchain.length;i++){
+        let events_list = [];
+        let skip = false;
+        for (let i =0; i < this.state.Events_Blockchain.length; i++) {
+            for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+                if (
+                    this.state.Events_Blockchain[i]
+                        .eventId ==
+                    this.state.Deleted_Events[j].eventId
+                ) {
+                    skip = true;
+                }
+            }
+            if(!skip){
+                for (let j = 0; j < this.state.hideEvent.length; j++) {
+                    if (
+                        this.state.Events_Blockchain[i]
+                            .eventId ==
+                        this.state.hideEvent[j].id
+                    ) {
+                        skip = true;
+                    }
+                }
+            }
+            if (!skip) {
+                events_list.push(this.state.Events_Blockchain[i]);
+            }
+            skip = false;
+        }
+        for(var i = 0;i<events_list.length;i++){
             events_calendar.push({
-            id:this.state.Events_Blockchain[i].returnValues.eventId,
-            title:this.state.Events_Blockchain[i].returnValues.name,
-            start:parseInt(this.state.Events_Blockchain[i].returnValues.time,10)*1000,
-            end:parseInt(this.state.Events_Blockchain[i].returnValues.time,10)*1000,
+            id:events_list[i].eventId,
+            title:events_list[i].name,
+            start:parseInt(events_list[i].time,10)*1000,
+            end:parseInt(events_list[i].time,10)*1000,
             allDay:true,
+            account:events_list[i].owner,
                 })
             }
-
         body = 
             <div style={{ height: '500pt'}}>
             <Calendar
@@ -117,9 +209,11 @@ class Calendars extends Component {
     }
 
     componentDidMount(){
+        this.props.executeScroll();
         this._isMounted = true;
         this.loadBlockchain();
-		window.scrollTo(0, 0);
+        this.filterHideEvent();
+
 
     }
 
@@ -127,4 +221,15 @@ class Calendars extends Component {
         this._isMounted = false;
     }
 }
-export default Calendars;
+Calendars.contextTypes = {
+	drizzle: PropTypes.object,
+};
+
+const mapStateToProps = (state) => {
+	return {
+		accounts: state.accounts,
+	};
+};
+
+const AppContainer = drizzleConnect(Calendars, mapStateToProps);
+export default AppContainer;
