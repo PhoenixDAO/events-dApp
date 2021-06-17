@@ -13,9 +13,9 @@ import {
 import BuyPHNXButton from "./common/BuyPhnxButton"
 import { KeyboardBackspace } from "@material-ui/icons";
 // import {Graph} from "../utils/graph";
-import { Line } from 'react-chartjs-2';
+import { Doughnut, Line } from 'react-chartjs-2';
 import EventsAnalytics from "./EventsAnalytics";
-
+import { Card } from "./common/Card";
 const useStyles = makeStyles((theme) => ({
     content: {
         backgroundColor: "white",
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "space-between",
         width: "100%",
-        alignItems: "flexEnd",
+        alignItems: "center",
         marginBottom: "25px",
 
 
@@ -51,64 +51,108 @@ const useStyles = makeStyles((theme) => ({
         color: "#413AE2",
         fontSize: "28px",
         fontWeight: "600",
+        alignItems: "center",
+
     },
     box: {
         border: "1px solid #E4E4E7",
         borderRadius: "8px",
-        padding: "20px",
-        "&:active": {
-            border: "8px solid #F2F2FD"
-        },
-        "&:focus": {
-            border: "8px solid #F2F2FD",
-            outline: "none"
-        },
+        padding: "30px 20px",
         backgroundColor: "white",
-        maxWidth: "31%",
-        textAlign: "inherit"
+        textAlign: "inherit",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: "40px",
+        width: "100%"
     },
-    yellow: {
-        borderLeft: "4px solid #E5AB00",
+    heading2: {
+        fontSize: "20px",
+        fontWeight: "700"
     },
-    blue: {
-        borderLeft: "4px solid #413AE2",
+    row2: {
+        display: "flex",
+        justifyContent: "space-between",
+        padding: "10px",
+        "& span": {
+            color: "#73727D",
+            fontSize: "18px",
+            marginBottom: "15px"
+        }
+    },
+    city: {
+        fontSize: "18px",
+        fontWeight: "600",
+        letterSpacing: "0.5px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "baseline",
+    },
+    ticketSold: {
+        color: "#4E4E55",
+        paddingRight: "10px",
+        fontSize: "18px"
 
     },
-    purple: {
-        borderLeft: "4px solid #963AE2",
-
+    row3: {
+        display: "flex",
+        justifyContent: "space-between",
+        padding: "15px 0px",
+        borderBottom: "1px solid #E4E4E7",
+        margin: "0px 10px"
     },
-    dollar: {
-        color: "#73727D",
-        textTransform: "uppercase"
+    chartDiv: {
+        background: `url('/images/graph.svg') no-repeat center 87px`,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: "110px"
     },
-    total: {
-        color: "#1E1E22",
-        fontSize: "24px",
-        fontWeight: "700",
-        paddingRight: "10px"
-    },
-    green: {
-        backgroundColor: "#E6FEF3",
-        color: '#07A287',
-        width: "57px",
-        textAlign: "center",
-        borderRadius: "10px"
-    },
-    red: {
-        backgroundColor: "#FEECEC",
-        color: '#F43C3C',
-        width: "57px",
-        textAlign: "center",
-        borderRadius: "10px"
-    },
-    status: {
-        fontSize: "14px",
-        color: "#73727D",
-        paddingTop: "15px"
-    },
-   
+    highlighter: {
+        width: "10px",
+        height: "10px",
+        display: "flex",
+        borderRadius: "50%",
+        marginRight: "12px",
+    }
 }));
+
+
+const TicketSales = [
+    {
+        eventCity: "melbourne",
+        TicketSold: 9
+    },
+    {
+        eventCity: "karachi",
+        TicketSold: 9
+    },
+    {
+        eventCity: "Sydney",
+        TicketSold: 8
+    },
+    {
+        eventCity: "Singapore",
+        TicketSold: 8
+    },
+    {
+        eventCity: "New York",
+        TicketSold: 4
+    },
+]
+//for doughnut chart
+const chartColors = ["#ACFFE3", "#96A6FF", "#FF8795", "#E8B56B", "#D0A6F2"];
+const data2 = {
+    maintainAspectRatio: false,
+    responsive: false,
+    labels: TicketSales.map((event) => { return event.eventCity }),
+    datasets: [
+        {
+            data: TicketSales.map((event) => { return event.TicketSold }),
+            backgroundColor: chartColors,
+            hoverBackgroundColor: chartColors
+        }
+    ]
+};
 
 const Analytics = (props, context) => {
     const {
@@ -129,7 +173,7 @@ const Analytics = (props, context) => {
     //for graph datasets
     let dataset = [];
     const getPhnxRevenue = () => {
-        dataset = [1, 2, 34, 5, 6, 7]
+        dataset = [1, 2, 34, 0, 6, 7]
         setGraphData(dataset);
     }
     const getDollarRevenue = () => {
@@ -140,7 +184,57 @@ const Analytics = (props, context) => {
         dataset = [4, 7, 8, 93, 32, 21];
         setGraphData(dataset);
     }
+    const TicketAnalytics = () => {
+        return TicketSales.map((event, index) => (
+            <Grid className={classes.row3}>
 
+                <Grid className={classes.city}><div className={classes.highlighter} style={{ backgroundColor: chartColors[index] }} ></div>{event.eventCity}</Grid>
+                <Grid className={classes.ticketSold}>{event.TicketSold}</Grid>
+
+            </Grid>
+        ));
+    };
+    //doughnut chart options
+    const options2 = {
+        legend: {
+            display: false,
+            position: "right"
+        },
+        elements: {
+            arc: {
+                borderWidth: 0
+            }
+        },
+        plugins: {
+            labels: false
+        },
+        cutoutPercentage:85,
+        tooltips: {
+            callbacks: {
+                title: function (tooltipItem, data) {
+                    return (data['labels'][tooltipItem[0]['index']]);
+                },
+                label: function (tooltipItem, data) {
+                    return data['datasets'][0]['data'][tooltipItem['index']] + " Tickets";
+                },
+                // afterLabel: function (tooltipItem, data) {
+                //     var dataset = data['datasets'][0];
+                //     var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+                //     return '(' + percent + '%)';
+                // }
+            },
+            backgroundColor: 'black',
+            titleFontSize: 16,
+            xPadding: 15,
+            yPadding: 15,
+            titleFontColor: '#fff',
+            bodyFontColor: '#E4E4E7',
+            bodyFontSize: 14,
+            displayColors: false,
+        }
+    
+    };
+    //line chart options
     const chartOptions = {
         // capBezierPoints: true,
         legend: {
@@ -237,6 +331,7 @@ const Analytics = (props, context) => {
                     <h3 className={classes.heading}>
                         Earnings
                     </h3>
+
                     <FormControl
                         variant="outlined"
                         className={classes.select}
@@ -259,72 +354,101 @@ const Analytics = (props, context) => {
                                 value="Yesterday"
                             >
                                 Yesterday
-                                </option>
+                            </option>
                             <option value="Last 7 Days">
                                 Last 7 Days
-												</option>
+                            </option>
                             <option value="Last 28 Days">
                                 Last 28 Days
-												</option>
+                            </option>
                             <option value="Last 90 Days">
                                 Last 90 Days
-												</option>
+                            </option>
                         </Select>
                     </FormControl>
+
                 </Grid>
                 <Grid container style={{ justifyContent: "space-evenly" }}>
-                    <Grid lg={4} item className={[classes.box, classes.yellow]} onClick={getDollarRevenue} component="button">
-                        <img
-                            src={"/images/icons/Dollar.png"}
-                            className={classes.phoenix}
-                            alt="Event Price"
-                        />
-                        <Typography className={classes.dollar}>Dollar Revenue</Typography>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <Typography className={classes.total}>$2640</Typography>
-                            <Typography className={classes.red}>+10%</Typography>
-                        </div>
+                    <Card color="#E5AB00" click={getDollarRevenue} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
+                    <Card color="#413AE2" click={getPhnxRevenue} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
+                    <Card color="#963AE2" click={getSoldTickets} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
 
-                        <Typography className={classes.status}>You made an extra $300k in the last 7 days</Typography>
-                    </Grid>
-                    <Grid lg={4} item className={[classes.box, classes.blue]} onClick={getPhnxRevenue} component="button">
-                        <img
-                            src={"/images/icons/Dollar.png"}
-                            className={classes.phoenix}
-                            alt="Event Price"
-                        />
-                        <Typography className={classes.dollar}>PHNX Revenue</Typography>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <Typography className={classes.total}>2640PHNX</Typography>
-                            <Typography className={classes.red}>+10%</Typography>
-                        </div>
-
-                        <Typography className={classes.status}>You made an extra $300k in the last 7 days
-                    </Typography>
-                    </Grid>
-                    <Grid lg={4} item className={[classes.box, classes.purple]} onClick={getSoldTickets} component="button">
-                        <img
-                            src={"/images/icons/Dollar.png"}
-                            className={classes.phoenix}
-                            alt="Event Price"
-                        />
-                        <Typography className={classes.dollar}>Tickets Sold</Typography>
-                        <div style={{ display: "flex", alignItems: "center" }}>
-                            <Typography className={classes.total}>640</Typography>
-                            <Typography className={classes.green}>+10%</Typography>
-                        </div>
-
-                        <Typography className={classes.status}>You sold 5 Tickets less this last 7 days
-                    </Typography>
-                    </Grid>
                 </Grid>
                 <Grid container style={{ margin: "70px 0px" }}>
                     <Line data={data} options={chartOptions} />
 
                 </Grid>
-               <EventsAnalytics/>
+                <EventsAnalytics />
+                <Grid className={classes.box}>
+
+                    <Grid className={classes.row}>
+
+                        <h5 className={classes.heading2}>
+                            Ticket sales by Location
+                        </h5>
+                        <Grid style={{ display: "flex", alignItems: "center" }}>
+                            <span style={{ color: "#73727D", marginRight: "10px" }}>Event</span>
+                            <FormControl
+                                variant="outlined"
+                                className={classes.select}
+                            >
+                                <Select
+                                    native
+                                    // value={state.age}
+                                    // onChange={handleChange}
+                                    inputProps={{
+                                        name: "age",
+                                        id: "outlined-age-native-simple",
+                                    }}
+                                >
+
+                                    <option value="Today">
+                                        Devfest
+                                    </option>
+                                    <option
+                                        aria-label="None"
+                                        value="Yesterday"
+                                    >
+                                        Yesterday
+                                    </option>
+                                    <option value="Last 7 Days">
+                                        Last 7 Days
+                                    </option>
+                                    <option value="Last 28 Days">
+                                        Last 28 Days
+                                    </option>
+                                    <option value="Last 90 Days">
+                                        Last 90 Days
+                                    </option>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    </Grid>
+
+
+                    <Grid container>
+                        <Grid lg={7}>
+                            <Grid className={classes.row2}>
+                                <span>
+                                    Cities
+                                </span>
+                                <span>
+                                    No of Tickets
+                                </span>
+                            </Grid>
+                            <TicketAnalytics />
+                        </Grid>
+                        <Grid lg={5} className={classes.chartDiv}>
+
+                            <Doughnut data={data2} options={options2} />
+
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+
             </Grid>
-        </div>
+        </div >
     );
 };
 Analytics.contextTypes = {

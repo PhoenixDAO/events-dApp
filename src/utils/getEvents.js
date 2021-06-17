@@ -12,7 +12,6 @@ export const getEvents = (props, context) => {
     const [hideEvent, setHideEvent] = useState([]);
     const [_isMounted, set_isMounted] = useState(props._isMounted);
     useEffect(() => {
-        console.log("i am ere", props)
         if (
             _isMounted
         ) {
@@ -28,10 +27,7 @@ export const getEvents = (props, context) => {
         try {
             const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
             if (get.data.result.length != 0) {
-
                 setHideEvent(get.data.result)
-                console.log("I am Deleted_Events", get.data.result)
-
             }
 
             return;
@@ -63,7 +59,6 @@ export const getEvents = (props, context) => {
                     setDeleted_Events([]);
                 } else {
                     setDeleted_Events(graphDeletedEvents.data.data.eventsRemoveds)
-                    // this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
                 }
             }).catch((err) => {
                 console.error("graph error here", err);
@@ -113,7 +108,6 @@ export const getEvents = (props, context) => {
                         const dateNow = Math.floor(dateTime / 1000);
 
                         let userEvents = graphEvents.data.data.users.find((user) => user.account.toLowerCase() == props.accounts.toLowerCase())
-                        console.log("graph userEvents", userEvents)
                         if (userEvents) {
                             let newsort = userEvents.userEvents
                                 .concat()
@@ -139,7 +133,6 @@ export const getEvents = (props, context) => {
         let filteredDeleted = [];
         let skip = false;
         let skip2 = false;
-        // console.log("Dashboard NewAndUpdatedEvent in dashboard after uniqueness this.state.MyEvents",this.state.MyEvents)
         console.log("GraphQL query newsort", MyEvents, "deleted", Deleted_Events);
 
         for (let i = 0; i < MyEvents.length; i++) {
@@ -173,26 +166,7 @@ export const getEvents = (props, context) => {
             skip2 = false;
         }
         console.log("filtered", filteredDeletedReported, filteredDeleted)
-        // var array1 = this.state.MyEvents;
-        // for (var key in this.state.MyEvents) {
-        // 	for (var key2 in deletedArray) {
-        // 		if (deletedArray[key] != this.state.MyEvents[key2]) {
-        // 			array1.splice(key, 1);
-        // 		}
-        // 	}
-        // }
-        // console.log("Dashboard DeletedEvent in dashboard",deletedArray)
-        // console.log("Dashboard DeletedEvent in dashboard deletedArray2",deletedArray2)
         setMyEvents(filteredDeletedReported);
-        // this.setState(
-        //     {
-        //         // filtered only deleted events
-        //         deletedArray2: deletedArray2,
-        //         // filtered deleted and reported events
-        //         deletedArray: deletedArray,
-        //     },
-        //     () => this.GetEventsRevenue(this.state.deletedArray)
-        // );
     }
     return MyEvents;
 }
