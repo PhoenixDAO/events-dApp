@@ -436,7 +436,7 @@ class Form extends Component {
 		}
 	};
 
-	render() {																			
+	render() {
 		let symbol = "PhoenixDAO.png";
 		let currency = this.state.currency === "eth" ? "ETH" : "PHNX";
 		let freeEvent = "";
@@ -802,7 +802,10 @@ class Form extends Component {
 								value={this.state.type}
 								onChange={this.categoryChange}
 							>
-								<option value="" selected>
+								<option
+									value=""
+									//  selected
+								>
 									Please select from dropdown
 								</option>
 								{eventTopics.map((Topic, index) => (
@@ -1177,7 +1180,7 @@ class Form extends Component {
 							</li>
 						</ul>
 						<div className="card-footer text-muted text-center">
-							<button className="btn btn-dark" disabled="true">
+							<button className="btn btn-dark" disabled>
 								{this.state.currency === "eth"
 									? "Get Ticket"
 									: "Buy Ticket"}
