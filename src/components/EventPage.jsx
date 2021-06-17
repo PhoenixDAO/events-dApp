@@ -10,10 +10,7 @@ import {
 	Select,
 	IconButton,
 } from "@material-ui/core";
-import {
-	ShoppingCartOutlined,
-	ModeCommentOutlined,
-} from "@material-ui/icons";
+import { ShoppingCartOutlined, ModeCommentOutlined } from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
@@ -54,6 +51,7 @@ import {
 } from "../config/phoenixDAOcontract_testnet";
 import BuyTicket from "./common/BuyTicket";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
+import { updateEventViews } from "../config/serverAPIs";
 
 let numeral = require("numeral");
 
@@ -645,22 +643,23 @@ class EventPage extends Component {
 					hour: "2-digit",
 					minute: "2-digit",
 				});
-				let priceGrid=<div className={classes.eventinfo}>
-											<span className={classes.PhnxPrice} >{event_data[3]
-												? numeral(price).format("0.000") + "PHNX"
-												: "FREE"}
-											</span>
-											<div style={{ color: "#56555D", fontSize: "14px" }}>
-												{event_data[3]
-													? "$" + numeral(
-														price *
-														this.state
-															.PhoenixDAO_market
-															.usd
-													).format("0.000")
-													: ""}
-											</div>
-										</div>;
+				let priceGrid = (
+					<div className={classes.eventinfo}>
+						<span className={classes.PhnxPrice}>
+							{event_data[3]
+								? numeral(price).format("0.000") + "PHNX"
+								: "FREE"}
+						</span>
+						<div style={{ color: "#56555D", fontSize: "14px" }}>
+							{event_data[3]
+								? "$" +
+								  numeral(
+										price * this.state.PhoenixDAO_market.usd
+								  ).format("0.000")
+								: ""}
+						</div>
+					</div>
+				);
 				if (this.props.match.params.page === pagetitle) {
 					body = (
 						<Grid>
@@ -671,8 +670,9 @@ class EventPage extends Component {
 								eventTitle={event_data[0]}
 								date={event_date}
 								time={time}
-								price={priceGrid} 
-								buy={this.inquire}/>
+								price={priceGrid}
+								buy={this.inquire}
+							/>
 							<Grid className="header3">
 								<h2>
 									<IconButton
@@ -796,18 +796,41 @@ class EventPage extends Component {
 											</Select>
 										</FormControl>
 										{priceGrid}
-										<p className={classes.eventHeading}> <CalendarTodayOutlined /> Date
+										<p className={classes.eventHeading}>
+											{" "}
+											<CalendarTodayOutlined /> Date
 										</p>
-										<p className={classes.eventinfo}>	{event_date}
+										<p className={classes.eventinfo}>
+											{" "}
+											{event_date}
 										</p>
-										<p className={classes.eventHeading}><ScheduleOutlined /> Time</p>
-										<p className={classes.eventinfo}>		{time}</p>
-										<p className={classes.eventHeading}><LocationOnOutlined /> Location</p>
-										<p className={classes.eventinfo}>{locations}</p>
-										<p className={classes.eventHeading}><PersonOutlined />Organizer</p>
-										<p className={classes.eventinfo}>{this.state.organizer}</p>
-										<p className={classes.eventHeading}><ConfirmationNumberOutlined />Tickets Bought</p>
-										<p className={classes.eventinfo}>{event_data[6]}/{max_seats}</p>
+										<p className={classes.eventHeading}>
+											<ScheduleOutlined /> Time
+										</p>
+										<p className={classes.eventinfo}>
+											{" "}
+											{time}
+										</p>
+										<p className={classes.eventHeading}>
+											<LocationOnOutlined /> Location
+										</p>
+										<p className={classes.eventinfo}>
+											{locations}
+										</p>
+										<p className={classes.eventHeading}>
+											<PersonOutlined />
+											Organizer
+										</p>
+										<p className={classes.eventinfo}>
+											{this.state.organizer}
+										</p>
+										<p className={classes.eventHeading}>
+											<ConfirmationNumberOutlined />
+											Tickets Bought
+										</p>
+										<p className={classes.eventinfo}>
+											{event_data[6]}/{max_seats}
+										</p>
 									</Grid>
 								</Grid>
 								<Grid container className={classes.socialDiv}>
@@ -1074,6 +1097,11 @@ class EventPage extends Component {
 	}
 
 	componentDidMount() {
+		updateEventViews({
+			eventId: this.props.match.params.id,
+			address: this.account,
+			networkId: this.props.networkId,
+		});
 		this.loadEventFromBlockchain();
 		window.scroll({
 			top: 0,
@@ -1104,6 +1132,7 @@ const mapStateToProps = (state) => {
 		contracts: state.contracts,
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
+		networkId: state.web3.networkId,
 	};
 };
 
