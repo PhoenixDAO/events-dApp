@@ -28,7 +28,7 @@ import LocationLandingPage from "./LocationLandingPage";
 import LocationsLandingPage from "./LocationsLandingPage";
 import Calendars from "./Calendars";
 import Token from "./Token";
-import Dashboard from "./Dashboard";
+// import Dashboard from "./Dashboard";
 import Terms from "./Terms";
 import Notify from "./Notify";
 import NotifyEvent from "./NotifyEvent";

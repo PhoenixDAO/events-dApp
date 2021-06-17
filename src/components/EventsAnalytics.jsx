@@ -11,8 +11,6 @@ import {
     Typography,
     Paper
 } from "@material-ui/core";
-import BuyPHNXButton from "./common/BuyPhnxButton"
-import { KeyboardBackspace } from "@material-ui/icons";
 import {getEvents} from "../utils/getEvents";
 const useStyles = makeStyles((theme) => ({
 
@@ -65,8 +63,7 @@ const [_isMounted,set_isMounted] =useState(true);
 const [MyEvents, setMyEvents] = useState([]);
 
     useEffect(() => {
-        // const result=getEvents();
-        // console.log("result",result);
+   
 
     });
     const classes = useStyles();
@@ -76,7 +73,6 @@ const [MyEvents, setMyEvents] = useState([]);
     )
     {
      result=getEvents({_isMounted:true,accounts:props.accounts});
-        console.log("result",result)
     }
 
 
