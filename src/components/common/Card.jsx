@@ -19,7 +19,11 @@ const useStyles = makeStyles((theme) => ({
         },
         backgroundColor: "white",
         maxWidth: "31%",
-        textAlign: "inherit"
+        textAlign: "inherit",
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: "initial",
+            margin: "10px",
+        }
     },
     color: {
     },
@@ -72,7 +76,7 @@ export const Card = (props) => {
     }, []);
     const classes = useStyles();
     return (
-        <Grid lg={4} item className={classes.box} onClick={click} style={{ borderLeft: `4px solid ${color}` }} component="button">
+        <Grid lg={4} sm={12} xs={12} item className={classes.box} onClick={click} style={{ borderLeft: `4px solid ${color}` }} component="button">
             <img
                 src={imageSrc}
                 className={classes.phoenix}

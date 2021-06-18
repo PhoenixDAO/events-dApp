@@ -507,7 +507,7 @@ class FindEvents extends Component {
 
 		return (
 			<React.Fragment>
-				<div className="retract-page-inner-wrapper-alternative dashh">
+				<div>
 					{/* <div
 						className="input-group input-group-lg"
 						ref={this.myRef}

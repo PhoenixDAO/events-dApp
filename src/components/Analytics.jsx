@@ -16,12 +16,19 @@ import { KeyboardBackspace } from "@material-ui/icons";
 import { Doughnut, Line } from 'react-chartjs-2';
 import EventsAnalytics from "./EventsAnalytics";
 import { Card } from "./common/Card";
+import { getEvents } from "../utils/getEvents";
+
 const useStyles = makeStyles((theme) => ({
     content: {
         backgroundColor: "white",
         margin: "40px 0px",
         padding: "50px",
-        borderRadius: "8px"
+        borderRadius: "8px",
+        paddingBottom:"80px",
+        [theme.breakpoints.down("xs")]: {
+            padding: "10px",
+
+        }
     },
     select: {
         width: "170px",
@@ -42,7 +49,9 @@ const useStyles = makeStyles((theme) => ({
         width: "100%",
         alignItems: "center",
         marginBottom: "25px",
-
+        [theme.breakpoints.down("xs")]: {
+            display:"grid"
+        }
 
     },
     heading: {
@@ -79,19 +88,27 @@ const useStyles = makeStyles((theme) => ({
             marginBottom: "15px"
         }
     },
+    
     city: {
         fontSize: "18px",
         fontWeight: "600",
         letterSpacing: "0.5px",
         display: "flex",
-        justifyContent: "center",
         alignItems: "baseline",
+        [theme.breakpoints.down("xs")]: {
+            fontSize: "16px",
+
+        }
+
     },
     ticketSold: {
         color: "#4E4E55",
         paddingRight: "10px",
-        fontSize: "18px"
+        fontSize: "18px",
+        [theme.breakpoints.down("xs")]: {
+            fontSize: "16px",
 
+        }
     },
     row3: {
         display: "flex",
@@ -105,7 +122,16 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        zIndex: "110px"
+        [theme.breakpoints.down("sm")]: {
+            marginTop:"35px",
+            background: `url('/images/graph.svg') no-repeat center`,
+        },
+        [theme.breakpoints.down("xs")]: {
+            marginTop:"35px",
+            background: `url('/images/graph.svg') no-repeat center`,
+            backgroundSize: "300px 100px"
+
+        }
     },
     highlighter: {
         width: "10px",
@@ -113,7 +139,17 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         borderRadius: "50%",
         marginRight: "12px",
-    }
+    },
+    Top5Events: {
+        marginTop: "60px",
+        width: "100%"
+    },
+    header:{
+        color: "#73727D",
+        fontSize: "18px",
+        marginBottom: "15px"
+    },
+    
 }));
 
 
@@ -160,9 +196,9 @@ const Analytics = (props, context) => {
         // date,
 
     } = props;
-
     useEffect(() => {
         getPhnxRevenue();
+        
 
     }, []);
     const classes = useStyles();
@@ -194,6 +230,23 @@ const Analytics = (props, context) => {
             </Grid>
         ));
     };
+    let Events = getEvents({ _isMounted: true, accounts: props.accounts });
+    console.log("result",Events);
+    const Top5Events = () => {
+        return Events.map((event, index) => (
+            <Grid className={classes.row3}>
+                <Grid lg={3} className={classes.ticketSold}><i
+											className="fa fa-ticket-alt"
+											title="My Tickets"
+                                            style={{color:"#73727D",paddingRight:"10px"}}
+										></i>{event.sold}</Grid>
+                <Grid lg={6} className={classes.city}>{event.name}</Grid>
+                <Grid lg={3} className={classes.ticketSold} style={{textAlign:"end"}}>{event.revenueOfEvent/1000000000000000000} PHNX</Grid>
+
+            </Grid>
+        ));
+    };
+
     //doughnut chart options
     const options2 = {
         legend: {
@@ -208,7 +261,7 @@ const Analytics = (props, context) => {
         plugins: {
             labels: false
         },
-        cutoutPercentage:85,
+        cutoutPercentage: 85,
         tooltips: {
             callbacks: {
                 title: function (tooltipItem, data) {
@@ -232,7 +285,7 @@ const Analytics = (props, context) => {
             bodyFontSize: 14,
             displayColors: false,
         }
-    
+
     };
     //line chart options
     const chartOptions = {
@@ -368,7 +421,7 @@ const Analytics = (props, context) => {
                     </FormControl>
 
                 </Grid>
-                <Grid container style={{ justifyContent: "space-evenly" }}>
+                <Grid container style={{ justifyContent: "space-evenly"}}>
                     <Card color="#E5AB00" click={getDollarRevenue} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
                     <Card color="#413AE2" click={getPhnxRevenue} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
                     <Card color="#963AE2" click={getSoldTickets} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
@@ -382,10 +435,12 @@ const Analytics = (props, context) => {
                 <Grid className={classes.box}>
 
                     <Grid className={classes.row}>
+                        <Grid className={classes.row}>
 
-                        <h5 className={classes.heading2}>
-                            Ticket sales by Location
-                        </h5>
+                            <h5 className={classes.heading2}>
+                                Ticket sales by Location
+                            </h5>
+                        </Grid>
                         <Grid style={{ display: "flex", alignItems: "center" }}>
                             <span style={{ color: "#73727D", marginRight: "10px" }}>Event</span>
                             <FormControl
@@ -427,7 +482,7 @@ const Analytics = (props, context) => {
 
 
                     <Grid container>
-                        <Grid lg={7}>
+                        <Grid lg={7} sm={12} xs={12} md={6}>
                             <Grid className={classes.row2}>
                                 <span>
                                     Cities
@@ -438,14 +493,63 @@ const Analytics = (props, context) => {
                             </Grid>
                             <TicketAnalytics />
                         </Grid>
-                        <Grid lg={5} className={classes.chartDiv}>
-
+                        <Grid lg={5} sm={12} xs={12} md={6} className={classes.chartDiv}>
                             <Doughnut data={data2} options={options2} />
-
                         </Grid>
                     </Grid>
 
                 </Grid>
+
+                {/* Top 5 Events */}
+                <Grid className={classes.Top5Events}>
+                    <Grid className={classes.row}>
+
+                        <h2 className={classes.heading2}>Top 5 Events</h2>
+                        <FormControl
+                            variant="outlined"
+                            className={classes.select}
+                        >
+                            <Select
+                                native
+                                // value={state.age}
+                                // onChange={handleChange}
+                                inputProps={{
+                                    name: "age",
+                                    id: "outlined-age-native-simple",
+                                }}
+                            >
+
+                                <option value="Dollar">
+                                    Dollar
+                                </option>
+
+                                <option value="PHNX">
+                                    PHNX
+                                </option>
+
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
+                    <Grid className={classes.box} style={{ marginTop: "30px" }}>
+                        <Grid className={classes.row2}>
+
+                            <Grid className={classes.header} lg={3}>
+                                No of Tickets
+                            </Grid>
+                            <Grid className={classes.header} lg={6}>
+                                Event Name
+                            </Grid>
+                            <Grid className={classes.header} style={{textAlign:"end"}} lg={3}>
+                                Revenue
+                            </Grid>
+                        </Grid>
+                        <Top5Events/>
+
+                    </Grid>
+
+                </Grid>
+
 
             </Grid>
         </div >

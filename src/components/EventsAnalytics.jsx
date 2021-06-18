@@ -73,6 +73,7 @@ const [MyEvents, setMyEvents] = useState([]);
     )
     {
      result=getEvents({_isMounted:true,accounts:props.accounts});
+     console.log("result",result);
     }
 
 
@@ -84,7 +85,7 @@ const [MyEvents, setMyEvents] = useState([]);
                 Events
                     </h3>
             <Grid container style={{ marginTop: "30px" }} item xs={12} spacing={3}>
-                <Grid item lg={6} xl={6}>
+                <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
                     <Paper className={classes.box2}>
                         <span className={classes.imageDiv}>
                             <img
@@ -96,7 +97,7 @@ const [MyEvents, setMyEvents] = useState([]);
                         <Typography className={classes.text1}>{result.length}</Typography>
                     </Paper>
                 </Grid>
-                <Grid item lg={6} xl={6}>
+                <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
                     <Paper className={classes.box2}>
                         <span className={classes.imageDiv}>
                             <img
@@ -108,7 +109,7 @@ const [MyEvents, setMyEvents] = useState([]);
                         <Typography className={classes.text1}>6</Typography>
                     </Paper>
                 </Grid>
-                <Grid item lg={6} xl={6}>
+                <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
                     <Paper className={classes.box2}>
                         <span className={classes.imageDiv}>
                             <img
@@ -120,7 +121,7 @@ const [MyEvents, setMyEvents] = useState([]);
                         <Typography className={classes.text1}>6</Typography>
                     </Paper>
                 </Grid>
-                <Grid item lg={6} xl={6}>
+                <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
                     <Paper className={classes.box2}>
                         <span className={classes.imageDiv}>
                             <img
