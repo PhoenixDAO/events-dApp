@@ -51,7 +51,7 @@ import {
 
 import NetworkError from "./NetworkError";
 import PageNotFound from "./PageNotFound";
-import  Favorites  from "./Favorite.jsx";
+import Favorites from "./Favorite.jsx";
 let ethereum = window.ethereum;
 let web3 = window.web3;
 const items = ["slide1.png", "slide2.png", "slide3.png", "slide4.png"];
@@ -68,7 +68,7 @@ class App extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {}
+		} catch (e) { }
 		super(props);
 		this.state = {
 			sent_tx: [],
@@ -144,7 +144,7 @@ class App extends Component {
 					new Web3.providers.HttpProvider(INFURA_URL)
 				);
 			}
-			window.ethereum.on("connect", function (accounts) {});
+			window.ethereum.on("connect", function (accounts) { });
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
 				window.location.reload();
@@ -182,7 +182,7 @@ class App extends Component {
 			});
 		}
 	};
-	
+
 	//TransferFrom when buying with PhoenixDAO
 	//After Approval
 	afterApprove = () =>
@@ -361,74 +361,74 @@ class App extends Component {
 	//Get Value form Event Creator from child component
 	//Notify,listen for transaction status.
 	passtransaction = (transaction, type) => {
-        let txreceipt = "";
-        let txconfirmed = "";
-        let txerror = "";
-        this.setState({disabledStatus:true})
-        this.setState({ upload: true, createEvent: transaction }, () =>
-            this.state.createEvent
-                .send({ from: this.state.account })
-                .on("transactionHash", (hash) => {
-                    if (hash !== null) {
-                        this.setState({
-                            upload: false,
-                            done: true,
-                        });
-                        toast(<NotifyEvent hash={hash} type={type} />, {
-                            position: "bottom-right",
-                            autoClose: true,
-                            pauseOnHover: true,
-                        });
-                    }
-                })
-                .on("confirmation", (confirmationNumber, receipt) => {
-                    if (confirmationNumber == 1) {
-                        txreceipt = receipt;
-                        txconfirmed = confirmationNumber;
-                        if (txconfirmed == 1 && txreceipt.status == true) {
-                            toast(
-                                <NotifyEventSuccess
-                                    hash={txreceipt.transactionHash}
-                                    createdEvent={
-                                        type === "create"
-                                            ? txreceipt.events.CreatedEvent
-                                                    .returnValues
-                                            : txreceipt.events
-                                                    .NewAndUpdatedEvent
-                                                    .returnValues
-                                    }
-                                />,
-                                {
-                                    position: "bottom-right",
-                                    autoClose: true,
-                                    pauseOnHover: true,
-                                }
-                            );
-                        }
-                        this.setState({disabledStatus:false})
-                    }
-                })
-                .on("error", (error) => {
-                    if (error !== null) {
-                        txerror = error;
-                        console.log("error", error);
-                        this.setState({ error: true });
-                        toast(
-                            <NotifyError
-                                error={error}
-                                message={txerror.message}
-                            />,
-                            {
-                                position: "bottom-right",
-                                autoClose: true,
-                                pauseOnHover: true,
-                            }
-                        );
-                    }
-                    this.setState({disabledStatus:false})
-                })
-        );
-    };		
+		let txreceipt = "";
+		let txconfirmed = "";
+		let txerror = "";
+		this.setState({ disabledStatus: true })
+		this.setState({ upload: true, createEvent: transaction }, () =>
+			this.state.createEvent
+				.send({ from: this.state.account })
+				.on("transactionHash", (hash) => {
+					if (hash !== null) {
+						this.setState({
+							upload: false,
+							done: true,
+						});
+						toast(<NotifyEvent hash={hash} type={type} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						});
+					}
+				})
+				.on("confirmation", (confirmationNumber, receipt) => {
+					if (confirmationNumber == 1) {
+						txreceipt = receipt;
+						txconfirmed = confirmationNumber;
+						if (txconfirmed == 1 && txreceipt.status == true) {
+							toast(
+								<NotifyEventSuccess
+									hash={txreceipt.transactionHash}
+									createdEvent={
+										type === "create"
+											? txreceipt.events.CreatedEvent
+												.returnValues
+											: txreceipt.events
+												.NewAndUpdatedEvent
+												.returnValues
+									}
+								/>,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true,
+								}
+							);
+						}
+						this.setState({ disabledStatus: false })
+					}
+				})
+				.on("error", (error) => {
+					if (error !== null) {
+						txerror = error;
+						console.log("error", error);
+						this.setState({ error: true });
+						toast(
+							<NotifyError
+								error={error}
+								message={txerror.message}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
+					}
+					this.setState({ disabledStatus: false })
+				})
+		);
+	};
 	toggleDisabling = () => {
 		this.setState({ disabledStatus: !this.state.disabledStatus });
 	};
@@ -597,7 +597,7 @@ class App extends Component {
 							/>
 						)}
 					/>
-						<Route
+					<Route
 						exact
 						path="/favorite/:page"
 						render={(props) => (
@@ -824,18 +824,18 @@ class App extends Component {
 							<h1>PhoenixDAO Events Marketplace</h1>
 							<p>What are you going to do?</p>
 						</div> */}
-						<div className="container">
-							<div className="page-wrapper-inner">
-								<div>
+						<div className="page-wrapper-inner">
+							<div className="container">
+								<div className="retract-page-inner-wrapper">
 									{body}
-									<Snackbar
-										open={this.state.openSnackbar}
-										message={
-											"MetaMask is not installed. Please install MetaMask to continue !"
-										}
-										handleClose={this.handleSnackbarClose}
-									/>
 								</div>
+								<Snackbar
+									open={this.state.openSnackbar}
+									message={
+										"MetaMask is not installed. Please install MetaMask to continue !"
+									}
+									handleClose={this.handleSnackbarClose}
+								/>
 							</div>
 						</div>
 					</div>

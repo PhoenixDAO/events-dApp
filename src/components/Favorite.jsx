@@ -521,11 +521,7 @@ class Favorites extends Component {
 
         return (
             <React.Fragment>
-                <div className="retract-page-inner-wrapper-alternative dashh">
-
-
-
-
+                <div>
                     <Grid className="header3">
                         <h2>
                             Favourites
