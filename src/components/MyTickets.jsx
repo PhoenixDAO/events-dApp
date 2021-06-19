@@ -155,7 +155,7 @@ class MyTickets extends Component {
 		}
 
 		return (
-			<div ref={this.myRef} className="retract-page-inner-wrapper-alternative ticketDiv">
+			<div ref={this.myRef}>
 				<div className="my-tickets-page">
 					<Grid className="header3">
 						<h2>

@@ -535,7 +535,6 @@ class FindEvents extends Component {
 						<div>
 							<br />
 							<br />
-							<br />
 
 							<div
 								style={{

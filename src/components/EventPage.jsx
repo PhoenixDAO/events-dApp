@@ -89,6 +89,10 @@ const styles = (theme) => ({
 	},
 	description: {
 		marginTop: "35px",
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "space-between",
+		alignItems: "end",
 	},
 	paper: {
 		padding: theme.spacing(2),
@@ -166,6 +170,25 @@ const styles = (theme) => ({
 		width: "80%",
 		marginBottom: "80px",
 	},
+	row: {
+		marginTop: "40px"
+	},
+	heading: {
+		borderBottom: "1px solid #E4E4E7",
+		fontWeight: "700",
+		color: "black",
+		paddingBottom: "10px",
+		marginBottom: "20px"
+	},
+	avatar: {
+		display: "inline-block",
+		marginBottom: "10px",
+		border: "1.4619px solid #D8D8D8",
+		padding: "6px",
+		background: "white",
+		marginRight: "7px",
+		marginTop: "-4px"
+	}
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -178,7 +201,7 @@ class EventPage extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {}
+		} catch (e) { }
 		super(props);
 		this.contracts = context.drizzle.contracts;
 		this.revenue =
@@ -653,9 +676,9 @@ class EventPage extends Component {
 						<div style={{ color: "#56555D", fontSize: "14px" }}>
 							{event_data[3]
 								? "$" +
-								  numeral(
-										price * this.state.PhoenixDAO_market.usd
-								  ).format("0.000")
+								numeral(
+									price * this.state.PhoenixDAO_market.usd
+								).format("0.000")
 								: ""}
 						</div>
 					</div>
@@ -674,7 +697,7 @@ class EventPage extends Component {
 								buy={this.inquire}
 							/>
 							<Grid className="header3">
-								<h2>
+								<div style={{display: "flex",alignItems: "center"}}>
 									<IconButton
 										aria-label="delete"
 										onClick={this.goBack}
@@ -684,9 +707,11 @@ class EventPage extends Component {
 											style={{ fill: "#1E1E22" }}
 										/>
 									</IconButton>
-									<span>&nbsp;&nbsp;</span>
-									{event_data[0]}
-								</h2>
+									<h2>
+
+										{event_data[0]}
+									</h2>
+								</div>
 								<div>
 									<Button
 										variant="contained"
@@ -738,10 +763,6 @@ class EventPage extends Component {
 								</Grid>
 								<Grid
 									container
-									style={{
-										borderBottom: "1px solid #E4E4E7",
-										paddingBottom: "50px",
-									}}
 								>
 									<Grid
 										lg={9}
@@ -750,7 +771,15 @@ class EventPage extends Component {
 										xs={12}
 										className={classes.description}
 									>
-										{description}
+										<Grid container>
+											{description}
+										</Grid>
+										<Grid container>
+											<Clock
+												deadline={date}
+												event_unix={event_data[1]}
+											/>
+										</Grid>
 									</Grid>
 									<Grid
 										lg={3}
@@ -833,6 +862,55 @@ class EventPage extends Component {
 										</p>
 									</Grid>
 								</Grid>
+								<Grid container className={classes.row}>
+									<div className="new-transaction-wrapper">
+										<h2 className={classes.heading}>
+											Ticket Purchases
+										</h2>
+										{this.state.load && <Loading />}
+										<Grid container lg={12}>
+											{this.state.pageTransactions.map(
+												(sold, index) => (
+
+													<p
+														className="sold_text col-sm-12 col-md-12 col-lg-6 col-xl-6"
+														key={index}
+													>
+														{/* <img
+													className="float-left blockie"
+													src={makeBlockie(
+														sold
+													)}
+												/>{" "} */}
+														<Avatar
+															src="/images/metamask.svg"
+															className={classes.avatar}
+														/>
+														Someone bought 1 ticket for{" "}
+														{event_data[0]}
+														.
+													</p>
+												)
+											)}
+										</Grid>
+										{!sold && (
+											<p className="sold_text col-md-12 no-tickets">
+												There are currently no purchases for
+												this ticket.
+											</p>
+										)}
+									</div>
+									<div className="pagination">
+										<JwPagination
+											items={this.state.soldTicket}
+											onChangePage={this.onChangePage}
+											maxPages={5}
+											pageSize={5}
+											styles={customStyles}
+										/>
+									</div>
+								</Grid>
+
 								<Grid container className={classes.socialDiv}>
 									<Grid
 										lg={2}
