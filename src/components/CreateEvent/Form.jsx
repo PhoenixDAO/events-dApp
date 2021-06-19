@@ -6,6 +6,7 @@ import "react-datetime/css/react-datetime.css";
 import { FacebookCircularProgress } from "./TimeAndDateLoader";
 import eventTypes from "../../config/types.json";
 import eventTopics from "../../config/topics.json";
+import PreviewEvent from "./PreviewEvent";
 
 //revamp
 import MyStepper from "./MyStepper";
@@ -436,7 +437,7 @@ class Form extends Component {
 		}
 	};
 
-	render() {																			
+	render() {
 		let symbol = "PhoenixDAO.png";
 		let currency = this.state.currency === "eth" ? "ETH" : "PHNX";
 		let freeEvent = "";
@@ -543,8 +544,11 @@ class Form extends Component {
 
 				<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 					<br />
-					<p>Event Preview</p>
+					<br />
+					<br />
+					<PreviewEvent />
 				</div>
+				{/* 
 
 				<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
 					<form>
@@ -802,7 +806,10 @@ class Form extends Component {
 								value={this.state.type}
 								onChange={this.categoryChange}
 							>
-								<option value="" selected>
+								<option
+									value=""
+									//  selected
+								>
 									Please select from dropdown
 								</option>
 								{eventTopics.map((Topic, index) => (
@@ -1093,6 +1100,9 @@ class Form extends Component {
 						</button>
 					</form>
 				</div>
+ */}
+
+				{/* 
 
 				<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 					<label>Event Preview:</label>
@@ -1177,7 +1187,7 @@ class Form extends Component {
 							</li>
 						</ul>
 						<div className="card-footer text-muted text-center">
-							<button className="btn btn-dark" disabled="true">
+							<button className="btn btn-dark" disabled>
 								{this.state.currency === "eth"
 									? "Get Ticket"
 									: "Buy Ticket"}
@@ -1185,6 +1195,10 @@ class Form extends Component {
 						</div>
 					</div>
 				</div>
+
+
+
+ */}
 			</React.Fragment>
 		);
 	}
