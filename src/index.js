@@ -4,17 +4,21 @@ import { DrizzleProvider } from "drizzle-react";
 import App from "./components/App";
 import Web3 from "web3";
 import OpenEvents from "./config/OpenEvents.json";
+// import {Open_events_Address} from './config/OpenEvents'
 import StableToken from "./config/StableToken.json";
 import {INFURA_URL} from "./config/const.js";
 
+// var web3s = new Web3(window.ethereum);
 const options = {
 	web3: {
 		customProvider: new Web3(INFURA_URL),
 	},
 
-	contracts: [OpenEvents, 
-		// StableToken
-	],
+	contracts: [OpenEvents],
+	// contracts : [{
+	// 	contractName: 'OpenEvents',
+	// 	web3Contract: new web3s.eth.Contract(OpenEvents.abi, Open_events_Address, {data: OpenEvents.deployedBytecode }) // An instance of a Web3 contract
+	//   }],
 
 	events: {
 		OpenEvents: ["CreatedEvent", "SoldTicket"],
