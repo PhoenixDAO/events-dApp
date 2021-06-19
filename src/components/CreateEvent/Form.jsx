@@ -6,6 +6,7 @@ import "react-datetime/css/react-datetime.css";
 import { FacebookCircularProgress } from "./TimeAndDateLoader";
 import eventTypes from "../../config/types.json";
 import eventTopics from "../../config/topics.json";
+import PreviewEvent from "./PreviewEvent";
 
 //revamp
 import MyStepper from "./MyStepper";
@@ -543,8 +544,11 @@ class Form extends Component {
 
 				<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 					<br />
-					<p>Event Preview</p>
+					<br />
+					<br />
+					<PreviewEvent />
 				</div>
+				{/* 
 
 				<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
 					<form>
@@ -1096,6 +1100,9 @@ class Form extends Component {
 						</button>
 					</form>
 				</div>
+ */}
+
+				{/* 
 
 				<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 					<label>Event Preview:</label>
@@ -1188,6 +1195,10 @@ class Form extends Component {
 						</div>
 					</div>
 				</div>
+
+
+
+ */}
 			</React.Fragment>
 		);
 	}

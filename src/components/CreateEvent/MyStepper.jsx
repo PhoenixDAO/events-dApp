@@ -1,6 +1,6 @@
 import "date-fns";
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import {
 	Stepper,
 	Step,
@@ -21,6 +21,8 @@ import {
 	Select,
 	Checkbox,
 	InputAdornment,
+	StepConnector,
+	StepContent,
 } from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -39,6 +41,86 @@ import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import EditIcon from "@material-ui/icons/Edit";
 import MUIRichTextEditor from "mui-rte";
 import RichTextEditor from "react-rte";
+import flameGIF from "../Images/flame.gif";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import Check from "@material-ui/icons/Check";
+
+const QontoConnector = withStyles({
+	alternativeLabel: {
+		top: 10,
+		left: "calc(-50% + 16px)",
+		right: "calc(50% + 16px)",
+	},
+	active: {
+		"& $line": {
+			borderColor: "#784af4",
+		},
+	},
+	completed: {
+		"& $line": {
+			borderColor: "#784af4",
+		},
+	},
+	line: {
+		borderColor: "#eaeaf0",
+		borderTopWidth: 3,
+		borderRadius: 1,
+	},
+})(StepConnector);
+
+const useQontoStepIconStyles = makeStyles({
+	root: {
+		color: "#eaeaf0",
+		display: "flex",
+		height: 22,
+		alignItems: "center",
+	},
+	active: {
+		color: "#784af4",
+	},
+	circle: {
+		width: 8,
+		height: 8,
+		borderRadius: "50%",
+		backgroundColor: "currentColor",
+	},
+	completed: {
+		color: "#784af4",
+		zIndex: 1,
+		fontSize: 18,
+	},
+});
+
+function QontoStepIcon(props) {
+	const classes = useQontoStepIconStyles();
+	const { active, completed } = props;
+
+	return (
+		<div
+			className={clsx(classes.root, {
+				[classes.active]: active,
+			})}
+		>
+			{completed ? (
+				<Check className={classes.completed} />
+			) : (
+				<div className={classes.circle} />
+			)}
+		</div>
+	);
+}
+
+QontoStepIcon.propTypes = {
+	/**
+	 * Whether this step is active.
+	 */
+	active: PropTypes.bool,
+	/**
+	 * Mark the step as completed. Is passed to child components.
+	 */
+	completed: PropTypes.bool,
+};
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -97,6 +179,10 @@ const MyStepper = () => {
 	const [richValue, setRichValue] = useState(
 		RichTextEditor.createEmptyValue()
 	);
+
+	//flaming stepper
+	const [activeFlamingStep, setActiveFlamingStep] = useState(0);
+	const flamingSteps = getFlamingSteps();
 
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
@@ -206,28 +292,32 @@ const MyStepper = () => {
 				{value === "onedayevent" ? (
 					<div>
 						<MuiPickersUtilsProvider utils={DateFnsUtils}>
+							<div>
+								<KeyboardDatePicker
+									fullWidth
+									disableToolbar
+									variant="inline"
+									format="MM/dd/yyyy"
+									margin="normal"
+									id="date-picker-inline"
+									label="DATE"
+									value={selectedDate}
+									onChange={handleDateChange}
+									KeyboardButtonProps={{
+										"aria-label": "change date",
+									}}
+									inputVariant="outlined"
+								/>
+							</div>
+
+							<br />
+
 							<div
 								style={{
 									display: "flex",
-									justifyContent: "space-evenly",
+									justifyContent: "space-between",
 								}}
 							>
-								<div>
-									<KeyboardDatePicker
-										disableToolbar
-										variant="inline"
-										format="MM/dd/yyyy"
-										margin="normal"
-										id="date-picker-inline"
-										label="START DATE"
-										value={selectedDate}
-										onChange={handleDateChange}
-										KeyboardButtonProps={{
-											"aria-label": "change date",
-										}}
-										inputVariant="outlined"
-									/>
-								</div>
 								<div>
 									<KeyboardTimePicker
 										margin="normal"
@@ -241,36 +331,8 @@ const MyStepper = () => {
 										inputVariant="outlined"
 									/>
 								</div>
-							</div>
-
-							<br />
-
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "space-evenly",
-								}}
-							>
-								<div>
-									<KeyboardDatePicker
-										disabled
-										disableToolbar
-										variant="inline"
-										format="MM/dd/yyyy"
-										margin="normal"
-										id="date-picker-inline"
-										label="END DATE"
-										value={selectedDate}
-										onChange={handleDateChange}
-										KeyboardButtonProps={{
-											"aria-label": "change date",
-										}}
-										inputVariant="outlined"
-									/>
-								</div>
 								<div>
 									<KeyboardTimePicker
-										disabled
 										margin="normal"
 										id="time-picker"
 										label="END TIME"
@@ -291,38 +353,38 @@ const MyStepper = () => {
 							<div
 								style={{
 									display: "flex",
-									justifyContent: "space-evenly",
+									justifyContent: "space-between",
 								}}
 							>
-								<div>
-									<KeyboardDatePicker
-										disableToolbar
-										variant="inline"
-										format="MM/dd/yyyy"
-										margin="normal"
-										id="date-picker-inline"
-										label="START DATE"
-										value={selectedDate}
-										onChange={handleDateChange}
-										KeyboardButtonProps={{
-											"aria-label": "change date",
-										}}
-										inputVariant="outlined"
-									/>
-								</div>
-								<div>
-									<KeyboardTimePicker
-										margin="normal"
-										id="time-picker"
-										label="START TIME"
-										value={selectedDate}
-										onChange={handleDateChange}
-										KeyboardButtonProps={{
-											"aria-label": "change time",
-										}}
-										inputVariant="outlined"
-									/>
-								</div>
+								<KeyboardDatePicker
+									disableToolbar
+									variant="inline"
+									format="MM/dd/yyyy"
+									margin="normal"
+									id="date-picker-inline"
+									label="START DATE"
+									value={selectedDate}
+									onChange={handleDateChange}
+									KeyboardButtonProps={{
+										"aria-label": "change date",
+									}}
+									inputVariant="outlined"
+								/>
+
+								<KeyboardDatePicker
+									disableToolbar
+									variant="inline"
+									format="MM/dd/yyyy"
+									margin="normal"
+									id="date-picker-inline"
+									label="END DATE"
+									value={selectedDate}
+									onChange={handleDateChange}
+									KeyboardButtonProps={{
+										"aria-label": "change date",
+									}}
+									inputVariant="outlined"
+								/>
 							</div>
 
 							<br />
@@ -330,38 +392,32 @@ const MyStepper = () => {
 							<div
 								style={{
 									display: "flex",
-									justifyContent: "space-evenly",
+									justifyContent: "space-between",
 								}}
 							>
-								<div>
-									<KeyboardDatePicker
-										disableToolbar
-										variant="inline"
-										format="MM/dd/yyyy"
-										margin="normal"
-										id="date-picker-inline"
-										label="END DATE"
-										value={selectedDate}
-										onChange={handleDateChange}
-										KeyboardButtonProps={{
-											"aria-label": "change date",
-										}}
-										inputVariant="outlined"
-									/>
-								</div>
-								<div>
-									<KeyboardTimePicker
-										margin="normal"
-										id="time-picker"
-										label="END TIME"
-										value={selectedDate}
-										onChange={handleDateChange}
-										KeyboardButtonProps={{
-											"aria-label": "change time",
-										}}
-										inputVariant="outlined"
-									/>
-								</div>
+								<KeyboardTimePicker
+									margin="normal"
+									id="time-picker"
+									label="TO"
+									value={selectedDate}
+									onChange={handleDateChange}
+									KeyboardButtonProps={{
+										"aria-label": "change time",
+									}}
+									inputVariant="outlined"
+								/>
+
+								<KeyboardTimePicker
+									margin="normal"
+									id="time-picker"
+									label="FROM"
+									value={selectedDate}
+									onChange={handleDateChange}
+									KeyboardButtonProps={{
+										"aria-label": "change time",
+									}}
+									inputVariant="outlined"
+								/>
 							</div>
 						</MuiPickersUtilsProvider>
 					</div>
@@ -664,8 +720,12 @@ const MyStepper = () => {
 						<div>
 							{/* ticket category box */}
 							<div>
-								<Grid container>
+								<Grid container spacing={2}>
 									<Grid
+										style={{
+											backgroundColor: "goldenrod",
+											padding: 15,
+										}}
 										container
 										item
 										xs={11}
@@ -676,23 +736,35 @@ const MyStepper = () => {
 										justify="space-between"
 										direction="row"
 									>
-										<Grid item>
-											<h6>Bronze Ticket</h6>
+										<Grid item direction="column">
+											<h4>Bronze Ticket</h4>
+											<h6>Unlimited Tickets</h6>
 										</Grid>
-										<Grid item>
-											<p>$300</p>
+
+										<Grid item direction="column">
+											<h2>$300</h2>
+											<h6>3000PHNX</h6>
 										</Grid>
 									</Grid>
+
 									<Grid
 										item
+										container
 										xs={1}
 										sm={1}
 										md={1}
 										lg={1}
 										xl={1}
+										direction="column"
+										justify="space-evenly"
 									>
-										<EditIcon fontSize="large" />
-										<DeleteForeverOutlinedIcon fontSize="large" />
+										<Grid item>
+											<EditIcon fontSize="large" />
+										</Grid>
+
+										<Grid item>
+											<DeleteForeverOutlinedIcon fontSize="large" />
+										</Grid>
 									</Grid>
 								</Grid>
 							</div>
@@ -796,6 +868,20 @@ const MyStepper = () => {
 									/>
 								</div>
 							)}
+
+							<br />
+
+							{/* save button */}
+							<Button
+								color="primary"
+								variant="outlined"
+								fullWidth
+								className={classes.addAnotherImageBtn}
+							>
+								Save
+							</Button>
+
+							<br />
 							<br />
 
 							<Button
@@ -882,6 +968,63 @@ const MyStepper = () => {
 		}
 	}
 
+	// flaming stepper
+	function getFlamingSteps() {
+		return ["Upload Data", "Confirm Transaction", "Publish Event"];
+	}
+
+	function getFlamingStepContent(step) {
+		switch (step) {
+			case 0:
+				return "Select campaign settings...";
+			case 1:
+				return "What is an ad group anyways?";
+			case 2:
+				return "This is the bit I really care about!";
+			default:
+				return "Unknown step";
+		}
+	}
+
+	const publishedEventComponent = () => {
+		return (
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					justifyItems: "center",
+				}}
+			>
+				<img src={flameGIF} width={154} height={188} alt="flaming..." />
+				<br />
+
+				{/* <Stepper
+					alternativeLabel
+					activeStep={activeFlamingStep}
+					connector={<QontoConnector />}
+					orientation="vertical"
+				>
+					{flamingSteps.map((label) => (
+						<Step key={label}>
+							<StepLabel StepIconComponent={QontoStepIcon}>
+								{label}
+							</StepLabel>
+						</Step>
+					))}
+				</Stepper> */}
+
+				<Stepper activeStep={activeFlamingStep} orientation="vertical">
+					{flamingSteps.map((label, index) => (
+						<Step key={label}>
+							<StepLabel>{label}</StepLabel>
+						</Step>
+					))}
+				</Stepper>
+			</div>
+		);
+	};
+
 	return (
 		<div className={classes.root}>
 			<Stepper activeStep={activeStep} alternativeLabel>
@@ -895,10 +1038,11 @@ const MyStepper = () => {
 				<br />
 				{activeStep === steps.length ? (
 					<div>
-						<Typography className={classes.instructions}>
+						{publishedEventComponent()}
+						{/* <Typography className={classes.instructions}>
 							All steps completed
 						</Typography>
-						<Button onClick={handleReset}>Reset</Button>
+						<Button onClick={handleReset}>Reset</Button> */}
 					</div>
 				) : (
 					<div>
