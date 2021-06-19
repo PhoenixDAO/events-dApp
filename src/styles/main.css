@@ -47,7 +47,6 @@ h5 {
 font-weight: 700;
 color: #1E1E22;
 margin-bottom: 40px;
-margin-top: 20px;
 
 }
 .btn:focus {
@@ -437,13 +436,7 @@ input[type="number"] {
 }
 
 @media screen and (max-width: 600px) {
-	.calendarDiv,
-	.topicsDiv,
-	.ticketDiv {
-		margin-left: -50px !important;
-		margin-right: -50px !important;
-		margin-top: -30px !important;
-	}
+	
 	.slider {
 		width: fit-content !important;
 	}
@@ -802,7 +795,7 @@ padding: 0px;
 }
  @media screen and (min-width:1200px) {
 	.retract-page-inner-wrapper {
-		margin: -30px -30px 0 -30px !important;
+		margin: 0px -30px 0 -30px !important;
 	background: transparent !important;
 		/* margin: -60px -60px 0 -60px !important;
 		background: transparent !important; */
@@ -909,11 +902,11 @@ padding: 0px;
 	.row_mobile {
 		margin-top: -15px;
 	}
-	.event-page-wrapper,
+	/* .event-page-wrapper,
 	.retract-page-inner-wrapper-alternative.dashh,
 	.retract-page-inner-wrapper-alternative.dash {
 		margin: -30px -50px 0 -50px !important;
-	}
+	} */
 	.countdown {
 		margin-bottom: 20px;
 		max-height: 123px !important;
@@ -927,11 +920,11 @@ padding: 0px;
 	}
 }
 
-@media (max-width: 320px) {
+/* @media (max-width: 320px) {
 	.event-page-wrapper {
 		margin: -30px -50px 0 -50px !important;
 	}
-}
+} */
 
 .topics-wrapper {
 	text-align: left;
@@ -1149,12 +1142,12 @@ button.read-more:hover {
 }
 
 .sold_text {
-	padding: 8px;
+	/* padding: 8px;
 	padding-bottom: 0px;
 	text-align: center;
-	border-top: 1px solid rgb(197, 195, 197);
-	font-size: 14px;
+	font-size: 14px; */
 	overflow: hidden;
+	display: flex;
 }
 
 .transaction-wrapper {
@@ -1342,7 +1335,7 @@ body,
 	scrollbar-width: thin;
 }
 #wrapper.toggled #sidebar-wrapper.sidebar-closed {
-	left: 45px;
+	left: 39px;
 	width: 260px;
 	transition-duration: 0.5s;
 }
@@ -1602,7 +1595,6 @@ body,
 	padding-bottom: 0px;
 	padding-left: 15px;
 	text-align: left;
-	border-top: 1px solid rgb(197, 195, 197);
 	font-size: 14px;
 	overflow: hidden;
 	min-height: 100px;
@@ -1611,12 +1603,10 @@ body,
 .new-transaction-wrapper .sold_text {
 	padding-top: 15px;
 	padding-bottom: 0px;
-	padding-left: 15px;
 	text-align: left;
-	border-top: 1px solid rgb(197, 195, 197);
 	font-size: 14px;
 	overflow: hidden;
-	min-height: 100px;
+	min-height: 70px;
 	font-size: 20px;
 }
 
@@ -1797,21 +1787,16 @@ h4.transactions {
 .countdown {
 	text-align: center;
 	color: rgb(58, 58, 58);
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
+	border-radius: 10px;
 	margin-top: 20px;
-	overflow: hidden;
-	box-shadow: 0 0 17px rgba(83, 74, 74, 0.5);
-	border: 1px solid #343a40;
-	max-height: 90px;
-	max-width: 360px;
+	border:1px solid #E4E4E7;
+	max-width: 424px;
 	float: right;
 	position: relative;
-	padding-left: 5px;
-	padding-right: 5px;
+	padding: 15px;
 	margin-top: 20px;
-	border: 1px solid rgb(197, 195, 197);
 	justify-content: center;
+	background-color: #FFFFFF;
 }
 
 .countdownEnded {
@@ -1823,12 +1808,10 @@ h4.transactions {
 	border-radius: 5px;
 	overflow: hidden;
 	/* background: #333940; */
-	box-shadow: 0 0 17px rgba(83, 74, 74, 0.5);
 	max-height: 90px;
 	float: right;
 	position: relative;
-	padding-left: 5px;
-	padding-right: 5px;
+	padding: 15px;
 	margin-top: 60px;
 	border: 1px solid rgb(197, 195, 197);
 }
@@ -1839,43 +1822,42 @@ h4.transactions {
 
 .countdown h5 {
 	text-align: center;
-	text-transform: uppercase;
-	font-size: 0.9rem;
-	font-weight: bold;
+	font-size: 18px;
+	color:#413AE2;
 }
 
 .clock {
 	margin: auto;
 	display: flex;
-	box-shadow: 0 0 17px rgba(224, 224, 224, 0.349);
 	margin-top: 12px;
-	max-width: 300px;
+	/* max-width: 300px; */
 	justify-content: center;
 }
 
-.clock p {
+.clock div {
 	font-weight: bold;
 	position: relative;
 	width: 100%;
 	max-width: 500px;
-	padding: 7px 20px 7px;
-	border: 1px solid #343a40;
+	padding: 10px;
 	font-size: 0.8rem;
-	display: flex;
 	color: rgb(29, 28, 28);
-	background: linear-gradient(
-		to bottom,
-		rgb(255, 255, 255),
-		rgb(146 144 144 / 37%)
-	);
-	box-shadow: 0 0 17px rgba(123, 124, 124, 0.5);
+	background: #FAFAFA;
 	border-radius: 5px;
-	border: 1px solid rgb(155, 155, 155);
-	margin: 1px;
+	margin: 4px;
+	
 }
-
+.clock div span{
+	font-size: 22px;
+}
+.clock div p{
+	font-size: 16px;
+	color:#4E4E55;
+	margin-bottom: 0px;
+	font-weight: 500;
+}
 @media (max-width: 650px) {
-	.clock p {
+	.clock div {
 		padding: 7px 6px 7px;
 		align-items: center;
 		font-size: 11px;
@@ -1883,31 +1865,29 @@ h4.transactions {
 }
 
 @media (max-width: 320px) {
-	.clock p {
-		padding: 7px 0px 7px;
+	.clock div span{
+		font-size: 13px !important;
+	}
+	.clock div p{
+		font-size: 10px !important;
 	}
 }
+@media (max-width: 1000px) {
+	.clock div {
+		padding: 5px;
 
-.clock p:last-child {
-	background: linear-gradient(
-		to top,
-		rgb(4 56 99 /69%),
-		rgb(93, 132, 165),
-		rgb(150, 188, 219)
-	) !important;
-	color: white;
-	border: 1px solid rgb(149 176 234 / 68%);
+	}
+	.clock div span{
+		font-size: 16px;
+	}
+	.clock div p{
+		font-size: 14px;
+	}
+	
 }
 
 .box {
-	background: white;
 	border-radius: 3px;
-	/* background: linear-gradient(
-		to right,
-		rgb(235, 235, 235),
-		rgb(255, 255, 255),
-		rgb(218, 216, 216)
-	); */
 }
 
 .myEventStat {

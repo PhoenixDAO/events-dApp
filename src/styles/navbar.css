@@ -50,6 +50,9 @@
 	scrollbar-color: #bfbfbf #333940;
 	scrollbar-width: 0px;
 }
+#sidebar-wrapper.my-sidebar::-webkit-scrollbar {
+	width: 0px;
+}
 #sidebar-wrapper.my-sidebar {
 	z-index: 999 !important;
 }

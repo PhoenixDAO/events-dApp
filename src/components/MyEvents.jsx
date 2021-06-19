@@ -3,14 +3,13 @@ import { Link } from "react-router-dom";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import {
-	AppBar, Tabs, Tab, Typography, Box, Divider, TextField,
-	InputAdornment,
+	AppBar, Tabs, Tab, Typography, Box, Divider
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import { INFURA_WEB_URL, graphURL } from "../config/const.js";
-import SearchIcon from "@material-ui/icons/Search";
+import SearchBar from './common/SearchBar';
 
 import Event from "./Event";
 // import Web3 from "web3";
@@ -73,7 +72,8 @@ const styles = theme => ({
 	searchRow: {
 		display: "flex",
 		justifyContent: "space-between",
-		paddingTop:"40px"
+		paddingTop:"40px",
+		alignItems: "baseline",
 	}
 });
 class MyEvents extends Component {
@@ -544,7 +544,9 @@ class MyEvents extends Component {
 					<h2 className="main-heading">
 						My Created Events
 				    </h2>
-					<TextField
+					<SearchBar />
+
+					{/* <TextField
 						className={classes.margin}
 						id="input-with-icon-textfield"
 						variant="outlined"
@@ -559,7 +561,7 @@ class MyEvents extends Component {
 								</InputAdornment>
 							),
 						}}
-					/>
+					/> */}
 				</div>
 				<AppBar position="static" className={classes.AppBar} color="transparent">
 					<Tabs

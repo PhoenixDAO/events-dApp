@@ -188,7 +188,6 @@ class TopicsLandingPage extends Component {
 							<div>
 								<br />
 								<br />
-								<br />
 								<div
 									style={{
 										display: "flex",
