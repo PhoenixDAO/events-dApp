@@ -7,13 +7,7 @@ import {
 	CardActionArea,
 	CardMedia,
 	CardContent,
-	CardActions,
-	Button,
 	Typography,
-	CardHeader,
-	Avatar,
-	IconButton,
-	Box,
 	Link,
 } from "@material-ui/core";
 
