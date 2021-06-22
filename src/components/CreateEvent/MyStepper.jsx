@@ -180,6 +180,10 @@ const MyStepper = () => {
 		RichTextEditor.createEmptyValue()
 	);
 
+	//state variable
+	const [eventName, setEventName] = useState("");
+	const [eventOrganizer, setEventOrganizer] = useState("");
+
 	//flaming stepper
 	const [activeFlamingStep, setActiveFlamingStep] = useState(0);
 	const flamingSteps = getFlamingSteps();
@@ -256,6 +260,8 @@ const MyStepper = () => {
 					// label="Event Name"
 					fullWidth
 					variant="outlined"
+					onChange={(e) => setEventName(e.target.value)}
+					value={eventName}
 				/>
 				<br />
 				<br />
@@ -265,6 +271,8 @@ const MyStepper = () => {
 					// label="Event Organizer"
 					fullWidth
 					variant="outlined"
+					onChange={(e) => setEventOrganizer(e.target.value)}
+					value={eventOrganizer}
 				/>
 				<br />
 				<br />
@@ -307,6 +315,8 @@ const MyStepper = () => {
 										"aria-label": "change date",
 									}}
 									inputVariant="outlined"
+									autoOk={true}
+									disablePast
 								/>
 							</div>
 
@@ -329,6 +339,7 @@ const MyStepper = () => {
 											"aria-label": "change time",
 										}}
 										inputVariant="outlined"
+										autoOk={true}
 									/>
 								</div>
 								<div>
@@ -342,6 +353,7 @@ const MyStepper = () => {
 											"aria-label": "change time",
 										}}
 										inputVariant="outlined"
+										autoOk={true}
 									/>
 								</div>
 							</div>
@@ -369,6 +381,8 @@ const MyStepper = () => {
 										"aria-label": "change date",
 									}}
 									inputVariant="outlined"
+									autoOk={true}
+									disablePast
 								/>
 
 								<KeyboardDatePicker
@@ -384,6 +398,8 @@ const MyStepper = () => {
 										"aria-label": "change date",
 									}}
 									inputVariant="outlined"
+									autoOk={true}
+									disablePast
 								/>
 							</div>
 
@@ -405,6 +421,7 @@ const MyStepper = () => {
 										"aria-label": "change time",
 									}}
 									inputVariant="outlined"
+									autoOk={true}
 								/>
 
 								<KeyboardTimePicker
@@ -417,6 +434,7 @@ const MyStepper = () => {
 										"aria-label": "change time",
 									}}
 									inputVariant="outlined"
+									autoOk={true}
 								/>
 							</div>
 						</MuiPickersUtilsProvider>
