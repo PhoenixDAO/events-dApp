@@ -15,7 +15,7 @@ import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
 import "../styles/eventPage.css";
-// import Notify from "./Notify";
+import Notify from "./Notify";
 // import NotifyEvent from "./NotifyEvent";
 import NotifyApprove from "./NotifyApprove";
 // import NotifySuccess from "./NotifySuccess";
@@ -23,7 +23,6 @@ import NotifyApprove from "./NotifyApprove";
 import NotifyApproveSuccess from "./NotifyApproveSuccess";
 // import NotifyFaucet from "./NotifyFaucet";
 // import NotifySuccessFaucet from "./NotifySuccessFaucet";
-import NotifyError from "./NotifyError";
 // import NotifyNetwork from "./NotifyNetwork";
 import {
 	CalendarTodayOutlined,
@@ -444,13 +443,18 @@ class EventPage extends Component {
 			);
 		return description;
 	};
-
+	handleClickOpen2 = () => {
+		this.setState({ open2: true });
+	};
 	handleClickOpen = () => {
 		this.setState({ open: true });
 	};
 
 	handleClose = () => {
 		this.setState({ open: false });
+	};
+	handleClose2 = () => {
+		this.setState({ open2: false });
 	};
 
 	allowance = async () => {
@@ -485,7 +489,7 @@ class EventPage extends Component {
 					this.setState({ disabledBuying: false });
 					txerror = error;
 					toast(
-						<NotifyError error={error} message={txerror.message} />,
+						<Notify error={error} message={txerror.message} />,
 						{
 							position: "bottom-right",
 							autoClose: true,
@@ -513,6 +517,9 @@ class EventPage extends Component {
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 		let temp = this.allowance();
+		console.log(
+			"in buy function",balance
+		)
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
@@ -687,8 +694,8 @@ class EventPage extends Component {
 					body = (
 						<Grid>
 							<BuyTicket
-								open={this.state.open}
-								handleClose={this.handleClose}
+								open={this.state.open2}
+								handleClose={this.handleClose2}
 								image={image}
 								eventTitle={event_data[0]}
 								date={event_date}
@@ -718,7 +725,7 @@ class EventPage extends Component {
 										color="primary"
 										style={{ marginRight: "10px" }}
 										className={classes.buy}
-										onClick={this.handleClickOpen}
+										onClick={this.handleClickOpen2}
 										disabled={
 											disabled ||
 											this.props.disabledStatus ||
