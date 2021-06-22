@@ -5,7 +5,7 @@ import App from "./components/App";
 import Web3 from "web3";
 import OpenEvents from "./config/OpenEvents.json";
 // import {Open_events_Address} from './config/OpenEvents'
-import StableToken from "./config/StableToken.json";
+// import StableToken from "./config/StableToken.json";
 import {INFURA_URL} from "./config/const.js";
 
 // var web3s = new Web3(window.ethereum);

@@ -8,13 +8,12 @@ import {
 import { withStyles } from "@material-ui/core/styles";
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
-import { INFURA_WEB_URL, graphURL } from "../config/const.js";
+import { graphURL } from "../config/const.js";
 import SearchBar from './common/SearchBar';
 
 import Event from "./Event";
 // import Web3 from "web3";
 import axios from "axios";
-import FindEvents from "./FindEvents";
 // import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 function a11yProps(index) {
 	return {
@@ -130,7 +129,7 @@ class MyEvents extends Component {
 			}).then((graphDeletedEvents) => {
 				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 
-				if (!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined') {
+				if (!graphDeletedEvents.data || !graphDeletedEvents.data.data === undefined) {
 					this.setState({ Deleted_Events: [] });
 				} else {
 					this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
@@ -182,14 +181,14 @@ class MyEvents extends Component {
 			}
 		}).then((graphEvents) => {
 			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
-			if (!graphEvents.data || graphEvents.data.data == 'undefined') {
+			if (!graphEvents.data || graphEvents.data.data === undefined) {
 				// console.log("GraphQL query -- graphEvents undefined")
 				this.setState({ loading: false, Topic_Events: [], active_length: 0 });
 			} else {
 				if (this._isMounted) {
 					const dateTime = Date.now();
 					const dateNow = Math.floor(dateTime / 1000);
-					let userEvents = graphEvents.data.data.users.find((user) => user.account.toLowerCase() == this.account.toLowerCase())
+					let userEvents = graphEvents.data.data.users.find((user) => user.account.toLowerCase() === this.account.toLowerCase())
 					if (userEvents) {
 						let newsort = userEvents.userEvents
 							.concat()
@@ -256,14 +255,14 @@ class MyEvents extends Component {
 		}).then((graphEvents) => {
 			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 
-			if (!graphEvents.data || graphEvents.data.data == 'undefined') {
+			if (!graphEvents.data || graphEvents.data.data === undefined) {
 				// console.log("GraphQL query -- graphEvents undefined")
 				this.setState({ loading: false, Topic_Events: [], active_length: 0 });
 			} else {
 				if (this._isMounted) {
 					const dateTime = Date.now();
 					const dateNow = Math.floor(dateTime / 1000);
-					let userEvents = graphEvents.data.data.users.find((user) => user.account.toLowerCase() == this.account.toLowerCase())
+					let userEvents = graphEvents.data.data.users.find((user) => user.account.toLowerCase() === this.account.toLowerCase())
 					if (userEvents) {
 						let newsort = userEvents.userEvents
 							.concat()
@@ -329,7 +328,7 @@ class MyEvents extends Component {
 		let { value } = e.target;
 		this.setState({ value }, () => {
 			try {
-				if (this.state.value !== "" && this.state.check.length != 0) {
+				if (this.state.value !== "" && this.state.check.length !== 0) {
 					var filteredEvents = this.state.check;
 					filteredEvents = filteredEvents.filter((events) => {
 						return (
@@ -352,10 +351,10 @@ class MyEvents extends Component {
 	executeScroll = () => this.myRef.current.scrollIntoView();
 	onTabChange = (event, newValue) => {
 		this.setState({ selectedTab: newValue });
-		if (newValue == 1) {
+		if (newValue === 1) {
 			this.ActiveEvent();
 		}
-		if (newValue == 2) {
+		if (newValue === 2) {
 			this.PastEvent();
 
 		}
@@ -388,7 +387,7 @@ class MyEvents extends Component {
 				for (let i = 0; i < count; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
-							this.state.MyEvents[i].eventId ==
+							this.state.MyEvents[i].eventId ===
 							this.state.Deleted_Events[j].eventId
 						) {
 							skip = true;
@@ -449,7 +448,7 @@ class MyEvents extends Component {
 									</Link>
 								</li>
 							);
-							if (this.state.prevPath != -1) {
+							if (this.state.prevPath !== -1) {
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -474,7 +473,7 @@ class MyEvents extends Component {
 									</Link>
 								</li>
 							);
-							if (this.state.prevPath != -1) {
+							if (this.state.prevPath !== -1) {
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -499,7 +498,7 @@ class MyEvents extends Component {
 									</Link>
 								</li>
 							);
-							if (this.state.prevPath != -1) {
+							if (this.state.prevPath !== -1) {
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -515,7 +514,7 @@ class MyEvents extends Component {
 						</nav>
 					);
 				}
-				if (updated_list.length == 0) {
+				if (updated_list.length === 0) {
 					body = (
 						<p className="text-center not-found">
 							<span role="img" aria-label="thinking">
@@ -646,7 +645,7 @@ class MyEvents extends Component {
 	}
 
 	componentDidMount() {
-		if (this.state.prevPath == -1) {
+		if (this.state.prevPath === -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}
 		this._isMounted = true;

@@ -86,7 +86,7 @@ class PastEvents extends Component {
 	}).then((graphDeletedEvents)=>{
 		// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 
-		if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
+		if(!graphDeletedEvents.data || !graphDeletedEvents.data.data === undefined){
 			this.setState({ Deleted_Events: [] });
 		}else{
 			this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
@@ -124,7 +124,7 @@ class PastEvents extends Component {
 	}).then((graphEvents)=>{
 	// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
-	if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+	if(!graphEvents.data || graphEvents.data.data === undefined){
 		// console.log("GraphQL query -- graphEvents undefined")
 		this.setState({ past_events: [] ,past_events_copy: [],
 			past_length: 0
@@ -162,7 +162,7 @@ class PastEvents extends Component {
 		let { value } = e.target;
 		this.setState({ value }, () => {
 			try {
-				if (this.state.value !== "" && this.state.past_events_copy.length!=0) {
+				if (this.state.value !== "" && this.state.past_events_copy.length!==0) {
 					var filteredEvents = this.state.past_events_copy;
 					filteredEvents = filteredEvents.filter((events) => {
 						return (
@@ -245,7 +245,7 @@ class PastEvents extends Component {
 				for (let i = 0; i < this.state.past_events.length; i++) {
 					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 						if (
-							this.state.past_events[i].eventId ==
+							this.state.past_events[i].eventId ===
 							this.state.Deleted_Events[j].eventId
 						) {
 							skip = true;
@@ -255,7 +255,7 @@ class PastEvents extends Component {
 						for (let j = 0; j < this.state.hideEvent.length; j++) {
 							if (
 								this.state.past_events[i]
-									.eventId == this.state.hideEvent[j].id
+									.eventId === this.state.hideEvent[j].id
 							) {
 								skip = true;
 							}
@@ -312,7 +312,7 @@ class PastEvents extends Component {
 									</Link>
 								</li>
 							);
-							if (this.state.prevPath != -1) {
+							if (this.state.prevPath !== -1) {
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -337,7 +337,7 @@ class PastEvents extends Component {
 									</Link>
 								</li>
 							);
-							if (this.state.prevPath != -1) {
+							if (this.state.prevPath !== -1) {
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -362,7 +362,7 @@ class PastEvents extends Component {
 									</Link>
 								</li>
 							);
-							if (this.state.prevPath != -1) {
+							if (this.state.prevPath !== -1) {
 								this.executeScroll({
 									behavior: "smooth",
 									block: "start",
@@ -378,7 +378,7 @@ class PastEvents extends Component {
 						</nav>
 					);
 				}
-				if (updated_list.length == 0) {
+				if (updated_list.length === 0) {
 					body = (
 						<p className="text-center not-found">
 							<span role="img" aria-label="thinking">
@@ -520,7 +520,7 @@ class PastEvents extends Component {
 	};
 
 	componentDidMount() {
-		if (this.state.prevPath == -1) {
+		if (this.state.prevPath === -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}
 		this._isMounted = true;

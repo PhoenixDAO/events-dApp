@@ -7,21 +7,16 @@ import { API_URL, ADD_TO_FAVOURITES , REMOVE_FROM_FAVOURITES } from "../../confi
 import { toast } from "react-toastify";
 import NotifyReport from "../NotifyReport";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
 
 import {
 	Card,
 	CardActionArea,
 	CardMedia,
 	CardContent,
-	CardActions,
 	Button,
 	Divider,
 	Grid,
 	Typography,
-	CardHeader,
-	Avatar,
-	Box,
 	Link,
 } from "@material-ui/core";
 import {
@@ -38,7 +33,6 @@ import {
 
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
-let numeral = require("numeral");
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -176,7 +170,7 @@ const EventCard = (props, context) => {
 			//for add to favourite
 			if(!Icon)
 			{
-				const addFavourite = await axios.post(
+				await axios.post(
 					`${API_URL}${ADD_TO_FAVOURITES}`,
 					payload
 				);
@@ -188,7 +182,7 @@ const EventCard = (props, context) => {
 			}
 			//for remove from favourites
 			else{
-				const removeFromFavourite = await axios.post(
+				await axios.post(
 					`${API_URL}${REMOVE_FROM_FAVOURITES}`,
 					payload
 				);

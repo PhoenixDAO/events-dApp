@@ -5,7 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
-import { FormControl, TextField, InputAdornment, Grid } from '@material-ui/core';
+import { FormControl, TextField } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import { Send } from "@material-ui/icons";
 import CloseIcon from '@material-ui/icons/Close';
@@ -139,7 +139,7 @@ const DialogContent = withStyles((theme) => ({
 const DialogActions = withStyles((theme) => ({
   root: {
     margin: 0,
-    padding: theme.spacing(1),
+    // padding: theme.spacing(1),
     padding: "20px"
   },
 

@@ -113,7 +113,7 @@ class CreateEvent extends Component {
 				},
 			},
 			() => {
-				if (fileHandle == true) {
+				if (fileHandle) {
 					this.stageUpdater(90);
 					this.readFile(file);
 				} else {
