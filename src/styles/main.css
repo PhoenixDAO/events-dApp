@@ -147,17 +147,27 @@ input[type="number"] {
 
 
 
-
 .notify {
 	font-size: 90%;
 }
+.notify2 {
+	font-size: 90%;
+    justify-content: center;
+    text-align: center;
+	color:#4E4E55;
 
+}
+.notify2 a{
+	color:#4E4E55;
+}
 .Toastify__toast--default {
 	background: rgb(243, 243, 243);
 	border: 1px solid rgb(10, 53, 88);
 	border-radius: 10px;
 }
-
+.notify2 i{
+margin-bottom: 10px;
+}
 .notify p {
 	color: black;
 	text-align: center;
@@ -226,7 +236,7 @@ input[type="number"] {
 .header3{
     margin-left: -2px;
     margin-right: -1px;
-    z-index: 1;
+    z-index: 999;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #E4E4E7;
@@ -2517,7 +2527,7 @@ h4.transactions {
 	text-align: center;
 	width: 100%;
 	height: inherit;
-	box-shadow: inset 0px -181px 53px rgba(0, 0, 0, 0.2);
+	box-shadow: inset 0px -181px 53px rgba(245, 190, 190, 0.2);
 	background: linear-gradient(
 		to bottom,
 		rgb(51, 64, 104),
@@ -2587,4 +2597,22 @@ h4.transactions {
 .termsDiv {
 	margin-left: -31px;
 	margin-right: -31px;
+}
+
+/* designing toastify */
+.Toastify__toast{
+	min-height: 130px;
+	padding:15px;
+}
+.Toastify__toast--default{
+	border:none;
+	background-color: white;
+}
+.Toastify__close-button--default{
+	color:"#4E4E55";
+	opacity: 0.9;
+}
+canvas#doughnut{   
+	 font-size: 0px;
+	 z-index: 1;
 }

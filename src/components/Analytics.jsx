@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         margin: "40px 0px",
         padding: "50px",
         borderRadius: "8px",
-        paddingBottom:"80px",
+        paddingBottom: "80px",
         [theme.breakpoints.down("xs")]: {
             padding: "10px",
 
@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
         },
         [theme.breakpoints.down("xs")]: {
             width: "auto",
-            minWidth: "141px",
         },
     },
     row: {
@@ -50,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         marginBottom: "25px",
         [theme.breakpoints.down("xs")]: {
-            display:"grid"
+            display: "grid"
         }
 
     },
@@ -88,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
             marginBottom: "15px"
         }
     },
-    
+
     city: {
         fontSize: "18px",
         fontWeight: "600",
@@ -118,17 +117,17 @@ const useStyles = makeStyles((theme) => ({
         margin: "0px 10px"
     },
     chartDiv: {
-        background: `url('/images/graph.svg') no-repeat center 87px`,
+        // background: `url('/images/graph.svg') no-repeat center 87px`,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         [theme.breakpoints.down("sm")]: {
-            marginTop:"35px",
-            background: `url('/images/graph.svg') no-repeat center`,
+            marginTop: "35px",
+            // background: `url('/images/graph.svg') no-repeat center`,
         },
         [theme.breakpoints.down("xs")]: {
-            marginTop:"35px",
-            background: `url('/images/graph.svg') no-repeat center`,
+            marginTop: "35px",
+            // background: `url('/images/graph.svg') no-repeat center`,
             backgroundSize: "300px 100px"
 
         }
@@ -144,12 +143,34 @@ const useStyles = makeStyles((theme) => ({
         marginTop: "60px",
         width: "100%"
     },
-    header:{
+    header: {
         color: "#73727D",
         fontSize: "18px",
         marginBottom: "15px"
     },
-    
+    image: {
+        position: "absolute",
+        paddingTop: "25px",
+        width: "14%",
+        zIndex:0,
+        [theme.breakpoints.down("xl")]: {
+            width: "7%"
+        },
+        [theme.breakpoints.down("lg")]: {
+            width: "14%"
+        },
+        [theme.breakpoints.down("md")]: {
+            width: "14%"
+        },
+        [theme.breakpoints.down("sm")]: {
+            width: "30%"
+        },
+        [theme.breakpoints.down("xs")]: {
+            width: "20%",
+            paddingTop:"13px"
+        }
+
+    }
 }));
 
 
@@ -198,7 +219,7 @@ const Analytics = (props, context) => {
     } = props;
     useEffect(() => {
         getPhnxRevenue();
-        
+
 
     }, []);
     const classes = useStyles();
@@ -231,17 +252,17 @@ const Analytics = (props, context) => {
         ));
     };
     let Events = getEvents({ _isMounted: true, accounts: props.accounts });
-    console.log("result",Events);
+    console.log("result", Events);
     const Top5Events = () => {
         return Events.map((event, index) => (
             <Grid className={classes.row3}>
                 <Grid lg={3} className={classes.ticketSold}><i
-											className="fa fa-ticket-alt"
-											title="My Tickets"
-                                            style={{color:"#73727D",paddingRight:"10px"}}
-										></i>{event.sold}</Grid>
+                    className="fa fa-ticket-alt"
+                    title="My Tickets"
+                    style={{ color: "#73727D", paddingRight: "10px" }}
+                ></i>{event.sold}</Grid>
                 <Grid lg={6} className={classes.city}>{event.name}</Grid>
-                <Grid lg={3} className={classes.ticketSold} style={{textAlign:"end"}}>{event.revenueOfEvent/1000000000000000000} PHNX</Grid>
+                <Grid lg={3} className={classes.ticketSold} style={{ textAlign: "end" }}>{event.revenueOfEvent / 1000000000000000000} PHNX</Grid>
 
             </Grid>
         ));
@@ -258,11 +279,33 @@ const Analytics = (props, context) => {
                 borderWidth: 0
             }
         },
+
+        layout: {
+            margin: {
+               bottom: 25  //set that fits the best
+            }
+         },
         plugins: {
-            labels: false
+            doughnutlabel: {
+                labels: [{
+                    text: '550',
+                    font: {
+                        size: 20,
+                        weight: 'bold'
+                    }
+                }, {
+                    text: 'total'
+                }]
+
+            }
         },
+
+
+
         cutoutPercentage: 85,
         tooltips: {
+           zIndex: 99 ,
+
             callbacks: {
                 title: function (tooltipItem, data) {
                     return (data['labels'][tooltipItem[0]['index']]);
@@ -275,6 +318,7 @@ const Analytics = (props, context) => {
                 //     var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
                 //     return '(' + percent + '%)';
                 // }
+                
             },
             backgroundColor: 'black',
             titleFontSize: 16,
@@ -284,6 +328,10 @@ const Analytics = (props, context) => {
             bodyFontColor: '#E4E4E7',
             bodyFontSize: 14,
             displayColors: false,
+            position: 'nearest',
+            yAlign: 'bottom',
+            x:40,
+y:40
         }
 
     };
@@ -421,7 +469,7 @@ const Analytics = (props, context) => {
                     </FormControl>
 
                 </Grid>
-                <Grid container style={{ justifyContent: "space-evenly"}}>
+                <Grid container style={{ justifyContent: "space-evenly" }}>
                     <Card color="#E5AB00" click={getDollarRevenue} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
                     <Card color="#413AE2" click={getPhnxRevenue} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
                     <Card color="#963AE2" click={getSoldTickets} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
@@ -494,7 +542,8 @@ const Analytics = (props, context) => {
                             <TicketAnalytics />
                         </Grid>
                         <Grid lg={5} sm={12} xs={12} md={6} className={classes.chartDiv}>
-                            <Doughnut data={data2} options={options2} />
+                            <Doughnut id="doughnut" data={data2} options={options2} />
+                            <img src="/images/graph.svg" className={classes.image} />
                         </Grid>
                     </Grid>
 
@@ -540,11 +589,11 @@ const Analytics = (props, context) => {
                             <Grid className={classes.header} lg={6}>
                                 Event Name
                             </Grid>
-                            <Grid className={classes.header} style={{textAlign:"end"}} lg={3}>
+                            <Grid className={classes.header} style={{ textAlign: "end" }} lg={3}>
                                 Revenue
                             </Grid>
                         </Grid>
-                        <Top5Events/>
+                        <Top5Events />
 
                     </Grid>
 

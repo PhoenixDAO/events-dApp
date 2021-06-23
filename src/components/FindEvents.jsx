@@ -670,7 +670,7 @@ class FindEvents extends Component {
 						<div className="row row_mobile">
 							<h2 className="col-lg-10 col-md-9 col-sm-8">
 								{/* <i className="fa fa-calendar-alt"></i>  */}
-								Upcoming Events
+								All Events
 							</h2>
 							<div
 								style={{

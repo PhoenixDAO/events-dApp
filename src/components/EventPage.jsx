@@ -15,16 +15,7 @@ import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
 import "../styles/eventPage.css";
-// import Notify from "./Notify";
-// import NotifyEvent from "./NotifyEvent";
-import NotifyApprove from "./NotifyApprove";
-// import NotifySuccess from "./NotifySuccess";
-// import NotifyEventSuccess from "./NotifyEventSuccess";
-import NotifyApproveSuccess from "./NotifyApproveSuccess";
-// import NotifyFaucet from "./NotifyFaucet";
-// import NotifySuccessFaucet from "./NotifySuccessFaucet";
-import NotifyError from "./NotifyError";
-// import NotifyNetwork from "./NotifyNetwork";
+import Notify from "./Notify";
 import {
 	CalendarTodayOutlined,
 	ScheduleOutlined,
@@ -444,13 +435,18 @@ class EventPage extends Component {
 			);
 		return description;
 	};
-
+	handleClickOpen2 = () => {
+		this.setState({ open2: true });
+	};
 	handleClickOpen = () => {
 		this.setState({ open: true });
 	};
 
 	handleClose = () => {
 		this.setState({ open: false });
+	};
+	handleClose2 = () => {
+		this.setState({ open2: false });
 	};
 
 	allowance = async () => {
@@ -470,7 +466,8 @@ class EventPage extends Component {
 			.send({ from: this.account })
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
-					toast(<NotifyApprove hash={hash} />, {
+					toast(<Notify hash={hash} text={"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."}
+					/>, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -485,7 +482,7 @@ class EventPage extends Component {
 					this.setState({ disabledBuying: false });
 					txerror = error;
 					toast(
-						<NotifyError error={error} message={txerror.message} />,
+						<Notify error={error} message={txerror.message} />,
 						{
 							position: "bottom-right",
 							autoClose: true,
@@ -500,7 +497,7 @@ class EventPage extends Component {
 	onConfirmation(confirmationNumber, receipt) {
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
-			toast(<NotifyApproveSuccess hash={receipt.transactionHash} />, {
+			toast(<Notify hash={receipt.transactionHash} icon="fas fa-check-circle fa-3x" text={"Transaction successful!\nYou can buy a ticket now." }/>, {
 				position: "bottom-right",
 				autoClose: true,
 				pauseOnHover: true,
@@ -513,6 +510,7 @@ class EventPage extends Component {
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 		let temp = this.allowance();
+
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
@@ -687,8 +685,8 @@ class EventPage extends Component {
 					body = (
 						<Grid>
 							<BuyTicket
-								open={this.state.open}
-								handleClose={this.handleClose}
+								open={this.state.open2}
+								handleClose={this.handleClose2}
 								image={image}
 								eventTitle={event_data[0]}
 								date={event_date}
@@ -718,7 +716,7 @@ class EventPage extends Component {
 										color="primary"
 										style={{ marginRight: "10px" }}
 										className={classes.buy}
-										onClick={this.handleClickOpen}
+										onClick={this.handleClickOpen2}
 										disabled={
 											disabled ||
 											this.props.disabledStatus ||

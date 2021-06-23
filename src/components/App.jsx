@@ -31,15 +31,6 @@ import Token from "./Token";
 // import Dashboard from "./Dashboard";
 import Terms from "./Terms";
 import Notify from "./Notify";
-import NotifyEvent from "./NotifyEvent";
-import NotifyApprove from "./NotifyApprove";
-import NotifySuccess from "./NotifySuccess";
-import NotifyEventSuccess from "./NotifyEventSuccess";
-import NotifyApproveSuccess from "./NotifyApproveSuccess";
-import NotifyFaucet from "./NotifyFaucet";
-import NotifySuccessFaucet from "./NotifySuccessFaucet";
-import NotifyError from "./NotifyError";
-import NotifyNetwork from "./NotifyNetwork";
 import PropTypes from "prop-types";
 import Snackbar from "./Snackbar";
 import { INFURA_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
@@ -175,7 +166,7 @@ class App extends Component {
 				() => this.buy()
 			);
 		} else {
-			toast(<NotifyNetwork />, {
+			toast(<Notify  text="😓 Wrong Network, Please Connect to Rinkeby Network." />, {
 				position: "bottom-right",
 				autoClose: true,
 				pauseOnHover: true,
@@ -196,7 +187,8 @@ class App extends Component {
 					if (hash !== null) {
 						this.setState({ disabledStatus: true });
 
-						toast(<Notify hash={hash} />, {
+						toast(<Notify hash={hash} text="Preparing your ticket...🚀"
+						icon="fa fa-ticket-alt" />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -212,8 +204,11 @@ class App extends Component {
 							txreceiptApproved.status == true
 						) {
 							toast(
-								<NotifySuccess
+								<Notify
 									hash={txreceiptApproved.transactionHash}
+									text="Ticket purchase successfull!"
+									icon="fa-ticket-alt"
+									link="Check out your TICKET here"
 								/>,
 								{
 									position: "bottom-right",
@@ -229,7 +224,7 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<NotifyError
+							<Notify
 								error={error}
 								message={txerror.message}
 							/>,
@@ -259,14 +254,17 @@ class App extends Component {
 		let txerror = "";
 
 		if ((await this.allowance()) == 0) {
+
 			this.state.approve
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
-						toast(<NotifyApprove hash={hash} />, {
+						toast(<Notify hash={hash} text={"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."}
+						/>, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
+							
 						});
 					}
 				})
@@ -276,7 +274,8 @@ class App extends Component {
 						txconfirmed = confirmationNumber;
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
-								<NotifyApproveSuccess
+								<Notify
+								text={"Transaction successfull!\nYou can buy a ticket now."}
 									hash={txreceipt.transactionHash}
 								/>,
 								{
@@ -294,7 +293,7 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<NotifyError
+							<Notify
 								error={error}
 								message={txerror.message}
 							/>,
@@ -312,7 +311,8 @@ class App extends Component {
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
-						toast(<Notify hash={hash} />, {
+						toast(<Notify hash={hash} text="Preparing your ticket...🚀"
+						icon="fa fa-ticket-alt fa-3x" color="#413AE2"/>, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -325,8 +325,13 @@ class App extends Component {
 						txconfirmed = confirmationNumber;
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
-								<NotifySuccess
+								<Notify
 									hash={txreceipt.transactionHash}
+									text="Ticket purchase successfull!"
+									icon="fa fa-ticket-alt fa-3x"
+									link="Check out your TICKET here"
+									url="/mytickets/1"
+									color="#413AE2"
 								/>,
 								{
 									position: "bottom-right",
@@ -342,7 +347,7 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<NotifyError
+							<Notify
 								error={error}
 								message={txerror.message}
 							/>,
@@ -374,7 +379,7 @@ class App extends Component {
 							upload: false,
 							done: true,
 						});
-						toast(<NotifyEvent hash={hash} type={type} />, {
+						toast(<Notify icon="fas fa-edit" hash={hash}  text={(type==="create"?"Creating":"Updating" )+"your Event..." }/>, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -387,7 +392,7 @@ class App extends Component {
 						txconfirmed = confirmationNumber;
 						if (txconfirmed == 1 && txreceipt.status == true) {
 							toast(
-								<NotifyEventSuccess
+								<Notify
 									hash={txreceipt.transactionHash}
 									createdEvent={
 										type === "create"
@@ -397,6 +402,9 @@ class App extends Component {
 												.NewAndUpdatedEvent
 												.returnValues
 									}
+									icon="fas fa-check-circle fa-3x"
+									link="checkout your event here"
+									text="Transaction success!"
 								/>,
 								{
 									position: "bottom-right",
@@ -414,7 +422,7 @@ class App extends Component {
 						console.log("error", error);
 						this.setState({ error: true });
 						toast(
-							<NotifyError
+							<Notify
 								error={error}
 								message={txerror.message}
 							/>,
@@ -447,7 +455,7 @@ class App extends Component {
 							upload: false,
 							done: true,
 						});
-						toast(<NotifyFaucet hash={hash} />, {
+						toast(<Notify hash={hash} text={"Request for 10,000 PHNX\nYour token request has been sent"} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -461,7 +469,8 @@ class App extends Component {
 
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
-								<NotifySuccessFaucet
+								<Notify
+								text="10,000 PHNX recieved! Check your balance here."
 									hash={txreceipt.transactionHash}
 								/>,
 								{
@@ -478,7 +487,7 @@ class App extends Component {
 						txerror = error;
 						this.setState({ error: true });
 						toast(
-							<NotifyError
+							<Notify
 								error={error}
 								message={txerror.message}
 							/>,
