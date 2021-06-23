@@ -21,17 +21,14 @@ import Loading from "./Loading";
 // import DialogContentText from "@material-ui/core/DialogContentText";
 // import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import NotifyApprove from "./NotifyApprove";
-import NotifyApproveSuccess from "./NotifyApproveSuccess";
-import NotifyError from "./NotifyError";
+
+import Notify from "./Notify";
 import ApprovalModal from "./approvalModal";
 
 import { toast } from "react-toastify";
 
 //eventCard
 import EventCard from "./common/EventCard";
-
-let numeral = require("numeral");
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -243,7 +240,8 @@ class Event extends Component {
 
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
-					toast(<NotifyApprove hash={hash} />, {
+					toast(<Notify hash={hash} text={"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."}
+					/>, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -281,7 +279,7 @@ class Event extends Component {
 					txerror = error;
 					this.props.toggleBuying();
 					toast(
-						<NotifyError error={error} message={txerror.message} />,
+						<Notify error={error} message={txerror.message} />,
 						{
 							position: "bottom-right",
 							autoClose: true,
@@ -301,7 +299,7 @@ class Event extends Component {
 		// if (confirmationNumber == 0 && receipt.status == true ) {
 		if (confirmationNumber === 0 && receipt.status == true) {
 			this.props.toggleBuying();
-			toast(<NotifyApproveSuccess hash={receipt.transactionHash} />, {
+			toast(<Notify hash={receipt.transactionHash} icon="fas fa-check-circle fa-3x" text="Transaction successful! You can buy a ticket now." />, {
 				position: "bottom-right",
 				autoClose: true,
 				pauseOnHover: true,

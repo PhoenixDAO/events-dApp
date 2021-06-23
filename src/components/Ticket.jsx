@@ -5,9 +5,7 @@ import { Link } from "react-router-dom";
 // import makeBlockie from "ethereum-blockies-base64";
 import "../styles/Ticket.css";
 import ipfs from "../utils/ipfs";
-import NotifySending from "./NotifySending";
-import NotifySuccessSending from "./NotifySuccessSending";
-import NotifyError from "./NotifyError";
+import Notify from "./Notify";
 import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 import Web3 from "web3";
@@ -184,7 +182,8 @@ class Ticket extends Component {
 				.send({ from: this.props.accounts[0] })
 				.on("transactionHash", (transactionHash) => {
 					if (transactionHash !== null) {
-						toast(<NotifySending hash={transactionHash} />, {
+						toast(<Notify hash={transactionHash} icon="fas fa-check-circle fa-3x"
+						color="#413AE2" text={"Transaction sent!\nSending your ticket... 🚀"}/>, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -200,8 +199,11 @@ class Ticket extends Component {
 							txreceiptApproved.status == true
 						) {
 							toast(
-								<NotifySuccessSending
+								<Notify
 									hash={txreceiptApproved.transactionHash}
+									icon="fas fa-check-circle fa-3x"
+									color="#413AE2"
+									text="Ticket Sent 🎁"
 								/>,
 								{
 									position: "bottom-right",
@@ -217,7 +219,7 @@ class Ticket extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						toast(<NotifyError error={error} message={txerror.message} />, {
+						toast(<Notify error={error} message={txerror.message} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,

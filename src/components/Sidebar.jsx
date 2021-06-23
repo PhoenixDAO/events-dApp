@@ -661,25 +661,6 @@ class Sidebar extends Component {
 									</span>
 									</NavLink>
 								</li>
-								<li>
-									<NavLink
-										to="/terms-and-conditions"
-										className="nav-link"
-										activeClassName="nav-link-active"
-										onClick={() => {
-											this.sidebarClick(this);
-										}}
-									>
-										<i
-											className="fa fa-file-alt fontAwesomeIcon"
-											title="How It Works"
-										
-										></i>{" "}
-										<span className="toggleHidden">
-											Privacy Policy
-											</span>
-									</NavLink>
-								</li>
 							</ul>
 
 							<ul className="grid toggleHidden">

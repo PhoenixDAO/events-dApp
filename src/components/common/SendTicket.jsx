@@ -12,6 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import roundlogo from "../Images/roundlogo.svg";
 import { makeStyles } from "@material-ui/core/styles";
+import Slide from '@material-ui/core/Slide';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -92,7 +93,9 @@ const useStyles = makeStyles((theme) => ({
 
 
 }));
-
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -155,19 +158,20 @@ export default function sendTicket({ handleClose, open, eventTitle, sendTicket2,
   }
   const send = () => {
 
-    console.log("props", sendTicket2)
-    handleClose();
+    // console.log("props", sendTicket2)
     sendTicket2(address, eventId);
+    handleClose();
+
   }
   return (
     <div >
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} className={classes.root} >
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} className={classes.root} TransitionComponent={Transition} >
         <DialogTitle id="customized-dialog-title" className={classes.header} onClose={handleClose} >
           <img src={roundlogo} className={classes.logo} alt="phnx logo" />
-  PhoenixDAO
-  <h2 className={classes.sharelink}>
+          PhoenixDAO
+          <h2 className={classes.sharelink}>
             Send Ticket
-  </h2>
+          </h2>
 
           <Typography gutterBottom className={classes.eventTitle}>
             {eventTitle}
@@ -197,8 +201,8 @@ export default function sendTicket({ handleClose, open, eventTitle, sendTicket2,
             onClick={send}
           >
             <Send style={{ marginRight: "7px", fontSize: "19px" }} />
-										Send Ticket
-									</Button>
+            Send Ticket
+          </Button>
 
         </DialogActions>
       </Dialog>

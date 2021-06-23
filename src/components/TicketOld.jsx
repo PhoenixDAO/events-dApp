@@ -5,9 +5,7 @@ import { Link } from "react-router-dom";
 // import makeBlockie from "ethereum-blockies-base64";
 import "../styles/Ticket.css";
 import ipfs from "../utils/ipfs";
-import NotifySending from "./NotifySending";
-import NotifySuccessSending from "./NotifySuccessSending";
-import NotifyError from "./NotifyError";
+import Notify from "./Notify";
 import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
 import Web3 from "web3";
@@ -229,7 +227,7 @@ class Ticket extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						toast(<NotifyError error={error} message={txerror.message} />, {
+						toast(<Notify error={error} message={txerror.message} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,

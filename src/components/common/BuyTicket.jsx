@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import roundlogo from "../Images/roundlogo.svg";
 import { makeStyles } from "@material-ui/core/styles";
 import { ShoppingCartOutlined, Cancel } from '@material-ui/icons';
+import Slide from '@material-ui/core/Slide';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,20 +105,22 @@ const useStyles = makeStyles((theme) => ({
     height: "86px",
     objectFit: "cover",
     borderBottomLeftRadius: "12px",
-    borderTopLeftRadius:"12px"
+    borderTopLeftRadius: "12px"
 
   },
-  
-  details:{
-    justifyContent:"space-between",
-    padding:"9px 15px",
-    display:"flex",
-    width:"100%"
+
+  details: {
+    justifyContent: "space-between",
+    padding: "9px 15px",
+    display: "flex",
+    width: "100%"
   }
 
 
 }));
-
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -170,41 +173,44 @@ const DialogActions = withStyles((theme) => ({
 
 }))(MuiDialogActions);
 
+
 export default function BuyTicket({ handleClose, open, eventTitle, image, date, time,price,buy }) {
   const classes = useStyles();
   const buyTicket = () => {
-    handleClose();
     buy();
+    // handleClose();
+    handleClose();
+
   }
   return (
     <div >
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} className={classes.root} >
+      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" TransitionComponent={Transition} open={open} className={classes.root} >
         <DialogTitle id="customized-dialog-title" className={classes.header} onClose={handleClose} >
           <img src={roundlogo} className={classes.logo} alt="phnx logo" />
-                PhoenixDAO
-                <h2 className={classes.sharelink}>
+          PhoenixDAO
+          <h2 className={classes.sharelink}>
             Buy Ticket
-                </h2>
-          <Typography gutterBottom className={classes.eventTitle} style={{color:"#73727D",fontWeight: "500"}}>
+          </h2>
+          <Typography gutterBottom className={classes.eventTitle} style={{ color: "#73727D", fontWeight: "500" }}>
             You’re about to purchase this ticket
-            </Typography>
+          </Typography>
 
         </DialogTitle>
         <DialogContent>
           <div className={classes.eventHolder}>
-            <img src={image} alt={eventTitle}  className={classes.eventImage} />
+            <img src={image} alt={eventTitle} className={classes.eventImage} />
             <Grid className={classes.details}>
 
               <div >
                 <Typography gutterBottom className={classes.eventTitle}>
                   {eventTitle}
                 </Typography>
-                <Typography gutterBottom style={{color:"#73727D",fontSize:"17px"}} >
+                <Typography gutterBottom style={{ color: "#73727D", fontSize: "17px" }} >
                   {date},{time}
                 </Typography>
               </div>
               <div>
-              {price}
+                {price}
               </div>
             </Grid>
 
@@ -221,7 +227,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, date, 
           >
             <Cancel style={{ marginRight: "7px", fontSize: "19px" }} />
             Cancel Purchase
-            						</Button>
+          </Button>
           <Button
             variant="contained"
             color="primary"
@@ -231,7 +237,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, date, 
             onClick={buyTicket}
           >
             <ShoppingCartOutlined style={{ marginRight: "10px" }} />
-Get Ticket									</Button>
+            Get Ticket									</Button>
         </DialogActions>
       </Dialog>
     </div>
