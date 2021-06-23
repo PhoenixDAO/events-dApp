@@ -221,7 +221,7 @@ const Analytics = (props, context) => {
     const classes = useStyles();
     const [graphData, setGraphData] = useState("");
     const goBack = () => {
-        this.props.history.goBack();
+    props.history.goBack();
     }
     //for graph datasets
     let dataset = [];
