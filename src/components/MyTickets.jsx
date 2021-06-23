@@ -101,7 +101,7 @@ class MyTickets extends Component {
 									<Link to={"/mytickets/" + i} onClick={() => this.setState({ prevPath: currentPage })} className="page-link">{i}</Link>
 								</li>
 							);
-							if (this.state.prevPath != -1) {
+							if (this.state.prevPath !== -1) {
 								this.executeScroll({ behavior: "smooth", block: "start" });
 							}
 						}
@@ -115,7 +115,7 @@ class MyTickets extends Component {
 									<Link to={"/mytickets/" + i} onClick={() => this.setState({ prevPath: currentPage })} className="page-link">{i}</Link>
 								</li>
 							);
-							if (this.state.prevPath != -1) {
+							if (this.state.prevPath !== -1) {
 								this.executeScroll({ behavior: "smooth", block: "start" });
 							}
 						}
@@ -128,7 +128,7 @@ class MyTickets extends Component {
 									<Link to={"/mytickets/" + i} onClick={() => this.setState({ prevPath: currentPage })} className="page-link">{i}</Link>
 								</li>
 							);
-							if (this.state.prevPath != -1) {
+							if (this.state.prevPath !== -1) {
 								this.executeScroll({ behavior: "smooth", block: "start" });
 							}
 						}
@@ -172,7 +172,7 @@ class MyTickets extends Component {
 	}
 	componentDidMount() {
 		this.loadTicketsFromBlockchain()
-		if (this.state.prevPath == -1) {
+		if (this.state.prevPath === -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}
 		this._isMounted = true;

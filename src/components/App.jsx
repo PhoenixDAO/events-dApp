@@ -33,6 +33,7 @@ import Terms from "./Terms";
 import Notify from "./Notify";
 import PropTypes from "prop-types";
 import Snackbar from "./Snackbar";
+import Snackbar2 from "./Snackbar2";
 import { INFURA_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
 
 import {
@@ -59,7 +60,7 @@ class App extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) { }
+		} catch (e) {}
 		super(props);
 		this.state = {
 			sent_tx: [],
@@ -77,7 +78,8 @@ class App extends Component {
 			error: false,
 			afterApprove: false,
 			getPhoenixDAO: "",
-			openSnackbar: false,
+			openSnackbarForNoMetaMask: false,
+			openSnackbarForPendingRequest: false,
 			disabledStatus: false,
 		};
 		this.myRef = React.createRef();
@@ -92,6 +94,7 @@ class App extends Component {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
+			console.log("accounts",accounts)
 			if (accounts.length == 0) {
 				localStorage.removeItem("account");
 			}
@@ -117,15 +120,24 @@ class App extends Component {
 	//Get Account
 	async loadBlockchainData() {
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
-			this.setState({ openSnackbar: true });
+			this.setState({
+				errorMessage:
+					"MetaMask is not installed. Please install MetaMask to continue !",
+				openSnackbarForNoMetaMask: true,
+				openSnackbarForPendingRequest: false,
+			});
 		} else {
 			if (typeof ethereum !== "undefined") {
-				const a = await ethereum.enable();
+				console.log("accounts I am here")
+				// const a = await ethereum.enable();
+				const a = ethereum.enable();
+				console.log("accounts I am here2")
 				web3 = new Web3(ethereum);
 				const accounts = await web3.eth.getAccounts();
+				console.log("accounts in loadBlockchainData",accounts)
 				const check = localStorage.getItem("account");
 				if (!check) {
-					window.location.reload();
+					// window.location.reload();
 					localStorage.setItem("account", true);
 				}
 			} else if (typeof web3 !== "undefined") {
@@ -135,7 +147,7 @@ class App extends Component {
 					new Web3.providers.HttpProvider(INFURA_URL)
 				);
 			}
-			window.ethereum.on("connect", function (accounts) { });
+			window.ethereum.on("connect", function (accounts) {});
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
 				window.location.reload();
@@ -148,6 +160,37 @@ class App extends Component {
 			this.setState({ account: accounts[0] });
 		}
 	}
+	async connectToMetaMask() {
+		if (window.ethereum && window.ethereum.isMetaMask) {
+			let web3 = new Web3(window.ethereum);
+			try {
+				const a = await window.ethereum.enable();
+			} catch (e) {
+				if ((e.code = -32002)) {
+					this.setState({
+						errorMessage:
+							"Connection request already pending. Please check MetaMask !",
+						openSnackbarForNoMetaMask: false,
+						openSnackbarForPendingRequest: true,
+					});
+				}
+			}
+		} else {
+			this.setState({
+				errorMessage:
+					"MetaMask is not installed. Please install MetaMask to continue !",
+				openSnackbarForNoMetaMask: true,
+				openSnackbarForPendingRequest: false,
+			});
+		}
+	}
+	handleSnackbarClose = (number) => {
+		if (number == 1) {
+			this.setState({ openSnackbarForNoMetaMask: false });
+		} else {
+			this.setState({ openSnackbarForPendingRequest: false });
+		}
+	};
 
 	//get value from buyer/from child components
 	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
@@ -369,7 +412,7 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-		this.setState({ disabledStatus: true })
+		this.setState({ disabledStatus: true });
 		this.setState({ upload: true, createEvent: transaction }, () =>
 			this.state.createEvent
 				.send({ from: this.state.account })
@@ -397,10 +440,10 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-												.returnValues
+													.returnValues
 											: txreceipt.events
-												.NewAndUpdatedEvent
-												.returnValues
+													.NewAndUpdatedEvent
+													.returnValues
 									}
 									icon="fas fa-check-circle fa-3x"
 									link="checkout your event here"
@@ -413,7 +456,7 @@ class App extends Component {
 								}
 							);
 						}
-						this.setState({ disabledStatus: false })
+						this.setState({ disabledStatus: false });
 					}
 				})
 				.on("error", (error) => {
@@ -433,7 +476,7 @@ class App extends Component {
 							}
 						);
 					}
-					this.setState({ disabledStatus: false })
+					this.setState({ disabledStatus: false });
 				})
 		);
 	};
@@ -511,9 +554,9 @@ class App extends Component {
 			() => console.log()
 		);
 	};
-	handleSnackbarClose = () => {
-		this.setState({ openSnackbar: false });
-	};
+	// handleSnackbarClose = () => {
+	// 	this.setState({ openSnackbar: false });
+	// };
 	executeScroll = () => {
 		if (this.myRef.current) this.myRef.current.scrollIntoView();
 	};
@@ -521,6 +564,12 @@ class App extends Component {
 	render() {
 		let body;
 		let connecting = false;
+
+		// uncomment this for test
+
+		// if( !this.props.drizzleStatus.initialized || this.props.web3.status === "failed" || 
+		// 	(this.props.web3.status === "initialized" && Object.keys(this.props.accounts).length === 0) ||
+		// 	this.props.web3.networkId != GLOBAL_NETWORK_ID) {
 		if (!this.props.drizzleStatus.initialized) {
 			body = (
 				<div>
@@ -574,10 +623,119 @@ class App extends Component {
 							)}
 						/>
 					</Switch>
-				</div>
+					</div>
 			);
-			connecting = true;
-		} else {
+							}
+
+		// uncomment this for test
+
+		// 	body = (
+		// 		<div>
+		// 			<Switch>
+		// 			<Route
+		// 				exact
+		// 				path="/"
+		// 				render={(props) => (
+		// 					<FindEvents
+		// 						{...props}
+		// 						executeScroll={this.executeScroll}
+		// 						inquire={this.inquireBuy}
+		// 						disabledStatus={this.state.disabledStatus}
+		// 						toggleDisabling={this.toggleDisabling}
+		// 					/>
+		// 				)}
+		// 			/>
+		// 			<Route
+		// 				exact
+		// 				path="/upcomingevents/:page"
+		// 				render={(props) => (
+		// 					<FindEvents
+		// 						{...props}
+		// 						executeScroll={this.executeScroll}
+		// 						inquire={this.inquireBuy}
+		// 						disabledStatus={this.state.disabledStatus}
+		// 						toggleDisabling={this.toggleDisabling}
+		// 					/>
+		// 				)}
+		// 			/>
+					
+				
+		// 			<Route
+		// 				exact
+		// 				path="/event/:page/:id"
+		// 				render={(props) => (
+		// 					<EventPage
+		// 						{...props}
+		// 						inquire={this.inquireBuy}
+		// 						disabledStatus={this.state.disabledStatus}
+		// 						toggleDisabling={this.toggleDisabling}
+		// 					/>
+		// 				)}
+		// 			/>
+					
+		// 			<Route
+		// 				exact
+		// 				path="/topics"
+		// 				//  component={TopicsLandingPage}
+		// 				component={(props) => <TopicsLandingPage {...props} />}
+		// 			/>
+		// 			<Route
+		// 				exact
+		// 				path="/topic/:page/:id"
+		// 				render={(props) => (
+		// 					<TopicLandingPage
+		// 						{...props}
+		// 						disabledStatus={this.state.disabledStatus}
+		// 						inquire={this.inquireBuy}
+		// 					/>
+		// 				)}
+		// 			/>
+		// 			<Route
+		// 				exact
+		// 				path="/locations"
+		// 				component={LocationsLandingPage}
+		// 			/>
+		// 			<Route
+		// 				exact
+		// 				path="/location/:page"
+		// 				component={LocationLandingPage}
+		// 			/>
+					
+		// 			<Route
+		// 				exact
+		// 				path="/guide"
+		// 				component={(props) => (
+		// 					<Guide
+		// 						{...props}
+		// 						executeScroll={this.executeScroll}
+		// 					/>
+		// 				)}
+		// 			/>
+		// 			<Route
+		// 				exact
+		// 				path="/faq"
+		// 				component={(props) => (
+		// 					<FAQ
+		// 						{...props}
+		// 						executeScroll={this.executeScroll}
+		// 					/>
+		// 				)}
+		// 			/>
+		// 			<Route
+		// 				exact
+		// 				path="/terms-and-conditions"
+		// 				render={(props) => (
+		// 					<Terms executeScroll={this.executeScroll} />
+		// 				)}
+		// 			/>
+		// 			<Route path="*" exact component={PageNotFound} />
+		// 		</Switch>
+				
+		// 		</div>
+		// 	);
+		// 	connecting = true;
+		// } 
+		else {
 			body = (
 				<Switch>
 					<Route
@@ -773,7 +931,6 @@ class App extends Component {
 						inquire={this.inquireBuy}
 						disabledStatus={this.state.disabledStatus}
 						toggleDisabling={this.toggleDisabling}
-
 					/>
 					<Route
 						exact
@@ -838,12 +995,29 @@ class App extends Component {
 								<div className="retract-page-inner-wrapper">
 									{body}
 								</div>
-								<Snackbar
+								{/* <Snackbar
 									open={this.state.openSnackbar}
 									message={
 										"MetaMask is not installed. Please install MetaMask to continue !"
 									}
 									handleClose={this.handleSnackbarClose}
+								/> */}
+								<Snackbar
+									open={this.state.openSnackbarForNoMetaMask}
+									message={this.state.errorMessage}
+									handleClose={() =>
+										this.handleSnackbarClose(1)
+									}
+								/>
+								<Snackbar2
+									style={{ zIndex: "9999999 !important" }}
+									open={
+										this.state.openSnackbarForPendingRequest
+									}
+									message={this.state.errorMessage}
+									handleClose={() =>
+										this.handleSnackbarClose(2)
+									}
 								/>
 							</div>
 						</div>

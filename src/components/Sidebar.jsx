@@ -8,6 +8,7 @@ import { Menu, DashboardOutlined, ModeCommentOutlined, TodayOutlined, ListAltOut
 import '../styles/navbar.css'
 class Sidebar extends Component {
 	constructor(props, context) {
+		console.log("accounts props in sidebar",typeof props.account)
 		super(props);
 		this.state = {
 			errorMessage: "",
@@ -75,8 +76,8 @@ class Sidebar extends Component {
 					this.setState({
 						errorMessage:
 							"Connection request already pending. Please check MetaMask !",
-						openSnackbar1: false,
-						openSnackbar2: true,
+						openSnackbarForPendingRequest: false,
+						openSnackbarForPendingRequest: true,
 					});
 				}
 			}
@@ -84,16 +85,16 @@ class Sidebar extends Component {
 			this.setState({
 				errorMessage:
 					"MetaMask is not installed. Please install MetaMask to continue !",
-				openSnackbar1: true,
-				openSnackbar2: false,
+				openSnackbarForPendingRequest: true,
+				openSnackbarForPendingRequest: false,
 			});
 		}
 	}
 	handleSnackbarClose = (number) => {
 		if (number == 1) {
-			this.setState({ openSnackbar1: false });
+			this.setState({ openSnackbarForPendingRequest: false });
 		} else {
-			this.setState({ openSnackbar2: false });
+			this.setState({ openSnackbarForPendingRequest: false });
 		}
 	};
 
@@ -112,7 +113,7 @@ class Sidebar extends Component {
 				</p>
 			</div>
 		);
-		if (this.props.connection === true && this.props.account.length !== 0) {
+		if (this.props.connection === true && this.props.account) {
 			user = (
 				<div>
 					<div className="user-status-icon">
@@ -146,17 +147,17 @@ class Sidebar extends Component {
 			);
 		}
 
-		if (this.props.account.length === 0) {
+		if (!this.props.account || this.props.account.length === 0) {
 			return (
 				<React.Fragment>
 					<Snackbar
-						open={this.state.openSnackbar1}
+						open={this.state.openSnackbarForPendingRequest}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(1)}
 					/>
 					<Snackbar2
 						style={{ zIndex: "9999999 !important" }}
-						open={this.state.openSnackbar2}
+						open={this.state.openSnackbarForPendingRequest}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(2)}
 					/>
@@ -241,7 +242,7 @@ class Sidebar extends Component {
 										<span className="toggleHidden">Topics</span>
 									</NavLink>
 								</li>
-								<li>
+								{/* <li>
 									<NavLink
 										to="/calendar"
 										className="nav-link"
@@ -255,7 +256,7 @@ class Sidebar extends Component {
 											Calendar
 									</span>
 									</NavLink>
-								</li>
+								</li> */}
 								<li>
 									<NavLink
 										to="/calendar"
@@ -272,7 +273,7 @@ class Sidebar extends Component {
 									</NavLink>
 								</li>
 							</ul>
-							<h5 className="mt-5 toggleHidden header">Manage Events</h5>
+							{/* <h5 className="mt-5 toggleHidden header">Manage Events</h5>
 							<ul className="nav flex-column">
 								<li>
 									<NavLink
@@ -289,8 +290,8 @@ class Sidebar extends Component {
 									</span>
 									</NavLink>
 								</li>
-							</ul>
-							<h5 className="mt-5 toggleHidden header">Tools</h5>
+							</ul> */}
+							<h5 className="mt-5 toggleHidden header">Resources</h5>
 							<ul className="nav flex-column">
 								<li>
 									<NavLink
@@ -324,7 +325,26 @@ class Sidebar extends Component {
 									</NavLink>
 								</li>
 								<li>
-									<div
+									<NavLink
+										to="/terms-and-conditions"
+										className="nav-link"
+										activeClassName="nav-link-active"
+										onClick={() => {
+											this.sidebarClick(this);
+										}}
+									>
+										<i
+											className="fa fa-file-alt fontAwesomeIcon"
+											title="How It Works"
+											>
+										</i>{" "}
+										<span className="toggleHidden">
+											Terms and Conditions
+									</span>
+									</NavLink>
+								</li>
+								<li>
+									{/* <div
 										className="nav-link"
 										onClick={
 											this.connectToMetaMask
@@ -334,7 +354,7 @@ class Sidebar extends Component {
 										<span className="toggleHidden">
 											Connect Wallet
 									</span>
-									</div>
+									</div> */}
 								</li>
 							</ul>
 

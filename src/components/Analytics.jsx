@@ -2,18 +2,11 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import {
-    Grid,
-    IconButton,
-    Button,
-    FormControl,
-    Select,
-    Typography,
-} from "@material-ui/core";
-import BuyPHNXButton from "./common/BuyPhnxButton"
+import { Grid, IconButton, FormControl, Select } from "@material-ui/core";
+import BuyPHNXButton from "./common/BuyPhnxButton";
 import { KeyboardBackspace } from "@material-ui/icons";
 // import {Graph} from "../utils/graph";
-import { Doughnut, Line } from 'react-chartjs-2';
+import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
 import { Card } from "./common/Card";
 import { getEvents } from "../utils/getEvents";
@@ -173,42 +166,45 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
 const TicketSales = [
-    {
-        eventCity: "melbourne",
-        TicketSold: 9
-    },
-    {
-        eventCity: "karachi",
-        TicketSold: 9
-    },
-    {
-        eventCity: "Sydney",
-        TicketSold: 8
-    },
-    {
-        eventCity: "Singapore",
-        TicketSold: 8
-    },
-    {
-        eventCity: "New York",
-        TicketSold: 4
-    },
-]
+	{
+		eventCity: "melbourne",
+		TicketSold: 9,
+	},
+	{
+		eventCity: "karachi",
+		TicketSold: 9,
+	},
+	{
+		eventCity: "Sydney",
+		TicketSold: 8,
+	},
+	{
+		eventCity: "Singapore",
+		TicketSold: 8,
+	},
+	{
+		eventCity: "New York",
+		TicketSold: 4,
+	},
+];
 //for doughnut chart
 const chartColors = ["#ACFFE3", "#96A6FF", "#FF8795", "#E8B56B", "#D0A6F2"];
 const data2 = {
-    maintainAspectRatio: false,
-    responsive: false,
-    labels: TicketSales.map((event) => { return event.eventCity }),
-    datasets: [
-        {
-            data: TicketSales.map((event) => { return event.TicketSold }),
-            backgroundColor: chartColors,
-            hoverBackgroundColor: chartColors
-        }
-    ]
+	maintainAspectRatio: false,
+	responsive: false,
+	labels: TicketSales.map((event) => {
+		return event.eventCity;
+	}),
+	datasets: [
+		{
+			data: TicketSales.map((event) => {
+				return event.TicketSold;
+			}),
+			backgroundColor: chartColors,
+			hoverBackgroundColor: chartColors,
+		},
+	],
 };
 
 const Analytics = (props, context) => {
@@ -605,15 +601,14 @@ y:40
     );
 };
 Analytics.contextTypes = {
-    drizzle: PropTypes.object,
+	drizzle: PropTypes.object,
 };
 const mapStateToProps = (state) => {
-
-    return {
-        contracts: state.contracts,
-        accounts: state.accounts[0],
-        networkId: state.web3.networkId,
-    };
+	return {
+		contracts: state.contracts,
+		accounts: state.accounts[0],
+		networkId: state.web3.networkId,
+	};
 };
 
 const AppContainer = drizzleConnect(Analytics, mapStateToProps);
