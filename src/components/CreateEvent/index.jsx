@@ -252,12 +252,15 @@ class CreateEvent extends Component {
 			}
 		}, 500);
 	};
+	
 	componentWillUnmount() {
 		clearInterval(this.tx_checkerInterval);
 		clearInterval(this.updaterInterval);
 	}
+
 	componentDidMount() {
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
+		console.log("this.contracts", this.contracts);
 	}
 
 	render() {
