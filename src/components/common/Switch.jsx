@@ -17,8 +17,8 @@ const AntSwitch = withStyles((theme) => ({
       color: theme.palette.common.white,
       '& + $track': {
         opacity: 1,
-        backgroundColor: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main,
+        backgroundColor:"white !important",
+        borderColor: theme.palette.primary.white,
       },
     },
     "&.MuiSwitch-switchBase":{
@@ -30,15 +30,15 @@ const AntSwitch = withStyles((theme) => ({
     width: 16,
     height: 16,
     boxShadow: 'none',
+    backgroundColor:" #FFC700"
   },
   track: {
     border: `1px solid ${theme.palette.grey[500]}`,
     borderRadius: 35,
     opacity: 1,
-    backgroundColor: "#FFC700"
+    backgroundColor: theme.palette.common.white,
   },
   checked: {
-    backgroundColor: theme.palette.common.white,
 
   },
 }))(Switch);
@@ -57,7 +57,7 @@ export default function ThemeSwitch() {
           <Grid item>
             <AntSwitch checked={checked} onChange={handleChange} name="checkedC" />
           </Grid>
-          <Grid item style={{fontSize:"18px"}}>{checked ? "Ashes":"Fire"}</Grid>
+          <Grid item className="toggleHidden" style={{fontSize:"16px",textAlign:"center"}}>{checked ? "Ashes":"Fire"}</Grid>
         </Grid>
       </Typography>
   );
