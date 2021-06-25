@@ -4,11 +4,12 @@ import PropTypes from "prop-types";
 import Web3 from 'web3';
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
-import { Menu, DashboardOutlined, ModeCommentOutlined, TodayOutlined, ListAltOutlined, InfoOutlined, ForumOutlined,FavoriteBorder } from '@material-ui/icons';
-import '../styles/navbar.css'
+import { Menu, DashboardOutlined, ModeCommentOutlined, TodayOutlined, ListAltOutlined, InfoOutlined, ForumOutlined, FavoriteBorder } from '@material-ui/icons';
+import '../styles/navbar.css';
+import ThemeSwitch from "./common/Switch";
 class Sidebar extends Component {
 	constructor(props, context) {
-		console.log("accounts props in sidebar",typeof props.account)
+		console.log("accounts props in sidebar", typeof props.account)
 		super(props);
 		this.state = {
 			errorMessage: "",
@@ -107,8 +108,8 @@ class Sidebar extends Component {
 				</div>
 				<p className="mt-3 small connection">
 					<span className="toggleHidden">
-					You are not connected to the Matic Mainnet. Please
-                        check MetaMask.
+						You are not connected to the Matic Mainnet. Please
+						check MetaMask.
 					</span>
 				</p>
 			</div>
@@ -137,9 +138,9 @@ class Sidebar extends Component {
 									2)}
 								...
 								{this.props.account.substring(
-										this.props.account.length - 10,
-										this.props.account.length
-									)}
+									this.props.account.length - 10,
+									this.props.account.length
+								)}
 							</span>
 						</NavLink>
 					</div>
@@ -254,22 +255,22 @@ class Sidebar extends Component {
 										<TodayOutlined />{" "}
 										<span className="toggleHidden">
 											Calendar
-									</span>
+										</span>
 									</NavLink>
 								</li> */}
 								<li>
 									<NavLink
-										to="/calendar"
+										to="/confirm-purchase"
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
 											this.toggleSidebarClass(true);
 										}}
 									>
-										<ModeCommentOutlined />{" "}
+										<i className="far fa-check-square fontAwesomeIcon"></i>{" "}
 										<span className="toggleHidden">
-											Validate Tickets
-									</span>
+											Confirm Purchase
+										</span>
 									</NavLink>
 								</li>
 							</ul>
@@ -287,7 +288,7 @@ class Sidebar extends Component {
 										<i className="fa fa-edit fontAwesomeIcon"></i>{" "}
 										<span className="toggleHidden">
 											Create Event
-									</span>
+										</span>
 									</NavLink>
 								</li>
 							</ul> */}
@@ -305,7 +306,7 @@ class Sidebar extends Component {
 										<InfoOutlined />{" "}
 										<span className="toggleHidden">
 											How It Works
-									</span>
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -317,10 +318,7 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
-										<i
-											className="fa fa-file-alt fontAwesomeIcon"
-											title="How It Works"
-										></i>{" "}
+										<ForumOutlined />{" "}
 										<span className="toggleHidden">FAQ's</span>
 									</NavLink>
 								</li>
@@ -336,11 +334,11 @@ class Sidebar extends Component {
 										<i
 											className="fa fa-file-alt fontAwesomeIcon"
 											title="How It Works"
-											>
+										>
 										</i>{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
-									</span>
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -494,22 +492,22 @@ class Sidebar extends Component {
 										<TodayOutlined />{" "}
 										<span className="toggleHidden">
 											Calendar
-									</span>
+										</span>
 									</NavLink>
 								</li>
 								<li>
-									<NavLink
-										to="/calendar"
+								<NavLink
+										to="/confirm-purchase"
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
 											this.toggleSidebarClass(true);
 										}}
 									>
-										<ModeCommentOutlined />{" "}
+										<i className="far fa-check-square fontAwesomeIcon"></i>
 										<span className="toggleHidden">
-											Validate Tickets
-									</span>
+											Confirm Purchase
+										</span>
 									</NavLink>
 								</li>
 							</ul>
@@ -532,7 +530,7 @@ class Sidebar extends Component {
 										></i>{" "}
 										<span className="toggleHidden">
 											Create Event
-									</span>
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -552,7 +550,7 @@ class Sidebar extends Component {
 										<ListAltOutlined />{" "}
 										<span className="toggleHidden">
 											My Created Events
-									</span>
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -575,7 +573,7 @@ class Sidebar extends Component {
 										></i>{" "}
 										<span className="toggleHidden">
 											My Tickets
-									</span>
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -587,10 +585,10 @@ class Sidebar extends Component {
 											this.toggleSidebarClass(true);
 										}}
 									>
-										<FavoriteBorder/>{"  "}
+										<FavoriteBorder />{"  "}
 										<span className="toggleHidden">
 											Favourites
-									</span>
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -608,7 +606,7 @@ class Sidebar extends Component {
 										></i>{"  "}
 										<span className="toggleHidden">
 											Analytics
-									</span>
+										</span>
 									</NavLink>
 								</li>
 							</ul>
@@ -626,7 +624,7 @@ class Sidebar extends Component {
 										<InfoOutlined />{" "}
 										<span className="toggleHidden">
 											How It Works
-									</span>
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -654,14 +652,19 @@ class Sidebar extends Component {
 										<i
 											className="fa fa-file-alt fontAwesomeIcon"
 											title="How It Works"
-											>
+										>
 										</i>{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
-									</span>
+										</span>
 									</NavLink>
 								</li>
+								<li
+								>
+									<ThemeSwitch />
+								</li>
 							</ul>
+
 
 							<ul className="grid toggleHidden">
 								<div className="imageHolder">

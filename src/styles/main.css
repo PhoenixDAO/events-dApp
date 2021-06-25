@@ -234,8 +234,8 @@ margin-bottom: 10px;
 
 /* sticky header */
 .header3{
-    margin-left: -2px;
-    margin-right: -1px;
+    /* margin-left: -2px;
+    margin-right: -1px; */
     z-index: 999;
     display: flex;
     justify-content: space-between;
@@ -1810,6 +1810,7 @@ h4.transactions {
 }
 
 .countdownEnded {
+	background-color: white;
 	width: 100%;
 	text-align: center;
 	color: rgb(58, 58, 58);
@@ -1823,11 +1824,12 @@ h4.transactions {
 	position: relative;
 	padding: 15px;
 	margin-top: 60px;
-	border: 1px solid rgb(197, 195, 197);
+	border:1px solid #E4E4E7;
+
 }
 
 .countdownEnded p {
-	font-size: 0.9rem;
+	font-size: 1rem;
 }
 
 .countdown h5 {
