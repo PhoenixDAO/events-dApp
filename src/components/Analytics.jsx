@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import { Grid, IconButton, FormControl, Select } from "@material-ui/core";
+import { Grid, FormControl, Select } from "@material-ui/core";
 import BuyPHNXButton from "./common/BuyPhnxButton";
-import { KeyboardBackspace } from "@material-ui/icons";
 // import {Graph} from "../utils/graph";
 import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
@@ -220,9 +219,6 @@ const Analytics = (props, context) => {
     }, []);
     const classes = useStyles();
     const [graphData, setGraphData] = useState("");
-    const goBack = () => {
-    props.history.goBack();
-    }
     //for graph datasets
     let dataset = [];
     const getPhnxRevenue = () => {
@@ -407,16 +403,6 @@ y:40
         <div>
             <Grid className="header3">
                 <h2>
-                    <IconButton
-                        aria-label="delete"
-                        onClick={goBack}
-                    >
-                        <KeyboardBackspace
-                            fontSize="large"
-                            style={{ fill: "#1E1E22" }}
-                        />
-                    </IconButton>
-                    <span>&nbsp;&nbsp;</span>
                     Analytics
                 </h2>
                 <div>

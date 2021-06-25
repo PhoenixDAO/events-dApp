@@ -9,7 +9,7 @@ import '../styles/navbar.css';
 import ThemeSwitch from "./common/Switch";
 class Sidebar extends Component {
 	constructor(props, context) {
-		console.log("accounts props in sidebar",typeof props.account)
+		console.log("accounts props in sidebar", typeof props.account)
 		super(props);
 		this.state = {
 			errorMessage: "",
@@ -260,16 +260,16 @@ class Sidebar extends Component {
 								</li> */}
 								<li>
 									<NavLink
-										to="/calendar"
+										to="/confirm-purchase"
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
 											this.toggleSidebarClass(true);
 										}}
 									>
-										<ModeCommentOutlined />{" "}
+										<i className="far fa-check-square fontAwesomeIcon"></i>{" "}
 										<span className="toggleHidden">
-											Validate Tickets
+											Confirm Purchase
 										</span>
 									</NavLink>
 								</li>
@@ -318,10 +318,7 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
-										<i
-											className="fa fa-file-alt fontAwesomeIcon"
-											title="How It Works"
-										></i>{" "}
+										<ForumOutlined />{" "}
 										<span className="toggleHidden">FAQ's</span>
 									</NavLink>
 								</li>
@@ -337,11 +334,11 @@ class Sidebar extends Component {
 										<i
 											className="fa fa-file-alt fontAwesomeIcon"
 											title="How It Works"
-											>
+										>
 										</i>{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
-									</span>
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -499,17 +496,17 @@ class Sidebar extends Component {
 									</NavLink>
 								</li>
 								<li>
-									<NavLink
-										to="/calendar"
+								<NavLink
+										to="/confirm-purchase"
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
 											this.toggleSidebarClass(true);
 										}}
 									>
-										<ModeCommentOutlined />{" "}
+										<i className="far fa-check-square fontAwesomeIcon"></i>
 										<span className="toggleHidden">
-											Validate Tickets
+											Confirm Purchase
 										</span>
 									</NavLink>
 								</li>
@@ -662,7 +659,7 @@ class Sidebar extends Component {
 										</span>
 									</NavLink>
 								</li>
-								<li 
+								<li
 								>
 									<ThemeSwitch />
 								</li>
