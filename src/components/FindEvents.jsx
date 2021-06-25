@@ -188,26 +188,33 @@ class FindEvents extends Component {
 				query: `
 			  {
 				events {
-				  id
-				  eventId
-				  name
-				  time
-				  price
-				  token
-				  limited
-				  seats
-				  sold
-				  ipfs
-				  category
-				  owner
-				  revenueOfEvent
+					id
+					eventId
+					owner
+					name
+					topic
+					location
+					ipfsHash
+					tktLimited
+					tktTotalQuantity
+					tktTotalQuantitySold
+					oneTimeBuy
+					token
+					time
+					duration
+					catTktQuantity
+					catTktQuantitySold	
+					categories
+					prices
+					eventRevenueInDollar
+					eventRevenueInPhnx
 				}
 			  }
 			  `,
 			},
 		})
 			.then((graphEvents) => {
-				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+				console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
 					// console.log("GraphQL query -- graphEvents undefined")
@@ -381,7 +388,7 @@ class FindEvents extends Component {
 							inquire={this.props.inquire}
 							key={events_list[i].eventId}
 							id={events_list[i].eventId}
-							ipfs={events_list[i].ipfs}
+							ipfs={events_list[i].ipfsHash}
 							eventData={events_list[i]}
 						/>
 					);

@@ -50,4 +50,4 @@ export const ADD_TO_FAVOURITES ="user/addToFavourites";
 export const UPDATE_EVENT_VIEWS = "user/updateViews";
 export const explorerWithTX="https://rinkeby.etherscan.io/tx/"
 export const explorerWithAddress ="https://rinkeby.etherscan.io/address/"
-export const graphURL="https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp2"
+export const graphURL="https://api.thegraph.com/subgraphs/name/nashaibakbar/eventcheck"

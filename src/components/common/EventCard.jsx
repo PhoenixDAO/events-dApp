@@ -277,7 +277,7 @@ const EventCard = (props, context) => {
 									>
 										<ConfirmationNumberOutlined fontSize="medium" />
 										<span>&nbsp;</span>
-										{event_data.sold}/{max_seats}
+										{event_data.tktTotalQuantitySold}/{event_data.tktTotalQuantity}
 									</Typography>
 									{!myEvent ? (
 										<Typography
@@ -310,7 +310,7 @@ const EventCard = (props, context) => {
 										fontWeight: 700,
 									}}
 								>
-									{event_data.sold >= 2 ? (
+									{event_data.tktTotalQuantitySold >= 2 ? (
 										<img
 											src="/images/fire.png"
 											className="event_badge-hot"
@@ -327,7 +327,7 @@ const EventCard = (props, context) => {
 									variant="body1"
 									component="h2"
 								>
-									Free
+									{!event_data.token ? "Free": `Starting from ${event_data.prices[0]} PHNX`}
 								</Typography>
 								{/* <div className={classes.eventinfo}>
 									<span className={classes.PhnxPrice} >{event_data[3]
@@ -402,7 +402,7 @@ const EventCard = (props, context) => {
 									>
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
-										{event_data.sold}/{max_seats}
+										{event_data.tktTotalQuantitySold}/{event_data.tktTotalQuantity}
 									</Typography>
 									<Typography
 										variant="body2"

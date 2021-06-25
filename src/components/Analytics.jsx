@@ -10,6 +10,7 @@ import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
 import { Card } from "./common/Card";
 import { getEvents } from "../utils/getEvents";
+import { getUserDetails } from "../config/serverAPIs";
 
 const useStyles = makeStyles((theme) => ({
 	content: {
@@ -185,9 +186,11 @@ const Analytics = (props, context) => {
 	// } = props;
 	useEffect(() => {
 		getPhnxRevenue();
+		getViewsAndFavourites();
 	}, []);
 	const classes = useStyles();
 	const [graphData, setGraphData] = useState("");
+	const [userDetails, setUserDetails] = useState(null)
 	const goBack = () => {
 		this.props.history.goBack();
 	};
@@ -219,6 +222,16 @@ const Analytics = (props, context) => {
 			</Grid>
 		));
 	};
+	const getViewsAndFavourites = async () =>{
+		const userDetails= await getUserDetails({address:props.accounts,networkId:props.networkId});
+		if (!userDetails.error){
+			setUserDetails(userDetails.result);
+		}else{
+			
+		}
+
+	}
+
 	let Events = getEvents({ _isMounted: true, accounts: props.accounts });
 	console.log("result", Events);
 	const Top5Events = () => {
@@ -434,7 +447,7 @@ const Analytics = (props, context) => {
 				<Grid container style={{ margin: "70px 0px" }}>
 					<Line data={data} options={chartOptions} />
 				</Grid>
-				<EventsAnalytics />
+				<EventsAnalytics userDetails={userDetails}/>
 				<Grid className={classes.box}>
 					<Grid className={classes.row}>
 						<Grid className={classes.row}>
