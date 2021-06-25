@@ -236,11 +236,26 @@ class MyEventStat extends Component {
 				  query: `
 				  {
 					events {
-					  eventId
-					  price
-					  token
-					  sold
-					  buyers
+						id
+						eventId
+						owner
+						name
+						topic
+						location
+						ipfsHash
+						tktLimited
+						tktTotalQuantity
+						tktTotalQuantitySold
+						oneTimeBuy
+						token
+						time
+						duration
+						catTktQuantity
+						catTktQuantitySold	
+						categories
+						prices
+						eventRevenueInDollar
+						eventRevenueInPhnx
 					}
 				  }
 				  `

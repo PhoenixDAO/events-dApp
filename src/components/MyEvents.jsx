@@ -158,29 +158,33 @@ class MyEvents extends Component {
 			method: 'post',
 			data: {
 				query: `{
-				users {
-			  id
-			  account
-			  userEvents {
-				id
-				eventId
-				name
-				time
-				price
-				token
-				limited
-				seats
-				sold
-				ipfs
-				category
-				owner
-				revenueOfEvent
-			  }
-			}
-		  }`
+					events(where : {owner: ${this.accounts}}) {
+						id
+						token
+						eventId
+						owner
+						name
+						topic
+						location
+						ipfsHash
+						tktLimited
+						oneTimeBuy
+						time
+						duration
+						tktTotalQuantity
+						tktTotalQuantitySold
+						catTktQuantity
+						catTktQuantitySold	
+						categories
+						prices
+						eventRevenueInDollar
+						eventRevenueInPhnx
+					  }
+		}
+	  }`
 			}
 		}).then((graphEvents) => {
-			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
+			console.log("GraphQL query response in MyEvents Active Events",Date.now(),graphEvents.data.data)
 			if (!graphEvents.data || graphEvents.data.data === undefined) {
 				// console.log("GraphQL query -- graphEvents undefined")
 				this.setState({ loading: false, Topic_Events: [], active_length: 0 });
@@ -188,9 +192,11 @@ class MyEvents extends Component {
 				if (this._isMounted) {
 					const dateTime = Date.now();
 					const dateNow = Math.floor(dateTime / 1000);
-					let userEvents = graphEvents.data.data.users.find((user) => user.account.toLowerCase() === this.account.toLowerCase())
+					let userEvents = graphEvents.data.data.events; 
+					//graphEvents.data.data.users.find((user) => user.account.toLowerCase() === this.account.toLowerCase())
 					if (userEvents) {
-						let newsort = userEvents.userEvents
+						// let newsort = userEvents.userEvents
+						let newsort = userEvents
 							.concat()
 							.sort((a, b) => b.blockNumber - a.blockNumber)
 							.filter(
@@ -230,30 +236,34 @@ class MyEvents extends Component {
 				query:
 
 					`{
-			users {
-			  id
-			  account
-			  userEvents {
-				id
-				eventId
-				name
-				time
-				price
-				token
-				limited
-				seats
-				sold
-				ipfs
-				category
-				owner
-				revenueOfEvent
-			  }
+						events(where : {owner: ${this.accounts}}) {
+							id
+							token
+							eventId
+							owner
+							name
+							topic
+							location
+							ipfsHash
+							tktLimited
+							oneTimeBuy
+							time
+							duration
+							tktTotalQuantity
+							tktTotalQuantitySold
+							catTktQuantity
+							catTktQuantitySold	
+							categories
+							prices
+							eventRevenueInDollar
+							eventRevenueInPhnx
+						  }
 			}
 		  }`
 
 			}
 		}).then((graphEvents) => {
-			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
+			console.log("GraphQL query response in MyEvents Past Events",Date.now(),graphEvents.data.data)
 
 			if (!graphEvents.data || graphEvents.data.data === undefined) {
 				// console.log("GraphQL query -- graphEvents undefined")
@@ -262,9 +272,11 @@ class MyEvents extends Component {
 				if (this._isMounted) {
 					const dateTime = Date.now();
 					const dateNow = Math.floor(dateTime / 1000);
-					let userEvents = graphEvents.data.data.users.find((user) => user.account.toLowerCase() === this.account.toLowerCase())
+					let userEvents = graphEvents.data.data.events; 
+					//graphEvents.data.data.users.find((user) => user.account.toLowerCase() === this.account.toLowerCase())
 					if (userEvents) {
-						let newsort = userEvents.userEvents
+						// let newsort = userEvents.userEvents
+						let newsort = userEvents
 							.concat()
 							.sort((a, b) => b.blockNumber - a.blockNumber)
 							.filter(
@@ -416,7 +428,7 @@ class MyEvents extends Component {
 							inquire={this.props.inquire}
 							key={events_list[i].eventId}
 							id={events_list[i].eventId}
-							ipfs={events_list[i].ipfs}
+							ipfs={events_list[i].ipfsHash}
 							myEvents={true}
 						/>
 					);
