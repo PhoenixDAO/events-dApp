@@ -9,13 +9,13 @@ import {
 } from "../config/const";
 import axios from "axios";
 
-export const getUserDetails = async ({ address, networkId }) => {
+export const getUserDetails = async ( address, networkId ) => {
 	const result = await axios.post(`${API_URL}${GET_USER_DETAIL}`, {
 		address,
 		networkId,
 	});
 	// console.log("serverAPI getUserDetails", result);
-	return result;
+	return result.data;
 };
 
 export const updateEventViews = async ({ address, networkId, eventId }) => {

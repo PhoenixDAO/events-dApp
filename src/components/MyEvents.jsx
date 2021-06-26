@@ -351,10 +351,10 @@ class MyEvents extends Component {
 	executeScroll = () => this.myRef.current.scrollIntoView();
 	onTabChange = (event, newValue) => {
 		this.setState({ selectedTab: newValue });
-		if (newValue === 1) {
+		if (newValue === 0) {
 			this.ActiveEvent();
 		}
-		if (newValue === 2) {
+		if (newValue === 1) {
 			this.PastEvent();
 
 		}
@@ -405,7 +405,7 @@ class MyEvents extends Component {
 				let start = end - this.perPage;
 				if (end > count) end = count;
 				let pages = Math.ceil(count / this.perPage);
-
+console.log("updated_list",updated_list);
 				for (let i = start; i < end; i++) {
 					updated_list.push(
 						<Event
@@ -578,11 +578,11 @@ class MyEvents extends Component {
 							className={classes.tabBar}
 
 							label="Upcoming Events"
-							{...a11yProps(1)}
+							{...a11yProps(0)}
 						/>
 						<Tab
 							className={classes.tabBar}
-							label="Past Events" {...a11yProps(2)} />
+							label="Past Events" {...a11yProps(1)} />
 
 					</Tabs>
 					<Divider light />
@@ -596,9 +596,7 @@ class MyEvents extends Component {
 					{body}
 					{/* <FindEvents {...this.props}/> */}
 				</TabPanel>
-				<TabPanel value={this.state.selectedTab} index={2}>
-					{body}
-				</TabPanel>
+			
 				{/* <h2 className="col-md-10" ref={this.myRef}>
 					{this.state.isActive ? (
 						<i className="fa fa-calendar-alt "></i>

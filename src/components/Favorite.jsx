@@ -203,10 +203,10 @@ class Favorites extends Component {
                     const dateNow = Math.floor(dateTime / 1000);
                     this.setState({ loading: true });
 
-                    let newsort = graphEvents.data.data.events
-                        .concat()
-                        .sort((a, b) => b.blockNumber - a.blockNumber)
-                        .filter((activeEvents) => activeEvents.time >= dateNow);
+                    let newsort = graphEvents.data.data.events;
+                    //     .concat()
+                    //     .sort((a, b) => b.blockNumber - a.blockNumber)
+                    //     .filter((activeEvents) => activeEvents.time >= dateNow);
                     // console.log("GraphQL query newsort",newsort)
 
                     this.setState({
