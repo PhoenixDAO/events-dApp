@@ -8,6 +8,10 @@ import Form from "./Form";
 import Loader from "./Loader";
 import Done from "./Done";
 
+//revamp
+import MyStepper from "./MyStepper";
+import PreviewEvent from "./PreviewEvent";
+
 // material UI styles
 import { withStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
@@ -248,12 +252,15 @@ class CreateEvent extends Component {
 			}
 		}, 500);
 	};
+
 	componentWillUnmount() {
 		clearInterval(this.tx_checkerInterval);
 		clearInterval(this.updaterInterval);
 	}
+
 	componentDidMount() {
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
+		console.log("this.contracts", this.contracts);
 	}
 
 	render() {
@@ -279,7 +286,20 @@ class CreateEvent extends Component {
 			) : (
 				<React.Fragment>
 					<div className="row">
-						<Form
+						<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
+							<br />
+							<br />
+							<br />
+							<MyStepper />
+						</div>
+						<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
+							<br />
+							<br />
+							<br />
+							<PreviewEvent />
+						</div>
+
+						{/* <Form
 							createEvent={this.createEvent}
 							account={this.props.account}
 							data={{
@@ -301,14 +321,27 @@ class CreateEvent extends Component {
 								topic: this.state.data.topic,
 								file_name: this.state.data.file_name,
 							}}
-						/>
+						/> */}
 					</div>
 				</React.Fragment>
 			);
 		if (this.state.error || this.props.error) {
 			body = (
 				<div className="row">
-					<Form
+					<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
+						<br />
+						<br />
+						<br />
+						<MyStepper />
+					</div>
+					<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
+						<br />
+						<br />
+						<br />
+						<PreviewEvent />
+					</div>
+
+					{/* <Form
 						data={{
 							name: this.state.data.name,
 							description: this.state.data.description,
@@ -330,7 +363,7 @@ class CreateEvent extends Component {
 						}}
 						createEvent={this.createEvent}
 						account={this.props.account}
-					/>
+					/> */}
 				</div>
 			);
 		}

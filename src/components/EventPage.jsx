@@ -705,7 +705,7 @@ class EventPage extends Component {
 				// 			<span role="img" aria-label="alert">
 				// 				⚠️
 				// 			</span>{" "}
-				// 			This event has already ended.
+				// 			This event has already ended.s
 				// 		</span>
 				// 	);
 				// }

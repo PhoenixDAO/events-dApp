@@ -9,6 +9,7 @@ import {
 } from "../config/const";
 import axios from "axios";
 
+
 export const getUserDetails = async ({ address, networkId }) => {
 	try {
 		console.log("serverAPI address and networkId",address,networkId)
@@ -17,7 +18,7 @@ export const getUserDetails = async ({ address, networkId }) => {
 			networkId,
 		});
 		console.log("serverAPI getUserDetails", result.data.result);
-		return { result:result.data.result, error: false };
+		return { result:result.data, error: false };
 	} catch (err) {
 		console.log("serverAPI error occured in getUserDetails", err);
 		return { error: true, message: err };
