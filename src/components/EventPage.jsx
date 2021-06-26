@@ -16,14 +16,6 @@ import Web3 from "web3";
 import axios from "axios";
 import "../styles/eventPage.css";
 import Notify from "./Notify";
-// import NotifyEvent from "./NotifyEvent";
-import NotifyApprove from "./NotifyApprove";
-// import NotifySuccess from "./NotifySuccess";
-// import NotifyEventSuccess from "./NotifyEventSuccess";
-import NotifyApproveSuccess from "./NotifyApproveSuccess";
-// import NotifyFaucet from "./NotifyFaucet";
-// import NotifySuccessFaucet from "./NotifySuccessFaucet";
-// import NotifyNetwork from "./NotifyNetwork";
 import {
 	CalendarTodayOutlined,
 	ScheduleOutlined,
@@ -552,7 +544,8 @@ class EventPage extends Component {
 			.send({ from: this.account })
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
-					toast(<NotifyApprove hash={hash} />, {
+					toast(<Notify hash={hash} text={"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."}
+					/>, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -582,7 +575,7 @@ class EventPage extends Component {
 	onConfirmation(confirmationNumber, receipt) {
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
-			toast(<NotifyApproveSuccess hash={receipt.transactionHash} />, {
+			toast(<Notify hash={receipt.transactionHash} icon="fas fa-check-circle fa-3x" text={"Transaction successful!\nYou can buy a ticket now." }/>, {
 				position: "bottom-right",
 				autoClose: true,
 				pauseOnHover: true,
@@ -595,9 +588,6 @@ class EventPage extends Component {
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 		let temp = this.allowance();
-		console.log(
-			"in buy function",balance
-		)
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
@@ -703,17 +693,17 @@ class EventPage extends Component {
 					buttonText = " Sold Out";
 				}
 
-				if (date.getTime() < new Date().getTime()) {
-					disabled = true;
-					disabledStatus = (
-						<span>
-							<span role="img" aria-label="alert">
-								⚠️
-							</span>{" "}
-							This event has already ended.
-						</span>
-					);
-				}
+				// if (date.getTime() < new Date().getTime()) {
+				// 	disabled = true;
+				// 	disabledStatus = (
+				// 		<span>
+				// 			<span role="img" aria-label="alert">
+				// 				⚠️
+				// 			</span>{" "}
+				// 			This event has already ended.
+				// 		</span>
+				// 	);
+				// }
 
 				if (this.state.active_length <= 0) {
 					sold = false;

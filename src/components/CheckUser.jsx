@@ -9,7 +9,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Snackbar from "./Snackbar";
 import { API_URL, REPORT_EVENT } from "../config/const";
 import { toast } from "react-toastify";
-import NotifyReport from "./NotifyReport";
+import Notify from "./Notify";
 
 class CheckUser extends Component {
 	constructor(props, context) {
@@ -68,7 +68,7 @@ class CheckUser extends Component {
 				payload
 			);
 			// console.log("Consoleee notify report response",report)
-			toast(<NotifyReport text={"Report successful!"}/>, {
+			toast(<Notify text="Report successful!" icon="fas fa-thumbs-down fa-3x" color="#413AE2"/>, {
 					position: "bottom-right",
 					autoClose: true,
 					pauseOnHover: true,
@@ -82,7 +82,7 @@ class CheckUser extends Component {
 
 			if(error.response && error.response.data){
 				// console.log("Consoleee notify report response error.response.data",error.response.data)
-				toast(<NotifyReport text={error.response.data.responseMessage+"!"}/>, {
+				toast(<Notify text={error.response.data.responseMessage+"!"} icon="fas fa-exclamation-circle fa-3x" color="#F43C3C"/>, {
 					position: "bottom-right",
 					autoClose: true,
 					pauseOnHover: true,

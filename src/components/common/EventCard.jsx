@@ -3,9 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import { API_URL, ADD_TO_FAVOURITES , REMOVE_FROM_FAVOURITES } from "../../config/const";
+import { API_URL, ADD_TO_FAVOURITES, REMOVE_FROM_FAVOURITES } from "../../config/const";
 import { toast } from "react-toastify";
-import NotifyReport from "../NotifyReport";
+import Notify from "../Notify";
 import axios from "axios";
 
 import {
@@ -136,13 +136,13 @@ const EventCard = (props, context) => {
 
 	useEffect(() => {
 		setIcon(favoriteEvent);
-	  }, [favoriteEvent]);
+	}, [favoriteEvent]);
 	const classes = useStyles();
 	const [Icon, setIcon] = useState(false);
 
 	const [open, setOpen] = useState(false);
 	const [open2, setOpen2] = useState(false);
-// changeIcon(favoriteEvent);
+	// changeIcon(favoriteEvent);
 	const handleClickOpen = (e) => {
 		setOpen(true);
 		e.preventDefault();
@@ -174,11 +174,6 @@ const EventCard = (props, context) => {
 					`${API_URL}${ADD_TO_FAVOURITES}`,
 					payload
 				);
-				toast(<NotifyReport text={"Event add to favourites"} />, {
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true,
-				});
 			}
 			//for remove from favourites
 			else{
@@ -187,23 +182,18 @@ const EventCard = (props, context) => {
 					payload
 				);
 				props.reloadData();
-
-				toast(<NotifyReport text={"Event remove from favourites"} />, {
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true,
-				});
 			}
 
-		
-		} 
+
+		}
 		catch (error) {
 			// console.log("Consoleee notify report response catch",error)
 
 			if (error.response && error.response.data) {
 				// console.log("Consoleee notify report response error.response.data",error.response.data)
 				toast(
-					<NotifyReport
+					<Notify
+						error={error}
 						text={error.response.data.responseMessage + "!"}
 					/>,
 					{
@@ -227,6 +217,7 @@ const EventCard = (props, context) => {
 				open={open}
 				handleClose={handleClose}
 				titleURL={titleURL}
+
 			/>
 			<SendTicket
 				sendTicket2={sendTicket2}
@@ -287,7 +278,7 @@ const EventCard = (props, context) => {
 										>
 
 											{Icon ? <Favorite fontSize="small" style={{ color: "#413AE2" }} /> : <FavoriteBorder fontSize="small" />}
-{Icon}
+											{Icon}
 										</Typography>)
 										: null}
 								</div>
@@ -438,50 +429,50 @@ const EventCard = (props, context) => {
 									</Button>
 								</Grid>
 							) : // For my ticket page
-							ticket ? (
-								<Grid item className={classes.row}>
-									<Button
-										className={classes.shareButton}
-										onClick={handleClickOpen}
-									>
-										<LaunchSharp
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Share Event
-									</Button>
-									<Button
-										className={classes.sendTicket}
-										onClick={handleClickOpen2}
-									>
-										<Send
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Send Ticket
-									</Button>
-								</Grid>
-							) : // For my Favorite page
-							myFavorites ? (
-								<Grid item className={classes.row}>
-									<Button
-										className={classes.shareButton}
-										onClick={handleClickOpen}
-									>
-										<LaunchSharp
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Share Event
-									</Button>
-								</Grid>
-							) : null}
+								ticket ? (
+									<Grid item className={classes.row}>
+										<Button
+											className={classes.shareButton}
+											onClick={handleClickOpen}
+										>
+											<LaunchSharp
+												style={{
+													marginRight: "7px",
+													fontSize: "19px",
+												}}
+											/>{" "}
+											Share Event
+										</Button>
+										<Button
+											className={classes.sendTicket}
+											onClick={handleClickOpen2}
+										>
+											<Send
+												style={{
+													marginRight: "7px",
+													fontSize: "19px",
+												}}
+											/>{" "}
+											Send Ticket
+										</Button>
+									</Grid>
+								) : // For my Favorite page
+									myFavorites ? (
+										<Grid item className={classes.row}>
+											<Button
+												className={classes.shareButton}
+												onClick={handleClickOpen}
+											>
+												<LaunchSharp
+													style={{
+														marginRight: "7px",
+														fontSize: "19px",
+													}}
+												/>{" "}
+												Share Event
+											</Button>
+										</Grid>
+									) : null}
 						</CardContent>
 					</CardActionArea>
 				</Card>

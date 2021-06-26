@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import { Grid, IconButton, FormControl, Select } from "@material-ui/core";
+import { Grid, FormControl, Select } from "@material-ui/core";
 import BuyPHNXButton from "./common/BuyPhnxButton";
-import { KeyboardBackspace } from "@material-ui/icons";
 // import {Graph} from "../utils/graph";
 import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
@@ -13,128 +12,158 @@ import { getEvents } from "../utils/getEvents";
 import { getUserDetails } from "../config/serverAPIs";
 
 const useStyles = makeStyles((theme) => ({
-	content: {
-		backgroundColor: "white",
-		margin: "40px 0px",
-		padding: "50px",
-		borderRadius: "8px",
-		paddingBottom: "80px",
-		[theme.breakpoints.down("xs")]: {
-			padding: "10px",
-		},
-	},
-	select: {
-		width: "170px",
-		marginTop: "10px",
-		marginBottom: "10px",
-		height: "40px",
-		"& .MuiSelect-outlined": {
-			padding: "10px",
-		},
-		[theme.breakpoints.down("xs")]: {
-			width: "auto",
-			minWidth: "141px",
-		},
-	},
-	row: {
-		display: "flex",
-		justifyContent: "space-between",
-		width: "100%",
-		alignItems: "center",
-		marginBottom: "25px",
-		[theme.breakpoints.down("xs")]: {
-			display: "grid",
-		},
-	},
-	heading: {
-		display: "flex",
-		alignItems: "center",
-		color: "#413AE2",
-		fontSize: "28px",
-		fontWeight: "600",
-	},
-	box: {
-		border: "1px solid #E4E4E7",
-		borderRadius: "8px",
-		padding: "30px 20px",
-		backgroundColor: "white",
-		textAlign: "inherit",
-		justifyContent: "space-between",
-		alignItems: "center",
-		marginTop: "40px",
-		width: "100%",
-	},
-	heading2: {
-		fontSize: "20px",
-		fontWeight: "700",
-	},
-	row2: {
-		display: "flex",
-		justifyContent: "space-between",
-		padding: "10px",
-		"& span": {
-			color: "#73727D",
-			fontSize: "18px",
-			marginBottom: "15px",
-		},
-	},
+    content: {
+        backgroundColor: "white",
+        margin: "40px 0px",
+        padding: "50px",
+        borderRadius: "8px",
+        paddingBottom: "80px",
+        [theme.breakpoints.down("xs")]: {
+            padding: "10px",
 
-	city: {
-		fontSize: "18px",
-		fontWeight: "600",
-		letterSpacing: "0.5px",
-		display: "flex",
-		alignItems: "baseline",
-		[theme.breakpoints.down("xs")]: {
-			fontSize: "16px",
-		},
-	},
-	ticketSold: {
-		color: "#4E4E55",
-		paddingRight: "10px",
-		fontSize: "18px",
-		[theme.breakpoints.down("xs")]: {
-			fontSize: "16px",
-		},
-	},
-	row3: {
-		display: "flex",
-		justifyContent: "space-between",
-		padding: "15px 0px",
-		borderBottom: "1px solid #E4E4E7",
-		margin: "0px 10px",
-	},
-	chartDiv: {
-		background: `url('/images/graph.svg') no-repeat center 87px`,
-		display: "flex",
-		justifyContent: "center",
-		alignItems: "center",
-		[theme.breakpoints.down("sm")]: {
-			marginTop: "35px",
-			background: `url('/images/graph.svg') no-repeat center`,
-		},
-		[theme.breakpoints.down("xs")]: {
-			marginTop: "35px",
-			background: `url('/images/graph.svg') no-repeat center`,
-			backgroundSize: "300px 100px",
-		},
-	},
-	highlighter: {
-		width: "10px",
-		height: "10px",
-		display: "flex",
-		borderRadius: "50%",
-		marginRight: "12px",
-	},
-	Top5Events: {
-		marginTop: "60px",
-		width: "100%",
-	},
-	header: {
-		color: "#73727D",
-		fontSize: "18px",
-		marginBottom: "15px",
-	},
+        }
+    },
+    select: {
+        width: "170px",
+        marginTop: "10px",
+        marginBottom: "10px",
+        height: "40px",
+        "& .MuiSelect-outlined": {
+            padding: "10px",
+        },
+        [theme.breakpoints.down("xs")]: {
+            width: "auto",
+        },
+    },
+    row: {
+        display: "flex",
+        justifyContent: "space-between",
+        width: "100%",
+        alignItems: "center",
+        marginBottom: "25px",
+        [theme.breakpoints.down("xs")]: {
+            display: "grid"
+        }
+
+    },
+    heading: {
+        display: "flex",
+        alignItems: "center",
+        color: "#413AE2",
+        fontSize: "28px",
+        fontWeight: "600",
+        alignItems: "center",
+
+    },
+    box: {
+        border: "1px solid #E4E4E7",
+        borderRadius: "8px",
+        padding: "30px 20px",
+        backgroundColor: "white",
+        textAlign: "inherit",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: "40px",
+        width: "100%"
+    },
+    heading2: {
+        fontSize: "20px",
+        fontWeight: "700"
+    },
+    row2: {
+        display: "flex",
+        justifyContent: "space-between",
+        padding: "10px",
+        "& span": {
+            color: "#73727D",
+            fontSize: "18px",
+            marginBottom: "15px"
+        }
+    },
+
+    city: {
+        fontSize: "18px",
+        fontWeight: "600",
+        letterSpacing: "0.5px",
+        display: "flex",
+        alignItems: "baseline",
+        [theme.breakpoints.down("xs")]: {
+            fontSize: "16px",
+
+        }
+
+    },
+    ticketSold: {
+        color: "#4E4E55",
+        paddingRight: "10px",
+        fontSize: "18px",
+        [theme.breakpoints.down("xs")]: {
+            fontSize: "16px",
+
+        }
+    },
+    row3: {
+        display: "flex",
+        justifyContent: "space-between",
+        padding: "15px 0px",
+        borderBottom: "1px solid #E4E4E7",
+        margin: "0px 10px"
+    },
+    chartDiv: {
+        // background: `url('/images/graph.svg') no-repeat center 87px`,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        [theme.breakpoints.down("sm")]: {
+            marginTop: "35px",
+            // background: `url('/images/graph.svg') no-repeat center`,
+        },
+        [theme.breakpoints.down("xs")]: {
+            marginTop: "35px",
+            // background: `url('/images/graph.svg') no-repeat center`,
+            backgroundSize: "300px 100px"
+
+        }
+    },
+    highlighter: {
+        width: "10px",
+        height: "10px",
+        display: "flex",
+        borderRadius: "50%",
+        marginRight: "12px",
+    },
+    Top5Events: {
+        marginTop: "60px",
+        width: "100%"
+    },
+    header: {
+        color: "#73727D",
+        fontSize: "18px",
+        marginBottom: "15px"
+    },
+    image: {
+        position: "absolute",
+        paddingTop: "25px",
+        width: "14%",
+        zIndex:0,
+        [theme.breakpoints.down("xl")]: {
+            width: "7%"
+        },
+        [theme.breakpoints.down("lg")]: {
+            width: "14%"
+        },
+        [theme.breakpoints.down("md")]: {
+            width: "14%"
+        },
+        [theme.breakpoints.down("sm")]: {
+            width: "30%"
+        },
+        [theme.breakpoints.down("xs")]: {
+            width: "20%",
+            paddingTop:"13px"
+        }
+
+    }
 }));
 
 const TicketSales = [
@@ -259,123 +288,7 @@ const Analytics = (props, context) => {
 		));
 	};
 
-	//doughnut chart options
-	const options2 = {
-		legend: {
-			display: false,
-			position: "right",
-		},
-		elements: {
-			arc: {
-				borderWidth: 0,
-			},
-		},
-		plugins: {
-			labels: false,
-		},
-		cutoutPercentage: 85,
-		tooltips: {
-			callbacks: {
-				title: function (tooltipItem, data) {
-					return data["labels"][tooltipItem[0]["index"]];
-				},
-				label: function (tooltipItem, data) {
-					return (
-						data["datasets"][0]["data"][tooltipItem["index"]] +
-						" Tickets"
-					);
-				},
-				// afterLabel: function (tooltipItem, data) {
-				//     var dataset = data['datasets'][0];
-				//     var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
-				//     return '(' + percent + '%)';
-				// }
-			},
-			backgroundColor: "black",
-			titleFontSize: 16,
-			xPadding: 15,
-			yPadding: 15,
-			titleFontColor: "#fff",
-			bodyFontColor: "#E4E4E7",
-			bodyFontSize: 14,
-			displayColors: false,
-		},
-	};
-	//line chart options
-	const chartOptions = {
-		// capBezierPoints: true,
-		legend: {
-			display: false,
-		},
-		scales: {
-			yAxes: [
-				{
-					gridLines: {
-						drawBorder: true,
-						display: true,
-						borderDash: [8, 4],
-					},
-					ticks: {
-						display: true,
-						fontColor: "black",
-						fontWeight: "700",
-						fontSize: 16,
-					},
-					scaleLabel: {
-						display: true,
-						labelString: "REVENUE",
-						fontSize: 14,
-						fontColor: "#73727D",
-					},
-				},
-			],
-			xAxes: [
-				{
-					gridLines: {
-						drawBorder: false,
-						display: false,
-					},
-					ticks: {
-						display: true, //this will remove only the label
-						fontColor: "black",
-						fontWeight: "700",
-						fontSize: 16,
-					},
-					scaleLabel: {
-						display: true,
-						labelString: "DATE",
-						fontSize: 14,
-						fontColor: "#73727D",
-					},
-				},
-			],
-		},
-	};
-	const data = (canvas) => {
-		const ctx = canvas.getContext("2d");
-		var gradient = ctx.createLinearGradient(0, 0, 0, 400);
-		gradient.addColorStop(0, "#F2F2FD");
-		gradient.addColorStop(1, "rgba(242, 242, 253, 0)");
 
-		return {
-			labels: ["jan", "feb", "march", "april", "may"],
-
-			datasets: [
-				{
-					backgroundColor: gradient,
-					pointColor: "#fff",
-					fill: "start",
-					pointHighlightStroke: "#ff6c23",
-					pointRadius: 7,
-					pointBackgroundColor: "white",
-					data: graphData,
-					type: "line",
-					borderColor: "#7E7AEB",
-					borderWidth: 2,
-				},
-			],
-		};
-	};
 
 	return (
 		<div>
@@ -561,6 +474,7 @@ const Analytics = (props, context) => {
 			</Grid>
 		</div>
 	);
+
 };
 Analytics.contextTypes = {
 	drizzle: PropTypes.object,

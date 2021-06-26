@@ -6,12 +6,17 @@ import Web3 from "web3";
 import OpenEvents from "./config/OpenEvents.json";
 // import {Open_events_Address} from './config/OpenEvents'
 // import StableToken from "./config/StableToken.json";
-import {INFURA_URL} from "./config/const.js";
+import {INFURA_URL,INFURA_WEB_URL} from "./config/const.js";
 
 // var web3s = new Web3(window.ethereum);
 const options = {
 	web3: {
 		customProvider: new Web3(INFURA_URL),
+		fallback:{
+			type: 'ws',
+			url:INFURA_WEB_URL,
+			
+		}
 	},
 
 	contracts: [OpenEvents],

@@ -42,19 +42,8 @@ import {
 	TwitterIcon,
 	WhatsappIcon,
 } from "react-share";
-
-// import Notify from "./Notify";
-// import NotifyEvent from "./NotifyEvent";
-import NotifyApprove from "./NotifyApprove";
-// import NotifySuccess from "./NotifySuccess";
-// import NotifyEventSuccess from "./NotifyEventSuccess";
-import NotifyApproveSuccess from "./NotifyApproveSuccess";
-// import NotifyFaucet from "./NotifyFaucet";
-// import NotifySuccessFaucet from "./NotifySuccessFaucet";
-import NotifyError from "./NotifyError";
-// import NotifyNetwork from "./NotifyNetwork";
+import Notify from "./Notify";
 import { ToastContainer, toast } from "react-toastify";
-import NotifyDelete from "./NotifyDelete";
 import { CircularProgress } from "@material-ui/core";
 import {INFURA_WEB_URL} from "../config/const.js";
 
@@ -426,7 +415,7 @@ this.props.toggleDisabling();
 			.send({ from: this.account })
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
-					toast(<NotifyApprove hash={hash} />, {
+					toast(<Notify hash={hash} />, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -441,7 +430,7 @@ this.props.toggleDisabling();
 					txerror = error;
 					this.props.toggleDisabling();
 					toast(
-						<NotifyError error={error} message={txerror.message} />,
+						<Notify error={error} message={txerror.message} />,
 						{
 							position: "bottom-right",
 							autoClose: true,
@@ -454,7 +443,8 @@ this.props.toggleDisabling();
 	onConfirmation(confirmationNumber, receipt) {
 		this.props.toggleDisabling();
 		if (confirmationNumber == 0 && receipt.status == true) {
-			toast(<NotifyApproveSuccess hash={receipt.transactionHash} />, {
+			toast(<Notify hash={receipt.transactionHash} icon="fas fa-check-circle fa-3x"
+			color="#413AE2" />, {
 				position: "bottom-right",
 				autoClose: true,
 				pauseOnHover: true,
@@ -531,9 +521,11 @@ this.props.toggleDisabling();
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
 					toast(
-						<NotifyDelete
+						<Notify
 							hash={hash}
 							text="Deleting your event..."
+							icon="fas fa-trash fa-3x"
+							color="#413AE2"
 						/>,
 						{
 							position: "bottom-right",
@@ -550,7 +542,7 @@ this.props.toggleDisabling();
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
 						toast(
-							<NotifyDelete
+							<Notify
 								hash={txreceipt.transactionHash}
 								text="your event has been deleted."
 							/>,
@@ -570,7 +562,7 @@ this.props.toggleDisabling();
 				if (error !== null) {
 					txerror = error;
 					toast(
-						<NotifyError error={error} message={txerror.message} />,
+						<Notify error={error} message={txerror.message} />,
 						{
 							position: "bottom-right",
 							autoClose: true,
