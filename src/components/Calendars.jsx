@@ -13,11 +13,14 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import { Grid, FormControl, Select } from "@material-ui/core";
 import BuyPHNXButton from "./common/BuyPhnxButton";
-
+import Web3 from "web3";
 import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
+import { getUserDetails } from "../config/serverAPIs";
+import { INFURA_WEB_URL } from "../config/const.js";
+import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 
 const styles = (theme) => ({
@@ -35,8 +38,8 @@ const styles = (theme) => ({
     categorySelect: {
         // width: "219px",
 
-        "& .MuiSelect-select":{
-            paddingRight: "32px !important" ,
+        "& .MuiSelect-select": {
+            paddingRight: "32px !important",
         },
         marginTop: "10px",
         marginBottom: "10px",
@@ -49,9 +52,9 @@ const styles = (theme) => ({
             minWidth: "141px",
         },
     },
-    selectDiv:{
+    selectDiv: {
         position: "absolute",
-        marginTop:"-9px" 
+        marginTop: "-9px"
     }
 });
 class Calendars extends Component {
@@ -68,16 +71,21 @@ class Calendars extends Component {
             blocks: 5000000,
             events: [],
             Deleted_Events: [],
-
         }
         this._isMounted = false;
+        this.web3 = new Web3(
+            new Web3.providers.WebsocketProvider(
+                INFURA_WEB_URL
+            )
+        );
+
         this.account = this.props.accounts[0];
     }
+
     calendarComponentRef = React.createRef();
 
     async loadBlockchain() {
         // GRAPH BLOCK //
-        // console.log("GraphQL query before call",Date.now())
 
         await axios({
             url: graphURL,
@@ -131,10 +139,7 @@ class Calendars extends Component {
 			  `
             }
         }).then((graphEvents) => {
-            // console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
-
             if (!graphEvents.data || graphEvents.data.data == 'undefined') {
-                // console.log("GraphQL query -- graphEvents undefined")
                 this.setState({
                     Events_Blockchain: [],
                     active_length: 0,
@@ -142,21 +147,16 @@ class Calendars extends Component {
                 });
             } else {
                 if (this._isMounted) {
-
-
-
                     this.setState({
                         Events_Blockchain: graphEvents.data.data.events,
                         active_length: graphEvents.data.data.events.length,
                         event_copy: graphEvents.data.data.events,
                     });
                 }
-
             }
 
         }).catch((err) => console.error(err))
     }
-
     filterHideEvent = async () => {
         try {
             const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
@@ -170,9 +170,6 @@ class Calendars extends Component {
     };
 
     goToEvent = (event_calendar) => {
-        console.log("event", event_calendar);
-        console.log("eventaccount", event_calendar.account);
-
         event_calendar = event_calendar.event;
         let rawTitle = event_calendar.title;
         var titleRemovedSpaces = rawTitle;
@@ -187,16 +184,56 @@ class Calendars extends Component {
         // }
         // else {
         let titleURL = "/event/" + pagetitle + "/" + event_calendar.id;
-
         this.props.history.push(titleURL);
     }
+    categoryChange = async (event) => {
+        let category = event.target.value;
+        if (category == "created") {
+            let data = this.state.event_copy;
+            let userEvents = data.filter((event) =>
+                event.owner.toLowerCase() == this.account.toLowerCase());
+            this.setState({
+                Events_Blockchain: userEvents
+            });
+        }
+        else if (category == "favourite") {
 
+            const data = await getUserDetails(this.account, this.props.networkId);
+
+            let favoriteEvents = this.state.event_copy.filter(item => data.result.favourites.includes(item.eventId));
+            this.setState({
+                Events_Blockchain: favoriteEvents
+            });
+        }
+        else if (category == "tickets") {
+            const openEvents = new this.web3.eth.Contract(
+                Open_events_ABI,
+                Open_events_Address
+            );
+            const blockChainTickets = await openEvents.methods.ticketsOf(this.props.accounts[0]).call()
+            const newsort = blockChainTickets.concat().sort((a, b) => b - a);
+            let tickets = this.state.event_copy.filter(item =>newsort.includes(item.eventId));
+
+            this.setState({
+                Events_Blockchain: tickets
+            });
+        }
+        else{
+            this.setState({
+                Events_Blockchain: this.state.event_copy
+            });
+        }
+        // else if (this.state.category === "favourite") {
+
+        // }
+    };
     render() {
         const { classes } = this.props;
 
         let body = '';
         const localizer = momentLocalizer(moment) // or globalizeLocalizer
         {
+
             let events_calendar = []
             let events_list = [];
             let skip = false;
@@ -225,7 +262,9 @@ class Calendars extends Component {
                     events_list.push(this.state.Events_Blockchain[i]);
                 }
                 skip = false;
+
             }
+
             for (var i = 0; i < events_list.length; i++) {
                 events_calendar.push({
                     id: events_list[i].eventId,
@@ -261,26 +300,26 @@ class Calendars extends Component {
                             >
                                 <Select
                                     native
-                                    // value={state.age}
-                                    // onChange={handleChange}
-                                    inputProps={{
-                                        name: "age",
-                                        id: "outlined-age-native-simple",
-                                    }}
+                                    value={this.state.category}
+                                    onChange={this.categoryChange}
+                                // inputProps={{
+                                //     name: "age",
+                                //     id: "outlined-age-native-simple",
+                                // }}
                                 >
                                     <option
                                         aria-label="None"
                                         value="all"
                                     >
-                                    All Events
-                                    </option> 
+                                        All Events
+                                    </option>
                                     <option value="tickets">
                                         Tickets
                                     </option>
-                                    <option value="ceeated">
+                                    <option value="created">
                                         Created Events
                                     </option>
-                                    <option value="favourites">
+                                    <option value="favourite">
                                         Favourites
                                     </option>
                                 </Select>
@@ -319,7 +358,6 @@ class Calendars extends Component {
 
         return (
             <div>
-
                 {body}
             </div>
         )
@@ -345,6 +383,7 @@ Calendars.contextTypes = {
 const mapStateToProps = (state) => {
     return {
         accounts: state.accounts,
+        networkId: state.web3.networkId,
     };
 };
 

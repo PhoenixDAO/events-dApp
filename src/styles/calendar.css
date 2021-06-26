@@ -126,14 +126,17 @@ font-size: 15px;
     font-weight: 700;
     font-size: 17px !important;
     }
-    /* .fc-timegrid-event .fc-event-time{
+    .fc-timeGridDay-view .fc-event-time{
         display: flex;
     justify-content: flex-end;
     align-items: flex-end;
     }
-    .fc-timegrid-event .fc-event-title{
+    .fc-timeGridDay-view .fc-event-title{
          display: flex;
     justify-content: flex-start;
     position: absolute;
     align-items: center;
-    } */
+    }
+    .fc-more-popover .fc-day{
+        z-index: 1;
+    }

@@ -12,6 +12,7 @@
 // Rinkeby Testnet
 
 // export const PhoenixDAO_Mainnet_Token_Address = '0x3B002f4e7902b95CbC673Bff68Ef2987ef825e2b';
+
 // export const PhoenixDAO_Testnet_Token_ABI = [
 //     {
 //       "inputs": [],
@@ -765,7 +766,6 @@ export const PhoenixDAO_Testnet_Token_ABI = [{ "constant": true, "inputs": [], "
 // 		"type": "function"
 // 	}
 // ]
-
 
 
 
