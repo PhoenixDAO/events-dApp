@@ -291,6 +291,11 @@ class EventPage extends Component {
 					blockChainEventLoaded: true,
 				});
 				this.updateIPFS();
+				updateEventViews({
+					eventId: graphEvents.data.data.events[0].eventId,
+					address: graphEvents.data.data.events[0].owner,
+					networkId: this.props.networkId,
+				});
 			}).catch((err)=>{
 				console.log("Error in GraphQL query response of events in eventPage",err)
 				this.setState({
@@ -1252,11 +1257,7 @@ class EventPage extends Component {
 	}
 
 	componentDidMount() {
-		updateEventViews({
-			eventId: this.props.match.params.id,
-			address: this.account,
-			networkId: this.props.networkId,
-		});
+		
 		this.loadEventFromBlockchain();
 		window.scroll({
 			top: 0,

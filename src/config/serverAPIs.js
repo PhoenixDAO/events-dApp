@@ -26,12 +26,13 @@ export const getUserDetails = async ({ address, networkId }) => {
 
 export const updateEventViews = async ({ address, networkId, eventId }) => {
 	try {
+		console.log("updateEventViews",address,networkId,eventId)
 		const result = await axios.post(`${API_URL}${UPDATE_EVENT_VIEWS}`, {
 			address,
 			networkId,
 			eventId,
 		});
-		// console.log("serverAPI updateEventViews", result);
+		console.log("serverAPI updateEventViews", result);
 		return { result:result.data.result, error: false };
 	} catch (err) {
 		console.log("error occured in updateEventViews", err);
