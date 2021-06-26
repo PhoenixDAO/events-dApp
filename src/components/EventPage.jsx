@@ -510,7 +510,6 @@ class EventPage extends Component {
 	inquire = async () => {
 		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
 		let temp = this.allowance();
-
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
