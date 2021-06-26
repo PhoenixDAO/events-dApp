@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: "80px",
         [theme.breakpoints.down("xs")]: {
             padding: "10px",
-
         }
     },
     select: {
@@ -44,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down("xs")]: {
             display: "grid"
         }
-
     },
     heading: {
         display: "flex",
@@ -53,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "28px",
         fontWeight: "600",
         alignItems: "center",
-
     },
     box: {
         border: "1px solid #E4E4E7",
@@ -80,7 +77,6 @@ const useStyles = makeStyles((theme) => ({
             marginBottom: "15px"
         }
     },
-
     city: {
         fontSize: "18px",
         fontWeight: "600",
@@ -89,9 +85,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "baseline",
         [theme.breakpoints.down("xs")]: {
             fontSize: "16px",
-
         }
-
     },
     ticketSold: {
         color: "#4E4E55",
@@ -99,7 +93,6 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "18px",
         [theme.breakpoints.down("xs")]: {
             fontSize: "16px",
-
         }
     },
     row3: {
@@ -122,7 +115,6 @@ const useStyles = makeStyles((theme) => ({
             marginTop: "35px",
             // background: `url('/images/graph.svg') no-repeat center`,
             backgroundSize: "300px 100px"
-
         }
     },
     highlighter: {
@@ -162,7 +154,6 @@ const useStyles = makeStyles((theme) => ({
             width: "20%",
             paddingTop:"13px"
         }
-
     }
 }));
 
@@ -206,7 +197,112 @@ const data2 = {
 		},
 	],
 };
-
+//doughnut chart options
+    const options2 = {
+        legend: {
+            display: false,
+            position: "right"
+        },
+        elements: {
+            arc: {
+                borderWidth: 0
+            }
+        },
+        layout: {
+            margin: {
+               bottom: 25  //set that fits the best
+            }
+         },
+        plugins: {
+            doughnutlabel: {
+                labels: [{
+                    text: '550',
+                    font: {
+                        size: 20,
+                        weight: 'bold'
+                    }
+                }, {
+                    text: 'total'
+                }]
+            }
+        },
+        cutoutPercentage: 85,
+        tooltips: {
+           zIndex: 99 ,
+            callbacks: {
+                title: function (tooltipItem, data) {
+                    return (data['labels'][tooltipItem[0]['index']]);
+                },
+                label: function (tooltipItem, data) {
+                    return data['datasets'][0]['data'][tooltipItem['index']] + " Tickets";
+                },
+                // afterLabel: function (tooltipItem, data) {
+                //     var dataset = data['datasets'][0];
+                //     var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+                //     return '(' + percent + '%)';
+                // }
+            },
+            backgroundColor: 'black',
+            titleFontSize: 16,
+            xPadding: 15,
+            yPadding: 15,
+            titleFontColor: '#fff',
+            bodyFontColor: '#E4E4E7',
+            bodyFontSize: 14,
+            displayColors: false,
+            position: 'nearest',
+            yAlign: 'bottom',
+            x:40,
+y:40
+        }
+    };
+    //line chart options
+    const chartOptions = {
+        // capBezierPoints: true,
+        legend: {
+            display: false,
+        },
+        scales: {
+            yAxes: [{
+                gridLines: {
+                    drawBorder: true,
+                    display: true,
+                    borderDash: [8, 4],
+                },
+                ticks: {
+                    display: true,
+                    fontColor: "black",
+                    fontWeight: "700",
+                    fontSize: 16
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'REVENUE',
+                    fontSize: 14,
+                    fontColor: "#73727D",
+                }
+            }],
+            xAxes: [{
+                gridLines: {
+                    drawBorder: false,
+                    display: false,
+                },
+                ticks: {
+                    display: true, //this will remove only the label
+                    fontColor: "black",
+                    fontWeight: "700",
+                    fontSize: 16
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: 'DATE',
+                    fontSize: 14,
+                    fontColor: "#73727D"
+                }
+            }],
+        },
+    };
+    
 const Analytics = (props, context) => {
 	// const {
 	//     // event_data,
@@ -225,6 +321,31 @@ const Analytics = (props, context) => {
 	};
 	//for graph datasets
 	let dataset = [];
+
+	const data = (canvas) => {
+        const ctx = canvas.getContext('2d')
+        var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, '#F2F2FD');
+        gradient.addColorStop(1, 'rgba(242, 242, 253, 0)');
+        return {
+            labels: ["jan", "feb", "march", "april", "may"],
+            datasets: [
+                {
+                    backgroundColor: gradient,
+                    pointColor: "#fff",
+                    fill: 'start',
+                    pointHighlightStroke: "#FF6C23",
+                    pointRadius: 7,
+                    pointBackgroundColor: "white",
+                    data: graphData,
+                    type: 'line',
+                    borderColor: '#7E7AEB',
+                    borderWidth: 2,
+                },
+            ]
+        }
+    }
+
 	const getPhnxRevenue = () => {
 		dataset = [1, 2, 34, 0, 6, 7];
 		setGraphData(dataset);
@@ -294,13 +415,6 @@ const Analytics = (props, context) => {
 		<div>
 			<Grid className="header3">
 				<h2>
-					<IconButton aria-label="delete" onClick={goBack}>
-						<KeyboardBackspace
-							fontSize="large"
-							style={{ fill: "#1E1E22" }}
-						/>
-					</IconButton>
-					<span>&nbsp;&nbsp;</span>
 					Analytics
 				</h2>
 				<div>
@@ -423,7 +537,8 @@ const Analytics = (props, context) => {
 							md={6}
 							className={classes.chartDiv}
 						>
-							<Doughnut data={data2} options={options2} />
+							<Doughnut id="doughnut" data={data2} options={options2} />
+							<img src="/images/graph.svg" className={classes.image} />
 						</Grid>
 					</Grid>
 				</Grid>
