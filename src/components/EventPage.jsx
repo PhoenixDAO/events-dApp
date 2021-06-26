@@ -230,23 +230,79 @@ class EventPage extends Component {
 		this.props.history.goBack();
 	}
 
+	// async loadEventFromBlockchain() {
+	// 	const web3 = new Web3(
+	// 		new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+	// 	);
+	// 	const openEvents = new web3.eth.Contract(
+	// 		Open_events_ABI,
+	// 		Open_events_Address
+	// 	);
+	// 	const blockChainEvent = await openEvents.methods
+	// 		.events(this.props.match.params.id)
+	// 		.call();
+	// 		console.log("blockChain Events in eventPage",blockChainEvent)
+	// 	this.setState({
+	// 		blockChainEvent: blockChainEvent,
+	// 		blockChainEventLoaded: true,
+	// 	});
+	// 	this.updateIPFS();
+	// 	// console.log("temp Event web3",blockChainEvent)
+	// }
+
 	async loadEventFromBlockchain() {
-		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
-		);
-		const openEvents = new web3.eth.Contract(
-			Open_events_ABI,
-			Open_events_Address
-		);
-		const blockChainEvent = await openEvents.methods
-			.events(this.props.match.params.id)
-			.call();
-		this.setState({
-			blockChainEvent: blockChainEvent,
-			blockChainEventLoaded: true,
-		});
-		this.updateIPFS();
-		// console.log("temp Event web3",blockChainEvent)
+		// duration to be changed to ending time or send duration in create event
+		await axios({
+			url: graphURL,
+			method: "post",
+			data: {
+				query: `
+			  {
+				events(where : {eventId: ${this.props.match.params.id}}) {
+					id
+					eventId
+					owner
+					name
+					topic
+					location
+					ipfsHash
+					tktLimited
+					tktTotalQuantity
+					tktTotalQuantitySold
+					oneTimeBuy
+					token
+					time
+					duration
+					catTktQuantity
+					catTktQuantitySold	
+					categories
+					prices
+					eventRevenueInDollar
+					eventRevenueInPhnx
+				}
+			  }
+			  `,
+			},
+		})
+			.then((graphEvents) => {
+				console.log("GraphQL query response of events in eventPage",graphEvents.data.data.events[0])
+				this.setState({
+					blockChainEvent: graphEvents.data.data.events[0],
+					blockChainEventLoaded: true,
+				});
+				this.updateIPFS();
+				updateEventViews({
+					eventId: graphEvents.data.data.events[0].eventId,
+					address: graphEvents.data.data.events[0].owner,
+					networkId: this.props.networkId,
+				});
+			}).catch((err)=>{
+				console.log("Error in GraphQL query response of events in eventPage",err)
+				this.setState({
+					blockChainEvent: {},
+					blockChainEventLoaded: true,
+				});
+			})
 	}
 
 	//Get SoldTicket Data
@@ -283,39 +339,66 @@ class EventPage extends Component {
 			url: graphURL,
 			method: "post",
 			data: {
-				query: `
-				  {
-					events {
-					  eventId
-					  price
-					  token
-					  sold
-					  buyers
-					}
-				  }
-				  `,
+				// query: `
+				//   {
+				// 	events {
+				// 	  eventId
+				// 	  price
+				// 	  token
+				// 	  sold
+				// 	  buyers
+				// 	}
+				//   }
+				//   `,
+				query:`{
+					tickets(where: { eventId:${this.props.match.params.id}}){
+						id
+						eventId
+						buyer
+						boughtTimeStamp
+						boughtLocation
+						eventLocation
+						soldCategory
+						categoryIndex
+						priceInPhnx
+						priceInDollar
+					  }
+				}`,
 			},
 		})
 			.then((graphEvents) => {
-				// console.log("mere soldTickets by Id",graphEvents.data.data.events)
-				let tickets = graphEvents.data.data.events.find(
-					(event) => event.eventId == this.props.match.params.id
-				);
+				console.log("GraphQL query for event buyers in eventPage",graphEvents.data.data.tickets)
+				let buyersOfTheEvent = graphEvents.data.data.tickets.map((ticket) => {
+					return ticket.buyer ;
+				});
+				  console.log("GraphQL result in eventPage",buyersOfTheEvent)
+				  if (this._isMounted) {
+						this.setState({
+							load: false,
+							soldTicket: buyersOfTheEvent,
+							active_length: buyersOfTheEvent.length,
+							check: buyersOfTheEvent,
+						});
+					}
 
-				this.setState({ load: true });
-				var newsort = tickets.buyers
-					.concat()
-					.sort((a, b) => b.blockNumber - a.blockNumber);
-				if (this._isMounted) {
-					this.setState({
-						load: false,
-						soldTicket: newsort,
-						active_length: newsort.length,
-						check: newsort,
-					});
-				}
+				// let tickets = graphEvents.data.data.events.find(
+				// 	(event) => event.eventId == this.props.match.params.id
+				// );
+
+				// this.setState({ load: true });
+				// var newsort = tickets.buyers
+				// 	.concat()
+				// 	.sort((a, b) => b.blockNumber - a.blockNumber);
+				// if (this._isMounted) {
+				// 	this.setState({
+				// 		load: false,
+				// 		soldTicket: newsort,
+				// 		active_length: newsort.length,
+				// 		check: newsort,
+				// 	});
+				// }
 			})
-			.catch((err) => console.error("mere here", err));
+			.catch((err) => console.log("Error in GraphQL query for event buyers in eventPage",err));
 
 		// openEvents
 		// 	.getPastEvents("SoldTicket", {
@@ -580,27 +663,28 @@ class EventPage extends Component {
 				);
 			} else {
 				let event_data = this.state.blockChainEvent;
+				// to be changed
 				let image = this.getImage();
 				let description = this.getDescription();
 				let locations = this.getLocation();
-				let buttonText = event_data[3] ? " Buy Ticket" : " Get Ticket";
-				let symbol = event_data[3]
+				let buttonText = event_data.token ? " Buy Ticket" : " Get Ticket";
+				let symbol = event_data.token
 					? "PhoenixDAO.svg"
 					: "PhoenixDAO.svg";
 				let price = this.context.drizzle.web3.utils.fromWei(
-					event_data[2]
+					event_data.prices[0]
 				);
-				let date = new Date(parseInt(event_data[1], 10) * 1000);
+				let date = new Date(parseInt(event_data.time, 10) * 1000);
 
-				let max_seats = event_data[4] ? event_data[5] : "∞";
+				let max_seats = event_data.tktLimited[0] ?  event_data.catTktQuantity[0] : "∞";
 
 				let disabled = false;
 				let disabledStatus;
 				let sold = true;
 
 				if (
-					event_data[4] &&
-					Number(event_data[6]) >= Number(event_data[5])
+					event_data.tktLimited[0] &&
+					Number(event_data.catTktQuantitySold[0]) >= Number( event_data.catTktQuantity[0])
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -631,25 +715,26 @@ class EventPage extends Component {
 				}
 
 				let myEvent = false;
-				if (event_data[9] === this.account) {
+				if (event_data.owner === this.account) {
 					myEvent = true;
 				}
 
-				let rawCategory = event_data[8];
+				let rawTopic = event_data.topic;
 
-				var categoryRemovedDashes = rawCategory;
-				categoryRemovedDashes = categoryRemovedDashes.replace(
+				var topicRemovedDashes = rawTopic;
+				topicRemovedDashes = topicRemovedDashes.replace(
 					/-/g,
 					" "
 				);
 
-				var category = categoryRemovedDashes
+				var topic = topicRemovedDashes
 					.toLowerCase()
 					.split(" ")
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(" ");
 				//Friendly URL Title
-				let rawTitle = event_data[0];
+				console.log("event_data in eventPage",event_data)
+				let rawTitle = event_data.name;
 				var titleRemovedSpaces = rawTitle;
 				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
 
@@ -666,12 +751,12 @@ class EventPage extends Component {
 				let priceGrid = (
 					<div className={classes.eventinfo}>
 						<span className={classes.PhnxPrice}>
-							{event_data[3]
+							{event_data.token
 								? numeral(price).format("0.000") + "PHNX"
 								: "FREE"}
 						</span>
 						<div style={{ color: "#56555D", fontSize: "14px" }}>
-							{event_data[3]
+							{event_data.token
 								? "$" +
 								numeral(
 									price * this.state.PhoenixDAO_market.usd
@@ -687,7 +772,7 @@ class EventPage extends Component {
 								open={this.state.open2}
 								handleClose={this.handleClose2}
 								image={image}
-								eventTitle={event_data[0]}
+								eventTitle={event_data.name}
 								date={event_date}
 								time={time}
 								price={priceGrid}
@@ -706,7 +791,7 @@ class EventPage extends Component {
 									</IconButton>
 									<h2>
 
-										{event_data[0]}
+										{event_data.name}
 									</h2>
 								</div>
 								<div>
@@ -774,7 +859,7 @@ class EventPage extends Component {
 										<Grid container>
 											<Clock
 												deadline={date}
-												event_unix={event_data[1]}
+												event_unix={event_data.time}
 											/>
 										</Grid>
 									</Grid>
@@ -855,7 +940,7 @@ class EventPage extends Component {
 											Tickets Bought
 										</p>
 										<p className={classes.eventinfo}>
-											{event_data[6]}/{max_seats}
+											{event_data.catTktQuantitySold[0]}/{max_seats}
 										</p>
 									</Grid>
 								</Grid>
@@ -884,7 +969,7 @@ class EventPage extends Component {
 															className={classes.avatar}
 														/>
 														Someone bought 1 ticket for{" "}
-														{event_data[0]}
+														{event_data.name}
 														.
 													</p>
 												)
@@ -919,7 +1004,7 @@ class EventPage extends Component {
 										<ModeCommentOutlined />
 										Topic
 										<div className={classes.eventinfo}>
-											{category}
+											{topic}
 										</div>
 									</Grid>
 									<Grid lg={10} md={9} sm={10} xs={12}>
@@ -1033,7 +1118,7 @@ class EventPage extends Component {
 
 									<div className="card-body">
 										<h5 className="card-title event-title">
-											{event_data[0]}
+											{event_data.name}
 										</h5>
 										{description}
 									</div>
@@ -1055,11 +1140,11 @@ class EventPage extends Component {
 												className="event_price-image"
 												alt="Event Price"
 											/>{" "}
-											{event_data[3]
+											{event_data.token
 												? numeral(price).format("0.000")
 												: "Free"}
-											{event_data[3] ? " or " : ""}
-											{event_data[3] ? (
+											{event_data.token ? " or " : ""}
+											{event_data.token ? (
 												<img
 													src={
 														"/images/dollarsign.png"
@@ -1070,7 +1155,7 @@ class EventPage extends Component {
 											) : (
 												""
 											)}
-											{event_data[3]
+											{event_data.token
 												? numeral(
 													price *
 													this.state
@@ -1095,7 +1180,7 @@ class EventPage extends Component {
 								{/* {this._isMounted && (
 									<Clock
 										deadline={date}
-										event_unix={event_data[1]}
+										event_unix={event_data.time}
 									/>
 								)}
 								<div className="new-transaction-wrapper">
@@ -1116,7 +1201,7 @@ class EventPage extends Component {
 													)}
 												/>{" "}
 												Someone bought 1 ticket for{" "}
-												<strong>{event_data[0]}</strong>
+												<strong>{event_data.name}</strong>
 												.
 											</p>
 										)
@@ -1172,11 +1257,7 @@ class EventPage extends Component {
 	}
 
 	componentDidMount() {
-		updateEventViews({
-			eventId: this.props.match.params.id,
-			address: this.account,
-			networkId: this.props.networkId,
-		});
+		
 		this.loadEventFromBlockchain();
 		window.scroll({
 			top: 0,
