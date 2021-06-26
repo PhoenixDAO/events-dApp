@@ -9,6 +9,7 @@ import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
 import { Card } from "./common/Card";
 import { getEvents } from "../utils/getEvents";
+import { getUserDetails } from "../config/serverAPIs";
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -207,384 +208,273 @@ const data2 = {
 };
 
 const Analytics = (props, context) => {
-    const {
-        // event_data,
-        // date,
+	// const {
+	//     // event_data,
+	//     // date,
 
-    } = props;
-    useEffect(() => {
-        getPhnxRevenue();
+	// } = props;
+	useEffect(() => {
+		getPhnxRevenue();
+		getViewsAndFavourites();
+	}, []);
+	const classes = useStyles();
+	const [graphData, setGraphData] = useState("");
+	const [userDetails, setUserDetails] = useState(null)
+	const goBack = () => {
+		this.props.history.goBack();
+	};
+	//for graph datasets
+	let dataset = [];
+	const getPhnxRevenue = () => {
+		dataset = [1, 2, 34, 0, 6, 7];
+		setGraphData(dataset);
+	};
+	const getDollarRevenue = () => {
+		dataset = [2, 5, 2, 8, 3, 2];
+		setGraphData(dataset);
+	};
+	const getSoldTickets = () => {
+		dataset = [4, 7, 8, 93, 32, 21];
+		setGraphData(dataset);
+	};
+	const TicketAnalytics = () => {
+		return TicketSales.map((event, index) => (
+			<Grid className={classes.row3}>
+				<Grid className={classes.city}>
+					<div
+						className={classes.highlighter}
+						style={{ backgroundColor: chartColors[index] }}
+					></div>
+					{event.eventCity}
+				</Grid>
+				<Grid className={classes.ticketSold}>{event.TicketSold}</Grid>
+			</Grid>
+		));
+	};
+	const getViewsAndFavourites = async () =>{
+		const userDetails= await getUserDetails({address:props.accounts,networkId:props.networkId});
+		if (!userDetails.error){
+			setUserDetails(userDetails.result);
+		}else{
+			
+		}
 
+	}
 
-    }, []);
-    const classes = useStyles();
-    const [graphData, setGraphData] = useState("");
-    //for graph datasets
-    let dataset = [];
-    const getPhnxRevenue = () => {
-        dataset = [1, 2, 34, 0, 6, 7]
-        setGraphData(dataset);
-    }
-    const getDollarRevenue = () => {
-        dataset = [2, 5, 2, 8, 3, 2]
-        setGraphData(dataset);
-    }
-    const getSoldTickets = () => {
-        dataset = [4, 7, 8, 93, 32, 21];
-        setGraphData(dataset);
-    }
-    const TicketAnalytics = () => {
-        return TicketSales.map((event, index) => (
-            <Grid className={classes.row3}>
-
-                <Grid className={classes.city}><div className={classes.highlighter} style={{ backgroundColor: chartColors[index] }} ></div>{event.eventCity}</Grid>
-                <Grid className={classes.ticketSold}>{event.TicketSold}</Grid>
-
-            </Grid>
-        ));
-    };
-    let Events = getEvents({ _isMounted: true, accounts: props.accounts });
-    console.log("result", Events);
-    const Top5Events = () => {
-        return Events.map((event, index) => (
-            <Grid className={classes.row3}>
-                <Grid lg={3} className={classes.ticketSold}><i
-                    className="fa fa-ticket-alt"
-                    title="My Tickets"
-                    style={{ color: "#73727D", paddingRight: "10px" }}
-                ></i>{event.sold}</Grid>
-                <Grid lg={6} className={classes.city}>{event.name}</Grid>
-                <Grid lg={3} className={classes.ticketSold} style={{ textAlign: "end" }}>{event.revenueOfEvent / 1000000000000000000} PHNX</Grid>
-
-            </Grid>
-        ));
-    };
-
-    //doughnut chart options
-    const options2 = {
-        legend: {
-            display: false,
-            position: "right"
-        },
-        elements: {
-            arc: {
-                borderWidth: 0
-            }
-        },
-
-        layout: {
-            margin: {
-               bottom: 25  //set that fits the best
-            }
-         },
-        plugins: {
-            doughnutlabel: {
-                labels: [{
-                    text: '550',
-                    font: {
-                        size: 20,
-                        weight: 'bold'
-                    }
-                }, {
-                    text: 'total'
-                }]
-
-            }
-        },
+	let Events = getEvents({ _isMounted: true, accounts: props.accounts });
+	console.log("result", Events);
+	const Top5Events = () => {
+		return Events.map((event, index) => (
+			<Grid className={classes.row3}>
+				<Grid lg={3} className={classes.ticketSold}>
+					<i
+						className="fa fa-ticket-alt"
+						title="My Tickets"
+						style={{ color: "#73727D", paddingRight: "10px" }}
+					></i>
+					{event.sold}
+				</Grid>
+				<Grid lg={6} className={classes.city}>
+					{event.name}
+				</Grid>
+				<Grid
+					lg={3}
+					className={classes.ticketSold}
+					style={{ textAlign: "end" }}
+				>
+					{event.revenueOfEvent / 1000000000000000000} PHNX
+				</Grid>
+			</Grid>
+		));
+	};
 
 
 
-        cutoutPercentage: 85,
-        tooltips: {
-           zIndex: 99 ,
+	return (
+		<div>
+			<Grid className="header3">
+				<h2>
+					<IconButton aria-label="delete" onClick={goBack}>
+						<KeyboardBackspace
+							fontSize="large"
+							style={{ fill: "#1E1E22" }}
+						/>
+					</IconButton>
+					<span>&nbsp;&nbsp;</span>
+					Analytics
+				</h2>
+				<div>
+					<BuyPHNXButton />
+				</div>
+			</Grid>
+			<Grid container className={classes.content}>
+				<Grid className={classes.row}>
+					<h3 className={classes.heading}>Earnings</h3>
 
-            callbacks: {
-                title: function (tooltipItem, data) {
-                    return (data['labels'][tooltipItem[0]['index']]);
-                },
-                label: function (tooltipItem, data) {
-                    return data['datasets'][0]['data'][tooltipItem['index']] + " Tickets";
-                },
-                // afterLabel: function (tooltipItem, data) {
-                //     var dataset = data['datasets'][0];
-                //     var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
-                //     return '(' + percent + '%)';
-                // }
-                
-            },
-            backgroundColor: 'black',
-            titleFontSize: 16,
-            xPadding: 15,
-            yPadding: 15,
-            titleFontColor: '#fff',
-            bodyFontColor: '#E4E4E7',
-            bodyFontSize: 14,
-            displayColors: false,
-            position: 'nearest',
-            yAlign: 'bottom',
-            x:40,
-y:40
-        }
+					<FormControl variant="outlined" className={classes.select}>
+						<Select
+							native
+							// value={state.age}
+							// onChange={handleChange}
+							inputProps={{
+								name: "age",
+								id: "outlined-age-native-simple",
+							}}
+						>
+							<option value="Today">Today</option>
+							<option aria-label="None" value="Yesterday">
+								Yesterday
+							</option>
+							<option value="Last 7 Days">Last 7 Days</option>
+							<option value="Last 28 Days">Last 28 Days</option>
+							<option value="Last 90 Days">Last 90 Days</option>
+						</Select>
+					</FormControl>
+				</Grid>
+				<Grid container style={{ justifyContent: "space-evenly" }}>
+					<Card
+						color="#E5AB00"
+						click={getDollarRevenue}
+						imageSrc="/images/icons/Dollar.png"
+						header="Dollar Revenue"
+						value="$2640"
+						profit="10%"
+					/>
+					<Card
+						color="#413AE2"
+						click={getPhnxRevenue}
+						imageSrc="/images/icons/Dollar.png"
+						header="Dollar Revenue"
+						value="$2640"
+						profit="10%"
+					/>
+					<Card
+						color="#963AE2"
+						click={getSoldTickets}
+						imageSrc="/images/icons/Dollar.png"
+						header="Dollar Revenue"
+						value="$2640"
+						profit="10%"
+					/>
+				</Grid>
+				<Grid container style={{ margin: "70px 0px" }}>
+					<Line data={data} options={chartOptions} />
+				</Grid>
+				<EventsAnalytics userDetails={userDetails}/>
+				<Grid className={classes.box}>
+					<Grid className={classes.row}>
+						<Grid className={classes.row}>
+							<h5 className={classes.heading2}>
+								Ticket sales by Location
+							</h5>
+						</Grid>
+						<Grid style={{ display: "flex", alignItems: "center" }}>
+							<span
+								style={{
+									color: "#73727D",
+									marginRight: "10px",
+								}}
+							>
+								Event
+							</span>
+							<FormControl
+								variant="outlined"
+								className={classes.select}
+							>
+								<Select
+									native
+									// value={state.age}
+									// onChange={handleChange}
+									inputProps={{
+										name: "age",
+										id: "outlined-age-native-simple",
+									}}
+								>
+									<option value="Today">Devfest</option>
+									<option aria-label="None" value="Yesterday">
+										Yesterday
+									</option>
+									<option value="Last 7 Days">
+										Last 7 Days
+									</option>
+									<option value="Last 28 Days">
+										Last 28 Days
+									</option>
+									<option value="Last 90 Days">
+										Last 90 Days
+									</option>
+								</Select>
+							</FormControl>
+						</Grid>
+					</Grid>
 
-    };
-    //line chart options
-    const chartOptions = {
-        // capBezierPoints: true,
-        legend: {
-            display: false,
-        },
-        scales: {
-            yAxes: [{
-                gridLines: {
-                    drawBorder: true,
-                    display: true,
-                    borderDash: [8, 4],
-                },
-                ticks: {
-                    display: true,
-                    fontColor: "black",
-                    fontWeight: "700",
-                    fontSize: 16
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: 'REVENUE',
-                    fontSize: 14,
-                    fontColor: "#73727D",
-                }
-            }],
-            xAxes: [{
-                gridLines: {
-                    drawBorder: false,
-                    display: false,
-                },
-                ticks: {
-                    display: true, //this will remove only the label
-                    fontColor: "black",
-                    fontWeight: "700",
-                    fontSize: 16
-                },
-                scaleLabel: {
-                    display: true,
-                    labelString: 'DATE',
-                    fontSize: 14,
-                    fontColor: "#73727D"
-                }
-            }],
-        },
-    };
-    const data = (canvas) => {
-        const ctx = canvas.getContext('2d')
-        var gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, '#F2F2FD');
-        gradient.addColorStop(1, 'rgba(242, 242, 253, 0)');
+					<Grid container>
+						<Grid lg={7} sm={12} xs={12} md={6}>
+							<Grid className={classes.row2}>
+								<span>Cities</span>
+								<span>No of Tickets</span>
+							</Grid>
+							<TicketAnalytics />
+						</Grid>
+						<Grid
+							lg={5}
+							sm={12}
+							xs={12}
+							md={6}
+							className={classes.chartDiv}
+						>
+							<Doughnut data={data2} options={options2} />
+						</Grid>
+					</Grid>
+				</Grid>
 
-        return {
-            labels: ["jan", "feb", "march", "april", "may"],
+				{/* Top 5 Events */}
+				<Grid className={classes.Top5Events}>
+					<Grid className={classes.row}>
+						<h2 className={classes.heading2}>Top 5 Events</h2>
+						<FormControl
+							variant="outlined"
+							className={classes.select}
+						>
+							<Select
+								native
+								// value={state.age}
+								// onChange={handleChange}
+								inputProps={{
+									name: "age",
+									id: "outlined-age-native-simple",
+								}}
+							>
+								<option value="Dollar">Dollar</option>
 
-            datasets: [
-                {
-                    backgroundColor: gradient,
-                    pointColor: "#fff",
-                    fill: 'start',
-                    pointHighlightStroke: "#ff6c23",
-                    pointRadius: 7,
-                    pointBackgroundColor: "white",
-                    data: graphData,
-                    type: 'line',
-                    borderColor: '#7E7AEB',
-                    borderWidth: 2,
-                },
-            ]
-        }
-    }
+								<option value="PHNX">PHNX</option>
+							</Select>
+						</FormControl>
+					</Grid>
 
-    return (
-        <div>
-            <Grid className="header3">
-                <h2>
-                    Analytics
-                </h2>
-                <div>
-                    <BuyPHNXButton />
-                </div>
-            </Grid>
-            <Grid container className={classes.content}>
-                <Grid className={classes.row}>
-                    <h3 className={classes.heading}>
-                        Earnings
-                    </h3>
+					<Grid className={classes.box} style={{ marginTop: "30px" }}>
+						<Grid className={classes.row2}>
+							<Grid className={classes.header} lg={3}>
+								No of Tickets
+							</Grid>
+							<Grid className={classes.header} lg={6}>
+								Event Name
+							</Grid>
+							<Grid
+								className={classes.header}
+								style={{ textAlign: "end" }}
+								lg={3}
+							>
+								Revenue
+							</Grid>
+						</Grid>
+						<Top5Events />
+					</Grid>
+				</Grid>
+			</Grid>
+		</div>
+	);
 
-                    <FormControl
-                        variant="outlined"
-                        className={classes.select}
-                    >
-                        <Select
-                            native
-                            // value={state.age}
-                            // onChange={handleChange}
-                            inputProps={{
-                                name: "age",
-                                id: "outlined-age-native-simple",
-                            }}
-                        >
-
-                            <option value="Today">
-                                Today
-                            </option>
-                            <option
-                                aria-label="None"
-                                value="Yesterday"
-                            >
-                                Yesterday
-                            </option>
-                            <option value="Last 7 Days">
-                                Last 7 Days
-                            </option>
-                            <option value="Last 28 Days">
-                                Last 28 Days
-                            </option>
-                            <option value="Last 90 Days">
-                                Last 90 Days
-                            </option>
-                        </Select>
-                    </FormControl>
-
-                </Grid>
-                <Grid container style={{ justifyContent: "space-evenly" }}>
-                    <Card color="#E5AB00" click={getDollarRevenue} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
-                    <Card color="#413AE2" click={getPhnxRevenue} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
-                    <Card color="#963AE2" click={getSoldTickets} imageSrc="/images/icons/Dollar.png" header="Dollar Revenue" value="$2640" profit="10%" />
-
-                </Grid>
-                <Grid container style={{ margin: "70px 0px" }}>
-                    <Line data={data} options={chartOptions} />
-
-                </Grid>
-                <EventsAnalytics />
-                <Grid className={classes.box}>
-
-                    <Grid className={classes.row}>
-                        <Grid className={classes.row}>
-
-                            <h5 className={classes.heading2}>
-                                Ticket sales by Location
-                            </h5>
-                        </Grid>
-                        <Grid style={{ display: "flex", alignItems: "center" }}>
-                            <span style={{ color: "#73727D", marginRight: "10px" }}>Event</span>
-                            <FormControl
-                                variant="outlined"
-                                className={classes.select}
-                            >
-                                <Select
-                                    native
-                                    // value={state.age}
-                                    // onChange={handleChange}
-                                    inputProps={{
-                                        name: "age",
-                                        id: "outlined-age-native-simple",
-                                    }}
-                                >
-
-                                    <option value="Today">
-                                        Devfest
-                                    </option>
-                                    <option
-                                        aria-label="None"
-                                        value="Yesterday"
-                                    >
-                                        Yesterday
-                                    </option>
-                                    <option value="Last 7 Days">
-                                        Last 7 Days
-                                    </option>
-                                    <option value="Last 28 Days">
-                                        Last 28 Days
-                                    </option>
-                                    <option value="Last 90 Days">
-                                        Last 90 Days
-                                    </option>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-
-
-                    <Grid container>
-                        <Grid lg={7} sm={12} xs={12} md={6}>
-                            <Grid className={classes.row2}>
-                                <span>
-                                    Cities
-                                </span>
-                                <span>
-                                    No of Tickets
-                                </span>
-                            </Grid>
-                            <TicketAnalytics />
-                        </Grid>
-                        <Grid lg={5} sm={12} xs={12} md={6} className={classes.chartDiv}>
-                            <Doughnut id="doughnut" data={data2} options={options2} />
-                            <img src="/images/graph.svg" className={classes.image} />
-                        </Grid>
-                    </Grid>
-
-                </Grid>
-
-                {/* Top 5 Events */}
-                <Grid className={classes.Top5Events}>
-                    <Grid className={classes.row}>
-
-                        <h2 className={classes.heading2}>Top 5 Events</h2>
-                        <FormControl
-                            variant="outlined"
-                            className={classes.select}
-                        >
-                            <Select
-                                native
-                                // value={state.age}
-                                // onChange={handleChange}
-                                inputProps={{
-                                    name: "age",
-                                    id: "outlined-age-native-simple",
-                                }}
-                            >
-
-                                <option value="Dollar">
-                                    Dollar
-                                </option>
-
-                                <option value="PHNX">
-                                    PHNX
-                                </option>
-
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    <Grid className={classes.box} style={{ marginTop: "30px" }}>
-                        <Grid className={classes.row2}>
-
-                            <Grid className={classes.header} lg={3}>
-                                No of Tickets
-                            </Grid>
-                            <Grid className={classes.header} lg={6}>
-                                Event Name
-                            </Grid>
-                            <Grid className={classes.header} style={{ textAlign: "end" }} lg={3}>
-                                Revenue
-                            </Grid>
-                        </Grid>
-                        <Top5Events />
-
-                    </Grid>
-
-                </Grid>
-
-
-            </Grid>
-        </div >
-    );
 };
 Analytics.contextTypes = {
 	drizzle: PropTypes.object,

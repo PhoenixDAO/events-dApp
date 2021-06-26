@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Mainnet_Token_Address,
@@ -29,6 +29,7 @@ import { toast } from "react-toastify";
 
 //eventCard
 import EventCard from "./common/EventCard";
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -124,7 +125,7 @@ class Event extends Component {
 				this.setState({ phoenixDAO_market: data.phoenixdao });
 				// }
 			})
-			.catch(console.log);
+			.catch(console.log("error in getPhoenixDAOMarketValue"));
 	}
 
 	updateIPFS = () => {
@@ -232,8 +233,8 @@ class Event extends Component {
 	giveApproval = async () => {
 		this.props.toggleBuying();
 		this.handleClose();
-		let txreceipt = "";
-		let txconfirmed = "";
+		// let txreceipt = "";
+		// let txconfirmed = "";
 		let txerror = "";
 		this.state.approve
 			.send({ from: this.account })
@@ -297,7 +298,7 @@ class Event extends Component {
 		// 	txconfirmed = confirmationNumber;
 		// 	console.log("confirmationNumberrrr",confirmationNumber)
 		// if (confirmationNumber == 0 && receipt.status == true ) {
-		if (confirmationNumber === 0 && receipt.status == true) {
+		if (confirmationNumber === 0 && receipt.status) {
 			this.props.toggleBuying();
 			toast(<Notify hash={receipt.transactionHash} icon="fas fa-check-circle fa-3x" text="Transaction successful! You can buy a ticket now." />, {
 				position: "bottom-right",
@@ -329,8 +330,7 @@ class Event extends Component {
 				),
 			},
 			async () => {
-				let temp = await this.allowance();
-				if ((await this.allowance()) == 0) {
+				if ((await this.allowance()) === 0) {
 					this.handleClickOpen();
 				} else {
 					this.props.inquire(
@@ -384,8 +384,6 @@ class Event extends Component {
     };
 	
 	render() {
-		const { classes } = this.props;
-
 		let body = (
 			<div className="card">
 				<div className="card-body">
@@ -393,7 +391,7 @@ class Event extends Component {
 				</div>
 			</div>
 		);
-
+			// console.log("this.state.eventData in Event.js",this.state)
 		if (
 			this.state.eventData
 			// typeof this.props.contracts["DaoEvents"].events[this.event] !==
@@ -412,14 +410,21 @@ class Event extends Component {
 			if (!event_data.token) {
 				freeEvent = <p className="free_event">Free Event</p>;
 			}
-			if (event_data.token !== "undefined") {
+			// if (event_data.token !== undefined) {
 				let symbol = "PhoenixDAO.png";
 				let price = event_data.token
-					? this.context.drizzle.web3.utils.fromWei(event_data.price)
+					? this.context.drizzle.web3.utils.fromWei(
+						event_data.prices[0]
+						)
 					: "Free Event";
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
 				// console.log("this.props.eventData",parseInt(event_data.time, 10))
-				let max_seats = event_data.limited ? event_data.seats : "∞";
+
+
+				// to be changed at the moment kept to first category
+				// let max_seats = event_data.limited ? event_data.seats : "∞"; // limited to tktLimited(array) and seats to tktTotalQuantity
+				let max_seats = event_data.tktLimited[0] ? event_data.catTktQuantity[0] : "∞"; 
+
 				let disabled = false;
 				let reportedOut = " ";
 				let reported = false;
@@ -442,8 +447,9 @@ class Event extends Component {
 				let sold = false;
 				if (
 					!reported &&
-					event_data.limited &&
-					Number(event_data.sold) >= Number(event_data.seats)
+					// to be changed at the moment kept because not being on event cards
+					// event_data.limited &&
+					Number(event_data.tktTotalQuantitySold) >= Number(event_data.tktTotalQuantity)
 				) {
 					sold = true;
 					disabled = true;
@@ -463,7 +469,7 @@ class Event extends Component {
 				}
 				let badge = "";
 
-				if (event_data.sold >= 2) {
+				if (event_data.tktTotalQuantitySold >= 2) {
 					badge = (
 						<img
 							src="/images/fire.png"
@@ -473,21 +479,21 @@ class Event extends Component {
 					);
 				}
 
-				let rawCategory = event_data.category;
+				let rawTopic = event_data.topic;
 
-				var categoryRemovedDashes = rawCategory;
-				categoryRemovedDashes = categoryRemovedDashes.replace(
+				var topicRemovedDashes = rawTopic;
+				topicRemovedDashes = topicRemovedDashes.replace(
 					/-/g,
 					" "
 				);
 
-				var category = categoryRemovedDashes
+				var topic = topicRemovedDashes
 					.toLowerCase()
 					.split(" ")
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(" ");
 
-				let topicURL = "/topic/" + event_data.category + "/1";
+				let topicURL = "/topic/" + event_data.topic + "/1";
 				let rawTitle = event_data.name;
 				var titleRemovedSpaces = rawTitle;
 				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
@@ -703,7 +709,7 @@ class Event extends Component {
 				// 	</div>
 				// </.>
 				// );
-			}
+			// }
 		}
 
 		return (

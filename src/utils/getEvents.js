@@ -96,7 +96,7 @@ export const getEvents = (props, context) => {
               }`
                 }
             }).then((graphEvents) => {
-                // console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
+                console.log("GraphQL query response in getEvents.js",graphEvents.data.data.users)
                 if (!graphEvents.data || graphEvents.data.data == 'undefined') {
                     // console.log("GraphQL query -- graphEvents undefined")
                     setLoading(false);

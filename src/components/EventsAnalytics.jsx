@@ -4,10 +4,6 @@ import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 import {
     Grid,
-    IconButton,
-    Button,
-    FormControl,
-    Select,
     Typography,
     Paper
 } from "@material-ui/core";
@@ -60,7 +56,7 @@ const EventsAnalytics = (props, context) => {
 
     } = props;
 const [_isMounted,set_isMounted] =useState(true);
-const [MyEvents, setMyEvents] = useState([]);
+// const [MyEvents, setMyEvents] = useState([]);
 
     useEffect(() => {
    
@@ -73,7 +69,7 @@ const [MyEvents, setMyEvents] = useState([]);
     )
     {
      result=getEvents({_isMounted:true,accounts:props.accounts});
-     console.log("result",result);
+    //  console.log("result",result);
     }
 
 
@@ -106,7 +102,7 @@ const [MyEvents, setMyEvents] = useState([]);
                             />
                             <Typography className={classes.text}>Events Page Views</Typography>
                         </span>
-                        <Typography className={classes.text1}>6</Typography>
+                        <Typography className={classes.text1}>{props.userDetails? props.userDetails.totalViewsOnCreatedEvents : "N/A"}</Typography>
                     </Paper>
                 </Grid>
                 <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
@@ -130,7 +126,7 @@ const [MyEvents, setMyEvents] = useState([]);
                             />
                             <Typography className={classes.text}>No. of Favourites</Typography>
                         </span>
-                        <Typography className={classes.text1}>6</Typography>
+                        <Typography className={classes.text1}>{props.userDetails? props.userDetails.favourites.length : "N/A"}</Typography>
                     </Paper>
                 </Grid>
 
