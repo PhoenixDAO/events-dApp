@@ -252,7 +252,7 @@ class CreateEvent extends Component {
 			}
 		}, 500);
 	};
-	
+
 	componentWillUnmount() {
 		clearInterval(this.tx_checkerInterval);
 		clearInterval(this.updaterInterval);

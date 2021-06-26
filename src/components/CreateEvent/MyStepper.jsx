@@ -1031,7 +1031,7 @@ const MyStepper = () => {
 				return (
 					<React.Fragment>
 						<div>
-							<h3 className={classes.title}>Event Datails</h3>
+							<h3 className={classes.title}>Event Details</h3>
 							<Divider light />
 							<br />
 							<label>EVENT NAME</label>
@@ -1057,6 +1057,15 @@ const MyStepper = () => {
 								)}
 								rules={{
 									required: "Please enter event name.",
+									minLength: {
+										value: 3,
+										message:
+											"Event name should contain atleast 3 characters.",
+									},
+									pattern: {
+										value: /^[a-z\sA-Z0-9]+$/,
+										message: "Invalid event name.",
+									},
 								}}
 							/>
 
@@ -1516,38 +1525,74 @@ const MyStepper = () => {
 								return (
 									<div key={index}>
 										<label>COVER IMAGE {index}</label>
-										<TextField
-											variant="outlined"
-											fullWidth
-											disabled
-											value={img.name}
-											InputProps={{
-												endAdornment: (
-													<Button component="label">
-														Browse
-														<input
-															type="file"
-															hidden
-															multiple={false}
-															accept="image/*"
-															onChange={(
-																event
-															) => {
-																const arr = [
-																	...images,
-																];
-																arr[
-																	index
-																].name =
-																	event.target.files[0].name;
 
-																setImages(arr);
-															}}
-														/>
-													</Button>
-												),
+										<Controller
+											name={`image${index}`}
+											control={control}
+											defaultValue=""
+											render={({
+												field: { onChange, value },
+												fieldState: { error },
+											}) => (
+												<TextField
+													variant="outlined"
+													fullWidth
+													disabled
+													value={img.name}
+													error={!!error}
+													helperText={
+														error
+															? error.message
+															: null
+													}
+													InputProps={{
+														endAdornment: (
+															<Button component="label">
+																Browse
+																<input
+																	type="file"
+																	hidden
+																	multiple={
+																		false
+																	}
+																	accept="image/*"
+																	onChange={(
+																		event
+																	) => {
+																		const arr =
+																			[
+																				...images,
+																			];
+																		arr[
+																			index
+																		].name =
+																			event.target.files[0].name;
+																		setImages(
+																			arr
+																		);
+																		onChange(
+																			event
+																		);
+																	}}
+																/>
+															</Button>
+														),
+													}}
+												/>
+											)}
+											rules={{
+												required:
+													"Please upload image.",
 											}}
 										/>
+
+										{index === 0 ? (
+											<span>
+												Max: 3 Pictures. Not greater
+												than 5MB (Recommended 1000px *
+												1000px)
+											</span>
+										) : null}
 										<br />
 										<br />
 									</div>
@@ -1555,6 +1600,7 @@ const MyStepper = () => {
 							})}
 
 							<Button
+								disabled={images.length > 3 ? true : false}
 								variant="outlined"
 								fullWidth
 								className={classes.addAnotherImageBtn}
@@ -1571,30 +1617,47 @@ const MyStepper = () => {
 
 							<br />
 							<br />
+
 							<label>TOPIC</label>
-							<FormControl
-								variant="outlined"
-								fullWidth
-								// className={classes.formControl}
-							>
-								<Select
-									labelId="demo-simple-select-outlined-label"
-									id="demo-simple-select-outlined"
-									value={topic}
-									onChange={(e) => setTopic(e.target.value)}
-									// label="Age"
-									fullWidth
-								>
-									{eventTopics.map((topic) => (
-										<MenuItem
-											key={topic.name}
-											value={topic.slug}
+							<Controller
+								name="eventTopic"
+								control={control}
+								defaultValue=""
+								render={({
+									field: { onChange, value },
+									fieldState: { error },
+								}) => (
+									<FormControl
+										variant="outlined"
+										fullWidth
+										// className={classes.formControl}
+										error={!!error}
+									>
+										<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											fullWidth
+											value={value}
+											onChange={onChange}
 										>
-											{topic.name}
-										</MenuItem>
-									))}
-								</Select>
-							</FormControl>
+											{eventTopics.map((topic) => (
+												<MenuItem
+													key={topic.name}
+													value={topic.slug}
+												>
+													{topic.name}
+												</MenuItem>
+											))}
+										</Select>
+										<FormHelperText>
+											{error ? error.message : null}
+										</FormHelperText>
+									</FormControl>
+								)}
+								rules={{
+									required: "Please select event topic.",
+								}}
+							/>
 						</div>
 					</React.Fragment>
 				);
