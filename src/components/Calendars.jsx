@@ -66,6 +66,7 @@ class Calendars extends Component {
             hideEvent: [],
 
             Events_Blockchain: [],
+            event_copy: [],
             activeEvents: '',
             latestblocks: 6000000,
             blocks: 5000000,

@@ -218,6 +218,7 @@ class EventPage extends Component {
 			approve: "",
 			pageTransactions: [],
 			approvalGranted: false,
+			selectedCategoryIndex:0
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -464,7 +465,7 @@ class EventPage extends Component {
 					loading: true,
 				},
 				() => {
-					ipfs.get(this.state.blockChainEvent[7])
+					ipfs.get(this.state.blockChainEvent.ipfsHash)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
 							if (!this.isCancelled) {
@@ -531,6 +532,9 @@ class EventPage extends Component {
 	handleClose2 = () => {
 		this.setState({ open2: false });
 	};
+	handleCategoryChange = (event) =>{
+		this.setState({selectedCategoryIndex:event.target.value})
+	}
 
 	allowance = async () => {
 		let a = await this.contracts["PHNX"].methods
@@ -671,20 +675,20 @@ class EventPage extends Component {
 				let symbol = event_data.token
 					? "PhoenixDAO.svg"
 					: "PhoenixDAO.svg";
-				let price = this.context.drizzle.web3.utils.fromWei(
-					event_data.prices[0]
-				);
+				// let price = this.context.drizzle.web3.utils.fromWei(
+				// 	event_data.prices[this.state.selectedCategoryIndex]
+				// );
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
 
-				let max_seats = event_data.tktLimited[0] ?  event_data.catTktQuantity[0] : "∞";
+				let max_seats = event_data.tktLimited[this.state.selectedCategoryIndex] ?  event_data.catTktQuantity[this.state.selectedCategoryIndex] : "∞";
 
 				let disabled = false;
 				let disabledStatus;
 				let sold = true;
 
 				if (
-					event_data.tktLimited[0] &&
-					Number(event_data.catTktQuantitySold[0]) >= Number( event_data.catTktQuantity[0])
+					event_data.tktLimited[this.state.selectedCategoryIndex] &&
+					Number(event_data.catTktQuantitySold[this.state.selectedCategoryIndex]) >= Number( event_data.catTktQuantity[this.state.selectedCategoryIndex])
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -752,14 +756,14 @@ class EventPage extends Component {
 					<div className={classes.eventinfo}>
 						<span className={classes.PhnxPrice}>
 							{event_data.token
-								? numeral(price).format("0.000") + "PHNX"
+								? numeral(event_data.prices[this.state.selectedCategoryIndex]).format("0.000") + "PHNX"
 								: "FREE"}
 						</span>
 						<div style={{ color: "#56555D", fontSize: "14px" }}>
 							{event_data.token
 								? "$" +
 								numeral(
-									price * this.state.PhoenixDAO_market.usd
+									event_data.prices[this.state.selectedCategoryIndex] * this.state.PhoenixDAO_market.usd
 								).format("0.000")
 								: ""}
 						</div>
@@ -878,20 +882,25 @@ class EventPage extends Component {
 											/>
 											TICKET PRICE
 										</p>
-										<FormControl
+										{event_data.token && <FormControl
 											variant="outlined"
 											className={classes.ticketSelect}
 										>
-											<Select
+											 <Select
 												native
 												// value={state.age}
-												// onChange={handleChange}
+												onChange={this.handleCategoryChange}
 												inputProps={{
 													name: "age",
 													id: "outlined-age-native-simple",
 												}}
 											>
-												<option
+												{event_data.categories.length > 1 ? event_data.categories.map((category,i)=>
+													<option value={i}>
+													{category}
+												</option>
+												): ""}
+												{/* <option
 													aria-label="None"
 													value=""
 												/>
@@ -903,9 +912,9 @@ class EventPage extends Component {
 												</option>
 												<option value={30}>
 													Golden Ticket
-												</option>
+												</option> */}
 											</Select>
-										</FormControl>
+										</FormControl>}
 										{priceGrid}
 										<p className={classes.eventHeading}>
 											{" "}
@@ -940,7 +949,7 @@ class EventPage extends Component {
 											Tickets Bought
 										</p>
 										<p className={classes.eventinfo}>
-											{event_data.catTktQuantitySold[0]}/{max_seats}
+											{event_data.catTktQuantitySold[this.state.selectedCategoryIndex]}/{max_seats}
 										</p>
 									</Grid>
 								</Grid>
