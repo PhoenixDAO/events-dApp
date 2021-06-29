@@ -70,6 +70,8 @@ class Ticket extends Component {
 			this.state.loading === false &&
 			this.state.blockChainEvent !== null
 		) {
+		
+
 			this.setState(
 				{
 					loading: true,
@@ -233,10 +235,12 @@ class Ticket extends Component {
 
 	updateEvent = async () => {
 		if (
-			typeof this.props.contracts["DaoEvents"].getTicket[this.ticket] !==
+			typeof this.props.contracts["DaoEvents"].getTicket[this.ticket] !=
+			"undefined" && typeof this.props.contracts["DaoEvents"].getTicket[this.ticket].value !=
 			"undefined" &&
 			this.state.blockChainEvent === null
 		) {
+			console.log("in ticket.js",this.props.contracts["DaoEvents"].getTicket[this.ticket])
 			this.event = await this.contracts[
 				"DaoEvents"
 			].methods.events.cacheCall(
@@ -456,6 +460,7 @@ class Ticket extends Component {
 	}
 
 	componentDidMount() {
+		console.log("this.ticket in Ticket",this.ticket)
 		this.updateEvent();
 		this.filterHideEvent();
 
