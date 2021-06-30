@@ -7,7 +7,8 @@ import {
     Typography,
     Paper
 } from "@material-ui/core";
-import {getEvents} from "../utils/getEvents";
+import { getEvents } from "../utils/getEvents";
+import { Favorite } from "@material-ui/icons";
 const useStyles = makeStyles((theme) => ({
 
 
@@ -26,25 +27,24 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "white",
         textAlign: "inherit",
         display: "flex",
-        justifyContent:"space-between",
-        alignItems:"center"
+        justifyContent: "space-between",
+        alignItems: "center"
     },
     text1: {
         color: "#4E4E55",
         fontSize: "20px",
         fontWeight: 700,
-
     },
     text: {
         color: "#4E4E55",
         fontSize: "20px",
         fontWeight: 500,
-        paddingLeft:"10px"
+        paddingLeft: "10px"
 
     },
-    imageDiv:{
-        display:"flex",
-        alignItems:"center"
+    imageDiv: {
+        display: "flex",
+        alignItems: "center"
 
     }
 }));
@@ -55,31 +55,29 @@ const EventsAnalytics = (props, context) => {
         // date,
 
     } = props;
-const [_isMounted,set_isMounted] =useState(true);
-// const [MyEvents, setMyEvents] = useState([]);
-
+    const [_isMounted, set_isMounted] = useState(true);
+    // const [MyEvents, setMyEvents] = useState([]);
     useEffect(() => {
-   
+
 
     });
     const classes = useStyles();
     let result;
-    if(
+    if (
         _isMounted
-    )
-    {
-     result=getEvents({_isMounted:true,accounts:props.accounts});
-    //  console.log("result",result);
+    ) {
+        result = getEvents({ _isMounted: true, accounts: props.accounts });
+        //  console.log("result",result);
     }
-
-
+    let favouriteLength = (props.userDetails.favourites) ? props.userDetails.favourites.length : 0;
+    console.log("props", props);
 
     return (
 
         <Grid container>
             <h3 className={classes.heading}>
                 Events
-                    </h3>
+            </h3>
             <Grid container style={{ marginTop: "30px" }} item xs={12} spacing={3}>
                 <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
                     <Paper className={classes.box2}>
@@ -102,7 +100,7 @@ const [_isMounted,set_isMounted] =useState(true);
                             />
                             <Typography className={classes.text}>Events Page Views</Typography>
                         </span>
-                        <Typography className={classes.text1}>{props.userDetails? props.userDetails.totalViewsOnCreatedEvents : "N/A"}</Typography>
+                        <Typography className={classes.text1}>{props.userDetails ? props.userDetails.totalViewsOnCreatedEvents : "N/A"}</Typography>
                     </Paper>
                 </Grid>
                 <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
@@ -126,7 +124,7 @@ const [_isMounted,set_isMounted] =useState(true);
                             />
                             <Typography className={classes.text}>No. of Favourites</Typography>
                         </span>
-                        <Typography className={classes.text1}>{props.userDetails? props.userDetails.favourites.length : "N/A"}</Typography>
+                        <Typography className={classes.text1}>{props.userDetails ? favouriteLength : "N/A"}</Typography>
                     </Paper>
                 </Grid>
 
