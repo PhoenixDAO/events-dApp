@@ -375,7 +375,7 @@ const Analytics = (props, context) => {
 	const getViewsAndFavourites = async () =>{
 		const userDetails= await getUserDetails({address:props.accounts,networkId:props.networkId});
 		if (!userDetails.error){
-			setUserDetails(userDetails.result);
+			setUserDetails(userDetails.result.result);
 		}else{
 			
 		}

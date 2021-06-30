@@ -49,18 +49,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const EventsAnalytics = (props, context) => {
-    const {
-        // event_data,
-        // date,
+const EventsAnalytics = (props) => {
+   const [userDetails,setUserDetails] = useState(null)
+const [_isMounted,set_isMounted] =useState(true);
+// const [MyEvents, setMyEvents] = useState([]);
 
-    } = props;
-    const [_isMounted, set_isMounted] = useState(true);
-    // const [MyEvents, setMyEvents] = useState([]);
     useEffect(() => {
+        // console.log("props in EventsAnalytics",props.userDetails)
+        setUserDetails(props.userDetails);
 
-
-    });
+    },[props.userDetails]);
     const classes = useStyles();
     let result;
     if (
@@ -100,7 +98,8 @@ const EventsAnalytics = (props, context) => {
                             />
                             <Typography className={classes.text}>Events Page Views</Typography>
                         </span>
-                        <Typography className={classes.text1}>{props.userDetails ? props.userDetails.totalViewsOnCreatedEvents : "N/A"}</Typography>
+                        <Typography className={classes.text1}>{userDetails ? userDetails.totalViewsOnCreatedEvents : "N/A"}</Typography>
+
                     </Paper>
                 </Grid>
                 <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
@@ -124,7 +123,8 @@ const EventsAnalytics = (props, context) => {
                             />
                             <Typography className={classes.text}>No. of Favourites</Typography>
                         </span>
-                        <Typography className={classes.text1}>{props.userDetails ? favouriteLength : "N/A"}</Typography>
+                        <Typography className={classes.text1}>{userDetails && userDetails.favourites? userDetails.favourites.length : "N/A"}</Typography>
+
                     </Paper>
                 </Grid>
 
