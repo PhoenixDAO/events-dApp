@@ -315,7 +315,7 @@ const Analytics = (props, context) => {
 	}, []);
 	const classes = useStyles();
 	const [graphData, setGraphData] = useState("");
-	const [userDetails, setUserDetails] = useState(null)
+	const [userDetails, setUserDetails] = useState([]);
 	const goBack = () => {
 		this.props.history.goBack();
 	};

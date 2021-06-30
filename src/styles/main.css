@@ -129,7 +129,8 @@ input[type="number"] {
 
 /* Track */
 ::-webkit-scrollbar-track {
-	background: #333940;
+	background:  #fafafa;
+	
 }
 
 ::-webkit-scrollbar-track {
@@ -137,7 +138,7 @@ input[type="number"] {
 }
 /* Handle */
 ::-webkit-scrollbar-thumb {
-	background: #bfbfbf;
+	background: #9391ff;
 
 	border-radius: 8px;
 }
@@ -245,6 +246,8 @@ margin-bottom: 10px;
     top: 0;
     padding-top: 40px;
     background-color: #FCFCFD;
+	width: 101% !important;
+
 }
 .header3 h2{
     font-weight: 700;
@@ -253,12 +256,14 @@ margin-bottom: 10px;
 @media screen and (max-width: 600px) {
 	.header3{
 		display: block;
+		width: 102% !important;
+
 	}
 }
 @media screen and (max-width: 370px) {
 	.header3{
-		margin-left: -20px;
-		margin-right: -20px;
+		/* margin-left: -20px;
+		margin-right: -20px; */
 		margin-top: 1px;	}
 }
 .header_PhoenixDAO-logo {
@@ -1336,12 +1341,12 @@ button.read-more:hover {
 html,
 body,
 #root {
-	scrollbar-color: #f1f1f1 #333940;
+	scrollbar-color: #9391ff #fafafa;
 	scrollbar-width: thin;
 }
 
 #wrapper {
-	scrollbar-color: #f1f1f1 #333940;
+	scrollbar-color: #9391ff #fafafa;
 	scrollbar-width: thin;
 }
 #wrapper.toggled #sidebar-wrapper.sidebar-closed {
