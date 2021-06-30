@@ -74,6 +74,37 @@ class CreateEvent extends Component {
 		this.contracts = context.drizzle.contracts;
 	}
 
+	handleCreateEvent = async () => {
+		console.log(this.context.drizzle.web3.utils.toWei("1"));
+
+		console.log(this.contracts);
+
+		// let id = this.contracts["DaoEvents"].methods.createEvent.cacheSend([
+		// 	false, // oneTimeBuy
+		// 	true, // token -> event not free
+		// 	this.props.accounts, // this.account
+		// 	Date.now(), // await toTimeFrmCurTime(24), time in UNIX
+		// 	86400,
+		// 	0,
+		// 	0,
+		// 	"hj testing name",
+		// 	"hj topic name",
+		// 	"hj location coordinates",
+		// 	"hj ipfs hash",
+		// 	[false, false], // unlimited
+		// 	[0, 0], // unlimited
+		// 	[1, 2],
+		// 	[0, 0],
+		// 	["level1", "level2"],
+		// ]);
+
+		let id = this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+
+		console.log("id", id);
+
+		this.transactionChecker(id);
+	};
+
 	createEvent = (
 		fileHandle,
 		fileImg,
@@ -204,6 +235,7 @@ class CreateEvent extends Component {
 
 		this.transactionChecker(id);
 	};
+
 	createNewEvent = () => {
 		this.setState(
 			{
@@ -231,6 +263,7 @@ class CreateEvent extends Component {
 	transactionChecker = (id) => {
 		this.tx_checkerInterval = setInterval(() => {
 			let tx = this.props.transactionStack[id];
+			console.log("tx -------->", tx);
 			if (typeof tx !== "undefined") {
 				this.setState({
 					upload: false,
@@ -260,7 +293,6 @@ class CreateEvent extends Component {
 
 	componentDidMount() {
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
-		console.log("this.contracts", this.contracts);
 	}
 
 	render() {
@@ -290,7 +322,9 @@ class CreateEvent extends Component {
 							<br />
 							<br />
 							<br />
-							<MyStepper />
+							<MyStepper
+								handleCreateEvent={this.handleCreateEvent}
+							/>
 						</div>
 						<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 							<br />
@@ -332,7 +366,7 @@ class CreateEvent extends Component {
 						<br />
 						<br />
 						<br />
-						<MyStepper />
+						<MyStepper handleCreateEvent={this.handleCreateEvent} />
 					</div>
 					<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 						<br />
@@ -420,6 +454,7 @@ const mapStateToProps = (state) => {
 	return {
 		contracts: state.contracts,
 		transactionStack: state.transactionStack,
+		accounts: state.accounts,
 	};
 };
 

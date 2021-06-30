@@ -6,17 +6,20 @@ import Web3 from "web3";
 import OpenEvents from "./config/OpenEvents.json";
 // import {Open_events_Address} from './config/OpenEvents'
 // import StableToken from "./config/StableToken.json";
-import {INFURA_URL,INFURA_WEB_URL} from "./config/const.js";
+import { INFURA_URL, INFURA_WEB_URL } from "./config/const.js";
+
+//revamp
+// import { Drizzle } from "@drizzle/store";
+// import { drizzleReactHooks } from "@drizzle/react-plugin";
 
 // var web3s = new Web3(window.ethereum);
 const options = {
 	web3: {
 		customProvider: new Web3(INFURA_URL),
-		fallback:{
-			type: 'ws',
-			url:INFURA_WEB_URL,
-			
-		}
+		fallback: {
+			type: "ws",
+			url: INFURA_WEB_URL,
+		},
 	},
 
 	contracts: [OpenEvents],
@@ -36,6 +39,13 @@ const options = {
 		txHash: {},
 	},
 };
+
+// console.log("DrizzleProvider", DrizzleProvider);
+
+// setup drizzle
+// const drizzle = new Drizzle(options);
+// const { DrizzleProvider } = drizzleReactHooks;
+
 // const account_login = localStorage.getItem("account");
 // let appPassword = localStorage.getItem("app_password");
 // if (
@@ -59,14 +69,13 @@ const options = {
 // }
 // if (appPassword == process.env.REACT_APP_PASSWORD) {
 
-	ReactDOM.render(
-		<DrizzleProvider options={options}>
-			<App />
-		</DrizzleProvider>,
-		document.getElementById("root")
-	);
+ReactDOM.render(
+	<DrizzleProvider options={options}>
+		<App />
+	</DrizzleProvider>,
+	document.getElementById("root")
+);
 // } else {
 // 	alert("Wrong password");
 // }
 // }
-
