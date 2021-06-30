@@ -1,5 +1,5 @@
 import "date-fns";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import {
 	Stepper,
@@ -23,6 +23,8 @@ import {
 	InputAdornment,
 	StepConnector,
 	StepContent,
+	IconButton,
+	Box,
 } from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -38,6 +40,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import SyncAltIcon from "@material-ui/icons/SyncAlt";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
+// import { CloseIcon } from "@material-ui/icons";
 import EditIcon from "@material-ui/icons/Edit";
 import MUIRichTextEditor from "mui-rte";
 import RichTextEditor from "react-rte";
@@ -47,7 +50,15 @@ import PropTypes from "prop-types";
 import Check from "@material-ui/icons/Check";
 import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
 import { useForm, Controller } from "react-hook-form";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faCheckSquare,
+	faCoffee,
+	faSquare,
+	faTimesCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import EventPreviewPage from "./EventPreviewPage";
+
 
 const QontoConnector = withStyles({
 	alternativeLabel: {
@@ -169,7 +180,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const MyStepper = () => {
+const MyStepper = ({ handleCreateEvent }) => {
 	const classes = useStyles();
 	const { handleSubmit, control, register } = useForm();
 
@@ -301,736 +312,6 @@ const MyStepper = () => {
 	const onChangeRichText = (value) => {
 		// console.log("rich value", value);
 		setRichValue(value);
-	};
-
-	const stepperComponent1 = () => {
-		return (
-			<div>
-				<h3 className={classes.title}>Event Datails</h3>
-				<Divider light />
-				<br />
-				<label>EVENT NAME</label>
-				<TextField
-					error
-					helperText="Please enter an event name."
-					id="outlined-basic"
-					// label="Event Name"
-					fullWidth
-					variant="outlined"
-					onChange={(e) => setEventName(e.target.value)}
-					value={eventName}
-				/>
-				<br />
-				<br />
-				<label>EVENT ORGANIZER</label>
-				<TextField
-					id="outlined-basic"
-					// label="Event Organizer"
-					fullWidth
-					variant="outlined"
-					onChange={(e) => setEventOrganizer(e.target.value)}
-					value={eventOrganizer}
-				/>
-				<br />
-				<br />
-				<FormControl component="fieldset">
-					<RadioGroup
-						row
-						aria-label="eventTime"
-						name="eventTime"
-						value={value}
-						onChange={handleChange}
-					>
-						<FormControlLabel
-							value="onedayevent"
-							control={<Radio color="primary" />}
-							label="One day Event"
-						/>
-						<FormControlLabel
-							value="morethanaday"
-							control={<Radio color="primary" />}
-							label="More than a day"
-						/>
-					</RadioGroup>
-				</FormControl>
-				<br />
-				{value === "onedayevent" ? (
-					<div>
-						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<div>
-								<KeyboardDatePicker
-									fullWidth
-									disableToolbar
-									variant="inline"
-									format="MM/dd/yyyy"
-									margin="normal"
-									id="date-picker-inline"
-									label="DATE"
-									value={startDate}
-									onChange={(d) => setStartDate(d)}
-									KeyboardButtonProps={{
-										"aria-label": "change date",
-									}}
-									inputVariant="outlined"
-									autoOk={true}
-									disablePast
-								/>
-							</div>
-
-							<br />
-
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "space-between",
-								}}
-							>
-								<div>
-									<KeyboardTimePicker
-										margin="normal"
-										id="time-picker"
-										label="START TIME"
-										value={startTime}
-										onChange={(t) => setStartTime(t)}
-										KeyboardButtonProps={{
-											"aria-label": "change time",
-										}}
-										inputVariant="outlined"
-										autoOk={true}
-									/>
-								</div>
-								<div>
-									<KeyboardTimePicker
-										margin="normal"
-										id="time-picker"
-										label="END TIME"
-										value={endTime}
-										// defaultValue={
-										// 	new Date(
-										// 		new Date().setHours(0, 0, 0, 0)
-										// 	)
-										// }
-										onChange={(t) => setEndTime(t)}
-										KeyboardButtonProps={{
-											"aria-label": "change time",
-										}}
-										inputVariant="outlined"
-										autoOk={true}
-									/>
-								</div>
-							</div>
-						</MuiPickersUtilsProvider>
-					</div>
-				) : (
-					<div>
-						<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "space-between",
-								}}
-							>
-								<KeyboardDatePicker
-									disableToolbar
-									variant="inline"
-									format="MM/dd/yyyy"
-									margin="normal"
-									id="date-picker-inline"
-									label="START DATE"
-									value={startDate}
-									onChange={(d) => setStartDate(d)}
-									KeyboardButtonProps={{
-										"aria-label": "change date",
-									}}
-									inputVariant="outlined"
-									autoOk={true}
-									disablePast
-								/>
-
-								<KeyboardDatePicker
-									disableToolbar
-									variant="inline"
-									format="MM/dd/yyyy"
-									margin="normal"
-									id="date-picker-inline"
-									label="END DATE"
-									value={endDate}
-									onChange={(d) => setEndDate(d)}
-									KeyboardButtonProps={{
-										"aria-label": "change date",
-									}}
-									inputVariant="outlined"
-									autoOk={true}
-									disablePast
-								/>
-							</div>
-
-							<br />
-
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "space-between",
-								}}
-							>
-								<KeyboardTimePicker
-									margin="normal"
-									id="time-picker"
-									label="TO"
-									value={startTime}
-									onChange={(t) => setStartTime}
-									KeyboardButtonProps={{
-										"aria-label": "change time",
-									}}
-									inputVariant="outlined"
-									autoOk={true}
-								/>
-
-								<KeyboardTimePicker
-									margin="normal"
-									id="time-picker"
-									label="FROM"
-									value={endTime}
-									onChange={(t) => setEndTime(t)}
-									KeyboardButtonProps={{
-										"aria-label": "change time",
-									}}
-									inputVariant="outlined"
-									autoOk={true}
-								/>
-							</div>
-						</MuiPickersUtilsProvider>
-					</div>
-				)}
-			</div>
-		);
-	};
-
-	const stepperComponent2 = () => {
-		return (
-			<div>
-				<h3 className={classes.title}>Event Datails</h3>
-				<Divider light />
-				<br />
-				<FormControl component="fieldset">
-					<RadioGroup
-						row
-						aria-label="eventType"
-						name="eventType"
-						value={type}
-						onChange={handleType}
-					>
-						<FormControlLabel
-							value="physical"
-							control={<Radio color="primary" />}
-							label="Physical Event"
-						/>
-						<FormControlLabel
-							value="online"
-							control={<Radio color="primary" />}
-							label="Online Event"
-						/>
-					</RadioGroup>
-				</FormControl>
-				<br />
-				{type === "physical" ? (
-					<div>
-						<label>EVENT LOCATION</label>
-						<TextField
-							id="outlined-basic"
-							// label="Event Location"
-							fullWidth
-							variant="outlined"
-						/>
-					</div>
-				) : (
-					<div>
-						<label>EVENT LINK</label>
-						<TextField
-							id="outlined-basic"
-							// label="Event LInk"
-							fullWidth
-							variant="outlined"
-						/>
-					</div>
-				)}
-				<br />
-				<label>COVER IMAGE</label>
-				<TextField
-					variant="outlined"
-					fullWidth
-					disabled
-					InputProps={{
-						endAdornment: (
-							<Button component="label">
-								Browse
-								<input type="file" hidden />
-							</Button>
-						),
-					}}
-				/>
-				<br />
-				<br />
-				<Button
-					variant="outlined"
-					fullWidth
-					className={classes.addAnotherImageBtn}
-					startIcon={<AddIcon fontSize="large" />}
-				>
-					Add another Image
-				</Button>
-
-				<br />
-				<br />
-				<label>TOPIC</label>
-				<FormControl
-					variant="outlined"
-					fullWidth
-				// className={classes.formControl}
-				>
-					<Select
-						labelId="demo-simple-select-outlined-label"
-						id="demo-simple-select-outlined"
-						value={topic}
-						onChange={(e) => setTopic(e.target.value)}
-						// label="Age"
-						fullWidth
-					>
-						{eventTopics.map((topic) => (
-							<MenuItem key={topic.name} value={topic.slug}>
-								{topic.name}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</div>
-		);
-	};
-
-	const stepperComponent3 = () => {
-		return (
-			<div>
-				<h3 className={classes.title}>Tickets</h3>
-				<Divider light />
-				<br />
-				<label>CATEGORY</label>
-				<FormControl
-					variant="outlined"
-					fullWidth
-				// className={classes.formControl}
-				>
-					<Select
-						labelId="demo-simple-select-outlined-label"
-						id="demo-simple-select-outlined"
-						value={category}
-						onChange={(e) => setCategory(e.target.value)}
-						// label="Age"
-						fullWidth
-					>
-						{/* <MenuItem value="">
-							<em>None</em>
-						</MenuItem> */}
-						<MenuItem value="free">Free Event</MenuItem>
-						<MenuItem value="single">
-							{`Paid (Single Ticket Type Event)`}
-						</MenuItem>
-						<MenuItem value="multiple">{`Paid (Multiple Ticket Type Event)`}</MenuItem>
-					</Select>
-				</FormControl>
-
-				<br />
-				<br />
-
-				{/* conditonal rendering for event category -free -single_paid -multiple-paid */}
-				<div>
-					{category === "free" ? (
-						<div>
-							<FormControl component="fieldset">
-								<label>TICKET AVAILABILITY</label>
-								<RadioGroup
-									row
-									aria-label="ticketAvailability"
-									name="ticketAvailability"
-									value={availability}
-									onChange={(e) =>
-										setAvailability(e.target.value)
-									}
-								>
-									<FormControlLabel
-										value="unlimited"
-										control={<Radio color="primary" />}
-										label="Unlimited Tickets"
-									/>
-									<FormControlLabel
-										value="limited"
-										control={<Radio color="primary" />}
-										label="Limited Tickets"
-									/>
-								</RadioGroup>
-							</FormControl>
-
-							{availability === "unlimited" ? null : (
-								<div>
-									<label>NUMBER OF TICKETS</label>
-									<TextField
-										type="number"
-										id="outlined-basic"
-										// label="Event Organizer"
-										fullWidth
-										variant="outlined"
-									/>
-								</div>
-							)}
-
-							<br />
-
-							<FormControlLabel
-								control={
-									<Checkbox
-										// checked={state.checkedB}
-										// onChange={handleChange}
-										name="checkedB"
-										color="primary"
-									/>
-								}
-								label="Restrict Wallet Address to one Ticket"
-							/>
-						</div>
-					) : category === "single" ? (
-						<div>
-							<label>TICKET PRICE</label>
-							<br />
-
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "space-between",
-									alignItems: "center",
-								}}
-							>
-								<TextField
-									className={classes.margin}
-									id="input-with-icon-textfield"
-									// label="TextField"
-									type="number"
-									variant="outlined"
-									InputProps={{
-										startAdornment: (
-											<InputAdornment position="start">
-												<AttachMoneyIcon
-													style={{ color: "#413AE2" }}
-												/>
-											</InputAdornment>
-										),
-									}}
-								/>
-								<SyncAltIcon
-									fontSize="large"
-									style={{ color: "#413AE2" }}
-								/>
-								<TextField
-									className={classes.margin}
-									id="input-with-icon-textfield"
-									// label="TextField"
-									type="number"
-									variant="outlined"
-									InputProps={{
-										startAdornment: (
-											<InputAdornment position="start">
-												<AttachMoneyIcon
-													style={{ color: "#413AE2" }}
-												/>
-											</InputAdornment>
-										),
-									}}
-								/>
-							</div>
-
-							<br />
-
-							<FormControl component="fieldset">
-								<label>TICKET AVAILABILITY</label>
-								<RadioGroup
-									row
-									aria-label="ticketAvailability"
-									name="ticketAvailability"
-									value={availability}
-									onChange={(e) =>
-										setAvailability(e.target.value)
-									}
-								>
-									<FormControlLabel
-										value="unlimited"
-										control={<Radio color="primary" />}
-										label="Unlimited Tickets"
-									/>
-									<FormControlLabel
-										value="limited"
-										control={<Radio color="primary" />}
-										label="Limited Tickets"
-									/>
-								</RadioGroup>
-							</FormControl>
-							{availability === "unlimited" ? null : (
-								<div>
-									<label>NUMBER OF TICKETS</label>
-									<TextField
-										type="number"
-										id="outlined-basic"
-										// label="Event Organizer"
-										fullWidth
-										variant="outlined"
-									/>
-								</div>
-							)}
-							<br />
-							<FormControlLabel
-								control={
-									<Checkbox
-										// checked={state.checkedB}
-										// onChange={handleChange}
-										name="checkedB"
-										color="primary"
-									/>
-								}
-								label="Restrict Wallet Address to one Ticket"
-							/>
-						</div>
-					) : (
-						<div>
-							{/* ticket category box */}
-							<div>
-								<Grid container spacing={2}>
-									<Grid
-										style={{
-											backgroundColor: "goldenrod",
-											padding: 15,
-										}}
-										container
-										item
-										xs={11}
-										sm={11}
-										md={11}
-										lg={11}
-										xl={11}
-										justify="space-between"
-										direction="row"
-									>
-										<Grid item direction="column">
-											<h4>Bronze Ticket</h4>
-											<h6>Unlimited Tickets</h6>
-										</Grid>
-
-										<Grid item direction="column">
-											<h2>$300</h2>
-											<h6>3000PHNX</h6>
-										</Grid>
-									</Grid>
-
-									<Grid
-										item
-										container
-										xs={1}
-										sm={1}
-										md={1}
-										lg={1}
-										xl={1}
-										direction="column"
-										justify="space-evenly"
-									>
-										<Grid item>
-											<EditIcon fontSize="large" />
-										</Grid>
-
-										<Grid item>
-											<DeleteForeverOutlinedIcon fontSize="large" />
-										</Grid>
-									</Grid>
-								</Grid>
-							</div>
-
-							<br />
-
-							{/* ticket name */}
-							<label>TICKET NAME</label>
-							<TextField
-								id="outlined-basic"
-								// label="Event Organizer"
-								fullWidth
-								variant="outlined"
-							/>
-
-							<br />
-							<br />
-
-							<label>TICKET PRICE</label>
-							<br />
-
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "space-between",
-									alignItems: "center",
-								}}
-							>
-								<TextField
-									className={classes.margin}
-									id="input-with-icon-textfield"
-									// label="TextField"
-									type="number"
-									variant="outlined"
-									InputProps={{
-										startAdornment: (
-											<InputAdornment position="start">
-												<AttachMoneyIcon
-													style={{ color: "#413AE2" }}
-												/>
-											</InputAdornment>
-										),
-									}}
-								/>
-								<SyncAltIcon
-									fontSize="large"
-									style={{ color: "#413AE2" }}
-								/>
-								<TextField
-									className={classes.margin}
-									id="input-with-icon-textfield"
-									// label="TextField"
-									type="number"
-									variant="outlined"
-									InputProps={{
-										startAdornment: (
-											<InputAdornment position="start">
-												<AttachMoneyIcon
-													style={{ color: "#413AE2" }}
-												/>
-											</InputAdornment>
-										),
-									}}
-								/>
-							</div>
-
-							<br />
-
-							<FormControl component="fieldset">
-								<label>TICKET AVAILABILITY</label>
-								<RadioGroup
-									row
-									aria-label="ticketAvailability"
-									name="ticketAvailability"
-									value={availability}
-									onChange={(e) =>
-										setAvailability(e.target.value)
-									}
-								>
-									<FormControlLabel
-										value="unlimited"
-										control={<Radio color="primary" />}
-										label="Unlimited Tickets"
-									/>
-									<FormControlLabel
-										value="limited"
-										control={<Radio color="primary" />}
-										label="Limited Tickets"
-									/>
-								</RadioGroup>
-							</FormControl>
-							{availability === "unlimited" ? null : (
-								<div>
-									<label>NUMBER OF TICKETS</label>
-									<TextField
-										type="number"
-										id="outlined-basic"
-										// label="Event Organizer"
-										fullWidth
-										variant="outlined"
-									/>
-								</div>
-							)}
-
-							<br />
-
-							{/* save button */}
-							<Button
-								color="primary"
-								variant="outlined"
-								fullWidth
-								className={classes.addAnotherImageBtn}
-							>
-								Save
-							</Button>
-
-							<br />
-							<br />
-
-							<Button
-								variant="outlined"
-								fullWidth
-								className={classes.addAnotherImageBtn}
-								startIcon={<AddIcon fontSize="large" />}
-							>
-								Add another Ticket Category
-							</Button>
-
-							<br />
-							<br />
-
-							<FormControlLabel
-								control={
-									<Checkbox
-										// checked={state.checkedB}
-										// onChange={handleChange}
-										name="checkedB"
-										color="primary"
-									/>
-								}
-								label="Restrict Wallet Address to one Ticket"
-							/>
-						</div>
-					)}
-				</div>
-			</div>
-		);
-	};
-
-	const stepperComponent4 = () => {
-		return (
-			<div>
-				<h3 className={classes.title}>Event Descritions</h3>
-				<Divider light />
-				<br />
-				<label>EVENT DESCRIPTION</label>
-				<br />
-				<RichTextEditor
-					className={classes.editor}
-					// editorClassName={}
-					value={richValue}
-					onChange={onChangeRichText}
-				// toolbarConfig={toolbarConfig}
-				/>
-				<br />
-				<FormControlLabel
-					control={
-						<Checkbox
-							// checked={state.checkedB}
-							// onChange={handleChange}
-							name="checkedB"
-							color="primary"
-						/>
-					}
-					label="By creating an event, I agree to the policies and terms of use."
-				/>
-			</div>
-		);
-	};
-
-	const stepperDefault = () => {
-		return (
-			<div>
-				<p>Unknown stepIndex</p>
-			</div>
-		);
 	};
 
 	function getStepContent(stepIndex) {
@@ -1473,7 +754,7 @@ const MyStepper = () => {
 				return (
 					<React.Fragment>
 						<div>
-							<h3 className={classes.title}>Event Datails</h3>
+							<h3 className={classes.title}>Event Details</h3>
 							<Divider light />
 							<br />
 							<FormControl component="fieldset">
@@ -2234,6 +1515,34 @@ const MyStepper = () => {
 
 	return (
 		<div className={classes.root}>
+			{/* <div
+				className="block-icon"
+				style={{
+					position: "relative",
+					display: "inline-flex",
+				}}
+			>
+				<img
+					className="m-2 shadow-sm"
+					width="32px"
+					src={
+						"https://www.google.com/s2/favicons?sz=64&domain_url=yahoo.com"
+					}
+					rounded
+				/>
+				<FontAwesomeIcon
+					style={{
+						position: "absolute",
+						top: 0,
+						right: 0,
+						zIndex: 1,
+					}}
+					color="red"
+					className="fa-stack the-wrapper icon-tag"
+					icon={faTimesCircle}
+				/>
+			</div> */}
+
 			<Stepper activeStep={activeStep} alternativeLabel>
 				{steps.map((label, i) => (
 					<Step key={i}>

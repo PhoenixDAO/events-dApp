@@ -1,6 +1,10 @@
 import React, { Component, useCallback } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { drizzleConnect } from "drizzle-react";
+import { drizzleConnect,DrizzleProvider } from "drizzle-react";
+// import { DrizzleProvider } from "drizzle-react";
+
+// import { drizzleConnect } from "@drizzle/react-plugin";
+
 import { ToastContainer, toast } from "react-toastify";
 import Web3 from "web3";
 
@@ -91,10 +95,13 @@ class App extends Component {
 	}
 
 	async componentDidMount() {
+		console.log("context", this.context);
+		console.log("DrizzleProvider", DrizzleProvider);
+
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
-			console.log("accounts",accounts)
+			console.log("accounts", accounts);
 			if (accounts.length == 0) {
 				localStorage.removeItem("account");
 			}
@@ -128,13 +135,13 @@ class App extends Component {
 			});
 		} else {
 			if (typeof ethereum !== "undefined") {
-				console.log("accounts I am here")
+				console.log("accounts I am here");
 				// const a = await ethereum.enable();
 				const a = ethereum.enable();
-				console.log("accounts I am here2")
+				console.log("accounts I am here2");
 				web3 = new Web3(ethereum);
 				const accounts = await web3.eth.getAccounts();
-				console.log("accounts in loadBlockchainData",accounts)
+				console.log("accounts in loadBlockchainData", accounts);
 				const check = localStorage.getItem("account");
 				if (!check) {
 					// window.location.reload();
@@ -209,11 +216,14 @@ class App extends Component {
 				() => this.buy()
 			);
 		} else {
-			toast(<Notify  text="😓 Wrong Network, Please Connect to Rinkeby Network." />, {
-				position: "bottom-right",
-				autoClose: true,
-				pauseOnHover: true,
-			});
+			toast(
+				<Notify text="😓 Wrong Network, Please Connect to Rinkeby Network." />,
+				{
+					position: "bottom-right",
+					autoClose: true,
+					pauseOnHover: true,
+				}
+			);
 		}
 	};
 
@@ -230,12 +240,18 @@ class App extends Component {
 					if (hash !== null) {
 						this.setState({ disabledStatus: true });
 
-						toast(<Notify hash={hash} text="Preparing your ticket...🚀"
-						icon="fa fa-ticket-alt" />, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<Notify
+								hash={hash}
+								text="Preparing your ticket...🚀"
+								icon="fa fa-ticket-alt"
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -267,10 +283,7 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify
-								error={error}
-								message={txerror.message}
-							/>,
+							<Notify error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -297,18 +310,23 @@ class App extends Component {
 		let txerror = "";
 
 		if ((await this.allowance()) == 0) {
-
 			this.state.approve
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
-						toast(<Notify hash={hash} text={"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."}
-						/>, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-							
-						});
+						toast(
+							<Notify
+								hash={hash}
+								text={
+									"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
+								}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -318,7 +336,9 @@ class App extends Component {
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
 								<Notify
-								text={"Transaction successfull!\nYou can buy a ticket now."}
+									text={
+										"Transaction successfull!\nYou can buy a ticket now."
+									}
 									hash={txreceipt.transactionHash}
 								/>,
 								{
@@ -336,10 +356,7 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify
-								error={error}
-								message={txerror.message}
-							/>,
+							<Notify error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -354,12 +371,19 @@ class App extends Component {
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
-						toast(<Notify hash={hash} text="Preparing your ticket...🚀"
-						icon="fa fa-ticket-alt fa-3x" color="#413AE2"/>, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<Notify
+								hash={hash}
+								text="Preparing your ticket...🚀"
+								icon="fa fa-ticket-alt fa-3x"
+								color="#413AE2"
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -390,10 +414,7 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify
-								error={error}
-								message={txerror.message}
-							/>,
+							<Notify error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -422,11 +443,22 @@ class App extends Component {
 							upload: false,
 							done: true,
 						});
-						toast(<Notify icon="fas fa-edit" hash={hash}  text={(type==="create"?"Creating":"Updating" )+"your Event..." }/>, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<Notify
+								icon="fas fa-edit"
+								hash={hash}
+								text={
+									(type === "create"
+										? "Creating"
+										: "Updating") + "your Event..."
+								}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -465,10 +497,7 @@ class App extends Component {
 						console.log("error", error);
 						this.setState({ error: true });
 						toast(
-							<Notify
-								error={error}
-								message={txerror.message}
-							/>,
+							<Notify error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -498,11 +527,19 @@ class App extends Component {
 							upload: false,
 							done: true,
 						});
-						toast(<Notify hash={hash} text={"Request for 10,000 PHNX\nYour token request has been sent"} />, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<Notify
+								hash={hash}
+								text={
+									"Request for 10,000 PHNX\nYour token request has been sent"
+								}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -513,7 +550,7 @@ class App extends Component {
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
 								<Notify
-								text="10,000 PHNX recieved! Check your balance here."
+									text="10,000 PHNX recieved! Check your balance here."
 									hash={txreceipt.transactionHash}
 								/>,
 								{
@@ -530,10 +567,7 @@ class App extends Component {
 						txerror = error;
 						this.setState({ error: true });
 						toast(
-							<Notify
-								error={error}
-								message={txerror.message}
-							/>,
+							<Notify error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -567,7 +601,7 @@ class App extends Component {
 
 		// uncomment this for test
 
-		// if( !this.props.drizzleStatus.initialized || this.props.web3.status === "failed" || 
+		// if( !this.props.drizzleStatus.initialized || this.props.web3.status === "failed" ||
 		// 	(this.props.web3.status === "initialized" && Object.keys(this.props.accounts).length === 0) ||
 		// 	this.props.web3.networkId != GLOBAL_NETWORK_ID) {
 		if (!this.props.drizzleStatus.initialized) {
@@ -623,9 +657,9 @@ class App extends Component {
 							)}
 						/>
 					</Switch>
-					</div>
+				</div>
 			);
-							}
+		}
 
 		// uncomment this for test
 
@@ -658,8 +692,7 @@ class App extends Component {
 		// 					/>
 		// 				)}
 		// 			/>
-					
-				
+
 		// 			<Route
 		// 				exact
 		// 				path="/event/:page/:id"
@@ -672,7 +705,7 @@ class App extends Component {
 		// 					/>
 		// 				)}
 		// 			/>
-					
+
 		// 			<Route
 		// 				exact
 		// 				path="/topics"
@@ -700,7 +733,7 @@ class App extends Component {
 		// 				path="/location/:page"
 		// 				component={LocationLandingPage}
 		// 			/>
-					
+
 		// 			<Route
 		// 				exact
 		// 				path="/guide"
@@ -730,11 +763,11 @@ class App extends Component {
 		// 			/>
 		// 			<Route path="*" exact component={PageNotFound} />
 		// 		</Switch>
-				
+
 		// 		</div>
 		// 	);
 		// 	connecting = true;
-		// } 
+		// }
 		else {
 			body = (
 				<Switch>
