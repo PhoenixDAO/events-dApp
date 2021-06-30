@@ -47,9 +47,11 @@
 	text-align: left !important;
 	width: 100%;
 	overflow-x: hidden;
-	scrollbar-color: #bfbfbf #333940;
-	scrollbar-width: 0px;
+
+	/* scrollbar-color: #bfbfbf #333940;*/
+	scrollbar-width: none;
 }
+
 #sidebar-wrapper.my-sidebar::-webkit-scrollbar {
 	width: 0px;
 }

@@ -12,8 +12,10 @@ const useStyles = makeStyles((theme) => ({
 		background: "#413AE2",
 		padding: "8px 35px",
 		paddingInline: "40px",
+		[theme.breakpoints.down("xs")]: {
+paddingInline:"20px"
+		},
 
-		
 		border: "1px solid #413AE2",
 		// maxHeight: 54,
 		// maxWidth: 230,
@@ -33,7 +35,7 @@ const BuyPhnxButton = () => {
 			size="large"
 			className={classes.button}
 
-			startIcon={<img style={{height:"24px"}}src={roundlogo} alt="phnx logo" />}
+			startIcon={<img style={{ height: "24px" }} src={roundlogo} alt="phnx logo" />}
 		>
 			Buy PHNX
 		</Button>
