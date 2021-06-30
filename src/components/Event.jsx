@@ -59,7 +59,7 @@ class Event extends Component {
 			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
 		}
 		super(props);
-		this.contracts = context.drizzle.contracts;
+		this.contracts = this.props.eventsContract;
 		// this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 		// 	this.props.id
 		// );
@@ -87,7 +87,6 @@ class Event extends Component {
 			buy: "",
 			open: false,
 			hideEvent: [],
-			revenue: 0,
 			blockie: "/images/PhoenixDAO.png",
 			approvalGranted: false,
 			phoenixDAO_market: [],
@@ -106,14 +105,7 @@ class Event extends Component {
 	handleClose = () => {
 		this.setState({ open: false });
 	};
-	async GetEventsRevenue() {
-		let revenue = await this.contracts["DaoEvents"].methods
-			.eventRevenue(this.props.match.params.id)
-			.call();
-		revenue = revenue / 1000000000000000000;
-		this.setState({ revenue });
-	}
-
+	
 	//get market cap & dollar value of PHNX
 	async getPhoenixDAOMarketValue() {
 		fetch(
@@ -223,12 +215,12 @@ class Event extends Component {
 		return locations;
 	};
 
-	allowance = async () => {
-		let a = await this.contracts["PHNX"].methods
-			.allowance(this.account, this.contracts["DaoEvents"].address)
-			.call();
-		return a;
-	};
+	// allowance = async () => {
+	// 	let a = await this.contracts["PHNX"].methods
+	// 		.allowance(this.account, this.contracts["DaoEvents"].address)
+	// 		.call();
+	// 	return a;
+	// };
 
 	giveApproval = async () => {
 		this.props.toggleBuying();
@@ -310,41 +302,41 @@ class Event extends Component {
 		}
 	}
 
-	inquire = async () => {
-		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
-		this.setState(
-			{
-				fee: this.state.eventData.price,
-				// this.props.contracts["DaoEvents"].events[this.event]
-				// 	.value[2],
-				token: this.state.eventData.token,
-				// this.props.contracts["DaoEvents"].events[this.event]
-				// 	.value[3],
-				openEvents_address: this.contracts["DaoEvents"].address,
-				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
-					this.props.id
-				),
-				approve: this.contracts["PHNX"].methods.approve(
-					this.contracts["DaoEvents"].address,
-					balance
-				),
-			},
-			async () => {
-				if ((await this.allowance()) === 0) {
-					this.handleClickOpen();
-				} else {
-					this.props.inquire(
-						this.props.id,
-						this.state.fee,
-						this.state.token,
-						this.state.openEvents_address,
-						this.state.buyticket,
-						this.state.approve
-					);
-				}
-			}
-		);
-	};
+	// inquire = async () => {
+	// 	let balance = await this.contracts["PHNX"].methods.totalSupply().call();
+	// 	this.setState(
+	// 		{
+	// 			fee: this.state.eventData.price,
+	// 			// this.props.contracts["DaoEvents"].events[this.event]
+	// 			// 	.value[2],
+	// 			token: this.state.eventData.token,
+	// 			// this.props.contracts["DaoEvents"].events[this.event]
+	// 			// 	.value[3],
+	// 			openEvents_address: this.contracts["DaoEvents"].address,
+	// 			buyticket: this.contracts["DaoEvents"].methods.buyTicket(
+	// 				this.props.id
+	// 			),
+	// 			approve: this.contracts["PHNX"].methods.approve(
+	// 				this.contracts["DaoEvents"].address,
+	// 				balance
+	// 			),
+	// 		},
+	// 		async () => {
+	// 			if ((await this.allowance()) === 0) {
+	// 				this.handleClickOpen();
+	// 			} else {
+	// 				this.props.inquire(
+	// 					this.props.id,
+	// 					this.state.fee,
+	// 					this.state.token,
+	// 					this.state.openEvents_address,
+	// 					this.state.buyticket,
+	// 					this.state.approve
+	// 				);
+	// 			}
+	// 		}
+	// 	);
+	// };
 
 	// getPrettyCategory(rawCategory) {
 	//   let prettyCategory = "";
@@ -528,8 +520,6 @@ class Event extends Component {
 							myEventStatURL={myEventStatURL}
 							titleURL={titleURL}
 							max_seats={max_seats}
-							revenue={this.state.revenue}
-							dollarRevenue={dollarRevenue}
 							myFavorites={this.props.myFavorites}
 							favoriteEvent={favouriteEvent}
 							eventId={this.props.id}
@@ -755,7 +745,7 @@ Event.contextTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		contracts: state.contracts,
+		// contracts: state.contracts,
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
 		web3: state.web3,

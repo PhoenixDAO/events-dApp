@@ -34,7 +34,8 @@ import Notify from "./Notify";
 import PropTypes from "prop-types";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
-import { INFURA_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
+import { INFURA_URL,INFURA_WEB_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
+import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
@@ -88,8 +89,33 @@ class App extends Component {
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
 		this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
 		this.executeScroll = this.executeScroll.bind(this);
+		this.initializeContract = this.initializeContract.bind(this);
+	}
+	async initializeContract() {
+		try{
+			const web3 = new Web3(
+				new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+			);
+			const openEvents = await new web3.eth.Contract(
+				Open_events_ABI,
+				Open_events_Address
+			);
+			const PHNX = await new web3.eth.Contract(
+				PhoenixDAO_Testnet_Token_ABI,
+				PhoenixDAO_Mainnet_Token_Address
+			);
+			console.log("contract initialized",openEvents)
+			this.setState({eventsContract : openEvents, phnxContract:PHNX})
+		
+		}catch(err){
+			console.log("error initializing the contract",err)
+		}
+		
 	}
 
+	async componentWillMount() {
+		await this.initializeContract();
+	}
 	async componentDidMount() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
@@ -748,6 +774,7 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
 							/>
 						)}
 					/>
@@ -761,10 +788,12 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
+
 							/>
 						)}
 					/>
-					<Route
+					{/* <Route
 						exact
 						path="/favorite/:page"
 						render={(props) => (
@@ -857,7 +886,7 @@ class App extends Component {
 								toggleDisabling={this.toggleDisabling}
 							/>
 						)}
-					/>
+					/> */}
 					<Route
 						exact
 						path="/event/:page/:id"
@@ -867,10 +896,13 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
+								phnxContract={this.state.phnxContract}
+
 							/>
 						)}
 					/>
-					<Route
+					{/* <Route
 						exact
 						path="/token"
 						render={(props) => (
@@ -958,7 +990,7 @@ class App extends Component {
 						render={(props) => (
 							<Terms executeScroll={this.executeScroll} />
 						)}
-					/>
+					/> */}
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>
 			);
