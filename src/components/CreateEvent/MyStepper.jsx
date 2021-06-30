@@ -48,7 +48,7 @@ import GoldonBlue from "../Images/GoldonBlue.gif";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import Check from "@material-ui/icons/Check";
-import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { useForm, Controller } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -58,7 +58,6 @@ import {
 	faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import EventPreviewPage from "./EventPreviewPage";
-
 
 const QontoConnector = withStyles({
 	alternativeLabel: {
@@ -741,9 +740,10 @@ const MyStepper = ({ handleCreateEvent }) => {
 							<Button
 								color="primary"
 								size="large"
-								startIcon={<VisibilityOutlinedIcon fontSize="large" />}
+								startIcon={
+									<VisibilityOutlinedIcon fontSize="large" />
+								}
 								onClick={handleClickOpen}
-
 							>
 								Preview Event
 							</Button>
@@ -986,95 +986,134 @@ const MyStepper = ({ handleCreateEvent }) => {
 							<Divider light />
 							<br />
 							<label>CATEGORY</label>
-							<FormControl
-								variant="outlined"
-								fullWidth
-							// className={classes.formControl}
-							>
-								<Select
-									labelId="demo-simple-select-outlined-label"
-									id="demo-simple-select-outlined"
-									value={category}
-									onChange={(e) =>
-										setCategory(e.target.value)
-									}
-									// label="Age"
-									fullWidth
-								>
-									{/* <MenuItem value="">
-							<em>None</em>
-						</MenuItem> */}
-									<MenuItem value="free">Free Event</MenuItem>
-									<MenuItem value="single">
-										{`Paid (Single Ticket Type Event)`}
-									</MenuItem>
-									<MenuItem value="multiple">{`Paid (Multiple Ticket Type Event)`}</MenuItem>
-								</Select>
-							</FormControl>
+							<Controller
+								name="eventCategory"
+								control={control}
+								defaultValue={category}
+								render={({
+									field: { onChange, value },
+									fieldState: { error },
+								}) => (
+									<FormControl
+										variant="outlined"
+										fullWidth
+										// className={classes.formControl}
+									>
+										<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											value={value}
+											onChange={(e) => {
+												onChange(e);
+												setCategory(e.target.value);
+											}}
+											fullWidth
+										>
+											<MenuItem value="free">
+												Free Event
+											</MenuItem>
+											<MenuItem value="single">
+												{`Paid (Single Ticket Type Event)`}
+											</MenuItem>
+											<MenuItem value="multiple">{`Paid (Multiple Ticket Type Event)`}</MenuItem>
+										</Select>
+									</FormControl>
+								)}
+								rules={{
+									required: "Please select event category.",
+								}}
+							/>
 
 							<br />
 							<br />
 
 							{/* conditonal rendering for event category -free -single_paid -multiple-paid */}
+
 							<div>
 								{category === "free" ? (
 									<div>
 										<FormControl component="fieldset">
 											<label>TICKET AVAILABILITY</label>
-											<RadioGroup
-												row
-												aria-label="ticketAvailability"
-												name="ticketAvailability"
-												value={availability}
-												onChange={(e) =>
-													setAvailability(
-														e.target.value
-													)
-												}
-											>
-												<FormControlLabel
-													value="unlimited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Unlimited Tickets"
-												/>
-												<FormControlLabel
-													value="limited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Limited Tickets"
-												/>
-											</RadioGroup>
-										</FormControl>
 
+											<Controller
+												name="ticketAvailability"
+												control={control}
+												defaultValue={availability}
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<RadioGroup
+														row
+														aria-label="ticketAvailability"
+														name="ticketAvailability"
+														value={value}
+														onChange={(e) => {
+															onChange(e);
+															setAvailability(
+																e.target.value
+															);
+														}}
+													>
+														<FormControlLabel
+															value="unlimited"
+															control={
+																<Radio color="primary" />
+															}
+															label="Unlimited Tickets"
+														/>
+														<FormControlLabel
+															value="limited"
+															control={
+																<Radio color="primary" />
+															}
+															label="Limited Tickets"
+														/>
+													</RadioGroup>
+												)}
+												rules={{
+													required:
+														"Please select event availability.",
+												}}
+											/>
+										</FormControl>
 										{availability === "unlimited" ? null : (
 											<div>
 												<label>NUMBER OF TICKETS</label>
-												<TextField
-													type="number"
-													id="outlined-basic"
-													// label="Event Organizer"
-													fullWidth
-													variant="outlined"
+												<Controller
+													name="noOfTickets"
+													control={control}
+													defaultValue=""
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+														fieldState: { error },
+													}) => (
+														<TextField
+															type="number"
+															id="outlined-basic"
+															// label="Event Organizer"
+															fullWidth
+															variant="outlined"
+															value={value}
+															onChange={onChange}
+															error={!!error}
+															helperText={
+																error
+																	? error.message
+																	: null
+															}
+														/>
+													)}
+													rules={{
+														required:
+															"Please enter number of tickets.",
+													}}
 												/>
 											</div>
 										)}
-
-										<br />
-
-										<FormControlLabel
-											control={
-												<Checkbox
-													// checked={state.checkedB}
-													// onChange={handleChange}
-													name="checkedB"
-													color="primary"
-												/>
-											}
-											label="Restrict Wallet Address to one Ticket"
-										/>
 									</div>
 								) : category === "single" ? (
 									<div>
@@ -1173,18 +1212,6 @@ const MyStepper = ({ handleCreateEvent }) => {
 												/>
 											</div>
 										)}
-										<br />
-										<FormControlLabel
-											control={
-												<Checkbox
-													// checked={state.checkedB}
-													// onChange={handleChange}
-													name="checkedB"
-													color="primary"
-												/>
-											}
-											label="Restrict Wallet Address to one Ticket"
-										/>
 									</div>
 								) : (
 									<div>
@@ -1387,24 +1414,34 @@ const MyStepper = ({ handleCreateEvent }) => {
 										>
 											Add another Ticket Category
 										</Button>
-
-										<br />
-										<br />
-
-										<FormControlLabel
-											control={
-												<Checkbox
-													// checked={state.checkedB}
-													// onChange={handleChange}
-													name="checkedB"
-													color="primary"
-												/>
-											}
-											label="Restrict Wallet Address to one Ticket"
-										/>
 									</div>
 								)}
 							</div>
+
+							<Controller
+								name="restrictWallet"
+								control={control}
+								defaultValue={false}
+								render={({
+									field: { onChange, value },
+									fieldState: { error },
+								}) => (
+									<FormControlLabel
+										control={
+											<Checkbox
+												checked={value}
+												onChange={onChange}
+												name="checkedB"
+												color="primary"
+											/>
+										}
+										label="Restrict Wallet Address to one Ticket"
+									/>
+								)}
+								rules={{
+									required: false,
+								}}
+							/>
 						</div>
 					</React.Fragment>
 				);
@@ -1422,7 +1459,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 								// editorClassName={}
 								value={richValue}
 								onChange={onChangeRichText}
-							// toolbarConfig={toolbarConfig}
+								// toolbarConfig={toolbarConfig}
 							/>
 							<br />
 							<FormControlLabel
@@ -1437,7 +1474,6 @@ const MyStepper = ({ handleCreateEvent }) => {
 								label="By creating an event, I agree to the policies and terms of use."
 							/>
 						</div>
-
 					</React.Fragment>
 				);
 			default:
