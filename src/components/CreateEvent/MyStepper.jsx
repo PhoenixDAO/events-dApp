@@ -48,6 +48,7 @@ import GoldonBlue from "../Images/GoldonBlue.gif";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import Check from "@material-ui/icons/Check";
+import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
 import { useForm, Controller } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -56,6 +57,8 @@ import {
 	faSquare,
 	faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import EventPreviewPage from "./EventPreviewPage";
+
 
 const QontoConnector = withStyles({
 	alternativeLabel: {
@@ -214,7 +217,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 	const [endDate, setEndDate] = useState(new Date());
 	const [startTime, setStartTime] = useState(null);
 	const [endTime, setEndTime] = useState(null);
-
+	const [open, setOpen] = useState(false);
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
 		display: [
@@ -240,7 +243,13 @@ const MyStepper = ({ handleCreateEvent }) => {
 			{ label: "OL", style: "ordered-list-item" },
 		],
 	};
+	const handleClickOpen = () => {
+		setOpen(true);
+	};
 
+	const handleClose = () => {
+		setOpen(false);
+	};
 	const handleChange = (event) => {
 		setValue(event.target.value);
 	};
@@ -710,6 +719,34 @@ const MyStepper = ({ handleCreateEvent }) => {
 									</MuiPickersUtilsProvider>
 								</div>
 							)}
+
+							{/* preview button */}
+							<EventPreviewPage
+								open={open}
+								handleClose={handleClose}
+								description="Yayy, I’m getting Married Yáll
+								Him boisterous invitation dispatched had connection inhabiting projection. By mutual an mr danger garret edward an. Diverted as strictly exertion addition no disposal by stanhill. This call wife do so sigh no gate felt. You and abode spite order get. Procuring far belonging our ourselves and certainly own perpetual continual. It elsewhere of sometimes or my certainty. Lain no as five or at high. Everything travelling set how law literature. 
+								belonging our ourselves and certainly own perpetual continual. It elsewhere of sometimes or my certainty. Lain no as five or at high. Everything travelling set how law literature. "
+								image="./images/problem_ipfs.png"
+								category={category}
+								title="Moe's Wedding"
+								startDate={"startDate"}
+								startTime={startTime}
+								endDate={"endDate"}
+								endTime={endTime}
+								eventOrganizer={eventOrganizer}
+								availability={availability}
+								location="karachi"
+							/>
+							<Button
+								color="primary"
+								size="large"
+								startIcon={<VisibilityOutlinedIcon fontSize="large" />}
+								onClick={handleClickOpen}
+
+							>
+								Preview Event
+							</Button>
 						</div>
 					</React.Fragment>
 				);
@@ -952,7 +989,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 							<FormControl
 								variant="outlined"
 								fullWidth
-								// className={classes.formControl}
+							// className={classes.formControl}
 							>
 								<Select
 									labelId="demo-simple-select-outlined-label"
@@ -1385,7 +1422,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 								// editorClassName={}
 								value={richValue}
 								onChange={onChangeRichText}
-								// toolbarConfig={toolbarConfig}
+							// toolbarConfig={toolbarConfig}
 							/>
 							<br />
 							<FormControlLabel
@@ -1400,6 +1437,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 								label="By creating an event, I agree to the policies and terms of use."
 							/>
 						</div>
+
 					</React.Fragment>
 				);
 			default:

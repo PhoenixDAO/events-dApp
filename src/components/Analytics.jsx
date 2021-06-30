@@ -315,7 +315,7 @@ const Analytics = (props, context) => {
 	}, []);
 	const classes = useStyles();
 	const [graphData, setGraphData] = useState("");
-	const [userDetails, setUserDetails] = useState(null)
+	const [userDetails, setUserDetails] = useState([]);
 	const goBack = () => {
 		this.props.history.goBack();
 	};
@@ -375,7 +375,7 @@ const Analytics = (props, context) => {
 	const getViewsAndFavourites = async () =>{
 		const userDetails= await getUserDetails({address:props.accounts,networkId:props.networkId});
 		if (!userDetails.error){
-			setUserDetails(userDetails.result);
+			setUserDetails(userDetails.result.result);
 		}else{
 			
 		}

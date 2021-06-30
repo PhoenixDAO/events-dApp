@@ -66,11 +66,13 @@ class Calendars extends Component {
             hideEvent: [],
 
             Events_Blockchain: [],
+            event_copy: [],
             activeEvents: '',
             latestblocks: 6000000,
             blocks: 5000000,
             events: [],
             Deleted_Events: [],
+            event_copy: [],
         }
         this._isMounted = false;
         this.web3 = new Web3(
@@ -121,19 +123,26 @@ class Calendars extends Component {
                 query: `
 			  {
 				events {
-				  id
-				  eventId
-				  name
-				  time
-				  price
-				  token
-				  limited
-				  seats
-				  sold
-				  ipfs
-				  category
-				  owner
-				  revenueOfEvent
+                    id
+					eventId
+					owner
+					name
+					topic
+					location
+					ipfsHash
+					tktLimited
+					tktTotalQuantity
+					tktTotalQuantitySold
+					oneTimeBuy
+					token
+					time
+					duration
+					catTktQuantity
+					catTktQuantitySold	
+					categories
+					prices
+					eventRevenueInDollar
+					eventRevenueInPhnx
 				}
 			  }
 			  `
@@ -197,13 +206,15 @@ class Calendars extends Component {
             });
         }
         else if (category == "favourite") {
-
-            const data = await getUserDetails(this.account, this.props.networkId);
-
-            let favoriteEvents = this.state.event_copy.filter(item => data.result.favourites.includes(item.eventId));
-            this.setState({
-                Events_Blockchain: favoriteEvents
-            });
+            // console.log("props",this.account, this.props.networkId);
+            const data = await getUserDetails({address:this.account, networkId:this.props.networkId});  
+            if (data.result.result.favourites != "undefined") {
+                let favoriteEvents = this.state.event_copy.filter(item => data.result.result.favourites.includes(item.eventId));
+                this.setState({
+                    Events_Blockchain: favoriteEvents
+                });
+            }
+           
         }
         else if (category == "tickets") {
             const openEvents = new this.web3.eth.Contract(
@@ -212,13 +223,13 @@ class Calendars extends Component {
             );
             const blockChainTickets = await openEvents.methods.ticketsOf(this.props.accounts[0]).call()
             const newsort = blockChainTickets.concat().sort((a, b) => b - a);
-            let tickets = this.state.event_copy.filter(item =>newsort.includes(item.eventId));
-
+            let tickets = this.state.event_copy.filter(item => newsort.includes(item.eventId));
             this.setState({
                 Events_Blockchain: tickets
             });
+
         }
-        else{
+        else {
             this.setState({
                 Events_Blockchain: this.state.event_copy
             });
@@ -346,11 +357,19 @@ class Calendars extends Component {
                             ]}
                             eventClick={events_calendar => this.goToEvent(events_calendar)}
                             dayMaxEvents={1}
-
+                            timeFormat= "H:mm"
+                            eventOverlap= {false}
                             eventLimit={3}
                             events={events_calendar}
                         // select={this.handleSelectedDates}
-
+                        slotEventOverlap={false}
+                        eventTimeFormat={{ // like '14:30:00'
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            meridiem: true
+                          }}
+                          eventMaxStack={1}
+allDaySlot={false}
                         />
                     </div>
                 </div>

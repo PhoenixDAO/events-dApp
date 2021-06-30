@@ -41,6 +41,7 @@ class MyTickets extends Component {
 			Open_events_Address
 		);
 		const blockChainTickets = await openEvents.methods.ticketsOf(this.props.accounts[0]).call()
+		console.log("MyTickets blockChainTickets",blockChainTickets)
 		const newsort = blockChainTickets.concat().sort((a, b) => b - a);
 		this.setState({ blockChainTickets: newsort, blockChainTicketsLoaded: false })
 		// this.updateIPFS();
