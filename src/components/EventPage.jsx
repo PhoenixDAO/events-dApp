@@ -183,20 +183,19 @@ const styles = (theme) => ({
 });
 class EventPage extends Component {
 	constructor(props, context) {
-		try {
-			var contractConfig = {
-				contractName: "PHNX",
-				web3Contract: new context.drizzle.web3.eth.Contract(
-					PhoenixDAO_Testnet_Token_ABI,
-					PhoenixDAO_Mainnet_Token_Address
-				),
-			};
-			context.drizzle.addContract(contractConfig);
-		} catch (e) { }
+		// try {
+		// 	var contractConfig = {
+		// 		contractName: "PHNX",
+		// 		web3Contract: new context.drizzle.web3.eth.Contract(
+		// 			PhoenixDAO_Testnet_Token_ABI,
+		// 			PhoenixDAO_Mainnet_Token_Address
+		// 		),
+		// 	};
+		// 	context.drizzle.addContract(contractConfig);
+		// } catch (e) { }
 		super(props);
-		this.contracts = context.drizzle.contracts;
-		this.revenue =
-			this.contracts["DaoEvents"].methods.eventRevenue.cacheCall(11);
+		// this.contracts = context.drizzle.contracts;
+		console.log("contracts in eventsPage",props.eventsContract,props.phnxContract)
 		this.account = this.props.accounts[0];
 		this.state = {
 			blockChainEventLoaded: false,
@@ -223,6 +222,7 @@ class EventPage extends Component {
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
 		this.giveApproval = this.giveApproval.bind(this);
+		this.inquire = this.inquire.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this);
 		this.goBack = this.goBack.bind(this); // i think you are missing this
 	}
@@ -537,9 +537,10 @@ class EventPage extends Component {
 	}
 
 	allowance = async () => {
-		let a = await this.contracts["PHNX"].methods
-			.allowance(this.account, this.contracts["DaoEvents"].address)
+		let a = await this.props.phnxContract.methods
+			.allowance(this.account, this.props.eventsContract.address)
 			.call();
+			console.log("In allowance eventsPage",a)
 		return a;
 	};
 
@@ -595,37 +596,38 @@ class EventPage extends Component {
 	}
 
 	inquire = async () => {
-		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
-		let temp = this.allowance();
-		this.setState(
-			{
-				fee: this.state.blockChainEvent[2],
-				token: this.state.blockChainEvent[3],
-				openEvents_address: this.contracts["DaoEvents"].address,
-				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
-					this.props.match.params.id
-				),
-				approve: this.contracts["PHNX"].methods.approve(
-					this.contracts["DaoEvents"].address,
-					balance
-				),
-			},
-			async () => {
-				let temp = await this.allowance();
-				if ((await this.allowance()) == 0) {
-					this.handleClickOpen();
-				} else {
-					this.props.inquire(
-						this.props.id,
-						this.state.fee,
-						this.state.token,
-						this.state.openEvents_address,
-						this.state.buyticket,
-						this.state.approve
-					);
-				}
-			}
-		);
+		let balance = await this.props.phnxContract.methods.totalSupply().call();
+		console.log("balance in eventsPage",balance)
+		// let temp = this.allowance();
+		// this.setState(
+		// 	{
+		// 		fee: this.state.blockChainEvent[2],
+		// 		token: this.state.blockChainEvent[3],
+		// 		openEvents_address: this.props.eventsContract.address,
+		// 		buyticket: this.props.eventsContract.methods.buyTicket(
+		// 			this.props.match.params.id
+		// 		),
+		// 		approve: this.props.phnxContract.methods.approve(
+		// 			this.props.eventsContract.address,
+		// 			balance
+		// 		),
+		// 	},
+		// 	async () => {
+		// 		let temp = await this.allowance();
+		// 		if ((await this.allowance()) == 0) {
+		// 			this.handleClickOpen();
+		// 		} else {
+		// 			this.props.inquire(
+		// 				this.props.id,
+		// 				this.state.fee,
+		// 				this.state.token,
+		// 				this.state.openEvents_address,
+		// 				this.state.buyticket,
+		// 				this.state.approve
+		// 			);
+		// 		}
+		// 	}
+		// );
 	};
 
 	getLocation = () => {
@@ -1294,7 +1296,7 @@ EventPage.contextTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		contracts: state.contracts,
+		// contracts: state.contracts,
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
 		networkId: state.web3.networkId,

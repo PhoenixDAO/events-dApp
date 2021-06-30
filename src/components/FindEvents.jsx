@@ -99,17 +99,18 @@ class FindEvents extends Component {
 			Events_Blockchain: [],
 			Deleted_Events: [],
 			Updated_Events: [],
-			active_length: "",
+			// active_length: "",
 			isOldestFirst: false,
 			event_copy: [],
 			prevPath: -1,
 			hideEvent: [],
 			selectedTab: 0,
+			eventCount:0
 		};
 
-		this.contracts = context.drizzle.contracts;
-		this.eventCount =
-			this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+		// this.contracts = context.drizzle.contracts;
+		// this.eventCount = this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 		this.myRef = React.createRef();
@@ -220,7 +221,7 @@ class FindEvents extends Component {
 					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({
 						Events_Blockchain: [],
-						active_length: 0,
+						// active_length: 0,
 						event_copy: [],
 					});
 				} else {
@@ -237,7 +238,7 @@ class FindEvents extends Component {
 
 					this.setState({
 						Events_Blockchain: newsort,
-						active_length: newsort.length,
+						// active_length: newsort.length,
 						event_copy: newsort,
 					});
 					this.setState({ loading: false });
@@ -269,7 +270,7 @@ class FindEvents extends Component {
 			}
 			this.setState({
 				Events_Blockchain: filteredEvents,
-				active_length: filteredEvents.length,
+				// active_length: filteredEvents.length,
 			});
 			this.props.history.push("/upcomingevents/" + 1);
 		});
@@ -315,6 +316,21 @@ class FindEvents extends Component {
 	onTabChange = (event, newValue) => {
 		this.setState({ selectedTab: newValue });
 	};
+	async componentWillMount(){
+		// console.log("drizzle getEventsCount in FindEvents",this.contracts["DaoEvents"].methods.getEventsCount.cacheCall());
+		// this.props.contracts["DaoEvents"].getEventsCount[
+		// 	this.eventCount
+		// ]
+		// console.log("eventsContract in FindEvents",this.props.eventsContract)
+		let eventCount = await this.props.eventsContract.methods.getEventsCount().call();
+		if(eventCount){
+			this.setState({eventCount})
+		}
+		// this.setState({eventCount})
+		console.log("this.eventCount in FindEvents",eventCount)
+		// let eventCount2 = await eventCount.call();
+		// console.log("this.eventCount2 in FindEvents",eventCount2)
+	}
 
 	render() {
 		//when user is not connectd hide connect wallet button
@@ -323,16 +339,19 @@ class FindEvents extends Component {
 		const { classes } = this.props;
 		let body = <PhoenixDAOLoader />;
 
-		if (
-			typeof this.props.contracts["DaoEvents"].getEventsCount[
-				this.eventCount
-			] !== "undefined" &&
-			this.state.active_length !== "undefined"
-		) {
+		// if (
+		// 	// typeof this.props.contracts["DaoEvents"].getEventsCount[
+		// 	// 	this.eventCount
+		// 	// ] !== "undefined" 
+
+		// 	// this.state.eventCount == 0
+		// 	// &&
+		// 	this.state.active_length !== ""
+		// ) {
 			let count = this.state.Events_Blockchain.length;
 			if (this.state.loading) {
 				body = <PhoenixDAOLoader />;
-			} else if (count === 0 && !this.state.loading) {
+			} else if (this.state.Events_Blockchain.length === 0 && !this.state.loading) {
 				body = (
 					<p className="text-center not-found">
 						<span role="img" aria-label="thinking">
@@ -510,7 +529,7 @@ class FindEvents extends Component {
 					);
 				}
 			}
-		}
+		// }
 
 		return (
 			<React.Fragment>
@@ -769,7 +788,8 @@ class FindEvents extends Component {
 		);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
+
 		if (this.state.prevPath == -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}
@@ -794,7 +814,7 @@ FindEvents.contextTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		contracts: state.contracts,
+		// contracts: state.contracts,
 		accounts: state.accounts,
 	};
 };
