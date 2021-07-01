@@ -58,6 +58,9 @@ import {
 	faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import EventPreviewPage from "./EventPreviewPage";
+import phnxLogo from "../Images/phnx.png";
+import dollarIcon from "../Images/dollar.png";
+import altIcon from "../Images/altIcon.png";
 
 const QontoConnector = withStyles({
 	alternativeLabel: {
@@ -1034,7 +1037,6 @@ const MyStepper = ({ handleCreateEvent }) => {
 									<div>
 										<FormControl component="fieldset">
 											<label>TICKET AVAILABILITY</label>
-
 											<Controller
 												name="ticketAvailability"
 												control={control}
@@ -1127,44 +1129,101 @@ const MyStepper = ({ handleCreateEvent }) => {
 												alignItems: "center",
 											}}
 										>
-											<TextField
-												className={classes.margin}
-												id="input-with-icon-textfield"
-												// label="TextField"
-												type="number"
-												variant="outlined"
-												InputProps={{
-													startAdornment: (
-														<InputAdornment position="start">
-															<AttachMoneyIcon
-																style={{
-																	color: "#413AE2",
-																}}
-															/>
-														</InputAdornment>
-													),
+											<Controller
+												name="dollarPrice"
+												control={control}
+												defaultValue=""
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<TextField
+														className={
+															classes.margin
+														}
+														id="input-with-icon-textfield"
+														// label="TextField"
+														type="number"
+														variant="outlined"
+														InputProps={{
+															startAdornment: (
+																<InputAdornment position="start">
+																	<img
+																		src={
+																			dollarIcon
+																		}
+																		alt="dollar sign"
+																	/>
+																</InputAdornment>
+															),
+														}}
+														value={value}
+														onChange={onChange}
+														error={!!error}
+														helperText={
+															error
+																? error.message
+																: " "
+														}
+													/>
+												)}
+												rules={{
+													required:
+														"Price in dollars.",
 												}}
 											/>
-											<SyncAltIcon
-												fontSize="large"
-												style={{ color: "#413AE2" }}
-											/>
-											<TextField
-												className={classes.margin}
-												id="input-with-icon-textfield"
-												// label="TextField"
-												type="number"
-												variant="outlined"
-												InputProps={{
-													startAdornment: (
-														<InputAdornment position="start">
-															<AttachMoneyIcon
-																style={{
-																	color: "#413AE2",
-																}}
-															/>
-														</InputAdornment>
-													),
+
+											<div>
+												<img
+													src={altIcon}
+													alt="alt icon"
+													// style={{
+													// 	marginTop: "auto",
+													// 	marginBottom: "auto",
+													// }}
+												/>
+											</div>
+
+											<Controller
+												name="phnxPrice"
+												control={control}
+												defaultValue=""
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<TextField
+														className={
+															classes.margin
+														}
+														id="input-with-icon-textfield"
+														// label="TextField"
+														type="number"
+														variant="outlined"
+														InputProps={{
+															startAdornment: (
+																<InputAdornment position="start">
+																	<img
+																		src={
+																			phnxLogo
+																		}
+																		alt="phnx logo"
+																	/>
+																</InputAdornment>
+															),
+														}}
+														value={value}
+														onChange={onChange}
+														error={!!error}
+														helperText={
+															error
+																? error.message
+																: " "
+														}
+													/>
+												)}
+												rules={{
+													required: "Price in PHNX.",
 												}}
 											/>
 										</div>
@@ -1173,42 +1232,82 @@ const MyStepper = ({ handleCreateEvent }) => {
 
 										<FormControl component="fieldset">
 											<label>TICKET AVAILABILITY</label>
-											<RadioGroup
-												row
-												aria-label="ticketAvailability"
+											<Controller
 												name="ticketAvailability"
-												value={availability}
-												onChange={(e) =>
-													setAvailability(
-														e.target.value
-													)
-												}
-											>
-												<FormControlLabel
-													value="unlimited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Unlimited Tickets"
-												/>
-												<FormControlLabel
-													value="limited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Limited Tickets"
-												/>
-											</RadioGroup>
+												control={control}
+												defaultValue={availability}
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<RadioGroup
+														row
+														aria-label="ticketAvailability"
+														name="ticketAvailability"
+														value={value}
+														onChange={(e) => {
+															onChange(e);
+															setAvailability(
+																e.target.value
+															);
+														}}
+													>
+														<FormControlLabel
+															value="unlimited"
+															control={
+																<Radio color="primary" />
+															}
+															label="Unlimited Tickets"
+														/>
+														<FormControlLabel
+															value="limited"
+															control={
+																<Radio color="primary" />
+															}
+															label="Limited Tickets"
+														/>
+													</RadioGroup>
+												)}
+												rules={{
+													required:
+														"Please select event availability.",
+												}}
+											/>
 										</FormControl>
 										{availability === "unlimited" ? null : (
 											<div>
 												<label>NUMBER OF TICKETS</label>
-												<TextField
-													type="number"
-													id="outlined-basic"
-													// label="Event Organizer"
-													fullWidth
-													variant="outlined"
+												<Controller
+													name="noOfTickets"
+													control={control}
+													defaultValue=""
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+														fieldState: { error },
+													}) => (
+														<TextField
+															type="number"
+															id="outlined-basic"
+															// label="Event Organizer"
+															fullWidth
+															variant="outlined"
+															value={value}
+															onChange={onChange}
+															error={!!error}
+															helperText={
+																error
+																	? error.message
+																	: null
+															}
+														/>
+													)}
+													rules={{
+														required:
+															"Please enter number of tickets.",
+													}}
 												/>
 											</div>
 										)}
