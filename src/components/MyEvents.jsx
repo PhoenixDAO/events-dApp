@@ -12,9 +12,7 @@ import { graphURL } from "../config/const.js";
 import SearchBar from './common/SearchBar';
 
 import Event from "./Event";
-// import Web3 from "web3";
 import axios from "axios";
-// import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 function a11yProps(index) {
 	return {
 		id: `scrollable-auto-tab-${index}`,
@@ -97,10 +95,10 @@ class MyEvents extends Component {
 
 		};
 		console.log("qwe",this.props.accounts[0])
-		this.contracts = context.drizzle.contracts;
-		this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
-			this.props.accounts[0]
-		);
+		// this.contracts = context.drizzle.contracts;
+		// this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
+		// 	this.props.accounts[0]
+		// );
 		this.perPage = 6;
 		this.account = this.props.accounts[0];
 		this.myRef = React.createRef();
@@ -374,10 +372,11 @@ class MyEvents extends Component {
 	render() {
 		const { classes } = this.props;
 		let body = <PhoenixDAOLoader />;
-		if (
-			typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
-			"undefined"
-		) {
+		// if (
+		// 	// typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
+		// 	// "undefined"
+		// 	this.state.active_length != ""
+		// ) {
 			let events = this.state.MyEvents.length;
 			if (this.state.loading) {
 				body = <PhoenixDAOLoader />;
@@ -417,7 +416,6 @@ class MyEvents extends Component {
 				let start = end - this.perPage;
 				if (end > count) end = count;
 				let pages = Math.ceil(count / this.perPage);
-console.log("updated_list",updated_list);
 				for (let i = start; i < end; i++) {
 					updated_list.push(
 						<Event
@@ -547,7 +545,6 @@ console.log("updated_list",updated_list);
 					);
 				}
 			}
-		}
 
 		return (
 			<div className="event-page-wrapper">
@@ -556,23 +553,6 @@ console.log("updated_list",updated_list);
 						My Created Events
 				    </h2>
 					<SearchBar />
-
-					{/* <TextField
-						className={classes.margin}
-						id="input-with-icon-textfield"
-						variant="outlined"
-						placeholder="Search for events"
-						size="medium"
-						onChange={this.updateSearch.bind(this)}
-						value={this.state.value}
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-									<SearchIcon style={{ color: "#C1C1C1" }} />
-								</InputAdornment>
-							),
-						}}
-					/> */}
 				</div>
 				<AppBar position="static" className={classes.AppBar} color="transparent">
 					<Tabs
@@ -673,7 +653,7 @@ MyEvents.contextTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		contracts: state.contracts,
+		// contracts: state.contracts,
 		accounts: state.accounts,
 	};
 };

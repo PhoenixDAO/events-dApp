@@ -317,19 +317,12 @@ class FindEvents extends Component {
 		this.setState({ selectedTab: newValue });
 	};
 	async componentWillMount(){
-		// console.log("drizzle getEventsCount in FindEvents",this.contracts["DaoEvents"].methods.getEventsCount.cacheCall());
-		// this.props.contracts["DaoEvents"].getEventsCount[
-		// 	this.eventCount
-		// ]
-		// console.log("eventsContract in FindEvents",this.props.eventsContract)
 		let eventCount = await this.props.eventsContract.methods.getEventsCount().call();
+		console.log("event contract",this.props.eventsContract);
 		if(eventCount){
 			this.setState({eventCount})
 		}
-		// this.setState({eventCount})
-		console.log("this.eventCount in FindEvents",eventCount)
-		// let eventCount2 = await eventCount.call();
-		// console.log("this.eventCount2 in FindEvents",eventCount2)
+
 	}
 
 	render() {

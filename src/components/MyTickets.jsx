@@ -31,16 +31,17 @@ class MyTickets extends Component {
 		this.props.history.push(location);
 	}
 	async loadTicketsFromBlockchain() {
-		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(
-				INFURA_WEB_URL
-			)
-		);
-		const openEvents = new web3.eth.Contract(
-			Open_events_ABI,
-			Open_events_Address
-		);
-		const blockChainTickets = await openEvents.methods.ticketsOf(this.props.accounts[0]).call()
+		// const web3 = new Web3(
+		// 	new Web3.providers.WebsocketProvider(
+		// 		INFURA_WEB_URL
+		// 	)
+		// );
+		// const openEvents = new web3.eth.Contract(
+		// 	Open_events_ABI,
+		// 	Open_events_Address
+		// );
+		
+		const blockChainTickets = await this.props.eventsContract.methods.ticketsOf(this.props.accounts[0]).call()
 		console.log("MyTickets blockChainTickets",blockChainTickets)
 		const newsort = blockChainTickets.concat().sort((a, b) => b - a);
 		this.setState({ blockChainTickets: newsort, blockChainTicketsLoaded: false })
@@ -53,9 +54,9 @@ class MyTickets extends Component {
 	render() {
 		let body = <PhoenixDAOLoader />;
 
-		if (
-			this.state.myTicket
-		) {
+		// if (
+		// 	this.state.myTicket
+		// ) {
 			if (this.state.blockChainTicketsLoaded) {
 				body =
 					<div>
@@ -153,7 +154,7 @@ class MyTickets extends Component {
 					</div>
 					;
 			}
-		}
+		
 
 		return (
 			<div ref={this.myRef}>
