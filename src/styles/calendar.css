@@ -213,6 +213,9 @@ table {
     .fc .fc-col-header-cell-cushion {
         font-size: 12px !important;
     }
+    /* .fc-event-time {
+        margin-right: -15px !important;
+    } */
 }
 
 .fc .fc-button-primary:focus {

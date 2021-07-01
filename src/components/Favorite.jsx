@@ -86,9 +86,9 @@ class Favorites extends Component {
             reload: false
         };
 
-        this.contracts = context.drizzle.contracts;
-        this.eventCount =
-            this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+        // this.contracts = context.drizzle.contracts;
+        // this.eventCount =
+        //     this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
         this.perPage = 6;
         this.topicClick = this.topicClick.bind(this);
         this.myRef = React.createRef();
@@ -335,9 +335,9 @@ class Favorites extends Component {
         let body = <PhoenixDAOLoader />;
 
         if (
-            typeof this.props.contracts["DaoEvents"].getEventsCount[
-            this.eventCount
-            ] !== "undefined" &&
+            // typeof this.props.contracts["DaoEvents"].getEventsCount[
+            // this.eventCount
+            // ] !== "undefined" &&
             this.state.active_length !== "undefined"
         ) {
             let count = this.state.Events_Blockchain.length;
@@ -575,7 +575,7 @@ Favorites.contextTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        contracts: state.contracts,
+        // contracts: state.contracts,
         accounts: state.accounts,
         web3: state.web3,
     };

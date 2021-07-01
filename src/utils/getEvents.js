@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 import axios from "axios";
-import { drizzleConnect } from "drizzle-react";
-import PropTypes from "prop-types";
 
 export const getEvents = (props, context) => {
     const [Deleted_Events, setDeleted_Events] = useState([]);
@@ -23,7 +21,7 @@ export const getEvents = (props, context) => {
             set_isMounted(false);
         }
     }, [MyEvents]);
-    const filterHideEvent = async () => {
+    const filterHideEvent = async() => {
         try {
             const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
             if (get.data.result.length != 0) {
@@ -35,7 +33,7 @@ export const getEvents = (props, context) => {
             // console.log("check error", error);
         }
     };
-    const loadBockchain = async () => {
+    const loadBockchain = async() => {
         if (_isMounted) {
             // if (this._isMounted) {
 
@@ -96,7 +94,7 @@ export const getEvents = (props, context) => {
               }`
                 }
             }).then((graphEvents) => {
-                console.log("GraphQL query response in getEvents.js",graphEvents.data.data.users)
+                console.log("GraphQL query response in getEvents.js", graphEvents.data.data.users)
                 if (!graphEvents.data || graphEvents.data.data == 'undefined') {
                     // console.log("GraphQL query -- graphEvents undefined")
                     setLoading(false);
