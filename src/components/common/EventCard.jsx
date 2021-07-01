@@ -318,7 +318,7 @@ const EventCard = (props, context) => {
 									variant="body1"
 									component="h2"
 								>
-									{!event_data.token ? "Free": `Starting from ${event_data.prices[0]} PHNX`}
+									{!event_data.token ? "Free": event_data.prices.length > 1 ? `Starting from ${event_data.prices[0]} PHNX` : event_data.prices[0]}
 								</Typography>
 								{/* <div className={classes.eventinfo}>
 									<span className={classes.PhnxPrice} >{event_data[3]
@@ -402,7 +402,7 @@ const EventCard = (props, context) => {
 										gutterBottom
 										className={classes.text}
 									>
-										PHNX Revenue: {revenue} PHNX
+										PHNX Revenue: {event_data.eventRevenueInPhnx} PHNX
 									</Typography>
 									<Typography
 										variant="body2"
@@ -412,7 +412,7 @@ const EventCard = (props, context) => {
 										className={classes.text}
 										style={{ marginBottom: "20px" }}
 									>
-										Dollar Revenue: $ {dollarRevenue}
+										Dollar Revenue: $ {event_data.eventRevenueInDollar}
 									</Typography>
 									<Divider />
 									<Button
@@ -486,7 +486,7 @@ EventCard.contextTypes = {
 const mapStateToProps = (state) => {
 
 	return {
-		contracts: state.contracts,
+		// contracts: state.contracts,
 		accounts: state.accounts[0],
 
 		networkId: state.web3.networkId,
