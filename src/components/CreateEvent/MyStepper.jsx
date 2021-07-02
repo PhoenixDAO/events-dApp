@@ -220,6 +220,9 @@ const MyStepper = ({ handleCreateEvent }) => {
 	const [startTime, setStartTime] = useState(null);
 	const [endTime, setEndTime] = useState(null);
 	const [open, setOpen] = useState(false);
+	const [categories, setCategories] = useState([]);
+	const [addAnotherCat, setaddAnotherCat] = useState(false);
+
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
 		display: [
@@ -314,6 +317,14 @@ const MyStepper = ({ handleCreateEvent }) => {
 	const onChangeRichText = (value) => {
 		// console.log("rich value", value);
 		setRichValue(value);
+	};
+
+	const handleSaveCatogory = () => {
+		let obj = {};
+		let arr = categories;
+		arr.push(obj);
+		setCategories(arr);
+		setaddAnotherCat(!addAnotherCat);
 	};
 
 	function getStepContent(stepIndex) {
@@ -1031,7 +1042,6 @@ const MyStepper = ({ handleCreateEvent }) => {
 							<br />
 
 							{/* conditonal rendering for event category -free -single_paid -multiple-paid */}
-
 							<div>
 								{category === "free" ? (
 									<div>
@@ -1121,7 +1131,6 @@ const MyStepper = ({ handleCreateEvent }) => {
 									<div>
 										<label>TICKET PRICE</label>
 										<br />
-
 										<div
 											style={{
 												display: "flex",
@@ -1314,205 +1323,227 @@ const MyStepper = ({ handleCreateEvent }) => {
 									</div>
 								) : (
 									<div>
-										{/* ticket category box */}
-										<div>
-											<Grid container spacing={2}>
-												<Grid
-													style={{
-														backgroundColor:
-															"goldenrod",
-														padding: 15,
-													}}
-													container
-													item
-													xs={11}
-													sm={11}
-													md={11}
-													lg={11}
-													xl={11}
-													justify="space-between"
-													direction="row"
-												>
-													<Grid
-														item
-														direction="column"
-													>
-														<h4>Bronze Ticket</h4>
-														<h6>
-															Unlimited Tickets
-														</h6>
+										{/*paid multiple - ticket category box */}
+										{categories.map((cat, index) => {
+											return (
+												<div key={index}>
+													<Grid container spacing={2}>
+														<Grid
+															style={{
+																backgroundColor:
+																	"goldenrod",
+																padding: 15,
+															}}
+															container
+															item
+															xs={11}
+															sm={11}
+															md={11}
+															lg={11}
+															xl={11}
+															justify="space-between"
+															direction="row"
+														>
+															<Grid
+																item
+																direction="column"
+															>
+																<h4>
+																	Bronze
+																	Ticket
+																</h4>
+																<h6>
+																	Unlimited
+																	Tickets
+																</h6>
+															</Grid>
+															<Grid
+																item
+																direction="column"
+															>
+																<h2>$300</h2>
+																<h6>
+																	3000PHNX
+																</h6>
+															</Grid>
+														</Grid>
+														<Grid
+															item
+															container
+															xs={1}
+															sm={1}
+															md={1}
+															lg={1}
+															xl={1}
+															direction="column"
+															justify="space-evenly"
+														>
+															<Grid item>
+																<EditIcon fontSize="large" />
+															</Grid>
+															<Grid item>
+																<DeleteForeverOutlinedIcon fontSize="large" />
+															</Grid>
+														</Grid>
 													</Grid>
+													<br />
+												</div>
+											);
+										})}
 
-													<Grid
-														item
-														direction="column"
-													>
-														<h2>$300</h2>
-														<h6>3000PHNX</h6>
-													</Grid>
-												</Grid>
-
-												<Grid
-													item
-													container
-													xs={1}
-													sm={1}
-													md={1}
-													lg={1}
-													xl={1}
-													direction="column"
-													justify="space-evenly"
-												>
-													<Grid item>
-														<EditIcon fontSize="large" />
-													</Grid>
-
-													<Grid item>
-														<DeleteForeverOutlinedIcon fontSize="large" />
-													</Grid>
-												</Grid>
-											</Grid>
-										</div>
-
-										<br />
-
-										{/* ticket name */}
-										<label>TICKET NAME</label>
-										<TextField
-											id="outlined-basic"
-											// label="Event Organizer"
-											fullWidth
-											variant="outlined"
-										/>
-
-										<br />
-										<br />
-
-										<label>TICKET PRICE</label>
-										<br />
-
-										<div
-											style={{
-												display: "flex",
-												justifyContent: "space-between",
-												alignItems: "center",
-											}}
-										>
-											<TextField
-												className={classes.margin}
-												id="input-with-icon-textfield"
-												// label="TextField"
-												type="number"
-												variant="outlined"
-												InputProps={{
-													startAdornment: (
-														<InputAdornment position="start">
-															<AttachMoneyIcon
-																style={{
-																	color: "#413AE2",
-																}}
-															/>
-														</InputAdornment>
-													),
-												}}
-											/>
-											<SyncAltIcon
-												fontSize="large"
-												style={{ color: "#413AE2" }}
-											/>
-											<TextField
-												className={classes.margin}
-												id="input-with-icon-textfield"
-												// label="TextField"
-												type="number"
-												variant="outlined"
-												InputProps={{
-													startAdornment: (
-														<InputAdornment position="start">
-															<AttachMoneyIcon
-																style={{
-																	color: "#413AE2",
-																}}
-															/>
-														</InputAdornment>
-													),
-												}}
-											/>
-										</div>
-
-										<br />
-
-										<FormControl component="fieldset">
-											<label>TICKET AVAILABILITY</label>
-											<RadioGroup
-												row
-												aria-label="ticketAvailability"
-												name="ticketAvailability"
-												value={availability}
-												onChange={(e) =>
-													setAvailability(
-														e.target.value
-													)
-												}
-											>
-												<FormControlLabel
-													value="unlimited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Unlimited Tickets"
-												/>
-												<FormControlLabel
-													value="limited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Limited Tickets"
-												/>
-											</RadioGroup>
-										</FormControl>
-										{availability === "unlimited" ? null : (
+										{!addAnotherCat ? (
 											<div>
-												<label>NUMBER OF TICKETS</label>
+												{/* ticket name */}
+												<label>TICKET NAME</label>
 												<TextField
-													type="number"
 													id="outlined-basic"
 													// label="Event Organizer"
 													fullWidth
 													variant="outlined"
 												/>
+												<br />
+												<br />
+												<label>TICKET PRICE</label>
+												<br />
+												<div
+													style={{
+														display: "flex",
+														justifyContent:
+															"space-between",
+														alignItems: "center",
+													}}
+												>
+													<TextField
+														className={
+															classes.margin
+														}
+														id="input-with-icon-textfield"
+														// label="TextField"
+														type="number"
+														variant="outlined"
+														InputProps={{
+															startAdornment: (
+																<InputAdornment position="start">
+																	<AttachMoneyIcon
+																		style={{
+																			color: "#413AE2",
+																		}}
+																	/>
+																</InputAdornment>
+															),
+														}}
+													/>
+													<SyncAltIcon
+														fontSize="large"
+														style={{
+															color: "#413AE2",
+														}}
+													/>
+													<TextField
+														className={
+															classes.margin
+														}
+														id="input-with-icon-textfield"
+														// label="TextField"
+														type="number"
+														variant="outlined"
+														InputProps={{
+															startAdornment: (
+																<InputAdornment position="start">
+																	<AttachMoneyIcon
+																		style={{
+																			color: "#413AE2",
+																		}}
+																	/>
+																</InputAdornment>
+															),
+														}}
+													/>
+												</div>
+												<br />
+												<FormControl component="fieldset">
+													<label>
+														TICKET AVAILABILITY
+													</label>
+													<RadioGroup
+														row
+														aria-label="ticketAvailability"
+														name="ticketAvailability"
+														value={availability}
+														onChange={(e) =>
+															setAvailability(
+																e.target.value
+															)
+														}
+													>
+														<FormControlLabel
+															value="unlimited"
+															control={
+																<Radio color="primary" />
+															}
+															label="Unlimited Tickets"
+														/>
+														<FormControlLabel
+															value="limited"
+															control={
+																<Radio color="primary" />
+															}
+															label="Limited Tickets"
+														/>
+													</RadioGroup>
+												</FormControl>
+												{availability ===
+												"unlimited" ? null : (
+													<div>
+														<label>
+															NUMBER OF TICKETS
+														</label>
+														<TextField
+															type="number"
+															id="outlined-basic"
+															// label="Event Organizer"
+															fullWidth
+															variant="outlined"
+														/>
+													</div>
+												)}
+												<br />
+												{/* save button */}
+												<Button
+													color="primary"
+													variant="outlined"
+													fullWidth
+													className={
+														classes.addAnotherImageBtn
+													}
+													onClick={handleSaveCatogory}
+												>
+													Save
+												</Button>
+												<br />
+												<br />
+											</div>
+										) : (
+											<div>
+												<Button
+													variant="outlined"
+													fullWidth
+													className={
+														classes.addAnotherImageBtn
+													}
+													startIcon={
+														<AddIcon fontSize="large" />
+													}
+													onClick={() =>
+														setaddAnotherCat(
+															!addAnotherCat
+														)
+													}
+												>
+													Add another Ticket Category
+												</Button>
 											</div>
 										)}
-
-										<br />
-
-										{/* save button */}
-										<Button
-											color="primary"
-											variant="outlined"
-											fullWidth
-											className={
-												classes.addAnotherImageBtn
-											}
-										>
-											Save
-										</Button>
-
-										<br />
-										<br />
-
-										<Button
-											variant="outlined"
-											fullWidth
-											className={
-												classes.addAnotherImageBtn
-											}
-											startIcon={
-												<AddIcon fontSize="large" />
-											}
-										>
-											Add another Ticket Category
-										</Button>
 									</div>
 								)}
 							</div>
