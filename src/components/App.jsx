@@ -94,7 +94,8 @@ class App extends Component {
 	async initializeContract() {
 		try {
 			const web3 = new Web3(
-				new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+				// new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+				window.ethereum
 			);
 			const openEvents = await new web3.eth.Contract(
 				Open_events_ABI,
@@ -104,13 +105,13 @@ class App extends Component {
 				PhoenixDAO_Testnet_Token_ABI,
 				PhoenixDAO_Mainnet_Token_Address
 			);
-			console.log("contract initialized", openEvents)
-			this.setState({ eventsContract: openEvents, phnxContract: PHNX })
+			console.log("contract initialized",openEvents,PHNX)
+			this.setState({eventsContract : openEvents, phnxContract:PHNX})
+		
+		}catch(err){
+			console.log("error initializing the contract",err)
 
-		} catch (err) {
-			console.log("error initializing the contract", err)
 		}
-
 	}
 
 	async componentWillMount() {
@@ -220,15 +221,18 @@ class App extends Component {
 
 	//get value from buyer/from child components
 	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
+		console.log("In inquireBuy function")
 		if (
 			this.state.account.length !== 0 &&
 			this.props.web3.networkId == GLOBAL_NETWORK_ID
 		) {
+			
+
 			this.setState({ disabledStatus: true });
 			this.setState(
 				{
-					fee: fee,
-					token: token,
+					// fee: fee,
+					// token: token,
 					buyticket: buyticket,
 					approve: approve,
 				},
@@ -321,8 +325,9 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-
+		console.log("in buy function")
 		if ((await this.allowance()) == 0) {
+			console.log("in buy function giving allowance")
 
 			this.state.approve
 				.send({ from: this.state.account })
@@ -359,6 +364,7 @@ class App extends Component {
 					}
 				})
 				.on("error", (error) => {
+					console.log("error in buy in if function giving allowance",error)
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -413,6 +419,7 @@ class App extends Component {
 					}
 				})
 				.on("error", (error) => {
+					console.log("error in buy in else function giving allowance",error)
 					if (error !== null) {
 						txerror = error;
 						toast(

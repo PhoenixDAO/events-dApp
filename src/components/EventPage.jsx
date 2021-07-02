@@ -538,7 +538,7 @@ class EventPage extends Component {
 
 	allowance = async () => {
 		let a = await this.props.phnxContract.methods
-			.allowance(this.account, this.props.eventsContract.address)
+			.allowance(this.account, Open_events_Address)
 			.call();
 			console.log("In allowance eventsPage",a)
 		return a;
@@ -550,6 +550,7 @@ class EventPage extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
+		console.log("in eventsPage giveApproval",this.account,this.state.approve)
 		this.state.approve
 			.send({ from: this.account })
 			.on("transactionHash", (hash) => {
@@ -566,6 +567,7 @@ class EventPage extends Component {
 				this.onConfirmation(confirmationNumber, receipt)
 			)
 			.on("error", (error) => {
+				console.log("error in giveApproval function",error)
 				if (error !== null) {
 					this.setState({ disabledBuying: false });
 					txerror = error;
@@ -596,38 +598,39 @@ class EventPage extends Component {
 	}
 
 	inquire = async () => {
+		console.log("in eventsPage",Open_events_Address)
 		let balance = await this.props.phnxContract.methods.totalSupply().call();
-		console.log("balance in eventsPage",balance)
-		// let temp = this.allowance();
-		// this.setState(
-		// 	{
-		// 		fee: this.state.blockChainEvent[2],
-		// 		token: this.state.blockChainEvent[3],
-		// 		openEvents_address: this.props.eventsContract.address,
-		// 		buyticket: this.props.eventsContract.methods.buyTicket(
-		// 			this.props.match.params.id
-		// 		),
-		// 		approve: this.props.phnxContract.methods.approve(
-		// 			this.props.eventsContract.address,
-		// 			balance
-		// 		),
-		// 	},
-		// 	async () => {
-		// 		let temp = await this.allowance();
-		// 		if ((await this.allowance()) == 0) {
-		// 			this.handleClickOpen();
-		// 		} else {
-		// 			this.props.inquire(
-		// 				this.props.id,
-		// 				this.state.fee,
-		// 				this.state.token,
-		// 				this.state.openEvents_address,
-		// 				this.state.buyticket,
-		// 				this.state.approve
-		// 			);
-		// 		}
-		// 	}
-		// );
+			console.log("balance in eventsPage",balance)
+
+		this.setState(
+			{
+				fee: this.state.blockChainEvent[2],
+				token: this.state.blockChainEvent[3],
+				openEvents_address: Open_events_Address,
+				buyticket: this.props.eventsContract.methods.buyTicket(
+					[this.props.match.params.id,0,"karachi"]
+				),
+				approve: this.props.phnxContract.methods.approve(
+					Open_events_Address,
+					balance
+				),
+			},
+			async () => {
+				// let temp = await this.allowance();
+				if ((await this.allowance()) == 0) {
+					this.handleClickOpen();
+				} else {
+					this.props.inquire(
+						this.props.id,
+						this.state.fee,
+						this.state.token,
+						this.state.openEvents_address,
+						this.state.buyticket,
+						this.state.approve
+					);
+				}
+			}
+		);
 	};
 
 	getLocation = () => {
