@@ -84,12 +84,9 @@ class TopicLandingPage extends Component {
 			Filtered_Events_length: 0,
 			hideEvent: [],
 			disabledBuying: false,
+			eventCount:0,
 			dateNow: "",
 		};
-
-		this.contracts = context.drizzle.contracts;
-		this.eventCount =
-			this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 		this.theTopic = this.getTopicData();
@@ -111,6 +108,7 @@ class TopicLandingPage extends Component {
 	goBack() {
 		this.props.history.goBack();
 	}
+	
 
 	componentDidUpdate() {}
 
@@ -456,14 +454,11 @@ class TopicLandingPage extends Component {
 		let body = <Loading />;
 		const topic = this.theTopic;
 
-		if (
-			typeof this.props.contracts["DaoEvents"].getEventsCount[
-				this.eventCount
-			] !== "undefined"
-		) {
+		// if (
+		// this.state.active_length == 0
+		// ) {
 			let count = this.state.active_length;
 			if (this.state.loading) {
-				// console.log("graph loading",this.state.loading)
 				body = <PhoenixDAOLoader />;
 			} else if (count === 0 && !this.state.loading) {
 				body = (
@@ -589,7 +584,6 @@ class TopicLandingPage extends Component {
 					);
 				}
 			}
-		}
 
 		return (
 			<React.Fragment>
@@ -806,16 +800,16 @@ class TopicLandingPage extends Component {
 	}
 }
 
-TopicLandingPage.contextTypes = {
-	drizzle: PropTypes.object,
-};
+// TopicLandingPage.contextTypes = {
+// 	drizzle: PropTypes.object,
+// };
 
-const mapStateToProps = (state) => {
-	return {
-		contracts: state.contracts,
-		accounts: state.accounts,
-	};
-};
+// const mapStateToProps = (state) => {
+// 	return {
+// 		contracts: state.contracts,
+// 		accounts: state.accounts,
+// 	};
+// };
 
-const AppContainer = drizzleConnect(TopicLandingPage, mapStateToProps);
-export default withStyles(useStyles)(AppContainer);
+// const AppContainer = drizzleConnect(TopicLandingPage, mapStateToProps);
+export default withStyles(useStyles)(TopicLandingPage);

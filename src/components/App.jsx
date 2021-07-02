@@ -34,7 +34,7 @@ import Notify from "./Notify";
 import PropTypes from "prop-types";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
-import { INFURA_URL,INFURA_WEB_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
+import { INFURA_URL, INFURA_WEB_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 import {
@@ -61,7 +61,7 @@ class App extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {}
+		} catch (e) { }
 		super(props);
 		this.state = {
 			sent_tx: [],
@@ -92,7 +92,7 @@ class App extends Component {
 		this.initializeContract = this.initializeContract.bind(this);
 	}
 	async initializeContract() {
-		try{
+		try {
 			const web3 = new Web3(
 				// new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
 				window.ethereum
@@ -110,8 +110,8 @@ class App extends Component {
 		
 		}catch(err){
 			console.log("error initializing the contract",err)
+
 		}
-		
 	}
 
 	async componentWillMount() {
@@ -121,7 +121,7 @@ class App extends Component {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
-			console.log("accounts",accounts)
+			console.log("accounts", accounts)
 			if (accounts.length == 0) {
 				localStorage.removeItem("account");
 			}
@@ -161,7 +161,7 @@ class App extends Component {
 				console.log("accounts I am here2")
 				web3 = new Web3(ethereum);
 				const accounts = await web3.eth.getAccounts();
-				console.log("accounts in loadBlockchainData",accounts)
+				console.log("accounts in loadBlockchainData", accounts)
 				const check = localStorage.getItem("account");
 				if (!check) {
 					// window.location.reload();
@@ -174,7 +174,7 @@ class App extends Component {
 					new Web3.providers.HttpProvider(INFURA_URL)
 				);
 			}
-			window.ethereum.on("connect", function (accounts) {});
+			window.ethereum.on("connect", function (accounts) { });
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
 				window.location.reload();
@@ -239,7 +239,7 @@ class App extends Component {
 				() => this.buy()
 			);
 		} else {
-			toast(<Notify  text="😓 Wrong Network, Please Connect to Rinkeby Network." />, {
+			toast(<Notify text="😓 Wrong Network, Please Connect to Rinkeby Network." />, {
 				position: "bottom-right",
 				autoClose: true,
 				pauseOnHover: true,
@@ -261,7 +261,7 @@ class App extends Component {
 						this.setState({ disabledStatus: true });
 
 						toast(<Notify hash={hash} text="Preparing your ticket...🚀"
-						icon="fa fa-ticket-alt" />, {
+							icon="fa fa-ticket-alt" />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -338,7 +338,7 @@ class App extends Component {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
-							
+
 						});
 					}
 				})
@@ -349,7 +349,7 @@ class App extends Component {
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
 								<Notify
-								text={"Transaction successfull!\nYou can buy a ticket now."}
+									text={"Transaction successfull!\nYou can buy a ticket now."}
 									hash={txreceipt.transactionHash}
 								/>,
 								{
@@ -387,7 +387,7 @@ class App extends Component {
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
 						toast(<Notify hash={hash} text="Preparing your ticket...🚀"
-						icon="fa fa-ticket-alt fa-3x" color="#413AE2"/>, {
+							icon="fa fa-ticket-alt fa-3x" color="#413AE2" />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -455,7 +455,7 @@ class App extends Component {
 							upload: false,
 							done: true,
 						});
-						toast(<Notify icon="fas fa-edit" hash={hash}  text={(type==="create"?"Creating":"Updating" )+"your Event..." }/>, {
+						toast(<Notify icon="fas fa-edit" hash={hash} text={(type === "create" ? "Creating" : "Updating") + "your Event..."} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -473,10 +473,10 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-													.returnValues
+												.returnValues
 											: txreceipt.events
-													.NewAndUpdatedEvent
-													.returnValues
+												.NewAndUpdatedEvent
+												.returnValues
 									}
 									icon="fas fa-check-circle fa-3x"
 									link="checkout your event here"
@@ -546,7 +546,7 @@ class App extends Component {
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
 								<Notify
-								text="10,000 PHNX recieved! Check your balance here."
+									text="10,000 PHNX recieved! Check your balance here."
 									hash={txreceipt.transactionHash}
 								/>,
 								{
@@ -656,9 +656,9 @@ class App extends Component {
 							)}
 						/>
 					</Switch>
-					</div>
+				</div>
 			);
-							}
+		}
 
 		// uncomment this for test
 
@@ -691,8 +691,8 @@ class App extends Component {
 		// 					/>
 		// 				)}
 		// 			/>
-					
-				
+
+
 		// 			<Route
 		// 				exact
 		// 				path="/event/:page/:id"
@@ -705,7 +705,7 @@ class App extends Component {
 		// 					/>
 		// 				)}
 		// 			/>
-					
+
 		// 			<Route
 		// 				exact
 		// 				path="/topics"
@@ -733,7 +733,7 @@ class App extends Component {
 		// 				path="/location/:page"
 		// 				component={LocationLandingPage}
 		// 			/>
-					
+
 		// 			<Route
 		// 				exact
 		// 				path="/guide"
@@ -763,7 +763,7 @@ class App extends Component {
 		// 			/>
 		// 			<Route path="*" exact component={PageNotFound} />
 		// 		</Switch>
-				
+
 		// 		</div>
 		// 	);
 		// 	connecting = true;
@@ -800,7 +800,7 @@ class App extends Component {
 							/>
 						)}
 					/>
-					{/* <Route
+					<Route
 						exact
 						path="/favorite/:page"
 						render={(props) => (
@@ -815,6 +815,19 @@ class App extends Component {
 					/>
 					<Route
 						exact
+						path="/mytickets/:page"
+						render={(props) => (
+							<MyTickets
+								{...props}
+								executeScroll={this.executeScroll}
+								eventsContract={this.state.eventsContract}
+
+							/>
+						)}
+					/>
+					{/* 
+					<Route
+						exact
 						path="/pastevents/:page"
 						render={(props) => (
 							<PastEvents
@@ -823,16 +836,7 @@ class App extends Component {
 							/>
 						)}
 					/>
-					<Route
-						exact
-						path="/mytickets/:page"
-						render={(props) => (
-							<MyTickets
-								{...props}
-								executeScroll={this.executeScroll}
-							/>
-						)}
-					/>
+				
 
 					<Route
 						exact
@@ -870,18 +874,7 @@ class App extends Component {
 						)}
 					/>
 
-					<Route
-						exact
-						path="/myevents/:page"
-						render={(props) => (
-							<MyEvents
-								{...props}
-								executeScroll={this.executeScroll}
-								inquire={this.inquireBuy}
-								disabledStatus={this.state.disabledStatus}
-							/>
-						)}
-					/>
+					
 					<Route
 						exact
 						path="/event-stat/:page/:id"
@@ -894,6 +887,18 @@ class App extends Component {
 							/>
 						)}
 					/> */}
+					<Route
+						exact
+						path="/myevents/:page"
+						render={(props) => (
+							<MyEvents
+								{...props}
+								executeScroll={this.executeScroll}
+								inquire={this.inquireBuy}
+								disabledStatus={this.state.disabledStatus}
+							/>
+						)}
+					/>
 					<Route
 						exact
 						path="/event/:page/:id"
@@ -909,21 +914,23 @@ class App extends Component {
 							/>
 						)}
 					/>
-					{/* <Route
+					<Route
 						exact
-						path="/token"
+						path="/calendar"
 						render={(props) => (
-							<Token
+							<Calendars
 								{...props}
-								getPhoenixDAO={this.getPhoenixDAO}
+								executeScroll={this.executeScroll}
+								eventsContract={this.state.eventsContract}
+
 							/>
 						)}
 					/>
 					<Route
 						exact
-						path="/topics"
-						//  component={TopicsLandingPage}
-						component={(props) => <TopicsLandingPage {...props} />}
+						path="/analytics"
+						component={Analytics}
+						account={this.state.account}
 					/>
 					<Route
 						exact
@@ -938,29 +945,10 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/locations"
-						component={LocationsLandingPage}
-					/>
-					<Route
-						exact
-						path="/location/:page"
-						component={LocationLandingPage}
-					/>
-					<Route
-						exact
-						path="/calendar"
-						render={(props) => (
-							<Calendars
-								{...props}
-								executeScroll={this.executeScroll}
-							/>
-						)}
-					/>
-					<Route
-						exact
-						path="/analytics"
-						component={Analytics}
-						account={this.state.account}
+						path="/topics"
+						//  component={TopicsLandingPage}
+						component={(props) => <TopicsLandingPage {...props} eventsContract={this.state.eventsContract}
+						/>}
 					/>
 					<Route
 						exact
@@ -971,6 +959,31 @@ class App extends Component {
 						disabledStatus={this.state.disabledStatus}
 						toggleDisabling={this.toggleDisabling}
 					/>
+					{/* <Route
+						exact
+						path="/token"
+						render={(props) => (
+							<Token
+								{...props}
+								getPhoenixDAO={this.getPhoenixDAO}
+							/>
+						)}
+					/>
+					
+				
+					<Route
+						exact
+						path="/locations"
+						component={LocationsLandingPage}
+					/>
+					<Route
+						exact
+						path="/location/:page"
+						component={LocationLandingPage}
+					/>
+					*/}
+				
+					
 					<Route
 						exact
 						path="/guide"
@@ -997,7 +1010,7 @@ class App extends Component {
 						render={(props) => (
 							<Terms executeScroll={this.executeScroll} />
 						)}
-					/> */}
+					/> 
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>
 			);
