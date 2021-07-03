@@ -61,6 +61,8 @@ import EventPreviewPage from "./EventPreviewPage";
 import phnxLogo from "../Images/phnx.png";
 import dollarIcon from "../Images/dollar.png";
 import altIcon from "../Images/altIcon.png";
+import editIcon from "../Images/editIcon.png";
+import deleteIcon from "../Images/deleteIcon.png";
 
 const QontoConnector = withStyles({
 	alternativeLabel: {
@@ -222,6 +224,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 	const [open, setOpen] = useState(false);
 	const [categories, setCategories] = useState([]);
 	const [addAnotherCat, setaddAnotherCat] = useState(false);
+	const [ticketCategory, setTicketCategory] = useState(0);
 
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
@@ -248,6 +251,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 			{ label: "OL", style: "ordered-list-item" },
 		],
 	};
+
 	const handleClickOpen = () => {
 		setOpen(true);
 	};
@@ -276,10 +280,9 @@ const MyStepper = ({ handleCreateEvent }) => {
 
 	//next button steeper
 	const handleNext = (fields) => {
-		console.log("activesteps", activeStep);
-		console.log("state", state);
+		// console.log("activesteps", activeStep);
+		// console.log("state", state);
 		console.log("fields", fields);
-
 		// for (const key of Object.keys(fields)) {
 		// 	console.log(key, fields[key]);
 		// 	setState((prevState) => ({
@@ -319,7 +322,8 @@ const MyStepper = ({ handleCreateEvent }) => {
 		setRichValue(value);
 	};
 
-	const handleSaveCatogory = () => {
+	const handleSaveCatogory = (fields) => {
+		console.log(fields);
 		let obj = {};
 		let arr = categories;
 		arr.push(obj);
@@ -1041,7 +1045,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 							<br />
 							<br />
 
-							{/* conditonal rendering for event category -free -single_paid -multiple-paid */}
+							{/* conditonal rendering for event category - free - single_paid - multiple-paid */}
 							<div>
 								{category === "free" ? (
 									<div>
@@ -1151,7 +1155,6 @@ const MyStepper = ({ handleCreateEvent }) => {
 															classes.margin
 														}
 														id="input-with-icon-textfield"
-														// label="TextField"
 														type="number"
 														variant="outlined"
 														InputProps={{
@@ -1206,7 +1209,6 @@ const MyStepper = ({ handleCreateEvent }) => {
 															classes.margin
 														}
 														id="input-with-icon-textfield"
-														// label="TextField"
 														type="number"
 														variant="outlined"
 														InputProps={{
@@ -1323,10 +1325,11 @@ const MyStepper = ({ handleCreateEvent }) => {
 									</div>
 								) : (
 									<div>
-										{/*paid multiple - ticket category box */}
+										{/*paid multiple - ticket category box*/}
 										{categories.map((cat, index) => {
 											return (
 												<div key={index}>
+													<br />
 													<Grid container spacing={2}>
 														<Grid
 															style={{
@@ -1379,10 +1382,18 @@ const MyStepper = ({ handleCreateEvent }) => {
 															justify="space-evenly"
 														>
 															<Grid item>
-																<EditIcon fontSize="large" />
+																<img
+																	src={
+																		editIcon
+																	}
+																/>
 															</Grid>
 															<Grid item>
-																<DeleteForeverOutlinedIcon fontSize="large" />
+																<img
+																	src={
+																		deleteIcon
+																	}
+																/>
 															</Grid>
 														</Grid>
 													</Grid>
@@ -1393,133 +1404,315 @@ const MyStepper = ({ handleCreateEvent }) => {
 
 										{!addAnotherCat ? (
 											<div>
-												{/* ticket name */}
-												<label>TICKET NAME</label>
-												<TextField
-													id="outlined-basic"
-													// label="Event Organizer"
-													fullWidth
-													variant="outlined"
-												/>
-												<br />
-												<br />
-												<label>TICKET PRICE</label>
-												<br />
-												<div
-													style={{
-														display: "flex",
-														justifyContent:
-															"space-between",
-														alignItems: "center",
-													}}
+												<form
+													onSubmit={handleSubmit(
+														handleSaveCatogory
+													)}
 												>
-													<TextField
-														className={
-															classes.margin
-														}
-														id="input-with-icon-textfield"
-														// label="TextField"
-														type="number"
-														variant="outlined"
-														InputProps={{
-															startAdornment: (
-																<InputAdornment position="start">
-																	<AttachMoneyIcon
-																		style={{
-																			color: "#413AE2",
-																		}}
-																	/>
-																</InputAdornment>
-															),
+													{/* ticket name */}
+													<label>TICKET NAME</label>
+													<Controller
+														name={`ticketName${ticketCategory}`}
+														control={control}
+														defaultValue=""
+														render={({
+															field: {
+																onChange,
+																value,
+															},
+															fieldState: {
+																error,
+															},
+														}) => (
+															<TextField
+																id="ticket-name"
+																fullWidth
+																variant="outlined"
+																value={value}
+																onChange={
+																	onChange
+																}
+																error={!!error}
+																helperText={
+																	error
+																		? error.message
+																		: null
+																}
+															/>
+														)}
+														rules={{
+															required:
+																"Please enter ticket name.",
 														}}
 													/>
-													<SyncAltIcon
-														fontSize="large"
+
+													<br />
+													<br />
+
+													<label>TICKET PRICE</label>
+													<br />
+													<div
 														style={{
-															color: "#413AE2",
+															display: "flex",
+															justifyContent:
+																"space-between",
+															alignItems:
+																"center",
 														}}
-													/>
-													<TextField
-														className={
-															classes.margin
-														}
-														id="input-with-icon-textfield"
-														// label="TextField"
-														type="number"
-														variant="outlined"
-														InputProps={{
-															startAdornment: (
-																<InputAdornment position="start">
-																	<AttachMoneyIcon
-																		style={{
-																			color: "#413AE2",
-																		}}
-																	/>
-																</InputAdornment>
-															),
-														}}
-													/>
-												</div>
-												<br />
-												<FormControl component="fieldset">
-													<label>
-														TICKET AVAILABILITY
-													</label>
-													<RadioGroup
-														row
-														aria-label="ticketAvailability"
-														name="ticketAvailability"
-														value={availability}
-														onChange={(e) =>
-															setAvailability(
-																e.target.value
-															)
-														}
 													>
-														<FormControlLabel
-															value="unlimited"
-															control={
-																<Radio color="primary" />
-															}
-															label="Unlimited Tickets"
+														<Controller
+															name={`dollarPrice${ticketCategory}`}
+															control={control}
+															defaultValue=""
+															render={({
+																field: {
+																	onChange,
+																	value,
+																},
+																fieldState: {
+																	error,
+																},
+															}) => (
+																<TextField
+																	className={
+																		classes.margin
+																	}
+																	id="input-with-icon-textfield"
+																	type="number"
+																	variant="outlined"
+																	InputProps={{
+																		startAdornment:
+																			(
+																				<InputAdornment position="start">
+																					<img
+																						src={
+																							dollarIcon
+																						}
+																						alt="dollar sign"
+																					/>
+																				</InputAdornment>
+																			),
+																	}}
+																	value={
+																		value
+																	}
+																	onChange={
+																		onChange
+																	}
+																	error={
+																		!!error
+																	}
+																	helperText={
+																		error
+																			? error.message
+																			: " "
+																	}
+																/>
+															)}
+															rules={{
+																required:
+																	"Price in dollars.",
+															}}
 														/>
-														<FormControlLabel
-															value="limited"
-															control={
-																<Radio color="primary" />
-															}
-															label="Limited Tickets"
-														/>
-													</RadioGroup>
-												</FormControl>
-												{availability ===
-												"unlimited" ? null : (
-													<div>
-														<label>
-															NUMBER OF TICKETS
-														</label>
-														<TextField
-															type="number"
-															id="outlined-basic"
-															// label="Event Organizer"
-															fullWidth
-															variant="outlined"
+
+														<div>
+															<img
+																src={altIcon}
+																alt="alt icon"
+																// style={{
+																// 	marginTop: "auto",
+																// 	marginBottom: "auto",
+																// }}
+															/>
+														</div>
+
+														<Controller
+															name={`phnxPrice${ticketCategory}`}
+															control={control}
+															defaultValue=""
+															render={({
+																field: {
+																	onChange,
+																	value,
+																},
+																fieldState: {
+																	error,
+																},
+															}) => (
+																<TextField
+																	className={
+																		classes.margin
+																	}
+																	id="input-with-icon-textfield"
+																	type="number"
+																	variant="outlined"
+																	InputProps={{
+																		startAdornment:
+																			(
+																				<InputAdornment position="start">
+																					<img
+																						src={
+																							phnxLogo
+																						}
+																						alt="phnx logo"
+																					/>
+																				</InputAdornment>
+																			),
+																	}}
+																	value={
+																		value
+																	}
+																	onChange={
+																		onChange
+																	}
+																	error={
+																		!!error
+																	}
+																	helperText={
+																		error
+																			? error.message
+																			: " "
+																	}
+																/>
+															)}
+															rules={{
+																required:
+																	"Price in PHNX.",
+															}}
 														/>
 													</div>
-												)}
-												<br />
-												{/* save button */}
-												<Button
-													color="primary"
-													variant="outlined"
-													fullWidth
-													className={
-														classes.addAnotherImageBtn
-													}
-													onClick={handleSaveCatogory}
-												>
-													Save
-												</Button>
+
+													<br />
+
+													<FormControl component="fieldset">
+														<label>
+															TICKET AVAILABILITY
+														</label>
+														<Controller
+															name={`ticketAvailability${ticketCategory}`}
+															control={control}
+															defaultValue={
+																availability
+															}
+															render={({
+																field: {
+																	onChange,
+																	value,
+																},
+																fieldState: {
+																	error,
+																},
+															}) => (
+																<RadioGroup
+																	row
+																	aria-label="ticketAvailability"
+																	name="ticketAvailability"
+																	value={
+																		value
+																	}
+																	onChange={(
+																		e
+																	) => {
+																		onChange(
+																			e
+																		);
+																		setAvailability(
+																			e
+																				.target
+																				.value
+																		);
+																	}}
+																>
+																	<FormControlLabel
+																		value="unlimited"
+																		control={
+																			<Radio color="primary" />
+																		}
+																		label="Unlimited Tickets"
+																	/>
+																	<FormControlLabel
+																		value="limited"
+																		control={
+																			<Radio color="primary" />
+																		}
+																		label="Limited Tickets"
+																	/>
+																</RadioGroup>
+															)}
+															rules={{
+																required:
+																	"Please select event availability.",
+															}}
+														/>
+													</FormControl>
+													{availability ===
+													"unlimited" ? null : (
+														<div>
+															<label>
+																NUMBER OF
+																TICKETS
+															</label>
+															<Controller
+																name={`noOfTickets${ticketCategory}`}
+																control={
+																	control
+																}
+																defaultValue=""
+																render={({
+																	field: {
+																		onChange,
+																		value,
+																	},
+																	fieldState:
+																		{
+																			error,
+																		},
+																}) => (
+																	<TextField
+																		type="number"
+																		id="outlined-basic"
+																		// label="Event Organizer"
+																		fullWidth
+																		variant="outlined"
+																		value={
+																			value
+																		}
+																		onChange={
+																			onChange
+																		}
+																		error={
+																			!!error
+																		}
+																		helperText={
+																			error
+																				? error.message
+																				: null
+																		}
+																	/>
+																)}
+																rules={{
+																	required:
+																		"Please enter number of tickets.",
+																}}
+															/>
+														</div>
+													)}
+
+													<br />
+
+													{/* save button */}
+													<Button
+														color="primary"
+														variant="outlined"
+														fullWidth
+														className={
+															classes.addAnotherImageBtn
+														}
+														type="submit"
+													>
+														Save
+													</Button>
+												</form>
 												<br />
 												<br />
 											</div>
@@ -1534,11 +1727,14 @@ const MyStepper = ({ handleCreateEvent }) => {
 													startIcon={
 														<AddIcon fontSize="large" />
 													}
-													onClick={() =>
+													onClick={() => {
 														setaddAnotherCat(
 															!addAnotherCat
-														)
-													}
+														);
+														setTicketCategory(
+															ticketCategory + 1
+														);
+													}}
 												>
 													Add another Ticket Category
 												</Button>
