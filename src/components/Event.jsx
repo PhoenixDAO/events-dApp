@@ -515,7 +515,6 @@ class Event extends Component {
 							event_data={event_data}
 							date={date}
 							image={image}
-							locations={locations}
 							myEvent={this.props.myEvents}
 							myEventStatURL={myEventStatURL}
 							titleURL={titleURL}

@@ -305,6 +305,8 @@ class Favorites extends Component {
     //     }
     // };
     getUserFavoritesEvent = async () => {
+        console.log("loading2", this.state.loading);
+
         try {
             const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`, { address: this.props.accounts[0], networkId: this.props.web3.networkId });
             this.setState({
@@ -315,13 +317,10 @@ class Favorites extends Component {
         } catch (error) {
             console.log("check error", error);
         }
+        // this.setState({reload:false});
     };
     reloadData = () => {
         this.setState({ reload: !this.state.reload })
-        if (this.state.reload) {
-            this.getUserFavoritesEvent();
-
-        }
     }
     onTabChange = (event, newValue) => {
         this.setState({ selectedTab: newValue });
@@ -405,11 +404,9 @@ class Favorites extends Component {
                             eventData={favoriteEvents[i]}
                             myFavorites={true}
                             reloadData={this.reloadData}
-                            reload={this.state.reload}
                         />
                     );
                 }
-                console.log("loading2", this.state.loading);
 
                 let pagination = "";
                 if (pages > 1) {
@@ -553,10 +550,10 @@ class Favorites extends Component {
         this.filterHideEvent();
         this.getUserFavoritesEvent();
     }
-    componentDidUpdate() {
-        if (this.state.reloadData) {
-            console.log("here")
-            this.getUserFavoritesEvent();
+    componentDidUpdate(prevProps,prevState) {
+        if (prevState.reload !== this.state.reload) {
+            console.log("prev",prevState,this.state.reload);
+                        this.getUserFavoritesEvent();
         }
     }
     componentWillUnmount() {
