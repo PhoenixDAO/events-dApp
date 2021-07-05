@@ -349,7 +349,8 @@ class App extends Component {
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
 								<Notify
-									text={"Transaction successfull!\nYou can buy a ticket now."}
+									text={"Transaction successfull!\nYou can buy a ticket now." } icon="fas fa-check-circle fa-3x"
+									color="#413AE2"
 									hash={txreceipt.transactionHash}
 								/>,
 								{
@@ -478,6 +479,7 @@ class App extends Component {
 												.NewAndUpdatedEvent
 												.returnValues
 									}
+									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
 									link="checkout your event here"
 									text="Transaction success!"

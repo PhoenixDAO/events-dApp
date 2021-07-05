@@ -17,7 +17,6 @@ function Notify({ text, icon, error ,link,color,createdEvent,url,hash}) {
       .join(' ');
 	  titleURL = "/event-stat/"+pagetitle+"/" + createdEvent.eventId;
 	}
-	console.log("text",text,"icon",icon)
 	if (error) {
 		return (
 			<div className="notify2">

@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     alignContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop:"80px",
     '& > * + *': {
       marginLeft: theme.spacing(2),
     },

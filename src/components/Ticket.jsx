@@ -8,9 +8,7 @@ import ipfs from "../utils/ipfs";
 import Notify from "./Notify";
 import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
-import Web3 from "web3";
-import { INFURA_WEB_URL } from "../config/const.js";
-import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+import { INFURA_WEB_URL, graphURL } from "../config/const.js";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { explorerWithAddress } from "../config/const";
@@ -24,15 +22,12 @@ var QRCode = require("qrcode.react");
 class Ticket extends Component {
 	constructor(props, context) {
 		super(props);
-		this.contracts = context.drizzle.contracts;
-		this.ticket = this.contracts["DaoEvents"].methods.getTicket.cacheCall(
-			this.props.id
-		);
-		this.web3=new Web3(
-			new Web3.providers.WebsocketProvider(
-				INFURA_WEB_URL
-			)
-		);
+		// this.contracts = context.drizzle.contracts;
+		// this.web3=new Web3(
+		// 	new Web3.providers.WebsocketProvider(
+		// 		INFURA_WEB_URL
+		// 	)
+		// );
 		this.event = null;
 		this.address = null;
 		this.account = this.props.accounts[0];
@@ -48,10 +43,17 @@ class Ticket extends Component {
 			wrong_address: false,
 			disabledStatus: false,
 			hideEvent: [],
+			eventId: "",
 			blockie: "/images/PhoenixDAO.png",
 		};
 		this.isCancelled = false;
 		this.sendTicket = this.sendTicket.bind(this)
+	}
+	async componentWillMount() {
+		let ticket = await this.props.eventsContract.methods.getTicket(
+			this.props.id
+		).call();
+		this.setState({ eventId: ticket.eventId })
 	}
 	filterHideEvent = async () => {
 		try {
@@ -70,7 +72,7 @@ class Ticket extends Component {
 			this.state.loading === false &&
 			this.state.blockChainEvent !== null
 		) {
-		
+
 
 			this.setState(
 				{
@@ -159,8 +161,8 @@ class Ticket extends Component {
 		});
 	};
 
-	sendTicket = (address,eventId) => {
-		console.log("addres123",address,!this.context.drizzle.web3.utils.isAddress(address))
+	sendTicket = (address, eventId) => {
+		// console.log("addres123",address,!this.context.drizzle.web3.utils.isAddress(address))
 		this.setState({ disabledStatus: true });
 		if (
 			!address ||
@@ -175,7 +177,7 @@ class Ticket extends Component {
 			let txerror = "";
 
 			this.setState({ wrong_address: false });
-			this.contracts["DaoEvents"].methods
+			this.props.eventsContract.methods
 				.safeTransferFrom(
 					this.props.accounts[0],
 					address,
@@ -185,7 +187,7 @@ class Ticket extends Component {
 				.on("transactionHash", (transactionHash) => {
 					if (transactionHash !== null) {
 						toast(<Notify hash={transactionHash} icon="fas fa-check-circle fa-3x"
-						color="#413AE2" text={"Transaction sent!\nSending your ticket... 🚀"}/>, {
+							color="#413AE2" text={"Transaction sent!\nSending your ticket... 🚀"} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -215,7 +217,7 @@ class Ticket extends Component {
 							);
 						}
 					}
-
+					this.props.reloadData();
 					this.setState({ disabledStatus: false });
 				})
 				.on("error", (error) => {
@@ -235,25 +237,67 @@ class Ticket extends Component {
 
 	updateEvent = async () => {
 		if (
-			typeof this.props.contracts["DaoEvents"].getTicket[this.ticket] !=
-			"undefined" && typeof this.props.contracts["DaoEvents"].getTicket[this.ticket].value !=
-			"undefined" &&
-			this.state.blockChainEvent === null
+			// typeof this.props.eventsContract.getTicket[this.ticket] !=
+			// "undefined" && typeof this.props.eventsContract.getTicket[this.ticket].value !=
+			// "undefined" &&
+			this.state.blockChainEvent === null && this.state.eventId != ""
 		) {
-			console.log("in ticket.js",this.props.contracts["DaoEvents"].getTicket[this.ticket])
-			this.event = await this.contracts[
-				"DaoEvents"
-			].methods.events.cacheCall(
-				this.props.contracts["DaoEvents"].getTicket[this.ticket]
-					.value[0]
-			);
-			const openEvents = new this.web3.eth.Contract(
-				Open_events_ABI,
-				Open_events_Address
-			);
-			const blockChainEvent = await openEvents.methods.events(this.props.contracts["DaoEvents"].getTicket[this.ticket]
-				.value[0]).call()
-			this.setState({ blockChainEvent: blockChainEvent, blockChainEventLoaded: true })
+			// console.log("in ticket.js",this.props.eventsContract.getTicket[this.ticket])
+			// this.event = await this.props.eventsContract.methods.events(this.state.eventId).call();
+			// const openEvents = new this.web3.eth.Contract(
+			// 	Open_events_ABI,
+			// 	Open_events_Address
+			// );
+			// console.log("this.props.")
+			await axios({
+				url: graphURL,
+				method: "post",
+				data: {
+					query: `
+					  {
+						events(where : {eventId: ${this.state.eventId}}) {
+							id
+							eventId
+							owner
+							name
+							topic
+							location
+							ipfsHash
+							tktLimited
+							tktTotalQuantity
+							tktTotalQuantitySold
+							oneTimeBuy
+							token
+							time
+							duration
+							catTktQuantity
+							catTktQuantitySold	
+							categories
+							prices
+							eventRevenueInDollar
+							eventRevenueInPhnx
+						}
+					  }
+					  `,
+				},
+			})
+				.then((graphEvents) => {
+					console.log("GraphQL query response of events in eventPage", graphEvents.data.data.events[0])
+					this.setState({
+						blockChainEvent: graphEvents.data.data.events[0],
+						blockChainEventLoaded: true,
+					});
+
+				}).catch((err) => {
+					console.log("Error in GraphQL query response of events in eventPage", err)
+					this.setState({
+						blockChainEvent: {},
+						blockChainEventLoaded: true,
+					});
+				})
+			// 	const blockChainEvent = await this.props.eventsContract.methods.events(this.state.eventId).call()
+			// 	console.log('blockChainEvent', blockChainEvent)
+			// this.setState({ blockChainEvent: blockChainEvent, blockChainEventLoaded: true })
 
 
 		}
@@ -261,10 +305,10 @@ class Ticket extends Component {
 			this.updateIPFS();
 		}
 	};
-	
+
 
 	downloadQR = () => {
-		let ticket_data = this.props.contracts["DaoEvents"].getTicket[
+		let ticket_data = this.props.eventsContract.getTicket[
 			this.ticket
 		].value;
 
@@ -293,25 +337,26 @@ class Ticket extends Component {
 		);
 		if (
 			this.state.blockChainEvent !== null &&
-			typeof this.props.contracts["DaoEvents"].events[this.event] !==
-			"undefined"
-		) 
-		{
-			let ticket_data = this.props.contracts["DaoEvents"].getTicket[
-				this.ticket
-			].value;
+			this.state.eventId != ""
+			// &&
+			// typeof this.props.eventsContract.events[this.event] !==
+			// "undefined"
+		) {
+			// let ticket_data = this.props.eventsContract.getTicket[
+			// 	this.ticket
+			// ].value;
 			let event_data = this.state.blockChainEvent
-			
+
 			let reported = false;
 			for (let j = 0; j < this.state.hideEvent.length; j++) {
 				if (
-					ticket_data[0] == this.state.hideEvent[j].id
+					this.state.eventId == this.state.hideEvent[j].id
 				) {
 					reported = true;
 				}
 			}
 
-			let rawTitle = event_data[0];
+			let rawTitle = event_data.name;
 			var titleRemovedSpaces = rawTitle;
 			titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
 
@@ -320,16 +365,16 @@ class Ticket extends Component {
 				.split(" ")
 				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 				.join(" ");
-			let titleURL = "/event/" + pagetitle + "/" + ticket_data[0];
-			let myEventStatURL = "/event-stat/" + pagetitle + "/" + ticket_data[0];
+			let titleURL = "/event/" + pagetitle + "/" + this.state.eventId;
+			// let myEventStatURL = "/event-stat/" + pagetitle + "/" + ticket_data[0];
 			let myEvent = false;
 			if (event_data.owner.toLowerCase() == this.account.toLowerCase()) {
 				myEvent = true;
 			}
 			let shareUrl = window.location.origin + titleURL;
-			let locations = this.getLocation();
-			let date = new Date(parseInt(event_data[1], 10) * 1000);
-			let max_seats = event_data.limited ? event_data.seats : "∞";
+			// let locations = this.getLocation();
+			let date = new Date(parseInt(event_data.time, 10) * 1000);
+			let max_seats = event_data.tktLimited[0] ? event_data.catTktQuantity[0] : "∞"; 
 			let image = this.getImage();
 
 			// if (this.state.card_tab === 1) {
@@ -355,10 +400,10 @@ class Ticket extends Component {
 
 			// } else {
 			// 	let image = this.getImage();
-			// 	let ticket_data = this.props.contracts["DaoEvents"].getTicket[
+			// 	let ticket_data = this.props.eventsContract.getTicket[
 			// 		this.ticket
 			// 	].value;
-			// 	let event_data = this.props.contracts["DaoEvents"].events[
+			// 	let event_data = this.props.eventsContract.events[
 			// 		this.event
 			// 	].value;
 			// 	let warning = this.state.wrong_address ? "is-invalid" : "";
@@ -396,18 +441,17 @@ class Ticket extends Component {
 
 			// }
 			body = (
-		<EventCard
+				<EventCard
 					event_data={event_data}
 					date={date}
 					image={image}
-					locations={locations}
 					ticket={true}
-					myEventStatURL={myEventStatURL}
+					// myEventStatURL={myEventStatURL}
 					titleURL={titleURL}
 					max_seats={max_seats}
 					revenue={this.state.revenue}
 					sendTicket2={this.sendTicket}
-					eventId= {this.props.id}
+					eventId={this.props.id}
 				/>
 				// <div className="card w-100">
 				// 	<div className="card-header">
@@ -460,7 +504,7 @@ class Ticket extends Component {
 	}
 
 	componentDidMount() {
-		console.log("this.ticket in Ticket",this.ticket)
+		// console.log("this.ticket in Ticket",this.ticket)
 		this.updateEvent();
 		this.filterHideEvent();
 
@@ -477,7 +521,7 @@ Ticket.contextTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		contracts: state.contracts,
+		// contracts: state.contracts,
 		accounts: state.accounts,
 	};
 };

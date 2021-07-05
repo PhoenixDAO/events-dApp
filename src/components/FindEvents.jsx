@@ -229,7 +229,7 @@ class FindEvents extends Component {
 					const dateTime = Date.now();
 					const dateNow = Math.floor(dateTime / 1000);
 					this.setState({ loading: true });
-
+console.log("events", graphEvents.data.data.events);
 					let newsort = graphEvents.data.data.events
 						.concat()
 						.sort((a, b) => b.blockNumber - a.blockNumber)

@@ -139,7 +139,6 @@ const EventCard = (props, context) => {
 	}, [favoriteEvent]);
 	const classes = useStyles();
 	const [Icon, setIcon] = useState(false);
-
 	const [open, setOpen] = useState(false);
 	const [open2, setOpen2] = useState(false);
 	// changeIcon(favoriteEvent);
@@ -270,13 +269,12 @@ const EventCard = (props, context) => {
 										<span>&nbsp;</span>
 										{event_data.tktTotalQuantitySold}/{event_data.tktTotalQuantity}
 									</Typography>
-									{!myEvent ? (
+									{!myEvent && !ticket ? (
 										<Typography
 											className={classes.FavoriteIcon}
 											component="button"
 											onClick={addTofavorite}
 										>
-
 											{Icon ? <Favorite fontSize="small" style={{ color: "#413AE2" }} /> : <FavoriteBorder fontSize="small" />}
 											{Icon}
 										</Typography>)
@@ -378,7 +376,7 @@ const EventCard = (props, context) => {
 							>
 								<LocationOnOutlined fontSize="small" />{" "}
 								<span>&nbsp;</span>
-								{locations}
+								{event_data.location}
 							</Typography>
 							{/* For my events page */}
 							{myEvent ? (
