@@ -323,12 +323,28 @@ const MyStepper = ({ handleCreateEvent }) => {
 	};
 
 	const handleSaveCatogory = (fields) => {
-		console.log(fields);
-		let obj = {};
+		console.log(fields, fields[`ticketName${ticketCategory}`]);
+
+		let obj = {
+			ticketName: fields[`ticketName${ticketCategory}`],
+			dollarPrice: fields[`dollarPrice${ticketCategory}`],
+			phnxPrice: fields[`phnxPrice${ticketCategory}`],
+			ticketAvailability: fields[`ticketAvailability${ticketCategory}`],
+			noOfTickets: fields[`noOfTickets${ticketCategory}`],
+		};
+
 		let arr = categories;
 		arr.push(obj);
+		console.log("arr", arr);
 		setCategories(arr);
 		setaddAnotherCat(!addAnotherCat);
+	};
+
+	const handleEditTicketCategory = (index) => {
+		console.log("delete clicked");
+		let arr = categories;
+		arr.splice(index, 1);
+		setCategories([...arr]);
 	};
 
 	function getStepContent(stepIndex) {
@@ -1327,14 +1343,14 @@ const MyStepper = ({ handleCreateEvent }) => {
 									<div>
 										{/*paid multiple - ticket category box*/}
 										{categories.map((cat, index) => {
+											// console.log("cat", cat);
 											return (
 												<div key={index}>
 													<br />
 													<Grid container spacing={2}>
 														<Grid
 															style={{
-																backgroundColor:
-																	"goldenrod",
+																background: `linear-gradient(270deg, rgba(94, 91, 255, 0.12) 0%, rgba(124, 118, 255, 0) 131.25%)`,
 																padding: 15,
 															}}
 															container
@@ -1352,21 +1368,32 @@ const MyStepper = ({ handleCreateEvent }) => {
 																direction="column"
 															>
 																<h4>
-																	Bronze
-																	Ticket
+																	{
+																		cat.ticketName
+																	}
+																	{` Ticket`}
 																</h4>
 																<h6>
-																	Unlimited
-																	Tickets
+																	{cat.noOfTickets
+																		? cat.noOfTickets
+																		: `Unlimited  Tickets`}
 																</h6>
 															</Grid>
 															<Grid
 																item
 																direction="column"
 															>
-																<h2>$300</h2>
+																<h2>
+																	$
+																	{
+																		cat.dollarPrice
+																	}
+																</h2>
 																<h6>
-																	3000PHNX
+																	{
+																		cat.phnxPrice
+																	}
+																	PHNX
 																</h6>
 															</Grid>
 														</Grid>
@@ -1382,18 +1409,30 @@ const MyStepper = ({ handleCreateEvent }) => {
 															justify="space-evenly"
 														>
 															<Grid item>
-																<img
-																	src={
-																		editIcon
-																	}
-																/>
+																<Button>
+																	<img
+																		src={
+																			editIcon
+																		}
+																		alt="editIcon"
+																	/>
+																</Button>
 															</Grid>
 															<Grid item>
-																<img
-																	src={
-																		deleteIcon
+																<Button
+																	onClick={() =>
+																		handleEditTicketCategory(
+																			index
+																		)
 																	}
-																/>
+																>
+																	<img
+																		src={
+																			deleteIcon
+																		}
+																		alt="deleteIcon"
+																	/>
+																</Button>
 															</Grid>
 														</Grid>
 													</Grid>
