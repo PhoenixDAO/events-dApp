@@ -259,6 +259,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 	const handleClose = () => {
 		setOpen(false);
 	};
+
 	const handleChange = (event) => {
 		setValue(event.target.value);
 	};
@@ -323,7 +324,8 @@ const MyStepper = ({ handleCreateEvent }) => {
 	};
 
 	const handleSaveCatogory = (fields) => {
-		console.log(fields, fields[`ticketName${ticketCategory}`]);
+		console.log(fields);
+		console.log("ticketCategory", ticketCategory);
 
 		let obj = {
 			ticketName: fields[`ticketName${ticketCategory}`],
@@ -334,17 +336,31 @@ const MyStepper = ({ handleCreateEvent }) => {
 		};
 
 		let arr = categories;
+		// arr.splice(ticketCategory, 1, obj);
+
 		arr.push(obj);
 		console.log("arr", arr);
-		setCategories(arr);
+		setCategories([...arr]);
 		setaddAnotherCat(!addAnotherCat);
 	};
 
-	const handleEditTicketCategory = (index) => {
+	const handleAddAnotherCategory = () => {
+		setaddAnotherCat(!addAnotherCat);
+		setTicketCategory(ticketCategory + 1);
+		// setTicketCategory(categories.length + 1);
+	};
+
+	const handleDeleteTicketCategory = (index) => {
 		console.log("delete clicked");
 		let arr = categories;
 		arr.splice(index, 1);
 		setCategories([...arr]);
+	};
+
+	const handleEditTicketCategory = (index) => {
+		console.log("edit index", index);
+		setaddAnotherCat(!addAnotherCat);
+		setTicketCategory(index);
 	};
 
 	function getStepContent(stepIndex) {
@@ -1409,7 +1425,13 @@ const MyStepper = ({ handleCreateEvent }) => {
 															justify="space-evenly"
 														>
 															<Grid item>
-																<Button>
+																<Button
+																	onClick={() =>
+																		handleEditTicketCategory(
+																			index
+																		)
+																	}
+																>
 																	<img
 																		src={
 																			editIcon
@@ -1421,7 +1443,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 															<Grid item>
 																<Button
 																	onClick={() =>
-																		handleEditTicketCategory(
+																		handleDeleteTicketCategory(
 																			index
 																		)
 																	}
@@ -1766,14 +1788,9 @@ const MyStepper = ({ handleCreateEvent }) => {
 													startIcon={
 														<AddIcon fontSize="large" />
 													}
-													onClick={() => {
-														setaddAnotherCat(
-															!addAnotherCat
-														);
-														setTicketCategory(
-															ticketCategory + 1
-														);
-													}}
+													onClick={
+														handleAddAnotherCategory
+													}
 												>
 													Add another Ticket Category
 												</Button>
