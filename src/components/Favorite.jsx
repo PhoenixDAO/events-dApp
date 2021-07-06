@@ -13,6 +13,7 @@ import { Grid } from "@material-ui/core";
 
 import SearchBar from "./common/SearchBar";
 import { ThumbsUpDownOutlined } from "@material-ui/icons";
+import  Header  from "./common/Header";
 
 const useStyles = (theme) => ({
     sticky: {
@@ -526,12 +527,7 @@ class Favorites extends Component {
         return (
             <React.Fragment>
                 <div>
-                    <Grid className="header3">
-                        <h2>
-                            Favourites
-                        				</h2>
-                        <SearchBar />
-                    </Grid>
+                <Header title="Favourites" searchBar={true}/>
                     <div ref={this.myRef} />
 
                     {body}

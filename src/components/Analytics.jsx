@@ -3,13 +3,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 import { Grid, FormControl, Select } from "@material-ui/core";
-import BuyPHNXButton from "./common/BuyPhnxButton";
 // import {Graph} from "../utils/graph";
 import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
 import { Card } from "./common/Card";
 import { getEvents } from "../utils/getEvents";
 import { getUserDetails } from "../config/serverAPIs";
+import Header from "./common/Header";
+import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
 	content: {
@@ -343,9 +345,71 @@ const Analytics = (props, context) => {
 		}
 	}
 
-	const getPhnxRevenue = () => {
-		dataset = [1, 2, 34, 0, 6, 7];
-		setGraphData(dataset);
+	const getPhnxRevenue = async () => {
+		await axios({
+			url: graphURL,
+			method: 'post',
+			data: {
+				query: `{
+					events(where : {owner: ${this.accounts}}) {
+						id
+						token
+						eventId
+						owner
+						name
+						topic
+						location
+						ipfsHash
+						tktLimited
+						oneTimeBuy
+						time
+						duration
+						tktTotalQuantity
+						tktTotalQuantitySold
+						catTktQuantity
+						catTktQuantitySold	
+						categories
+						prices
+						eventRevenueInDollar
+						eventRevenueInPhnx
+					  }
+		}
+	  }`
+			}
+		}).then((graphEvents) => {
+				console.log("GraphQL query response in analytics", Date.now(), graphEvents.data.data.events)
+
+				if (!graphEvents.data || graphEvents.data.data == "undefined") {
+					// console.log("GraphQL query -- graphEvents undefined")
+					this.setState({
+						Events_Blockchain: [],
+						// active_length: 0,
+						event_copy: [],
+					});
+				} else {
+					// if (this._isMounted) {
+					const dateTime = Date.now();
+					const dateNow = Math.floor(dateTime / 1000);
+					this.setState({ loading: true });
+					console.log("events", graphEvents.data.data.events);
+					let newsort = graphEvents.data.data.events
+						.concat()
+						.sort((a, b) => b.blockNumber - a.blockNumber)
+						.filter((activeEvents) => activeEvents.time >= dateNow);
+					// console.log("GraphQL query newsort",newsort)
+
+					this.setState({
+						Events_Blockchain: newsort,
+						// active_length: newsort.length,
+						event_copy: newsort,
+					});
+					this.setState({ loading: false });
+					// }
+				}
+			})
+			.catch((err) => console.error(err));
+			dataset = [1, 2, 34, 0, 6, 7];
+			setGraphData(dataset);
 	};
 	const getDollarRevenue = () => {
 		dataset = [2, 5, 2, 8, 3, 2];
@@ -382,7 +446,7 @@ const Analytics = (props, context) => {
 	let Events = getEvents({ _isMounted: true, accounts: props.accounts });
 	const Top5Events = () => {
 		if (Events.length == 0) {
-			return (<p className="text-center not-found" style={{marginTop:"40px"}}>
+			return (<p className="text-center not-found" style={{ marginTop: "40px" }}>
 				<span role="img" aria-label="thinking">
 					🤔
 				</span>
@@ -421,14 +485,7 @@ const Analytics = (props, context) => {
 
 	return (
 		<div>
-			<Grid className="header3">
-				<h2>
-					Analytics
-				</h2>
-				<div>
-					<BuyPHNXButton />
-				</div>
-			</Grid>
+			<Header title="Analytics" page="analytics" phnxButton="true" />
 			<Grid container className={classes.content}>
 				<Grid className={classes.row}>
 					<h3 className={classes.heading}>Earnings</h3>

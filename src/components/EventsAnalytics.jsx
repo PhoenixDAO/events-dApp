@@ -68,7 +68,7 @@ const [_isMounted,set_isMounted] =useState(true);
         //  console.log("result",result);
     }
     let favouriteLength = (props.userDetails.favourites) ? props.userDetails.favourites.length : 0;
-    console.log("props", props);
+    // console.log("props", props);
 
     return (
 

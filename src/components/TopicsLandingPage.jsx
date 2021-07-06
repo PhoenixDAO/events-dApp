@@ -8,6 +8,7 @@ import Loading from "./Loading";
 import Event from "./Event";
 
 import topicsJson from "../config/topics.json";
+import  Header  from "./common/Header";
 
 // material UI styles
 import { withStyles } from "@material-ui/core/styles";
@@ -190,45 +191,7 @@ class TopicsLandingPage extends Component {
       </div> */}
 
 						{/* top sticky header */}
-						<div className={classes.sticky}>
-							<div>
-								<br />
-								<br />
-								<div
-									style={{
-										display: "flex",
-										justifyContent: "space-between",
-										alignItems: "center",
-										paddingBottom: "5px"
-									}}
-								>
-									<div>
-										<h2
-											style={{
-												fontWeight: 700,
-												color: "#1E1E22",
-											}}
-										>
-											Topics
-										</h2>
-									</div>
-
-									<div
-										style={{
-											display: "flex",
-											alignItems: "center",
-										}}
-									>
-										<SearchBar />
-
-										<ConnectWalletButton />
-									</div>
-								</div>
-								<Divider light />
-							</div>
-						</div>
-
-						<br />
+						<Header title="Topics" searchBar={true}/>
 						<br />
 						<br />
 						{/* slider */}

@@ -9,6 +9,7 @@ import { INFURA_WEB_URL } from "../config/const.js";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import { Grid } from "@material-ui/core";
 import SearchBar from './common/SearchBar';
+import  Header  from "./common/Header";
 
 class MyTickets extends Component {
 	constructor(props, context) {
@@ -164,14 +165,7 @@ class MyTickets extends Component {
 		return (
 			<div ref={this.myRef}>
 				<div className="my-tickets-page">
-					<Grid className="header3">
-						<h2>
-							My Tickets
-						</h2>
-						<SearchBar />
-					</Grid>
-
-
+				<Header title="My Tickets" searchBar={true}/>
 					{body}
 				</div>
 			</div>

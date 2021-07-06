@@ -12,15 +12,12 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import { Grid, FormControl, Select } from "@material-ui/core";
-import BuyPHNXButton from "./common/BuyPhnxButton";
-import Web3 from "web3";
 import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { getUserDetails } from "../config/serverAPIs";
-import { INFURA_WEB_URL } from "../config/const.js";
-import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+import  Header  from "./common/Header";
 
 
 const styles = (theme) => ({
@@ -278,14 +275,7 @@ class Calendars extends Component {
             }
             body =
                 <div>
-                    <Grid container className="header3">
-                        <h2>
-                            Calendar
-                        </h2>
-                        <div>
-                            <BuyPHNXButton />
-                        </div>
-                    </Grid>
+                 	<Header title="Calendar"  phnxButton={true}/>
                     <div className={classes.content}>
                         <div className={classes.selectDiv}>
                             <FormControl

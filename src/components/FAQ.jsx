@@ -14,6 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddIcon from "@material-ui/icons/Add";
 import AccordianCard from "./common/AccordianCard";
+import  Header  from "./common/Header";
 
 const useStyles = makeStyles((theme) => ({
 	termsHeader: {
@@ -149,14 +150,7 @@ const FAQ = (props) => {
 
 	return (
 		<div className="event-page-wrapper">
-			<div className={classes.sticky}>
-				<div className={classes.termsHeader}>
-					<h2 className={classes.h2Custom}>Frequently Asked Questions</h2>
-					<BuyPhnxButton />
-				</div>
-				<br />
-				<Divider light />
-			</div>
+							<Header title="Frequently Asked Questions" phnxButton={true}/>
 			<Grid container>
 				<div className={classes.imageContainer}>
 					<img
