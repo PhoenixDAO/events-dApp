@@ -319,7 +319,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 	};
 
 	const onChangeRichText = (value) => {
-		// console.log("rich value", value);
+		console.log("rich value", value);
 		setRichValue(value);
 	};
 
@@ -399,10 +399,6 @@ const MyStepper = ({ handleCreateEvent }) => {
 										value: 3,
 										message:
 											"Event name should contain atleast 3 characters.",
-									},
-									pattern: {
-										value: /^[a-z\sA-Z0-9]+$/,
-										message: "Invalid event name.",
 									},
 								}}
 							/>
@@ -1426,11 +1422,11 @@ const MyStepper = ({ handleCreateEvent }) => {
 														>
 															<Grid item>
 																<Button
-																	onClick={() =>
-																		handleEditTicketCategory(
-																			index
-																		)
-																	}
+																// onClick={() =>
+																// 	handleEditTicketCategory(
+																// 		index
+																// 	)
+																// }
 																>
 																	<img
 																		src={
@@ -1836,24 +1832,71 @@ const MyStepper = ({ handleCreateEvent }) => {
 							<br />
 							<label>EVENT DESCRIPTION</label>
 							<br />
-							<RichTextEditor
-								className={classes.editor}
-								// editorClassName={}
-								value={richValue}
-								onChange={onChangeRichText}
-								// toolbarConfig={toolbarConfig}
+
+							<Controller
+								name="eventDescription"
+								control={control}
+								defaultValue={RichTextEditor.createEmptyValue()}
+								render={({
+									field: { onChange, value },
+									fieldState: { error },
+								}) => (
+									<RichTextEditor
+										autoFocus
+										className={classes.editor}
+										// editorClassName={}
+										value={value}
+										onChange={(v) => {
+											console.log(v.toString("markdown"));
+											onChange(v);
+										}}
+										// toolbarConfig={toolbarConfig}
+										placeholder="Type something here....."
+									/>
+								)}
+								rules={{
+									required: "Please enter event details.",
+									minLength: {
+										value: 500,
+										message:
+											"Event description should contain atleast 500 characters.",
+									},
+								}}
 							/>
 							<br />
-							<FormControlLabel
-								control={
-									<Checkbox
-										// checked={state.checkedB}
-										// onChange={handleChange}
-										name="checkedB"
-										color="primary"
-									/>
-								}
-								label="By creating an event, I agree to the policies and terms of use."
+							<Controller
+								name="termsAndConditions"
+								control={control}
+								defaultValue={false}
+								render={({
+									field: { onChange, value },
+									fieldState: { error },
+								}) => (
+									<FormControl
+										required
+										error={!!error}
+										component="fieldset"
+									>
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={value}
+													onChange={onChange}
+													name="checkedB"
+													color="primary"
+												/>
+											}
+											label="By creating an event, I agree to the policies and terms of use."
+										/>
+										<FormHelperText>
+											{error ? error.message : null}
+										</FormHelperText>
+									</FormControl>
+								)}
+								rules={{
+									required:
+										"Please agree to all the terms and conditions before creating an event.",
+								}}
 							/>
 						</div>
 					</React.Fragment>
