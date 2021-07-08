@@ -1841,18 +1841,24 @@ const MyStepper = ({ handleCreateEvent }) => {
 									field: { onChange, value },
 									fieldState: { error },
 								}) => (
-									<RichTextEditor
-										autoFocus
-										className={classes.editor}
-										// editorClassName={}
-										value={value}
-										onChange={(v) => {
-											console.log(v.toString("markdown"));
-											onChange(v);
-										}}
-										// toolbarConfig={toolbarConfig}
-										placeholder="Type something here....."
-									/>
+									<FormControl
+										// required
+										error={!!error}
+										component="fieldset"
+									>
+										<RichTextEditor
+											autoFocus
+											className={classes.editor}
+											// editorClassName={}
+											value={value}
+											onChange={(v) => onChange(v)}
+											// toolbarConfig={toolbarConfig}
+											placeholder="Type something here....."
+										/>
+										<FormHelperText>
+											{error ? error.message : null}
+										</FormHelperText>
+									</FormControl>
 								)}
 								rules={{
 									required: "Please enter event details.",
