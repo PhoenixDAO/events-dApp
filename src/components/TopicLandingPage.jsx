@@ -3,6 +3,7 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Header from "./common/Header";
 
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
@@ -597,60 +598,9 @@ class TopicLandingPage extends Component {
 				</div> */}
 
 				<div className="retract-page-inner-wrapper-alternative dash topicsDiv">
-					{/* top sticky header */}
-					<div className={classes.sticky}>
-						<div>
-							<br />
-							<br />
-							<br />
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "space-between",
-									alignItems: "center",
-									paddingBottom:"5px"
-								}}
-							>
-								<div>
-									<h2
-										style={{
-											fontWeight: 700,
-											color: "#1E1E22",
-										}}
-									>
-										<IconButton
-											aria-label="delete"
-											onClick={this.goBack}
-										>
-											<KeyboardBackspaceIcon
-												fontSize="large"
-												style={{ fill: "#1E1E22" }}
-											/>
-										</IconButton>
-										<span>&nbsp;&nbsp;</span>
-										{topic.name}
-									</h2>
-								</div>
-
-								<div
-									style={{
-										display: "flex",
-										alignItems: "center",
-									}}
-								>
-									<SearchBar />
-
-									<ConnectWalletButton />
-								</div>
-							</div>
-							<Divider light />
-						</div>
-					</div>
-
+							<Header title={topic.name} phnxButton={true} goBack={this.goBack} page="topic"/>
 					<br />
 					<br />
-					<br />
-
 					<div
 						id="scroll-to-element"
 						ref={this.myRef}

@@ -94,7 +94,7 @@ export const getEvents = (props, context) => {
               }`
                 }
             }).then((graphEvents) => {
-                console.log("GraphQL query response in getEvents.js", graphEvents.data.data.users)
+                // console.log("GraphQL query response in getEvents.js", graphEvents.data.data.users)
                 if (!graphEvents.data || graphEvents.data.data == 'undefined') {
                     // console.log("GraphQL query -- graphEvents undefined")
                     setLoading(false);
@@ -131,7 +131,7 @@ export const getEvents = (props, context) => {
         let filteredDeleted = [];
         let skip = false;
         let skip2 = false;
-        console.log("GraphQL query newsort", MyEvents, "deleted", Deleted_Events);
+        // console.log("GraphQL query newsort", MyEvents, "deleted", Deleted_Events);
 
         for (let i = 0; i < MyEvents.length; i++) {
             for (let j = 0; j < Deleted_Events.length; j++) {
@@ -163,7 +163,7 @@ export const getEvents = (props, context) => {
             skip = false;
             skip2 = false;
         }
-        console.log("filtered", filteredDeletedReported, filteredDeleted)
+        // console.log("filtered", filteredDeletedReported, filteredDeleted)
         setMyEvents(filteredDeletedReported);
     }
     return MyEvents;
