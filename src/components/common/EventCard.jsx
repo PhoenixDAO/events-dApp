@@ -113,6 +113,16 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: "700",
 		color: "#413AE2",
 	},
+	starting: {
+		color: "#73727D",
+		fontSize: "14px",
+		marginBottom: "0px",
+		fontWeight: "400"
+	},
+	price: {
+		color: "#413AE2", fontWeight: "700", fontSize: "17px"
+	}
+
 }));
 
 const EventCard = (props, context) => {
@@ -122,7 +132,6 @@ const EventCard = (props, context) => {
 		image,
 		locations,
 		myEvent,
-		myEventStatURL,
 		titleURL,
 		max_seats,
 		revenue,
@@ -131,7 +140,8 @@ const EventCard = (props, context) => {
 		sendTicket2,
 		eventId,
 		myFavorites,
-		favoriteEvent
+		favoriteEvent,
+		prices
 	} = props;
 
 	useEffect(() => {
@@ -139,7 +149,6 @@ const EventCard = (props, context) => {
 	}, [favoriteEvent]);
 	const classes = useStyles();
 	const [Icon, setIcon] = useState(false);
-
 	const [open, setOpen] = useState(false);
 	const [open2, setOpen2] = useState(false);
 	// changeIcon(favoriteEvent);
@@ -168,15 +177,14 @@ const EventCard = (props, context) => {
 			};
 
 			//for add to favourite
-			if(!Icon)
-			{
+			if (!Icon) {
 				await axios.post(
 					`${API_URL}${ADD_TO_FAVOURITES}`,
 					payload
 				);
 			}
 			//for remove from favourites
-			else{
+			else {
 				await axios.post(
 					`${API_URL}${REMOVE_FROM_FAVOURITES}`,
 					payload
@@ -230,7 +238,7 @@ const EventCard = (props, context) => {
 			<Link
 				underline="none"
 				component={RouterLink}
-				to={myEvent ? myEventStatURL : titleURL}
+				to={titleURL}
 				style={{ textDecoration: "none" }}
 			>
 				<Card className={classes.root}>
@@ -270,13 +278,12 @@ const EventCard = (props, context) => {
 										<span>&nbsp;</span>
 										{event_data.tktTotalQuantitySold}/{event_data.tktTotalQuantity}
 									</Typography>
-									{!myEvent ? (
+									{!myEvent && !ticket ? (
 										<Typography
 											className={classes.FavoriteIcon}
 											component="button"
 											onClick={addTofavorite}
 										>
-
 											{Icon ? <Favorite fontSize="small" style={{ color: "#413AE2" }} /> : <FavoriteBorder fontSize="small" />}
 											{Icon}
 										</Typography>)
@@ -312,14 +319,22 @@ const EventCard = (props, context) => {
 									)}
 									{event_data.name}
 								</Typography>
-
 								<Typography
-									style={{ color: "#413AE2" }}
+									className={classes.price}
 									variant="body1"
 									component="h2"
 								>
-									{!event_data.token ? "Free": `Starting from ${event_data.prices[0]} PHNX`}
+									{!event_data.token ? "Free" : prices.length == 1 ? prices[0] :
+										(<div>
+											<p className={classes.starting}>Starting from</p>
+											<p>{prices[0]} PHNX</p>
+										</div>
+										)
+									}
+
 								</Typography>
+								{/* ? `Starting from ${prices[0]} PHNX` : prices[0]} */}
+
 								{/* <div className={classes.eventinfo}>
 									<span className={classes.PhnxPrice} >{event_data[3]
 										? numeral(price).format("0.000") + "PHNX"
@@ -378,7 +393,7 @@ const EventCard = (props, context) => {
 							>
 								<LocationOnOutlined fontSize="small" />{" "}
 								<span>&nbsp;</span>
-								{locations}
+								{event_data.location}
 							</Typography>
 							{/* For my events page */}
 							{myEvent ? (
@@ -402,7 +417,7 @@ const EventCard = (props, context) => {
 										gutterBottom
 										className={classes.text}
 									>
-										PHNX Revenue: {revenue} PHNX
+										PHNX Revenue: {event_data.eventRevenueInPhnx} PHNX
 									</Typography>
 									<Typography
 										variant="body2"
@@ -412,7 +427,7 @@ const EventCard = (props, context) => {
 										className={classes.text}
 										style={{ marginBottom: "20px" }}
 									>
-										Dollar Revenue: $ {dollarRevenue}
+										Dollar Revenue: $ {event_data.eventRevenueInDollar}
 									</Typography>
 									<Divider />
 									<Button
@@ -486,7 +501,7 @@ EventCard.contextTypes = {
 const mapStateToProps = (state) => {
 
 	return {
-		contracts: state.contracts,
+		// contracts: state.contracts,
 		accounts: state.accounts[0],
 
 		networkId: state.web3.networkId,

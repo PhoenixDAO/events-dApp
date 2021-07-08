@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import BuyPhnxButton from "./common/BuyPhnxButton";
+import  Header  from "./common/Header";
 import { Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
@@ -58,15 +58,7 @@ const Terms = (props) => {
 	}
 	return (
 		<div className="event-page-wrapper">
-			<div className={classes.sticky}>
-				<div className={classes.termsHeader}>
-					<h2 style={{ fontWeight: "bold", fontSize: "xx-large" }}>
-						Terms and Conditions
-					</h2>
-					<BuyPhnxButton />
-				</div>
-				<Divider light />
-			</div>
+		<Header title="Terms and Conditions" phnxButton={true}/>
 			<Grid container>
 				<Grid
 					className={classes.hideScroll}

@@ -12,15 +12,12 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import { Grid, FormControl, Select } from "@material-ui/core";
-import BuyPHNXButton from "./common/BuyPhnxButton";
-import Web3 from "web3";
 import { withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { getUserDetails } from "../config/serverAPIs";
-import { INFURA_WEB_URL } from "../config/const.js";
-import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+import  Header  from "./common/Header";
 
 
 const styles = (theme) => ({
@@ -64,7 +61,6 @@ class Calendars extends Component {
         super(props);
         this.state = {
             hideEvent: [],
-
             Events_Blockchain: [],
             event_copy: [],
             activeEvents: '',
@@ -75,12 +71,6 @@ class Calendars extends Component {
             event_copy: [],
         }
         this._isMounted = false;
-        this.web3 = new Web3(
-            new Web3.providers.WebsocketProvider(
-                INFURA_WEB_URL
-            )
-        );
-
         this.account = this.props.accounts[0];
     }
 
@@ -207,21 +197,21 @@ class Calendars extends Component {
         }
         else if (category == "favourite") {
             // console.log("props",this.account, this.props.networkId);
-            const data = await getUserDetails({address:this.account, networkId:this.props.networkId});  
+            const data = await getUserDetails({ address: this.account, networkId: this.props.networkId });
             if (data.result.result.favourites != "undefined") {
                 let favoriteEvents = this.state.event_copy.filter(item => data.result.result.favourites.includes(item.eventId));
                 this.setState({
                     Events_Blockchain: favoriteEvents
                 });
             }
-           
+
         }
         else if (category == "tickets") {
-            const openEvents = new this.web3.eth.Contract(
-                Open_events_ABI,
-                Open_events_Address
-            );
-            const blockChainTickets = await openEvents.methods.ticketsOf(this.props.accounts[0]).call()
+            // const openEvents = new this.web3.eth.Contract(
+            //     Open_events_ABI,
+            //     Open_events_Address
+            // );
+            const blockChainTickets = await this.props.eventsContract.methods.ticketsOf(this.props.accounts[0]).call()
             const newsort = blockChainTickets.concat().sort((a, b) => b - a);
             let tickets = this.state.event_copy.filter(item => newsort.includes(item.eventId));
             this.setState({
@@ -234,9 +224,6 @@ class Calendars extends Component {
                 Events_Blockchain: this.state.event_copy
             });
         }
-        // else if (this.state.category === "favourite") {
-
-        // }
     };
     render() {
         const { classes } = this.props;
@@ -288,21 +275,7 @@ class Calendars extends Component {
             }
             body =
                 <div>
-                    <Grid container className="header3">
-                        <h2>
-                            Calendar
-                        </h2>
-                        <div>
-                            <BuyPHNXButton />
-                        </div>
-                    </Grid>
-                    {/* <Calendar
-                        localizer={localizer}
-                        events={events_calendar}
-                        defaultDate={moment().toDate()}
-                        onSelectEvent={events_calendar =>this.goToEvent(events_calendar)}
-                        views={['month','day','agenda']} 
-                        /> */}
+                 	<Header title="Calendar"  phnxButton={true}/>
                     <div className={classes.content}>
                         <div className={classes.selectDiv}>
                             <FormControl
@@ -357,19 +330,19 @@ class Calendars extends Component {
                             ]}
                             eventClick={events_calendar => this.goToEvent(events_calendar)}
                             dayMaxEvents={1}
-                            timeFormat= "H:mm"
-                            eventOverlap= {false}
+                            timeFormat="H:mm"
+                            eventOverlap={false}
                             eventLimit={3}
                             events={events_calendar}
-                        // select={this.handleSelectedDates}
-                        slotEventOverlap={false}
-                        eventTimeFormat={{ // like '14:30:00'
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            meridiem: true
-                          }}
-                          eventMaxStack={1}
-allDaySlot={false}
+                            // select={this.handleSelectedDates}
+                            slotEventOverlap={false}
+                            eventTimeFormat={{ // like '14:30:00'
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                meridiem: true
+                            }}
+                            eventMaxStack={1}
+                            allDaySlot={false}
                         />
                     </div>
                 </div>

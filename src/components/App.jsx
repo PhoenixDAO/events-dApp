@@ -1,10 +1,6 @@
 import React, { Component, useCallback } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { drizzleConnect,DrizzleProvider } from "drizzle-react";
-// import { DrizzleProvider } from "drizzle-react";
-
-// import { drizzleConnect } from "@drizzle/react-plugin";
-
+import { drizzleConnect } from "drizzle-react";
 import { ToastContainer, toast } from "react-toastify";
 import Web3 from "web3";
 
@@ -38,7 +34,8 @@ import Notify from "./Notify";
 import PropTypes from "prop-types";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
-import { INFURA_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
+import { INFURA_URL, INFURA_WEB_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
+import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
@@ -64,7 +61,7 @@ class App extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {}
+		} catch (e) { }
 		super(props);
 		this.state = {
 			sent_tx: [],
@@ -92,16 +89,39 @@ class App extends Component {
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
 		this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
 		this.executeScroll = this.executeScroll.bind(this);
+		this.initializeContract = this.initializeContract.bind(this);
+	}
+	async initializeContract() {
+		try {
+			const web3 = new Web3(
+				// new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+				window.ethereum
+			);
+			const openEvents = await new web3.eth.Contract(
+				Open_events_ABI,
+				Open_events_Address
+			);
+			const PHNX = await new web3.eth.Contract(
+				PhoenixDAO_Testnet_Token_ABI,
+				PhoenixDAO_Mainnet_Token_Address
+			);
+			console.log("contract initialized",openEvents,PHNX)
+			this.setState({eventsContract : openEvents, phnxContract:PHNX})
+		
+		}catch(err){
+			console.log("error initializing the contract",err)
+
+		}
 	}
 
+	async componentWillMount() {
+		await this.initializeContract();
+	}
 	async componentDidMount() {
-		console.log("context", this.context);
-		console.log("DrizzleProvider", DrizzleProvider);
-
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
-			console.log("accounts", accounts);
+			console.log("accounts", accounts)
 			if (accounts.length == 0) {
 				localStorage.removeItem("account");
 			}
@@ -135,13 +155,13 @@ class App extends Component {
 			});
 		} else {
 			if (typeof ethereum !== "undefined") {
-				console.log("accounts I am here");
+				console.log("accounts I am here")
 				// const a = await ethereum.enable();
 				const a = ethereum.enable();
-				console.log("accounts I am here2");
+				console.log("accounts I am here2")
 				web3 = new Web3(ethereum);
 				const accounts = await web3.eth.getAccounts();
-				console.log("accounts in loadBlockchainData", accounts);
+				console.log("accounts in loadBlockchainData", accounts)
 				const check = localStorage.getItem("account");
 				if (!check) {
 					// window.location.reload();
@@ -154,7 +174,7 @@ class App extends Component {
 					new Web3.providers.HttpProvider(INFURA_URL)
 				);
 			}
-			window.ethereum.on("connect", function (accounts) {});
+			window.ethereum.on("connect", function (accounts) { });
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
 				window.location.reload();
@@ -201,29 +221,29 @@ class App extends Component {
 
 	//get value from buyer/from child components
 	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
+		console.log("In inquireBuy function")
 		if (
 			this.state.account.length !== 0 &&
 			this.props.web3.networkId == GLOBAL_NETWORK_ID
 		) {
+			
+
 			this.setState({ disabledStatus: true });
 			this.setState(
 				{
-					fee: fee,
-					token: token,
+					// fee: fee,
+					// token: token,
 					buyticket: buyticket,
 					approve: approve,
 				},
 				() => this.buy()
 			);
 		} else {
-			toast(
-				<Notify text="😓 Wrong Network, Please Connect to Rinkeby Network." />,
-				{
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true,
-				}
-			);
+			toast(<Notify text="😓 Wrong Network, Please Connect to Rinkeby Network." />, {
+				position: "bottom-right",
+				autoClose: true,
+				pauseOnHover: true,
+			});
 		}
 	};
 
@@ -240,18 +260,12 @@ class App extends Component {
 					if (hash !== null) {
 						this.setState({ disabledStatus: true });
 
-						toast(
-							<Notify
-								hash={hash}
-								text="Preparing your ticket...🚀"
-								icon="fa fa-ticket-alt"
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
+						toast(<Notify hash={hash} text="Preparing your ticket...🚀"
+							icon="fa fa-ticket-alt" />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						});
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -283,7 +297,10 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify
+								error={error}
+								message={txerror.message}
+							/>,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -308,25 +325,21 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-
+		console.log("in buy function")
 		if ((await this.allowance()) == 0) {
+			console.log("in buy function giving allowance")
+
 			this.state.approve
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
-						toast(
-							<Notify
-								hash={hash}
-								text={
-									"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
-								}
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
+						toast(<Notify hash={hash} text={"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."}
+						/>, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+
+						});
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -336,9 +349,8 @@ class App extends Component {
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
 								<Notify
-									text={
-										"Transaction successfull!\nYou can buy a ticket now."
-									}
+									text={"Transaction successfull!\nYou can buy a ticket now." } icon="fas fa-check-circle fa-3x"
+									color="#413AE2"
 									hash={txreceipt.transactionHash}
 								/>,
 								{
@@ -353,10 +365,14 @@ class App extends Component {
 					}
 				})
 				.on("error", (error) => {
+					console.log("error in buy in if function giving allowance",error)
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify
+								error={error}
+								message={txerror.message}
+							/>,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -371,19 +387,12 @@ class App extends Component {
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
-						toast(
-							<Notify
-								hash={hash}
-								text="Preparing your ticket...🚀"
-								icon="fa fa-ticket-alt fa-3x"
-								color="#413AE2"
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
+						toast(<Notify hash={hash} text="Preparing your ticket...🚀"
+							icon="fa fa-ticket-alt fa-3x" color="#413AE2" />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						});
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -411,10 +420,14 @@ class App extends Component {
 					}
 				})
 				.on("error", (error) => {
+					console.log("error in buy in else function giving allowance",error)
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify
+								error={error}
+								message={txerror.message}
+							/>,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -443,22 +456,11 @@ class App extends Component {
 							upload: false,
 							done: true,
 						});
-						toast(
-							<Notify
-								icon="fas fa-edit"
-								hash={hash}
-								text={
-									(type === "create"
-										? "Creating"
-										: "Updating") + "your Event..."
-								}
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
+						toast(<Notify icon="fas fa-edit" hash={hash} text={(type === "create" ? "Creating" : "Updating") + "your Event..."} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						});
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -472,11 +474,12 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-													.returnValues
+												.returnValues
 											: txreceipt.events
-													.NewAndUpdatedEvent
-													.returnValues
+												.NewAndUpdatedEvent
+												.returnValues
 									}
+									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
 									link="checkout your event here"
 									text="Transaction success!"
@@ -497,7 +500,10 @@ class App extends Component {
 						console.log("error", error);
 						this.setState({ error: true });
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify
+								error={error}
+								message={txerror.message}
+							/>,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -527,19 +533,11 @@ class App extends Component {
 							upload: false,
 							done: true,
 						});
-						toast(
-							<Notify
-								hash={hash}
-								text={
-									"Request for 10,000 PHNX\nYour token request has been sent"
-								}
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
+						toast(<Notify hash={hash} text={"Request for 10,000 PHNX\nYour token request has been sent"} />, {
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						});
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -567,7 +565,10 @@ class App extends Component {
 						txerror = error;
 						this.setState({ error: true });
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify
+								error={error}
+								message={txerror.message}
+							/>,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -601,7 +602,7 @@ class App extends Component {
 
 		// uncomment this for test
 
-		// if( !this.props.drizzleStatus.initialized || this.props.web3.status === "failed" ||
+		// if( !this.props.drizzleStatus.initialized || this.props.web3.status === "failed" || 
 		// 	(this.props.web3.status === "initialized" && Object.keys(this.props.accounts).length === 0) ||
 		// 	this.props.web3.networkId != GLOBAL_NETWORK_ID) {
 		if (!this.props.drizzleStatus.initialized) {
@@ -693,6 +694,7 @@ class App extends Component {
 		// 				)}
 		// 			/>
 
+
 		// 			<Route
 		// 				exact
 		// 				path="/event/:page/:id"
@@ -767,7 +769,7 @@ class App extends Component {
 		// 		</div>
 		// 	);
 		// 	connecting = true;
-		// }
+		// } 
 		else {
 			body = (
 				<Switch>
@@ -781,6 +783,7 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
 							/>
 						)}
 					/>
@@ -794,6 +797,8 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
+
 							/>
 						)}
 					/>
@@ -812,6 +817,19 @@ class App extends Component {
 					/>
 					<Route
 						exact
+						path="/mytickets/:page"
+						render={(props) => (
+							<MyTickets
+								{...props}
+								executeScroll={this.executeScroll}
+								eventsContract={this.state.eventsContract}
+
+							/>
+						)}
+					/>
+					{/* 
+					<Route
+						exact
 						path="/pastevents/:page"
 						render={(props) => (
 							<PastEvents
@@ -820,16 +838,7 @@ class App extends Component {
 							/>
 						)}
 					/>
-					<Route
-						exact
-						path="/mytickets/:page"
-						render={(props) => (
-							<MyTickets
-								{...props}
-								executeScroll={this.executeScroll}
-							/>
-						)}
-					/>
+				
 
 					<Route
 						exact
@@ -867,6 +876,19 @@ class App extends Component {
 						)}
 					/>
 
+					
+					<Route
+						exact
+						path="/event-stat/:page/:id"
+						render={(props) => (
+							<MyEventStat
+								{...props}
+								inquire={this.inquireBuy}
+								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
+							/>
+						)}
+					/> */}
 					<Route
 						exact
 						path="/myevents/:page"
@@ -881,18 +903,6 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/event-stat/:page/:id"
-						render={(props) => (
-							<MyEventStat
-								{...props}
-								inquire={this.inquireBuy}
-								disabledStatus={this.state.disabledStatus}
-								toggleDisabling={this.toggleDisabling}
-							/>
-						)}
-					/>
-					<Route
-						exact
 						path="/event/:page/:id"
 						render={(props) => (
 							<EventPage
@@ -900,24 +910,29 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
+								phnxContract={this.state.phnxContract}
+
 							/>
 						)}
 					/>
 					<Route
 						exact
-						path="/token"
+						path="/calendar"
 						render={(props) => (
-							<Token
+							<Calendars
 								{...props}
-								getPhoenixDAO={this.getPhoenixDAO}
+								executeScroll={this.executeScroll}
+								eventsContract={this.state.eventsContract}
+
 							/>
 						)}
 					/>
 					<Route
 						exact
-						path="/topics"
-						//  component={TopicsLandingPage}
-						component={(props) => <TopicsLandingPage {...props} />}
+						path="/analytics"
+						component={Analytics}
+						account={this.state.account}
 					/>
 					<Route
 						exact
@@ -932,29 +947,10 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/locations"
-						component={LocationsLandingPage}
-					/>
-					<Route
-						exact
-						path="/location/:page"
-						component={LocationLandingPage}
-					/>
-					<Route
-						exact
-						path="/calendar"
-						render={(props) => (
-							<Calendars
-								{...props}
-								executeScroll={this.executeScroll}
-							/>
-						)}
-					/>
-					<Route
-						exact
-						path="/analytics"
-						component={Analytics}
-						account={this.state.account}
+						path="/topics"
+						//  component={TopicsLandingPage}
+						component={(props) => <TopicsLandingPage {...props} eventsContract={this.state.eventsContract}
+						/>}
 					/>
 					<Route
 						exact
@@ -965,6 +961,31 @@ class App extends Component {
 						disabledStatus={this.state.disabledStatus}
 						toggleDisabling={this.toggleDisabling}
 					/>
+					{/* <Route
+						exact
+						path="/token"
+						render={(props) => (
+							<Token
+								{...props}
+								getPhoenixDAO={this.getPhoenixDAO}
+							/>
+						)}
+					/>
+					
+				
+					<Route
+						exact
+						path="/locations"
+						component={LocationsLandingPage}
+					/>
+					<Route
+						exact
+						path="/location/:page"
+						component={LocationLandingPage}
+					/>
+					*/}
+				
+					
 					<Route
 						exact
 						path="/guide"
@@ -991,7 +1012,7 @@ class App extends Component {
 						render={(props) => (
 							<Terms executeScroll={this.executeScroll} />
 						)}
-					/>
+					/> 
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>
 			);

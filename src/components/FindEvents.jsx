@@ -16,6 +16,7 @@ import Event from "./Event";
 // TODO: Make slides dynamic: import slidesJson from '../config/slides.json';
 import topicsJson from "../config/topics.json";
 // import eventCTAsJson from "../config/event_ctas.json";
+import  Header  from "./common/Header";
 
 //Material UI styles
 import { withStyles } from "@material-ui/core/styles";
@@ -99,17 +100,18 @@ class FindEvents extends Component {
 			Events_Blockchain: [],
 			Deleted_Events: [],
 			Updated_Events: [],
-			active_length: "",
+			// active_length: "",
 			isOldestFirst: false,
 			event_copy: [],
 			prevPath: -1,
 			hideEvent: [],
 			selectedTab: 0,
+			eventCount: 0
 		};
 
-		this.contracts = context.drizzle.contracts;
-		this.eventCount =
-			this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+		// this.contracts = context.drizzle.contracts;
+		// this.eventCount = this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 		this.myRef = React.createRef();
@@ -214,13 +216,13 @@ class FindEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+				console.log("GraphQL query response", Date.now(), graphEvents.data.data.events)
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
 					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({
 						Events_Blockchain: [],
-						active_length: 0,
+						// active_length: 0,
 						event_copy: [],
 					});
 				} else {
@@ -228,7 +230,7 @@ class FindEvents extends Component {
 					const dateTime = Date.now();
 					const dateNow = Math.floor(dateTime / 1000);
 					this.setState({ loading: true });
-
+					console.log("events", graphEvents.data.data.events);
 					let newsort = graphEvents.data.data.events
 						.concat()
 						.sort((a, b) => b.blockNumber - a.blockNumber)
@@ -237,7 +239,7 @@ class FindEvents extends Component {
 
 					this.setState({
 						Events_Blockchain: newsort,
-						active_length: newsort.length,
+						// active_length: newsort.length,
 						event_copy: newsort,
 					});
 					this.setState({ loading: false });
@@ -269,7 +271,7 @@ class FindEvents extends Component {
 			}
 			this.setState({
 				Events_Blockchain: filteredEvents,
-				active_length: filteredEvents.length,
+				// active_length: filteredEvents.length,
 			});
 			this.props.history.push("/upcomingevents/" + 1);
 		});
@@ -315,6 +317,14 @@ class FindEvents extends Component {
 	onTabChange = (event, newValue) => {
 		this.setState({ selectedTab: newValue });
 	};
+	async componentWillMount() {
+		let eventCount = await this.props.eventsContract.methods.getEventsCount().call();
+		console.log("event contract", this.props.eventsContract);
+		if (eventCount) {
+			this.setState({ eventCount })
+		}
+
+	}
 
 	render() {
 		//when user is not connectd hide connect wallet button
@@ -323,16 +333,176 @@ class FindEvents extends Component {
 		const { classes } = this.props;
 		let body = <PhoenixDAOLoader />;
 
-		if (
-			typeof this.props.contracts["DaoEvents"].getEventsCount[
-				this.eventCount
-			] !== "undefined" &&
-			this.state.active_length !== "undefined"
-		) {
-			let count = this.state.Events_Blockchain.length;
-			if (this.state.loading) {
-				body = <PhoenixDAOLoader />;
-			} else if (count === 0 && !this.state.loading) {
+		// if (
+		// 	// typeof this.props.contracts["DaoEvents"].getEventsCount[
+		// 	// 	this.eventCount
+		// 	// ] !== "undefined" 
+
+		// 	// this.state.eventCount == 0
+		// 	// &&
+		// 	this.state.active_length !== ""
+		// ) {
+		let count = this.state.Events_Blockchain.length;
+		if (this.state.loading) {
+			body = <PhoenixDAOLoader />;
+		} else if (this.state.Events_Blockchain.length === 0 && !this.state.loading) {
+			body = (
+				<p className="text-center not-found">
+					<span role="img" aria-label="thinking">
+						🤔
+					</span>
+					&nbsp;No events found.{" "}
+					<a href="/createevent">Try creating one.</a>
+				</p>
+			);
+		} else {
+			let currentPage = Number(this.props.match.params.page);
+			let events_list = [];
+			let skip = false;
+			for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
+				for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+					if (
+						this.state.Events_Blockchain[i].eventId ==
+						this.state.Deleted_Events[j].eventId
+					) {
+						skip = true;
+					}
+				}
+				if (!skip) {
+					for (let j = 0; j < this.state.hideEvent.length; j++) {
+						if (
+							this.state.Events_Blockchain[i].eventId ==
+							this.state.hideEvent[j].id
+						) {
+							skip = true;
+						}
+					}
+				}
+				if (!skip) {
+					events_list.push(this.state.Events_Blockchain[i]);
+				}
+				skip = false;
+			}
+
+			events_list.reverse();
+			// console.log("events_listt",events_list)
+			let updated_list = [];
+			count = events_list.length;
+			if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+			let end = currentPage * this.perPage;
+			let start = end - this.perPage;
+			if (end > count) end = count;
+			let pages = Math.ceil(count / this.perPage);
+			for (let i = start; i < end; i++) {
+				updated_list.push(
+					<Event
+						toggleBuying={this.props.toggleDisabling}
+						disabledStatus={this.props.disabledStatus}
+						inquire={this.props.inquire}
+						key={events_list[i].eventId}
+						id={events_list[i].eventId}
+						ipfs={events_list[i].ipfsHash}
+						eventData={events_list[i]}
+					/>
+				);
+			}
+
+			let pagination = "";
+			if (pages > 1) {
+				let links = [];
+
+				if (pages > 5 && currentPage >= 3) {
+					console.log("pag pages > 5 && currentPage >= 3");
+					for (
+						let i = currentPage - 2;
+						i <= currentPage + 2 && i <= pages;
+						i++
+					) {
+						let active = i === currentPage ? "active" : "";
+						links.push(
+							<li className={"page-item " + active} key={i}>
+								<Link
+									to={"/upcomingevents/" + i}
+									onClick={() =>
+										this.setState({
+											prevPath: currentPage,
+										})
+									}
+									className="page-link"
+								>
+									{i}
+								</Link>
+							</li>
+						);
+						if (this.state.prevPath != -1) {
+							this.executeScroll({
+								behavior: "smooth",
+								block: "start",
+							});
+						}
+					}
+				} else if (pages > 5 && currentPage < 3) {
+					console.log("pag pages > 5 && currentPage < 3");
+					for (let i = 1; i <= 5 && i <= pages; i++) {
+						let active = i === currentPage ? "active" : "";
+						links.push(
+							<li className={"page-item " + active} key={i}>
+								<Link
+									to={"/upcomingevents/" + i}
+									onClick={() =>
+										this.setState({
+											prevPath: currentPage,
+										})
+									}
+									className="page-link"
+								>
+									{i}
+								</Link>
+							</li>
+						);
+						if (this.state.prevPath != -1) {
+							this.executeScroll({
+								behavior: "smooth",
+								block: "start",
+							});
+						}
+					}
+				} else {
+					console.log("pag else");
+					for (let i = 1; i <= pages; i++) {
+						let active = i === currentPage ? "active" : "";
+						links.push(
+							<li className={"page-item " + active} key={i}>
+								<Link
+									to={"/upcomingevents/" + i}
+									onClick={() =>
+										this.setState({
+											prevPath: currentPage,
+										})
+									}
+									className="page-link"
+								>
+									{i}
+								</Link>
+							</li>
+						);
+						if (this.state.prevPath != -1) {
+							this.executeScroll({
+								behavior: "smooth",
+								block: "start",
+							});
+						}
+					}
+				}
+				pagination = (
+					<nav>
+						<ul className="pagination justify-content-center">
+							{links}
+						</ul>
+					</nav>
+				);
+			}
+			if (updated_list.length == 0) {
 				body = (
 					<p className="text-center not-found">
 						<span role="img" aria-label="thinking">
@@ -343,174 +513,17 @@ class FindEvents extends Component {
 					</p>
 				);
 			} else {
-				let currentPage = Number(this.props.match.params.page);
-				let events_list = [];
-				let skip = false;
-				for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
-					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
-						if (
-							this.state.Events_Blockchain[i].eventId ==
-							this.state.Deleted_Events[j].eventId
-						) {
-							skip = true;
-						}
-					}
-					if (!skip) {
-						for (let j = 0; j < this.state.hideEvent.length; j++) {
-							if (
-								this.state.Events_Blockchain[i].eventId ==
-								this.state.hideEvent[j].id
-							) {
-								skip = true;
-							}
-						}
-					}
-					if (!skip) {
-						events_list.push(this.state.Events_Blockchain[i]);
-					}
-					skip = false;
-				}
-
-				events_list.reverse();
-				// console.log("events_listt",events_list)
-				let updated_list = [];
-				count = events_list.length;
-				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-				let end = currentPage * this.perPage;
-				let start = end - this.perPage;
-				if (end > count) end = count;
-				let pages = Math.ceil(count / this.perPage);
-				for (let i = start; i < end; i++) {
-					updated_list.push(
-						<Event
-							toggleBuying={this.props.toggleDisabling}
-							disabledStatus={this.props.disabledStatus}
-							inquire={this.props.inquire}
-							key={events_list[i].eventId}
-							id={events_list[i].eventId}
-							ipfs={events_list[i].ipfsHash}
-							eventData={events_list[i]}
-						/>
-					);
-				}
-
-				let pagination = "";
-				if (pages > 1) {
-					let links = [];
-
-					if (pages > 5 && currentPage >= 3) {
-						console.log("pag pages > 5 && currentPage >= 3");
-						for (
-							let i = currentPage - 2;
-							i <= currentPage + 2 && i <= pages;
-							i++
-						) {
-							let active = i === currentPage ? "active" : "";
-							links.push(
-								<li className={"page-item " + active} key={i}>
-									<Link
-										to={"/upcomingevents/" + i}
-										onClick={() =>
-											this.setState({
-												prevPath: currentPage,
-											})
-										}
-										className="page-link"
-									>
-										{i}
-									</Link>
-								</li>
-							);
-							if (this.state.prevPath != -1) {
-								this.executeScroll({
-									behavior: "smooth",
-									block: "start",
-								});
-							}
-						}
-					} else if (pages > 5 && currentPage < 3) {
-						console.log("pag pages > 5 && currentPage < 3");
-						for (let i = 1; i <= 5 && i <= pages; i++) {
-							let active = i === currentPage ? "active" : "";
-							links.push(
-								<li className={"page-item " + active} key={i}>
-									<Link
-										to={"/upcomingevents/" + i}
-										onClick={() =>
-											this.setState({
-												prevPath: currentPage,
-											})
-										}
-										className="page-link"
-									>
-										{i}
-									</Link>
-								</li>
-							);
-							if (this.state.prevPath != -1) {
-								this.executeScroll({
-									behavior: "smooth",
-									block: "start",
-								});
-							}
-						}
-					} else {
-						console.log("pag else");
-						for (let i = 1; i <= pages; i++) {
-							let active = i === currentPage ? "active" : "";
-							links.push(
-								<li className={"page-item " + active} key={i}>
-									<Link
-										to={"/upcomingevents/" + i}
-										onClick={() =>
-											this.setState({
-												prevPath: currentPage,
-											})
-										}
-										className="page-link"
-									>
-										{i}
-									</Link>
-								</li>
-							);
-							if (this.state.prevPath != -1) {
-								this.executeScroll({
-									behavior: "smooth",
-									block: "start",
-								});
-							}
-						}
-					}
-					pagination = (
-						<nav>
-							<ul className="pagination justify-content-center">
-								{links}
-							</ul>
-						</nav>
-					);
-				}
-				if (updated_list.length == 0) {
-					body = (
-						<p className="text-center not-found">
-							<span role="img" aria-label="thinking">
-								🤔
-							</span>
-							&nbsp;No events found.{" "}
-							<a href="/createevent">Try creating one.</a>
-						</p>
-					);
-				} else {
-					body = (
-						<div>
-							<div className="row user-list mt-4">
-								{updated_list}
-							</div>
-							{pagination}
+				body = (
+					<div>
+						<div className="row user-list mt-4">
+							{updated_list}
 						</div>
-					);
-				}
+						{pagination}
+					</div>
+				);
 			}
 		}
+		// }
 
 		return (
 			<React.Fragment>
@@ -539,7 +552,21 @@ class FindEvents extends Component {
 
 					{/* sticky bar start */}
 					<div className={classes.sticky}>
-						<div>
+
+					<Header  page="dashboard" searchBar="true" title={<div style={{ display: "flex" }}>
+									<img src={roundlogo} alt="phnx logo" />
+									<span>&nbsp;&nbsp;&nbsp;</span>
+									<h2
+										style={{
+											fontWeight: 900,
+											color: "#1E1E22",
+											marginBottom: "0px",
+										}}
+									>
+										PhoenixDAO Events Marketplace
+									</h2>
+								</div>}/>
+						{/* <div>
 							<br />
 							<br />
 
@@ -575,15 +602,17 @@ class FindEvents extends Component {
 								</div>
 							</div>
 
-							{/* <Grid container>
+
+						</div>
+					
+					 */}
+						{/* <Grid container>
 								<Grid item>
 									LOGO PhoenixDAO Events Marketplace
 								</Grid>
 								<Grid item>SearchBar</Grid>
 								<Grid item>Connect Wallet</Grid>
 							</Grid> */}
-						</div>
-
 						<br />
 
 						{/* tabs */}
@@ -655,8 +684,6 @@ class FindEvents extends Component {
 						</div>
 					</div>
 					{/* sticky bar ends */}
-
-					<br />
 					<br />
 					<br />
 
@@ -688,8 +715,8 @@ class FindEvents extends Component {
 								{/* <p>Sort:</p> */}
 								<select
 									name="category"
-									// value={category}
-									// onChange={event => handleCategoryChange(event.target.value)}
+								// value={category}
+								// onChange={event => handleCategoryChange(event.target.value)}
 								>
 									<option id="0">All Events</option>
 									<option id="1">Trending Events</option>
@@ -769,7 +796,8 @@ class FindEvents extends Component {
 		);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
+
 		if (this.state.prevPath == -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}
@@ -794,7 +822,7 @@ FindEvents.contextTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		contracts: state.contracts,
+		// contracts: state.contracts,
 		accounts: state.accounts,
 	};
 };

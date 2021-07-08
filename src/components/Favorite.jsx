@@ -13,6 +13,7 @@ import { Grid } from "@material-ui/core";
 
 import SearchBar from "./common/SearchBar";
 import { ThumbsUpDownOutlined } from "@material-ui/icons";
+import  Header  from "./common/Header";
 
 const useStyles = (theme) => ({
     sticky: {
@@ -86,9 +87,9 @@ class Favorites extends Component {
             reload: false
         };
 
-        this.contracts = context.drizzle.contracts;
-        this.eventCount =
-            this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+        // this.contracts = context.drizzle.contracts;
+        // this.eventCount =
+        //     this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
         this.perPage = 6;
         this.topicClick = this.topicClick.bind(this);
         this.myRef = React.createRef();
@@ -305,6 +306,8 @@ class Favorites extends Component {
     //     }
     // };
     getUserFavoritesEvent = async () => {
+        console.log("loading2", this.state.loading);
+
         try {
             const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`, { address: this.props.accounts[0], networkId: this.props.web3.networkId });
             this.setState({
@@ -315,13 +318,10 @@ class Favorites extends Component {
         } catch (error) {
             console.log("check error", error);
         }
+        // this.setState({reload:false});
     };
     reloadData = () => {
         this.setState({ reload: !this.state.reload })
-        if (this.state.reload) {
-            this.getUserFavoritesEvent();
-
-        }
     }
     onTabChange = (event, newValue) => {
         this.setState({ selectedTab: newValue });
@@ -335,9 +335,9 @@ class Favorites extends Component {
         let body = <PhoenixDAOLoader />;
 
         if (
-            typeof this.props.contracts["DaoEvents"].getEventsCount[
-            this.eventCount
-            ] !== "undefined" &&
+            // typeof this.props.contracts["DaoEvents"].getEventsCount[
+            // this.eventCount
+            // ] !== "undefined" &&
             this.state.active_length !== "undefined"
         ) {
             let count = this.state.Events_Blockchain.length;
@@ -405,11 +405,9 @@ class Favorites extends Component {
                             eventData={favoriteEvents[i]}
                             myFavorites={true}
                             reloadData={this.reloadData}
-                            reload={this.state.reload}
                         />
                     );
                 }
-                console.log("loading2", this.state.loading);
 
                 let pagination = "";
                 if (pages > 1) {
@@ -529,12 +527,7 @@ class Favorites extends Component {
         return (
             <React.Fragment>
                 <div>
-                    <Grid className="header3">
-                        <h2>
-                            Favourites
-                        				</h2>
-                        <SearchBar />
-                    </Grid>
+                <Header title="Favourites" searchBar={true}/>
                     <div ref={this.myRef} />
 
                     {body}
@@ -553,10 +546,10 @@ class Favorites extends Component {
         this.filterHideEvent();
         this.getUserFavoritesEvent();
     }
-    componentDidUpdate() {
-        if (this.state.reloadData) {
-            console.log("here")
-            this.getUserFavoritesEvent();
+    componentDidUpdate(prevProps,prevState) {
+        if (prevState.reload !== this.state.reload) {
+            console.log("prev",prevState,this.state.reload);
+                        this.getUserFavoritesEvent();
         }
     }
     componentWillUnmount() {
@@ -575,7 +568,7 @@ Favorites.contextTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        contracts: state.contracts,
+        // contracts: state.contracts,
         accounts: state.accounts,
         web3: state.web3,
     };

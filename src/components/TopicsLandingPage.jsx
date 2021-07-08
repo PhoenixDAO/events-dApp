@@ -8,6 +8,7 @@ import Loading from "./Loading";
 import Event from "./Event";
 
 import topicsJson from "../config/topics.json";
+import  Header  from "./common/Header";
 
 // material UI styles
 import { withStyles } from "@material-ui/core/styles";
@@ -54,9 +55,13 @@ const useStyles = (theme) => ({
 class TopicsLandingPage extends Component {
 	constructor(props, context) {
 		super(props);
-		this.contracts = context.drizzle.contracts;
-		this.eventCount =
-			this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+		// this.contracts = context.drizzle.contracts;
+		this.state = {
+			eventCount: 0
+		}
+		// this.eventCount =
+		// 	this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 		this.compare = this.compare.bind(this);
@@ -86,16 +91,18 @@ class TopicsLandingPage extends Component {
 		const { classes } = this.props;
 		let body = <Loading />;
 
-		if (
-			typeof this.props.contracts["DaoEvents"].getEventsCount[
-				this.eventCount
-			] !== "undefined"
-		) {
-			let count = Number(
-				this.props.contracts["DaoEvents"].getEventsCount[
-					this.eventCount
-				].value
-			);
+		// if (
+		// 	// typeof this.props.contracts["DaoEvents"].getEventsCount[
+		// 	// this.eventCount
+		// 	// ] !== "undefined"
+			
+		// ) {
+		// 	let count = Number(
+		// 		this.props.contracts["DaoEvents"].getEventsCount[
+		// 			this.eventCount
+		// 		].value
+		// 	);
+		let count=this.state.eventCount;
 			if (count === 0) {
 				body = (
 					<p className="text-center not-found">
@@ -155,7 +162,7 @@ class TopicsLandingPage extends Component {
 					</div>
 				);
 			}
-		}
+		
 
 		return (
 			<React.Fragment>
@@ -184,45 +191,7 @@ class TopicsLandingPage extends Component {
       </div> */}
 
 						{/* top sticky header */}
-						<div className={classes.sticky}>
-							<div>
-								<br />
-								<br />
-								<div
-									style={{
-										display: "flex",
-										justifyContent: "space-between",
-										alignItems: "center",
-										paddingBottom:"5px"
-									}}
-								>
-									<div>
-										<h2
-											style={{
-												fontWeight: 700,
-												color: "#1E1E22",
-											}}
-										>
-											Topics
-										</h2>
-									</div>
-
-									<div
-										style={{
-											display: "flex",
-											alignItems: "center",
-										}}
-									>
-										<SearchBar />
-
-										<ConnectWalletButton />
-									</div>
-								</div>
-								<Divider light />
-							</div>
-						</div>
-
-						<br />
+						<Header title="Topics" searchBar={true}/>
 						<br />
 						<br />
 						{/* slider */}
@@ -289,8 +258,8 @@ class TopicsLandingPage extends Component {
 									{/* <p>Sort:</p> */}
 									<select
 										name="category"
-										// value={category}
-										// onChange={event => handleCategoryChange(event.target.value)}
+									// value={category}
+									// onChange={event => handleCategoryChange(event.target.value)}
 									>
 										<option id="0">All Topics</option>
 										<option id="1">Trending Topics</option>
@@ -334,18 +303,25 @@ class TopicsLandingPage extends Component {
 			behavior: "smooth",
 		});
 	}
+	async componentWillMount() {
+		let eventCount = await this.props.eventsContract.methods.getEventsCount().call();
+		if (eventCount) {
+			this.setState({ eventCount })
+		}
+	}
+
 }
 
-TopicsLandingPage.contextTypes = {
-	drizzle: PropTypes.object,
-};
+// TopicsLandingPage.contextTypes = {
+// 	drizzle: PropTypes.object,
+// };
 
-const mapStateToProps = (state) => {
-	return {
-		contracts: state.contracts,
-		accounts: state.accounts,
-	};
-};
+// const mapStateToProps = (state) => {
+// 	return {
+// 		// contracts: state.contracts,
+// 		accounts: state.accounts,
+// 	};
+// };
 
-const AppContainer = drizzleConnect(TopicsLandingPage, mapStateToProps);
-export default withStyles(useStyles)(AppContainer);
+// const AppContainer = drizzleConnect(TopicsLandingPage, mapStateToProps);
+export default withStyles(useStyles)(TopicsLandingPage);
