@@ -151,38 +151,40 @@ class MyEvents extends Component {
 		}
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
+
+		console.log("checking this.accounts", typeof this.account, this.account)
 		await axios({
 			url: graphURL,
 			method: 'post',
 			data: {
-				query: `{
-					events(where : {owner: ${this.accounts}}) {
-						id
-						token
-						eventId
-						owner
-						name
-						topic
-						location
-						ipfsHash
-						tktLimited
-						oneTimeBuy
-						time
-						duration
-						tktTotalQuantity
-						tktTotalQuantitySold
-						catTktQuantity
-						catTktQuantitySold	
-						categories
-						prices
-						eventRevenueInDollar
-						eventRevenueInPhnx
-					  }
-		}
-	  }`
+				query:
+					`{
+                        events(where : {owner:"${this.account.toLowerCase()}"}) {
+                            id
+                            token
+                            eventId
+                            owner
+                            name
+                            topic
+                            location
+                            ipfsHash
+                            tktLimited
+                            oneTimeBuy
+                            time
+                            duration
+                            tktTotalQuantity
+                            tktTotalQuantitySold
+                            catTktQuantity
+                            catTktQuantitySold  
+                            categories
+                            prices
+                            eventRevenueInDollar
+                            eventRevenueInPhnx
+            }
+          }`
 			}
 		}).then((graphEvents) => {
-			console.log("GraphQL query response in MyEvents Active Events", Date.now(), graphEvents.data.data)
+			console.log("GraphQL query response in MyEvents Past Events", Date.now(), graphEvents.data.data)
 			if (!graphEvents.data || graphEvents.data.data === undefined) {
 				// console.log("GraphQL query -- graphEvents undefined")
 				this.setState({ loading: false, Topic_Events: [], active_length: 0 });
@@ -217,6 +219,8 @@ class MyEvents extends Component {
 			this.setState({ loading: false });
 		})
 
+
+
 	}
 
 	//Get My Concluded Events on Blockchain
@@ -234,7 +238,7 @@ class MyEvents extends Component {
 				query:
 
 					`{
-						events(where : {owner: ${this.accounts}}) {
+						events(where : {owner: "${this.account.toLowerCase()}"}) {
 							id
 							token
 							eventId
@@ -256,7 +260,6 @@ class MyEvents extends Component {
 							eventRevenueInDollar
 							eventRevenueInPhnx
 						  }
-			}
 		  }`
 
 			}
@@ -479,7 +482,7 @@ class MyEvents extends Component {
 									}
 									className="page-link"
 								>
-									{i}
+									{i} am
 								</Link>
 							</li>
 						);
@@ -546,7 +549,7 @@ class MyEvents extends Component {
 			}
 		}
 		return (
-			<div className="event-page-wrapper">
+			<div className="event-page-wrapper" ref={this.myRef}>
 				<Header title="Created Events" page="myEvent" searchBar={true} />
 
 				<AppBar position="static" className={classes.AppBar} color="transparent">

@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Header = ({ title, disabled, buttonText, goBack, page, phnxButton, searchBar, connectWallet, buyTicket }) => {
+const Header = ({ title, disabled, buttonText, goBack, page, phnxButton, searchBar, connectWallet, buyTicket ,handleClickOpen2}) => {
 	const classes = useStyles();
 
 	return (
@@ -53,8 +53,8 @@ const Header = ({ title, disabled, buttonText, goBack, page, phnxButton, searchB
 			</div>
 
 
-			{page == "analytics" || page == "create" || page == "calendar"
-				|| page == "guide" || phnxButton ?
+			{page == "analytics" || page == "create" 
+				|| phnxButton ?
 				<BuyPhnxButton /> : null
 			}
 			{
@@ -69,7 +69,7 @@ const Header = ({ title, disabled, buttonText, goBack, page, phnxButton, searchB
 							color="primary"
 							style={{ marginRight: "10px" }}
 							className={classes.buy}
-							onClick={this.handleClickOpen2}
+							onClick={handleClickOpen2}
 							disabled={disabled}
 						>
 							<ShoppingCartOutlined

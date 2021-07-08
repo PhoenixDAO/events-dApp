@@ -291,138 +291,138 @@ class EventPage extends Component {
 	}
 
 	//Get SoldTicket Data
-	async loadblockhain() {
-		const web3 = new Web3(
-			new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
-		);
-		const openEvents = new web3.eth.Contract(
-			Open_events_ABI,
-			Open_events_Address
-		);
+	// async loadblockhain() {
+	// 	const web3 = new Web3(
+	// 		new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+	// 	);
+	// 	const openEvents = new web3.eth.Contract(
+	// 		Open_events_ABI,
+	// 		Open_events_Address
+	// 	);
 
-		if (this._isMounted) {
-			this.setState({ openEvents });
-			this.setState({ phoenixDAOTransfer: [] });
-		}
-		const blockNumber = await web3.eth.getBlockNumber();
-		if (this._isMounted) {
-			this.setState({
-				blocks: blockNumber - 50000,
-				latestblocks: blockNumber - 1,
-				soldTicket: [],
-			});
-		}
+	// 	if (this._isMounted) {
+	// 		this.setState({ openEvents });
+	// 		this.setState({ phoenixDAOTransfer: [] });
+	// 	}
+	// 	const blockNumber = await web3.eth.getBlockNumber();
+	// 	if (this._isMounted) {
+	// 		this.setState({
+	// 			blocks: blockNumber - 50000,
+	// 			latestblocks: blockNumber - 1,
+	// 			soldTicket: [],
+	// 		});
+	// 	}
 
-		// openEvents
-		// 	.getPastEvents("SoldTicket", {
-		// 		filter: { eventId: this.props.match.params.id },
-		// 		fromBlock: 5000000,
-		// 		toBlock: 'latest',
-		// 	})
-		// 	.then((events) => {
-		await axios({
-			url: graphURL,
-			method: "post",
-			data: {
-				// query: `
-				//   {
-				// 	events {
-				// 	  eventId
-				// 	  price
-				// 	  token
-				// 	  sold
-				// 	  buyers
-				// 	}
-				//   }
-				//   `,
-				query: `{
-					tickets(where: { eventId:${this.props.match.params.id}}){
-						id
-						eventId
-						buyer
-						boughtTimeStamp
-						boughtLocation
-						eventLocation
-						soldCategory
-						categoryIndex
-						priceInPhnx
-						priceInDollar
-					  }
-				}`,
-			},
-		})
-			.then((graphEvents) => {
-				console.log("GraphQL query for event buyers in eventPage", graphEvents.data.data.tickets)
-				let buyersOfTheEvent = graphEvents.data.data.tickets.map((ticket) => {
-					return ticket.buyer;
-				});
-				console.log("GraphQL result in eventPage", buyersOfTheEvent)
-				if (this._isMounted) {
-					this.setState({
-						load: false,
-						soldTicket: buyersOfTheEvent,
-						active_length: buyersOfTheEvent.length,
-						check: buyersOfTheEvent,
-					});
-				}
+	// 	// openEvents
+	// 	// 	.getPastEvents("SoldTicket", {
+	// 	// 		filter: { eventId: this.props.match.params.id },
+	// 	// 		fromBlock: 5000000,
+	// 	// 		toBlock: 'latest',
+	// 	// 	})
+	// 	// 	.then((events) => {
+	// 	await axios({
+	// 		url: graphURL,
+	// 		method: "post",
+	// 		data: {
+	// 			// query: `
+	// 			//   {
+	// 			// 	events {
+	// 			// 	  eventId
+	// 			// 	  price
+	// 			// 	  token
+	// 			// 	  sold
+	// 			// 	  buyers
+	// 			// 	}
+	// 			//   }
+	// 			//   `,
+	// 			query: `{
+	// 				tickets(where: { eventId:${this.props.match.params.id}}){
+	// 					id
+	// 					eventId
+	// 					buyer
+	// 					boughtTimeStamp
+	// 					boughtLocation
+	// 					eventLocation
+	// 					soldCategory
+	// 					categoryIndex
+	// 					priceInPhnx
+	// 					priceInDollar
+	// 				  }
+	// 			}`,
+	// 		},
+	// 	})
+	// 		.then((graphEvents) => {
+	// 			console.log("GraphQL query for event buyers in eventPage", graphEvents.data.data.tickets)
+	// 			let buyersOfTheEvent = graphEvents.data.data.tickets.map((ticket) => {
+	// 				return ticket.buyer;
+	// 			});
+	// 			console.log("GraphQL result in eventPage", buyersOfTheEvent)
+	// 			if (this._isMounted) {
+	// 				this.setState({
+	// 					load: false,
+	// 					soldTicket: buyersOfTheEvent,
+	// 					active_length: buyersOfTheEvent.length,
+	// 					check: buyersOfTheEvent,
+	// 				});
+	// 			}
 
-				// let tickets = graphEvents.data.data.events.find(
-				// 	(event) => event.eventId == this.props.match.params.id
-				// );
+	// 			// let tickets = graphEvents.data.data.events.find(
+	// 			// 	(event) => event.eventId == this.props.match.params.id
+	// 			// );
 
-				// this.setState({ load: true });
-				// var newsort = tickets.buyers
-				// 	.concat()
-				// 	.sort((a, b) => b.blockNumber - a.blockNumber);
-				// if (this._isMounted) {
-				// 	this.setState({
-				// 		load: false,
-				// 		soldTicket: newsort,
-				// 		active_length: newsort.length,
-				// 		check: newsort,
-				// 	});
-				// }
-			})
-			.catch((err) => console.log("Error in GraphQL query for event buyers in eventPage", err));
+	// 			// this.setState({ load: true });
+	// 			// var newsort = tickets.buyers
+	// 			// 	.concat()
+	// 			// 	.sort((a, b) => b.blockNumber - a.blockNumber);
+	// 			// if (this._isMounted) {
+	// 			// 	this.setState({
+	// 			// 		load: false,
+	// 			// 		soldTicket: newsort,
+	// 			// 		active_length: newsort.length,
+	// 			// 		check: newsort,
+	// 			// 	});
+	// 			// }
+	// 		})
+	// 		.catch((err) => console.log("Error in GraphQL query for event buyers in eventPage", err));
 
-		// openEvents
-		// 	.getPastEvents("SoldTicket", {
-		// 		fromBlock: 5000000,
-		// 		toBlock: 'latest',
-		// 	})
-		// 	.then((events) => {console.log("mere soldTickets without Id",events)})
-		// 	.catch((err) => console.error(err));
+	// 	// openEvents
+	// 	// 	.getPastEvents("SoldTicket", {
+	// 	// 		fromBlock: 5000000,
+	// 	// 		toBlock: 'latest',
+	// 	// 	})
+	// 	// 	.then((events) => {console.log("mere soldTickets without Id",events)})
+	// 	// 	.catch((err) => console.error(err));
 
-		//Listen for Incoming Sold Tickets
-		// openEvents.events
-		// 	.SoldTicket({
-		// 		filter: { eventId: this.props.match.params.id },
-		// 		fromBlock: blockNumber,
-		// 		toBlock: "latest",
-		// 	})
-		// 	.on("data", (log) => {
-		// 		console.log('mere soldTickets listner', log)
-		// 		setTimeout(() => {
-		// 			this.setState({ load: true });
+	// 	//Listen for Incoming Sold Tickets
+	// 	// openEvents.events
+	// 	// 	.SoldTicket({
+	// 	// 		filter: { eventId: this.props.match.params.id },
+	// 	// 		fromBlock: blockNumber,
+	// 	// 		toBlock: "latest",
+	// 	// 	})
+	// 	// 	.on("data", (log) => {
+	// 	// 		console.log('mere soldTickets listner', log)
+	// 	// 		setTimeout(() => {
+	// 	// 			this.setState({ load: true });
 
-		// 			this.setState({
-		// 				soldTicket: [...this.state.soldTicket, log],
-		// 			});
-		// 			var newest = this.state.soldTicket;
-		// 			var newsort = newest
-		// 				.concat()
-		// 				.sort((a, b) => b.blockNumber - a.blockNumber);
-		// 			if (this._isMounted) {
-		// 				this.setState({ soldTicket: newsort });
-		// 				this.setState({
-		// 					active_length: this.state.soldTicket.length,
-		// 				});
-		// 			}
-		// 			this.setState({ load: false });
-		// 		}),
-		// 			15000;
-		// 	});
-	}
+	// 	// 			this.setState({
+	// 	// 				soldTicket: [...this.state.soldTicket, log],
+	// 	// 			});
+	// 	// 			var newest = this.state.soldTicket;
+	// 	// 			var newsort = newest
+	// 	// 				.concat()
+	// 	// 				.sort((a, b) => b.blockNumber - a.blockNumber);
+	// 	// 			if (this._isMounted) {
+	// 	// 				this.setState({ soldTicket: newsort });
+	// 	// 				this.setState({
+	// 	// 					active_length: this.state.soldTicket.length,
+	// 	// 				});
+	// 	// 			}
+	// 	// 			this.setState({ load: false });
+	// 	// 		}),
+	// 	// 			15000;
+	// 	// 	});
+	// }
 
 	//get market cap & dollar value of PhoenixDAO
 	async getPhoenixDAOMarketValue() {
@@ -592,7 +592,7 @@ class EventPage extends Component {
 				token: this.state.blockChainEvent[3],
 				openEvents_address: Open_events_Address,
 				buyticket: this.props.eventsContract.methods.buyTicket(
-					[this.props.match.params.id, 0, "karachi"]
+					[this.props.match.params.id, this.state.selectedCategoryIndex, "karachi"]
 				),
 				approve: this.props.phnxContract.methods.approve(
 					Open_events_Address,
@@ -770,13 +770,14 @@ class EventPage extends Component {
 								time={time}
 								price={priceGrid}
 								buy={this.inquire}
+								buttonText={buttonText}
 							/>
 							<Header disabled={
 								disabled ||
 								this.props.disabledStatus ||
 								this.state.disabledBuying
 							}  
-							title={event_data.name} buttonText={buttonText} goBack={this.goBack} page="event" buyTicket={true} />
+							title={event_data.name} buttonText={buttonText} goBack={this.goBack} page="event" buyTicket={true} handleClickOpen2={this.handleClickOpen2} />
 							<Grid
 								style={{
 									marginBottom: "40px",
@@ -1232,7 +1233,7 @@ class EventPage extends Component {
 		});
 		this._isMounted = true;
 		this.updateIPFS();
-		this.loadblockhain();
+		// this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
 	}
 

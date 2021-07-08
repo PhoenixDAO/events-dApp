@@ -346,12 +346,13 @@ const Analytics = (props, context) => {
 	}
 
 	const getPhnxRevenue = async () => {
+		console.log("I am here",props.accounts);
 		await axios({
 			url: graphURL,
 			method: 'post',
 			data: {
 				query: `{
-					events(where : {owner: ${this.accounts}}) {
+					events(where : {owner: "${props.accounts.toLowerCase()}"}) {
 						id
 						token
 						eventId
@@ -373,43 +374,41 @@ const Analytics = (props, context) => {
 						eventRevenueInDollar
 						eventRevenueInPhnx
 					  }
-		}
-	  }`
+	  				}`
 			}
 		}).then((graphEvents) => {
-				console.log("GraphQL query response in analytics", Date.now(), graphEvents.data.data.events)
+			console.log("GraphQL query response in analytics", Date.now(), graphEvents.data.data.events)
 
-				if (!graphEvents.data || graphEvents.data.data == "undefined") {
-					// console.log("GraphQL query -- graphEvents undefined")
-					this.setState({
-						Events_Blockchain: [],
-						// active_length: 0,
-						event_copy: [],
-					});
-				} else {
-					// if (this._isMounted) {
-					const dateTime = Date.now();
-					const dateNow = Math.floor(dateTime / 1000);
-					this.setState({ loading: true });
-					console.log("events", graphEvents.data.data.events);
-					let newsort = graphEvents.data.data.events
-						.concat()
-						.sort((a, b) => b.blockNumber - a.blockNumber)
-						.filter((activeEvents) => activeEvents.time >= dateNow);
-					// console.log("GraphQL query newsort",newsort)
+			if (!graphEvents.data || graphEvents.data.data == "undefined") {
+				// console.log("GraphQL query -- graphEvents undefined")
+				this.setState({
+					Events_Blockchain: [],
+					// active_length: 0,
+					event_copy: [],
+				});
+			} else {
+				// if (this._isMounted) {
+				const dateTime = Date.now();
+				const dateNow = Math.floor(dateTime / 1000);
+				this.setState({ loading: true });
+				console.log("events", graphEvents.data.data.events);
+				let newsort = graphEvents.data.data.events
+					.concat()
+					.sort((a, b) => b.blockNumber - a.blockNumber)
+					.filter((activeEvents) => activeEvents.time >= dateNow);
+				// console.log("GraphQL query newsort",newsort)
 
-					this.setState({
-						Events_Blockchain: newsort,
-						// active_length: newsort.length,
-						event_copy: newsort,
-					});
-					this.setState({ loading: false });
-					// }
-				}
-			})
-			.catch((err) => console.error(err));
-			dataset = [1, 2, 34, 0, 6, 7];
-			setGraphData(dataset);
+				this.setState({
+					Events_Blockchain: newsort,
+					// active_length: newsort.length,
+					event_copy: newsort,
+				});
+				this.setState({ loading: false });
+				// }
+			}
+		}).catch((err) => console.error(err));
+		dataset = [1, 2, 34, 0, 6, 7];
+		setGraphData(dataset);
 	};
 	const getDollarRevenue = () => {
 		dataset = [2, 5, 2, 8, 3, 2];
