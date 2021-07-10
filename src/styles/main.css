@@ -1681,6 +1681,7 @@ body,
 }
 
 .new-transaction-wrapper .sold_text {
+    white-space: break-spaces;
     padding-top: 15px;
     padding-bottom: 0px;
     text-align: left;

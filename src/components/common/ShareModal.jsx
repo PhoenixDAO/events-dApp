@@ -124,7 +124,7 @@ export default function ShareModal({ handleClose, open, titleURL }) {
       setIsCopied(false);
     }, 1000);
   };
-  let URL = "events.phoenixdao.io" + titleURL
+  let URL = "https://phoenixdao-events-dapp.herokuapp.com" + titleURL
   return (
     <div>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} TransitionComponent={Transition}

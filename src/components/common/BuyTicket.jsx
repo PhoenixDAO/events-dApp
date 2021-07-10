@@ -209,7 +209,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, date, 
                   {date},{time}
                 </Typography>
               </div>
-              <div>
+              <div style={{textAlign:"end"}}>
                 {price}
               </div>
             </Grid>
