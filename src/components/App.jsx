@@ -1,10 +1,6 @@
 import React, { Component, useCallback } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { drizzleConnect,DrizzleProvider } from "drizzle-react";
-// import { DrizzleProvider } from "drizzle-react";
-
-// import { drizzleConnect } from "@drizzle/react-plugin";
-
+import { drizzleConnect } from "drizzle-react";
 import { ToastContainer, toast } from "react-toastify";
 import Web3 from "web3";
 
@@ -38,7 +34,12 @@ import Notify from "./Notify";
 import PropTypes from "prop-types";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
-import { INFURA_URL, GLOBAL_NETWORK_ID } from "../config/const.js";
+import {
+	INFURA_URL,
+	INFURA_WEB_URL,
+	GLOBAL_NETWORK_ID,
+} from "../config/const.js";
+import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
@@ -92,12 +93,33 @@ class App extends Component {
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
 		this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
 		this.executeScroll = this.executeScroll.bind(this);
+		this.initializeContract = this.initializeContract.bind(this);
+	}
+	async initializeContract() {
+		try {
+			const web3 = new Web3(
+				// new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+				window.ethereum
+			);
+			const openEvents = await new web3.eth.Contract(
+				Open_events_ABI,
+				Open_events_Address
+			);
+			const PHNX = await new web3.eth.Contract(
+				PhoenixDAO_Testnet_Token_ABI,
+				PhoenixDAO_Mainnet_Token_Address
+			);
+			console.log("contract initialized", openEvents, PHNX);
+			this.setState({ eventsContract: openEvents, phnxContract: PHNX });
+		} catch (err) {
+			console.log("error initializing the contract", err);
+		}
 	}
 
+	async componentWillMount() {
+		await this.initializeContract();
+	}
 	async componentDidMount() {
-		console.log("context", this.context);
-		console.log("DrizzleProvider", DrizzleProvider);
-
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
@@ -201,6 +223,7 @@ class App extends Component {
 
 	//get value from buyer/from child components
 	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
+		console.log("In inquireBuy function");
 		if (
 			this.state.account.length !== 0 &&
 			this.props.web3.networkId == GLOBAL_NETWORK_ID
@@ -208,8 +231,8 @@ class App extends Component {
 			this.setState({ disabledStatus: true });
 			this.setState(
 				{
-					fee: fee,
-					token: token,
+					// fee: fee,
+					// token: token,
 					buyticket: buyticket,
 					approve: approve,
 				},
@@ -308,8 +331,10 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-
+		console.log("in buy function");
 		if ((await this.allowance()) == 0) {
+			console.log("in buy function giving allowance");
+
 			this.state.approve
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
@@ -339,6 +364,8 @@ class App extends Component {
 									text={
 										"Transaction successfull!\nYou can buy a ticket now."
 									}
+									icon="fas fa-check-circle fa-3x"
+									color="#413AE2"
 									hash={txreceipt.transactionHash}
 								/>,
 								{
@@ -353,6 +380,10 @@ class App extends Component {
 					}
 				})
 				.on("error", (error) => {
+					console.log(
+						"error in buy in if function giving allowance",
+						error
+					);
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -411,6 +442,10 @@ class App extends Component {
 					}
 				})
 				.on("error", (error) => {
+					console.log(
+						"error in buy in else function giving allowance",
+						error
+					);
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -477,6 +512,7 @@ class App extends Component {
 													.NewAndUpdatedEvent
 													.returnValues
 									}
+									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
 									link="checkout your event here"
 									text="Transaction success!"
@@ -781,6 +817,7 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
 							/>
 						)}
 					/>
@@ -794,6 +831,7 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
 							/>
 						)}
 					/>
@@ -812,25 +850,15 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/pastevents/:page"
-						render={(props) => (
-							<PastEvents
-								{...props}
-								executeScroll={this.executeScroll}
-							/>
-						)}
-					/>
-					<Route
-						exact
 						path="/mytickets/:page"
 						render={(props) => (
 							<MyTickets
 								{...props}
 								executeScroll={this.executeScroll}
+								eventsContract={this.state.eventsContract}
 							/>
 						)}
 					/>
-
 					<Route
 						exact
 						path="/createevent"
@@ -845,9 +873,25 @@ class App extends Component {
 								done={this.state.done}
 								error={this.state.error}
 								account={this.state.account}
+								eventsContract={this.state.eventsContract}
 							/>
 						)}
 					/>
+
+					{/* 
+					<Route
+						exact
+						path="/pastevents/:page"
+						render={(props) => (
+							<PastEvents
+								{...props}
+								executeScroll={this.executeScroll}
+							/>
+						)}
+					/>
+				
+
+					
 					<Route
 						exact
 						path="/editevent"
@@ -867,6 +911,19 @@ class App extends Component {
 						)}
 					/>
 
+					
+					<Route
+						exact
+						path="/event-stat/:page/:id"
+						render={(props) => (
+							<MyEventStat
+								{...props}
+								inquire={this.inquireBuy}
+								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
+							/>
+						)}
+					/> */}
 					<Route
 						exact
 						path="/myevents/:page"
@@ -881,18 +938,6 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/event-stat/:page/:id"
-						render={(props) => (
-							<MyEventStat
-								{...props}
-								inquire={this.inquireBuy}
-								disabledStatus={this.state.disabledStatus}
-								toggleDisabling={this.toggleDisabling}
-							/>
-						)}
-					/>
-					<Route
-						exact
 						path="/event/:page/:id"
 						render={(props) => (
 							<EventPage
@@ -900,24 +945,27 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
+								phnxContract={this.state.phnxContract}
 							/>
 						)}
 					/>
 					<Route
 						exact
-						path="/token"
+						path="/calendar"
 						render={(props) => (
-							<Token
+							<Calendars
 								{...props}
-								getPhoenixDAO={this.getPhoenixDAO}
+								executeScroll={this.executeScroll}
+								eventsContract={this.state.eventsContract}
 							/>
 						)}
 					/>
 					<Route
 						exact
-						path="/topics"
-						//  component={TopicsLandingPage}
-						component={(props) => <TopicsLandingPage {...props} />}
+						path="/analytics"
+						component={Analytics}
+						account={this.state.account}
 					/>
 					<Route
 						exact
@@ -932,29 +980,14 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/locations"
-						component={LocationsLandingPage}
-					/>
-					<Route
-						exact
-						path="/location/:page"
-						component={LocationLandingPage}
-					/>
-					<Route
-						exact
-						path="/calendar"
-						render={(props) => (
-							<Calendars
+						path="/topics"
+						//  component={TopicsLandingPage}
+						component={(props) => (
+							<TopicsLandingPage
 								{...props}
-								executeScroll={this.executeScroll}
+								eventsContract={this.state.eventsContract}
 							/>
 						)}
-					/>
-					<Route
-						exact
-						path="/analytics"
-						component={Analytics}
-						account={this.state.account}
 					/>
 					<Route
 						exact
@@ -965,6 +998,30 @@ class App extends Component {
 						disabledStatus={this.state.disabledStatus}
 						toggleDisabling={this.toggleDisabling}
 					/>
+					{/* <Route
+						exact
+						path="/token"
+						render={(props) => (
+							<Token
+								{...props}
+								getPhoenixDAO={this.getPhoenixDAO}
+							/>
+						)}
+					/>
+					
+				
+					<Route
+						exact
+						path="/locations"
+						component={LocationsLandingPage}
+					/>
+					<Route
+						exact
+						path="/location/:page"
+						component={LocationLandingPage}
+					/>
+					*/}
+
 					<Route
 						exact
 						path="/guide"

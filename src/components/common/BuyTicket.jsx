@@ -174,7 +174,7 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 
-export default function BuyTicket({ handleClose, open, eventTitle, image, date, time,price,buy }) {
+export default function BuyTicket({ handleClose, open, eventTitle, image, date, time,price,buy,buttonText}) {
   const classes = useStyles();
   const buyTicket = () => {
     buy();
@@ -189,7 +189,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, date, 
           <img src={roundlogo} className={classes.logo} alt="phnx logo" />
           PhoenixDAO
           <h2 className={classes.sharelink}>
-            Buy Ticket
+          {buttonText}
           </h2>
           <Typography gutterBottom className={classes.eventTitle} style={{ color: "#73727D", fontWeight: "500" }}>
             You’re about to purchase this ticket
@@ -237,7 +237,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, date, 
             onClick={buyTicket}
           >
             <ShoppingCartOutlined style={{ marginRight: "10px" }} />
-            Get Ticket									</Button>
+            {buttonText}								</Button>
         </DialogActions>
       </Dialog>
     </div>

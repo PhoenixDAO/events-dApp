@@ -184,7 +184,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const MyStepper = ({ handleCreateEvent }) => {
+const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	const classes = useStyles();
 	const { handleSubmit, control, register } = useForm();
 
@@ -281,31 +281,72 @@ const MyStepper = ({ handleCreateEvent }) => {
 
 	//next button steeper
 	const handleNext = (fields) => {
-		// console.log("activesteps", activeStep);
-		// console.log("state", state);
-		console.log("fields", fields);
-		// for (const key of Object.keys(fields)) {
-		// 	console.log(key, fields[key]);
-		// 	setState((prevState) => ({
-		// 		...prevState,
-		// 		[key]: fields[key],
-		// 	}));
-		// }
+		// console.log("categories", categories);
 
-		setActiveStep((prevActiveStep) => prevActiveStep + 1);
-
-		// if (activeStep === 0) {
-		// 	//first stepper conditions - eventdate&time
-		// 	setActiveStep((prevActiveStep) => prevActiveStep + 1);
-		// } else if (activeStep === 1) {
-		// 	//2nd stpper
-		// } else if (activeStep === 2) {
-		// 	// 3rd stepper
-		// } else if (activeStep === 3) {
-		// 	// 4th stepper
-		// } else {
-		// 	//publish event
-		// }
+		if (activeStep === 0) {
+			//first stepper conditions - eventdate&time
+			onFieldsChange(fields);
+			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+		} else if (activeStep === 1) {
+			//2nd stpper - location/link, images, topicI
+			onFieldsChange(fields);
+			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+		} else if (activeStep === 2) {
+			// 3rd stepper -  event categories (free, single paid, multiple paid)
+			// bool token; // false means free
+			if (fields.eventCategory === "free") {
+				let cat = [];
+				let obj = {
+					ticketName: "free",
+					dollarPrice: "0",
+					ticketAvailability:
+						fields.ticketAvailability === "unlimited"
+							? false
+							: true,
+					noOfTickets:
+						fields.ticketAvailability === "unlimited"
+							? "0"
+							: fields.noOfTickets,
+				};
+				cat.push(obj);
+				fields.categories = cat;
+				fields.token = false; // false means free
+				onFieldsChange(fields);
+				setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			} else if (fields.eventCategory === "single") {
+				let cat = [];
+				let obj = {
+					ticketName: "single",
+					dollarPrice: fields.dollarPrice,
+					ticketAvailability:
+						fields.ticketAvailability === "unlimited"
+							? false
+							: true,
+					noOfTickets:
+						fields.ticketAvailability === "unlimited"
+							? "0"
+							: fields.noOfTickets,
+				};
+				cat.push(obj);
+				fields.categories = cat;
+				fields.token = true; // false means free
+				onFieldsChange(fields);
+				setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			} else {
+				fields.categories = categories;
+				fields.token = true; // false means free
+				onFieldsChange(fields);
+				setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			}
+		} else if (activeStep === 3) {
+			// 4th stepper
+			onFieldsChange(fields);
+			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			handleCreateEvent();
+		} else {
+			//publish event
+			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
+		}
 	};
 
 	//back button stepper
@@ -330,9 +371,14 @@ const MyStepper = ({ handleCreateEvent }) => {
 		let obj = {
 			ticketName: fields[`ticketName${ticketCategory}`],
 			dollarPrice: fields[`dollarPrice${ticketCategory}`],
-			phnxPrice: fields[`phnxPrice${ticketCategory}`],
-			ticketAvailability: fields[`ticketAvailability${ticketCategory}`],
-			noOfTickets: fields[`noOfTickets${ticketCategory}`],
+			ticketAvailability:
+				fields[`ticketAvailability${ticketCategory}`] === "unlimited"
+					? false
+					: true,
+			noOfTickets:
+				fields[`ticketAvailability${ticketCategory}`] === "unlimited"
+					? "0"
+					: fields[`noOfTickets${ticketCategory}`],
 		};
 
 		let arr = categories;
@@ -1223,7 +1269,6 @@ const MyStepper = ({ handleCreateEvent }) => {
 													// }}
 												/>
 											</div>
-
 											<Controller
 												name="phnxPrice"
 												control={control}
@@ -1236,6 +1281,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 														className={
 															classes.margin
 														}
+														disabled
 														id="input-with-icon-textfield"
 														type="number"
 														variant="outlined"
@@ -1262,7 +1308,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 													/>
 												)}
 												rules={{
-													required: "Price in PHNX.",
+													required: false,
 												}}
 											/>
 										</div>
@@ -1386,7 +1432,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 																	{` Ticket`}
 																</h4>
 																<h6>
-																	{cat.noOfTickets
+																	{cat.ticketAvailability
 																		? cat.noOfTickets
 																		: `Unlimited  Tickets`}
 																</h6>
@@ -1600,6 +1646,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 																	className={
 																		classes.margin
 																	}
+																	disabled
 																	id="input-with-icon-textfield"
 																	type="number"
 																	variant="outlined"
@@ -1633,8 +1680,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 																/>
 															)}
 															rules={{
-																required:
-																	"Price in PHNX.",
+																required: false,
 															}}
 														/>
 													</div>

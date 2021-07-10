@@ -12,6 +12,7 @@ import ipfs from "../utils/ipfs";
 import { API_URL, REPORT_EVENT, GET_USER_DETAIL } from "../config/const";
 import axios from "axios";
 import Loading from "./Loading";
+import Web3 from "web3";
 // import eventTopics from "../config/topics.json";
 
 // import Button from "@material-ui/core/Button";
@@ -59,7 +60,7 @@ class Event extends Component {
 			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
 		}
 		super(props);
-		this.contracts = context.drizzle.contracts;
+		this.contracts = this.props.eventsContract;
 		// this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
 		// 	this.props.id
 		// );
@@ -87,12 +88,11 @@ class Event extends Component {
 			buy: "",
 			open: false,
 			hideEvent: [],
-			revenue: 0,
 			blockie: "/images/PhoenixDAO.png",
 			approvalGranted: false,
 			phoenixDAO_market: [],
-			myFavorites:this.props.myFavorites,
-			UserFavoriteEvents:[]
+			myFavorites: this.props.myFavorites,
+			UserFavoriteEvents: []
 		};
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
 		this.isCancelled = false;
@@ -106,13 +106,6 @@ class Event extends Component {
 	handleClose = () => {
 		this.setState({ open: false });
 	};
-	async GetEventsRevenue() {
-		let revenue = await this.contracts["DaoEvents"].methods
-			.eventRevenue(this.props.match.params.id)
-			.call();
-		revenue = revenue / 1000000000000000000;
-		this.setState({ revenue });
-	}
 
 	//get market cap & dollar value of PHNX
 	async getPhoenixDAOMarketValue() {
@@ -223,12 +216,12 @@ class Event extends Component {
 		return locations;
 	};
 
-	allowance = async () => {
-		let a = await this.contracts["PHNX"].methods
-			.allowance(this.account, this.contracts["DaoEvents"].address)
-			.call();
-		return a;
-	};
+	// allowance = async () => {
+	// 	let a = await this.contracts["PHNX"].methods
+	// 		.allowance(this.account, this.contracts["DaoEvents"].address)
+	// 		.call();
+	// 	return a;
+	// };
 
 	giveApproval = async () => {
 		this.props.toggleBuying();
@@ -310,41 +303,41 @@ class Event extends Component {
 		}
 	}
 
-	inquire = async () => {
-		let balance = await this.contracts["PHNX"].methods.totalSupply().call();
-		this.setState(
-			{
-				fee: this.state.eventData.price,
-				// this.props.contracts["DaoEvents"].events[this.event]
-				// 	.value[2],
-				token: this.state.eventData.token,
-				// this.props.contracts["DaoEvents"].events[this.event]
-				// 	.value[3],
-				openEvents_address: this.contracts["DaoEvents"].address,
-				buyticket: this.contracts["DaoEvents"].methods.buyTicket(
-					this.props.id
-				),
-				approve: this.contracts["PHNX"].methods.approve(
-					this.contracts["DaoEvents"].address,
-					balance
-				),
-			},
-			async () => {
-				if ((await this.allowance()) === 0) {
-					this.handleClickOpen();
-				} else {
-					this.props.inquire(
-						this.props.id,
-						this.state.fee,
-						this.state.token,
-						this.state.openEvents_address,
-						this.state.buyticket,
-						this.state.approve
-					);
-				}
-			}
-		);
-	};
+	// inquire = async () => {
+	// 	let balance = await this.contracts["PHNX"].methods.totalSupply().call();
+	// 	this.setState(
+	// 		{
+	// 			fee: this.state.eventData.price,
+	// 			// this.props.contracts["DaoEvents"].events[this.event]
+	// 			// 	.value[2],
+	// 			token: this.state.eventData.token,
+	// 			// this.props.contracts["DaoEvents"].events[this.event]
+	// 			// 	.value[3],
+	// 			openEvents_address: this.contracts["DaoEvents"].address,
+	// 			buyticket: this.contracts["DaoEvents"].methods.buyTicket(
+	// 				this.props.id
+	// 			),
+	// 			approve: this.contracts["PHNX"].methods.approve(
+	// 				this.contracts["DaoEvents"].address,
+	// 				balance
+	// 			),
+	// 		},
+	// 		async () => {
+	// 			if ((await this.allowance()) === 0) {
+	// 				this.handleClickOpen();
+	// 			} else {
+	// 				this.props.inquire(
+	// 					this.props.id,
+	// 					this.state.fee,
+	// 					this.state.token,
+	// 					this.state.openEvents_address,
+	// 					this.state.buyticket,
+	// 					this.state.approve
+	// 				);
+	// 			}
+	// 		}
+	// 	);
+	// };
 
 	// getPrettyCategory(rawCategory) {
 	//   let prettyCategory = "";
@@ -370,19 +363,19 @@ class Event extends Component {
 		}
 	};
 	getUserFavoritesEvent = async () => {
-        try {
-            const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`, 
-			{ address: this.props.accounts[0], networkId: this.props.web3.networkId });
-            this.setState({
-                UserFavoriteEvents: get.data.result.favourites,
-            });
+		try {
+			const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`,
+				{ address: this.props.accounts[0], networkId: this.props.web3.networkId });
+			this.setState({
+				UserFavoriteEvents: get.data.result.favourites,
+			});
 
-            return;
-        } catch (error) {
-            console.log("check error", error);
-        }
-    };
-	
+			return;
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
+
 	render() {
 		let body = (
 			<div className="card">
@@ -391,7 +384,7 @@ class Event extends Component {
 				</div>
 			</div>
 		);
-			// console.log("this.state.eventData in Event.js",this.state)
+		// console.log("this.state.eventData in Event.js",this.state)
 		if (
 			this.state.eventData
 			// typeof this.props.contracts["DaoEvents"].events[this.event] !==
@@ -411,304 +404,302 @@ class Event extends Component {
 				freeEvent = <p className="free_event">Free Event</p>;
 			}
 			// if (event_data.token !== undefined) {
-				let symbol = "PhoenixDAO.png";
-				let price = event_data.token
-					? this.context.drizzle.web3.utils.fromWei(
-						event_data.prices[0]
-						)
-					: "Free Event";
-				let date = new Date(parseInt(event_data.time, 10) * 1000);
-				// console.log("this.props.eventData",parseInt(event_data.time, 10))
+			let symbol = "PhoenixDAO.png";
+
+			let event_price = event_data.prices.map((price) => {
+				return (Web3.utils.fromWei(price) / this.state.phoenixDAO_market.usd).toFixed(2);
+			})
+			console.log("prices", event_price);
+
+			let date = new Date(parseInt(event_data.time, 10) * 1000);
+			// console.log("this.props.eventData",parseInt(event_data.time, 10))
 
 
-				// to be changed at the moment kept to first category
-				// let max_seats = event_data.limited ? event_data.seats : "∞"; // limited to tktLimited(array) and seats to tktTotalQuantity
-				let max_seats = event_data.tktLimited[0] ? event_data.catTktQuantity[0] : "∞"; 
+			// to be changed at the moment kept to first category
+			// let max_seats = event_data.limited ? event_data.seats : "∞"; // limited to tktLimited(array) and seats to tktTotalQuantity
+			let max_seats = event_data.tktLimited[0] ? event_data.catTktQuantity[0] : "∞";
 
-				let disabled = false;
-				let reportedOut = " ";
-				let reported = false;
-				let soldOut = " ";
-				for (let j = 0; j < this.state.hideEvent.length; j++) {
-					if (this.props.id == this.state.hideEvent[j].id) {
-						reported = true;
-						disabled = true;
-						buttonText = (
-							<span>
-								<span role="img" aria-label="alert">
-									{" "}
-								</span>{" "}
-								Reported
-							</span>
-						);
-						reportedOut = <p className="reported">Reported</p>;
-					}
-				}
-				let sold = false;
-				if (
-					!reported &&
-					// to be changed at the moment kept because not being on event cards
-					// event_data.limited &&
-					Number(event_data.tktTotalQuantitySold) >= Number(event_data.tktTotalQuantity)
-				) {
-					sold = true;
+			let disabled = false;
+			let reportedOut = " ";
+			let reported = false;
+			let soldOut = " ";
+			for (let j = 0; j < this.state.hideEvent.length; j++) {
+				if (this.props.id == this.state.hideEvent[j].id) {
+					reported = true;
 					disabled = true;
 					buttonText = (
 						<span>
 							<span role="img" aria-label="alert">
 								{" "}
 							</span>{" "}
-							Sold Out
+							Reported
 						</span>
 					);
-					soldOut = <p className="sold_out">Sold Out</p>;
+					reportedOut = <p className="reported">Reported</p>;
 				}
-				if (date.getTime() < new Date().getTime()) {
-					disabled = true;
-					buttonText = "Event has ended";
-				}
-				let badge = "";
-
-				if (event_data.tktTotalQuantitySold >= 2) {
-					badge = (
-						<img
-							src="/images/fire.png"
-							className="event_badge-hot"
-							alt="Hot Icon"
-						/>
-					);
-				}
-
-				let rawTopic = event_data.topic;
-
-				var topicRemovedDashes = rawTopic;
-				topicRemovedDashes = topicRemovedDashes.replace(
-					/-/g,
-					" "
+			}
+			let sold = false;
+			if (
+				!reported &&
+				// to be changed at the moment kept because not being on event cards
+				// event_data.limited &&
+				Number(event_data.tktTotalQuantitySold) >= Number(event_data.tktTotalQuantity)
+			) {
+				sold = true;
+				disabled = true;
+				buttonText = (
+					<span>
+						<span role="img" aria-label="alert">
+							{" "}
+						</span>{" "}
+						Sold Out
+					</span>
 				);
+				soldOut = <p className="sold_out">Sold Out</p>;
+			}
+			if (date.getTime() < new Date().getTime()) {
+				disabled = true;
+				buttonText = "Event has ended";
+			}
+			let badge = "";
 
-				var topic = topicRemovedDashes
-					.toLowerCase()
-					.split(" ")
-					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-					.join(" ");
-
-				let topicURL = "/topic/" + event_data.topic + "/1";
-				let rawTitle = event_data.name;
-				var titleRemovedSpaces = rawTitle;
-				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
-
-				var pagetitle = titleRemovedSpaces
-					.toLowerCase()
-					.split(" ")
-					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-					.join(" ");
-
-				let titleURL = "/event/" + pagetitle + "/" + this.props.id;
-				let myEventStatURL =
-					"/event-stat/" + pagetitle + "/" + this.props.id;
-				let myEvent = false;
-				if (
-					event_data.owner.toLowerCase() == this.account.toLowerCase()
-				) {
-					myEvent = true;
-				}
-				let dollarRevenue =
-					this.state.phoenixDAO_market.usd * this.state.revenue;
-					let favouriteEvent= this.state.UserFavoriteEvents.indexOf(this.props.id) != -1; 
-				body = (
-					<div>
-						{/* new card */}
-						<EventCard
-							event_data={event_data}
-							date={date}
-							image={image}
-							locations={locations}
-							myEvent={this.props.myEvents}
-							myEventStatURL={myEventStatURL}
-							titleURL={titleURL}
-							max_seats={max_seats}
-							revenue={this.state.revenue}
-							dollarRevenue={dollarRevenue}
-							myFavorites={this.props.myFavorites}
-							favoriteEvent={favouriteEvent}
-							eventId={this.props.id}
-							reloadData={this.props.reloadData}
-                            reload={this.props.reload}
-						/>
-					</div>
+			if (event_data.tktTotalQuantitySold >= 2) {
+				badge = (
+					<img
+						src="/images/fire.png"
+						className="event_badge-hot"
+						alt="Hot Icon"
+					/>
 				);
+			}
 
-				//old card body
-				// let bodyOld = (
-				// <.>
-				// 	<div>
-				// 		{/* old card */}
-				// 		<div className="card">
-				// 			<div className="image_wrapper">
-				// 				{!reported ? (
-				// 					<Link
-				// 						to={
-				// 							myEvent
-				// 								? myEventStatURL
-				// 								: titleURL
-				// 						}
-				// 					>
-				// 						<img
-				// 							className="card-img-top event-image"
-				// 							src={image}
-				// 							alt={event_data.name}
-				// 						/>
-				// 					</Link>
-				// 				) : (
-				// 					<img
-				// 						className="card-img-top event-image"
-				// 						src={image}
-				// 						alt={event_data.name}
-				// 					/>
-				// 				)}
+			let rawTopic = event_data.topic;
 
-				// 				{reportedOut}
-				// 				{!reported && soldOut}
-				// 				{!reported && !sold && freeEvent}
-				// 			</div>
+			var topicRemovedDashes = rawTopic;
+			topicRemovedDashes = topicRemovedDashes.replace(
+				/-/g,
+				" "
+			);
 
-				// 			<div className="card-header text-muted event-header ">
-				// 				<img
-				// 					className="float-left"
-				// 					src={this.state.blockie}
-				// 					alt={event_data.owner}
-				// 				/>
-				// 				{/* {this.props.this.props. ? (
-				// 			<Link to={myEventStatURL}>
-				// 			</Link>
-				// 		) : (
-				// 			""
-				// 		)} */}
-				// 			</div>
+			var topic = topicRemovedDashes
+				.toLowerCase()
+				.split(" ")
+				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+				.join(" ");
 
-				// 			<div className="card-body">
-				// 				{reported ? (
-				// 					<h5
-				// 						className="card-title event-title"
-				// 						title={event_data.name}
-				// 					>
-				// 						{badge}
-				// 						{event_data.name}
-				// 					</h5>
-				// 				) : (
-				// 					<h5
-				// 						className="card-title event-title"
-				// 						title={event_data.name}
-				// 					>
-				// 						<Link
-				// 							to={
-				// 								myEvent
-				// 									? myEventStatURL
-				// 									: titleURL
-				// 							}
-				// 						>
-				// 							{badge}
-				// 							{event_data.name}
-				// 						</Link>
-				// 					</h5>
-				// 				)}
-				// 				{description}
-				// 			</div>
+			let topicURL = "/topic/" + event_data.topic + "/1";
+			let rawTitle = event_data.name;
+			var titleRemovedSpaces = rawTitle;
+			titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
 
-				// 			<ul className="list-group list-group-flush">
-				// 				<li className="list-group-item ">
-				// 					{locations}
-				// 				</li>
-				// 				<li className="list-group-item category">
-				// 					<strong style={{ paddingRight: "3px" }}>
-				// 						Category:{" "}
-				// 					</strong>{" "}
-				// 					<a href={topicURL}>{category}</a>
-				// 				</li>
-				// 				<li className="list-group-item">
-				// 					<strong>Price:</strong>{" "}
-				// 					<img
-				// 						src={"/images/" + symbol}
-				// 						className="event_price-image"
-				// 						alt="Event Price Icon"
-				// 					/>{" "}
-				// 					{event_data.token
-				// 						? "" +
-				// 						  numeral(price).format("0.000")
-				// 						: "" + price}
-				// 					{event_data.token ? " or " : ""}
-				// 					{event_data.token ? (
-				// 						<img
-				// 							src={"/images/dollarsign.png"}
-				// 							className="event_price-image"
-				// 							alt="Event Price"
-				// 						/>
-				// 					) : (
-				// 						""
-				// 					)}
-				// 					{event_data.token
-				// 						? numeral(
-				// 								price *
-				// 									this.state
-				// 										.PhoenixDAO_market
-				// 										.usd
-				// 						  ).format("0.000")
-				// 						: ""}
-				// 				</li>
-				// 				<li className="list-group-item date">
-				// 					<strong>Date:</strong>{" "}
-				// 					{date.toLocaleDateString()} at{" "}
-				// 					{date.toLocaleTimeString([], {
-				// 						hour: "2-digit",
-				// 						minute: "2-digit",
-				// 					})}
-				// 				</li>
-				// 				<li className="list-group-item">
-				// 					<strong>Tickets Sold:</strong>{" "}
-				// 					{event_data.sold}/{max_seats}
-				// 				</li>
-				// 			</ul>
-				// 			{/* {this.props.this.props. ? (
-				// 		<div className=" editButtons text-muted text-center">
-				// 			<Link
-				// 				className="col-6"
-				// 				to={{
-				// 					pathname: "/editevent",
-				// 					state: { event: event_data ,...this.state,price:price},
-				// 				}}
-				// 			>
-				// 				<button className="btn btn-dark col-12">
-				// 					<i className="fa fa-edit"></i> Edit
-				// 				</button>
-				// 			</Link>
-				// 			<button
-				// 				className="btn btn-dark col-6"
-				// 				onClick={this.inquire}
-				// 			>
-				// 				<i className="fas fa-trash-alt"></i> Delete
-				// 			</button>
-				// 		</div>
-				// 	) : null} */}
+			var pagetitle = titleRemovedSpaces
+				.toLowerCase()
+				.split(" ")
+				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+				.join(" ");
 
-				// 			<div className="card-footer text-muted text-center">
-				// 				<button
-				// 					className="btn btn-dark"
-				// 					onClick={this.inquire}
-				// 					disabled={
-				// 						disabled ||
-				// 						this.props.disabledStatus ||
-				// 						this.props.disabledBuying
-				// 					}
-				// 				>
-				// 					<i className="fas fa-ticket-alt"></i>{" "}
-				// 					{buttonText}
-				// 				</button>
-				// 			</div>
-				// 		</div>
-				// 	</div>
-				// </.>
-				// );
+			let titleURL = "/event/" + pagetitle + "/" + this.props.id;
+			let myEventStatURL = "/event-stat/" + pagetitle + "/" + this.props.id;
+			let myEvent = false;
+			if (
+				event_data.owner.toLowerCase() == this.account.toLowerCase()
+			) {
+				myEvent = true;
+			}
+			let dollarRevenue =
+				this.state.phoenixDAO_market.usd * this.state.revenue;
+			let favouriteEvent = this.state.UserFavoriteEvents.indexOf(this.props.id) != -1;
+			body = (
+				<div>
+					{/* new card */}
+					<EventCard
+						event_data={event_data}
+						date={date}
+						image={image}
+						myEvent={this.props.myEvents}
+						myEventStatURL={myEventStatURL}
+						titleURL={titleURL}
+						max_seats={max_seats}
+						myFavorites={this.props.myFavorites}
+						favoriteEvent={favouriteEvent}
+						eventId={this.props.id}
+						reloadData={this.props.reloadData}
+						reload={this.props.reload}
+						prices={event_price}
+					/>
+				</div>
+			);
+
+			//old card body
+			// let bodyOld = (
+			// <.>
+			// 	<div>
+			// 		{/* old card */}
+			// 		<div className="card">
+			// 			<div className="image_wrapper">
+			// 				{!reported ? (
+			// 					<Link
+			// 						to={
+			// 							myEvent
+			// 								? myEventStatURL
+			// 								: titleURL
+			// 						}
+			// 					>
+			// 						<img
+			// 							className="card-img-top event-image"
+			// 							src={image}
+			// 							alt={event_data.name}
+			// 						/>
+			// 					</Link>
+			// 				) : (
+			// 					<img
+			// 						className="card-img-top event-image"
+			// 						src={image}
+			// 						alt={event_data.name}
+			// 					/>
+			// 				)}
+
+			// 				{reportedOut}
+			// 				{!reported && soldOut}
+			// 				{!reported && !sold && freeEvent}
+			// 			</div>
+
+			// 			<div className="card-header text-muted event-header ">
+			// 				<img
+			// 					className="float-left"
+			// 					src={this.state.blockie}
+			// 					alt={event_data.owner}
+			// 				/>
+			// 				{/* {this.props.this.props. ? (
+			// 			<Link to={myEventStatURL}>
+			// 			</Link>
+			// 		) : (
+			// 			""
+			// 		)} */}
+			// 			</div>
+
+			// 			<div className="card-body">
+			// 				{reported ? (
+			// 					<h5
+			// 						className="card-title event-title"
+			// 						title={event_data.name}
+			// 					>
+			// 						{badge}
+			// 						{event_data.name}
+			// 					</h5>
+			// 				) : (
+			// 					<h5
+			// 						className="card-title event-title"
+			// 						title={event_data.name}
+			// 					>
+			// 						<Link
+			// 							to={
+			// 								myEvent
+			// 									? myEventStatURL
+			// 									: titleURL
+			// 							}
+			// 						>
+			// 							{badge}
+			// 							{event_data.name}
+			// 						</Link>
+			// 					</h5>
+			// 				)}
+			// 				{description}
+			// 			</div>
+
+			// 			<ul className="list-group list-group-flush">
+			// 				<li className="list-group-item ">
+			// 					{locations}
+			// 				</li>
+			// 				<li className="list-group-item category">
+			// 					<strong style={{ paddingRight: "3px" }}>
+			// 						Category:{" "}
+			// 					</strong>{" "}
+			// 					<a href={topicURL}>{category}</a>
+			// 				</li>
+			// 				<li className="list-group-item">
+			// 					<strong>Price:</strong>{" "}
+			// 					<img
+			// 						src={"/images/" + symbol}
+			// 						className="event_price-image"
+			// 						alt="Event Price Icon"
+			// 					/>{" "}
+			// 					{event_data.token
+			// 						? "" +
+			// 						  numeral(price).format("0.000")
+			// 						: "" + price}
+			// 					{event_data.token ? " or " : ""}
+			// 					{event_data.token ? (
+			// 						<img
+			// 							src={"/images/dollarsign.png"}
+			// 							className="event_price-image"
+			// 							alt="Event Price"
+			// 						/>
+			// 					) : (
+			// 						""
+			// 					)}
+			// 					{event_data.token
+			// 						? numeral(
+			// 								price *
+			// 									this.state
+			// 										.PhoenixDAO_market
+			// 										.usd
+			// 						  ).format("0.000")
+			// 						: ""}
+			// 				</li>
+			// 				<li className="list-group-item date">
+			// 					<strong>Date:</strong>{" "}
+			// 					{date.toLocaleDateString()} at{" "}
+			// 					{date.toLocaleTimeString([], {
+			// 						hour: "2-digit",
+			// 						minute: "2-digit",
+			// 					})}
+			// 				</li>
+			// 				<li className="list-group-item">
+			// 					<strong>Tickets Sold:</strong>{" "}
+			// 					{event_data.sold}/{max_seats}
+			// 				</li>
+			// 			</ul>
+			// 			{/* {this.props.this.props. ? (
+			// 		<div className=" editButtons text-muted text-center">
+			// 			<Link
+			// 				className="col-6"
+			// 				to={{
+			// 					pathname: "/editevent",
+			// 					state: { event: event_data ,...this.state,price:price},
+			// 				}}
+			// 			>
+			// 				<button className="btn btn-dark col-12">
+			// 					<i className="fa fa-edit"></i> Edit
+			// 				</button>
+			// 			</Link>
+			// 			<button
+			// 				className="btn btn-dark col-6"
+			// 				onClick={this.inquire}
+			// 			>
+			// 				<i className="fas fa-trash-alt"></i> Delete
+			// 			</button>
+			// 		</div>
+			// 	) : null} */}
+
+			// 			<div className="card-footer text-muted text-center">
+			// 				<button
+			// 					className="btn btn-dark"
+			// 					onClick={this.inquire}
+			// 					disabled={
+			// 						disabled ||
+			// 						this.props.disabledStatus ||
+			// 						this.props.disabledBuying
+			// 					}
+			// 				>
+			// 					<i className="fas fa-ticket-alt"></i>{" "}
+			// 					{buttonText}
+			// 				</button>
+			// 			</div>
+			// 		</div>
+			// 	</div>
+			// </.>
+			// );
 			// }
 		}
 
@@ -755,7 +746,7 @@ Event.contextTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		contracts: state.contracts,
+		// contracts: state.contracts,
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
 		web3: state.web3,

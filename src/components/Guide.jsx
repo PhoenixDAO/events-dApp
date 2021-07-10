@@ -3,6 +3,7 @@ import BuyPhnxButton from "./common/BuyPhnxButton";
 import { Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
+import Header from "./common/Header";
 
 const useStyles = makeStyles((theme) => ({
 	termsHeader: {
@@ -85,15 +86,7 @@ const Terms = (props) => {
 	}
 	return (
 		<div className="event-page-wrapper">
-			<div className={classes.sticky}>
-				<div className={classes.termsHeader}>
-					<h2 style={{ fontWeight: "bold", fontSize: "xx-large" }}>
-						How it works
-					</h2>
-					<BuyPhnxButton />
-				</div>
-				<Divider light />
-			</div>
+			<Header title="Terms and Conditions" phnxButton={true} />
 			<Grid container>
 				<Grid
 					className={classes.hideScroll}
@@ -126,20 +119,20 @@ const Terms = (props) => {
 					<div className={classes.alignTextWithVideo}>
 						<h2
 							ref={(el) =>
-								(pageRefs.current = {
-									...pageRefs.current,
-									InstallationAndConfiguration: el,
-								})
+							(pageRefs.current = {
+								...pageRefs.current,
+								InstallationAndConfiguration: el,
+							})
 							}
 						>
 							Installation and Configuration
 						</h2>
 						<h3
 							ref={(el) =>
-								(pageRefs.current = {
-									...pageRefs.current,
-									Installation: el,
-								})
+							(pageRefs.current = {
+								...pageRefs.current,
+								Installation: el,
+							})
 							}
 						>
 							MetaMask Installation
@@ -163,10 +156,10 @@ const Terms = (props) => {
 
 						<h3
 							ref={(el) =>
-								(pageRefs.current = {
-									...pageRefs.current,
-									Configuration: el,
-								})
+							(pageRefs.current = {
+								...pageRefs.current,
+								Configuration: el,
+							})
 							}
 						>
 							MetaMask Configuration
@@ -211,10 +204,10 @@ const Terms = (props) => {
 						</ul>
 						<h2
 							ref={(el) =>
-								(pageRefs.current = {
-									...pageRefs.current,
-									Getting: el,
-								})
+							(pageRefs.current = {
+								...pageRefs.current,
+								Getting: el,
+							})
 							}
 						>
 							Getting into app and connecting wallet - Ethereum /

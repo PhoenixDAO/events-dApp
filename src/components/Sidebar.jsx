@@ -243,7 +243,7 @@ class Sidebar extends Component {
 										<span className="toggleHidden">Topics</span>
 									</NavLink>
 								</li>
-								{/* <li>
+								<li>
 									<NavLink
 										to="/calendar"
 										className="nav-link"
@@ -257,7 +257,7 @@ class Sidebar extends Component {
 											Calendar
 										</span>
 									</NavLink>
-								</li> */}
+								</li>
 								<li>
 									<NavLink
 										to="/confirm-purchase"

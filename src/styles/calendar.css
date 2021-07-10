@@ -173,6 +173,10 @@ table {
     font-size: 17px !important;
 }
 
+.fc .fc-daygrid-day-frame {
+    min-height: 115px !important;
+}
+
 .fc-timeGridDay-view .fc-event-time {
     display: flex;
     justify-content: flex-end;
@@ -194,7 +198,22 @@ table {
     margin-right: 24px;
 }
 
+.fc .fc-toolbar-title {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+@media screen and (min-width:1000px) {
+    .fc .fc-toolbar-title {
+        min-width: 214px;
+    }
+}
+
 @media screen and (max-width:815px) {
+    .fc .fc-daygrid-day-frame {
+        min-height: 90px !important;
+    }
     .fc .fc-toolbar {
         display: block !important;
     }
@@ -213,6 +232,9 @@ table {
     .fc .fc-col-header-cell-cushion {
         font-size: 12px !important;
     }
+    /* .fc-event-time {
+        margin-right: -15px !important;
+    } */
 }
 
 .fc .fc-button-primary:focus {
