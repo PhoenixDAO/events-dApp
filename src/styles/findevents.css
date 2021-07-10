@@ -1,0 +1,14 @@
+.header2 {
+	/* margin-left: -2px;
+    margin-right: -1px; */
+	z-index: 9999;
+	display: flex;
+	flex-direction: column;
+	/* justify-content: space-between; */
+	/* border-bottom: 1px solid #E4E4E7;
+    padding-bottom: 10px; */
+	position: sticky;
+	top: 0;
+	/* padding-top: 20px; */
+	/* background-color: #fcfcfd; */
+}

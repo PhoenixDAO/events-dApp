@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { drizzleConnect } from 'drizzle-react';
-import PropTypes from 'prop-types';
+// import { drizzleConnect } from 'drizzle-react';
+// import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import makeBlockie from 'ethereum-blockies-base64';
+import { explorerWithAddress } from "../config/const";
 
-import ipfs from '../utils/ipfs';
+// import ipfs from '../utils/ipfs';
 
 import Loading from './Loading';
 
@@ -27,8 +28,8 @@ class Topic extends Component {
 	render() {
 		let body = <div className="card"><div className="card-body"><Loading /></div></div>;
 
-		if (typeof this.props.contracts['OpenEvents'].getEvent[this.event] !== 'undefined') {
-			let event_data = this.props.contracts['OpenEvents'].getEvent[this.event].value;
+		if (typeof this.props.contracts['DaoEvents'].getEvent[this.event] !== 'undefined') {
+			let event_data = this.props.contracts['DaoEvents'].getEvent[this.event].value;
 
 			let image = this.getImage();
 			let description = this.getDescription();
@@ -68,7 +69,7 @@ class Topic extends Component {
 					<div className="card-header text-muted event-header">
 						<img className="float-left" src={makeBlockie(event_data[8])} alt={event_data[8]} />
 						<p className="small text-truncate mb-0">
-							Creator: <a href={"https://rinkeby.etherscan.io/address/" + event_data[8]} target="_blank" className="event_creator-link">
+							Creator: <a href={explorerWithAddress + event_data[8]} target="_blank" className="event_creator-link">
 								{event_data[8]}
 							</a>
 						</p>
@@ -85,7 +86,7 @@ class Topic extends Component {
 						<li className="list-group-item"><strong>Tickets Sold:</strong> {event_data[6]}/{max_seats}</li>
 					</ul>
 					<div className="card-footer text-muted text-center">
-						<button className="btn btn-dark" onClick={this.buyTicket} disabled={disabled}><i className="fas fa-ticket-alt"></i> {buttonText}</button>
+						<button className="btn btn-dark" onClick={this.buyTicket} disabled={disabled || this.props.disabledStatus}><i className="fas fa-ticket-alt"></i> {buttonText}</button>
 					</div>
 				</div>
 				;
