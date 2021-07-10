@@ -17,6 +17,8 @@ import { withStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
 import BuyPhnxButton from "../common/BuyPhnxButton";
 
+import web3 from "web3";
+
 const useStyles = (theme) => ({
 	sticky: {
 		position: "sticky",
@@ -70,39 +72,87 @@ class CreateEvent extends Component {
 				type: null,
 				file_name: null,
 			},
+			fields: {},
 		};
 		this.contracts = context.drizzle.contracts;
 	}
 
+	onFieldsChange = (f) => {
+		this.setState({ fields: { ...this.state.fields, ...f } });
+	};
+
 	handleCreateEvent = async () => {
-		console.log(this.context.drizzle.web3.utils.toWei("1"));
+		console.log("handleCreateEvent", this.state.fields);
 
-		console.log(this.contracts);
+		const {
+			eventName,
+			eventOrganizer,
+			eventTopic,
+			eventCategory,
+			eventLocation,
+			restrictWallet: oneTimeBuy,
+			categories: ticketCategories,
+			token,
+			eventDate,
+			eventStartDate,
+		} = this.state.fields;
 
-		// let id = this.contracts["DaoEvents"].methods.createEvent.cacheSend([
-		// 	false, // oneTimeBuy
-		// 	true, // token -> event not free
-		// 	this.props.accounts, // this.account
-		// 	Date.now(), // await toTimeFrmCurTime(24), time in UNIX
-		// 	86400,
-		// 	0,
-		// 	0,
-		// 	"hj testing name",
-		// 	"hj topic name",
-		// 	"hj location coordinates",
-		// 	"hj ipfs hash",
-		// 	[false, false], // unlimited
-		// 	[0, 0], // unlimited
-		// 	[1, 2],
-		// 	[0, 0],
-		// 	["level1", "level2"],
-		// ]);
+		console.log(ticketCategories);
 
-		let id = this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
+		let ticketLimited = [];
+		let tktQnty = [];
+		let prices = [];
+		let tktQntySold = [];
+		let categories = [];
 
-		console.log("id", id);
+		let totalQuantity = 0;
+		let time = Date.parse(eventDate ? eventDate : eventStartDate) / 1000;
 
-		this.transactionChecker(id);
+		for (var i = 0; i < ticketCategories.length; i++) {
+			ticketLimited.push(ticketCategories[i].ticketAvailability);
+			tktQnty.push(ticketCategories[i].noOfTickets);
+			prices.push(web3.utils.toWei(ticketCategories[i].dollarPrice));
+			tktQntySold.push("0");
+			categories.push(ticketCategories[i].ticketName);
+			console.log(ticketCategories[i].noOfTickets);
+			totalQuantity =
+				totalQuantity + parseInt(ticketCategories[i].noOfTickets);
+		}
+
+		await this.props.eventsContract.methods
+			.createEvent([
+				oneTimeBuy,
+				token, // false means free
+				this.props.accounts[0],
+				time.toString(), //time
+				"86400", //duration
+				totalQuantity.toString(), //totalQuantity
+				"0", //totalQntySold
+				eventName,
+				eventTopic,
+				eventLocation,
+				"hj_ipfs_hash",
+				ticketLimited,
+				tktQnty,
+				prices,
+				tktQntySold,
+				categories,
+			])
+			.send({
+				from: this.props.accounts[0],
+			})
+			.on("transactionHash", (hash) => {
+				// hash of tx
+				console.log("hash", hash);
+			})
+			.on("confirmation", function (confirmationNumber, receipt) {
+				if (confirmationNumber === 2) {
+					console.log("confirmationNumber", confirmationNumber);
+				}
+			})
+			.on("error", function (err) {
+				console.log("error", err);
+			});
 	};
 
 	createEvent = (
@@ -324,6 +374,7 @@ class CreateEvent extends Component {
 							<br />
 							<MyStepper
 								handleCreateEvent={this.handleCreateEvent}
+								onFieldsChange={this.onFieldsChange}
 							/>
 						</div>
 						<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
@@ -366,7 +417,10 @@ class CreateEvent extends Component {
 						<br />
 						<br />
 						<br />
-						<MyStepper handleCreateEvent={this.handleCreateEvent} />
+						<MyStepper
+							handleCreateEvent={this.handleCreateEvent}
+							onFieldsChange={this.onFieldsChange}
+						/>
 					</div>
 					<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 						<br />

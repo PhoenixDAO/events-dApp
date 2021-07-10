@@ -48,7 +48,7 @@ import GoldonBlue from "../Images/GoldonBlue.gif";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import Check from "@material-ui/icons/Check";
-import VisibilityOutlinedIcon from '@material-ui/icons/VisibilityOutlined';
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { useForm, Controller } from "react-hook-form";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -58,7 +58,11 @@ import {
 	faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import EventPreviewPage from "./EventPreviewPage";
-
+import phnxLogo from "../Images/phnx.png";
+import dollarIcon from "../Images/dollar.png";
+import altIcon from "../Images/altIcon.png";
+import editIcon from "../Images/editIcon.png";
+import deleteIcon from "../Images/deleteIcon.png";
 
 const QontoConnector = withStyles({
 	alternativeLabel: {
@@ -180,7 +184,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const MyStepper = ({ handleCreateEvent }) => {
+const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	const classes = useStyles();
 	const { handleSubmit, control, register } = useForm();
 
@@ -218,6 +222,10 @@ const MyStepper = ({ handleCreateEvent }) => {
 	const [startTime, setStartTime] = useState(null);
 	const [endTime, setEndTime] = useState(null);
 	const [open, setOpen] = useState(false);
+	const [categories, setCategories] = useState([]);
+	const [addAnotherCat, setaddAnotherCat] = useState(false);
+	const [ticketCategory, setTicketCategory] = useState(0);
+
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
 		display: [
@@ -243,6 +251,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 			{ label: "OL", style: "ordered-list-item" },
 		],
 	};
+
 	const handleClickOpen = () => {
 		setOpen(true);
 	};
@@ -250,6 +259,7 @@ const MyStepper = ({ handleCreateEvent }) => {
 	const handleClose = () => {
 		setOpen(false);
 	};
+
 	const handleChange = (event) => {
 		setValue(event.target.value);
 	};
@@ -271,32 +281,72 @@ const MyStepper = ({ handleCreateEvent }) => {
 
 	//next button steeper
 	const handleNext = (fields) => {
-		console.log("activesteps", activeStep);
-		console.log("state", state);
-		console.log("fields", fields);
+		// console.log("categories", categories);
 
-		// for (const key of Object.keys(fields)) {
-		// 	console.log(key, fields[key]);
-		// 	setState((prevState) => ({
-		// 		...prevState,
-		// 		[key]: fields[key],
-		// 	}));
-		// }
-
-		setActiveStep((prevActiveStep) => prevActiveStep + 1);
-
-		// if (activeStep === 0) {
-		// 	//first stepper conditions - eventdate&time
-		// 	setActiveStep((prevActiveStep) => prevActiveStep + 1);
-		// } else if (activeStep === 1) {
-		// 	//2nd stpper
-		// } else if (activeStep === 2) {
-		// 	// 3rd stepper
-		// } else if (activeStep === 3) {
-		// 	// 4th stepper
-		// } else {
-		// 	//publish event
-		// }
+		if (activeStep === 0) {
+			//first stepper conditions - eventdate&time
+			onFieldsChange(fields);
+			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+		} else if (activeStep === 1) {
+			//2nd stpper - location/link, images, topicI
+			onFieldsChange(fields);
+			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+		} else if (activeStep === 2) {
+			// 3rd stepper -  event categories (free, single paid, multiple paid)
+			// bool token; // false means free
+			if (fields.eventCategory === "free") {
+				let cat = [];
+				let obj = {
+					ticketName: "free",
+					dollarPrice: "0",
+					ticketAvailability:
+						fields.ticketAvailability === "unlimited"
+							? false
+							: true,
+					noOfTickets:
+						fields.ticketAvailability === "unlimited"
+							? "0"
+							: fields.noOfTickets,
+				};
+				cat.push(obj);
+				fields.categories = cat;
+				fields.token = false; // false means free
+				onFieldsChange(fields);
+				setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			} else if (fields.eventCategory === "single") {
+				let cat = [];
+				let obj = {
+					ticketName: "single",
+					dollarPrice: fields.dollarPrice,
+					ticketAvailability:
+						fields.ticketAvailability === "unlimited"
+							? false
+							: true,
+					noOfTickets:
+						fields.ticketAvailability === "unlimited"
+							? "0"
+							: fields.noOfTickets,
+				};
+				cat.push(obj);
+				fields.categories = cat;
+				fields.token = true; // false means free
+				onFieldsChange(fields);
+				setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			} else {
+				fields.categories = categories;
+				fields.token = true; // false means free
+				onFieldsChange(fields);
+				setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			}
+		} else if (activeStep === 3) {
+			// 4th stepper
+			onFieldsChange(fields);
+			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			handleCreateEvent();
+		} else {
+			//publish event
+			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
+		}
 	};
 
 	//back button stepper
@@ -310,8 +360,53 @@ const MyStepper = ({ handleCreateEvent }) => {
 	};
 
 	const onChangeRichText = (value) => {
-		// console.log("rich value", value);
+		console.log("rich value", value);
 		setRichValue(value);
+	};
+
+	const handleSaveCatogory = (fields) => {
+		console.log(fields);
+		console.log("ticketCategory", ticketCategory);
+
+		let obj = {
+			ticketName: fields[`ticketName${ticketCategory}`],
+			dollarPrice: fields[`dollarPrice${ticketCategory}`],
+			ticketAvailability:
+				fields[`ticketAvailability${ticketCategory}`] === "unlimited"
+					? false
+					: true,
+			noOfTickets:
+				fields[`ticketAvailability${ticketCategory}`] === "unlimited"
+					? "0"
+					: fields[`noOfTickets${ticketCategory}`],
+		};
+
+		let arr = categories;
+		// arr.splice(ticketCategory, 1, obj);
+
+		arr.push(obj);
+		console.log("arr", arr);
+		setCategories([...arr]);
+		setaddAnotherCat(!addAnotherCat);
+	};
+
+	const handleAddAnotherCategory = () => {
+		setaddAnotherCat(!addAnotherCat);
+		setTicketCategory(ticketCategory + 1);
+		// setTicketCategory(categories.length + 1);
+	};
+
+	const handleDeleteTicketCategory = (index) => {
+		console.log("delete clicked");
+		let arr = categories;
+		arr.splice(index, 1);
+		setCategories([...arr]);
+	};
+
+	const handleEditTicketCategory = (index) => {
+		console.log("edit index", index);
+		setaddAnotherCat(!addAnotherCat);
+		setTicketCategory(index);
 	};
 
 	function getStepContent(stepIndex) {
@@ -350,10 +445,6 @@ const MyStepper = ({ handleCreateEvent }) => {
 										value: 3,
 										message:
 											"Event name should contain atleast 3 characters.",
-									},
-									pattern: {
-										value: /^[a-z\sA-Z0-9]+$/,
-										message: "Invalid event name.",
 									},
 								}}
 							/>
@@ -741,9 +832,10 @@ const MyStepper = ({ handleCreateEvent }) => {
 							<Button
 								color="primary"
 								size="large"
-								startIcon={<VisibilityOutlinedIcon fontSize="large" />}
+								startIcon={
+									<VisibilityOutlinedIcon fontSize="large" />
+								}
 								onClick={handleClickOpen}
-
 							>
 								Preview Event
 							</Button>
@@ -986,101 +1078,137 @@ const MyStepper = ({ handleCreateEvent }) => {
 							<Divider light />
 							<br />
 							<label>CATEGORY</label>
-							<FormControl
-								variant="outlined"
-								fullWidth
-							// className={classes.formControl}
-							>
-								<Select
-									labelId="demo-simple-select-outlined-label"
-									id="demo-simple-select-outlined"
-									value={category}
-									onChange={(e) =>
-										setCategory(e.target.value)
-									}
-									// label="Age"
-									fullWidth
-								>
-									{/* <MenuItem value="">
-							<em>None</em>
-						</MenuItem> */}
-									<MenuItem value="free">Free Event</MenuItem>
-									<MenuItem value="single">
-										{`Paid (Single Ticket Type Event)`}
-									</MenuItem>
-									<MenuItem value="multiple">{`Paid (Multiple Ticket Type Event)`}</MenuItem>
-								</Select>
-							</FormControl>
+							<Controller
+								name="eventCategory"
+								control={control}
+								defaultValue={category}
+								render={({
+									field: { onChange, value },
+									fieldState: { error },
+								}) => (
+									<FormControl
+										variant="outlined"
+										fullWidth
+										// className={classes.formControl}
+									>
+										<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											value={value}
+											onChange={(e) => {
+												onChange(e);
+												setCategory(e.target.value);
+											}}
+											fullWidth
+										>
+											<MenuItem value="free">
+												Free Event
+											</MenuItem>
+											<MenuItem value="single">
+												{`Paid (Single Ticket Type Event)`}
+											</MenuItem>
+											<MenuItem value="multiple">{`Paid (Multiple Ticket Type Event)`}</MenuItem>
+										</Select>
+									</FormControl>
+								)}
+								rules={{
+									required: "Please select event category.",
+								}}
+							/>
 
 							<br />
 							<br />
 
-							{/* conditonal rendering for event category -free -single_paid -multiple-paid */}
+							{/* conditonal rendering for event category - free - single_paid - multiple-paid */}
 							<div>
 								{category === "free" ? (
 									<div>
 										<FormControl component="fieldset">
 											<label>TICKET AVAILABILITY</label>
-											<RadioGroup
-												row
-												aria-label="ticketAvailability"
+											<Controller
 												name="ticketAvailability"
-												value={availability}
-												onChange={(e) =>
-													setAvailability(
-														e.target.value
-													)
-												}
-											>
-												<FormControlLabel
-													value="unlimited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Unlimited Tickets"
-												/>
-												<FormControlLabel
-													value="limited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Limited Tickets"
-												/>
-											</RadioGroup>
+												control={control}
+												defaultValue={availability}
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<RadioGroup
+														row
+														aria-label="ticketAvailability"
+														name="ticketAvailability"
+														value={value}
+														onChange={(e) => {
+															onChange(e);
+															setAvailability(
+																e.target.value
+															);
+														}}
+													>
+														<FormControlLabel
+															value="unlimited"
+															control={
+																<Radio color="primary" />
+															}
+															label="Unlimited Tickets"
+														/>
+														<FormControlLabel
+															value="limited"
+															control={
+																<Radio color="primary" />
+															}
+															label="Limited Tickets"
+														/>
+													</RadioGroup>
+												)}
+												rules={{
+													required:
+														"Please select event availability.",
+												}}
+											/>
 										</FormControl>
-
 										{availability === "unlimited" ? null : (
 											<div>
 												<label>NUMBER OF TICKETS</label>
-												<TextField
-													type="number"
-													id="outlined-basic"
-													// label="Event Organizer"
-													fullWidth
-													variant="outlined"
+												<Controller
+													name="noOfTickets"
+													control={control}
+													defaultValue=""
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+														fieldState: { error },
+													}) => (
+														<TextField
+															type="number"
+															id="outlined-basic"
+															// label="Event Organizer"
+															fullWidth
+															variant="outlined"
+															value={value}
+															onChange={onChange}
+															error={!!error}
+															helperText={
+																error
+																	? error.message
+																	: null
+															}
+														/>
+													)}
+													rules={{
+														required:
+															"Please enter number of tickets.",
+													}}
 												/>
 											</div>
 										)}
-
-										<br />
-
-										<FormControlLabel
-											control={
-												<Checkbox
-													// checked={state.checkedB}
-													// onChange={handleChange}
-													name="checkedB"
-													color="primary"
-												/>
-											}
-											label="Restrict Wallet Address to one Ticket"
-										/>
 									</div>
 								) : category === "single" ? (
 									<div>
 										<label>TICKET PRICE</label>
 										<br />
-
 										<div
 											style={{
 												display: "flex",
@@ -1088,44 +1216,99 @@ const MyStepper = ({ handleCreateEvent }) => {
 												alignItems: "center",
 											}}
 										>
-											<TextField
-												className={classes.margin}
-												id="input-with-icon-textfield"
-												// label="TextField"
-												type="number"
-												variant="outlined"
-												InputProps={{
-													startAdornment: (
-														<InputAdornment position="start">
-															<AttachMoneyIcon
-																style={{
-																	color: "#413AE2",
-																}}
-															/>
-														</InputAdornment>
-													),
+											<Controller
+												name="dollarPrice"
+												control={control}
+												defaultValue=""
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<TextField
+														className={
+															classes.margin
+														}
+														id="input-with-icon-textfield"
+														type="number"
+														variant="outlined"
+														InputProps={{
+															startAdornment: (
+																<InputAdornment position="start">
+																	<img
+																		src={
+																			dollarIcon
+																		}
+																		alt="dollar sign"
+																	/>
+																</InputAdornment>
+															),
+														}}
+														value={value}
+														onChange={onChange}
+														error={!!error}
+														helperText={
+															error
+																? error.message
+																: " "
+														}
+													/>
+												)}
+												rules={{
+													required:
+														"Price in dollars.",
 												}}
 											/>
-											<SyncAltIcon
-												fontSize="large"
-												style={{ color: "#413AE2" }}
-											/>
-											<TextField
-												className={classes.margin}
-												id="input-with-icon-textfield"
-												// label="TextField"
-												type="number"
-												variant="outlined"
-												InputProps={{
-													startAdornment: (
-														<InputAdornment position="start">
-															<AttachMoneyIcon
-																style={{
-																	color: "#413AE2",
-																}}
-															/>
-														</InputAdornment>
-													),
+
+											<div>
+												<img
+													src={altIcon}
+													alt="alt icon"
+													// style={{
+													// 	marginTop: "auto",
+													// 	marginBottom: "auto",
+													// }}
+												/>
+											</div>
+											<Controller
+												name="phnxPrice"
+												control={control}
+												defaultValue=""
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<TextField
+														className={
+															classes.margin
+														}
+														disabled
+														id="input-with-icon-textfield"
+														type="number"
+														variant="outlined"
+														InputProps={{
+															startAdornment: (
+																<InputAdornment position="start">
+																	<img
+																		src={
+																			phnxLogo
+																		}
+																		alt="phnx logo"
+																	/>
+																</InputAdornment>
+															),
+														}}
+														value={value}
+														onChange={onChange}
+														error={!!error}
+														helperText={
+															error
+																? error.message
+																: " "
+														}
+													/>
+												)}
+												rules={{
+													required: false,
 												}}
 											/>
 										</div>
@@ -1134,277 +1317,555 @@ const MyStepper = ({ handleCreateEvent }) => {
 
 										<FormControl component="fieldset">
 											<label>TICKET AVAILABILITY</label>
-											<RadioGroup
-												row
-												aria-label="ticketAvailability"
+											<Controller
 												name="ticketAvailability"
-												value={availability}
-												onChange={(e) =>
-													setAvailability(
-														e.target.value
-													)
-												}
-											>
-												<FormControlLabel
-													value="unlimited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Unlimited Tickets"
-												/>
-												<FormControlLabel
-													value="limited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Limited Tickets"
-												/>
-											</RadioGroup>
+												control={control}
+												defaultValue={availability}
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<RadioGroup
+														row
+														aria-label="ticketAvailability"
+														name="ticketAvailability"
+														value={value}
+														onChange={(e) => {
+															onChange(e);
+															setAvailability(
+																e.target.value
+															);
+														}}
+													>
+														<FormControlLabel
+															value="unlimited"
+															control={
+																<Radio color="primary" />
+															}
+															label="Unlimited Tickets"
+														/>
+														<FormControlLabel
+															value="limited"
+															control={
+																<Radio color="primary" />
+															}
+															label="Limited Tickets"
+														/>
+													</RadioGroup>
+												)}
+												rules={{
+													required:
+														"Please select event availability.",
+												}}
+											/>
 										</FormControl>
 										{availability === "unlimited" ? null : (
 											<div>
 												<label>NUMBER OF TICKETS</label>
-												<TextField
-													type="number"
-													id="outlined-basic"
-													// label="Event Organizer"
-													fullWidth
-													variant="outlined"
+												<Controller
+													name="noOfTickets"
+													control={control}
+													defaultValue=""
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+														fieldState: { error },
+													}) => (
+														<TextField
+															type="number"
+															id="outlined-basic"
+															// label="Event Organizer"
+															fullWidth
+															variant="outlined"
+															value={value}
+															onChange={onChange}
+															error={!!error}
+															helperText={
+																error
+																	? error.message
+																	: null
+															}
+														/>
+													)}
+													rules={{
+														required:
+															"Please enter number of tickets.",
+													}}
 												/>
 											</div>
 										)}
-										<br />
-										<FormControlLabel
-											control={
-												<Checkbox
-													// checked={state.checkedB}
-													// onChange={handleChange}
-													name="checkedB"
-													color="primary"
-												/>
-											}
-											label="Restrict Wallet Address to one Ticket"
-										/>
 									</div>
 								) : (
 									<div>
-										{/* ticket category box */}
-										<div>
-											<Grid container spacing={2}>
-												<Grid
-													style={{
-														backgroundColor:
-															"goldenrod",
-														padding: 15,
-													}}
-													container
-													item
-													xs={11}
-													sm={11}
-													md={11}
-													lg={11}
-													xl={11}
-													justify="space-between"
-													direction="row"
-												>
-													<Grid
-														item
-														direction="column"
-													>
-														<h4>Bronze Ticket</h4>
-														<h6>
-															Unlimited Tickets
-														</h6>
+										{/*paid multiple - ticket category box*/}
+										{categories.map((cat, index) => {
+											// console.log("cat", cat);
+											return (
+												<div key={index}>
+													<br />
+													<Grid container spacing={2}>
+														<Grid
+															style={{
+																background: `linear-gradient(270deg, rgba(94, 91, 255, 0.12) 0%, rgba(124, 118, 255, 0) 131.25%)`,
+																padding: 15,
+															}}
+															container
+															item
+															xs={11}
+															sm={11}
+															md={11}
+															lg={11}
+															xl={11}
+															justify="space-between"
+															direction="row"
+														>
+															<Grid
+																item
+																direction="column"
+															>
+																<h4>
+																	{
+																		cat.ticketName
+																	}
+																	{` Ticket`}
+																</h4>
+																<h6>
+																	{cat.ticketAvailability
+																		? cat.noOfTickets
+																		: `Unlimited  Tickets`}
+																</h6>
+															</Grid>
+															<Grid
+																item
+																direction="column"
+															>
+																<h2>
+																	$
+																	{
+																		cat.dollarPrice
+																	}
+																</h2>
+																<h6>
+																	{
+																		cat.phnxPrice
+																	}
+																	PHNX
+																</h6>
+															</Grid>
+														</Grid>
+														<Grid
+															item
+															container
+															xs={1}
+															sm={1}
+															md={1}
+															lg={1}
+															xl={1}
+															direction="column"
+															justify="space-evenly"
+														>
+															<Grid item>
+																<Button
+																// onClick={() =>
+																// 	handleEditTicketCategory(
+																// 		index
+																// 	)
+																// }
+																>
+																	<img
+																		src={
+																			editIcon
+																		}
+																		alt="editIcon"
+																	/>
+																</Button>
+															</Grid>
+															<Grid item>
+																<Button
+																	onClick={() =>
+																		handleDeleteTicketCategory(
+																			index
+																		)
+																	}
+																>
+																	<img
+																		src={
+																			deleteIcon
+																		}
+																		alt="deleteIcon"
+																	/>
+																</Button>
+															</Grid>
+														</Grid>
 													</Grid>
+													<br />
+												</div>
+											);
+										})}
 
-													<Grid
-														item
-														direction="column"
-													>
-														<h2>$300</h2>
-														<h6>3000PHNX</h6>
-													</Grid>
-												</Grid>
-
-												<Grid
-													item
-													container
-													xs={1}
-													sm={1}
-													md={1}
-													lg={1}
-													xl={1}
-													direction="column"
-													justify="space-evenly"
-												>
-													<Grid item>
-														<EditIcon fontSize="large" />
-													</Grid>
-
-													<Grid item>
-														<DeleteForeverOutlinedIcon fontSize="large" />
-													</Grid>
-												</Grid>
-											</Grid>
-										</div>
-
-										<br />
-
-										{/* ticket name */}
-										<label>TICKET NAME</label>
-										<TextField
-											id="outlined-basic"
-											// label="Event Organizer"
-											fullWidth
-											variant="outlined"
-										/>
-
-										<br />
-										<br />
-
-										<label>TICKET PRICE</label>
-										<br />
-
-										<div
-											style={{
-												display: "flex",
-												justifyContent: "space-between",
-												alignItems: "center",
-											}}
-										>
-											<TextField
-												className={classes.margin}
-												id="input-with-icon-textfield"
-												// label="TextField"
-												type="number"
-												variant="outlined"
-												InputProps={{
-													startAdornment: (
-														<InputAdornment position="start">
-															<AttachMoneyIcon
-																style={{
-																	color: "#413AE2",
-																}}
-															/>
-														</InputAdornment>
-													),
-												}}
-											/>
-											<SyncAltIcon
-												fontSize="large"
-												style={{ color: "#413AE2" }}
-											/>
-											<TextField
-												className={classes.margin}
-												id="input-with-icon-textfield"
-												// label="TextField"
-												type="number"
-												variant="outlined"
-												InputProps={{
-													startAdornment: (
-														<InputAdornment position="start">
-															<AttachMoneyIcon
-																style={{
-																	color: "#413AE2",
-																}}
-															/>
-														</InputAdornment>
-													),
-												}}
-											/>
-										</div>
-
-										<br />
-
-										<FormControl component="fieldset">
-											<label>TICKET AVAILABILITY</label>
-											<RadioGroup
-												row
-												aria-label="ticketAvailability"
-												name="ticketAvailability"
-												value={availability}
-												onChange={(e) =>
-													setAvailability(
-														e.target.value
-													)
-												}
-											>
-												<FormControlLabel
-													value="unlimited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Unlimited Tickets"
-												/>
-												<FormControlLabel
-													value="limited"
-													control={
-														<Radio color="primary" />
-													}
-													label="Limited Tickets"
-												/>
-											</RadioGroup>
-										</FormControl>
-										{availability === "unlimited" ? null : (
+										{!addAnotherCat ? (
 											<div>
-												<label>NUMBER OF TICKETS</label>
-												<TextField
-													type="number"
-													id="outlined-basic"
-													// label="Event Organizer"
-													fullWidth
+												<form
+													onSubmit={handleSubmit(
+														handleSaveCatogory
+													)}
+												>
+													{/* ticket name */}
+													<label>TICKET NAME</label>
+													<Controller
+														name={`ticketName${ticketCategory}`}
+														control={control}
+														defaultValue=""
+														render={({
+															field: {
+																onChange,
+																value,
+															},
+															fieldState: {
+																error,
+															},
+														}) => (
+															<TextField
+																id="ticket-name"
+																fullWidth
+																variant="outlined"
+																value={value}
+																onChange={
+																	onChange
+																}
+																error={!!error}
+																helperText={
+																	error
+																		? error.message
+																		: null
+																}
+															/>
+														)}
+														rules={{
+															required:
+																"Please enter ticket name.",
+														}}
+													/>
+
+													<br />
+													<br />
+
+													<label>TICKET PRICE</label>
+													<br />
+													<div
+														style={{
+															display: "flex",
+															justifyContent:
+																"space-between",
+															alignItems:
+																"center",
+														}}
+													>
+														<Controller
+															name={`dollarPrice${ticketCategory}`}
+															control={control}
+															defaultValue=""
+															render={({
+																field: {
+																	onChange,
+																	value,
+																},
+																fieldState: {
+																	error,
+																},
+															}) => (
+																<TextField
+																	className={
+																		classes.margin
+																	}
+																	id="input-with-icon-textfield"
+																	type="number"
+																	variant="outlined"
+																	InputProps={{
+																		startAdornment:
+																			(
+																				<InputAdornment position="start">
+																					<img
+																						src={
+																							dollarIcon
+																						}
+																						alt="dollar sign"
+																					/>
+																				</InputAdornment>
+																			),
+																	}}
+																	value={
+																		value
+																	}
+																	onChange={
+																		onChange
+																	}
+																	error={
+																		!!error
+																	}
+																	helperText={
+																		error
+																			? error.message
+																			: " "
+																	}
+																/>
+															)}
+															rules={{
+																required:
+																	"Price in dollars.",
+															}}
+														/>
+
+														<div>
+															<img
+																src={altIcon}
+																alt="alt icon"
+																// style={{
+																// 	marginTop: "auto",
+																// 	marginBottom: "auto",
+																// }}
+															/>
+														</div>
+
+														<Controller
+															name={`phnxPrice${ticketCategory}`}
+															control={control}
+															defaultValue=""
+															render={({
+																field: {
+																	onChange,
+																	value,
+																},
+																fieldState: {
+																	error,
+																},
+															}) => (
+																<TextField
+																	className={
+																		classes.margin
+																	}
+																	disabled
+																	id="input-with-icon-textfield"
+																	type="number"
+																	variant="outlined"
+																	InputProps={{
+																		startAdornment:
+																			(
+																				<InputAdornment position="start">
+																					<img
+																						src={
+																							phnxLogo
+																						}
+																						alt="phnx logo"
+																					/>
+																				</InputAdornment>
+																			),
+																	}}
+																	value={
+																		value
+																	}
+																	onChange={
+																		onChange
+																	}
+																	error={
+																		!!error
+																	}
+																	helperText={
+																		error
+																			? error.message
+																			: " "
+																	}
+																/>
+															)}
+															rules={{
+																required: false,
+															}}
+														/>
+													</div>
+
+													<br />
+
+													<FormControl component="fieldset">
+														<label>
+															TICKET AVAILABILITY
+														</label>
+														<Controller
+															name={`ticketAvailability${ticketCategory}`}
+															control={control}
+															defaultValue={
+																availability
+															}
+															render={({
+																field: {
+																	onChange,
+																	value,
+																},
+																fieldState: {
+																	error,
+																},
+															}) => (
+																<RadioGroup
+																	row
+																	aria-label="ticketAvailability"
+																	name="ticketAvailability"
+																	value={
+																		value
+																	}
+																	onChange={(
+																		e
+																	) => {
+																		onChange(
+																			e
+																		);
+																		setAvailability(
+																			e
+																				.target
+																				.value
+																		);
+																	}}
+																>
+																	<FormControlLabel
+																		value="unlimited"
+																		control={
+																			<Radio color="primary" />
+																		}
+																		label="Unlimited Tickets"
+																	/>
+																	<FormControlLabel
+																		value="limited"
+																		control={
+																			<Radio color="primary" />
+																		}
+																		label="Limited Tickets"
+																	/>
+																</RadioGroup>
+															)}
+															rules={{
+																required:
+																	"Please select event availability.",
+															}}
+														/>
+													</FormControl>
+													{availability ===
+													"unlimited" ? null : (
+														<div>
+															<label>
+																NUMBER OF
+																TICKETS
+															</label>
+															<Controller
+																name={`noOfTickets${ticketCategory}`}
+																control={
+																	control
+																}
+																defaultValue=""
+																render={({
+																	field: {
+																		onChange,
+																		value,
+																	},
+																	fieldState:
+																		{
+																			error,
+																		},
+																}) => (
+																	<TextField
+																		type="number"
+																		id="outlined-basic"
+																		// label="Event Organizer"
+																		fullWidth
+																		variant="outlined"
+																		value={
+																			value
+																		}
+																		onChange={
+																			onChange
+																		}
+																		error={
+																			!!error
+																		}
+																		helperText={
+																			error
+																				? error.message
+																				: null
+																		}
+																	/>
+																)}
+																rules={{
+																	required:
+																		"Please enter number of tickets.",
+																}}
+															/>
+														</div>
+													)}
+
+													<br />
+
+													{/* save button */}
+													<Button
+														color="primary"
+														variant="outlined"
+														fullWidth
+														className={
+															classes.addAnotherImageBtn
+														}
+														type="submit"
+													>
+														Save
+													</Button>
+												</form>
+												<br />
+												<br />
+											</div>
+										) : (
+											<div>
+												<Button
 													variant="outlined"
-												/>
+													fullWidth
+													className={
+														classes.addAnotherImageBtn
+													}
+													startIcon={
+														<AddIcon fontSize="large" />
+													}
+													onClick={
+														handleAddAnotherCategory
+													}
+												>
+													Add another Ticket Category
+												</Button>
 											</div>
 										)}
-
-										<br />
-
-										{/* save button */}
-										<Button
-											color="primary"
-											variant="outlined"
-											fullWidth
-											className={
-												classes.addAnotherImageBtn
-											}
-										>
-											Save
-										</Button>
-
-										<br />
-										<br />
-
-										<Button
-											variant="outlined"
-											fullWidth
-											className={
-												classes.addAnotherImageBtn
-											}
-											startIcon={
-												<AddIcon fontSize="large" />
-											}
-										>
-											Add another Ticket Category
-										</Button>
-
-										<br />
-										<br />
-
-										<FormControlLabel
-											control={
-												<Checkbox
-													// checked={state.checkedB}
-													// onChange={handleChange}
-													name="checkedB"
-													color="primary"
-												/>
-											}
-											label="Restrict Wallet Address to one Ticket"
-										/>
 									</div>
 								)}
 							</div>
+
+							<Controller
+								name="restrictWallet"
+								control={control}
+								defaultValue={false}
+								render={({
+									field: { onChange, value },
+									fieldState: { error },
+								}) => (
+									<FormControlLabel
+										control={
+											<Checkbox
+												checked={value}
+												onChange={onChange}
+												name="checkedB"
+												color="primary"
+											/>
+										}
+										label="Restrict Wallet Address to one Ticket"
+									/>
+								)}
+								rules={{
+									required: false,
+								}}
+							/>
 						</div>
 					</React.Fragment>
 				);
@@ -1417,27 +1878,79 @@ const MyStepper = ({ handleCreateEvent }) => {
 							<br />
 							<label>EVENT DESCRIPTION</label>
 							<br />
-							<RichTextEditor
-								className={classes.editor}
-								// editorClassName={}
-								value={richValue}
-								onChange={onChangeRichText}
-							// toolbarConfig={toolbarConfig}
+
+							<Controller
+								name="eventDescription"
+								control={control}
+								defaultValue={RichTextEditor.createEmptyValue()}
+								render={({
+									field: { onChange, value },
+									fieldState: { error },
+								}) => (
+									<FormControl
+										// required
+										error={!!error}
+										component="fieldset"
+									>
+										<RichTextEditor
+											autoFocus
+											className={classes.editor}
+											// editorClassName={}
+											value={value}
+											onChange={(v) => onChange(v)}
+											// toolbarConfig={toolbarConfig}
+											placeholder="Type something here....."
+										/>
+										<FormHelperText>
+											{error ? error.message : null}
+										</FormHelperText>
+									</FormControl>
+								)}
+								rules={{
+									required: "Please enter event details.",
+									minLength: {
+										value: 500,
+										message:
+											"Event description should contain atleast 500 characters.",
+									},
+								}}
 							/>
 							<br />
-							<FormControlLabel
-								control={
-									<Checkbox
-										// checked={state.checkedB}
-										// onChange={handleChange}
-										name="checkedB"
-										color="primary"
-									/>
-								}
-								label="By creating an event, I agree to the policies and terms of use."
+							<Controller
+								name="termsAndConditions"
+								control={control}
+								defaultValue={false}
+								render={({
+									field: { onChange, value },
+									fieldState: { error },
+								}) => (
+									<FormControl
+										required
+										error={!!error}
+										component="fieldset"
+									>
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={value}
+													onChange={onChange}
+													name="checkedB"
+													color="primary"
+												/>
+											}
+											label="By creating an event, I agree to the policies and terms of use."
+										/>
+										<FormHelperText>
+											{error ? error.message : null}
+										</FormHelperText>
+									</FormControl>
+								)}
+								rules={{
+									required:
+										"Please agree to all the terms and conditions before creating an event.",
+								}}
 							/>
 						</div>
-
 					</React.Fragment>
 				);
 			default:

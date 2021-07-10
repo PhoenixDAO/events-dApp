@@ -16,7 +16,7 @@ import Event from "./Event";
 // TODO: Make slides dynamic: import slidesJson from '../config/slides.json';
 import topicsJson from "../config/topics.json";
 // import eventCTAsJson from "../config/event_ctas.json";
-import  Header  from "./common/Header";
+import Header from "./common/Header";
 
 //Material UI styles
 import { withStyles } from "@material-ui/core/styles";
@@ -106,7 +106,7 @@ class FindEvents extends Component {
 			prevPath: -1,
 			hideEvent: [],
 			selectedTab: 0,
-			eventCount: 0
+			eventCount: 0,
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -189,7 +189,7 @@ class FindEvents extends Component {
 			data: {
 				query: `
 			  {
-				events {
+				events(orderBy:eventId orderDirection:asc) {
 					id
 					eventId
 					owner
@@ -216,7 +216,11 @@ class FindEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				console.log("GraphQL query response", Date.now(), graphEvents.data.data.events)
+				console.log(
+					"GraphQL query response",
+					Date.now(),
+					graphEvents.data.data.events
+				);
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
 					// console.log("GraphQL query -- graphEvents undefined")
@@ -318,12 +322,13 @@ class FindEvents extends Component {
 		this.setState({ selectedTab: newValue });
 	};
 	async componentWillMount() {
-		let eventCount = await this.props.eventsContract.methods.getEventsCount().call();
+		let eventCount = await this.props.eventsContract.methods
+			.getEventsCount()
+			.call();
 		console.log("event contract", this.props.eventsContract);
 		if (eventCount) {
-			this.setState({ eventCount })
+			this.setState({ eventCount });
 		}
-
 	}
 
 	render() {
@@ -336,7 +341,7 @@ class FindEvents extends Component {
 		// if (
 		// 	// typeof this.props.contracts["DaoEvents"].getEventsCount[
 		// 	// 	this.eventCount
-		// 	// ] !== "undefined" 
+		// 	// ] !== "undefined"
 
 		// 	// this.state.eventCount == 0
 		// 	// &&
@@ -345,7 +350,10 @@ class FindEvents extends Component {
 		let count = this.state.Events_Blockchain.length;
 		if (this.state.loading) {
 			body = <PhoenixDAOLoader />;
-		} else if (this.state.Events_Blockchain.length === 0 && !this.state.loading) {
+		} else if (
+			this.state.Events_Blockchain.length === 0 &&
+			!this.state.loading
+		) {
 			body = (
 				<p className="text-center not-found">
 					<span role="img" aria-label="thinking">
@@ -515,9 +523,7 @@ class FindEvents extends Component {
 			} else {
 				body = (
 					<div>
-						<div className="row user-list mt-4">
-							{updated_list}
-						</div>
+						<div className="row user-list mt-4">{updated_list}</div>
 						{pagination}
 					</div>
 				);
@@ -552,8 +558,11 @@ class FindEvents extends Component {
 
 					{/* sticky bar start */}
 					<div className={classes.sticky}>
-
-					<Header  page="dashboard" searchBar="true" title={<div style={{ display: "flex" }}>
+						<Header
+							page="dashboard"
+							searchBar="true"
+							title={
+								<div style={{ display: "flex" }}>
 									<img src={roundlogo} alt="phnx logo" />
 									<span>&nbsp;&nbsp;&nbsp;</span>
 									<h2
@@ -565,7 +574,9 @@ class FindEvents extends Component {
 									>
 										PhoenixDAO Events Marketplace
 									</h2>
-								</div>}/>
+								</div>
+							}
+						/>
 						{/* <div>
 							<br />
 							<br />
@@ -715,8 +726,8 @@ class FindEvents extends Component {
 								{/* <p>Sort:</p> */}
 								<select
 									name="category"
-								// value={category}
-								// onChange={event => handleCategoryChange(event.target.value)}
+									// value={category}
+									// onChange={event => handleCategoryChange(event.target.value)}
 								>
 									<option id="0">All Events</option>
 									<option id="1">Trending Events</option>
@@ -797,7 +808,6 @@ class FindEvents extends Component {
 	}
 
 	async componentDidMount() {
-
 		if (this.state.prevPath == -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}
