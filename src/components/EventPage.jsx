@@ -32,13 +32,13 @@ import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
 import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
-import { INFURA_WEB_URL, graphURL } from "../config/const.js";
-
+import { INFURA_WEB_URL, graphURL,explorerWithTX, explorerWithAddress  } from "../config/const.js";
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import BuyTicket from "./common/BuyTicket";
 import { updateEventViews } from "../config/serverAPIs";
 import  Header  from "./common/Header";
+import {generateBuyerArr} from "../utils/addresses";
 let numeral = require("numeral");
 
 const customStyles = {
@@ -274,6 +274,7 @@ class EventPage extends Component {
 				this.setState({
 					blockChainEvent: graphEvents.data.data.events[0],
 					blockChainEventLoaded: true,
+					load:false
 				});
 				this.updateIPFS();
 				updateEventViews({
@@ -524,7 +525,6 @@ class EventPage extends Component {
 		let a = await this.props.phnxContract.methods
 			.allowance(this.account, Open_events_Address)
 			.call();
-		console.log("In allowance eventsPage", a)
 		return a;
 	};
 
@@ -534,7 +534,6 @@ class EventPage extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-		console.log("in eventsPage giveApproval", this.account, this.state.approve)
 		this.state.approve
 			.send({ from: this.account })
 			.on("transactionHash", (hash) => {
@@ -551,7 +550,7 @@ class EventPage extends Component {
 				this.onConfirmation(confirmationNumber, receipt)
 			)
 			.on("error", (error) => {
-				console.log("error in giveApproval function", error)
+				console.log("asd error in giveApproval function", error)
 				if (error !== null) {
 					this.setState({ disabledBuying: false });
 					txerror = error;
@@ -569,6 +568,8 @@ class EventPage extends Component {
 			});
 	};
 	onConfirmation(confirmationNumber, receipt) {
+		console.log("asd in onConfirmation confirmationNumber",confirmationNumber)
+
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
 			toast(<Notify hash={receipt.transactionHash} icon="fas fa-check-circle fa-3x" text={"Transaction successful!\nYou can buy a ticket now."} />, {
@@ -592,7 +593,7 @@ class EventPage extends Component {
 				token: this.state.blockChainEvent[3],
 				openEvents_address: Open_events_Address,
 				buyticket: this.props.eventsContract.methods.buyTicket(
-					[this.props.match.params.id, this.state.selectedCategoryIndex, "karachi"]
+					[this.props.match.params.id, this.state.selectedCategoryIndex, "Sydney"]
 				),
 				approve: this.props.phnxContract.methods.approve(
 					Open_events_Address,
@@ -659,7 +660,7 @@ class EventPage extends Component {
 				// to be changed
 				let image = this.getImage();
 				let description = this.getDescription();
-				let locations = this.getLocation();
+				let locations =event_data.location;
 				let buttonText = event_data.token ? " Buy Ticket" : " Get Ticket";
 				let symbol = event_data.token
 					? "PhoenixDAO.svg"
@@ -668,12 +669,16 @@ class EventPage extends Component {
 				// 	event_data.prices[this.state.selectedCategoryIndex]
 				// );
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
+				let phnx_price = event_data.prices.map((price) => {
+					return (Web3.utils.fromWei(price) / this.state.PhoenixDAO_market.usd).toFixed(2);
+				})
+				let dollar_price = Web3.utils.fromWei(event_data.prices[this.state.selectedCategoryIndex]);
 
 				let max_seats = event_data.tktLimited[this.state.selectedCategoryIndex] ? event_data.catTktQuantity[this.state.selectedCategoryIndex] : "∞";
 
 				let disabled = false;
 				let disabledStatus;
-				let sold = true;
+				// let sold = true;
 
 				if (
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
@@ -703,9 +708,9 @@ class EventPage extends Component {
 				// 	);
 				// }
 
-				if (this.state.active_length <= 0) {
-					sold = false;
-				}
+				// if (this.state.active_length <= 0) {
+				// 	sold = false;
+				// }
 
 				let myEvent = false;
 				if (event_data.owner === this.account) {
@@ -745,15 +750,13 @@ class EventPage extends Component {
 					<div className={classes.eventinfo}>
 						<span className={classes.PhnxPrice}>
 							{event_data.token
-								? numeral(event_data.prices[this.state.selectedCategoryIndex]).format("0.000") + "PHNX"
+								? phnx_price[this.state.selectedCategoryIndex]+ "PHNX"
 								: "FREE"}
 						</span>
 						<div style={{ color: "#56555D", fontSize: "14px" }}>
 							{event_data.token
 								? "$" +
-								numeral(
-									event_data.prices[this.state.selectedCategoryIndex] * this.state.PhoenixDAO_market.usd
-								).format("0.000")
+								dollar_price
 								: ""}
 						</div>
 					</div>
@@ -908,6 +911,7 @@ class EventPage extends Component {
 											Tickets Bought
 										</p>
 										<p className={classes.eventinfo}>
+											
 											{event_data.catTktQuantitySold[this.state.selectedCategoryIndex]}/{max_seats}
 										</p>
 									</Grid>
@@ -919,31 +923,45 @@ class EventPage extends Component {
 										</h2>
 										{this.state.load && <Loading />}
 										<Grid container lg={12}>
+											{console.log("sold ticket",this.state.soldTicket)}
 											{this.state.pageTransactions.map(
-												(sold, index) => (
-
-													<p
-														className="sold_text col-sm-12 col-md-12 col-lg-6 col-xl-6"
-														key={index}
+											(sold, index) => (
+												<p
+													className="sold_text col-md-12"
+													key={index}
+												>
+													<a
+														href={
+															explorerWithAddress +
+															sold.address
+														}
+														target="blank"
 													>
-														{/* <img
-													className="float-left blockie"
-													src={makeBlockie(
-														sold
-													)}
-												/>{" "} */}
-														<Avatar
-															src="/images/metamask.svg"
-															className={classes.avatar}
-														/>
-														Someone bought 1 ticket for{" "}
-														{event_data.name}
-														.
-													</p>
-												)
-											)}
+														{sold.address.slice(
+															0,
+															10
+														) + "... "}
+													</a>{" "}
+													has{" "}
+													<a
+														// href={
+														// 	explorerWithTX +
+														// 	sold.transactionHash
+														// }
+														// target="blank"
+													>
+														bought
+													</a>{"  "}
+													{" "+sold.count+" "} ticket for this event{" "}
+													{/* <strong>
+														{event_data[0]}
+													</strong> */}
+													.
+												</p>
+											)
+										)}
 										</Grid>
-										{!sold && (
+										{this.state.soldTicket.length  == 0 && (
 											<p className="sold_text col-md-12 no-tickets">
 												There are currently no purchases for
 												this ticket.
@@ -1224,8 +1242,9 @@ class EventPage extends Component {
 		);
 	}
 
-	componentDidMount() {
-
+	async componentDidMount() {
+		const buyers= await generateBuyerArr(this.props.match.params.id);
+		this.setState({soldTicket:buyers})
 		this.loadEventFromBlockchain();
 		window.scroll({
 			top: 0,

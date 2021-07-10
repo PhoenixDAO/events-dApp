@@ -12,7 +12,6 @@ import ipfs from "../utils/ipfs";
 import { API_URL, REPORT_EVENT, GET_USER_DETAIL } from "../config/const";
 import axios from "axios";
 import Loading from "./Loading";
-import Web3 from "web3";
 // import eventTopics from "../config/topics.json";
 
 // import Button from "@material-ui/core/Button";
@@ -90,7 +89,6 @@ class Event extends Component {
 			hideEvent: [],
 			blockie: "/images/PhoenixDAO.png",
 			approvalGranted: false,
-			phoenixDAO_market: [],
 			myFavorites: this.props.myFavorites,
 			UserFavoriteEvents: []
 		};
@@ -106,20 +104,6 @@ class Event extends Component {
 	handleClose = () => {
 		this.setState({ open: false });
 	};
-
-	//get market cap & dollar value of PHNX
-	async getPhoenixDAOMarketValue() {
-		fetch(
-			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
-		)
-			.then((res) => res.json())
-			.then((data) => {
-				// if (this._isMounted) {
-				this.setState({ phoenixDAO_market: data.phoenixdao });
-				// }
-			})
-			.catch(console.log("error in getPhoenixDAOMarketValue"));
-	}
 
 	updateIPFS = () => {
 		if (
@@ -399,18 +383,12 @@ class Event extends Component {
 			let description = this.getDescription();
 			let locations = this.getLocation();
 			let buttonText = event_data.token ? "Buy Ticket" : "Get Ticket";
-			let freeEvent = "";
-			if (!event_data.token) {
-				freeEvent = <p className="free_event">Free Event</p>;
-			}
+			// let freeEvent = "";
+			// if (!event_data.token) {
+			// 	freeEvent = <p className="free_event">Free Event</p>;
+			// }
 			// if (event_data.token !== undefined) {
 			let symbol = "PhoenixDAO.png";
-
-			let event_price = event_data.prices.map((price) => {
-				return (Web3.utils.fromWei(price) / this.state.phoenixDAO_market.usd).toFixed(2);
-			})
-			console.log("prices", event_price);
-
 			let date = new Date(parseInt(event_data.time, 10) * 1000);
 			// console.log("this.props.eventData",parseInt(event_data.time, 10))
 
@@ -506,8 +484,8 @@ class Event extends Component {
 			) {
 				myEvent = true;
 			}
-			let dollarRevenue =
-				this.state.phoenixDAO_market.usd * this.state.revenue;
+			// let dollarRevenue =
+			// 	this.state.phoenixDAO_market.usd * this.state.revenue;
 			let favouriteEvent = this.state.UserFavoriteEvents.indexOf(this.props.id) != -1;
 			body = (
 				<div>
@@ -525,7 +503,6 @@ class Event extends Component {
 						eventId={this.props.id}
 						reloadData={this.props.reloadData}
 						reload={this.props.reload}
-						prices={event_price}
 					/>
 				</div>
 			);
@@ -719,7 +696,6 @@ class Event extends Component {
 		// this._isMounted = true;
 		this.filterHideEvent();
 		this.updateIPFS();
-		this.getPhoenixDAOMarketValue();
 		this.getUserFavoritesEvent();
 
 	}

@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = ({ title, disabled, buttonText, goBack, page, phnxButton, searchBar, connectWallet, buyTicket ,handleClickOpen2}) => {
 	const classes = useStyles();
-
 	return (
 		<Grid className="header3" style={page == "dashboard" || page == "myEvent" ? { borderBottom: "0px" } : null}>
 			{/* Back button Arrow */}

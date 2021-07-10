@@ -12,7 +12,7 @@ import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 import axios from "axios";
-
+import { generateJSON } from "../utils/ticketSoldByLocation";
 const useStyles = makeStyles((theme) => ({
 	content: {
 		backgroundColor: "white",
@@ -159,46 +159,31 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const TicketSales = [
-	{
-		eventCity: "melbourne",
-		TicketSold: 9,
-	},
-	{
-		eventCity: "karachi",
-		TicketSold: 9,
-	},
-	{
-		eventCity: "Sydney",
-		TicketSold: 8,
-	},
-	{
-		eventCity: "Singapore",
-		TicketSold: 8,
-	},
-	{
-		eventCity: "New York",
-		TicketSold: 4,
-	},
-];
+// const TicketSales = [
+// 	{
+// 		eventCity: "melbourne",
+// 		TicketSold: 9,
+// 	},
+// 	{
+// 		eventCity: "karachi",
+// 		TicketSold: 9,
+// 	},
+// 	{
+// 		eventCity: "Sydney",
+// 		TicketSold: 8,
+// 	},
+// 	{
+// 		eventCity: "Singapore",
+// 		TicketSold: 8,
+// 	},
+// 	{
+// 		eventCity: "New York",
+// 		TicketSold: 4,
+// 	},
+// ];
 //for doughnut chart
 const chartColors = ["#ACFFE3", "#96A6FF", "#FF8795", "#E8B56B", "#D0A6F2"];
-const data2 = {
-	maintainAspectRatio: false,
-	responsive: false,
-	labels: TicketSales.map((event) => {
-		return event.eventCity;
-	}),
-	datasets: [
-		{
-			data: TicketSales.map((event) => {
-				return event.TicketSold;
-			}),
-			backgroundColor: chartColors,
-			hoverBackgroundColor: chartColors,
-		},
-	],
-};
+
 //doughnut chart options
 const options2 = {
 	legend: {
@@ -314,13 +299,19 @@ const Analytics = (props, context) => {
 	useEffect(() => {
 		getPhnxRevenue();
 		getViewsAndFavourites();
+		// ticketSold();
 	}, []);
 	const classes = useStyles();
 	const [graphData, setGraphData] = useState("");
 	const [userDetails, setUserDetails] = useState([]);
+	const [TicketSales, setTicketSales] = useState([]);
 	//for graph datasets
 	let dataset = [];
-
+	const ticketSold = async () => {
+		const tickets = await generateJSON(15);
+		console.log("tickets",tickets);
+		setTicketSales(tickets);
+	}
 	const data = (canvas) => {
 		const ctx = canvas.getContext('2d')
 		var gradient = ctx.createLinearGradient(0, 0, 0, 400);
@@ -344,9 +335,24 @@ const Analytics = (props, context) => {
 			]
 		}
 	}
-
+	const data2 = {
+		maintainAspectRatio: false,
+		responsive: false,
+		labels: TicketSales.map((event) => {
+			return event.eventCity;
+		}),
+		datasets: [
+			{
+				data: TicketSales.map((event) => {
+					return event.TicketSold;
+				}),
+				backgroundColor: chartColors,
+				hoverBackgroundColor: chartColors,
+			},
+		],
+	};
 	const getPhnxRevenue = async () => {
-		console.log("I am here",props.accounts);
+		console.log("I am here", props.accounts);
 		await axios({
 			url: graphURL,
 			method: 'post',

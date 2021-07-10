@@ -223,7 +223,6 @@ class App extends Component {
 
 	//get value from buyer/from child components
 	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
-		console.log("In inquireBuy function");
 		if (
 			this.state.account.length !== 0 &&
 			this.props.web3.networkId == GLOBAL_NETWORK_ID
@@ -331,10 +330,8 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-		console.log("in buy function");
 		if ((await this.allowance()) == 0) {
 			console.log("in buy function giving allowance");
-
 			this.state.approve
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
@@ -376,14 +373,11 @@ class App extends Component {
 							);
 							this.afterApprove();
 							this.setState({ disabledStatus: false });
+
 						}
 					}
 				})
 				.on("error", (error) => {
-					console.log(
-						"error in buy in if function giving allowance",
-						error
-					);
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -416,12 +410,9 @@ class App extends Component {
 							}
 						);
 					}
-				})
-				.on("confirmation", (confirmationNumber, receipt) => {
-					if (confirmationNumber !== null) {
-						txreceipt = receipt;
-						txconfirmed = confirmationNumber;
-						if (txconfirmed == 0 && txreceipt.status == true) {
+						let intervalVar = setInterval(async () => {
+						  let receipt = await web3.eth.getTransactionReceipt(hash);
+						  if (receipt) {
 							toast(
 								<Notify
 									hash={txreceipt.transactionHash}
@@ -438,14 +429,35 @@ class App extends Component {
 								}
 							);
 							this.setState({ disabledStatus: false });
-						}
-					}
+							clearInterval(intervalVar);
+						  }
+						}, 5000);
 				})
+				// .on("confirmation", (confirmationNumber, receipt) => {
+				// 	if (confirmationNumber == 1) {
+				// 		txreceipt = receipt;
+				// 		txconfirmed = confirmationNumber;
+				// 		if (txconfirmed == 0 && txreceipt.status == true) {
+				// 			toast(
+				// 				<Notify
+				// 					hash={txreceipt.transactionHash}
+				// 					text="Ticket purchase successfull!"
+				// 					icon="fa fa-ticket-alt fa-3x"
+				// 					link="Check out your TICKET here"
+				// 					url="/mytickets/1"
+				// 					color="#413AE2"
+				// 				/>,
+				// 				{
+				// 					position: "bottom-right",
+				// 					autoClose: true,
+				// 					pauseOnHover: true,
+				// 				}
+				// 			);
+				// 			this.setState({ disabledStatus: false });
+				// 		}
+				// 	}
+				// })
 				.on("error", (error) => {
-					console.log(
-						"error in buy in else function giving allowance",
-						error
-					);
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -530,7 +542,6 @@ class App extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						console.log("error", error);
 						this.setState({ error: true });
 						toast(
 							<Notify error={error} message={txerror.message} />,

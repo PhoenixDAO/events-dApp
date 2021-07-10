@@ -7,6 +7,7 @@ import { API_URL, ADD_TO_FAVOURITES, REMOVE_FROM_FAVOURITES } from "../../config
 import { toast } from "react-toastify";
 import Notify from "../Notify";
 import axios from "axios";
+import Web3 from "web3";
 
 import {
 	Card,
@@ -112,6 +113,7 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "22px",
 		fontWeight: "700",
 		color: "#413AE2",
+		textAlign: "end",
 	},
 	starting: {
 		color: "#73727D",
@@ -120,9 +122,12 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: "400"
 	},
 	price: {
-		color: "#413AE2", fontWeight: "700", fontSize: "17px"
+		color: "#413AE2", fontWeight: "700", fontSize: "17px",
+		"& p": {
+			marginBottom: "0px",
+		},
+		minHeight: "71px"
 	}
-
 }));
 
 const EventCard = (props, context) => {
@@ -141,16 +146,17 @@ const EventCard = (props, context) => {
 		eventId,
 		myFavorites,
 		favoriteEvent,
-		prices
 	} = props;
 
 	useEffect(() => {
 		setIcon(favoriteEvent);
+		getPhoenixDAOMarketValue();
 	}, [favoriteEvent]);
 	const classes = useStyles();
 	const [Icon, setIcon] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [open2, setOpen2] = useState(false);
+	const [PhoenixDAO_market, setPhoenixDAO_market] = useState("");
 	// changeIcon(favoriteEvent);
 	const handleClickOpen = (e) => {
 		setOpen(true);
@@ -219,6 +225,22 @@ const EventCard = (props, context) => {
 			// });
 		}
 	};
+	//get market cap & dollar value of PhoenixDAO
+	const getPhoenixDAOMarketValue = async () => {
+		fetch(
+			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
+		)
+			.then((res) => res.json())
+			.then((data) => {
+				setPhoenixDAO_market(data.phoenixdao);
+			})
+			.catch(console.log);
+	}
+	let phnx_price = event_data.prices.map((price) => {
+		return (Web3.utils.fromWei(price) / PhoenixDAO_market.usd).toFixed(2);
+	})
+	let dollar_price = Web3.utils.fromWei(event_data.prices[0]);
+
 	return (
 		<div>
 			<ShareModal
@@ -276,7 +298,7 @@ const EventCard = (props, context) => {
 									>
 										<ConfirmationNumberOutlined fontSize="medium" />
 										<span>&nbsp;</span>
-										{event_data.tktTotalQuantitySold}/{event_data.tktTotalQuantity}
+										{event_data.tktTotalQuantitySold}/{event_data.tktTotalQuantity == 0 ? <span style={{fontSize:"21px"}}>∞</span>:event_data.tktTotalQuantity}
 									</Typography>
 									{!myEvent && !ticket ? (
 										<Typography
@@ -324,10 +346,16 @@ const EventCard = (props, context) => {
 									variant="body1"
 									component="h2"
 								>
-									{!event_data.token ? "Free" : prices.length == 1 ? prices[0] :
+									{!event_data.token ? "Free" : phnx_price.length == 1 ?
+										(<div>
+											<p>{phnx_price[0]} PHNX</p>
+											<p className={classes.starting}> ${dollar_price}</p>
+										</div>)
+										:
 										(<div>
 											<p className={classes.starting}>Starting from</p>
-											<p>{prices[0]} PHNX</p>
+											<p>{phnx_price[0]} PHNX</p>
+											<p className={classes.starting}> ${dollar_price}</p>
 										</div>
 										)
 									}
@@ -352,9 +380,6 @@ const EventCard = (props, context) => {
 									</div>
 								</div> */}
 							</div>
-
-							<br />
-
 							<Typography
 								variant="body2"
 								color="textSecondary"

@@ -1024,6 +1024,7 @@ this.props.toggleDisabling();
 											Ticket Purchases
 										</h4>
 										{this.state.load && <Loading />}
+										
 										{this.state.pageTransactions.map(
 											(sold, index) => (
 												<p
