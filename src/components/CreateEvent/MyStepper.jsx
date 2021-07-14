@@ -191,6 +191,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	const [activeStep, setActiveStep] = useState(0);
 	const steps = ["", "", "", ""];
 	const [value, setValue] = useState("onedayevent");
+	const [eventTime, setEventTime] = useState("onedayevent");
 	const [selectedDate, setSelectedDate] = React.useState(new Date());
 	const [selectTime, setSelectTime] = useState(new Date());
 	const [type, setType] = useState("physical");
@@ -225,6 +226,8 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	const [categories, setCategories] = useState([]);
 	const [addAnotherCat, setaddAnotherCat] = useState(false);
 	const [ticketCategory, setTicketCategory] = useState(0);
+	const [PhoenixDAO_market, setPhoenixDAO_market] = useState({});
+	const [phnxValue, setPhnxValue] = useState(0);
 
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
@@ -250,6 +253,22 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 			{ label: "UL", style: "unordered-list-item" },
 			{ label: "OL", style: "ordered-list-item" },
 		],
+	};
+
+	useEffect(() => {
+		getPhoenixdaoMarket();
+	}, []);
+
+	const getPhoenixdaoMarket = async () => {
+		fetch(
+			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
+		)
+			.then((res) => res.json())
+			.then((data) => {
+				// this.setState({ PhoenixDAO_market: data.phoenixdao });
+				setPhoenixDAO_market(data.phoenixdao);
+			})
+			.catch(console.log);
 	};
 
 	const handleClickOpen = () => {
@@ -409,6 +428,15 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 		setTicketCategory(index);
 	};
 
+	const onPriceChanges = (e) => {
+		let value = parseFloat(e.target.value);
+		value = value > 0 ? value : 0;
+		let usd = PhoenixDAO_market.usd;
+		let phoenixValue = value / usd;
+		phoenixValue = phoenixValue.toFixed(5);
+		setPhnxValue(phoenixValue);
+	};
+
 	function getStepContent(stepIndex) {
 		switch (stepIndex) {
 			case 0:
@@ -479,28 +507,51 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 
 							<br />
 							<br />
+
 							<FormControl component="fieldset">
-								<RadioGroup
-									row
-									aria-label="eventTime"
+								<label>TICKET AVAILABILITY</label>
+								<Controller
 									name="eventTime"
-									value={value}
-									onChange={handleChange}
-								>
-									<FormControlLabel
-										value="onedayevent"
-										control={<Radio color="primary" />}
-										label="One day Event"
-									/>
-									<FormControlLabel
-										value="morethanaday"
-										control={<Radio color="primary" />}
-										label="More than a day"
-									/>
-								</RadioGroup>
+									control={control}
+									defaultValue={eventTime}
+									render={({
+										field: { onChange, value },
+										fieldState: { error },
+									}) => (
+										<RadioGroup
+											row
+											aria-label="eventTime"
+											name="eventTime"
+											value={value}
+											onChange={(e) => {
+												onChange(e);
+												setEventTime(e.target.value);
+											}}
+										>
+											<FormControlLabel
+												value="onedayevent"
+												control={
+													<Radio color="primary" />
+												}
+												label="One day Event"
+											/>
+											<FormControlLabel
+												value="morethanaday"
+												control={
+													<Radio color="primary" />
+												}
+												label="More than a day"
+											/>
+										</RadioGroup>
+									)}
+									rules={{
+										required: "Please select event time.",
+									}}
+								/>
 							</FormControl>
+
 							<br />
-							{value === "onedayevent" ? (
+							{eventTime === "onedayevent" ? (
 								<div>
 									<MuiPickersUtilsProvider
 										utils={DateFnsUtils}
@@ -849,26 +900,49 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							<h3 className={classes.title}>Event Details</h3>
 							<Divider light />
 							<br />
+
 							<FormControl component="fieldset">
-								<RadioGroup
-									row
-									aria-label="eventType"
+								<label>TICKET AVAILABILITY</label>
+								<Controller
 									name="eventType"
-									value={type}
-									onChange={handleType}
-								>
-									<FormControlLabel
-										value="physical"
-										control={<Radio color="primary" />}
-										label="Physical Event"
-									/>
-									<FormControlLabel
-										value="online"
-										control={<Radio color="primary" />}
-										label="Online Event"
-									/>
-								</RadioGroup>
+									control={control}
+									defaultValue={type}
+									render={({
+										field: { onChange, value },
+										fieldState: { error },
+									}) => (
+										<RadioGroup
+											row
+											aria-label="eventType"
+											name="eventType"
+											value={value}
+											onChange={(e) => {
+												onChange(e);
+												setType(e.target.value);
+											}}
+										>
+											<FormControlLabel
+												value="physical"
+												control={
+													<Radio color="primary" />
+												}
+												label="Physical Event"
+											/>
+											<FormControlLabel
+												value="online"
+												control={
+													<Radio color="primary" />
+												}
+												label="Online Event"
+											/>
+										</RadioGroup>
+									)}
+									rules={{
+										required: "Please select event type.",
+									}}
+								/>
 							</FormControl>
+
 							<br />
 							{type === "physical" ? (
 								<div>
@@ -968,6 +1042,12 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																	onChange={(
 																		event
 																	) => {
+																		console.log(
+																			"img",
+																			event
+																				.target
+																				.files[0]
+																		);
 																		const arr =
 																			[
 																				...images,
@@ -981,6 +1061,8 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																		);
 																		onChange(
 																			event
+																				.target
+																				.files[0]
 																		);
 																	}}
 																/>
@@ -1244,7 +1326,10 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															),
 														}}
 														value={value}
-														onChange={onChange}
+														onChange={(e) => {
+															onChange(e);
+															onPriceChanges(e);
+														}}
 														error={!!error}
 														helperText={
 															error
@@ -1297,7 +1382,8 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																</InputAdornment>
 															),
 														}}
-														value={value}
+														// value={value}
+														value={phnxValue}
 														onChange={onChange}
 														error={!!error}
 														helperText={
@@ -1599,9 +1685,16 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																	value={
 																		value
 																	}
-																	onChange={
-																		onChange
-																	}
+																	onChange={(
+																		e
+																	) => {
+																		onChange(
+																			e
+																		);
+																		onPriceChanges(
+																			e
+																		);
+																	}}
 																	error={
 																		!!error
 																	}
@@ -1663,8 +1756,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																				</InputAdornment>
 																			),
 																	}}
+																	// value={
+																	// 	value
+																	// }
 																	value={
-																		value
+																		phnxValue
 																	}
 																	onChange={
 																		onChange
