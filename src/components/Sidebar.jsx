@@ -118,7 +118,7 @@ class Sidebar extends Component {
 			user = (
 				<div>
 					<div className="user-status-icon">
-						<NavLink to="/" style={{ display: "flex" }}>
+						<NavLink to="/accountdetails" style={{ display: "flex" }}>
 							{/* <img
 								src={makeBlockie(this.props.account)}
 								alt={this.props.account}
