@@ -3,16 +3,32 @@ import "./detailform.css";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import DialogueBox from "../common/DialogueBox";
 import roundlogo from "../Images/roundlogo.svg";
-
-const DetailForm = () => {
+import { drizzleConnect } from "drizzle-react";
+import { updateUserDetails } from "../../config/serverAPIs";
+import PropTypes from "prop-types";
+const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
-
+	const [organizer, setOrganizer] = useState("");
+	const [avatarCustom, setAvatarCustom] = useState(false);
+	const [alternateCurrency, setAlternateCurrency] = useState("Dollar");
 	const handleOpen = () => {
 		setOpen(true);
 	};
 
 	const handleClose = () => {
 		setOpen(false);
+	};
+
+	const updateUserInfo = () => {
+		updateUserDetails({
+			address: props.account,
+			networkId: props.networkId,
+			name: "Bennue", //we need to change this when the design is finalised
+			organizer,
+			avatarCustom, //we need to change this when the design is finalised
+			avatarNumber: 1, //we need to change this when the design is finalised
+			alternateCurrency,
+		});
 	};
 
 	const avatars = [
@@ -34,6 +50,14 @@ const DetailForm = () => {
 			</div>
 		);
 	});
+
+	const currency = [
+		{ name: "Dollar", flag: "" },
+		{ name: "Euro", flag: "" },
+		{ name: "British Pound", flag: "" },
+	].map((data) => {
+		return <option value={data.name}>{data.name}</option>;
+	});
 	return (
 		<div className="dtl-hldr">
 			<div className="acc-basic-info">
@@ -53,7 +77,7 @@ const DetailForm = () => {
 					<div className="acc-form-prt">
 						<div className="frm-single">
 							<p className="acc-inpt-heading">WALLET ADDRESS</p>
-							<input className="acc-inpt" />
+							<input className="acc-inpt" value={props.account} />
 						</div>
 					</div>
 					<div className="acc-form-prt">
@@ -61,7 +85,13 @@ const DetailForm = () => {
 							<p className="acc-inpt-heading">
 								ALTERNATIVE CURRENCY
 							</p>
-							<input className="acc-inpt" />
+							<select
+								className="acc-inpt acc-select"
+								onChange={(e) => setOrganizer(e.target.value)}
+								value={organizer}
+							>
+								{currency}
+							</select>
 						</div>
 					</div>
 					<div className="acc-form-prt">
@@ -88,7 +118,12 @@ const DetailForm = () => {
 						</div>
 					</div>
 					<div className="acc-form-prt frm-btn-hldr">
-						<button className="acc-frm-btn">Save</button>
+						<button
+							className="acc-frm-btn"
+							onClick={updateUserInfo}
+						>
+							Save
+						</button>
 					</div>
 				</form>
 			</div>
@@ -121,4 +156,19 @@ const DetailForm = () => {
 		</div>
 	);
 };
-export default DetailForm;
+
+DetailForm.contextTypes = {
+	drizzle: PropTypes.object,
+};
+
+const mapStateToProps = (state) => {
+	return {
+		accounts: state.accounts[0],
+		networkId: state.web3.networkId,
+	};
+};
+
+const AppContainer = drizzleConnect(DetailForm, mapStateToProps);
+export default AppContainer;
+
+// export default DetailForm;
