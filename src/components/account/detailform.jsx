@@ -11,6 +11,8 @@ const DetailForm = (props) => {
 	const [organizer, setOrganizer] = useState("");
 	const [avatarCustom, setAvatarCustom] = useState(false);
 	const [alternateCurrency, setAlternateCurrency] = useState("Dollar");
+	const [selectImage, setSelectImage] = useState("");
+	const [file, setFile] = useState({});
 	const handleOpen = () => {
 		setOpen(true);
 	};
@@ -31,19 +33,40 @@ const DetailForm = (props) => {
 		});
 	};
 
+	const uploadImage = () => {
+		
+	};
+
 	const avatars = [
-		{ img: "/images/metamask.svg", name: "Bennue" },
-		{ img: "/images/metamask.svg", name: "Bennue" },
-		{ img: "/images/metamask.svg", name: "Bennue" },
-		{ img: "/images/metamask.svg", name: "Bennue" },
-		{ img: "/images/metamask.svg", name: "Bennue" },
-		{ img: "/images/metamask.svg", name: "Bennue" },
+		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
+		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
+		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
+		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
+		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
+		{ img: "/images/metamask.svg", name: "Custom", onclick: true },
 	].map((data) => {
 		return (
-			<div className="single-avatar-hldr">
-				<div className="acc-av-hldr">
-					<img className="acc-av" src={data.img} />
-				</div>
+			<div
+				className="single-avatar-hldr"
+				onClick={(e) => setSelectImage(e.target.img)}
+			>
+				{data.onclick ? (
+					<div>
+						<label for="file-upload" className="custom-file-upload">
+							+
+						</label>
+						<input
+							id="file-upload"
+							type="file"
+							name="file"
+							onChange={(e) => setFile(e.target.files[0])}
+						/>
+					</div>
+				) : (
+					<div className="acc-av-hldr">
+						<img className="acc-av" src={data.img} />
+					</div>
+				)}
 				<div className="acc-title-hlder">
 					<p className="acc-title"> {data.name} </p>
 				</div>
@@ -87,7 +110,9 @@ const DetailForm = (props) => {
 							</p>
 							<select
 								className="acc-inpt acc-select"
-								onChange={(e) => setOrganizer(e.target.value)}
+								onChange={(e) =>
+									setAlternateCurrency(e.target.value)
+								}
 								value={organizer}
 							>
 								{currency}
@@ -111,6 +136,7 @@ const DetailForm = (props) => {
 								className="acc-inpt"
 								rows="4"
 								cols="50"
+								onChange={(e) => setOrganizer(e.target.value)}
 							></textarea>
 							<p className="org-subheading">
 								Not more than 500 words.
