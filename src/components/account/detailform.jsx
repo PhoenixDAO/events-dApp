@@ -3,10 +3,16 @@ import "./detailform.css";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import DialogueBox from "../common/DialogueBox";
 import roundlogo from "../Images/roundlogo.svg";
-
-const DetailForm = () => {
+import { drizzleConnect } from "drizzle-react";
+import { updateUserDetails } from "../../config/serverAPIs";
+import PropTypes from "prop-types";
+const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
-
+	const [organizer, setOrganizer] = useState("");
+	const [avatarCustom, setAvatarCustom] = useState(false);
+	const [alternateCurrency, setAlternateCurrency] = useState("Dollar");
+	const [selectImage, setSelectImage] = useState("");
+	const [file, setFile] = useState({});
 	const handleOpen = () => {
 		setOpen(true);
 	};
@@ -15,24 +21,65 @@ const DetailForm = () => {
 		setOpen(false);
 	};
 
+	const updateUserInfo = () => {
+		updateUserDetails({
+			address: props.account,
+			networkId: props.networkId,
+			name: "Bennue", //we need to change this when the design is finalised
+			organizer,
+			avatarCustom, //we need to change this when the design is finalised
+			avatarNumber: 1, //we need to change this when the design is finalised
+			alternateCurrency,
+		});
+	};
+
+	const uploadImage = () => {
+		
+	};
+
 	const avatars = [
-		{ img: "/images/metamask.svg", name: "Bennue" },
-		{ img: "/images/metamask.svg", name: "Bennue" },
-		{ img: "/images/metamask.svg", name: "Bennue" },
-		{ img: "/images/metamask.svg", name: "Bennue" },
-		{ img: "/images/metamask.svg", name: "Bennue" },
-		{ img: "/images/metamask.svg", name: "Bennue" },
+		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
+		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
+		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
+		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
+		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
+		{ img: "/images/metamask.svg", name: "Custom", onclick: true },
 	].map((data) => {
 		return (
-			<div className="single-avatar-hldr">
-				<div className="acc-av-hldr">
-					<img className="acc-av" src={data.img} />
-				</div>
+			<div
+				className="single-avatar-hldr"
+				onClick={(e) => setSelectImage(e.target.img)}
+			>
+				{data.onclick ? (
+					<div>
+						<label for="file-upload" className="custom-file-upload">
+							+
+						</label>
+						<input
+							id="file-upload"
+							type="file"
+							name="file"
+							onChange={(e) => setFile(e.target.files[0])}
+						/>
+					</div>
+				) : (
+					<div className="acc-av-hldr">
+						<img className="acc-av" src={data.img} />
+					</div>
+				)}
 				<div className="acc-title-hlder">
 					<p className="acc-title"> {data.name} </p>
 				</div>
 			</div>
 		);
+	});
+
+	const currency = [
+		{ name: "Dollar", flag: "" },
+		{ name: "Euro", flag: "" },
+		{ name: "British Pound", flag: "" },
+	].map((data) => {
+		return <option value={data.name}>{data.name}</option>;
 	});
 	return (
 		<div className="dtl-hldr">
@@ -53,7 +100,7 @@ const DetailForm = () => {
 					<div className="acc-form-prt">
 						<div className="frm-single">
 							<p className="acc-inpt-heading">WALLET ADDRESS</p>
-							<input className="acc-inpt" />
+							<input className="acc-inpt" value={props.account} />
 						</div>
 					</div>
 					<div className="acc-form-prt">
@@ -61,7 +108,15 @@ const DetailForm = () => {
 							<p className="acc-inpt-heading">
 								ALTERNATIVE CURRENCY
 							</p>
-							<input className="acc-inpt" />
+							<select
+								className="acc-inpt acc-select"
+								onChange={(e) =>
+									setAlternateCurrency(e.target.value)
+								}
+								value={organizer}
+							>
+								{currency}
+							</select>
 						</div>
 					</div>
 					<div className="acc-form-prt">
@@ -81,6 +136,7 @@ const DetailForm = () => {
 								className="acc-inpt"
 								rows="4"
 								cols="50"
+								onChange={(e) => setOrganizer(e.target.value)}
 							></textarea>
 							<p className="org-subheading">
 								Not more than 500 words.
@@ -88,7 +144,12 @@ const DetailForm = () => {
 						</div>
 					</div>
 					<div className="acc-form-prt frm-btn-hldr">
-						<button className="acc-frm-btn">Save</button>
+						<button
+							className="acc-frm-btn"
+							onClick={updateUserInfo}
+						>
+							Save
+						</button>
 					</div>
 				</form>
 			</div>
@@ -121,4 +182,19 @@ const DetailForm = () => {
 		</div>
 	);
 };
-export default DetailForm;
+
+DetailForm.contextTypes = {
+	drizzle: PropTypes.object,
+};
+
+const mapStateToProps = (state) => {
+	return {
+		accounts: state.accounts[0],
+		networkId: state.web3.networkId,
+	};
+};
+
+const AppContainer = drizzleConnect(DetailForm, mapStateToProps);
+export default AppContainer;
+
+// export default DetailForm;

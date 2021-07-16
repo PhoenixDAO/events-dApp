@@ -48,6 +48,9 @@
 	width: 100%;
 }
 
+.acc-select {
+	background-color: #ffffff;
+}
 .frm-single {
 }
 
@@ -128,4 +131,22 @@
 	font-weight: bold;
 	text-align: center;
 	border: 0px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: block;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin: 0 auto;
+	border-radius: 50%;
+	height: 60px;
+	width: 60px;
+	text-align: center;
+	color: #000000;
+	font-size: 30px;
 }
