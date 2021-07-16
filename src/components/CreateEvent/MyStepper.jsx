@@ -57,6 +57,8 @@ import altIcon from "../Images/altIcon.png";
 import editIcon from "../Images/editIcon.png";
 import deleteIcon from "../Images/deleteIcon.png";
 
+var badWords = require("bad-words");
+
 const QontoConnector = withStyles({
 	alternativeLabel: {
 		top: 10,
@@ -248,6 +250,48 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 		],
 	};
 
+	const formatInputNoOfTickets = (e) => {
+		// Prevent characters that are not numbers ("e", ".", "+" & "-") ✨
+		let checkIfNum;
+		if (e.key !== undefined) {
+			// Check if it's a "e", ".", "+" or "-"
+			checkIfNum =
+				e.key === "e" ||
+				e.key === "." ||
+				e.key === "+" ||
+				e.key === "-";
+		} else if (e.keyCode !== undefined) {
+			// Check if it's a "e" (69), "." (190), "+" (187) or "-" (189)
+			checkIfNum =
+				e.keyCode === 69 ||
+				e.keyCode === 190 ||
+				e.keyCode === 187 ||
+				e.keyCode === 189;
+		}
+		return checkIfNum && e.preventDefault();
+	};
+
+	const formatInputDollarPrice = (e) => {
+		// Prevent characters that are not numbers ("e", ".", "+" & "-") ✨
+		let checkIfNum;
+		if (e.key !== undefined) {
+			// Check if it's a "e", ".", "+" or "-"
+			checkIfNum =
+				e.key === "e" ||
+				// e.key === "." ||
+				e.key === "+" ||
+				e.key === "-";
+		} else if (e.keyCode !== undefined) {
+			// Check if it's a "e" (69), "." (190), "+" (187) or "-" (189)
+			checkIfNum =
+				e.keyCode === 69 ||
+				// e.keyCode === 190 ||
+				e.keyCode === 187 ||
+				e.keyCode === 189;
+		}
+		return checkIfNum && e.preventDefault();
+	};
+
 	useEffect(() => {
 		getPhoenixdaoMarket();
 	}, []);
@@ -294,9 +338,14 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	//next button steeper
 	const handleNext = (fields) => {
 		// console.log("categories", categories);
+		const filter = new badWords();
 
 		if (activeStep === 0) {
-			//first stepper conditions - eventdate&time
+			//first stepper conditions - eventName, eventOrg, eventdate&time
+			const badEventName = filter.clean(fields.eventName);
+			fields.eventName = badEventName;
+			const badEventOrg = filter.clean(fields.eventOrganizer);
+			fields.eventOrganizer = badEventOrg;
 			onFieldsChange(fields);
 			setActiveStep((prevActiveStep) => prevActiveStep + 1);
 		} else if (activeStep === 1) {
@@ -494,7 +543,13 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 									/>
 								)}
 								rules={{
-									required: "Please enter event organizer.",
+									required:
+										"Please enter event organizer name.",
+									minLength: {
+										value: 3,
+										message:
+											"Event organizer name should contain atleast 3 characters.",
+									},
 								}}
 							/>
 
@@ -582,6 +637,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																	"aria-label":
 																		"change date",
 																}}
+																InputProps={{
+																	readOnly: true,
+																}}
 																inputVariant="outlined"
 																autoOk={true}
 																disablePast
@@ -641,6 +699,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																"aria-label":
 																	"change time",
 															}}
+															InputProps={{
+																readOnly: true,
+															}}
 															inputVariant="outlined"
 															autoOk={true}
 															value={value}
@@ -685,6 +746,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															KeyboardButtonProps={{
 																"aria-label":
 																	"change time",
+															}}
+															InputProps={{
+																readOnly: true,
 															}}
 															inputVariant="outlined"
 															autoOk={true}
@@ -743,6 +807,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															margin="normal"
 															id="date-picker-inline"
 															placeholder="dd-MM-yyyy"
+															InputProps={{
+																readOnly: true,
+															}}
 															// label="START DATE"
 															// value={startDate}
 															// onChange={(d) =>
@@ -799,6 +866,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															// label="END DATE"
 															// value={endDate}
 															// onChange={(d) => setEndDate(d)}
+															InputProps={{
+																readOnly: true,
+															}}
 															KeyboardButtonProps={{
 																"aria-label":
 																	"change date",
@@ -859,6 +929,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																"aria-label":
 																	"change time",
 															}}
+															InputProps={{
+																readOnly: true,
+															}}
 															inputVariant="outlined"
 															autoOk={true}
 															value={value}
@@ -903,6 +976,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															KeyboardButtonProps={{
 																"aria-label":
 																	"change time",
+															}}
+															InputProps={{
+																readOnly: true,
 															}}
 															inputVariant="outlined"
 															autoOk={true}
@@ -1064,6 +1140,10 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 										rules={{
 											required:
 												"Please enter event link.",
+											pattern: {
+												value: /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/,
+												message: "Is Not Valid URL",
+											},
 										}}
 									/>
 								</div>
@@ -1107,28 +1187,34 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																	onChange={(
 																		event
 																	) => {
-																		console.log(
-																			"img",
+																		if (
 																			event
 																				.target
 																				.files[0]
-																		);
-																		const arr =
-																			[
-																				...images,
-																			];
-																		arr[
-																			index
-																		].name =
-																			event.target.files[0].name;
-																		setImages(
-																			arr
-																		);
-																		onChange(
-																			event
-																				.target
-																				.files[0]
-																		);
+																				.size >
+																			5000000
+																		) {
+																			onChange(
+																				""
+																			);
+																		} else {
+																			const arr =
+																				[
+																					...images,
+																				];
+																			arr[
+																				index
+																			].name =
+																				event.target.files[0].name;
+																			setImages(
+																				arr
+																			);
+																			onChange(
+																				event
+																					.target
+																					.files[0]
+																			);
+																		}
 																	}}
 																/>
 															</Button>
@@ -1138,7 +1224,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 											)}
 											rules={{
 												required:
-													"Please upload image.",
+													"Please select an image less than 5MB.",
 											}}
 										/>
 
@@ -1329,9 +1415,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 														fieldState: { error },
 													}) => (
 														<TextField
+															onKeyDown={
+																formatInputNoOfTickets
+															}
 															type="number"
 															id="outlined-basic"
-															// label="Event Organizer"
 															fullWidth
 															variant="outlined"
 															value={value}
@@ -1347,6 +1435,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													rules={{
 														required:
 															"Please enter number of tickets.",
+														min: {
+															value: 1,
+															message:
+																"Number of ticket should be atleast 1",
+														},
 													}}
 												/>
 											</div>
@@ -1374,6 +1467,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													<TextField
 														className={
 															classes.margin
+														}
+														onKeyDown={
+															formatInputDollarPrice
 														}
 														id="input-with-icon-textfield"
 														type="number"
@@ -1406,6 +1502,16 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 												rules={{
 													required:
 														"Price in dollars.",
+													pattern: {
+														value: /\d+(\.\d+)?$/,
+														message:
+															"Please enter an integer",
+													},
+													min: {
+														value: 1,
+														message:
+															"Price of ticket should be atleast 1 dollar.",
+													},
 												}}
 											/>
 
@@ -1525,6 +1631,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 														fieldState: { error },
 													}) => (
 														<TextField
+															onKeyDown={
+																formatInputNoOfTickets
+															}
 															type="number"
 															id="outlined-basic"
 															// label="Event Organizer"
@@ -1543,6 +1652,12 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													rules={{
 														required:
 															"Please enter number of tickets.",
+
+														min: {
+															value: 1,
+															message:
+																"Number of ticket should be atleast 1",
+														},
 													}}
 												/>
 											</div>
@@ -1716,6 +1831,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													>
 														<Controller
 															name={`dollarPrice${ticketCategory}`}
+															onKeyDown={
+																formatInputDollarPrice
+															}
 															control={control}
 															defaultValue=""
 															render={({
@@ -1917,6 +2035,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																TICKETS
 															</label>
 															<Controller
+																onKeyDown={
+																	formatInputNoOfTickets
+																}
 																name={`noOfTickets${ticketCategory}`}
 																control={
 																	control
@@ -1933,7 +2054,6 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																		},
 																}) => (
 																	<TextField
-																		type="number"
 																		id="outlined-basic"
 																		// label="Event Organizer"
 																		fullWidth
@@ -1957,6 +2077,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																rules={{
 																	required:
 																		"Please enter number of tickets.",
+																	min: {
+																		value: 1,
+																		message:
+																			"Number of ticket should be atleast 1",
+																	},
 																}}
 															/>
 														</div>
