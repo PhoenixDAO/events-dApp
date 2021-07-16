@@ -50,13 +50,13 @@ import PropTypes from "prop-types";
 import Check from "@material-ui/icons/Check";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { useForm, Controller } from "react-hook-form";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faCheckSquare,
-	faCoffee,
-	faSquare,
-	faTimesCircle,
-} from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import {
+// 	faCheckSquare,
+// 	faCoffee,
+// 	faSquare,
+// 	faTimesCircle,
+// } from "@fortawesome/free-solid-svg-icons";
 import EventPreviewPage from "./EventPreviewPage";
 import phnxLogo from "../Images/phnx.png";
 import dollarIcon from "../Images/dollar.png";

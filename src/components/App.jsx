@@ -49,6 +49,8 @@ import {
 import NetworkError from "./NetworkError";
 import PageNotFound from "./PageNotFound";
 import Favorites from "./Favorite.jsx";
+import AccountDetail from './account/index'
+
 let ethereum = window.ethereum;
 let web3 = window.web3;
 const items = ["slide1.png", "slide2.png", "slide3.png", "slide4.png"];
@@ -373,7 +375,6 @@ class App extends Component {
 							);
 							this.afterApprove();
 							this.setState({ disabledStatus: false });
-
 						}
 					}
 				})
@@ -410,9 +411,11 @@ class App extends Component {
 							}
 						);
 					}
-						let intervalVar = setInterval(async () => {
-						  let receipt = await web3.eth.getTransactionReceipt(hash);
-						  if (receipt) {
+					let intervalVar = setInterval(async () => {
+						let receipt = await web3.eth.getTransactionReceipt(
+							hash
+						);
+						if (receipt) {
 							toast(
 								<Notify
 									hash={txreceipt.transactionHash}
@@ -430,8 +433,8 @@ class App extends Component {
 							);
 							this.setState({ disabledStatus: false });
 							clearInterval(intervalVar);
-						  }
-						}, 5000);
+						}
+					}, 5000);
 				})
 				// .on("confirmation", (confirmationNumber, receipt) => {
 				// 	if (confirmationNumber == 1) {
@@ -884,6 +887,19 @@ class App extends Component {
 								done={this.state.done}
 								error={this.state.error}
 								account={this.state.account}
+								eventsContract={this.state.eventsContract}
+							/>
+						)}
+					/>
+
+					<Route
+						exact
+						path="/accountdetails"
+						render={(props) => (
+							<AccountDetail
+								{...props}
+								account={this.state.account}
+								executeScroll={this.executeScroll}
 								eventsContract={this.state.eventsContract}
 							/>
 						)}
