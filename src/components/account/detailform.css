@@ -25,7 +25,7 @@
 	justify-content: center;
 }
 
-.acc-title{
+.acc-title {
 	margin-right: 3px;
 }
 
@@ -72,6 +72,57 @@
 	background-color: blueviolet;
 	color: #ffffff;
 	width: 50%;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-weight: bold;
+	text-align: center;
+	border: 0px;
+}
+
+.idn-head {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.idn-heading {
+	margin: 0;
+	font-size: 18px;
+	color: black;
+	margin-right: 5px;
+}
+
+.idn-sub {
+	margin-top: 20px;
+}
+
+.idn-subhead1 {
+	text-align: center;
+	color: blueviolet;
+	font-weight: bold;
+}
+
+.idn-subhead2 {
+	text-align: center;
+	color: #929292;
+	font-size: 12px;
+}
+
+.avatar-hldr {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 20px 0;
+}
+
+.single-avatar-hldr {
+	flex-grow: 1;
+	width: 33%;
+}
+
+.avatar-select-btn {
+	background-color: blueviolet;
+	color: #ffffff;
+	width: 100%;
 	padding: 5px 10px;
 	border-radius: 5px;
 	font-weight: bold;
