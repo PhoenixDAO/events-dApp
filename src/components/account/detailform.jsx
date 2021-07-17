@@ -2,22 +2,23 @@ import React, { useState } from "react";
 import "./detailform.css";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import DialogueBox from "../common/DialogueBox";
-import roundlogo from "../Images/roundlogo.svg";
 import { drizzleConnect } from "drizzle-react";
 import { updateUserDetails } from "../../config/serverAPIs";
 import PropTypes from "prop-types";
+import IdentityForm from "./identityform";
 const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
 	const [organizer, setOrganizer] = useState("");
 	const [avatarCustom, setAvatarCustom] = useState(false);
 	const [alternateCurrency, setAlternateCurrency] = useState("Dollar");
-	const [selectImage, setSelectImage] = useState("");
 	const [file, setFile] = useState({});
+	const [nextForm, setNextForm] = useState(false);
 	const handleOpen = () => {
 		setOpen(true);
 	};
 
 	const handleClose = () => {
+		setNextForm(false);
 		setOpen(false);
 	};
 
@@ -34,45 +35,21 @@ const DetailForm = (props) => {
 	};
 
 	const uploadImage = () => {
-		
+		const data = new FormData();
+		data.append("file", file);
+		data.append("upload_preset", "event-dapp"); //will be decided when conifiguring
+		data.append("cloud_name", "breellz"); //will be decided when configuring
+		fetch("  https://api.cloudinary.com/v1_1/breellz/image/upload", {
+			method: "post",
+			body: data,
+		})
+			.then((resp) => resp.json())
+			.then((data) => {
+				console.log(data);
+				// setUrl(data.url);
+			})
+			.catch((err) => console.log(err));
 	};
-
-	const avatars = [
-		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
-		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
-		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
-		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
-		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
-		{ img: "/images/metamask.svg", name: "Custom", onclick: true },
-	].map((data) => {
-		return (
-			<div
-				className="single-avatar-hldr"
-				onClick={(e) => setSelectImage(e.target.img)}
-			>
-				{data.onclick ? (
-					<div>
-						<label for="file-upload" className="custom-file-upload">
-							+
-						</label>
-						<input
-							id="file-upload"
-							type="file"
-							name="file"
-							onChange={(e) => setFile(e.target.files[0])}
-						/>
-					</div>
-				) : (
-					<div className="acc-av-hldr">
-						<img className="acc-av" src={data.img} />
-					</div>
-				)}
-				<div className="acc-title-hlder">
-					<p className="acc-title"> {data.name} </p>
-				</div>
-			</div>
-		);
-	});
 
 	const currency = [
 		{ name: "Dollar", flag: "" },
@@ -153,31 +130,8 @@ const DetailForm = (props) => {
 					</div>
 				</form>
 			</div>
-			<DialogueBox open={open} handleClose={handleClose}>
-				<div className="idn-hldr">
-					<div className="idn-head">
-						<div>
-							<img
-								style={{ height: "24px" }}
-								src={roundlogo}
-								alt="phnx logo"
-							/>
-						</div>
-						<div>
-							<p className="idn-heading">PhoenixDAO</p>
-						</div>
-					</div>
-					<div className="idn-sub">
-						<h5 className="idn-subhead1"> Choose your identity</h5>
-						<p className="idn-subhead2">
-							This will be used as your avatar in the dApp
-						</p>
-					</div>
-					<div className="avatar-hldr">{avatars}</div>
-					<div className="">
-						<button className="avatar-select-btn">Select</button>
-					</div>
-				</div>
+			<DialogueBox open={open} handleClose={handleClose} maxWidth="sm">
+				<IdentityForm setNextForm={setNextForm} nextForm={nextForm} />
 			</DialogueBox>
 		</div>
 	);
