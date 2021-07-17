@@ -1,0 +1,35 @@
+.already-av-holder {
+	border-radius: 50%;
+	height: 100px;
+	width: 100px;
+	border: 1px solid #ccc;
+    margin: 0 auto;
+}
+
+.already-av-img{
+    width: 80px;
+    display: block;
+    margin: 0 auto;
+}
+
+.already-av-text {
+	text-align: center;
+    font-weight: bold;
+    color: #000000;
+}
+
+.alread-av-desc {
+	text-align: center;
+    color: #000000;
+}
+
+.already-select-btn {
+	background-color: blueviolet;
+	color: #ffffff;
+	width: 100%;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-weight: bold;
+	text-align: center;
+	border: 0px;
+}

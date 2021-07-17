@@ -18,6 +18,8 @@ const DialogueBox = (props) => {
 			onClose={props.handleClose}
 			aria-labelledby="alert-dialog-slide-title"
 			aria-describedby="alert-dialog-slide-description"
+			maxWidth={props.maxWidth}
+			fullWidth={true}
 		>
 			<DialogTitle id="alert-dialog-slide-title">
 				{props.heading}
