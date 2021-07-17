@@ -38,7 +38,7 @@ import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import BuyTicket from "./common/BuyTicket";
 import { updateEventViews } from "../config/serverAPIs";
 import  Header  from "./common/Header";
-import {generateBuyerArr} from "../utils/addresses";
+import {generateBuyerArr} from "../utils/graphApis";
 let numeral = require("numeral");
 
 const customStyles = {
@@ -277,6 +277,7 @@ class EventPage extends Component {
 					load:false
 				});
 				this.updateIPFS();
+				console.log("updateEvent eventId",graphEvents.data.data.events[0].eventId,"updateEvent address",graphEvents.data.data.events[0].owner,"updateEvent networkId",this.props.networkId)
 				updateEventViews({
 					eventId: graphEvents.data.data.events[0].eventId,
 					address: graphEvents.data.data.events[0].owner,

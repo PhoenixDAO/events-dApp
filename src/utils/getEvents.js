@@ -10,6 +10,7 @@ export const getEvents = (props, context) => {
     const [hideEvent, setHideEvent] = useState([]);
     const [_isMounted, set_isMounted] = useState(props._isMounted);
     useEffect(() => {
+
         if (
             _isMounted
         ) {
@@ -38,63 +39,66 @@ export const getEvents = (props, context) => {
             // if (this._isMounted) {
 
             // Graph BLOCK
-            await axios({
-                url: graphURL,
-                method: 'post',
-                data: {
-                    query: `
-              {
-                eventsRemoveds {
-                  id
-                  eventId
-                }
-              }
-              `
-                }
-            }).then((graphDeletedEvents) => {
+            // await axios({
+            //     url: graphURL,
+            //     method: 'post',
+            //     data: {
+            //         query: `
+            //   {
+            //     eventsRemoveds {
+            //       id
+            //       eventId
+            //     }
+            //   }
+            //   `
+            //     }
+            // }).then((graphDeletedEvents) => {
 
-                if (!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined') {
-                    setDeleted_Events([]);
-                } else {
-                    setDeleted_Events(graphDeletedEvents.data.data.eventsRemoveds)
-                }
-            }).catch((err) => {
-                console.error("graph error here", err);
-                setDeleted_Events([]);
-                setLoading(false);
-            })
+            //     if (!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined') {
+            //         setDeleted_Events([]);
+            //     } else {
+            //         setDeleted_Events(graphDeletedEvents.data.data.eventsRemoveds)
+            //     }
+            // }).catch((err) => {
+            //     console.error("graph error here", err);
+            //     setDeleted_Events([]);
+            //     setLoading(false);
+            // })
 
 
             //Listen For My Newly Created Events
-
+            console.log("account", props.revenueCategory);
             await axios({
                 url: graphURL,
                 method: 'post',
                 data: {
                     query: `{
-                    users {
-                  id
-                  account
-                  userEvents {
-                    id
-                    eventId
-                    name
-                    time
-                    price
-                    token
-                    limited
-                    seats
-                    sold
-                    ipfs
-                    category
-                    owner
-                    revenueOfEvent
-                  }
-                }
+                        events(where : {owner: "${props.accounts}"} orderBy:${props.revenueCategory} orderDirection: desc first:5) {
+							id
+							token
+							eventId
+							owner
+							name
+							topic
+							location
+							ipfsHash
+							tktLimited
+							oneTimeBuy
+							time
+							duration
+							tktTotalQuantity
+							tktTotalQuantitySold
+							catTktQuantity
+							catTktQuantitySold	
+							categories
+							prices
+							eventRevenueInDollar
+							eventRevenueInPhnx
+						  }
               }`
                 }
             }).then((graphEvents) => {
-                // console.log("GraphQL query response in getEvents.js", graphEvents.data.data.users)
+                // console.log("GraphQL query response in getEvents.js", graphEvents.data.data)
                 if (!graphEvents.data || graphEvents.data.data == 'undefined') {
                     // console.log("GraphQL query -- graphEvents undefined")
                     setLoading(false);
@@ -104,17 +108,14 @@ export const getEvents = (props, context) => {
                     if (props._isMounted) {
                         const dateTime = Date.now();
                         const dateNow = Math.floor(dateTime / 1000);
-
-                        let userEvents = graphEvents.data.data.users.find((user) => user.account.toLowerCase() == props.accounts.toLowerCase())
+                        let userEvents = graphEvents.data.data.events;
                         if (userEvents) {
-                            let newsort = userEvents.userEvents
+                            let newsort = userEvents
                                 .concat()
                                 .sort((a, b) => b.blockNumber - a.blockNumber)
 
                             setMyEvents(newsort);
                             setActive_length(newsort.length);
-
-
                         }
                         setLoading(false);
                     }
