@@ -10,8 +10,6 @@ import {
 import { getEvents } from "../utils/getEvents";
 import { Favorite } from "@material-ui/icons";
 const useStyles = makeStyles((theme) => ({
-
-
     heading: {
         display: "flex",
         alignItems: "center",
@@ -50,25 +48,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EventsAnalytics = (props) => {
-   const [userDetails,setUserDetails] = useState(null)
-const [_isMounted,set_isMounted] =useState(true);
-// const [MyEvents, setMyEvents] = useState([]);
+    const [userDetails, setUserDetails] = useState(null)
+    const [_isMounted, set_isMounted] = useState(true);
+    // const [MyEvents, setMyEvents] = useState([]);
 
     useEffect(() => {
         // console.log("props in EventsAnalytics",props.userDetails)
         setUserDetails(props.userDetails);
 
-    },[props.userDetails]);
+    }, [props.userDetails]);
     const classes = useStyles();
-    let result;
-    if (
-        _isMounted
-    ) {
-        result = getEvents({ _isMounted: true, accounts: props.accounts });
-        //  console.log("result",result);
-    }
+    // let result;
+    // if (
+    //     _isMounted
+    // ) {
+    //     result = getEvents({ _isMounted: true, accounts: props.accounts });
+    //     //  console.log("result",result);
+    // }
     let favouriteLength = (props.userDetails.favourites) ? props.userDetails.favourites.length : 0;
-    // console.log("props", props);
 
     return (
 
@@ -86,7 +83,7 @@ const [_isMounted,set_isMounted] =useState(true);
                             />
                             <Typography className={classes.text}>No. of Events Created</Typography>
                         </span>
-                        <Typography className={classes.text1}>{result.length}</Typography>
+                        <Typography className={classes.text1}>{props.createdEvents}</Typography>
                     </Paper>
                 </Grid>
                 <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
@@ -111,7 +108,7 @@ const [_isMounted,set_isMounted] =useState(true);
                             />
                             <Typography className={classes.text}>No. of Tickets bought</Typography>
                         </span>
-                        <Typography className={classes.text1}>6</Typography>
+                        <Typography className={classes.text1}>{props.ticketBought}</Typography>
                     </Paper>
                 </Grid>
                 <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
@@ -123,7 +120,7 @@ const [_isMounted,set_isMounted] =useState(true);
                             />
                             <Typography className={classes.text}>No. of Favourites</Typography>
                         </span>
-                        <Typography className={classes.text1}>{userDetails && userDetails.favourites? userDetails.favourites.length : "N/A"}</Typography>
+                        <Typography className={classes.text1}>{userDetails && userDetails.favourites ? userDetails.favourites.length : "N/A"}</Typography>
 
                     </Paper>
                 </Grid>
@@ -139,7 +136,6 @@ EventsAnalytics.contextTypes = {
 };
 const mapStateToProps = (state) => {
     return {
-        contracts: state.contracts,
         accounts: state.accounts[0],
         networkId: state.web3.networkId,
     };

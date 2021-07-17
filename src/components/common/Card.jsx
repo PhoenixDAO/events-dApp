@@ -55,9 +55,13 @@ const useStyles = makeStyles((theme) => ({
     status: {
         fontSize: "14px",
         color: "#73727D",
-        paddingTop: "15px"
+        // paddingTop: "15px"
     },
-
+    liveRevenue: {
+        color: "#A3A3A3",
+        fontSize: "12px",
+        height: "20px"
+    }
 }));
 
 export const Card = (props) => {
@@ -67,7 +71,11 @@ export const Card = (props) => {
         header,
         value,
         profit,
-        color
+        color,
+        diffrence,
+        entity,
+        days,
+        liveDollarRevenue
     } = props;
 
     useEffect(() => {
@@ -75,6 +83,7 @@ export const Card = (props) => {
 
     }, []);
     const classes = useStyles();
+    let timestamp = days / 86400;
     return (
         <Grid lg={4} sm={12} xs={12} item className={classes.box} onClick={click} style={{ borderLeft: `4px solid ${color}` }} component="button">
             <img
@@ -85,10 +94,11 @@ export const Card = (props) => {
             <Typography className={classes.dollar}>{header}</Typography>
             <div style={{ display: "flex", alignItems: "center" }}>
                 <Typography className={classes.total}>{value}</Typography>
-                <Typography className={classes.red}>{profit}</Typography>
+                <Typography className={(profit > 0 ? classes.green : classes.red)}>{profit.toFixed(0)}%</Typography>
             </div>
-
-            <Typography className={classes.status}>You made an extra $300k in the last 7 days</Typography>
+            <Typography className={classes.liveRevenue}> {liveDollarRevenue ? "$" + liveDollarRevenue + " (Current price)" : null} </Typography>
+            <Typography className={classes.status}>You made {diffrence > 0 ? "an extra" : diffrence < 0 ? "a less" : null} <span style={diffrence > 0 ? { color: "#07A287" } : { color: "#F43C3C" }}>{Math.abs(diffrence).toFixed(3)} </span>{entity} in the last {" "}
+                {timestamp}  {timestamp > 1 ? "days" : "day"} </Typography>
         </Grid>
     );
 };

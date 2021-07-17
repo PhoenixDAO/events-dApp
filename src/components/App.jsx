@@ -49,6 +49,7 @@ import {
 import NetworkError from "./NetworkError";
 import PageNotFound from "./PageNotFound";
 import Favorites from "./Favorite.jsx";
+import {getUserDetails} from "../config/serverAPIs"
 import AccountDetail from './account/index'
 
 let ethereum = window.ethereum;
@@ -67,7 +68,7 @@ class App extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {}
+		} catch (e) { }
 		super(props);
 		this.state = {
 			sent_tx: [],
@@ -178,7 +179,7 @@ class App extends Component {
 					new Web3.providers.HttpProvider(INFURA_URL)
 				);
 			}
-			window.ethereum.on("connect", function (accounts) {});
+			window.ethereum.on("connect", function (accounts) { });
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
 				window.location.reload();
@@ -189,6 +190,10 @@ class App extends Component {
 			});
 			const accounts = await web3.eth.getAccounts();
 			this.setState({ account: accounts[0] });
+			// console.log("getUserDetail account[0]",accounts[0],"getUserDetail networkId",GLOBAL_NETWORK_ID)
+
+			if(accounts[0] && GLOBAL_NETWORK_ID){
+			await getUserDetails({address:accounts[0],networkId:GLOBAL_NETWORK_ID})}
 		}
 	}
 	async connectToMetaMask() {
@@ -412,9 +417,7 @@ class App extends Component {
 						);
 					}
 					let intervalVar = setInterval(async () => {
-						let receipt = await web3.eth.getTransactionReceipt(
-							hash
-						);
+						let receipt = await web3.eth.getTransactionReceipt(hash);
 						if (receipt) {
 							toast(
 								<Notify
@@ -522,10 +525,10 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-													.returnValues
+												.returnValues
 											: txreceipt.events
-													.NewAndUpdatedEvent
-													.returnValues
+												.NewAndUpdatedEvent
+												.returnValues
 									}
 									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
@@ -991,8 +994,13 @@ class App extends Component {
 					<Route
 						exact
 						path="/analytics"
-						component={Analytics}
-						account={this.state.account}
+						render={(props) => (
+
+							<Analytics
+								{...props}
+								eventsContract={this.state.eventsContract}
+							/>)}
+
 					/>
 					<Route
 						exact
