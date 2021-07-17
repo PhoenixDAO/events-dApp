@@ -29,3 +29,17 @@ input[type="file"] {
 	color: #000000;
 	font-size: 30px;
 }
+
+.custom-img-hldr {
+	border: 1px solid #ccc;
+	border-radius: 50%;
+	height: 100px;
+	width: 100px;
+	text-align: center;
+	display: block;
+	padding: 6px 12px;
+	margin: 0 auto;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
