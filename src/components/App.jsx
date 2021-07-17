@@ -50,6 +50,7 @@ import NetworkError from "./NetworkError";
 import PageNotFound from "./PageNotFound";
 import Favorites from "./Favorite.jsx";
 import {getUserDetails} from "../config/serverAPIs"
+import AccountDetail from './account/index'
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -379,7 +380,6 @@ class App extends Component {
 							);
 							this.afterApprove();
 							this.setState({ disabledStatus: false });
-
 						}
 					}
 				})
@@ -890,6 +890,19 @@ class App extends Component {
 								done={this.state.done}
 								error={this.state.error}
 								account={this.state.account}
+								eventsContract={this.state.eventsContract}
+							/>
+						)}
+					/>
+
+					<Route
+						exact
+						path="/accountdetails"
+						render={(props) => (
+							<AccountDetail
+								{...props}
+								account={this.state.account}
+								executeScroll={this.executeScroll}
 								eventsContract={this.state.eventsContract}
 							/>
 						)}

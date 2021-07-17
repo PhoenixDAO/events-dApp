@@ -119,40 +119,40 @@ class CreateEvent extends Component {
 				totalQuantity + parseInt(ticketCategories[i].noOfTickets);
 		}
 
-		await this.props.eventsContract.methods
-			.createEvent([
-				oneTimeBuy,
-				token, // false means free
-				this.props.accounts[0],
-				time.toString(), //time
-				"86400", //duration
-				totalQuantity.toString(), //totalQuantity
-				"0", //totalQntySold
-				eventName,
-				eventTopic,
-				eventLocation,
-				"hj_ipfs_hash",
-				ticketLimited,
-				tktQnty,
-				prices,
-				tktQntySold,
-				categories,
-			])
-			.send({
-				from: this.props.accounts[0],
-			})
-			.on("transactionHash", (hash) => {
-				// hash of tx
-				console.log("hash", hash);
-			})
-			.on("confirmation", function (confirmationNumber, receipt) {
-				if (confirmationNumber === 2) {
-					console.log("confirmationNumber", confirmationNumber);
-				}
-			})
-			.on("error", function (err) {
-				console.log("error", err);
-			});
+		// await this.props.eventsContract.methods
+		// 	.createEvent([
+		// 		oneTimeBuy,
+		// 		token, // false means free
+		// 		this.props.accounts[0],
+		// 		time.toString(), //time
+		// 		"86400", //duration
+		// 		totalQuantity.toString(), //totalQuantity
+		// 		"0", //totalQntySold
+		// 		eventName,
+		// 		eventTopic,
+		// 		eventLocation,
+		// 		"hj_ipfs_hash",
+		// 		ticketLimited,
+		// 		tktQnty,
+		// 		prices,
+		// 		tktQntySold,
+		// 		categories,
+		// 	])
+		// 	.send({
+		// 		from: this.props.accounts[0],
+		// 	})
+		// 	.on("transactionHash", (hash) => {
+		// 		// hash of tx
+		// 		console.log("hash", hash);
+		// 	})
+		// 	.on("confirmation", function (confirmationNumber, receipt) {
+		// 		if (confirmationNumber === 2) {
+		// 			console.log("confirmationNumber", confirmationNumber);
+		// 		}
+		// 	})
+		// 	.on("error", function (err) {
+		// 		console.log("error", err);
+		// 	});
 	};
 
 	createEvent = (
@@ -381,7 +381,7 @@ class CreateEvent extends Component {
 							<br />
 							<br />
 							<br />
-							<PreviewEvent />
+							<PreviewEvent fields={this.state.fields} />
 						</div>
 
 						{/* <Form
@@ -426,7 +426,7 @@ class CreateEvent extends Component {
 						<br />
 						<br />
 						<br />
-						<PreviewEvent />
+						<PreviewEvent fields={this.state.fields} />
 					</div>
 
 					{/* <Form

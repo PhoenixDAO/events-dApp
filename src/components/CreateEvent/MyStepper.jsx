@@ -50,13 +50,14 @@ import PropTypes from "prop-types";
 import Check from "@material-ui/icons/Check";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { useForm, Controller } from "react-hook-form";
-
 import EventPreviewPage from "./EventPreviewPage";
 import phnxLogo from "../Images/phnx.png";
 import dollarIcon from "../Images/dollar.png";
 import altIcon from "../Images/altIcon.png";
 import editIcon from "../Images/editIcon.png";
 import deleteIcon from "../Images/deleteIcon.png";
+
+var badWords = require("bad-words");
 
 const QontoConnector = withStyles({
 	alternativeLabel: {
@@ -185,6 +186,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	const [activeStep, setActiveStep] = useState(0);
 	const steps = ["", "", "", ""];
 	const [value, setValue] = useState("onedayevent");
+	const [eventTime, setEventTime] = useState("onedayevent");
 	const [selectedDate, setSelectedDate] = React.useState(new Date());
 	const [selectTime, setSelectTime] = useState(new Date());
 	const [type, setType] = useState("physical");
@@ -219,6 +221,8 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	const [categories, setCategories] = useState([]);
 	const [addAnotherCat, setaddAnotherCat] = useState(false);
 	const [ticketCategory, setTicketCategory] = useState(0);
+	const [PhoenixDAO_market, setPhoenixDAO_market] = useState({});
+	const [phnxValue, setPhnxValue] = useState(0);
 
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
@@ -244,6 +248,64 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 			{ label: "UL", style: "unordered-list-item" },
 			{ label: "OL", style: "ordered-list-item" },
 		],
+	};
+
+	const formatInputNoOfTickets = (e) => {
+		// Prevent characters that are not numbers ("e", ".", "+" & "-") ✨
+		let checkIfNum;
+		if (e.key !== undefined) {
+			// Check if it's a "e", ".", "+" or "-"
+			checkIfNum =
+				e.key === "e" ||
+				e.key === "." ||
+				e.key === "+" ||
+				e.key === "-";
+		} else if (e.keyCode !== undefined) {
+			// Check if it's a "e" (69), "." (190), "+" (187) or "-" (189)
+			checkIfNum =
+				e.keyCode === 69 ||
+				e.keyCode === 190 ||
+				e.keyCode === 187 ||
+				e.keyCode === 189;
+		}
+		return checkIfNum && e.preventDefault();
+	};
+
+	const formatInputDollarPrice = (e) => {
+		// Prevent characters that are not numbers ("e", ".", "+" & "-") ✨
+		let checkIfNum;
+		if (e.key !== undefined) {
+			// Check if it's a "e", ".", "+" or "-"
+			checkIfNum =
+				e.key === "e" ||
+				// e.key === "." ||
+				e.key === "+" ||
+				e.key === "-";
+		} else if (e.keyCode !== undefined) {
+			// Check if it's a "e" (69), "." (190), "+" (187) or "-" (189)
+			checkIfNum =
+				e.keyCode === 69 ||
+				// e.keyCode === 190 ||
+				e.keyCode === 187 ||
+				e.keyCode === 189;
+		}
+		return checkIfNum && e.preventDefault();
+	};
+
+	useEffect(() => {
+		getPhoenixdaoMarket();
+	}, []);
+
+	const getPhoenixdaoMarket = async () => {
+		fetch(
+			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
+		)
+			.then((res) => res.json())
+			.then((data) => {
+				// this.setState({ PhoenixDAO_market: data.phoenixdao });
+				setPhoenixDAO_market(data.phoenixdao);
+			})
+			.catch(console.log);
 	};
 
 	const handleClickOpen = () => {
@@ -276,9 +338,14 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	//next button steeper
 	const handleNext = (fields) => {
 		// console.log("categories", categories);
+		const filter = new badWords();
 
 		if (activeStep === 0) {
-			//first stepper conditions - eventdate&time
+			//first stepper conditions - eventName, eventOrg, eventdate&time
+			const badEventName = filter.clean(fields.eventName);
+			fields.eventName = badEventName;
+			const badEventOrg = filter.clean(fields.eventOrganizer);
+			fields.eventOrganizer = badEventOrg;
 			onFieldsChange(fields);
 			setActiveStep((prevActiveStep) => prevActiveStep + 1);
 		} else if (activeStep === 1) {
@@ -403,6 +470,15 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 		setTicketCategory(index);
 	};
 
+	const onPriceChanges = (e) => {
+		let value = parseFloat(e.target.value);
+		value = value > 0 ? value : 0;
+		let usd = PhoenixDAO_market.usd;
+		let phoenixValue = value / usd;
+		phoenixValue = phoenixValue.toFixed(5);
+		setPhnxValue(phoenixValue);
+	};
+
 	function getStepContent(stepIndex) {
 		switch (stepIndex) {
 			case 0:
@@ -467,80 +543,126 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 									/>
 								)}
 								rules={{
-									required: "Please enter event organizer.",
+									required:
+										"Please enter event organizer name.",
+									minLength: {
+										value: 3,
+										message:
+											"Event organizer name should contain atleast 3 characters.",
+									},
 								}}
 							/>
 
 							<br />
 							<br />
+
 							<FormControl component="fieldset">
-								<RadioGroup
-									row
-									aria-label="eventTime"
+								<label>TICKET AVAILABILITY</label>
+								<Controller
 									name="eventTime"
-									value={value}
-									onChange={handleChange}
-								>
-									<FormControlLabel
-										value="onedayevent"
-										control={<Radio color="primary" />}
-										label="One day Event"
-									/>
-									<FormControlLabel
-										value="morethanaday"
-										control={<Radio color="primary" />}
-										label="More than a day"
-									/>
-								</RadioGroup>
+									control={control}
+									defaultValue={eventTime}
+									render={({
+										field: { onChange, value },
+										fieldState: { error },
+									}) => (
+										<RadioGroup
+											row
+											aria-label="eventTime"
+											name="eventTime"
+											value={value}
+											onChange={(e) => {
+												onChange(e);
+												setEventTime(e.target.value);
+											}}
+										>
+											<FormControlLabel
+												value="onedayevent"
+												control={
+													<Radio color="primary" />
+												}
+												label="One day Event"
+											/>
+											<FormControlLabel
+												value="morethanaday"
+												control={
+													<Radio color="primary" />
+												}
+												label="More than a day"
+											/>
+										</RadioGroup>
+									)}
+									rules={{
+										required: "Please select event time.",
+									}}
+								/>
 							</FormControl>
+
 							<br />
-							{value === "onedayevent" ? (
+							<br />
+
+							{eventTime === "onedayevent" ? (
 								<div>
 									<MuiPickersUtilsProvider
 										utils={DateFnsUtils}
 									>
 										<div>
-											<Controller
-												name="eventDate"
-												control={control}
-												defaultValue={null}
-												render={({
-													field: { onChange, value },
-													fieldState: { error },
-												}) => {
-													return (
-														<KeyboardDatePicker
-															fullWidth
-															disableToolbar
-															variant="inline"
-															format="MM/dd/yyyy"
-															margin="normal"
-															id="event-date"
-															label="DATE"
-															KeyboardButtonProps={{
-																"aria-label":
-																	"change date",
-															}}
-															inputVariant="outlined"
-															autoOk={true}
-															disablePast
-															placeholder="31/12/2021"
-															value={value}
-															onChange={onChange}
-															error={!!error}
-															helperText={
-																error
-																	? error.message
-																	: null
-															}
-														/>
-													);
-												}}
-												rules={{
-													required:
-														"Please select event date.",
-												}}
-											/>
+											<div>
+												<label
+													style={{ marginBottom: 0 }}
+												>
+													DATE
+												</label>
+												<Controller
+													name="eventDate"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+														fieldState: { error },
+													}) => {
+														return (
+															<KeyboardDatePicker
+																fullWidth
+																disableToolbar
+																variant="inline"
+																format="dd-MM-yyyy"
+																margin="normal"
+																id="event-date"
+																// label="DATE"
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change date",
+																}}
+																InputProps={{
+																	readOnly: true,
+																}}
+																inputVariant="outlined"
+																autoOk={true}
+																disablePast
+																placeholder="dd-MM-yyyy"
+																value={value}
+																onChange={
+																	onChange
+																}
+																error={!!error}
+																helperText={
+																	error
+																		? error.message
+																		: null
+																}
+															/>
+														);
+													}}
+													rules={{
+														required:
+															"Please select event date.",
+													}}
+												/>
+											</div>
 										</div>
 
 										<br />
@@ -552,6 +674,12 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 											}}
 										>
 											<div>
+												<label
+													style={{ marginBottom: 0 }}
+												>
+													START TIME
+												</label>
+												<br />
 												<Controller
 													name="eventStartTime"
 													control={control}
@@ -566,10 +694,13 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 														<KeyboardTimePicker
 															margin="normal"
 															id="start-time-picker"
-															label="START TIME"
+															// label="START TIME"
 															KeyboardButtonProps={{
 																"aria-label":
 																	"change time",
+															}}
+															InputProps={{
+																readOnly: true,
 															}}
 															inputVariant="outlined"
 															autoOk={true}
@@ -590,6 +721,12 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 												/>
 											</div>
 											<div>
+												<label
+													style={{ marginBottom: 0 }}
+												>
+													END TIME
+												</label>
+												<br />
 												<Controller
 													name="eventEndTime"
 													control={control}
@@ -605,10 +742,13 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															required={false}
 															margin="normal"
 															id="end-time-picker"
-															label="END TIME"
+															// label="END TIME"
 															KeyboardButtonProps={{
 																"aria-label":
 																	"change time",
+															}}
+															InputProps={{
+																readOnly: true,
 															}}
 															inputVariant="outlined"
 															autoOk={true}
@@ -642,87 +782,117 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 												justifyContent: "space-between",
 											}}
 										>
-											<Controller
-												name="eventStartDate"
-												control={control}
-												defaultValue={null}
-												render={({
-													field: { onChange, value },
-													fieldState: { error },
-												}) => (
-													<KeyboardDatePicker
-														disableToolbar
-														variant="inline"
-														format="MM/dd/yyyy"
-														margin="normal"
-														id="date-picker-inline"
-														label="START DATE"
-														// value={startDate}
-														// onChange={(d) =>
-														// 	setStartDate(d)
-														// }
-														KeyboardButtonProps={{
-															"aria-label":
-																"change date",
-														}}
-														inputVariant="outlined"
-														autoOk={true}
-														disablePast
-														value={value}
-														onChange={onChange}
-														error={!!error}
-														helperText={
-															error
-																? error.message
-																: null
-														}
-													/>
-												)}
-												rules={{
-													required:
-														"Please select event start date.",
-												}}
-											/>
+											<div>
+												<label
+													style={{ marginBottom: 0 }}
+												>
+													START DATE
+												</label>
+												<br />
+												<Controller
+													name="eventStartDate"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+														fieldState: { error },
+													}) => (
+														<KeyboardDatePicker
+															disableToolbar
+															variant="inline"
+															format="dd-MM-yyyy"
+															margin="normal"
+															id="date-picker-inline"
+															placeholder="dd-MM-yyyy"
+															InputProps={{
+																readOnly: true,
+															}}
+															// label="START DATE"
+															// value={startDate}
+															// onChange={(d) =>
+															// 	setStartDate(d)
+															// }
+															KeyboardButtonProps={{
+																"aria-label":
+																	"change date",
+															}}
+															inputVariant="outlined"
+															autoOk={true}
+															disablePast
+															value={value}
+															onChange={onChange}
+															error={!!error}
+															helperText={
+																error
+																	? error.message
+																	: null
+															}
+														/>
+													)}
+													rules={{
+														required:
+															"Please select event start date.",
+													}}
+												/>
+											</div>
 
-											<Controller
-												name="eventEndDate"
-												control={control}
-												defaultValue={null}
-												render={({
-													field: { onChange, value },
-													fieldState: { error },
-												}) => (
-													<KeyboardDatePicker
-														disableToolbar
-														variant="inline"
-														format="MM/dd/yyyy"
-														margin="normal"
-														id="date-picker-inline"
-														label="END DATE"
-														// value={endDate}
-														// onChange={(d) => setEndDate(d)}
-														KeyboardButtonProps={{
-															"aria-label":
-																"change date",
-														}}
-														inputVariant="outlined"
-														autoOk={true}
-														disablePast
-														value={value}
-														onChange={onChange}
-														error={!!error}
-														helperText={
-															error
-																? error.message
-																: null
-														}
-													/>
-												)}
-												rules={{
-													required:
-														"Please select event end date.",
-												}}
-											/>
+											<div>
+												<label
+													style={{ marginBottom: 0 }}
+												>
+													END DATE
+												</label>
+												<br />
+												<Controller
+													name="eventEndDate"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+														fieldState: { error },
+													}) => (
+														<KeyboardDatePicker
+															disableToolbar
+															variant="inline"
+															format="dd-MM-yyyy"
+															margin="normal"
+															id="date-picker-inline"
+															// label="END DATE"
+															// value={endDate}
+															// onChange={(d) => setEndDate(d)}
+															InputProps={{
+																readOnly: true,
+															}}
+															KeyboardButtonProps={{
+																"aria-label":
+																	"change date",
+															}}
+															inputVariant="outlined"
+															placeholder="dd-MM-yyyy"
+															autoOk={true}
+															disablePast
+															value={value}
+															onChange={onChange}
+															error={!!error}
+															helperText={
+																error
+																	? error.message
+																	: null
+															}
+														/>
+													)}
+													rules={{
+														required:
+															"Please select event end date.",
+													}}
+												/>
+											</div>
 										</div>
 
 										<br />
@@ -733,80 +903,108 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 												justifyContent: "space-between",
 											}}
 										>
-											<Controller
-												name="eventStartTime"
-												control={control}
-												defaultValue={null}
-												render={({
-													field: { onChange, value },
-													fieldState: { error },
-												}) => (
-													<KeyboardTimePicker
-														margin="normal"
-														id="time-picker"
-														label="TO"
-														KeyboardButtonProps={{
-															"aria-label":
-																"change time",
-														}}
-														inputVariant="outlined"
-														autoOk={true}
-														value={value}
-														onChange={onChange}
-														error={!!error}
-														helperText={
-															error
-																? error.message
-																: null
-														}
-													/>
-												)}
-												rules={{
-													required:
-														"Please select event start time.",
-												}}
-											/>
+											<div>
+												<label
+													style={{ marginBottom: 0 }}
+												>
+													TO
+												</label>
+												<br />
+												<Controller
+													name="eventStartTime"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+														fieldState: { error },
+													}) => (
+														<KeyboardTimePicker
+															margin="normal"
+															id="time-picker"
+															// label="TO"
+															KeyboardButtonProps={{
+																"aria-label":
+																	"change time",
+															}}
+															InputProps={{
+																readOnly: true,
+															}}
+															inputVariant="outlined"
+															autoOk={true}
+															value={value}
+															onChange={onChange}
+															error={!!error}
+															helperText={
+																error
+																	? error.message
+																	: null
+															}
+														/>
+													)}
+													rules={{
+														required:
+															"Please select event start time.",
+													}}
+												/>
+											</div>
 
-											<Controller
-												name="eventEndTime"
-												control={control}
-												defaultValue={null}
-												render={({
-													field: { onChange, value },
-													fieldState: { error },
-												}) => (
-													<KeyboardTimePicker
-														margin="normal"
-														id="time-picker"
-														label="FROM"
-														KeyboardButtonProps={{
-															"aria-label":
-																"change time",
-														}}
-														inputVariant="outlined"
-														autoOk={true}
-														value={value}
-														onChange={onChange}
-														error={!!error}
-														helperText={
-															error
-																? error.message
-																: null
-														}
-													/>
-												)}
-												rules={{
-													required:
-														"Please select event end time.",
-												}}
-											/>
+											<div>
+												<label
+													style={{ marginBottom: 0 }}
+												>
+													FROM
+												</label>
+												<br />
+												<Controller
+													name="eventEndTime"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+														},
+														fieldState: { error },
+													}) => (
+														<KeyboardTimePicker
+															margin="normal"
+															id="time-picker"
+															// label="FROM"
+															KeyboardButtonProps={{
+																"aria-label":
+																	"change time",
+															}}
+															InputProps={{
+																readOnly: true,
+															}}
+															inputVariant="outlined"
+															autoOk={true}
+															value={value}
+															onChange={onChange}
+															error={!!error}
+															helperText={
+																error
+																	? error.message
+																	: null
+															}
+														/>
+													)}
+													rules={{
+														required:
+															"Please select event end time.",
+													}}
+												/>
+											</div>
 										</div>
 									</MuiPickersUtilsProvider>
 								</div>
 							)}
 
 							{/* preview button */}
-							<EventPreviewPage
+							{/* <EventPreviewPage
 								open={open}
 								handleClose={handleClose}
 								description="Yayy, I’m getting Married Yáll
@@ -822,8 +1020,8 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 								eventOrganizer={eventOrganizer}
 								availability={availability}
 								location="karachi"
-							/>
-							<Button
+							/> */}
+							{/* <Button
 								color="primary"
 								size="large"
 								startIcon={
@@ -832,7 +1030,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 								onClick={handleClickOpen}
 							>
 								Preview Event
-							</Button>
+							</Button> */}
 						</div>
 					</React.Fragment>
 				);
@@ -843,26 +1041,49 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							<h3 className={classes.title}>Event Details</h3>
 							<Divider light />
 							<br />
+
 							<FormControl component="fieldset">
-								<RadioGroup
-									row
-									aria-label="eventType"
+								<label>TICKET AVAILABILITY</label>
+								<Controller
 									name="eventType"
-									value={type}
-									onChange={handleType}
-								>
-									<FormControlLabel
-										value="physical"
-										control={<Radio color="primary" />}
-										label="Physical Event"
-									/>
-									<FormControlLabel
-										value="online"
-										control={<Radio color="primary" />}
-										label="Online Event"
-									/>
-								</RadioGroup>
+									control={control}
+									defaultValue={type}
+									render={({
+										field: { onChange, value },
+										fieldState: { error },
+									}) => (
+										<RadioGroup
+											row
+											aria-label="eventType"
+											name="eventType"
+											value={value}
+											onChange={(e) => {
+												onChange(e);
+												setType(e.target.value);
+											}}
+										>
+											<FormControlLabel
+												value="physical"
+												control={
+													<Radio color="primary" />
+												}
+												label="Physical Event"
+											/>
+											<FormControlLabel
+												value="online"
+												control={
+													<Radio color="primary" />
+												}
+												label="Online Event"
+											/>
+										</RadioGroup>
+									)}
+									rules={{
+										required: "Please select event type.",
+									}}
+								/>
 							</FormControl>
+
 							<br />
 							{type === "physical" ? (
 								<div>
@@ -919,6 +1140,10 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 										rules={{
 											required:
 												"Please enter event link.",
+											pattern: {
+												value: /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/,
+												message: "Is Not Valid URL",
+											},
 										}}
 									/>
 								</div>
@@ -962,20 +1187,34 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																	onChange={(
 																		event
 																	) => {
-																		const arr =
-																			[
-																				...images,
-																			];
-																		arr[
-																			index
-																		].name =
-																			event.target.files[0].name;
-																		setImages(
-																			arr
-																		);
-																		onChange(
+																		if (
 																			event
-																		);
+																				.target
+																				.files[0]
+																				.size >
+																			5000000
+																		) {
+																			onChange(
+																				""
+																			);
+																		} else {
+																			const arr =
+																				[
+																					...images,
+																				];
+																			arr[
+																				index
+																			].name =
+																				event.target.files[0].name;
+																			setImages(
+																				arr
+																			);
+																			onChange(
+																				event
+																					.target
+																					.files[0]
+																			);
+																		}
 																	}}
 																/>
 															</Button>
@@ -985,7 +1224,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 											)}
 											rules={{
 												required:
-													"Please upload image.",
+													"Please select an image less than 5MB.",
 											}}
 										/>
 
@@ -1176,9 +1415,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 														fieldState: { error },
 													}) => (
 														<TextField
+															onKeyDown={
+																formatInputNoOfTickets
+															}
 															type="number"
 															id="outlined-basic"
-															// label="Event Organizer"
 															fullWidth
 															variant="outlined"
 															value={value}
@@ -1194,6 +1435,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													rules={{
 														required:
 															"Please enter number of tickets.",
+														min: {
+															value: 1,
+															message:
+																"Number of ticket should be atleast 1",
+														},
 													}}
 												/>
 											</div>
@@ -1222,6 +1468,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 														className={
 															classes.margin
 														}
+														onKeyDown={
+															formatInputDollarPrice
+														}
 														id="input-with-icon-textfield"
 														type="number"
 														variant="outlined"
@@ -1238,7 +1487,10 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															),
 														}}
 														value={value}
-														onChange={onChange}
+														onChange={(e) => {
+															onChange(e);
+															onPriceChanges(e);
+														}}
 														error={!!error}
 														helperText={
 															error
@@ -1250,6 +1502,16 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 												rules={{
 													required:
 														"Price in dollars.",
+													pattern: {
+														value: /\d+(\.\d+)?$/,
+														message:
+															"Please enter an integer",
+													},
+													min: {
+														value: 1,
+														message:
+															"Price of ticket should be atleast 1 dollar.",
+													},
 												}}
 											/>
 
@@ -1291,7 +1553,8 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																</InputAdornment>
 															),
 														}}
-														value={value}
+														// value={value}
+														value={phnxValue}
 														onChange={onChange}
 														error={!!error}
 														helperText={
@@ -1368,6 +1631,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 														fieldState: { error },
 													}) => (
 														<TextField
+															onKeyDown={
+																formatInputNoOfTickets
+															}
 															type="number"
 															id="outlined-basic"
 															// label="Event Organizer"
@@ -1386,6 +1652,12 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													rules={{
 														required:
 															"Please enter number of tickets.",
+
+														min: {
+															value: 1,
+															message:
+																"Number of ticket should be atleast 1",
+														},
 													}}
 												/>
 											</div>
@@ -1559,6 +1831,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													>
 														<Controller
 															name={`dollarPrice${ticketCategory}`}
+															onKeyDown={
+																formatInputDollarPrice
+															}
 															control={control}
 															defaultValue=""
 															render={({
@@ -1593,9 +1868,16 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																	value={
 																		value
 																	}
-																	onChange={
-																		onChange
-																	}
+																	onChange={(
+																		e
+																	) => {
+																		onChange(
+																			e
+																		);
+																		onPriceChanges(
+																			e
+																		);
+																	}}
 																	error={
 																		!!error
 																	}
@@ -1657,8 +1939,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																				</InputAdornment>
 																			),
 																	}}
+																	// value={
+																	// 	value
+																	// }
 																	value={
-																		value
+																		phnxValue
 																	}
 																	onChange={
 																		onChange
@@ -1750,6 +2035,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																TICKETS
 															</label>
 															<Controller
+																onKeyDown={
+																	formatInputNoOfTickets
+																}
 																name={`noOfTickets${ticketCategory}`}
 																control={
 																	control
@@ -1766,7 +2054,6 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																		},
 																}) => (
 																	<TextField
-																		type="number"
 																		id="outlined-basic"
 																		// label="Event Organizer"
 																		fullWidth
@@ -1790,6 +2077,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																rules={{
 																	required:
 																		"Please enter number of tickets.",
+																	min: {
+																		value: 1,
+																		message:
+																			"Number of ticket should be atleast 1",
+																	},
 																}}
 															/>
 														</div>

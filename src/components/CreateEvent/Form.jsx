@@ -64,6 +64,7 @@ class Form extends Component {
 				: new Date(Date.now() + 10800000),
 		};
 	}
+
 	shouldComponentUpdate(nextProps, nextState) {
 		if (
 			nextProps.currentBlock &&
@@ -77,6 +78,7 @@ class Form extends Component {
 		}
 		return true;
 	}
+
 	getCurrentTime = async () => {
 		this.setState({ updateTimeStamp: true });
 
@@ -227,6 +229,7 @@ class Form extends Component {
 			location: location,
 		});
 	};
+
 	//this is event topic
 	typeChange = (event) => {
 		let topic = event.target.value;
@@ -235,6 +238,7 @@ class Form extends Component {
 			topic: topic,
 		});
 	};
+	
 	//this is event type
 	categoryChange = (event) => {
 		let type = event.target.value;
