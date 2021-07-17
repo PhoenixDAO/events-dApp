@@ -6,7 +6,10 @@ const CustomForm = () => {
 	const [file, setFile] = useState([]);
 	const handleFile = (e) => {
 		console.log(e.target.files);
-		if (e.target.files[0] !== undefined) {
+		if (
+			e.target.files[0] !== undefined &&
+			e.target.files[0].size < 3 * 1024 * 1024
+		) {
 			setFile(e.target.files);
 		}
 	};
@@ -57,6 +60,7 @@ const CustomForm = () => {
 							<input
 								id="file-upload"
 								type="file"
+								accept="image/*"
 								name="file"
 								onChange={handleFile}
 							/>
