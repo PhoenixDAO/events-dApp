@@ -23,7 +23,7 @@ const CustomForm = () => {
 				<p className="idn-subhead2">Create your own custom Avatar</p>
 				<div>
 					<label for="file-upload" className="custom-file-upload1">
-						<span style={{ marginTop: "30px" }}>+ </span>
+						<span style={{ marginTop: "20px" }}>+ </span>
 					</label>
 					<input
 						id="file-upload"
