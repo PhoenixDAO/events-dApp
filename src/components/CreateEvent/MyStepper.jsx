@@ -40,9 +40,6 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import SyncAltIcon from "@material-ui/icons/SyncAlt";
 import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined";
-// import { CloseIcon } from "@material-ui/icons";
-import EditIcon from "@material-ui/icons/Edit";
-import MUIRichTextEditor from "mui-rte";
 import RichTextEditor from "react-rte";
 import GoldonBlue from "../Images/GoldonBlue.gif";
 import clsx from "clsx";
@@ -257,6 +254,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 			// Check if it's a "e", ".", "+" or "-"
 			checkIfNum =
 				e.key === "e" ||
+				e.key === "E" ||
 				e.key === "." ||
 				e.key === "+" ||
 				e.key === "-";
@@ -278,6 +276,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 			// Check if it's a "e", ".", "+" or "-"
 			checkIfNum =
 				e.key === "e" ||
+				e.key === "E" ||
 				// e.key === "." ||
 				e.key === "+" ||
 				e.key === "-";
@@ -2183,7 +2182,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 											className={classes.editor}
 											// editorClassName={}
 											value={value}
-											onChange={(v) => onChange(v)}
+											onChange={(v) => {
+												onChange(v);
+											}}
 											// toolbarConfig={toolbarConfig}
 											placeholder="Type something here....."
 										/>
