@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./customform.css";
 import roundlogo from "../Images/roundlogo.svg";
+import ipfs from "../../utils/ipfs";
 
 const CustomForm = () => {
 	const [file, setFile] = useState([]);
@@ -11,6 +12,21 @@ const CustomForm = () => {
 			e.target.files[0].size < 3 * 1024 * 1024
 		) {
 			setFile(e.target.files);
+		}
+	};
+
+	const uploadImage = () => {
+		let pinit = process.env.NODE_ENV === "production";
+		if (file[0] !== undefined) {
+			const url = URL.createObjectURL(file[0]);
+			let buffer = Buffer.from(url);
+			ipfs.add(buffer, { pin: pinit })
+				.then((hash) => {
+					console.log("hash", hash)
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 	};
 	return (
@@ -77,6 +93,7 @@ const CustomForm = () => {
 			<div className="" style={{ marginTop: "20px" }}>
 				<button
 					className="avatar-select-btn"
+					onClick={uploadImage}
 					// onClick={() => handleNextForm(true, "alreadyform")}
 				>
 					Save

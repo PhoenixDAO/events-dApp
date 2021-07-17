@@ -34,23 +34,6 @@ const DetailForm = (props) => {
 		});
 	};
 
-	const uploadImage = () => {
-		const data = new FormData();
-		data.append("file", file);
-		data.append("upload_preset", "event-dapp"); //will be decided when conifiguring
-		data.append("cloud_name", "breellz"); //will be decided when configuring
-		fetch("  https://api.cloudinary.com/v1_1/breellz/image/upload", {
-			method: "post",
-			body: data,
-		})
-			.then((resp) => resp.json())
-			.then((data) => {
-				console.log(data);
-				// setUrl(data.url);
-			})
-			.catch((err) => console.log(err));
-	};
-
 	const currency = [
 		{ name: "Dollar", flag: "" },
 		{ name: "Euro", flag: "" },
