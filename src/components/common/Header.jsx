@@ -36,7 +36,7 @@ const Header = ({ title, disabled, buttonText, goBack, page, phnxButton, searchB
 		<Grid className="header3" style={page == "dashboard" || page == "myEvent" ? { borderBottom: "0px" } : null}>
 			{/* Back button Arrow */}
 			<div style={{ display: "flex", alignItems: "center" }}>
-				{page == "event" || page == "topic" ? (<IconButton
+				{page === "event" || page === "topic" || page === "accountdetails" ? (<IconButton
 					aria-label="delete"
 					onClick={goBack}
 				>
