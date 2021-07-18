@@ -298,7 +298,7 @@ const Analytics = (props, context) => {
 	const [dollarDifference, setdollarDifference] = useState(0);
 	const [phnxDifference, setRevenueDifference] = useState(0);
 	const [ticketDifference, setTicketDifference] = useState(0);
-	const [liveDollarRevenue,setLiveDollarRevenue] =useState(0);
+	const [liveDollarRevenue, setLiveDollarRevenue] = useState(0);
 	useEffect(() => {
 		// getPhnxRevenue();
 		getViewsAndFavourites();
@@ -307,13 +307,13 @@ const Analytics = (props, context) => {
 	const loadApis = async () => {
 		const eventName = await getEventName(props.accounts);
 		setEventName(eventName);
-		const tickets = await generateJSON(eventName[0].eventId);
-		setTicketSales(tickets);
-		console.log("props", props.eventsContract);
+		if (eventName.length != 0) {
+			const tickets = await generateJSON(eventName[0].eventId);
+			setTicketSales(tickets);
+		}
 		const blockChainTickets = await props.eventsContract.methods.ticketsOf(props.accounts).call()
 		setTicketBought(blockChainTickets.length);
 		const timeData = await getTimeData(props.accounts);
-		console.log("timedata", timeData);
 		setGraphData(timeData);
 		handleTimeStampChange();
 	}
@@ -463,21 +463,19 @@ const Analytics = (props, context) => {
 			let graphForDays = graphData.filter(
 				(event) => event.dayStartTimeStamp >= elapsedTime
 			);
-			console.log("data", graphForDays);
 			if (graphForDays.length != 0) {
-				let totalDollarRevenue=0;
+				let totalDollarRevenue = 0;
 				let totalPhnxRevenue = 0;
 				let soldTicket = 0;
 				graphForDays.forEach((event) => {
-					console.log("data", event);
 					totalDollarRevenue += Number(event.totalDollarRevenueInDay);
 					soldTicket += Number(event.soldTicketsInDay);
 					totalPhnxRevenue += Number(event.totalPhnxRevenueInDay);
 				});
-			     totalPhnxRevenue = Web3.utils.fromWei(totalPhnxRevenue.toString());
-				 totalPhnxRevenue=(parseFloat(totalPhnxRevenue)).toFixed(3);
+				totalPhnxRevenue = Web3.utils.fromWei(totalPhnxRevenue.toString());
+				totalPhnxRevenue = (parseFloat(totalPhnxRevenue)).toFixed(3);
 				totalDollarRevenue = (parseFloat(Web3.utils.fromWei(totalDollarRevenue.toString())).toFixed(3));
-				let liveDollarRevenue =  await getPhoenixDAOMarketValue(totalDollarRevenue);
+				let liveDollarRevenue = await getPhoenixDAOMarketValue(totalDollarRevenue);
 				setLiveDollarRevenue(liveDollarRevenue)
 				setDollarRevenue(totalDollarRevenue);
 				setPhnxRevenue(totalPhnxRevenue);
@@ -486,43 +484,41 @@ const Analytics = (props, context) => {
 				let lastIndex = graphForDays.length - 1;
 				let originalNumber = graphForDays[0].totalDollarRevenueInDay;
 				let newNumber = graphForDays[lastIndex].totalDollarRevenueInDay;
-				console.log("PhnxChange", originalNumber, newNumber);
-
 				let PHNXoriginalNumber = Web3.utils.fromWei(graphForDays[0].totalPhnxRevenueInDay);
 				let PHNXnewNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalPhnxRevenueInDay);
 				let PhnxChange, price;
-
 				price = (((newNumber - originalNumber) / originalNumber) * 100);
 				PhnxChange = (((PHNXnewNumber - PHNXoriginalNumber) / PHNXoriginalNumber) * 100);
 				let ticketChange = (((graphForDays[lastIndex].soldTicketsInDay - graphForDays[0].soldTicketsInDay) / graphForDays[0].soldTicketsInDay) * 100);
-				if (isNaN(price)) { price = 0; }
-				if (isNaN(PhnxChange)) { PhnxChange = 0; }
-				if (isNaN(ticketChange)) { ticketChange = 0; }
+				if (!isFinite(price)) { price = 100; }
+				if (!isFinite(PhnxChange)) { PhnxChange =100; }
+				if (!isFinite(ticketChange)) { ticketChange = 100; }
 				setPhnxChange(PhnxChange);
 				setDollarChange(price);
 				setTicketSoldChange(ticketChange);
 
 				originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenueInDay);
 				newNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenueInDay);
-
-				console.log("PhnxChange", PhnxChange);
-
 				let priceDifference = newNumber - originalNumber;
-				console.log("priceDifference", priceDifference);
 				setdollarDifference(priceDifference);
 				let revenueDifference = PHNXnewNumber - PHNXoriginalNumber;
 				setRevenueDifference(revenueDifference);
 				setTicketDifference(graphForDays[lastIndex].soldTicketsInDay - graphForDays[0].soldTicketsInDay)
 
 			}
-			else{
+			else {
 				setDollarRevenue(0);
 				setPhnxRevenue(0);
 				setSoldTickets(0);
 				setLiveDollarRevenue(0);
-				
+				setPhnxChange(0);
+				setDollarChange(0);
+				setTicketSoldChange(0);
+				setdollarDifference(0);
+				setTicketDifference(0);
+				setRevenueDifference(0);
 			}
-		
+
 		}
 	}
 	// const calculatePercentage =() =>{
