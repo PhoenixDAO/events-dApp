@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./detailform.css";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import DialogueBox from "../common/DialogueBox";
@@ -13,6 +13,7 @@ const DetailForm = (props) => {
 	const [alternateCurrency, setAlternateCurrency] = useState("Dollar");
 	const [file, setFile] = useState({});
 	const [nextForm, setNextForm] = useState(false);
+	const orgref = useRef(null);
 	const handleOpen = () => {
 		setOpen(true);
 	};
@@ -34,6 +35,16 @@ const DetailForm = (props) => {
 		});
 	};
 
+	// const orgDetails = (e) => {
+	// 	// if (e.target.value.split(" ").length <= 500) {
+	// 	// 	orgref.current.enabled;
+	// 	setOrganizer(e.target.value);
+	// 	// } else {
+	// 	// 	e.preventDefault();
+	// 	// 	console.log("Length of organizer details exceeded");
+	// 	// }
+	// };
+
 	const currency = [
 		{ name: "Dollar", flag: "" },
 		{ name: "Euro", flag: "" },
@@ -41,6 +52,7 @@ const DetailForm = (props) => {
 	].map((data) => {
 		return <option value={data.name}>{data.name}</option>;
 	});
+
 	return (
 		<div className="dtl-hldr">
 			<div className="acc-basic-info">
@@ -51,7 +63,7 @@ const DetailForm = (props) => {
 					<p className="acc-title"> Bennu </p>
 					<CreateOutlinedIcon
 						onClick={handleOpen}
-						style={{ color: "blueviolet", width: "20px" }}
+						style={{ color: "#413AE2", width: "20px" }}
 					/>
 				</div>
 			</div>
@@ -97,9 +109,11 @@ const DetailForm = (props) => {
 								rows="4"
 								cols="50"
 								onChange={(e) => setOrganizer(e.target.value)}
+								ref={orgref}
+								maxLength="500"
 							></textarea>
 							<p className="org-subheading">
-								Not more than 500 words.
+								Not more than 500 characters.
 							</p>
 						</div>
 					</div>
