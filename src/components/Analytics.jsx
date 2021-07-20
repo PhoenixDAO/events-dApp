@@ -462,19 +462,21 @@ const Analytics = (props, context) => {
 		if (graphData != undefined) {
 			let graphForDays = graphData.filter(
 				(event) => event.dayStartTimeStamp >= elapsedTime
+
 			);
+			console.log("graph",graphData);
 			if (graphForDays.length != 0) {
 				let totalDollarRevenue = 0;
 				let totalPhnxRevenue = 0;
 				let soldTicket = 0;
 				graphForDays.forEach((event) => {
-					totalDollarRevenue += Number(event.totalDollarRevenueInDay);
+					totalDollarRevenue += Number(Web3.utils.fromWei(event.totalDollarRevenueInDay));
 					soldTicket += Number(event.soldTicketsInDay);
-					totalPhnxRevenue += Number(event.totalPhnxRevenueInDay);
+					totalPhnxRevenue += Number(Web3.utils.fromWei(event.totalPhnxRevenueInDay));
 				});
-				totalPhnxRevenue = Web3.utils.fromWei(totalPhnxRevenue.toString());
 				totalPhnxRevenue = (parseFloat(totalPhnxRevenue)).toFixed(3);
-				totalDollarRevenue = (parseFloat(Web3.utils.fromWei(totalDollarRevenue.toString())).toFixed(3));
+				totalDollarRevenue =(parseFloat(totalPhnxRevenue)).toFixed(3);
+				console.log("totalDollarRevenue",totalDollarRevenue);
 				let liveDollarRevenue = await getPhoenixDAOMarketValue(totalDollarRevenue);
 				setLiveDollarRevenue(liveDollarRevenue)
 				setDollarRevenue(totalDollarRevenue);
@@ -482,8 +484,9 @@ const Analytics = (props, context) => {
 				setSoldTickets(soldTicket);
 				//calculate data for change and difference of cards
 				let lastIndex = graphForDays.length - 1;
-				let originalNumber = graphForDays[0].totalDollarRevenueInDay;
-				let newNumber = graphForDays[lastIndex].totalDollarRevenueInDay;
+				let originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenueInDay);
+				let newNumber =Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenueInDay);
+				console.log("phnx",originalNumber,newNumber);
 				let PHNXoriginalNumber = Web3.utils.fromWei(graphForDays[0].totalPhnxRevenueInDay);
 				let PHNXnewNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalPhnxRevenueInDay);
 				let PhnxChange, price;
@@ -496,9 +499,9 @@ const Analytics = (props, context) => {
 				setPhnxChange(PhnxChange);
 				setDollarChange(price);
 				setTicketSoldChange(ticketChange);
-
-				originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenueInDay);
-				newNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenueInDay);
+				console.log("new",newNumber,originalNumber);
+				// originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenueInDay);
+				// newNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenueInDay);
 				let priceDifference = newNumber - originalNumber;
 				setdollarDifference(priceDifference);
 				let revenueDifference = PHNXnewNumber - PHNXoriginalNumber;

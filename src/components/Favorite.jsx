@@ -129,39 +129,39 @@ class Favorites extends Component {
         // GRAPH BLOCK //
         // console.log("GraphQL query before call",Date.now())
 
-        await axios({
-            url: graphURL,
-            method: "post",
-            data: {
-                query: `
-				  {
-					eventsRemoveds {
-					  id
-					  eventId
-					}
-				  }
-				  `,
-            },
-        })
-            .then((graphDeletedEvents) => {
-                // console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+        // await axios({
+        //     url: graphURL,
+        //     method: "post",
+        //     data: {
+        //         query: `
+		// 		  {
+		// 			eventsRemoveds {
+		// 			  id
+		// 			  eventId
+		// 			}
+		// 		  }
+		// 		  `,
+        //     },
+        // })
+        //     .then((graphDeletedEvents) => {
+        //         // console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 
-                if (
-                    !graphDeletedEvents.data ||
-                    !graphDeletedEvents.data.data == "undefined"
-                ) {
-                    this.setState({ Deleted_Events: [] });
-                } else {
-                    this.setState({
-                        Deleted_Events:
-                            graphDeletedEvents.data.data.eventsRemoveds,
-                    });
-                }
-            })
-            .catch((err) => {
-                console.error(err);
-                this.setState({ Deleted_Events: [] });
-            });
+        //         if (
+        //             !graphDeletedEvents.data ||
+        //             !graphDeletedEvents.data.data == "undefined"
+        //         ) {
+        //             this.setState({ Deleted_Events: [] });
+        //         } else {
+        //             this.setState({
+        //                 Deleted_Events:
+        //                     graphDeletedEvents.data.data.eventsRemoveds,
+        //             });
+        //         }
+        //     })
+        //     .catch((err) => {
+        //         console.error(err);
+        //         this.setState({ Deleted_Events: [] });
+        //     });
 
         await axios({
             url: graphURL,
@@ -313,7 +313,6 @@ class Favorites extends Component {
             this.setState({
                 UserFavoriteEvents: get.data.result.favourites,
             });
-
             return;
         } catch (error) {
             console.log("check error", error);

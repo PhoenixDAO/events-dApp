@@ -39,12 +39,12 @@
 
 //Rinkeby
 export const INFURA_URL =
-	"https://rinkeby.infura.io/v3/c89f216154d84b83bb9344a7d0a91108";
+    "https://rinkeby.infura.io/v3/c89f216154d84b83bb9344a7d0a91108";
 export const INFURA_WEB_URL =
-	"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b";
+    "wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b";
 
 export const GLOBAL_NETWORK_ID = 4;
-export const API_URL = "https://phoenix-event-dapp-backend-tst.herokuapp.com/";
+export const API_URL = "https://events-api.phoenixdao.io/";
 export const REPORT_EVENT = "event/report";
 export const GET_USER_DETAIL = "user/details";
 export const UPDATE_USER_DETAIL = "user/updateDetails";
@@ -54,4 +54,4 @@ export const UPDATE_EVENT_VIEWS = "user/updateViews";
 export const explorerWithTX = "https://rinkeby.etherscan.io/tx/";
 export const explorerWithAddress = "https://rinkeby.etherscan.io/address/";
 export const graphURL =
-	"https://api.thegraph.com/subgraphs/name/nashaibakbar/eventcheck";
+    "https://api.thegraph.com/subgraphs/name/nashaibakbar/eventcheck";
