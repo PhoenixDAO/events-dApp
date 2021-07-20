@@ -124,7 +124,7 @@ export async function getTimeData(owner) {
         )
         totalDollarRevenue += Number(event.totalDollarRevenueInDay);
     });
-    console.log("total dollar revenue", totalDollarRevenue);
+    // console.log("total dollar revenue", totalDollarRevenue);
     return result.data.data.ownerDayDatas
 }
 

@@ -49,7 +49,7 @@ export const addToFavourites = async({ address, networkId, eventId }) => {
             networkId,
             eventId,
         });
-        // console.log("serverAPI addToFavourites", result);
+        console.log("serverAPI addToFavourites", result);
         return { result: result.data.result, error: false };
     } catch (err) {
         // console.log("error occured in addToFavourites", err);
