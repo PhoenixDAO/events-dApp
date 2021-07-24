@@ -7,10 +7,15 @@ import OpenEvents from "./config/OpenEvents.json";
 // import {Open_events_Address} from './config/OpenEvents'
 // import StableToken from "./config/StableToken.json";
 import { INFURA_URL, INFURA_WEB_URL } from "./config/const.js";
-
 //revamp
 // import { Drizzle } from "@drizzle/store";
 // import { drizzleReactHooks } from "@drizzle/react-plugin";
+import {
+	createMuiTheme,
+	ThemeProvider,
+	makeStyles,
+} from "@material-ui/core/styles";
+import { CssBaseline } from "@material-ui/core";
 
 // var web3s = new Web3(window.ethereum);
 const options = {
@@ -40,7 +45,26 @@ const options = {
 	},
 };
 
-// console.log("DrizzleProvider", DrizzleProvider);
+const theme = createMuiTheme({
+	palette: {
+		// primary: {
+		// 	main: "#00F",
+		// },
+		background: {
+			default: "#FBFBFE",
+		},
+	},
+	overrides: {
+		MuiButton: {
+			"&:hover, &:focus ": {
+				outline: "none",
+			},
+		},
+		MuiIconButton: {
+			outline: "none",
+		},
+	},
+});
 
 // setup drizzle
 // const drizzle = new Drizzle(options);
@@ -71,7 +95,10 @@ const options = {
 
 ReactDOM.render(
 	<DrizzleProvider options={options}>
-		<App />
+		<ThemeProvider theme={theme}>
+			<CssBaseline />
+			<App />
+		</ThemeProvider>
 	</DrizzleProvider>,
 	document.getElementById("root")
 );

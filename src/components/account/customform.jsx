@@ -20,6 +20,7 @@ const CustomForm = () => {
 		let pinit = process.env.NODE_ENV === "production";
 		if (file[0] !== undefined) {
 			const url = URL.createObjectURL(file[0]);
+			console.log("url", url);
 			let buffer = Buffer.from(url);
 			ipfs.add(buffer, { pin: pinit })
 				.then((hash) => {

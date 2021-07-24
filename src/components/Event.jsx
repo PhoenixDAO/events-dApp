@@ -30,7 +30,6 @@ import { toast } from "react-toastify";
 //eventCard
 import EventCard from "./common/EventCard";
 
-
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -90,7 +89,7 @@ class Event extends Component {
 			blockie: "/images/PhoenixDAO.png",
 			approvalGranted: false,
 			myFavorites: this.props.myFavorites,
-			UserFavoriteEvents: []
+			UserFavoriteEvents: [],
 		};
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
 		this.isCancelled = false;
@@ -121,6 +120,8 @@ class Event extends Component {
 					ipfs.get(this.props.ipfs)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
+							console.log("event ipfs", file);
+							console.log("ipfs data", data, data.image);
 							if (!this.isCancelled) {
 								this.setState({
 									loading: false,
@@ -218,12 +219,19 @@ class Event extends Component {
 
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
-					toast(<Notify hash={hash} text={"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."}
-					/>, {
-						position: "bottom-right",
-						autoClose: true,
-						pauseOnHover: true,
-					});
+					toast(
+						<Notify
+							hash={hash}
+							text={
+								"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
+							}
+						/>,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
 				}
 			})
 			.on("confirmation", (confirmationNumber, receipt) =>
@@ -256,14 +264,11 @@ class Event extends Component {
 				if (error !== null) {
 					txerror = error;
 					this.props.toggleBuying();
-					toast(
-						<Notify error={error} message={txerror.message} />,
-						{
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						}
-					);
+					toast(<Notify error={error} message={txerror.message} />, {
+						position: "bottom-right",
+						autoClose: true,
+						pauseOnHover: true,
+					});
 					// this.afterApprove()
 					this.setState({ disabledStatus: false });
 				}
@@ -277,11 +282,18 @@ class Event extends Component {
 		// if (confirmationNumber == 0 && receipt.status == true ) {
 		if (confirmationNumber === 0 && receipt.status) {
 			this.props.toggleBuying();
-			toast(<Notify hash={receipt.transactionHash} icon="fas fa-check-circle fa-3x" text="Transaction successful! You can buy a ticket now." />, {
-				position: "bottom-right",
-				autoClose: true,
-				pauseOnHover: true,
-			});
+			toast(
+				<Notify
+					hash={receipt.transactionHash}
+					icon="fas fa-check-circle fa-3x"
+					text="Transaction successful! You can buy a ticket now."
+				/>,
+				{
+					position: "bottom-right",
+					autoClose: true,
+					pauseOnHover: true,
+				}
+			);
 			// this.afterApprove();
 			this.setState({ disabledStatus: false });
 		}
@@ -348,8 +360,10 @@ class Event extends Component {
 	};
 	getUserFavoritesEvent = async () => {
 		try {
-			const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`,
-				{ address: this.props.accounts[0], networkId: this.props.web3.networkId });
+			const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`, {
+				address: this.props.accounts[0],
+				networkId: this.props.web3.networkId,
+			});
 			this.setState({
 				UserFavoriteEvents: get.data.result.favourites,
 			});
@@ -392,10 +406,11 @@ class Event extends Component {
 			let date = new Date(parseInt(event_data.time, 10) * 1000);
 			// console.log("this.props.eventData",parseInt(event_data.time, 10))
 
-
 			// to be changed at the moment kept to first category
 			// let max_seats = event_data.limited ? event_data.seats : "∞"; // limited to tktLimited(array) and seats to tktTotalQuantity
-			let max_seats = event_data.tktLimited[0] ? event_data.catTktQuantity[0] : "∞";
+			let max_seats = event_data.tktLimited[0]
+				? event_data.catTktQuantity[0]
+				: "∞";
 
 			let disabled = false;
 			let reportedOut = " ";
@@ -421,7 +436,8 @@ class Event extends Component {
 				!reported &&
 				// to be changed at the moment kept because not being on event cards
 				// event_data.limited &&
-				Number(event_data.tktTotalQuantitySold) >= Number(event_data.tktTotalQuantity)
+				Number(event_data.tktTotalQuantitySold) >=
+					Number(event_data.tktTotalQuantity)
 			) {
 				sold = true;
 				disabled = true;
@@ -454,10 +470,7 @@ class Event extends Component {
 			let rawTopic = event_data.topic;
 
 			var topicRemovedDashes = rawTopic;
-			topicRemovedDashes = topicRemovedDashes.replace(
-				/-/g,
-				" "
-			);
+			topicRemovedDashes = topicRemovedDashes.replace(/-/g, " ");
 
 			var topic = topicRemovedDashes
 				.toLowerCase()
@@ -477,16 +490,16 @@ class Event extends Component {
 				.join(" ");
 
 			let titleURL = "/event/" + pagetitle + "/" + this.props.id;
-			let myEventStatURL = "/event-stat/" + pagetitle + "/" + this.props.id;
+			let myEventStatURL =
+				"/event-stat/" + pagetitle + "/" + this.props.id;
 			let myEvent = false;
-			if (
-				event_data.owner.toLowerCase() == this.account.toLowerCase()
-			) {
+			if (event_data.owner.toLowerCase() == this.account.toLowerCase()) {
 				myEvent = true;
 			}
 			// let dollarRevenue =
 			// 	this.state.phoenixDAO_market.usd * this.state.revenue;
-			let favouriteEvent = this.state.UserFavoriteEvents.indexOf(this.props.id) != -1;
+			let favouriteEvent =
+				this.state.UserFavoriteEvents.indexOf(this.props.id) != -1;
 			body = (
 				<div>
 					{/* new card */}
@@ -697,7 +710,6 @@ class Event extends Component {
 		this.filterHideEvent();
 		this.updateIPFS();
 		this.getUserFavoritesEvent();
-
 	}
 
 	componentDidUpdate() {
@@ -726,7 +738,6 @@ const mapStateToProps = (state) => {
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
 		web3: state.web3,
-
 	};
 };
 
