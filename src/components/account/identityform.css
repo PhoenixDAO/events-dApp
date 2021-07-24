@@ -11,6 +11,36 @@
 	margin-right: 5px;
 }
 
+.idn-av-hldr {
+	border: 1px solid #e4e4e4;
+	border-radius: 50%;
+	height: 80px;
+	width: 80px;
+	padding: 10px;
+	margin: 0 auto;
+}
+
+.idn-av {
+	width: 50px;
+	display: block;
+	margin: 0 auto;
+}
+
+.custom-file-upload-idn {
+	border: 1px solid #ccc;
+	display: block;
+	padding: 15px 12px;
+	cursor: pointer;
+	margin: 0 auto;
+	border-radius: 50%;
+	height: 80px;
+	width: 80px;
+	text-align: center;
+	color: #000000;
+	font-size: 30px;
+}
+
+
 .idn-sub {
 	margin-top: 20px;
 }

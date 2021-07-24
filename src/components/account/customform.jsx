@@ -1,13 +1,33 @@
 import React, { useState } from "react";
 import "./customform.css";
 import roundlogo from "../Images/roundlogo.svg";
+import ipfs from "../../utils/ipfs";
 
 const CustomForm = () => {
 	const [file, setFile] = useState([]);
 	const handleFile = (e) => {
 		console.log(e.target.files);
-		if (e.target.files[0] !== undefined) {
+		if (
+			e.target.files[0] !== undefined &&
+			e.target.files[0].size < 3 * 1024 * 1024
+		) {
 			setFile(e.target.files);
+		}
+	};
+
+	const uploadImage = (e) => {
+		e.preventDefault();
+		let pinit = process.env.NODE_ENV === "production";
+		if (file[0] !== undefined) {
+			const url = URL.createObjectURL(file[0]);
+			let buffer = Buffer.from(url);
+			ipfs.add(buffer, { pin: pinit })
+				.then((hash) => {
+					console.log("hash", hash);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		}
 	};
 	return (
@@ -57,6 +77,7 @@ const CustomForm = () => {
 							<input
 								id="file-upload"
 								type="file"
+								accept="image/*"
 								name="file"
 								onChange={handleFile}
 							/>
@@ -73,6 +94,7 @@ const CustomForm = () => {
 			<div className="" style={{ marginTop: "20px" }}>
 				<button
 					className="avatar-select-btn"
+					onClick={uploadImage}
 					// onClick={() => handleNextForm(true, "alreadyform")}
 				>
 					Save

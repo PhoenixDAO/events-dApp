@@ -4,6 +4,7 @@
 .acc-basic-info {
 	margin: 0 auto;
 }
+
 .acc-av-hldr {
 	border: 1px solid #e4e4e4;
 	border-radius: 50%;
@@ -29,11 +30,35 @@
 	margin-right: 3px;
 }
 
+.redirect-img-hldr {
+	margin-left: 5px;
+	width: 15px;
+}
+
+.redirect-img {
+	width: 100%;
+}
+
 .acc-inpt-heading {
 	color: #999999;
 	font-weight: bold;
 	margin: 0;
 	font-size: 0.8rem;
+}
+
+.acc-wallet-input-holder {
+	position: relative;
+	display: flex;
+}
+
+.acc-copy-img-holder {
+	position: absolute;
+	left: 94%;
+	top: 10%;
+}
+
+.acc-copy-img {
+	width: 100%;
 }
 
 .acc-form-prt {
@@ -55,7 +80,7 @@
 }
 
 .org-heading {
-	color: blueviolet;
+	color: #413ae2;
 	font-weight: bold;
 	font-size: 15px;
 	margin: 0;
@@ -72,7 +97,7 @@
 }
 
 .acc-frm-btn {
-	background-color: blueviolet;
+	background-color: #413ae2;
 	color: #ffffff;
 	width: 50%;
 	padding: 5px 10px;
