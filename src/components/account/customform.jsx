@@ -15,14 +15,15 @@ const CustomForm = () => {
 		}
 	};
 
-	const uploadImage = () => {
+	const uploadImage = (e) => {
+		e.preventDefault();
 		let pinit = process.env.NODE_ENV === "production";
 		if (file[0] !== undefined) {
 			const url = URL.createObjectURL(file[0]);
 			let buffer = Buffer.from(url);
 			ipfs.add(buffer, { pin: pinit })
 				.then((hash) => {
-					console.log("hash", hash)
+					console.log("hash", hash);
 				})
 				.catch((err) => {
 					console.log(err);

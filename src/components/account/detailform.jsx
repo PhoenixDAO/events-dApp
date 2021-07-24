@@ -6,6 +6,8 @@ import { drizzleConnect } from "drizzle-react";
 import { updateUserDetails } from "../../config/serverAPIs";
 import PropTypes from "prop-types";
 import IdentityForm from "./identityform";
+import Tooltip from "@material-ui/core/Tooltip";
+
 const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
 	const [organizer, setOrganizer] = useState("");
@@ -14,6 +16,13 @@ const DetailForm = (props) => {
 	const [file, setFile] = useState({});
 	const [nextForm, setNextForm] = useState(false);
 	const orgref = useRef(null);
+	const [copytext, setCopyText] = useState("Copy");
+
+	const handleCopy = (value) => {
+		navigator.clipboard.writeText(value);
+		setCopyText("Copied!");
+	};
+
 	const handleOpen = () => {
 		setOpen(true);
 	};
@@ -23,7 +32,8 @@ const DetailForm = (props) => {
 		setOpen(false);
 	};
 
-	const updateUserInfo = () => {
+	const updateUserInfo = (e) => {
+		e.preventDefault();
 		updateUserDetails({
 			address: props.account,
 			networkId: props.networkId,
@@ -61,10 +71,12 @@ const DetailForm = (props) => {
 				</div>
 				<div className="acc-title-hlder">
 					<p className="acc-title"> Bennu </p>
-					<CreateOutlinedIcon
-						onClick={handleOpen}
-						style={{ color: "#413AE2", width: "20px" }}
-					/>
+					<div className="redirect-img-hldr">
+						<img
+							className="redirect-img"
+							src="/images/redirect.svg"
+						/>
+					</div>
 				</div>
 			</div>
 			<div className="acc-form-hldr">
@@ -72,7 +84,28 @@ const DetailForm = (props) => {
 					<div className="acc-form-prt">
 						<div className="frm-single">
 							<p className="acc-inpt-heading">WALLET ADDRESS</p>
-							<input className="acc-inpt" value={props.account} />
+							<div className="acc-wallet-input-holder">
+								<div style={{ width: "100%" }}>
+									<input
+										className="acc-inpt"
+										value={props.account}
+									/>
+								</div>
+								<Tooltip title={copytext} arrow>
+									<div
+										className="acc-copy-img-holder"
+										onMouseEnter={() => setCopyText("Copy")}
+										onClick={() => {
+											handleCopy(props.account);
+										}}
+									>
+										<img
+											className="acc-copy-img"
+											src="/images/copy.svg"
+										/>
+									</div>
+								</Tooltip>
+							</div>
 						</div>
 					</div>
 					<div className="acc-form-prt">
@@ -91,7 +124,7 @@ const DetailForm = (props) => {
 							</select>
 						</div>
 					</div>
-					<div className="acc-form-prt">
+					<div className="acc-form-prt" style={{ marginTop: "70px" }}>
 						<div>
 							<h6 className="org-heading">Organizer details</h6>
 							<p className="org-subheading">
