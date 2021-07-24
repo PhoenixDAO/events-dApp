@@ -17,6 +17,8 @@ import { withStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
 import BuyPhnxButton from "../common/BuyPhnxButton";
 
+import Header from "../common/Header";
+
 import web3 from "web3";
 
 const useStyles = (theme) => ({
@@ -135,6 +137,7 @@ class CreateEvent extends Component {
 
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({
+			//new
 			image0,
 			image1,
 			image2,
@@ -147,6 +150,12 @@ class CreateEvent extends Component {
 			eventTime,
 			eventType,
 			eventDescription,
+			//old
+			image: image0,
+			text: eventDescription,
+			location: location,
+			organizer: eventOrganizer,
+			topic: eventTopic,
 		});
 
 		let buffer = Buffer.from(ipfsData);
@@ -158,40 +167,43 @@ class CreateEvent extends Component {
 				// 	console.log("data", data);
 				// });
 
-				// await this.props.eventsContract.methods
-				// 	.createEvent([
-				// 		oneTimeBuy,
-				// 		token, // false means free
-				// 		this.props.accounts[0],
-				// 		time.toString(), //time
-				// 		"86400", //duration
-				// 		totalQuantity.toString(), //totalQuantity
-				// 		"0", //totalQntySold
-				// 		eventName,
-				// 		eventTopic,
-				// 		location,
-				// 		hash[0].hash,
-				// 		ticketLimited,
-				// 		tktQnty,
-				// 		prices,
-				// 		tktQntySold,
-				// 		categories,
-				// 	])
-				// 	.send({
-				// 		from: this.props.accounts[0],
-				// 	})
-				// 	.on("transactionHash", (hash) => {
-				// 		// hash of tx
-				// 		console.log("hash", hash);
-				// 	})
-				// 	.on("confirmation", function (confirmationNumber, receipt) {
-				// 		if (confirmationNumber === 2) {
-				// 			console.log("confirmationNumber", confirmationNumber);
-				// 		}
-				// 	})
-				// 	.on("error", function (err) {
-				// 		console.log("error", err);
-				// 	});
+				await this.props.eventsContract.methods
+					.createEvent([
+						oneTimeBuy,
+						token, // false means free
+						this.props.accounts[0],
+						time.toString(), //time
+						"86400", //duration
+						totalQuantity.toString(), //totalQuantity
+						"0", //totalQntySold
+						eventName,
+						eventTopic,
+						location,
+						hash[0].hash,
+						ticketLimited,
+						tktQnty,
+						prices,
+						tktQntySold,
+						categories,
+					])
+					.send({
+						from: this.props.accounts[0],
+					})
+					.on("transactionHash", (hash) => {
+						// hash of tx
+						console.log("hash", hash);
+					})
+					.on("confirmation", function (confirmationNumber, receipt) {
+						if (confirmationNumber === 2) {
+							console.log(
+								"confirmationNumber",
+								confirmationNumber
+							);
+						}
+					})
+					.on("error", function (err) {
+						console.log("error", err);
+					});
 			})
 			.catch((error) => {
 				//
@@ -507,7 +519,7 @@ class CreateEvent extends Component {
 				</h2> */}
 
 				{/* top sticky header */}
-				<div className={classes.sticky}>
+				{/* <div className={classes.sticky}>
 					<div>
 						<br />
 						<br />
@@ -521,7 +533,13 @@ class CreateEvent extends Component {
 						</div>
 						<Divider light />
 					</div>
-				</div>
+				</div> */}
+
+				<Header
+					title="Create Event"
+					page="createevent"
+					phnxButton="true"
+				/>
 
 				{disabled && (
 					<div className="alert-connection col-lg-6 mb-6">

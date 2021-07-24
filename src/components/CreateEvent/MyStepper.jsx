@@ -174,6 +174,11 @@ const useStyles = makeStyles((theme) => ({
 		overflow: "auto",
 		zIndex: 2,
 	},
+	label: {
+		color: "#999999",
+		fontSize: 15,
+		fontWeight: 500,
+	},
 }));
 
 const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
@@ -487,7 +492,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							<h3 className={classes.title}>Event Details</h3>
 							<Divider light />
 							<br />
-							<label>EVENT NAME</label>
+							<label className={classes.label}>EVENT NAME</label>
 							<Controller
 								name="eventName"
 								control={control}
@@ -520,7 +525,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 
 							<br />
 							<br />
-							<label>EVENT ORGANIZER</label>
+							<label className={classes.label}>
+								EVENT ORGANIZER
+							</label>
 							<Controller
 								name="eventOrganizer"
 								control={control}
@@ -556,7 +563,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							<br />
 
 							<FormControl component="fieldset">
-								<label>TICKET AVAILABILITY</label>
+								<label className={classes.label}>
+									TICKET AVAILABILITY
+								</label>
 								<Controller
 									name="eventTime"
 									control={control}
@@ -608,6 +617,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 										<div>
 											<div>
 												<label
+													className={classes.label}
 													style={{ marginBottom: 0 }}
 												>
 													DATE
@@ -642,7 +652,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																inputVariant="outlined"
 																autoOk={true}
 																disablePast
-																placeholder="dd-MM-yyyy"
+																placeholder="DD-MM-YYYY"
 																value={value}
 																onChange={
 																	onChange
@@ -674,6 +684,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 										>
 											<div>
 												<label
+													className={classes.label}
 													style={{ marginBottom: 0 }}
 												>
 													START TIME
@@ -694,6 +705,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															margin="normal"
 															id="start-time-picker"
 															// label="START TIME"
+															placeholder="00:00 AM"
 															KeyboardButtonProps={{
 																"aria-label":
 																	"change time",
@@ -721,6 +733,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 											</div>
 											<div>
 												<label
+													className={classes.label}
 													style={{ marginBottom: 0 }}
 												>
 													END TIME
@@ -742,6 +755,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															margin="normal"
 															id="end-time-picker"
 															// label="END TIME"
+															placeholder="00:00 AM"
 															KeyboardButtonProps={{
 																"aria-label":
 																	"change time",
@@ -783,6 +797,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 										>
 											<div>
 												<label
+													className={classes.label}
 													style={{ marginBottom: 0 }}
 												>
 													START DATE
@@ -805,7 +820,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															format="dd-MM-yyyy"
 															margin="normal"
 															id="date-picker-inline"
-															placeholder="dd-MM-yyyy"
+															placeholder="DD-MM-YYYY"
 															InputProps={{
 																readOnly: true,
 															}}
@@ -840,6 +855,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 
 											<div>
 												<label
+													className={classes.label}
 													style={{ marginBottom: 0 }}
 												>
 													END DATE
@@ -873,7 +889,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																	"change date",
 															}}
 															inputVariant="outlined"
-															placeholder="dd-MM-yyyy"
+															placeholder="DD-MM-YYYY"
 															autoOk={true}
 															disablePast
 															value={value}
@@ -904,6 +920,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 										>
 											<div>
 												<label
+													className={classes.label}
 													style={{ marginBottom: 0 }}
 												>
 													TO
@@ -924,6 +941,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															margin="normal"
 															id="time-picker"
 															// label="TO"
+															placeholder="00:00 AM"
 															KeyboardButtonProps={{
 																"aria-label":
 																	"change time",
@@ -952,6 +970,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 
 											<div>
 												<label
+													className={classes.label}
 													style={{ marginBottom: 0 }}
 												>
 													FROM
@@ -972,6 +991,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 															margin="normal"
 															id="time-picker"
 															// label="FROM"
+															placeholder="00:00 AM"
 															KeyboardButtonProps={{
 																"aria-label":
 																	"change time",
@@ -1042,7 +1062,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							<br />
 
 							<FormControl component="fieldset">
-								<label>TICKET AVAILABILITY</label>
+								<label className={classes.label}>
+									TICKET AVAILABILITY
+								</label>
 								<Controller
 									name="eventType"
 									control={control}
@@ -1086,7 +1108,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							<br />
 							{type === "physical" ? (
 								<div>
-									<label>EVENT LOCATION</label>
+									<label className={classes.label}>
+										EVENT LOCATION
+									</label>
 									<Controller
 										name="eventLocation"
 										control={control}
@@ -1115,7 +1139,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 								</div>
 							) : (
 								<div>
-									<label>EVENT LINK</label>
+									<label className={classes.label}>
+										EVENT LINK
+									</label>
 									<Controller
 										name="eventLink"
 										control={control}
@@ -1151,7 +1177,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							{images.slice(0, 3).map((img, index) => {
 								return (
 									<div key={index}>
-										<label>COVER IMAGE {index}</label>
+										<label className={classes.label}>
+											COVER IMAGE {index}
+										</label>
 
 										<Controller
 											name={`image${index}`}
@@ -1259,7 +1287,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							<br />
 							<br />
 
-							<label>TOPIC</label>
+							<label className={classes.label}>TOPIC</label>
 							<Controller
 								name="eventTopic"
 								control={control}
@@ -1309,7 +1337,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							<h3 className={classes.title}>Tickets</h3>
 							<Divider light />
 							<br />
-							<label>CATEGORY</label>
+							<label className={classes.label}>CATEGORY</label>
 							<Controller
 								name="eventCategory"
 								control={control}
@@ -1356,7 +1384,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 								{category === "free" ? (
 									<div>
 										<FormControl component="fieldset">
-											<label>TICKET AVAILABILITY</label>
+											<label className={classes.label}>
+												TICKET AVAILABILITY
+											</label>
 											<Controller
 												name="ticketAvailability"
 												control={control}
@@ -1401,7 +1431,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 										</FormControl>
 										{availability === "unlimited" ? null : (
 											<div>
-												<label>NUMBER OF TICKETS</label>
+												<label
+													className={classes.label}
+												>
+													NUMBER OF TICKETS
+												</label>
 												<Controller
 													name="noOfTickets"
 													control={control}
@@ -1446,7 +1480,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 									</div>
 								) : category === "single" ? (
 									<div>
-										<label>TICKET PRICE</label>
+										<label className={classes.label}>
+											TICKET PRICE
+										</label>
 										<br />
 										<div
 											style={{
@@ -1572,7 +1608,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 										<br />
 
 										<FormControl component="fieldset">
-											<label>TICKET AVAILABILITY</label>
+											<label className={classes.label}>
+												TICKET AVAILABILITY
+											</label>
 											<Controller
 												name="ticketAvailability"
 												control={control}
@@ -1617,7 +1655,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 										</FormControl>
 										{availability === "unlimited" ? null : (
 											<div>
-												<label>NUMBER OF TICKETS</label>
+												<label
+													className={classes.label}
+												>
+													NUMBER OF TICKETS
+												</label>
 												<Controller
 													name="noOfTickets"
 													control={control}
@@ -1778,7 +1820,13 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													)}
 												>
 													{/* ticket name */}
-													<label>TICKET NAME</label>
+													<label
+														className={
+															classes.label
+														}
+													>
+														TICKET NAME
+													</label>
 													<Controller
 														name={`ticketName${ticketCategory}`}
 														control={control}
@@ -1817,7 +1865,13 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													<br />
 													<br />
 
-													<label>TICKET PRICE</label>
+													<label
+														className={
+															classes.label
+														}
+													>
+														TICKET PRICE
+													</label>
 													<br />
 													<div
 														style={{
@@ -1966,7 +2020,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													<br />
 
 													<FormControl component="fieldset">
-														<label>
+														<label
+															className={
+																classes.label
+															}
+														>
 															TICKET AVAILABILITY
 														</label>
 														<Controller
@@ -2029,7 +2087,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													{availability ===
 													"unlimited" ? null : (
 														<div>
-															<label>
+															<label
+																className={
+																	classes.label
+																}
+															>
 																NUMBER OF
 																TICKETS
 															</label>
@@ -2158,10 +2220,14 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 				return (
 					<React.Fragment>
 						<div>
-							<h3 className={classes.title}>Event Descritions</h3>
+							<h3 className={classes.title}>
+								Event Descriptions
+							</h3>
 							<Divider light />
 							<br />
-							<label>EVENT DESCRIPTION</label>
+							<label className={classes.label}>
+								EVENT DESCRIPTION
+							</label>
 							<br />
 
 							<Controller
