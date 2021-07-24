@@ -71,7 +71,7 @@ const DetailForm = (props) => {
 				</div>
 				<div className="acc-title-hlder">
 					<p className="acc-title"> Bennu </p>
-					<div className="redirect-img-hldr">
+					<div className="redirect-img-hldr" onClick={handleOpen}>
 						<img
 							className="redirect-img"
 							src="/images/redirect.svg"
@@ -96,7 +96,7 @@ const DetailForm = (props) => {
 										className="acc-copy-img-holder"
 										onMouseEnter={() => setCopyText("Copy")}
 										onClick={() => {
-											handleCopy(props.account);
+											handleCopy("Copied");
 										}}
 									>
 										<img

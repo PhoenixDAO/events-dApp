@@ -20,7 +20,9 @@ const CustomForm = () => {
 		let pinit = process.env.NODE_ENV === "production";
 		if (file[0] !== undefined) {
 			const url = URL.createObjectURL(file[0]);
+			console.log("url", url);
 			let buffer = Buffer.from(url);
+			console.log("buffer", buffer);
 			ipfs.add(buffer, { pin: pinit })
 				.then((hash) => {
 					console.log("hash", hash);
@@ -30,6 +32,7 @@ const CustomForm = () => {
 				});
 		}
 	};
+
 	return (
 		<div className="idn-hldr">
 			{console.log(Object.keys(file).length)}
