@@ -1,19 +1,19 @@
 @import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400");
 
-/* @font-face {
-    font-family: "Aeonik";
-    src: url("../custom-font/Aeonik/Aeonik-Medium.otf");
+@font-face {
+	font-family: "Aeonik";
+	src: url("../custom-font/Aeonik/Aeonik-Medium.otf");
 }
 @font-face {
-    font-family: "AeonikBold";
-    src: url("../custom-font/Aeonik/Aeonik-Bold.otf");
+	font-family: "AeonikBold";
+	src: url("../custom-font/Aeonik/Aeonik-Bold.otf");
 }
 @font-face {
-    font-family: "AeonikReg";
-    src: url("../custom-font/Aeonik/Aeonik-Regular.otf");
-} */
+	font-family: "AeonikReg";
+	src: url("../custom-font/Aeonik/Aeonik-Regular.otf");
+}
 
-@font-face {
+/* @font-face {
 	font-family: "Aeonik Air";
 	src: url("../fonts/Aeonik/Aeonik-AirItalic.woff2") format("woff2"),
 		url("../fonts/Aeonik/Aeonik-AirItalic.woff") format("woff");
@@ -137,25 +137,25 @@
 	font-weight: 100;
 	font-style: normal;
 	font-display: swap;
-}
+} */
 
 html {
 	scroll-behavior: smooth;
 }
 
-/* body {
+body {
 	background-color: #fafafa;
 	font-family: "AeonikReg", sans-serif;
 	color: #333;
 	font-weight: 300;
-} */
+}
 
-body {
+/* body {
 	background-color: #fafafa;
 	font-family: "Aeonik", sans-serif;
-	/* color: #333;
-	font-weight: 300; */
-}
+	color: #333;
+	font-weight: 300;
+} */
 
 h1,
 h2,
