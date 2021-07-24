@@ -17,6 +17,8 @@ import { withStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
 import BuyPhnxButton from "../common/BuyPhnxButton";
 
+import Header from "../common/Header";
+
 import web3 from "web3";
 
 const useStyles = (theme) => ({
@@ -84,29 +86,44 @@ class CreateEvent extends Component {
 	handleCreateEvent = async () => {
 		console.log("handleCreateEvent", this.state.fields);
 
-		const {
+		let {
 			eventName,
 			eventOrganizer,
 			eventTopic,
 			eventCategory,
 			eventLocation,
+			eventLink,
 			restrictWallet: oneTimeBuy,
 			categories: ticketCategories,
-			token,
-			eventDate,
-			eventStartDate,
+			token, //false means free
+			eventDate, //onedayevent date format
+			eventStartDate, //morethanadayevent
+			eventEndDate, //morethanadayevent
+			eventStartTime,
+			eventEndTime,
+			eventTime, //oneday/moreday event
+			eventType, //physical or online
+			image0,
+			image1,
+			image2,
+			eventDescription,
 		} = this.state.fields;
 
-		console.log(ticketCategories);
+		image0 = image0 ? URL.createObjectURL(image0) : "";
+		image1 = image1 ? URL.createObjectURL(image1) : "";
+		image2 = image2 ? URL.createObjectURL(image2) : "";
 
 		let ticketLimited = [];
 		let tktQnty = [];
 		let prices = [];
 		let tktQntySold = [];
 		let categories = [];
-
 		let totalQuantity = 0;
-		let time = Date.parse(eventDate ? eventDate : eventStartDate) / 1000;
+		let location = eventType === "physical" ? eventLocation : eventLink;
+		let time =
+			Date.parse(
+				eventTime === "onedayevent" ? eventDate : eventStartDate
+			) / 1000;
 
 		for (var i = 0; i < ticketCategories.length; i++) {
 			ticketLimited.push(ticketCategories[i].ticketAvailability);
@@ -114,45 +131,84 @@ class CreateEvent extends Component {
 			prices.push(web3.utils.toWei(ticketCategories[i].dollarPrice));
 			tktQntySold.push("0");
 			categories.push(ticketCategories[i].ticketName);
-			console.log(ticketCategories[i].noOfTickets);
 			totalQuantity =
 				totalQuantity + parseInt(ticketCategories[i].noOfTickets);
 		}
 
-		// await this.props.eventsContract.methods
-		// 	.createEvent([
-		// 		oneTimeBuy,
-		// 		token, // false means free
-		// 		this.props.accounts[0],
-		// 		time.toString(), //time
-		// 		"86400", //duration
-		// 		totalQuantity.toString(), //totalQuantity
-		// 		"0", //totalQntySold
-		// 		eventName,
-		// 		eventTopic,
-		// 		eventLocation,
-		// 		"hj_ipfs_hash",
-		// 		ticketLimited,
-		// 		tktQnty,
-		// 		prices,
-		// 		tktQntySold,
-		// 		categories,
-		// 	])
-		// 	.send({
-		// 		from: this.props.accounts[0],
-		// 	})
-		// 	.on("transactionHash", (hash) => {
-		// 		// hash of tx
-		// 		console.log("hash", hash);
-		// 	})
-		// 	.on("confirmation", function (confirmationNumber, receipt) {
-		// 		if (confirmationNumber === 2) {
-		// 			console.log("confirmationNumber", confirmationNumber);
-		// 		}
-		// 	})
-		// 	.on("error", function (err) {
-		// 		console.log("error", err);
-		// 	});
+		let pinit = process.env.NODE_ENV === "production";
+		let ipfsData = JSON.stringify({
+			//new
+			image0,
+			image1,
+			image2,
+			eventOrganizer,
+			eventDate,
+			eventStartDate,
+			eventEndDate,
+			eventStartTime,
+			eventEndTime,
+			eventTime,
+			eventType,
+			eventDescription,
+			//old
+			image: image0,
+			text: eventDescription,
+			location: location,
+			organizer: eventOrganizer,
+			topic: eventTopic,
+		});
+
+		let buffer = Buffer.from(ipfsData);
+		ipfs.add(buffer, { pin: pinit })
+			.then(async (hash) => {
+				console.log("hashhh", hash[0].hash);
+				// ipfs.get(hash[0].hash).then((file) => {
+				// 	let data = JSON.parse(file[0].content.toString());
+				// 	console.log("data", data);
+				// });
+
+				await this.props.eventsContract.methods
+					.createEvent([
+						oneTimeBuy,
+						token, // false means free
+						this.props.accounts[0],
+						time.toString(), //time
+						"86400", //duration
+						totalQuantity.toString(), //totalQuantity
+						"0", //totalQntySold
+						eventName,
+						eventTopic,
+						location,
+						hash[0].hash,
+						ticketLimited,
+						tktQnty,
+						prices,
+						tktQntySold,
+						categories,
+					])
+					.send({
+						from: this.props.accounts[0],
+					})
+					.on("transactionHash", (hash) => {
+						// hash of tx
+						console.log("hash", hash);
+					})
+					.on("confirmation", function (confirmationNumber, receipt) {
+						if (confirmationNumber === 2) {
+							console.log(
+								"confirmationNumber",
+								confirmationNumber
+							);
+						}
+					})
+					.on("error", function (err) {
+						console.log("error", err);
+					});
+			})
+			.catch((error) => {
+				//
+				console.log("error in convertAndUpload", error);
+			});
 	};
 
 	createEvent = (
@@ -463,7 +519,7 @@ class CreateEvent extends Component {
 				</h2> */}
 
 				{/* top sticky header */}
-				<div className={classes.sticky}>
+				{/* <div className={classes.sticky}>
 					<div>
 						<br />
 						<br />
@@ -477,7 +533,13 @@ class CreateEvent extends Component {
 						</div>
 						<Divider light />
 					</div>
-				</div>
+				</div> */}
+
+				<Header
+					title="Create Event"
+					page="createevent"
+					phnxButton="true"
+				/>
 
 				{disabled && (
 					<div className="alert-connection col-lg-6 mb-6">

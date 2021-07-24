@@ -131,9 +131,10 @@ export default function PreviewEvent({ fields }) {
 		eventTopic,
 		eventCategory,
 		eventLocation,
+		eventLink,
 		restrictWallet: oneTimeBuy,
 		categories: ticketCategories,
-		token,
+		token, //false means free
 		eventDate, //onedayevent
 		eventStartDate, //morethanadayevent
 		eventEndDate, //morethanadayevent
@@ -143,8 +144,6 @@ export default function PreviewEvent({ fields }) {
 		eventType,
 		image0,
 	} = fields;
-
-	console.log("fields @ preview", fields);
 
 	useEffect(() => {
 		const { categories: ticketCategories } = fields;
