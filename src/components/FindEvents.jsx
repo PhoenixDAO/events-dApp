@@ -312,7 +312,9 @@ class FindEvents extends Component {
 			this.setState({
 				hideEvent: get.data.result,
 			});
+			console.log("hide event",this.state.hideEvent);
 			return;
+
 		} catch (error) {
 			console.log("check error", error);
 		}

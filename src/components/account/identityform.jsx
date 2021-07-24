@@ -27,25 +27,19 @@ const IdentityForm = (props) => {
 	// };
 	const avatars = [
 		{ img: "/images/metamask.svg", name: "Bennue", onclick: false },
-		{ img: "/images/metamask.svg", name: "Milcham", onclick: false },
-		{ img: "/images/metamask.svg", name: "Thunderbird", onclick: false },
-		{ img: "/images/metamask.svg", name: "Garuda", onclick: false },
-		{ img: "/images/metamask.svg", name: "Firebird", onclick: false },
+		{ img: "/images/milcham.svg", name: "Milcham", onclick: false },
+		{ img: "/images/thunderbird.svg", name: "Thunderbird", onclick: false },
+		{ img: "/images/garuda.svg", name: "Garuda", onclick: false },
+		{ img: "/images/firebird.svg", name: "Firebird", onclick: false },
 		{ img: "/images/metamask.svg", name: "Custom", onclick: true },
 	].map((data) => {
 		return (
 			<div className="single-avatar-hldr">
 				{data.onclick ? (
 					<div onClick={() => handleNextForm(true, "customform")}>
-						<label for="file-upload" className="custom-file-upload">
+						<label for="file-upload" className="custom-file-upload-idn">
 							+
 						</label>
-						{/* <input
-							id="file-upload"
-							type="file"
-							name="file"
-							onChange={(e) => setFile(e.target.files[0])}
-						/> */}
 					</div>
 				) : (
 					<div
@@ -54,11 +48,11 @@ const IdentityForm = (props) => {
 						}
 						className={
 							selectImage.name === data.name
-								? "select-av-img acc-av-hldr"
-								: "acc-av-hldr"
+								? "select-av-img idn-av-hldr"
+								: "idn-av-hldr"
 						}
 					>
-						<img className="acc-av" src={data.img} />
+						<img className="idn-av" src={data.img} />
 					</div>
 				)}
 				<div className="acc-title-hlder">

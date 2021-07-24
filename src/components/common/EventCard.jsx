@@ -191,10 +191,12 @@ const EventCard = (props, context) => {
 			}
 			//for remove from favourites
 			else {
-				await axios.post(
+				const result= await axios.post(
 					`${API_URL}${REMOVE_FROM_FAVOURITES}`,
 					payload
 				);
+				console.log("result",result);
+
 				props.reloadData();
 			}
 
@@ -204,7 +206,7 @@ const EventCard = (props, context) => {
 			// console.log("Consoleee notify report response catch",error)
 
 			if (error.response && error.response.data) {
-				// console.log("Consoleee notify report response error.response.data",error.response.data)
+				console.log("Consoleee notify report response error.response.data",error.response.data)
 				toast(
 					<Notify
 						error={error}

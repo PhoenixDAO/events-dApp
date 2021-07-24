@@ -12,7 +12,9 @@ import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 import axios from "axios";
-import { generateJSON } from "../utils/ticketSoldByLocation";
+import { generateJSON, getEventName, getTimeData, getPhoenixDAOMarketValue } from "../utils/graphApis";
+import Web3 from "web3";
+import MyEvents from "./MyEvents";
 const useStyles = makeStyles((theme) => ({
 	content: {
 		backgroundColor: "white",
@@ -102,7 +104,10 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: "space-between",
 		padding: "15px 0px",
 		borderBottom: "1px solid #E4E4E7",
-		margin: "0px 10px"
+		margin: "0px 10px",
+		'&:last-child': {
+			borderBottom: "none",
+		}
 	},
 	chartDiv: {
 		// background: `url('/images/graph.svg') no-repeat center 87px`,
@@ -156,31 +161,16 @@ const useStyles = makeStyles((theme) => ({
 			width: "20%",
 			paddingTop: "13px"
 		}
+	},
+	noTicket: {
+		fontSize: "18px",
+		fontWeight: "600",
+		letterSpacing: "0.5px",
+		padding: "10px",
+
 	}
 }));
 
-// const TicketSales = [
-// 	{
-// 		eventCity: "melbourne",
-// 		TicketSold: 9,
-// 	},
-// 	{
-// 		eventCity: "karachi",
-// 		TicketSold: 9,
-// 	},
-// 	{
-// 		eventCity: "Sydney",
-// 		TicketSold: 8,
-// 	},
-// 	{
-// 		eventCity: "Singapore",
-// 		TicketSold: 8,
-// 	},
-// 	{
-// 		eventCity: "New York",
-// 		TicketSold: 4,
-// 	},
-// ];
 //for doughnut chart
 const chartColors = ["#ACFFE3", "#96A6FF", "#FF8795", "#E8B56B", "#D0A6F2"];
 
@@ -291,27 +281,46 @@ const chartOptions = {
 };
 
 const Analytics = (props, context) => {
-	// const {
-	//     // event_data,
-	//     // date,
-
-	// } = props;
-	useEffect(() => {
-		getPhnxRevenue();
-		getViewsAndFavourites();
-		// ticketSold();
-	}, []);
 	const classes = useStyles();
-	const [graphData, setGraphData] = useState("");
+	const [graphData, setGraphData] = useState([]);
 	const [userDetails, setUserDetails] = useState([]);
 	const [TicketSales, setTicketSales] = useState([]);
+	const [eventName, setEventName] = useState([]);
+	const [revenueCategory, setrevenueCategory] = useState("eventRevenueInPhnx");
+	const [ticketBought, setTicketBought] = useState(0);
+	const [timeStamp, setTimeStamp] = useState("86400");
+	const [dollarRevenue, setDollarRevenue] = useState(0);
+	const [phnxRevenue, setPhnxRevenue] = useState(0);
+	const [soldTicket, setSoldTickets] = useState(0);
+	const [dollarChange, setDollarChange] = useState(0);
+	const [phnxChange, setPhnxChange] = useState(0);
+	const [ticketSoldChange, setTicketSoldChange] = useState(0);
+	const [dollarDifference, setdollarDifference] = useState(0);
+	const [phnxDifference, setRevenueDifference] = useState(0);
+	const [ticketDifference, setTicketDifference] = useState(0);
+	const [liveDollarRevenue, setLiveDollarRevenue] = useState(0);
+	useEffect(() => {
+		// getPhnxRevenue();
+		getViewsAndFavourites();
+		loadApis();
+	}, []);
+	const loadApis = async () => {
+		const eventName = await getEventName(props.accounts);
+		setEventName(eventName);
+		if (eventName.length != 0) {
+			const tickets = await generateJSON(eventName[0].eventId);
+			setTicketSales(tickets);
+		}
+		const blockChainTickets = await props.eventsContract.methods.ticketsOf(props.accounts).call()
+		setTicketBought(blockChainTickets.length);
+		const timeData = await getTimeData(props.accounts);
+		setGraphData(timeData);
+		handleTimeStampChange();
+	}
+	const events = getEvents({ _isMounted: true, accounts: props.accounts, revenueCategory: revenueCategory });
+	// console.log("events", events);
 	//for graph datasets
 	let dataset = [];
-	const ticketSold = async () => {
-		const tickets = await generateJSON(15);
-		console.log("tickets",tickets);
-		setTicketSales(tickets);
-	}
 	const data = (canvas) => {
 		const ctx = canvas.getContext('2d')
 		var gradient = ctx.createLinearGradient(0, 0, 0, 400);
@@ -339,83 +348,19 @@ const Analytics = (props, context) => {
 		maintainAspectRatio: false,
 		responsive: false,
 		labels: TicketSales.map((event) => {
-			return event.eventCity;
+			return event.location;
 		}),
 		datasets: [
 			{
 				data: TicketSales.map((event) => {
-					return event.TicketSold;
+					return event.ticketSold;
 				}),
 				backgroundColor: chartColors,
 				hoverBackgroundColor: chartColors,
 			},
 		],
 	};
-	const getPhnxRevenue = async () => {
-		console.log("I am here", props.accounts);
-		await axios({
-			url: graphURL,
-			method: 'post',
-			data: {
-				query: `{
-					events(where : {owner: "${props.accounts.toLowerCase()}"}) {
-						id
-						token
-						eventId
-						owner
-						name
-						topic
-						location
-						ipfsHash
-						tktLimited
-						oneTimeBuy
-						time
-						duration
-						tktTotalQuantity
-						tktTotalQuantitySold
-						catTktQuantity
-						catTktQuantitySold	
-						categories
-						prices
-						eventRevenueInDollar
-						eventRevenueInPhnx
-					  }
-	  				}`
-			}
-		}).then((graphEvents) => {
-			console.log("GraphQL query response in analytics", Date.now(), graphEvents.data.data.events)
 
-			if (!graphEvents.data || graphEvents.data.data == "undefined") {
-				// console.log("GraphQL query -- graphEvents undefined")
-				this.setState({
-					Events_Blockchain: [],
-					// active_length: 0,
-					event_copy: [],
-				});
-			} else {
-				// if (this._isMounted) {
-				const dateTime = Date.now();
-				const dateNow = Math.floor(dateTime / 1000);
-				this.setState({ loading: true });
-				console.log("events", graphEvents.data.data.events);
-				let newsort = graphEvents.data.data.events
-					.concat()
-					.sort((a, b) => b.blockNumber - a.blockNumber)
-					.filter((activeEvents) => activeEvents.time >= dateNow);
-				// console.log("GraphQL query newsort",newsort)
-
-				this.setState({
-					Events_Blockchain: newsort,
-					// active_length: newsort.length,
-					event_copy: newsort,
-				});
-				this.setState({ loading: false });
-				// }
-			}
-		}).catch((err) => console.error(err));
-		dataset = [1, 2, 34, 0, 6, 7];
-		setGraphData(dataset);
-	};
 	const getDollarRevenue = () => {
 		dataset = [2, 5, 2, 8, 3, 2];
 		setGraphData(dataset);
@@ -425,19 +370,27 @@ const Analytics = (props, context) => {
 		setGraphData(dataset);
 	};
 	const TicketAnalytics = () => {
-		return TicketSales.map((event, index) => (
-			<Grid className={classes.row3}>
-				<Grid className={classes.city}>
-					<div
-						className={classes.highlighter}
-						style={{ backgroundColor: chartColors[index] }}
-					></div>
-					{event.eventCity}
+		if (TicketSales.length == 0) {
+			return (<Grid className={classes.noTicket}>
+				No tickets sold
+			</Grid>)
+		}
+		else {
+
+			return TicketSales.map((event, index) => (
+				<Grid className={classes.row3}>
+					<Grid className={classes.city}>
+						<div
+							className={classes.highlighter}
+							style={{ backgroundColor: chartColors[index] }}
+						></div>
+						{event.location}
+					</Grid>
+					<Grid className={classes.ticketSold}>{event.ticketSold}</Grid>
 				</Grid>
-				<Grid className={classes.ticketSold}>{event.TicketSold}</Grid>
-			</Grid>
-		));
-	};
+			));
+		};
+	}
 	const getViewsAndFavourites = async () => {
 		const userDetails = await getUserDetails({ address: props.accounts, networkId: props.networkId });
 		if (!userDetails.error) {
@@ -447,10 +400,9 @@ const Analytics = (props, context) => {
 		}
 
 	}
-
-	let Events = getEvents({ _isMounted: true, accounts: props.accounts });
 	const Top5Events = () => {
-		if (Events.length == 0) {
+		if (events.length == 0) {
+			// console.log("MyEvents", events);
 			return (<p className="text-center not-found" style={{ marginTop: "40px" }}>
 				<span role="img" aria-label="thinking">
 					🤔
@@ -460,15 +412,16 @@ const Analytics = (props, context) => {
 			</p>)
 		}
 		else {
-			return Events.map((event, index) => (
-				<Grid className={classes.row3}>
+
+			return events.map((event, index) => (
+				<Grid container className={classes.row3}>
 					<Grid lg={3} className={classes.ticketSold}>
 						<i
 							className="fa fa-ticket-alt"
 							title="My Tickets"
 							style={{ color: "#73727D", paddingRight: "10px" }}
 						></i>
-						{event.sold}
+						{event.tktTotalQuantitySold}
 					</Grid>
 					<Grid lg={6} className={classes.city}>
 						{event.name}
@@ -478,16 +431,106 @@ const Analytics = (props, context) => {
 						className={classes.ticketSold}
 						style={{ textAlign: "end" }}
 					>
-						{event.revenueOfEvent / 1000000000000000000} PHNX
+						{revenueCategory == "eventRevenueInPhnx" ?
+							(event.eventRevenueInPhnx / 1000000000000000000).toFixed(2) + " PHNX"
+							: "$ " + (event.eventRevenueInDollar / 1000000000000000000).toFixed(2)
+						}
 					</Grid>
 				</Grid>
 			));
 		}
 
 	};
+	const handleRevenue = (event) => {
+		setrevenueCategory(event.target.value);
+	};
 
+	//filterations and calculations of earnuings card section
+	const handleTimeStampChange = async (event) => {
+		let timestamp;
+		getTimeData(props.accounts)
+		if (event) {
+			timestamp = event.target.value;
+		}
+		else {
+			timestamp = timeStamp;
+		}
+		setTimeStamp(timestamp);
+		let today = Math.floor(Date.now() / 1000)
+		let elapsedTime = today - timestamp;
 
+		if (graphData != undefined) {
+			let graphForDays = graphData.filter(
+				(event) => event.dayStartTimeStamp >= elapsedTime
 
+			);
+			console.log("graph",graphData);
+			if (graphForDays.length != 0) {
+				let totalDollarRevenue = 0;
+				let totalPhnxRevenue = 0;
+				let soldTicket = 0;
+				graphForDays.forEach((event) => {
+					totalDollarRevenue += Number(Web3.utils.fromWei(event.totalDollarRevenueInDay));
+					soldTicket += Number(event.soldTicketsInDay);
+					totalPhnxRevenue += Number(Web3.utils.fromWei(event.totalPhnxRevenueInDay));
+				});
+				totalPhnxRevenue = (parseFloat(totalPhnxRevenue)).toFixed(3);
+				totalDollarRevenue =(parseFloat(totalPhnxRevenue)).toFixed(3);
+				console.log("totalDollarRevenue",totalDollarRevenue);
+				let liveDollarRevenue = await getPhoenixDAOMarketValue(totalDollarRevenue);
+				setLiveDollarRevenue(liveDollarRevenue)
+				setDollarRevenue(totalDollarRevenue);
+				setPhnxRevenue(totalPhnxRevenue);
+				setSoldTickets(soldTicket);
+				//calculate data for change and difference of cards
+				let lastIndex = graphForDays.length - 1;
+				let originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenueInDay);
+				let newNumber =Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenueInDay);
+				console.log("phnx",originalNumber,newNumber);
+				let PHNXoriginalNumber = Web3.utils.fromWei(graphForDays[0].totalPhnxRevenueInDay);
+				let PHNXnewNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalPhnxRevenueInDay);
+				let PhnxChange, price;
+				price = (((newNumber - originalNumber) / originalNumber) * 100);
+				PhnxChange = (((PHNXnewNumber - PHNXoriginalNumber) / PHNXoriginalNumber) * 100);
+				let ticketChange = (((graphForDays[lastIndex].soldTicketsInDay - graphForDays[0].soldTicketsInDay) / graphForDays[0].soldTicketsInDay) * 100);
+				if (!isFinite(price)) { price = 100; }
+				if (!isFinite(PhnxChange)) { PhnxChange =100; }
+				if (!isFinite(ticketChange)) { ticketChange = 100; }
+				setPhnxChange(PhnxChange);
+				setDollarChange(price);
+				setTicketSoldChange(ticketChange);
+				console.log("new",newNumber,originalNumber);
+				// originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenueInDay);
+				// newNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenueInDay);
+				let priceDifference = newNumber - originalNumber;
+				setdollarDifference(priceDifference);
+				let revenueDifference = PHNXnewNumber - PHNXoriginalNumber;
+				setRevenueDifference(revenueDifference);
+				setTicketDifference(graphForDays[lastIndex].soldTicketsInDay - graphForDays[0].soldTicketsInDay)
+
+			}
+			else {
+				setDollarRevenue(0);
+				setPhnxRevenue(0);
+				setSoldTickets(0);
+				setLiveDollarRevenue(0);
+				setPhnxChange(0);
+				setDollarChange(0);
+				setTicketSoldChange(0);
+				setdollarDifference(0);
+				setTicketDifference(0);
+				setRevenueDifference(0);
+			}
+
+		}
+	}
+	// const calculatePercentage =() =>{
+	//         let price = (((newNumber - orignalNumber) / orignalNumber) * 100);
+	// }
+	const handleEvent = async (event) => {
+		const tickets = await generateJSON(Number(event.target.value));
+		setTicketSales(tickets);
+	}
 	return (
 		<div>
 			<Header title="Analytics" page="analytics" phnxButton="true" />
@@ -498,20 +541,20 @@ const Analytics = (props, context) => {
 					<FormControl variant="outlined" className={classes.select}>
 						<Select
 							native
-							// value={state.age}
-							// onChange={handleChange}
+							value={timeStamp}
+							onChange={handleTimeStampChange}
 							inputProps={{
 								name: "age",
 								id: "outlined-age-native-simple",
 							}}
 						>
-							<option value="Today">Today</option>
-							<option aria-label="None" value="Yesterday">
+							<option value="86400">Today</option>
+							{/* <option aria-label="None" value="Yesterday">
 								Yesterday
-							</option>
-							<option value="Last 7 Days">Last 7 Days</option>
-							<option value="Last 28 Days">Last 28 Days</option>
-							<option value="Last 90 Days">Last 90 Days</option>
+							</option> */}
+							<option value="604800">Last 7 Days</option>
+							<option value="2419200">Last 28 Days</option>
+							<option value="7776000">Last 90 Days</option>
 						</Select>
 					</FormControl>
 				</Grid>
@@ -521,30 +564,42 @@ const Analytics = (props, context) => {
 						click={getDollarRevenue}
 						imageSrc="/images/icons/Dollar.png"
 						header="Dollar Revenue"
-						value="$2640"
-						profit="10%"
+						value={"$" + dollarRevenue}
+						profit={dollarChange}
+						diffrence={dollarDifference}
+						entity="$"
+						days={timeStamp}
+						liveDollarRevenue={liveDollarRevenue}
 					/>
 					<Card
 						color="#413AE2"
-						click={getPhnxRevenue}
-						imageSrc="/images/icons/Dollar.png"
-						header="Dollar Revenue"
-						value="$2640"
-						profit="10%"
+						// click={getPhnxRevenue}
+						imageSrc="/images/icons/PHNX.png"
+						header="Phnx Revenue"
+						value={phnxRevenue + "PHNX"}
+						profit={phnxChange}
+						diffrence={phnxDifference}
+						entity="PHNX"
+						days={timeStamp}
+
 					/>
 					<Card
 						color="#963AE2"
 						click={getSoldTickets}
-						imageSrc="/images/icons/Dollar.png"
-						header="Dollar Revenue"
-						value="$2640"
-						profit="10%"
+						imageSrc="/images/icons/Events.png"
+						header="Tickets Sold"
+						value={soldTicket}
+						profit={ticketSoldChange}
+						diffrence={ticketDifference}
+						entity="Tickets"
+						days={timeStamp}
+
 					/>
 				</Grid>
 				<Grid container style={{ margin: "70px 0px" }}>
 					<Line data={data} options={chartOptions} />
 				</Grid>
-				<EventsAnalytics userDetails={userDetails} />
+				<EventsAnalytics userDetails={userDetails} createdEvents={eventName.length} ticketBought={ticketBought} />
 				<Grid className={classes.box}>
 					<Grid className={classes.row}>
 						<Grid className={classes.row}>
@@ -568,25 +623,17 @@ const Analytics = (props, context) => {
 								<Select
 									native
 									// value={state.age}
-									// onChange={handleChange}
+									onChange={handleEvent}
 									inputProps={{
 										name: "age",
 										id: "outlined-age-native-simple",
 									}}
 								>
-									<option value="Today">Devfest</option>
-									<option aria-label="None" value="Yesterday">
-										Yesterday
-									</option>
-									<option value="Last 7 Days">
-										Last 7 Days
-									</option>
-									<option value="Last 28 Days">
-										Last 28 Days
-									</option>
-									<option value="Last 90 Days">
-										Last 90 Days
-									</option>
+									{
+										eventName.map((event) => {
+											return <option value={event.eventId}>{event.name}</option>
+										})
+									}
 								</Select>
 							</FormControl>
 						</Grid>
@@ -624,15 +671,14 @@ const Analytics = (props, context) => {
 							<Select
 								native
 								// value={state.age}
-								// onChange={handleChange}
+								onChange={handleRevenue}
 								inputProps={{
 									name: "age",
 									id: "outlined-age-native-simple",
 								}}
 							>
-								<option value="Dollar">Dollar</option>
-
-								<option value="PHNX">PHNX</option>
+								<option value="eventRevenueInPhnx">PHNX</option>
+								<option value="eventRevenueInDollar">Dollar</option>
 							</Select>
 						</FormControl>
 					</Grid>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./detailform.css";
 import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import DialogueBox from "../common/DialogueBox";
@@ -6,6 +6,8 @@ import { drizzleConnect } from "drizzle-react";
 import { updateUserDetails } from "../../config/serverAPIs";
 import PropTypes from "prop-types";
 import IdentityForm from "./identityform";
+import Tooltip from "@material-ui/core/Tooltip";
+
 const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
 	const [organizer, setOrganizer] = useState("");
@@ -13,6 +15,14 @@ const DetailForm = (props) => {
 	const [alternateCurrency, setAlternateCurrency] = useState("Dollar");
 	const [file, setFile] = useState({});
 	const [nextForm, setNextForm] = useState(false);
+	const orgref = useRef(null);
+	const [copytext, setCopyText] = useState("Copy");
+
+	const handleCopy = (value) => {
+		navigator.clipboard.writeText(value);
+		setCopyText("Copied!");
+	};
+
 	const handleOpen = () => {
 		setOpen(true);
 	};
@@ -22,7 +32,8 @@ const DetailForm = (props) => {
 		setOpen(false);
 	};
 
-	const updateUserInfo = () => {
+	const updateUserInfo = (e) => {
+		e.preventDefault();
 		updateUserDetails({
 			address: props.account,
 			networkId: props.networkId,
@@ -34,22 +45,15 @@ const DetailForm = (props) => {
 		});
 	};
 
-	const uploadImage = () => {
-		const data = new FormData();
-		data.append("file", file);
-		data.append("upload_preset", "event-dapp"); //will be decided when conifiguring
-		data.append("cloud_name", "breellz"); //will be decided when configuring
-		fetch("  https://api.cloudinary.com/v1_1/breellz/image/upload", {
-			method: "post",
-			body: data,
-		})
-			.then((resp) => resp.json())
-			.then((data) => {
-				console.log(data);
-				// setUrl(data.url);
-			})
-			.catch((err) => console.log(err));
-	};
+	// const orgDetails = (e) => {
+	// 	// if (e.target.value.split(" ").length <= 500) {
+	// 	// 	orgref.current.enabled;
+	// 	setOrganizer(e.target.value);
+	// 	// } else {
+	// 	// 	e.preventDefault();
+	// 	// 	console.log("Length of organizer details exceeded");
+	// 	// }
+	// };
 
 	const currency = [
 		{ name: "Dollar", flag: "" },
@@ -58,6 +62,7 @@ const DetailForm = (props) => {
 	].map((data) => {
 		return <option value={data.name}>{data.name}</option>;
 	});
+
 	return (
 		<div className="dtl-hldr">
 			<div className="acc-basic-info">
@@ -66,10 +71,12 @@ const DetailForm = (props) => {
 				</div>
 				<div className="acc-title-hlder">
 					<p className="acc-title"> Bennu </p>
-					<CreateOutlinedIcon
-						onClick={handleOpen}
-						style={{ color: "blueviolet", width: "20px" }}
-					/>
+					<div className="redirect-img-hldr">
+						<img
+							className="redirect-img"
+							src="/images/redirect.svg"
+						/>
+					</div>
 				</div>
 			</div>
 			<div className="acc-form-hldr">
@@ -77,7 +84,28 @@ const DetailForm = (props) => {
 					<div className="acc-form-prt">
 						<div className="frm-single">
 							<p className="acc-inpt-heading">WALLET ADDRESS</p>
-							<input className="acc-inpt" value={props.account} />
+							<div className="acc-wallet-input-holder">
+								<div style={{ width: "100%" }}>
+									<input
+										className="acc-inpt"
+										value={props.account}
+									/>
+								</div>
+								<Tooltip title={copytext} arrow>
+									<div
+										className="acc-copy-img-holder"
+										onMouseEnter={() => setCopyText("Copy")}
+										onClick={() => {
+											handleCopy(props.account);
+										}}
+									>
+										<img
+											className="acc-copy-img"
+											src="/images/copy.svg"
+										/>
+									</div>
+								</Tooltip>
+							</div>
 						</div>
 					</div>
 					<div className="acc-form-prt">
@@ -96,7 +124,7 @@ const DetailForm = (props) => {
 							</select>
 						</div>
 					</div>
-					<div className="acc-form-prt">
+					<div className="acc-form-prt" style={{ marginTop: "70px" }}>
 						<div>
 							<h6 className="org-heading">Organizer details</h6>
 							<p className="org-subheading">
@@ -114,9 +142,11 @@ const DetailForm = (props) => {
 								rows="4"
 								cols="50"
 								onChange={(e) => setOrganizer(e.target.value)}
+								ref={orgref}
+								maxLength="500"
 							></textarea>
 							<p className="org-subheading">
-								Not more than 500 words.
+								Not more than 500 characters.
 							</p>
 						</div>
 					</div>
