@@ -312,9 +312,8 @@ class FindEvents extends Component {
 			this.setState({
 				hideEvent: get.data.result,
 			});
-			console.log("hide event",this.state.hideEvent);
+			console.log("hide event", this.state.hideEvent);
 			return;
-
 		} catch (error) {
 			console.log("check error", error);
 		}
@@ -715,7 +714,10 @@ class FindEvents extends Component {
 
 					<div>
 						<div className="row row_mobile">
-							<h2 className="col-lg-10 col-md-9 col-sm-8">
+							<h2
+								className="col-lg-10 col-md-9 col-sm-8"
+								// style={{ fontWeight: "bold" }}
+							>
 								{/* <i className="fa fa-calendar-alt"></i>  */}
 								All Events
 							</h2>
