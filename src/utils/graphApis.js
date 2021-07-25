@@ -125,21 +125,7 @@ export async function getTimeData(owner) {
 	});
 	console.log("getTimeData > ", timeDataArr);
 	let newTimeDataArr = [];
-	// console.log("timedataarr", timeDataArr);
-	// console.log(date1, date2, date1 - date2);
-	// let hldrArray = [];
-	// let j = 0;
-	// let i = Number(timeDataArr[0].dayStartTimeStamp);
-	// let final = Number(timeDataArr[timeDataArr.length - 1].dayStartTimeStamp);
-	// while (i < final && j < timeDataArr.length) {
-	// 	if (
-	// 		j + 1 < timeDataArr.length &&
-	// 		Number(timeDataArr[j].dayStartTimeStamp) + 84600 !==
-	// 			timeDataArr[j + 1].dayStartTimeStamp
-	// 	) {
-    //         if()
-	// 	}
-	// }
+	console.log("timedataarr", timeDataArr);
 	timeDataArr.forEach((timeData, i) => {
 		console.log("timeData", timeData);
 		newTimeDataArr.push(timeData);
@@ -166,6 +152,38 @@ export async function getTimeData(owner) {
 			});
 		}
 	}, timeDataArr);
+	let max = newTimeDataArr.length;
+	for (let i = 0; i < max; i++) {
+		if (i + 1 < max) {
+			if (
+				Number(newTimeDataArr[i].dayStartTimeStamp) ===
+				Number(newTimeDataArr[i + 1].dayStartTimeStamp)
+			) {
+				continue;
+			}
+			if (
+				Number(newTimeDataArr[i].dayStartTimeStamp) + 86400 !==
+				Number(newTimeDataArr[i + 1].dayStartTimeStamp)
+			) {
+				const hldr =
+						Number(newTimeDataArr[i].dayStartTimeStamp) + 86400;
+					// newTimeDataObj[hldr] = {
+					// 	dayStartTimeStamp: hldr,
+					// 	eventId: "0",
+					// 	soldTicketsInDay: "0",
+					// 	totalDollarRevenueInDay: "0",
+					// 	totalPhnxRevenueInDay: "0",
+					// };
+					newTimeDataArr.splice(i + 1, 0, {
+						dayStartTimeStamp: hldr,
+						eventId: "0",
+						soldTicketsInDay: "0",
+						totalDollarRevenueInDay: "0",
+						totalPhnxRevenueInDay: "0",
+					});
+			}
+		}
+	}
 	console.log(newTimeDataArr);
 	return newTimeDataArr;
 }
