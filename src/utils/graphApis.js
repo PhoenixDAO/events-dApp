@@ -105,23 +105,24 @@ export async function getTimeData(owner) {
 		data: {
 			query: `
             {
-                ownerDayDatas(where:{owner:"${owner}" } orderBy:dayStartTimeStamp orderDirection:asc)
+                ownerDayDatas(where:{owner:"${owner}" } orderBy: startTimeStamp orderDirection:asc)
                 {
                   eventId
-                  dayStartTimeStamp
-                  soldTicketsInDay
-                  totalPhnxRevenueInDay
-                  totalDollarRevenueInDay
+                  startTimeStamp
+                  soldTickets
+                  totalPhnxRevenue
+                  totalDollarRevenue
                 }
               }`,
 		},
 	});
 
 	let totalDollarRevenue = 0;
+	console.log(result)
 	const timeDataArr = result.data.data.ownerDayDatas;
 	timeDataArr.forEach((event) => {
 		console.log("event", event);
-		totalDollarRevenue += Number(event.totalDollarRevenueInDay);
+		totalDollarRevenue += Number(event.totalDollarRevenue);
 	});
 	console.log("getTimeData > ", timeDataArr);
 	let newTimeDataArr = [];
@@ -129,26 +130,26 @@ export async function getTimeData(owner) {
 	timeDataArr.forEach((timeData, i) => {
 		console.log("timeData", timeData);
 		newTimeDataArr.push(timeData);
-		// const { dayStartTimeStamp } = timeData;
+		// const { startTimeStamp } = timeData;
 		if (
 			i + 1 < timeDataArr.length &&
-			Number(timeData.dayStartTimeStamp) + 86400 !=
-				timeDataArr[i + 1].dayStartTimeStamp
+			Number(timeData.startTimeStamp) + 86400 !=
+				timeDataArr[i + 1].startTimeStamp
 		) {
-			// skip loop if the current and next dayStartTimestamp are same
+			// skip loop if the current and next startTimeStamp are same
 			if (
-				Number(timeDataArr[i].dayStartTimeStamp) ==
-				Number(timeDataArr[i + 1].dayStartTimeStamp)
+				Number(timeDataArr[i].startTimeStamp) ==
+				Number(timeDataArr[i + 1].startTimeStamp)
 			) {
 				return;
 			}
 			newTimeDataArr.push({
-				dayStartTimeStamp:
-					Number(timeDataArr[i + 1].dayStartTimeStamp) + 86400,
+				startTimeStamp:
+					Number(timeDataArr[i + 1].startTimeStamp) + 86400,
 				eventId: "0",
-				soldTicketsInDay: "0",
-				totalDollarRevenueInDay: "0",
-				totalPhnxRevenueInDay: "0",
+				soldTickets: "0",
+				totalDollarRevenue: "0",
+				totalPhnxRevenue: "0",
 			});
 		}
 	}, timeDataArr);
@@ -156,30 +157,30 @@ export async function getTimeData(owner) {
 	for (let i = 0; i < max; i++) {
 		if (i + 1 < max) {
 			if (
-				Number(newTimeDataArr[i].dayStartTimeStamp) ===
-				Number(newTimeDataArr[i + 1].dayStartTimeStamp)
+				Number(newTimeDataArr[i].startTimeStamp) ===
+				Number(newTimeDataArr[i + 1].startTimeStamp)
 			) {
 				continue;
 			}
 			if (
-				Number(newTimeDataArr[i].dayStartTimeStamp) + 86400 !==
-				Number(newTimeDataArr[i + 1].dayStartTimeStamp)
+				Number(newTimeDataArr[i].startTimeStamp) + 86400 !==
+				Number(newTimeDataArr[i + 1].startTimeStamp)
 			) {
 				const hldr =
-					Number(newTimeDataArr[i].dayStartTimeStamp) + 86400;
+					Number(newTimeDataArr[i].startTimeStamp) + 86400;
 				// newTimeDataObj[hldr] = {
-				// 	dayStartTimeStamp: hldr,
+				// 	startTimeStamp: hldr,
 				// 	eventId: "0",
-				// 	soldTicketsInDay: "0",
-				// 	totalDollarRevenueInDay: "0",
-				// 	totalPhnxRevenueInDay: "0",
+				// 	soldTickets: "0",
+				// 	totalDollarRevenue: "0",
+				// 	totalPhnxRevenue: "0",
 				// };
 				newTimeDataArr.splice(i + 1, 0, {
-					dayStartTimeStamp: hldr,
+					startTimeStamp: hldr,
 					eventId: "0",
-					soldTicketsInDay: "0",
-					totalDollarRevenueInDay: "0",
-					totalPhnxRevenueInDay: "0",
+					soldTickets: "0",
+					totalDollarRevenue: "0",
+					totalPhnxRevenue: "0",
 				});
 			}
 		}
@@ -195,13 +196,13 @@ export async function getTodayData(owner, timestamp) {
 		data: {
 			query: `
             {
-				ownerHourDatas(where:{owner:"${owner}"} hourStartTimeStamp_gte: ${timestamp} orderBy:hourStartTimeStamp orderDirection:asc)
+				ownerHourDatas(where:{owner:"${owner}"} startTimeStamp_gte: ${timestamp} orderBy:startTimeStamp orderDirection:asc)
                 {
-                  eventId
-                  hourStartTimeStamp
-                  soldTicketsInHour
-                  totalPhnxRevenueInHour
-                  totalDollarRevenueInHour
+					eventId
+					startTimeStamp
+					soldTickets
+					totalPhnxRevenue
+					totalDollarRevenue
                 }
               }`,
 		},
@@ -212,7 +213,7 @@ export async function getTodayData(owner, timestamp) {
 	const timeDataArr = result.data.data.ownerHourDatas
 	timeDataArr.forEach((event) => {
 		console.log("event", event);
-		totalDollarRevenue += Number(event.totalDollarRevenueInDay);
+		totalDollarRevenue += Number(event.totalDollarRevenue);
 	});
 	console.log("getTimeData > ", timeDataArr);
 	let newTimeDataArr = [];
@@ -220,60 +221,60 @@ export async function getTodayData(owner, timestamp) {
 	timeDataArr.forEach((timeData, i) => {
 		console.log("timeData", timeData);
 		newTimeDataArr.push(timeData);
-		// const { hourStartTimeStamp } = timeData;
+		// const { startTimeStamp } = timeData;
 		if (
 			i + 1 < timeDataArr.length &&
-			Number(timeData.hourStartTimeStamp) + 3600 !=
-				timeDataArr[i + 1].hourStartTimeStamp
+			Number(timeData.startTimeStamp) + 3600 !=
+				timeDataArr[i + 1].startTimeStamp
 		) {
-			// skip loop if the current and next hourStartTimeStamp are same
+			// skip loop if the current and next startTimeStamp are same
 			if (
-				Number(timeDataArr[i].hourStartTimeStamp) ==
-				Number(timeDataArr[i + 1].hourStartTimeStamp)
+				Number(timeDataArr[i].startTimeStamp) ==
+				Number(timeDataArr[i + 1].startTimeStamp)
 			) {
 				return;
 			}
 			newTimeDataArr.push({
-				hourStartTimeStamp:
-					Number(timeDataArr[i + 1].hourStartTimeStamp) + 3600,
+				startTimeStamp:
+					Number(timeDataArr[i + 1].startTimeStamp) + 3600,
 				eventId: "0",
-				soldTicketsInDay: "0",
-				totalDollarRevenueInDay: "0",
-				totalPhnxRevenueInDay: "0",
+				soldTickets: "0",
+				totalDollarRevenue: "0",
+				totalPhnxRevenue: "0",
 			});
 		}
 	}, timeDataArr);
-	// let max = newTimeDataArr.length;
-	// for (let i = 0; i < max; i++) {
-	// 	if (i + 1 < max) {
-	// 		if (
-	// 			Number(newTimeDataArr[i].dayStartTimeStamp) ===
-	// 			Number(newTimeDataArr[i + 1].dayStartTimeStamp)
-	// 		) {
-	// 			continue;
-	// 		}
-	// 		if (
-	// 			Number(newTimeDataArr[i].dayStartTimeStamp) + 3600 !==
-	// 			Number(newTimeDataArr[i + 1].dayStartTimeStamp)
-	// 		) {
-	// 			const hldr = Number(newTimeDataArr[i].dayStartTimeStamp) + 3600;
-	// 			// newTimeDataObj[hldr] = {
-	// 			// 	dayStartTimeStamp: hldr,
-	// 			// 	eventId: "0",
-	// 			// 	soldTicketsInDay: "0",
-	// 			// 	totalDollarRevenueInDay: "0",
-	// 			// 	totalPhnxRevenueInDay: "0",
-	// 			// };
-	// 			newTimeDataArr.splice(i + 1, 0, {
-	// 				dayStartTimeStamp: hldr,
-	// 				eventId: "0",
-	// 				soldTicketsInDay: "0",
-	// 				totalDollarRevenueInDay: "0",
-	// 				totalPhnxRevenueInDay: "0",
-	// 			});
-	// 		}
-	// 	}
-	// }
+	let max = newTimeDataArr.length;
+	for (let i = 0; i < max; i++) {
+		if (i + 1 < max) {
+			if (
+				Number(newTimeDataArr[i].startTimeStamp) ===
+				Number(newTimeDataArr[i + 1].startTimeStamp)
+			) {
+				continue;
+			}
+			if (
+				Number(newTimeDataArr[i].startTimeStamp) + 3600 !==
+				Number(newTimeDataArr[i + 1].startTimeStamp)
+			) {
+				const hldr = Number(newTimeDataArr[i].startTimeStamp) + 3600;
+				// newTimeDataObj[hldr] = {
+				// 	startTimeStamp: hldr,
+				// 	eventId: "0",
+				// 	soldTickets: "0",
+				// 	totalDollarRevenue: "0",
+				// 	totalPhnxRevenue: "0",
+				// };
+				newTimeDataArr.splice(i + 1, 0, {
+					startTimeStamp: hldr,
+					eventId: "0",
+					soldTickets: "0",
+					totalDollarRevenue: "0",
+					totalPhnxRevenue: "0",
+				});
+			}
+		}
+	}
 	console.log(newTimeDataArr);
 	return newTimeDataArr;
 }
@@ -284,26 +285,26 @@ export async function getTodayData(owner, timestamp) {
 // ​
 //     timeDataArr.forEach((timeData, i) => {
 //       newTimeDataArr.push(timeData);
-//       const { dayStartTimeStamp } = timeData;
+//       const { startTimeStamp } = timeData;
 // ​
 //       if (
-//         Number(dayStartTimeStamp) + 86400 !=
-//           timeDataArr[i + 1]?.dayStartTimeStamp &&
+//         Number(startTimeStamp) + 86400 !=
+//           timeDataArr[i + 1]?.startTimeStamp &&
 //         i + 1 < timeDataArr.length
 //       ) {
-//         // skip loop if the current and next dayStartTimestamp are same
+//         // skip loop if the current and next startTimeStamp are same
 //         if (
-//           Number(dayStartTimeStamp) == timeDataArr[i + 1]?.dayStartTimeStamp
+//           Number(startTimeStamp) == timeDataArr[i + 1]?.startTimeStamp
 //         ) {
 //           return;
 //         }
 // ​
 //         newTimeDataArr.push({
-//           dayStartTimeStamp: Number(dayStartTimeStamp) + 86400,
+//           startTimeStamp: Number(startTimeStamp) + 86400,
 //           eventId: "0",
-//           soldTicketsInDay: "0",
-//           totalDollarRevenueInDay: "0",
-//           totalPhnxRevenueInDay: "0",
+//           soldTickets: "0",
+//           totalDollarRevenue: "0",
+//           totalPhnxRevenue: "0",
 //         });
 //       }
 //     }, timeDataArr);

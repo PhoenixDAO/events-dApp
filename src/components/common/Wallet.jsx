@@ -5,13 +5,47 @@ const Wallet = () => {
 	const walletManager = [
 		{
 			img: "/images/metawallet.svg",
-			name: "Metamask"
-		}
+			name: "Metamask",
+			coming: false,
+		},
+		{
+			img: "/images/ledgerwallet.svg",
+			name: "Ledger",
+			coming: true,
+		},
+		{
+			img: "/images/connectwallet.svg",
+			name: "Wallet Connect",
+			coming: true,
+		},
+		{
+			img: "/images/coinbasewallet.svg",
+			name: "Coinbase Wallet",
+			coming: true,
+		},
 	].map((data) => {
 		return (
 			<div className="wallets-single">
-				<img className="wallets-img" src={data} />
-				<hr />
+				<div className="wallets-first">
+					<div className="wallets-img-hldr">
+						<img className="wallets-img" src={data.img} />
+					</div>
+					<div className="wallets-name-hldr">
+						<span className="wallets-name">{data.name}</span>
+					</div>
+				</div>
+				<div className="wallets-second">
+					{data.coming ? (
+						<div className="coming-hldr"> COMING SOON</div>
+					) : (
+						<div className="right-arrow-img-hldr">
+							<img
+								className="right-arrow-img"
+								src="/images/arrowright.svg"
+							/>
+						</div>
+					)}
+				</div>
 			</div>
 		);
 	});
@@ -33,6 +67,9 @@ const Wallet = () => {
 				<p className="wallets-subheading">Connect to Ethereum Wallet</p>
 			</div>
 			<div className="wallet-main-hldr">{walletManager}</div>
+			<div>
+				<p className="wallets-footer">By connecting, I accept PhoenixDAO’s <span style={{color:"#413AE2"}}>Terms of service</span> </p>
+			</div>
 		</div>
 	);
 };

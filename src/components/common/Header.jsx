@@ -106,7 +106,7 @@ const Header = ({
 					</Button>
 				</div>
 			) : null}
-			<DialogueBox open={open} handleClose={handleClose} maxWidth="sm">
+			<DialogueBox open={open} handleClose={handleClose} maxWidth="xs">
 				{/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}
 				<Wallet />
 			</DialogueBox>
