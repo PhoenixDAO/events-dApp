@@ -715,7 +715,10 @@ class FindEvents extends Component {
 
 					<div>
 						<div className="row row_mobile">
-							<h2 className="col-lg-10 col-md-9 col-sm-8">
+							<h2
+								className="col-lg-10 col-md-9 col-sm-8"
+								// style={{ fontWeight: "bold" }}
+							>
 								{/* <i className="fa fa-calendar-alt"></i>  */}
 								All Events
 							</h2>
