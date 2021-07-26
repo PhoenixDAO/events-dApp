@@ -2621,3 +2621,18 @@ canvas#doughnut {
     font-size: 0px;
     z-index: 1;
 }
+
+.wallets-head{
+    display: flex;
+	justify-content: center;
+}
+
+.wallets-heading{
+    margin-left: 10px;
+}
+
+.wallets-subheading{
+    text-align: center;
+    font-weight: bold;
+    color: #413AE2;
+}

@@ -166,21 +166,21 @@ export async function getTimeData(owner) {
 				Number(newTimeDataArr[i + 1].dayStartTimeStamp)
 			) {
 				const hldr =
-						Number(newTimeDataArr[i].dayStartTimeStamp) + 86400;
-					// newTimeDataObj[hldr] = {
-					// 	dayStartTimeStamp: hldr,
-					// 	eventId: "0",
-					// 	soldTicketsInDay: "0",
-					// 	totalDollarRevenueInDay: "0",
-					// 	totalPhnxRevenueInDay: "0",
-					// };
-					newTimeDataArr.splice(i + 1, 0, {
-						dayStartTimeStamp: hldr,
-						eventId: "0",
-						soldTicketsInDay: "0",
-						totalDollarRevenueInDay: "0",
-						totalPhnxRevenueInDay: "0",
-					});
+					Number(newTimeDataArr[i].dayStartTimeStamp) + 86400;
+				// newTimeDataObj[hldr] = {
+				// 	dayStartTimeStamp: hldr,
+				// 	eventId: "0",
+				// 	soldTicketsInDay: "0",
+				// 	totalDollarRevenueInDay: "0",
+				// 	totalPhnxRevenueInDay: "0",
+				// };
+				newTimeDataArr.splice(i + 1, 0, {
+					dayStartTimeStamp: hldr,
+					eventId: "0",
+					soldTicketsInDay: "0",
+					totalDollarRevenueInDay: "0",
+					totalPhnxRevenueInDay: "0",
+				});
 			}
 		}
 	}
@@ -188,6 +188,95 @@ export async function getTimeData(owner) {
 	return newTimeDataArr;
 }
 
+export async function getTodayData(owner, timestamp) {
+	let result = await axios({
+		url: graphURL,
+		method: "post",
+		data: {
+			query: `
+            {
+				ownerHourDatas(where:{owner:"${owner}"} hourStartTimeStamp_gte: ${timestamp} orderBy:hourStartTimeStamp orderDirection:asc)
+                {
+                  eventId
+                  hourStartTimeStamp
+                  soldTicketsInHour
+                  totalPhnxRevenueInHour
+                  totalDollarRevenueInHour
+                }
+              }`,
+		},
+	});
+
+	let totalDollarRevenue = 0;
+	console.log(result.data.data.ownerHourDatas)
+	const timeDataArr = result.data.data.ownerHourDatas
+	timeDataArr.forEach((event) => {
+		console.log("event", event);
+		totalDollarRevenue += Number(event.totalDollarRevenueInDay);
+	});
+	console.log("getTimeData > ", timeDataArr);
+	let newTimeDataArr = [];
+	console.log("timedataarr", timeDataArr);
+	timeDataArr.forEach((timeData, i) => {
+		console.log("timeData", timeData);
+		newTimeDataArr.push(timeData);
+		// const { hourStartTimeStamp } = timeData;
+		if (
+			i + 1 < timeDataArr.length &&
+			Number(timeData.hourStartTimeStamp) + 3600 !=
+				timeDataArr[i + 1].hourStartTimeStamp
+		) {
+			// skip loop if the current and next hourStartTimeStamp are same
+			if (
+				Number(timeDataArr[i].hourStartTimeStamp) ==
+				Number(timeDataArr[i + 1].hourStartTimeStamp)
+			) {
+				return;
+			}
+			newTimeDataArr.push({
+				hourStartTimeStamp:
+					Number(timeDataArr[i + 1].hourStartTimeStamp) + 3600,
+				eventId: "0",
+				soldTicketsInDay: "0",
+				totalDollarRevenueInDay: "0",
+				totalPhnxRevenueInDay: "0",
+			});
+		}
+	}, timeDataArr);
+	// let max = newTimeDataArr.length;
+	// for (let i = 0; i < max; i++) {
+	// 	if (i + 1 < max) {
+	// 		if (
+	// 			Number(newTimeDataArr[i].dayStartTimeStamp) ===
+	// 			Number(newTimeDataArr[i + 1].dayStartTimeStamp)
+	// 		) {
+	// 			continue;
+	// 		}
+	// 		if (
+	// 			Number(newTimeDataArr[i].dayStartTimeStamp) + 3600 !==
+	// 			Number(newTimeDataArr[i + 1].dayStartTimeStamp)
+	// 		) {
+	// 			const hldr = Number(newTimeDataArr[i].dayStartTimeStamp) + 3600;
+	// 			// newTimeDataObj[hldr] = {
+	// 			// 	dayStartTimeStamp: hldr,
+	// 			// 	eventId: "0",
+	// 			// 	soldTicketsInDay: "0",
+	// 			// 	totalDollarRevenueInDay: "0",
+	// 			// 	totalPhnxRevenueInDay: "0",
+	// 			// };
+	// 			newTimeDataArr.splice(i + 1, 0, {
+	// 				dayStartTimeStamp: hldr,
+	// 				eventId: "0",
+	// 				soldTicketsInDay: "0",
+	// 				totalDollarRevenueInDay: "0",
+	// 				totalPhnxRevenueInDay: "0",
+	// 			});
+	// 		}
+	// 	}
+	// }
+	console.log(newTimeDataArr);
+	return newTimeDataArr;
+}
 // getTimeData("0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b")
 //   .then((timeDataArr) => {
 //     console.log("getTimeData > ", timeDataArr);

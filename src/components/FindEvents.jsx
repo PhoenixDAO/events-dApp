@@ -312,9 +312,8 @@ class FindEvents extends Component {
 			this.setState({
 				hideEvent: get.data.result,
 			});
-			console.log("hide event",this.state.hideEvent);
+			console.log("hide event", this.state.hideEvent);
 			return;
-
 		} catch (error) {
 			console.log("check error", error);
 		}
@@ -323,15 +322,16 @@ class FindEvents extends Component {
 	onTabChange = (event, newValue) => {
 		this.setState({ selectedTab: newValue });
 	};
-	async componentWillMount() {
-		let eventCount = await this.props.eventsContract.methods
-			.getEventsCount()
-			.call();
-		console.log("event contract", this.props.eventsContract);
-		if (eventCount) {
-			this.setState({ eventCount });
-		}
-	}
+	// async componentDidMount() {
+	// 	console.log("props", this.props);
+	// 	let eventCount = await this.props.eventsContract.methods
+	// 		.getEventsCount()
+	// 		.call();
+	// 	console.log("event contract", this.props.eventsContract);
+	// 	if (eventCount) {
+	// 		this.setState({ eventCount });
+	// 	}
+	// }
 
 	render() {
 		//when user is not connectd hide connect wallet button
@@ -810,6 +810,14 @@ class FindEvents extends Component {
 	}
 
 	async componentDidMount() {
+		console.log("props", this.props);
+		// let eventCount = await this.props.eventsContract.methods
+		// 	.getEventsCount()
+		// 	.call();
+		// console.log("event contract", this.props.eventsContract);
+		// if (eventCount) {
+		// 	this.setState({ eventCount });
+		// }
 		if (this.state.prevPath == -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}

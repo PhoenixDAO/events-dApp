@@ -480,6 +480,7 @@ class Event extends Component {
 			let myEventStatURL = "/event-stat/" + pagetitle + "/" + this.props.id;
 			let myEvent = false;
 			if (
+				this.account !== undefined &&
 				event_data.owner.toLowerCase() == this.account.toLowerCase()
 			) {
 				myEvent = true;
