@@ -3,6 +3,10 @@ import "./alreadyform.css";
 import roundlogo from "../Images/roundlogo.svg";
 
 const AlreadyForm = (props) => {
+	const closeForm=(e)=>{
+		e.preventDefault()
+		props.handleClose()
+	}
 	return (
 		<div className="idn-hldr">
 			<div className="idn-head">
@@ -41,7 +45,7 @@ const AlreadyForm = (props) => {
 			<div>
 				<button
 					className="already-select-btn"
-					// onClick={() => handleNextForm(true)}
+					onClick={closeForm}
 				>
 					Enter Events Dapp
 				</button>

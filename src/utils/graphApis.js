@@ -118,8 +118,18 @@ export async function getTimeData(owner) {
 	});
 
 	let totalDollarRevenue = 0;
-	console.log(result)
+	console.log(result);
 	const timeDataArr = result.data.data.ownerDayDatas;
+	// if (timeDataArr.length === 0) {
+	// 	timeDataArr.push({
+	// 		startTimeStamp: Number(timestamp),
+	// 		eventId: "0",
+	// 		soldTickets: "0",
+	// 		totalDollarRevenue: "0",
+	// 		totalPhnxRevenue: "0",
+	// 	});
+	// 	return timeDataArr;
+	// }
 	timeDataArr.forEach((event) => {
 		console.log("event", event);
 		totalDollarRevenue += Number(event.totalDollarRevenue);
@@ -166,8 +176,7 @@ export async function getTimeData(owner) {
 				Number(newTimeDataArr[i].startTimeStamp) + 86400 !==
 				Number(newTimeDataArr[i + 1].startTimeStamp)
 			) {
-				const hldr =
-					Number(newTimeDataArr[i].startTimeStamp) + 86400;
+				const hldr = Number(newTimeDataArr[i].startTimeStamp) + 86400;
 				// newTimeDataObj[hldr] = {
 				// 	startTimeStamp: hldr,
 				// 	eventId: "0",
@@ -196,7 +205,7 @@ export async function getTodayData(owner, timestamp) {
 		data: {
 			query: `
             {
-				ownerHourDatas(where:{owner:"${owner}"} startTimeStamp_gte: ${timestamp} orderBy:startTimeStamp orderDirection:asc)
+				ownerHourDatas(where:{owner:"${owner}" startTimeStamp_gte: ${timestamp} } orderBy:startTimeStamp orderDirection:asc)
                 {
 					eventId
 					startTimeStamp
@@ -209,8 +218,18 @@ export async function getTodayData(owner, timestamp) {
 	});
 
 	let totalDollarRevenue = 0;
-	console.log(result.data.data.ownerHourDatas)
-	const timeDataArr = result.data.data.ownerHourDatas
+	console.log(result.data.data.ownerHourDatas);
+	const timeDataArr = result.data.data.ownerHourDatas;
+	if (timeDataArr.length === 0) {
+		timeDataArr.push({
+			startTimeStamp: Number(timestamp),
+			eventId: "0",
+			soldTickets: "0",
+			totalDollarRevenue: "0",
+			totalPhnxRevenue: "0",
+		});
+		return timeDataArr;
+	}
 	timeDataArr.forEach((event) => {
 		console.log("event", event);
 		totalDollarRevenue += Number(event.totalDollarRevenue);
