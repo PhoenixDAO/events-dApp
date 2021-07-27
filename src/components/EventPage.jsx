@@ -10,7 +10,11 @@ import {
 	Select,
 	IconButton,
 } from "@material-ui/core";
-import { ShoppingCartOutlined, ModeCommentOutlined } from "@material-ui/icons";
+import {
+	ShoppingCartOutlined,
+	ModeCommentOutlined,
+	ContactlessOutlined,
+} from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
@@ -32,14 +36,23 @@ import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
 import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
-import { INFURA_WEB_URL, graphURL,explorerWithTX, explorerWithAddress  } from "../config/const.js";
+import {
+	INFURA_WEB_URL,
+	graphURL,
+	explorerWithTX,
+	explorerWithAddress,
+} from "../config/const.js";
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import BuyTicket from "./common/BuyTicket";
 import { updateEventViews } from "../config/serverAPIs";
-import  Header  from "./common/Header";
-import {generateBuyerArr} from "../utils/graphApis";
+import Header from "./common/Header";
+import { generateBuyerArr } from "../utils/graphApis";
+import RichTextEditor from "react-rte";
+import BodyTextEditor from "./common/BodyTextEditor";
+
 let numeral = require("numeral");
+var moment = require("moment");
 
 const customStyles = {
 	ul: {
@@ -146,14 +159,14 @@ const styles = (theme) => ({
 		marginBottom: "80px",
 	},
 	row: {
-		marginTop: "40px"
+		marginTop: "40px",
 	},
 	heading: {
 		borderBottom: "1px solid #E4E4E7",
 		fontWeight: "700",
 		color: "black",
 		paddingBottom: "10px",
-		marginBottom: "20px"
+		marginBottom: "20px",
 	},
 	avatar: {
 		display: "inline-block",
@@ -162,8 +175,8 @@ const styles = (theme) => ({
 		padding: "6px",
 		background: "white",
 		marginRight: "7px",
-		marginTop: "-4px"
-	}
+		marginTop: "-4px",
+	},
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -179,7 +192,11 @@ class EventPage extends Component {
 		// } catch (e) { }
 		super(props);
 		// this.contracts = context.drizzle.contracts;
-		console.log("contracts in eventsPage", props.eventsContract, props.phnxContract)
+		console.log(
+			"contracts in eventsPage",
+			props.eventsContract,
+			props.phnxContract
+		);
 		this.account = this.props.accounts[0];
 		this.state = {
 			blockChainEventLoaded: false,
@@ -201,7 +218,21 @@ class EventPage extends Component {
 			approve: "",
 			pageTransactions: [],
 			approvalGranted: false,
-			selectedCategoryIndex: 0
+			selectedCategoryIndex: 0,
+			//new ipfs data
+			image0: null,
+			image1: null,
+			image2: null,
+			eventOrganizer: null,
+			eventDate: null,
+			eventStartDate: null,
+			eventEndDate: null,
+			eventStartTime: null,
+			eventEndTime: null,
+			eventTime: null,
+			eventType: null,
+			eventDescription: null,
+			eventLocation: null,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -270,26 +301,40 @@ class EventPage extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				console.log("GraphQL query response of events in eventPage", graphEvents.data.data.events[0])
+				console.log(
+					"GraphQL query response of events in eventPage",
+					graphEvents.data.data.events[0]
+				);
 				this.setState({
 					blockChainEvent: graphEvents.data.data.events[0],
 					blockChainEventLoaded: true,
-					load:false
+					load: false,
 				});
 				this.updateIPFS();
-				console.log("updateEvent eventId",graphEvents.data.data.events[0].eventId,"updateEvent address",graphEvents.data.data.events[0].owner,"updateEvent networkId",this.props.networkId)
+				console.log(
+					"updateEvent eventId",
+					graphEvents.data.data.events[0].eventId,
+					"updateEvent address",
+					graphEvents.data.data.events[0].owner,
+					"updateEvent networkId",
+					this.props.networkId
+				);
 				updateEventViews({
 					eventId: graphEvents.data.data.events[0].eventId,
 					address: graphEvents.data.data.events[0].owner,
 					networkId: this.props.networkId,
 				});
-			}).catch((err) => {
-				console.log("Error in GraphQL query response of events in eventPage", err)
+			})
+			.catch((err) => {
+				console.log(
+					"Error in GraphQL query response of events in eventPage",
+					err
+				);
 				this.setState({
 					blockChainEvent: {},
 					blockChainEventLoaded: true,
 				});
-			})
+			});
 	}
 
 	//Get SoldTicket Data
@@ -458,10 +503,25 @@ class EventPage extends Component {
 								this.setState({
 									loading: false,
 									loaded: true,
-									description: data.text,
+									// description: data.text,
+									description: "",
 									image: data.image,
 									locations: data.location,
 									organizer: data.organizer,
+									//new
+									image0: data.image0,
+									image1: data.image1,
+									image2: data.image2,
+									eventOrganizer: data.eventOrganizer,
+									eventDate: data.eventDate,
+									eventStartDate: data.eventStartDate,
+									eventEndDate: data.eventEndDate,
+									eventStartTime: data.eventStartTime,
+									eventEndTime: data.eventEndTime,
+									eventTime: data.eventTime,
+									eventType: data.eventType,
+									eventDescription: data.eventDescription,
+									eventLocation: data.location,
 								});
 							}
 						})
@@ -498,11 +558,35 @@ class EventPage extends Component {
 				</p>
 			);
 		if (this.state.description !== null)
-			description = (
-				<p style={{ whiteSpace: "pre-line" }}>
-					{this.state.description}
-				</p>
-			);
+			console.log("desc", this.state.eventDescription);
+		description = (
+			// <p style={{ whiteSpace: "pre-line" }}>
+			// 	{this.state.description}
+			// </p>
+			// <BodyTextEditor
+			// 	value={this.state.eventDescription}
+			// 	setValue={(bodyText) => {
+			// 		console.log(bodyText);
+			// 		// onChange(bodyText);
+			// 	}}
+			// 	readOnly={true}
+			// />
+			<RichTextEditor
+				readOnly
+				value={RichTextEditor.createValueFromString(
+					this.state.eventDescription,
+					"html"
+				)}
+				// onChange={handleChange}
+				required
+				id="body-text"
+				name="bodyText"
+				type="string"
+				multiline
+				variant="filled"
+				// className={classes.editor}
+			/>
+		);
 		return description;
 	};
 	handleClickOpen2 = () => {
@@ -519,8 +603,8 @@ class EventPage extends Component {
 		this.setState({ open2: false });
 	};
 	handleCategoryChange = (event) => {
-		this.setState({ selectedCategoryIndex: event.target.value })
-	}
+		this.setState({ selectedCategoryIndex: event.target.value });
+	};
 
 	allowance = async () => {
 		let a = await this.props.phnxContract.methods
@@ -539,63 +623,81 @@ class EventPage extends Component {
 			.send({ from: this.account })
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
-					toast(<Notify hash={hash} text={"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."}
-					/>, {
-						position: "bottom-right",
-						autoClose: true,
-						pauseOnHover: true,
-					});
-				}
-			})
-			.on("confirmation", (confirmationNumber, receipt) =>
-				this.onConfirmation(confirmationNumber, receipt)
-			)
-			.on("error", (error) => {
-				console.log("asd error in giveApproval function", error)
-				if (error !== null) {
-					this.setState({ disabledBuying: false });
-					txerror = error;
 					toast(
-						<Notify error={error} message={txerror.message} />,
+						<Notify
+							hash={hash}
+							text={
+								"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
+							}
+						/>,
 						{
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
 						}
 					);
+				}
+			})
+			.on("confirmation", (confirmationNumber, receipt) =>
+				this.onConfirmation(confirmationNumber, receipt)
+			)
+			.on("error", (error) => {
+				console.log("asd error in giveApproval function", error);
+				if (error !== null) {
+					this.setState({ disabledBuying: false });
+					txerror = error;
+					toast(<Notify error={error} message={txerror.message} />, {
+						position: "bottom-right",
+						autoClose: true,
+						pauseOnHover: true,
+					});
 					// this.afterApprove()
 					this.setState({ disabledStatus: false });
 				}
 			});
 	};
 	onConfirmation(confirmationNumber, receipt) {
-		console.log("asd in onConfirmation confirmationNumber",confirmationNumber)
+		console.log(
+			"asd in onConfirmation confirmationNumber",
+			confirmationNumber
+		);
 
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
-			toast(<Notify hash={receipt.transactionHash} icon="fas fa-check-circle fa-3x" text={"Transaction successful!\nYou can buy a ticket now."} />, {
-				position: "bottom-right",
-				autoClose: true,
-				pauseOnHover: true,
-			});
+			toast(
+				<Notify
+					hash={receipt.transactionHash}
+					icon="fas fa-check-circle fa-3x"
+					text={"Transaction successful!\nYou can buy a ticket now."}
+				/>,
+				{
+					position: "bottom-right",
+					autoClose: true,
+					pauseOnHover: true,
+				}
+			);
 			// this.afterApprove();
 			this.setState({ disabledStatus: false });
 		}
 	}
 
 	inquire = async () => {
-		console.log("in eventsPage", Open_events_Address)
-		let balance = await this.props.phnxContract.methods.totalSupply().call();
-		console.log("balance in eventsPage", balance)
+		console.log("in eventsPage", Open_events_Address);
+		let balance = await this.props.phnxContract.methods
+			.totalSupply()
+			.call();
+		console.log("balance in eventsPage", balance);
 
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
 				token: this.state.blockChainEvent[3],
 				openEvents_address: Open_events_Address,
-				buyticket: this.props.eventsContract.methods.buyTicket(
-					[this.props.match.params.id, this.state.selectedCategoryIndex, "Sydney"]
-				),
+				buyticket: this.props.eventsContract.methods.buyTicket([
+					this.props.match.params.id,
+					this.state.selectedCategoryIndex,
+					"Sydney",
+				]),
 				approve: this.props.phnxContract.methods.approve(
 					Open_events_Address,
 					balance
@@ -661,8 +763,10 @@ class EventPage extends Component {
 				// to be changed
 				let image = this.getImage();
 				let description = this.getDescription();
-				let locations =event_data.location;
-				let buttonText = event_data.token ? " Buy Ticket" : " Get Ticket";
+				let locations = event_data.location;
+				let buttonText = event_data.token
+					? " Buy Ticket"
+					: " Get Ticket";
 				let symbol = event_data.token
 					? "PhoenixDAO.svg"
 					: "PhoenixDAO.svg";
@@ -671,11 +775,22 @@ class EventPage extends Component {
 				// );
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
 				let phnx_price = event_data.prices.map((price) => {
-					return (Web3.utils.fromWei(price) / this.state.PhoenixDAO_market.usd).toFixed(2);
-				})
-				let dollar_price = Web3.utils.fromWei(event_data.prices[this.state.selectedCategoryIndex]);
+					return (
+						Web3.utils.fromWei(price) /
+						this.state.PhoenixDAO_market.usd
+					).toFixed(2);
+				});
+				let dollar_price = Web3.utils.fromWei(
+					event_data.prices[this.state.selectedCategoryIndex]
+				);
 
-				let max_seats = event_data.tktLimited[this.state.selectedCategoryIndex] ? event_data.catTktQuantity[this.state.selectedCategoryIndex] : "∞";
+				let max_seats = event_data.tktLimited[
+					this.state.selectedCategoryIndex
+				]
+					? event_data.catTktQuantity[
+							this.state.selectedCategoryIndex
+					  ]
+					: "∞";
 
 				let disabled = false;
 				let disabledStatus;
@@ -683,7 +798,16 @@ class EventPage extends Component {
 
 				if (
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
-					Number(event_data.catTktQuantitySold[this.state.selectedCategoryIndex]) >= Number(event_data.catTktQuantity[this.state.selectedCategoryIndex])
+					Number(
+						event_data.catTktQuantitySold[
+							this.state.selectedCategoryIndex
+						]
+					) >=
+						Number(
+							event_data.catTktQuantity[
+								this.state.selectedCategoryIndex
+							]
+						)
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -721,10 +845,7 @@ class EventPage extends Component {
 				let rawTopic = event_data.topic;
 
 				var topicRemovedDashes = rawTopic;
-				topicRemovedDashes = topicRemovedDashes.replace(
-					/-/g,
-					" "
-				);
+				topicRemovedDashes = topicRemovedDashes.replace(/-/g, " ");
 
 				var topic = topicRemovedDashes
 					.toLowerCase()
@@ -732,7 +853,7 @@ class EventPage extends Component {
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(" ");
 				//Friendly URL Title
-				console.log("event_data in eventPage", event_data)
+				console.log("event_data in eventPage", event_data);
 				let rawTitle = event_data.name;
 				var titleRemovedSpaces = rawTitle;
 				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
@@ -751,14 +872,12 @@ class EventPage extends Component {
 					<div className={classes.eventinfo}>
 						<span className={classes.PhnxPrice}>
 							{event_data.token
-								? phnx_price[this.state.selectedCategoryIndex]+ "PHNX"
+								? phnx_price[this.state.selectedCategoryIndex] +
+								  "PHNX"
 								: "FREE"}
 						</span>
 						<div style={{ color: "#56555D", fontSize: "14px" }}>
-							{event_data.token
-								? "$" +
-								dollar_price
-								: ""}
+							{event_data.token ? "$" + dollar_price : ""}
 						</div>
 					</div>
 				);
@@ -776,12 +895,19 @@ class EventPage extends Component {
 								buy={this.inquire}
 								buttonText={buttonText}
 							/>
-							<Header disabled={
-								disabled ||
-								this.props.disabledStatus ||
-								this.state.disabledBuying
-							}  
-							title={event_data.name} buttonText={buttonText} goBack={this.goBack} page="event" buyTicket={true} handleClickOpen2={this.handleClickOpen2} />
+							<Header
+								disabled={
+									disabled ||
+									this.props.disabledStatus ||
+									this.state.disabledBuying
+								}
+								title={event_data.name}
+								buttonText={buttonText}
+								goBack={this.goBack}
+								page="event"
+								buyTicket={true}
+								handleClickOpen2={this.handleClickOpen2}
+							/>
 							<Grid
 								style={{
 									marginBottom: "40px",
@@ -810,9 +936,7 @@ class EventPage extends Component {
 										alt="Event"
 									/>
 								</Grid>
-								<Grid
-									container
-								>
+								<Grid container>
 									<Grid
 										lg={9}
 										md={7}
@@ -820,9 +944,7 @@ class EventPage extends Component {
 										xs={12}
 										className={classes.description}
 									>
-										<Grid container>
-											{description}
-										</Grid>
+										<Grid container>{description}</Grid>
 										<Grid container>
 											<Clock
 												deadline={date}
@@ -845,25 +967,43 @@ class EventPage extends Component {
 											/>
 											TICKET PRICE
 										</p>
-										{event_data.token && <FormControl
-											variant="outlined"
-											className={classes.ticketSelect}
-										>
-											<Select
-												native
-												// value={state.age}
-												onChange={this.handleCategoryChange}
-												inputProps={{
-													name: "age",
-													id: "outlined-age-native-simple",
-												}}
+										{event_data.token && (
+											<FormControl
+												variant="outlined"
+												className={classes.ticketSelect}
 											>
-												{event_data.categories.length > 1 ? event_data.categories.map((category, i) =>
-													<option value={i}>
-														{category}
-													</option>
-												) : ""}
-												{/* <option
+												<Select
+													native
+													// value={state.age}
+													onChange={
+														this
+															.handleCategoryChange
+													}
+													inputProps={{
+														name: "age",
+														id: "outlined-age-native-simple",
+													}}
+												>
+													{event_data.categories
+														.length > 1
+														? event_data.categories.map(
+																(
+																	category,
+																	i
+																) => (
+																	<option
+																		value={
+																			i
+																		}
+																	>
+																		{
+																			category
+																		}
+																	</option>
+																)
+														  )
+														: ""}
+													{/* <option
 													aria-label="None"
 													value=""
 												/>
@@ -876,8 +1016,9 @@ class EventPage extends Component {
 												<option value={30}>
 													Golden Ticket
 												</option> */}
-											</Select>
-										</FormControl>}
+												</Select>
+											</FormControl>
+										)}
 										{priceGrid}
 										<p className={classes.eventHeading}>
 											{" "}
@@ -885,7 +1026,19 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{" "}
-											{event_date}
+											{/* {event_date} */}
+											{!this.state.eventTime
+												? `Date`
+												: this.state.eventTime ===
+												  "onedayevent"
+												? moment(
+														this.state.eventDate
+												  ).format("Do MMM, YYYY")
+												: `
+							${moment(this.state.eventStartDate).format("Do MMM")}
+							-
+							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
+							`}
 										</p>
 										<p className={classes.eventHeading}>
 											<ScheduleOutlined /> Time
@@ -912,8 +1065,13 @@ class EventPage extends Component {
 											Tickets Bought
 										</p>
 										<p className={classes.eventinfo}>
-											
-											{event_data.catTktQuantitySold[this.state.selectedCategoryIndex]}/{max_seats}
+											{
+												event_data.catTktQuantitySold[
+													this.state
+														.selectedCategoryIndex
+												]
+											}
+											/{max_seats}
 										</p>
 									</Grid>
 								</Grid>
@@ -924,48 +1082,55 @@ class EventPage extends Component {
 										</h2>
 										{this.state.load && <Loading />}
 										<Grid container lg={12}>
-											{console.log("sold ticket",this.state.soldTicket)}
+											{console.log(
+												"sold ticket",
+												this.state.soldTicket
+											)}
 											{this.state.pageTransactions.map(
-											(sold, index) => (
-												<p
-													className="sold_text col-md-12"
-													key={index}
-												>
-													<a
-														href={
-															explorerWithAddress +
-															sold.address
-														}
-														target="blank"
+												(sold, index) => (
+													<p
+														className="sold_text col-md-12"
+														key={index}
 													>
-														{sold.address.slice(
-															0,
-															10
-														) + "... "}
-													</a>{" "}
-													has{" "}
-													<a
+														<a
+															href={
+																explorerWithAddress +
+																sold.address
+															}
+															target="blank"
+														>
+															{sold.address.slice(
+																0,
+																10
+															) + "... "}
+														</a>{" "}
+														has{" "}
+														<a
 														// href={
 														// 	explorerWithTX +
 														// 	sold.transactionHash
 														// }
 														// target="blank"
-													>
-														bought
-													</a>{"  "}
-													{" "+sold.count+" "} ticket for this event{" "}
-													{/* <strong>
+														>
+															bought
+														</a>
+														{"  "}
+														{" " +
+															sold.count +
+															" "}{" "}
+														ticket for this event{" "}
+														{/* <strong>
 														{event_data[0]}
 													</strong> */}
-													.
-												</p>
-											)
-										)}
+														.
+													</p>
+												)
+											)}
 										</Grid>
-										{this.state.soldTicket.length  == 0 && (
+										{this.state.soldTicket.length == 0 && (
 											<p className="sold_text col-md-12 no-tickets">
-												There are currently no purchases for
-												this ticket.
+												There are currently no purchases
+												for this ticket.
 											</p>
 										)}
 									</div>
@@ -1244,8 +1409,8 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
-		const buyers= await generateBuyerArr(this.props.match.params.id);
-		this.setState({soldTicket:buyers})
+		const buyers = await generateBuyerArr(this.props.match.params.id);
+		this.setState({ soldTicket: buyers });
 		this.loadEventFromBlockchain();
 		window.scroll({
 			top: 0,

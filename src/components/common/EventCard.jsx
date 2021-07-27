@@ -9,6 +9,7 @@ import {
 	REMOVE_FROM_FAVOURITES,
 } from "../../config/const";
 import { toast } from "react-toastify";
+
 import Notify from "../Notify";
 import axios from "axios";
 import Web3 from "web3";
@@ -37,6 +38,7 @@ import {
 
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
+var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -151,9 +153,18 @@ const EventCard = (props, context) => {
 		eventId,
 		myFavorites,
 		favoriteEvent,
+		//
+		eventOrganizer,
+		eventDate,
+		eventStartDate,
+		eventEndDate,
+		eventStartTime,
+		eventEndTime,
+		eventTime,
+		eventType,
+		eventDescription,
+		eventLocation,
 	} = props;
-
-	console.log("image in eventcard", image);
 
 	useEffect(() => {
 		setIcon(favoriteEvent);
@@ -416,7 +427,16 @@ const EventCard = (props, context) => {
 							>
 								<DateRange fontSize="small" />{" "}
 								<span>&nbsp;</span>
-								{date.toLocaleDateString()}
+								{/* {date.toLocaleDateString()} */}
+								{!eventTime
+									? `Date`
+									: eventTime === "onedayevent"
+									? moment(eventDate).format("Do MMM, YYYY")
+									: `
+							${moment(eventStartDate).format("Do MMM")}
+							-
+							${moment(eventEndDate).format("Do MMM, YYYY")}
+							`}
 							</Typography>
 
 							<Typography
@@ -428,10 +448,13 @@ const EventCard = (props, context) => {
 							>
 								<AccessTime fontSize="small" />{" "}
 								<span>&nbsp;</span>
-								{date.toLocaleTimeString([], {
+								{/* {date.toLocaleTimeString([], {
 									hour: "2-digit",
 									minute: "2-digit",
-								})}
+								})} */}
+								{!eventStartTime
+									? `Time`
+									: moment(eventStartTime).format("LT")}
 							</Typography>
 
 							<Typography
@@ -445,8 +468,14 @@ const EventCard = (props, context) => {
 							>
 								<LocationOnOutlined fontSize="small" />{" "}
 								<span>&nbsp;</span>
-								{event_data.location}
+								{/* {event_data.location} */}
+								{!eventType
+									? `Location`
+									: !eventType === "physical"
+									? `Online`
+									: eventLocation}
 							</Typography>
+
 							{/* For my events page */}
 							{myEvent ? (
 								<Grid item>
@@ -471,7 +500,10 @@ const EventCard = (props, context) => {
 										className={classes.text}
 									>
 										PHNX Revenue:{" "}
-										{event_data.eventRevenueInPhnx} PHNX
+										{Web3.utils.fromWei(
+											event_data.eventRevenueInPhnx
+										)}{" "}
+										PHNX
 									</Typography>
 									<Typography
 										variant="body2"
@@ -482,7 +514,9 @@ const EventCard = (props, context) => {
 										style={{ marginBottom: "20px" }}
 									>
 										Dollar Revenue: ${" "}
-										{event_data.eventRevenueInDollar}
+										{Web3.utils.fromWei(
+											event_data.eventRevenueInDollar
+										)}
 									</Typography>
 									<Divider />
 									<Button

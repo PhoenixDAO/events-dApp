@@ -14,7 +14,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { explorerWithAddress } from "../config/const";
 import EventCard from "./common/EventCard.jsx";
 
-
 import Loading from "./Loading";
 
 var QRCode = require("qrcode.react");
@@ -45,15 +44,29 @@ class Ticket extends Component {
 			hideEvent: [],
 			eventId: "",
 			blockie: "/images/PhoenixDAO.png",
+			//new ipfs data
+			image0: null,
+			image1: null,
+			image2: null,
+			eventOrganizer: null,
+			eventDate: null,
+			eventStartDate: null,
+			eventEndDate: null,
+			eventStartTime: null,
+			eventEndTime: null,
+			eventTime: null,
+			eventType: null,
+			eventDescription: null,
+			eventLocation: null,
 		};
 		this.isCancelled = false;
-		this.sendTicket = this.sendTicket.bind(this)
+		this.sendTicket = this.sendTicket.bind(this);
 	}
 	async componentWillMount() {
-		let ticket = await this.props.eventsContract.methods.getTicket(
-			this.props.id
-		).call();
-		this.setState({ eventId: ticket.eventId })
+		let ticket = await this.props.eventsContract.methods
+			.getTicket(this.props.id)
+			.call();
+		this.setState({ eventId: ticket.eventId });
 	}
 	filterHideEvent = async () => {
 		try {
@@ -72,16 +85,12 @@ class Ticket extends Component {
 			this.state.loading === false &&
 			this.state.blockChainEvent !== null
 		) {
-
-
 			this.setState(
 				{
 					loading: true,
 				},
 				() => {
-					ipfs.get(
-						this.state.blockChainEvent[7]
-					)
+					ipfs.get(this.state.blockChainEvent[7])
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
 							if (!this.isCancelled) {
@@ -91,6 +100,20 @@ class Ticket extends Component {
 									description: data.text,
 									image: data.image,
 									location: data.location,
+									//new
+									image0: data.image0,
+									image1: data.image1,
+									image2: data.image2,
+									eventOrganizer: data.eventOrganizer,
+									eventDate: data.eventDate,
+									eventStartDate: data.eventStartDate,
+									eventEndDate: data.eventEndDate,
+									eventStartTime: data.eventStartTime,
+									eventEndTime: data.eventEndTime,
+									eventTime: data.eventTime,
+									eventType: data.eventType,
+									eventDescription: data.eventDescription,
+									eventLocation: data.location,
 								});
 							}
 						})
@@ -164,13 +187,9 @@ class Ticket extends Component {
 	sendTicket = (address, eventId) => {
 		// console.log("addres123",address,!this.context.drizzle.web3.utils.isAddress(address))
 		this.setState({ disabledStatus: true });
-		if (
-			!address ||
-			!this.context.drizzle.web3.utils.isAddress(address)
-		) {
+		if (!address || !this.context.drizzle.web3.utils.isAddress(address)) {
 			this.setState({ wrong_address: true });
 			this.setState({ disabledStatus: false });
-
 		} else {
 			let txreceiptApproved = "";
 			let txconfirmedApproved = "";
@@ -186,12 +205,21 @@ class Ticket extends Component {
 				.send({ from: this.props.accounts[0] })
 				.on("transactionHash", (transactionHash) => {
 					if (transactionHash !== null) {
-						toast(<Notify hash={transactionHash} icon="fas fa-check-circle fa-3x"
-							color="#413AE2" text={"Transaction sent!\nSending your ticket... 🚀"} />, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<Notify
+								hash={transactionHash}
+								icon="fas fa-check-circle fa-3x"
+								color="#413AE2"
+								text={
+									"Transaction sent!\nSending your ticket... 🚀"
+								}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 				})
 				.on("confirmation", (confirmationNumber, receipt) => {
@@ -223,11 +251,14 @@ class Ticket extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						toast(<Notify error={error} message={txerror.message} />, {
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						});
+						toast(
+							<Notify error={error} message={txerror.message} />,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
 					}
 
 					this.setState({ disabledStatus: false });
@@ -240,7 +271,8 @@ class Ticket extends Component {
 			// typeof this.props.eventsContract.getTicket[this.ticket] !=
 			// "undefined" && typeof this.props.eventsContract.getTicket[this.ticket].value !=
 			// "undefined" &&
-			this.state.blockChainEvent === null && this.state.eventId != ""
+			this.state.blockChainEvent === null &&
+			this.state.eventId != ""
 		) {
 			// console.log("in ticket.js",this.props.eventsContract.getTicket[this.ticket])
 			// this.event = await this.props.eventsContract.methods.events(this.state.eventId).call();
@@ -282,37 +314,39 @@ class Ticket extends Component {
 				},
 			})
 				.then((graphEvents) => {
-					console.log("GraphQL query response of events in eventPage", graphEvents.data.data.events[0])
+					console.log(
+						"GraphQL query response of events in eventPage",
+						graphEvents.data.data.events[0]
+					);
 					this.setState({
 						blockChainEvent: graphEvents.data.data.events[0],
 						blockChainEventLoaded: true,
 					});
-
-				}).catch((err) => {
-					console.log("Error in GraphQL query response of events in eventPage", err)
+				})
+				.catch((err) => {
+					console.log(
+						"Error in GraphQL query response of events in eventPage",
+						err
+					);
 					this.setState({
 						blockChainEvent: {},
 						blockChainEventLoaded: true,
 					});
-				})
+				});
 			// 	const blockChainEvent = await this.props.eventsContract.methods.events(this.state.eventId).call()
 			// 	console.log('blockChainEvent', blockChainEvent)
 			// this.setState({ blockChainEvent: blockChainEvent, blockChainEventLoaded: true })
-
-
 		}
 		if (this.event !== null) {
 			this.updateIPFS();
 		}
 	};
 
-
 	downloadQR = () => {
-		let ticket_data = this.props.eventsContract.getTicket[
-			this.ticket
-		].value;
+		let ticket_data =
+			this.props.eventsContract.getTicket[this.ticket].value;
 
-		let event_data = this.state.blockChainEvent
+		let event_data = this.state.blockChainEvent;
 		const canvas = document.getElementById(
 			event_data[0] + "-" + ticket_data[1]
 		);
@@ -345,13 +379,11 @@ class Ticket extends Component {
 			// let ticket_data = this.props.eventsContract.getTicket[
 			// 	this.ticket
 			// ].value;
-			let event_data = this.state.blockChainEvent
+			let event_data = this.state.blockChainEvent;
 
 			let reported = false;
 			for (let j = 0; j < this.state.hideEvent.length; j++) {
-				if (
-					this.state.eventId == this.state.hideEvent[j].id
-				) {
+				if (this.state.eventId == this.state.hideEvent[j].id) {
 					reported = true;
 				}
 			}
@@ -374,7 +406,9 @@ class Ticket extends Component {
 			let shareUrl = window.location.origin + titleURL;
 			// let locations = this.getLocation();
 			let date = new Date(parseInt(event_data.time, 10) * 1000);
-			let max_seats = event_data.tktLimited[0] ? event_data.catTktQuantity[0] : "∞"; 
+			let max_seats = event_data.tktLimited[0]
+				? event_data.catTktQuantity[0]
+				: "∞";
 			let image = this.getImage();
 
 			// if (this.state.card_tab === 1) {
@@ -396,7 +430,6 @@ class Ticket extends Component {
 			// 		);
 			// 		timeClass = "text-danger";
 			// 	}
-
 
 			// } else {
 			// 	let image = this.getImage();
@@ -452,6 +485,16 @@ class Ticket extends Component {
 					revenue={this.state.revenue}
 					sendTicket2={this.sendTicket}
 					eventId={this.props.id}
+					eventOrganizer={this.state.eventOrganizer}
+					eventDate={this.state.eventDate}
+					eventStartDate={this.state.eventStartDate}
+					eventEndDate={this.state.eventEndDate}
+					eventStartTime={this.state.eventStartTime}
+					eventEndTime={this.state.eventEndTime}
+					eventTime={this.state.eventTime}
+					eventType={this.state.eventType}
+					eventDescription={this.state.eventDescription}
+					eventLocation={this.state.eventLocation}
 				/>
 				// <div className="card w-100">
 				// 	<div className="card-header">
@@ -491,7 +534,6 @@ class Ticket extends Component {
 			);
 		}
 
-
 		return (
 			<div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4 d-flex justify-content-center align-items-stretch">
 				{body}
@@ -507,7 +549,6 @@ class Ticket extends Component {
 		// console.log("this.ticket in Ticket",this.ticket)
 		this.updateEvent();
 		this.filterHideEvent();
-
 	}
 
 	componentWillUnmount() {

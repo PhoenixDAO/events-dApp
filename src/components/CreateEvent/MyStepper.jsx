@@ -53,6 +53,7 @@ import dollarIcon from "../Images/dollar.png";
 import altIcon from "../Images/altIcon.png";
 import editIcon from "../Images/editIcon.png";
 import deleteIcon from "../Images/deleteIcon.png";
+import BodyTextEditor from "../common/BodyTextEditor";
 
 var badWords = require("bad-words");
 
@@ -2233,26 +2234,21 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							<Controller
 								name="eventDescription"
 								control={control}
-								defaultValue={RichTextEditor.createEmptyValue()}
+								defaultValue="<p><br></p>"
 								render={({
 									field: { onChange, value },
 									fieldState: { error },
 								}) => (
 									<FormControl
-										// required
 										error={!!error}
 										component="fieldset"
 									>
-										<RichTextEditor
-											autoFocus
-											className={classes.editor}
-											// editorClassName={}
+										<BodyTextEditor
 											value={value}
-											onChange={(v) => {
-												onChange(v);
+											setValue={(bodyText) => {
+												onChange(bodyText);
 											}}
-											// toolbarConfig={toolbarConfig}
-											placeholder="Type something here....."
+											readOnly={false}
 										/>
 										<FormHelperText>
 											{error ? error.message : null}
@@ -2262,9 +2258,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 								rules={{
 									required: "Please enter event details.",
 									minLength: {
-										value: 500,
+										value: 100,
 										message:
-											"Event description should contain atleast 500 characters.",
+											"Event description is too short.",
 									},
 								}}
 							/>

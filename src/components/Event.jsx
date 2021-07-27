@@ -30,6 +30,8 @@ import { toast } from "react-toastify";
 //eventCard
 import EventCard from "./common/EventCard";
 
+var moment = require("moment");
+
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -90,6 +92,20 @@ class Event extends Component {
 			approvalGranted: false,
 			myFavorites: this.props.myFavorites,
 			UserFavoriteEvents: [],
+			//new ipfs data
+			image0: null,
+			image1: null,
+			image2: null,
+			eventOrganizer: null,
+			eventDate: null,
+			eventStartDate: null,
+			eventEndDate: null,
+			eventStartTime: null,
+			eventEndTime: null,
+			eventTime: null,
+			eventType: null,
+			eventDescription: null,
+			eventLocation: null,
 		};
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
 		this.isCancelled = false;
@@ -120,16 +136,31 @@ class Event extends Component {
 					ipfs.get(this.props.ipfs)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
-							console.log("event ipfs", file);
-							console.log("ipfs data", data, data.image);
+							// console.log("data here", data);
+
 							if (!this.isCancelled) {
 								this.setState({
 									loading: false,
 									loaded: true,
+									//old
 									description: data.text,
 									image: data.image,
 									locations: data.location,
 									organizer: data.organizer,
+									//new
+									image0: data.image0,
+									image1: data.image1,
+									image2: data.image2,
+									eventOrganizer: data.eventOrganizer,
+									eventDate: data.eventDate,
+									eventStartDate: data.eventStartDate,
+									eventEndDate: data.eventEndDate,
+									eventStartTime: data.eventStartTime,
+									eventEndTime: data.eventEndTime,
+									eventTime: data.eventTime,
+									eventType: data.eventType,
+									eventDescription: data.eventDescription,
+									eventLocation: data.location,
 								});
 							}
 						})
@@ -144,6 +175,17 @@ class Event extends Component {
 						});
 				}
 			);
+		}
+	};
+
+	isBase64 = (str) => {
+		if (str === "" || str.trim() === "") {
+			return false;
+		}
+		try {
+			return btoa(atob(str)) == str;
+		} catch (err) {
+			return false;
 		}
 	};
 
@@ -194,11 +236,38 @@ class Event extends Component {
 				</div>
 			);
 		if (this.state.locations !== null) {
-			let place = this.state.locations;
+			// let place = this.state.locations;
 			// locations = <strong>Location: {place}</strong>;
+
+			let place =
+				!this.state.eventType === "physical"
+					? `Online`
+					: this.state.eventLocation;
+
 			locations = place;
 		}
 		return locations;
+	};
+
+	getTime = () => {
+		let time;
+		if (this.state.ipfs_problem)
+			time = (
+				<div className="text-center mb-0 event-description">
+					<div role="img" aria-label="monkey">
+						{/* <span> 🙊 </span> */}
+					</div>
+					<div>We can not load time</div>
+				</div>
+			);
+		if (this.state.eventStartTime !== null) {
+			time = moment(this.state.eventStartTime).format("LT");
+		}
+		return time;
+	};
+
+	getDate = () => {
+		//
 	};
 
 	// allowance = async () => {
@@ -397,6 +466,7 @@ class Event extends Component {
 			let description = this.getDescription();
 			let locations = this.getLocation();
 			let buttonText = event_data.token ? "Buy Ticket" : "Get Ticket";
+			let time = this.getTime();
 			// let freeEvent = "";
 			// if (!event_data.token) {
 			// 	freeEvent = <p className="free_event">Free Event</p>;
@@ -516,6 +586,16 @@ class Event extends Component {
 						eventId={this.props.id}
 						reloadData={this.props.reloadData}
 						reload={this.props.reload}
+						eventOrganizer={this.state.eventOrganizer}
+						eventDate={this.state.eventDate}
+						eventStartDate={this.state.eventStartDate}
+						eventEndDate={this.state.eventEndDate}
+						eventStartTime={this.state.eventStartTime}
+						eventEndTime={this.state.eventEndTime}
+						eventTime={this.state.eventTime}
+						eventType={this.state.eventType}
+						eventDescription={this.state.eventDescription}
+						eventLocation={this.state.eventLocation}
 					/>
 				</div>
 			);
