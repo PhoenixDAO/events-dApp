@@ -3,7 +3,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import { API_URL, ADD_TO_FAVOURITES, REMOVE_FROM_FAVOURITES } from "../../config/const";
+import {
+	API_URL,
+	ADD_TO_FAVOURITES,
+	REMOVE_FROM_FAVOURITES,
+} from "../../config/const";
 import { toast } from "react-toastify";
 import Notify from "../Notify";
 import axios from "axios";
@@ -30,7 +34,6 @@ import {
 	LaunchSharp,
 	Send,
 } from "@material-ui/icons";
-
 
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
@@ -119,15 +122,17 @@ const useStyles = makeStyles((theme) => ({
 		color: "#73727D",
 		fontSize: "14px",
 		marginBottom: "0px",
-		fontWeight: "400"
+		fontWeight: "400",
 	},
 	price: {
-		color: "#413AE2", fontWeight: "700", fontSize: "17px",
+		color: "#413AE2",
+		fontWeight: "700",
+		fontSize: "17px",
 		"& p": {
 			marginBottom: "0px",
 		},
-		minHeight: "71px"
-	}
+		minHeight: "71px",
+	},
 }));
 
 const EventCard = (props, context) => {
@@ -147,6 +152,8 @@ const EventCard = (props, context) => {
 		myFavorites,
 		favoriteEvent,
 	} = props;
+
+	console.log("image in eventcard", image);
 
 	useEffect(() => {
 		setIcon(favoriteEvent);
@@ -184,29 +191,26 @@ const EventCard = (props, context) => {
 
 			//for add to favourite
 			if (!Icon) {
-				await axios.post(
-					`${API_URL}${ADD_TO_FAVOURITES}`,
-					payload
-				);
+				await axios.post(`${API_URL}${ADD_TO_FAVOURITES}`, payload);
 			}
 			//for remove from favourites
 			else {
-				const result= await axios.post(
+				const result = await axios.post(
 					`${API_URL}${REMOVE_FROM_FAVOURITES}`,
 					payload
 				);
-				console.log("result",result);
+				console.log("result", result);
 
 				props.reloadData();
 			}
-
-
-		}
-		catch (error) {
+		} catch (error) {
 			// console.log("Consoleee notify report response catch",error)
 
 			if (error.response && error.response.data) {
-				console.log("Consoleee notify report response error.response.data",error.response.data)
+				console.log(
+					"Consoleee notify report response error.response.data",
+					error.response.data
+				);
 				toast(
 					<Notify
 						error={error}
@@ -237,10 +241,10 @@ const EventCard = (props, context) => {
 				setPhoenixDAO_market(data.phoenixdao);
 			})
 			.catch(console.log);
-	}
+	};
 	let phnx_price = event_data.prices.map((price) => {
 		return (Web3.utils.fromWei(price) / PhoenixDAO_market.usd).toFixed(2);
-	})
+	});
 	let dollar_price = Web3.utils.fromWei(event_data.prices[0]);
 
 	return (
@@ -249,7 +253,6 @@ const EventCard = (props, context) => {
 				open={open}
 				handleClose={handleClose}
 				titleURL={titleURL}
-
 			/>
 			<SendTicket
 				sendTicket2={sendTicket2}
@@ -300,7 +303,14 @@ const EventCard = (props, context) => {
 									>
 										<ConfirmationNumberOutlined fontSize="medium" />
 										<span>&nbsp;</span>
-										{event_data.tktTotalQuantitySold}/{event_data.tktTotalQuantity == 0 ? <span style={{fontSize:"21px"}}>∞</span>:event_data.tktTotalQuantity}
+										{event_data.tktTotalQuantitySold}/
+										{event_data.tktTotalQuantity == 0 ? (
+											<span style={{ fontSize: "21px" }}>
+												∞
+											</span>
+										) : (
+											event_data.tktTotalQuantity
+										)}
 									</Typography>
 									{!myEvent && !ticket ? (
 										<Typography
@@ -308,10 +318,17 @@ const EventCard = (props, context) => {
 											component="button"
 											onClick={addTofavorite}
 										>
-											{Icon ? <Favorite fontSize="small" style={{ color: "#413AE2" }} /> : <FavoriteBorder fontSize="small" />}
+											{Icon ? (
+												<Favorite
+													fontSize="small"
+													style={{ color: "#413AE2" }}
+												/>
+											) : (
+												<FavoriteBorder fontSize="small" />
+											)}
 											{Icon}
-										</Typography>)
-										: null}
+										</Typography>
+									) : null}
 								</div>
 							</div>
 						</div>
@@ -348,20 +365,28 @@ const EventCard = (props, context) => {
 									variant="body1"
 									component="h2"
 								>
-									{!event_data.token ? "Free" : phnx_price.length == 1 ?
-										(<div>
+									{!event_data.token ? (
+										"Free"
+									) : phnx_price.length == 1 ? (
+										<div>
 											<p>{phnx_price[0]} PHNX</p>
-											<p className={classes.starting}> ${dollar_price}</p>
-										</div>)
-										:
-										(<div>
-											<p className={classes.starting}>Starting from</p>
-											<p>{phnx_price[0]} PHNX</p>
-											<p className={classes.starting}> ${dollar_price}</p>
+											<p className={classes.starting}>
+												{" "}
+												${dollar_price}
+											</p>
 										</div>
-										)
-									}
-
+									) : (
+										<div>
+											<p className={classes.starting}>
+												Starting from
+											</p>
+											<p>{phnx_price[0]} PHNX</p>
+											<p className={classes.starting}>
+												{" "}
+												${dollar_price}
+											</p>
+										</div>
+									)}
 								</Typography>
 								{/* ? `Starting from ${prices[0]} PHNX` : prices[0]} */}
 
@@ -435,7 +460,8 @@ const EventCard = (props, context) => {
 									>
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
-										{event_data.tktTotalQuantitySold}/{event_data.tktTotalQuantity}
+										{event_data.tktTotalQuantitySold}/
+										{event_data.tktTotalQuantity}
 									</Typography>
 									<Typography
 										variant="body2"
@@ -444,7 +470,8 @@ const EventCard = (props, context) => {
 										gutterBottom
 										className={classes.text}
 									>
-										PHNX Revenue: {event_data.eventRevenueInPhnx} PHNX
+										PHNX Revenue:{" "}
+										{event_data.eventRevenueInPhnx} PHNX
 									</Typography>
 									<Typography
 										variant="body2"
@@ -454,7 +481,8 @@ const EventCard = (props, context) => {
 										className={classes.text}
 										style={{ marginBottom: "20px" }}
 									>
-										Dollar Revenue: $ {event_data.eventRevenueInDollar}
+										Dollar Revenue: ${" "}
+										{event_data.eventRevenueInDollar}
 									</Typography>
 									<Divider />
 									<Button
@@ -471,50 +499,50 @@ const EventCard = (props, context) => {
 									</Button>
 								</Grid>
 							) : // For my ticket page
-								ticket ? (
-									<Grid item className={classes.row}>
-										<Button
-											className={classes.shareButton}
-											onClick={handleClickOpen}
-										>
-											<LaunchSharp
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
-											/>{" "}
-											Share Event
-										</Button>
-										<Button
-											className={classes.sendTicket}
-											onClick={handleClickOpen2}
-										>
-											<Send
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
-											/>{" "}
-											Send Ticket
-										</Button>
-									</Grid>
-								) : // For my Favorite page
-									myFavorites ? (
-										<Grid item className={classes.row}>
-											<Button
-												className={classes.shareButton}
-												onClick={handleClickOpen}
-											>
-												<LaunchSharp
-													style={{
-														marginRight: "7px",
-														fontSize: "19px",
-													}}
-												/>{" "}
-												Share Event
-											</Button>
-										</Grid>
-									) : null}
+							ticket ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+									<Button
+										className={classes.sendTicket}
+										onClick={handleClickOpen2}
+									>
+										<Send
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Send Ticket
+									</Button>
+								</Grid>
+							) : // For my Favorite page
+							myFavorites ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+								</Grid>
+							) : null}
 						</CardContent>
 					</CardActionArea>
 				</Card>
@@ -526,7 +554,6 @@ EventCard.contextTypes = {
 	drizzle: PropTypes.object,
 };
 const mapStateToProps = (state) => {
-
 	return {
 		// contracts: state.contracts,
 		accounts: state.accounts[0],

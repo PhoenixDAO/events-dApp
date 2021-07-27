@@ -109,9 +109,13 @@ class CreateEvent extends Component {
 			eventDescription,
 		} = this.state.fields;
 
-		image0 = image0 ? URL.createObjectURL(image0) : "";
-		image1 = image1 ? URL.createObjectURL(image1) : "";
-		image2 = image2 ? URL.createObjectURL(image2) : "";
+		// image0 = image0 ? URL.createObjectURL(image0) : "";
+		// image1 = image1 ? URL.createObjectURL(image1) : "";
+		// image2 = image2 ? URL.createObjectURL(image2) : "";
+
+		let image0Base64 = image0 ? await this.getBase64(image0) : "";
+		let image1Base64 = image1 ? await this.getBase64(image1) : "";
+		let image2Base64 = image2 ? await this.getBase64(image2) : "";
 
 		let ticketLimited = [];
 		let tktQnty = [];
@@ -138,9 +142,9 @@ class CreateEvent extends Component {
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({
 			//new
-			image0,
-			image1,
-			image2,
+			image0: image0Base64,
+			image1: image1Base64,
+			image2: image2Base64,
 			eventOrganizer,
 			eventDate,
 			eventStartDate,
@@ -151,7 +155,7 @@ class CreateEvent extends Component {
 			eventType,
 			eventDescription,
 			//old
-			image: image0,
+			image: image0Base64,
 			text: eventDescription,
 			location: location,
 			organizer: eventOrganizer,
@@ -207,8 +211,17 @@ class CreateEvent extends Component {
 			})
 			.catch((error) => {
 				//
-				console.log("error in convertAndUpload", error);
+				console.log("error", error);
 			});
+	};
+
+	getBase64 = (file) => {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => resolve(reader.result);
+			reader.onerror = (error) => reject(error);
+		});
 	};
 
 	createEvent = (
@@ -266,8 +279,11 @@ class CreateEvent extends Component {
 	};
 
 	readFile = (file) => {
+		console.log("readFile calling", file);
 		let reader = new window.FileReader();
+		console.log("reader", reader);
 		reader.readAsDataURL(file);
+		console.log("reader.readAsDataURL", reader);
 		reader.onloadend = () => this.convertAndUpload(reader);
 	};
 
@@ -275,6 +291,7 @@ class CreateEvent extends Component {
 		let data;
 		let pinit = process.env.NODE_ENV === "production";
 		if (this.state.data.fileHandle) {
+			console.log("fileHandle", true);
 			data = JSON.stringify({
 				image: reader.result,
 				text: this.state.data.description,
@@ -291,6 +308,9 @@ class CreateEvent extends Component {
 				topic: this.state.data.topic,
 			});
 		}
+
+		console.log("createevent data", data);
+
 		let buffer = Buffer.from(data);
 		ipfs.add(buffer, { pin: pinit })
 			.then((hash) => {
