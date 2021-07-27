@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const ConnectWalletButton = () => {
+const ConnectWalletButton = (props) => {
 	const classes = useStyles();
 
 	return (
@@ -27,6 +27,7 @@ const ConnectWalletButton = () => {
 			size="large"
 			className={classes.button}
 			startIcon={<AddIcon fontSize="large" />}
+			onClick={props.onClick}
 		>
 			Connect Wallet
 		</Button>

@@ -16,6 +16,7 @@ import {
 	generateJSON,
 	getEventName,
 	getTimeData,
+	getTodayData,
 	getPhoenixDAOMarketValue,
 } from "../utils/graphApis";
 import Web3 from "web3";
@@ -298,6 +299,7 @@ const chartOptions = {
 const Analytics = (props, context) => {
 	const classes = useStyles();
 	const [graphData, setGraphData] = useState([]);
+	const [todayGraphData, setTodayGraphData] = useState([]);
 	const [graphDays, setGraphDays] = useState([]);
 	const [userDetails, setUserDetails] = useState([]);
 	const [TicketSales, setTicketSales] = useState([]);
@@ -345,7 +347,15 @@ const Analytics = (props, context) => {
 		);
 		console.log("timeData", timeData);
 		setGraphData(timeData);
-		handleTimeStampChange();
+		console.log("timestamp", Number(moment().unix()));
+		const todayData = await getTodayData(
+			"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b",
+			Number(moment().unix()- 86400)
+		);
+		console.log("time stamp--- ", moment().unix())
+		console.log("todayData", todayData);
+		setTodayGraphData(todayData);
+		handleTimeStampChange(null, todayData);
 	};
 	const events = getEvents({
 		_isMounted: true,
@@ -400,17 +410,17 @@ const Analytics = (props, context) => {
 		let phxRevenue = [];
 		let phnxLabel = [];
 		let phxData = {};
+		console.log(graphDays);
 		for (let i = 0; i < graphDays.length; i++) {
-			if (graphDays[i].dayStartTimeStamp in phxData) {
-				const key = graphDays[i].dayStartTimeStamp;
-				phxData[key].totalPhnxRevenueInDay =
-					Number(phxData[key].totalPhnxRevenueInDay) +
-					Number(graphDays[i].totalPhnxRevenueInDay);
+			let key = graphDays[i].startTimeStamp;
+			if (key in phxData) {
+				phxData[key].totalPhnxRevenue =
+					Number(phxData[key].totalPhnxRevenue) +
+					Number(graphDays[i].totalPhnxRevenue);
 			} else {
-				const key = graphDays[i].dayStartTimeStamp;
 				phxData[key] = {
-					dayStartTimeStamp: graphDays[i].dayStartTimeStamp,
-					totalPhnxRevenueInDay: graphDays[i].totalPhnxRevenueInDay,
+					startTimeStamp: graphDays[i].startTimeStamp,
+					totalPhnxRevenue: graphDays[i].totalPhnxRevenue,
 				};
 			}
 		}
@@ -418,9 +428,9 @@ const Analytics = (props, context) => {
 		for (let i = 0; i < phxKey.length; i++) {
 			const obj = phxData[phxKey[i]];
 			phxRevenue.push(
-				Web3.utils.fromWei(obj.totalPhnxRevenueInDay.toString())
+				Web3.utils.fromWei(obj.totalPhnxRevenue.toString())
 			);
-			phnxLabel.push(moment.unix(obj.dayStartTimeStamp).format("DD/MM"));
+			phnxLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
 		}
 		setDollarClicked(false);
 		setSoldClicked(false);
@@ -434,24 +444,24 @@ const Analytics = (props, context) => {
 		let soldLabel = [];
 		let soldData = {};
 		for (let i = 0; i < graphDays.length; i++) {
-			if (graphDays[i].dayStartTimeStamp in soldData) {
-				const key = graphDays[i].dayStartTimeStamp;
-				soldData[key].soldTicketsInDay =
-					Number(soldData[key].soldTicketsInDay) +
-					Number(graphDays[i].soldTicketsInDay);
+			let key = graphDays[i].startTimeStamp;
+			if (key in soldData) {
+				soldData[key].soldTickets =
+					Number(soldData[key].soldTickets) +
+					Number(graphDays[i].soldTickets);
 			} else {
-				const key = graphDays[i].dayStartTimeStamp;
 				soldData[key] = {
-					dayStartTimeStamp: graphDays[i].dayStartTimeStamp,
-					soldTicketsInDay: graphDays[i].soldTicketsInDay,
+					startTimeStamp: graphDays[i].startTimeStamp,
+					soldTickets: graphDays[i].soldTickets,
 				};
 			}
 		}
+
 		const soldKey = Object.keys(soldData);
 		for (let i = 0; i < soldKey.length; i++) {
 			const obj = soldData[soldKey[i]];
-			soldTickets.push(obj.soldTicketsInDay);
-			soldLabel.push(moment.unix(obj.dayStartTimeStamp).format("DD/MM"));
+			soldTickets.push(obj.soldTickets);
+			soldLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
 		}
 		setPhnxClicked(false);
 		setDollarClicked(false);
@@ -465,17 +475,15 @@ const Analytics = (props, context) => {
 		let dollarLabel = [];
 		let dollarData = {};
 		for (let i = 0; i < graphDays.length; i++) {
-			if (graphDays[i].dayStartTimeStamp in dollarData) {
-				const key = graphDays[i].dayStartTimeStamp;
-				dollarData[key].totalDollarRevenueInDay =
-					Number(dollarData[key].totalDollarRevenueInDay) +
-					Number(graphDays[i].totalDollarRevenueInDay);
+			let key = graphDays[i].startTimeStamp;
+			if (key in dollarData) {
+				dollarData[key].totalDollarRevenue =
+					Number(dollarData[key].totalDollarRevenue) +
+					Number(graphDays[i].totalDollarRevenue);
 			} else {
-				const key = graphDays[i].dayStartTimeStamp;
 				dollarData[key] = {
-					dayStartTimeStamp: graphDays[i].dayStartTimeStamp,
-					totalDollarRevenueInDay:
-						graphDays[i].totalDollarRevenueInDay,
+					startTimeStamp: graphDays[i].startTimeStamp,
+					totalDollarRevenue: graphDays[i].totalDollarRevenue,
 				};
 			}
 		}
@@ -483,11 +491,9 @@ const Analytics = (props, context) => {
 		for (let i = 0; i < dollarKey.length; i++) {
 			const obj = dollarData[dollarKey[i]];
 			dollarRev.push(
-				Web3.utils.fromWei(obj.totalDollarRevenueInDay.toString())
+				Web3.utils.fromWei(obj.totalDollarRevenue.toString())
 			);
-			dollarLabel.push(
-				moment.unix(obj.dayStartTimeStamp).format("DD/MM")
-			);
+			dollarLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
 		}
 		setPhnxClicked(false);
 		setSoldClicked(false);
@@ -580,9 +586,8 @@ const Analytics = (props, context) => {
 	};
 
 	//filterations and calculations of earnuings card section
-	const handleTimeStampChange = async (event) => {
+	const handleTimeStampChange = async (event, todayDat) => {
 		let timestamp;
-		// getTimeData(props.accounts);
 		if (event) {
 			timestamp = event.target.value;
 		} else {
@@ -593,11 +598,28 @@ const Analytics = (props, context) => {
 		let elapsedTime = today - timestamp;
 		console.log(graphData);
 		if (graphData != undefined) {
-			let graphForDays = graphData.filter(
-				(event) => event.dayStartTimeStamp >= elapsedTime
-			);
+			let graphForDays;
+			console.log("called herer");
+			if (timestamp === "86400") {
+				console.log("graphData", "called here");
+				if (todayDat != undefined && todayDat.length > 0) {
+					console.log("graphData", "if called here", todayDat);
+					graphForDays = todayDat;
+				} else if (todayGraphData.length > 0) {
+					console.log(
+						"graphData",
+						"else if called here",
+						todayGraphData
+					);
+					graphForDays = todayGraphData;
+				}
+			} else {
+				console.log("graphData", graphData);
+				graphForDays = graphData.filter(
+					(event) => event.startTimeStamp >= elapsedTime
+				);
+			}
 			setGraphDays(graphForDays);
-			// setGraphData(graphForDays);
 			console.log("graph", graphForDays);
 			if (graphForDays.length != 0) {
 				let totalDollarRevenue = 0;
@@ -605,11 +627,11 @@ const Analytics = (props, context) => {
 				let soldTicket = 0;
 				graphForDays.forEach((event) => {
 					totalDollarRevenue += Number(
-						Web3.utils.fromWei(event.totalDollarRevenueInDay)
+						Web3.utils.fromWei(event.totalDollarRevenue.toString())
 					);
-					soldTicket += Number(event.soldTicketsInDay);
+					soldTicket += Number(event.soldTickets.toString());
 					totalPhnxRevenue += Number(
-						Web3.utils.fromWei(event.totalPhnxRevenueInDay)
+						Web3.utils.fromWei(event.totalPhnxRevenue.toString())
 					);
 				});
 				totalPhnxRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
@@ -625,17 +647,17 @@ const Analytics = (props, context) => {
 				//calculate data for change and difference of cards
 				let lastIndex = graphForDays.length - 1;
 				let originalNumber = Web3.utils.fromWei(
-					graphForDays[0].totalDollarRevenueInDay
+					graphForDays[0].totalDollarRevenue
 				);
 				let newNumber = Web3.utils.fromWei(
-					graphForDays[lastIndex].totalDollarRevenueInDay
+					graphForDays[lastIndex].totalDollarRevenue
 				);
 				console.log("phnx", originalNumber, newNumber);
 				let PHNXoriginalNumber = Web3.utils.fromWei(
-					graphForDays[0].totalPhnxRevenueInDay
+					graphForDays[0].totalPhnxRevenue
 				);
 				let PHNXnewNumber = Web3.utils.fromWei(
-					graphForDays[lastIndex].totalPhnxRevenueInDay
+					graphForDays[lastIndex].totalPhnxRevenue
 				);
 				let PhnxChange, price;
 				price = ((newNumber - originalNumber) / originalNumber) * 100;
@@ -644,9 +666,9 @@ const Analytics = (props, context) => {
 						PHNXoriginalNumber) *
 					100;
 				let ticketChange =
-					((graphForDays[lastIndex].soldTicketsInDay -
-						graphForDays[0].soldTicketsInDay) /
-						graphForDays[0].soldTicketsInDay) *
+					((graphForDays[lastIndex].soldTickets -
+						graphForDays[0].soldTickets) /
+						graphForDays[0].soldTickets) *
 					100;
 				if (!isFinite(price)) {
 					price = 100;
@@ -661,15 +683,15 @@ const Analytics = (props, context) => {
 				setDollarChange(price);
 				setTicketSoldChange(ticketChange);
 				console.log("new", newNumber, originalNumber);
-				// originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenueInDay);
-				// newNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenueInDay);
+				// originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenue);
+				// newNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenue);
 				let priceDifference = newNumber - originalNumber;
 				setdollarDifference(priceDifference);
 				let revenueDifference = PHNXnewNumber - PHNXoriginalNumber;
 				setRevenueDifference(revenueDifference);
 				setTicketDifference(
-					graphForDays[lastIndex].soldTicketsInDay -
-						graphForDays[0].soldTicketsInDay
+					graphForDays[lastIndex].soldTickets -
+						graphForDays[0].soldTickets
 				);
 			} else {
 				setDollarRevenue(0);

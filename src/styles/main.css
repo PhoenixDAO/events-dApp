@@ -2834,6 +2834,88 @@ h4.transactions {
 }
 
 canvas#doughnut {
-	font-size: 0px;
-	z-index: 1;
+    font-size: 0px;
+    z-index: 1;
 }
+
+.wallets-head{
+    display: flex;
+	justify-content: center;
+}
+
+.wallets-heading{
+    margin-left: 10px;
+}
+
+.wallet-main-hldr{
+    padding: 10px;
+}
+
+.wallets-subheading{
+    text-align: center;
+    font-weight: bold;
+    color: #413AE2;
+}
+
+<<<<<<< HEAD
+.wallets-single{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);;
+}
+
+.wallets-first{
+    display: flex;
+    width: 50%;
+
+}
+
+.wallets-second{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.wallets-img-hldr{
+    width: 20px;
+}
+
+.wallets-img{
+    width: 100%;
+}
+
+.wallets-name{
+    color: #000000;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+.wallets-name-hldr{
+    margin-left: 10px;
+}
+
+.coming-hldr{
+    font-size: 0.7rem;
+    border-radius: 10px;
+    background-color: #FAEBEB;
+    padding: 3px 5px;
+    color: #ED2020;
+    font-weight: bold;
+}
+
+.right-arrow-img-hldr{
+    width: 20px;
+}
+
+.right-arrow-img{
+    width: 100%;
+}
+
+.wallets-footer{
+    text-align: center;
+    font-size: 0.7rem;
+}
+=======
+>>>>>>> f709be37c53b02012065f4f58cfef15a8538f9f3
