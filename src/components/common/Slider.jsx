@@ -11,6 +11,12 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 	},
 	carouselCaption: {
+		"& p": {
+			textAlign: "left",
+			width: "70%",
+			marginLeft: "-64px",
+			fontFamily: '"Aeonik" ,sans-serif',
+		},
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",

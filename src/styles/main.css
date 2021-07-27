@@ -2833,3 +2833,8 @@ canvas#doughnut {
     text-align: center;
     font-size: 0.7rem;
 }
+
+h2.main-title {
+    font-family: 'Aeonik', sans-serif;
+    font-weight: 700
+}
