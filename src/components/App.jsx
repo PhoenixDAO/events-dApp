@@ -9,7 +9,7 @@ import "startbootstrap-simple-sidebar/css/simple-sidebar.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/main.css";
-import Analytics from "../components/Analytics";
+import AnalyticsWrapper from "../components/AnalyticsWrapper";
 import Sidebar from "./Sidebar";
 import Home from "./Home";
 import Guide from "./Guide";
@@ -1014,7 +1014,7 @@ class App extends Component {
 						exact
 						path="/analytics"
 						render={(props) => (
-							<Analytics
+							<AnalyticsWrapper
 								{...props}
 								eventsContract={this.state.eventsContract}
 							/>

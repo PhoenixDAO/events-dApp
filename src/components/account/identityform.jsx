@@ -8,7 +8,8 @@ const IdentityForm = (props) => {
 	const [selectImage, setSelectImage] = useState({});
 	const [formType, setFormType] = useState("");
 
-	const handleNextForm = (value, type) => {
+	const handleNextForm = (e, value, type) => {
+		e.preventDefault();
 		if (type === "alreadyform") {
 			if (selectImage.name) {
 				setFormType(type);
@@ -20,12 +21,15 @@ const IdentityForm = (props) => {
 		}
 	};
 
-	// const handle
+	const handleSelectedAvatar = (e, { index, img, name }) => {
+		e.preventDefault();
+		setSelectImage({ img, name });
+		props.handleAvatarNumber(index);
+		props.handleName(name);
+	};
 
-	// const switchNextForm = (value) => {
-	// 	setNextForm(value);
-	// };
 	const avatars = [
+
 		{ img: "/images/avatars/bennu.svg", name: "Bennu", onclick: false },
 		{ img: "/images/avatars/milcham.svg", name: "Milcham", onclick: false },
 		{ img: "/images/avatars/thunderbird.svg", name: "Thunderbird", onclick: false },
@@ -36,15 +40,22 @@ const IdentityForm = (props) => {
 		return (
 			<div className="single-avatar-hldr">
 				{data.onclick ? (
-					<div onClick={() => handleNextForm(true, "customform")}>
-						<label for="file-upload" className="custom-file-upload-idn">
+					<div onClick={(e) => handleNextForm(e, true, "customform")}>
+						<label
+							for="file-upload"
+							className="custom-file-upload-idn"
+						>
 							+
 						</label>
 					</div>
 				) : (
 					<div
 						onClick={(e) =>
-							setSelectImage({ img: data.img, name: data.name })
+							handleSelectedAvatar(e, {
+								index: i,
+								img: data.img,
+								name: data.name,
+							})
 						}
 						className={
 							selectImage.name === data.name
@@ -88,7 +99,9 @@ const IdentityForm = (props) => {
 					<div className="">
 						<button
 							className="avatar-select-btn"
-							onClick={() => handleNextForm(true, "alreadyform")}
+							onClick={(e) =>
+								handleNextForm(e, true, "alreadyform")
+							}
 						>
 							Select
 						</button>
@@ -98,9 +111,17 @@ const IdentityForm = (props) => {
 				<HolderForm
 					formtype={
 						formType === "alreadyform" ? (
-							<AlreadyForm selectImage={selectImage} />
+							<AlreadyForm
+								selectImage={selectImage}
+								handleClose={props.handleClose}
+							/>
 						) : (
-							<CustomForm />
+							<CustomForm
+								handleCustomAvatar={props.handleCustomAvatar}
+								handleName={props.handleName}
+								handleClose={props.handleClose}
+								handleAvatar={props.handleAvatar}
+							/>
 						)
 					}
 				/>
