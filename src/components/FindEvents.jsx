@@ -60,6 +60,7 @@ const useStyles = (theme) => ({
 	tabBar: {
 		fontWeight: "500",
 		fontFamily: '"Aeonik" ,sans-serif',
+		textTransform: 'Capitalize',
 
 		"&:hover, &:focus ": {
 			outline: "none",

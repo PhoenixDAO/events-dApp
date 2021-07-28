@@ -147,7 +147,7 @@ html {
 
 body {
     background-color: #fafafa;
-    font-family: "AeonikReg", sans-serif;
+    font-family: "Aeonik", sans-serif !important;
     color: #333;
     font-weight: 300;
 }
@@ -608,8 +608,19 @@ input[type="number"] {
 }
 
 .carousel-indicators {
-    bottom: 5px;
+    bottom: -60px;
 }
+
+.carousel-indicators li {
+    background-color: #E4E4E7;
+    height: 8px;
+    border-radius: 8px;
+}
+
+.carousel-indicators li.active {
+    background-color: #413AE2;
+}
+
 
 .carousel-control-next-icon,
 .carousel-control-prev-icon {

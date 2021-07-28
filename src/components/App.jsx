@@ -237,7 +237,7 @@ class App extends Component {
 	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
 		if (
 			this.state.account.length !== 0 &&
-			this.props.web3.networkId == GLOBAL_NETWORK_ID
+			this.props.web3.networkId === GLOBAL_NETWORK_ID
 		) {
 			this.setState({ disabledStatus: true });
 			this.setState(
