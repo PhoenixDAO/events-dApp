@@ -26,12 +26,13 @@ import {
 	Tab,
 	Divider,
 	InputLabel,
-	MenuItem,
-	FormHelperText,
-	FormControl,
-	Select,
 	Grid,
+	Typography,
 } from "@material-ui/core";
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import Slider from "./common/Slider";
 import roundlogo from "./Images/roundlogo.svg";
 import ConnectWalletButton from "./common/ConnectWalletButton";
@@ -56,6 +57,13 @@ const useStyles = (theme) => ({
 		"&.MuiPaper-elevation4": {
 			boxShadow: "none",
 		},
+		"& .MuiTabScrollButton-root": {
+			"& .MuiSvgIcon-root": {
+				background: "#413AE2",
+				borderRadius: '10px',
+				color: "#fff"
+			}
+		}
 	},
 	tabBar: {
 		fontWeight: "500",
@@ -80,6 +88,13 @@ const useStyles = (theme) => ({
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
+	},
+	sortBy: {
+		position: 'absolute',
+		left: '-50px',
+		top: '15px',
+		color: '#73727D',
+		fontSize: '18px'
 	},
 });
 
@@ -719,7 +734,7 @@ class FindEvents extends Component {
 					<br />
 
 					<div>
-						<div className="row row_mobile">
+						<div className="row row_mobile dropdown-row">
 							<h2
 								className="col-lg-10 col-md-9 col-sm-8 main-title"
 								// style={{ fontWeight: "bold" }}
@@ -727,23 +742,28 @@ class FindEvents extends Component {
 								{/* <i className="fa fa-calendar-alt"></i>  */}
 								All Events
 							</h2>
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "center",
-								}}
+							<FormControl
+								variant="outlined"
+								className={classes.formControl}
 							>
-								{/* <p>Sort:</p> */}
-								<select
-									name="category"
+								<Typography variant="p" className={classes.sortBy}>
+									Sort:
+								</Typography>
+								<InputLabel id="demo-simple-select-outlined-label" style={{"z-index": '-1'}}>
+									Events
+								</InputLabel>
+								<Select
+									labelId="demo-simple-select-outlined-label"
+									id="demo-simple-select-outlined"
 									// value={category}
 									// onChange={event => handleCategoryChange(event.target.value)}
+									label="All Events"
 								>
-									<option id="0">All Events</option>
-									<option id="1">Trending Events</option>
-									<option id="2">Popular Events</option>
-								</select>
-							</div>
+									<MenuItem value={10}>All Events</MenuItem>
+									<MenuItem value={20}>Trending Events</MenuItem>
+									<MenuItem value={30}>Popular Events</MenuItem>
+								</Select>
+							</FormControl>
 							{/* <button
 								className="btn sort_button btn-dark col-lg-2 col-md-3 col-sm-3"
 								value={this.state.value}
