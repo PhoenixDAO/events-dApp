@@ -614,7 +614,7 @@ input[type="number"] {
 .carousel-indicators li {
     background-color: #E4E4E7;
     height: 8px;
-    border-radius: 8px;
+    border-radius: 12px 13px;
 }
 
 .carousel-indicators li.active {
@@ -2848,4 +2848,8 @@ canvas#doughnut {
 h2.main-title {
     font-family: 'Aeonik', sans-serif;
     font-weight: 700
+}
+
+.dropdown-row .MuiSelect-selectMenu{
+    font-weight: 700;
 }
