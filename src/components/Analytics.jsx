@@ -596,8 +596,8 @@ const Analytics = (props, context) => {
 		setTimeStamp(timestamp);
 		let today = Math.floor(Date.now() / 1000);
 		let elapsedTime = today - timestamp;
-		console.log(graphData);
-		if (graphData != undefined) {
+		console.log("graph",graphData);
+		if (graphData.length != 0) {
 			let graphForDays;
 			console.log("called herer");
 			if (timestamp === "86400") {
