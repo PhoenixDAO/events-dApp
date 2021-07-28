@@ -51,7 +51,7 @@ const CustomForm = (props) => {
 			<div className="idn-head">
 				<div>
 					<img
-						style={{ height: "24px" }}
+						style={{ height: "21px" }}
 						src={roundlogo}
 						alt="phnx logo"
 					/>

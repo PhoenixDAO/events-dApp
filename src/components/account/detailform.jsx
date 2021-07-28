@@ -88,7 +88,10 @@ const DetailForm = (props) => {
 	return (
 		<div className="dtl-hldr">
 			<div className="acc-basic-info">
+			<img alt="banner" src="/images/accountDetails.jpg" />
+
 				<div className="acc-av-hldr">
+
 					<img className="acc-av" src="/images/metamask.svg" />
 				</div>
 				<div className="acc-title-hlder">
