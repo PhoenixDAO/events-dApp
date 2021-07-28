@@ -95,10 +95,7 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
 	<DrizzleProvider options={options}>
-		<ThemeProvider theme={theme}>
-			<CssBaseline />
-			<App />
-		</ThemeProvider>
+		<App />
 	</DrizzleProvider>,
 	document.getElementById("root")
 );
