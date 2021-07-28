@@ -58,6 +58,9 @@ const useStyles = (theme) => ({
 		},
 	},
 	tabBar: {
+		fontWeight: "500",
+		fontFamily: '"Aeonik" ,sans-serif',
+
 		"&:hover, &:focus ": {
 			outline: "none",
 		},
@@ -67,6 +70,7 @@ const useStyles = (theme) => ({
 		"&.MuiTab-textColorPrimary.Mui-selected": {
 			color: "#413AE2",
 			borderBottom: "2.5px solid #413AE2",
+			fontWeight: "700",
 		},
 	},
 	formControl: {
@@ -716,7 +720,7 @@ class FindEvents extends Component {
 					<div>
 						<div className="row row_mobile">
 							<h2
-								className="col-lg-10 col-md-9 col-sm-8"
+								className="col-lg-10 col-md-9 col-sm-8 main-title"
 								// style={{ fontWeight: "bold" }}
 							>
 								{/* <i className="fa fa-calendar-alt"></i>  */}
