@@ -75,12 +75,25 @@ class CreateEvent extends Component {
 				file_name: null,
 			},
 			fields: {},
+			activeStep: 0,
+			activeFlamingStep: 0,
 		};
 		this.contracts = context.drizzle.contracts;
 	}
 
 	onFieldsChange = (f) => {
 		this.setState({ fields: { ...this.state.fields, ...f } });
+	};
+
+	onStepsChange = (s) => {
+		this.setState({
+			activeStep: s,
+		});
+	};
+
+	onFlamingStepsChange = () => {
+		console.log("onFlamingStepsChange");
+		this.setState({ activeFlamingStep: this.state.activeFlamingStep + 1 });
 	};
 
 	handleCreateEvent = async () => {
@@ -166,6 +179,7 @@ class CreateEvent extends Component {
 		ipfs.add(buffer, { pin: pinit })
 			.then(async (hash) => {
 				console.log("hashhh", hash[0].hash);
+				this.onFlamingStepsChange();
 				// ipfs.get(hash[0].hash).then((file) => {
 				// 	let data = JSON.parse(file[0].content.toString());
 				// 	console.log("data", data);
@@ -196,6 +210,7 @@ class CreateEvent extends Component {
 					.on("transactionHash", (hash) => {
 						// hash of tx
 						console.log("hash", hash);
+						this.onFlamingStepsChange();
 					})
 					.on("confirmation", function (confirmationNumber, receipt) {
 						if (confirmationNumber === 2) {
@@ -203,6 +218,10 @@ class CreateEvent extends Component {
 								"confirmationNumber",
 								confirmationNumber
 							);
+							this.setState({
+								activeFlamingStep:
+									this.state.activeFlamingStep + 1,
+							});
 						}
 					})
 					.on("error", function (err) {
@@ -451,13 +470,22 @@ class CreateEvent extends Component {
 							<MyStepper
 								handleCreateEvent={this.handleCreateEvent}
 								onFieldsChange={this.onFieldsChange}
+								onStepsChange={this.onStepsChange}
+								onFlamingStepsChange={this.onFlamingStepsChange}
+								activeFlamingStep={this.state.activeFlamingStep}
 							/>
 						</div>
 						<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 							<br />
 							<br />
 							<br />
-							<PreviewEvent fields={this.state.fields} />
+							<PreviewEvent
+								fields={this.state.fields}
+								activeStep={this.state.activeStep}
+							/>
+							<button onClick={this.onFlamingStepsChange}>
+								step
+							</button>
 						</div>
 
 						{/* <Form
@@ -496,13 +524,19 @@ class CreateEvent extends Component {
 						<MyStepper
 							handleCreateEvent={this.handleCreateEvent}
 							onFieldsChange={this.onFieldsChange}
+							onStepsChange={this.onStepsChange}
+							onFlamingStepsChange={this.onFlamingStepsChange}
+							activeFlamingStep={this.state.activeFlamingStep}
 						/>
 					</div>
 					<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
 						<br />
 						<br />
 						<br />
-						<PreviewEvent fields={this.state.fields} />
+						<PreviewEvent
+							fields={this.state.fields}
+							activeStep={this.state.activeStep}
+						/>
 					</div>
 
 					{/* <Form

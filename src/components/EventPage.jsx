@@ -563,14 +563,6 @@ class EventPage extends Component {
 			// <p style={{ whiteSpace: "pre-line" }}>
 			// 	{this.state.description}
 			// </p>
-			// <BodyTextEditor
-			// 	value={this.state.eventDescription}
-			// 	setValue={(bodyText) => {
-			// 		console.log(bodyText);
-			// 		// onChange(bodyText);
-			// 	}}
-			// 	readOnly={true}
-			// />
 			<RichTextEditor
 				readOnly
 				value={RichTextEditor.createValueFromString(
