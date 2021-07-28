@@ -2773,11 +2773,7 @@ canvas#doughnut {
     color: #413AE2;
 }
 
-<<<<<<< HEAD
-.wallets-single{
-=======
 .wallets-single {
->>>>>>> af9e9cbc02d16845a798e232c800c0906b6aa5ed
     display: flex;
     justify-content: space-between;
     align-items: center;
