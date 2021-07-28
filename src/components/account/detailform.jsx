@@ -37,7 +37,7 @@ const DetailForm = (props) => {
 		updateUserDetails({
 			address: props.account,
 			networkId: props.networkId,
-			name: "Bennue", //we need to change this when the design is finalised
+			name: "Bennu", //we need to change this when the design is finalised
 			organizer,
 			avatarCustom, //we need to change this when the design is finalised
 			avatarNumber: 1, //we need to change this when the design is finalised
@@ -66,7 +66,10 @@ const DetailForm = (props) => {
 	return (
 		<div className="dtl-hldr">
 			<div className="acc-basic-info">
+			<img alt="banner" src="/images/accountDetails.jpg" />
+
 				<div className="acc-av-hldr">
+
 					<img className="acc-av" src="/images/metamask.svg" />
 				</div>
 				<div className="acc-title-hlder">
