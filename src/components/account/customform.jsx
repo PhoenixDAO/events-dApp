@@ -3,7 +3,7 @@ import "./customform.css";
 import roundlogo from "../Images/roundlogo.svg";
 import ipfs from "../../utils/ipfs";
 
-const CustomForm = () => {
+const CustomForm = (props) => {
 	const [file, setFile] = useState([]);
 	const handleFile = (e) => {
 		console.log(e.target.files);
@@ -14,18 +14,31 @@ const CustomForm = () => {
 			setFile(e.target.files);
 		}
 	};
+	const getBase64 = (file) => {
+		return new Promise((resolve, reject) => {
+			const reader = new FileReader();
+			reader.readAsDataURL(file);
+			reader.onload = () => resolve(reader.result);
+			reader.onerror = (error) => reject(error);
+		});
+	};
 
-	const uploadImage = (e) => {
+	const uploadImage = async (e) => {
 		e.preventDefault();
 		let pinit = process.env.NODE_ENV === "production";
+		const base64Img = await getBase64(file[0]);
 		if (file[0] !== undefined) {
-			const url = URL.createObjectURL(file[0]);
-			console.log("url", url);
-			let buffer = Buffer.from(url);
+			let ipfsData = JSON.stringify({
+				image0: base64Img,
+			});
+			let buffer = Buffer.from(ipfsData);
 			console.log("buffer", buffer);
 			ipfs.add(buffer, { pin: pinit })
 				.then((hash) => {
 					console.log("hash", hash);
+					props.handleCustomAvatar(true);
+					props.handleAvatar(hash[0].hash);
+					props.handleClose();
 				})
 				.catch((err) => {
 					console.log(err);
@@ -35,11 +48,10 @@ const CustomForm = () => {
 
 	return (
 		<div className="idn-hldr">
-			{console.log(Object.keys(file).length)}
 			<div className="idn-head">
 				<div>
 					<img
-						style={{ height: "24px" }}
+						style={{ height: "21px" }}
 						src={roundlogo}
 						alt="phnx logo"
 					/>
@@ -91,15 +103,14 @@ const CustomForm = () => {
 			<div>
 				<div className="frm-single">
 					<p className="avatar-name-heading">AVATAR NAME</p>
-					<input className="avatar-name-inpt" />
+					<input
+						className="avatar-name-inpt"
+						onChange={(e) => props.handleName(e.target.value)}
+					/>
 				</div>
 			</div>
 			<div className="" style={{ marginTop: "20px" }}>
-				<button
-					className="avatar-select-btn"
-					onClick={uploadImage}
-					// onClick={() => handleNextForm(true, "alreadyform")}
-				>
+				<button className="avatar-select-btn" onClick={uploadImage}>
 					Save
 				</button>
 			</div>

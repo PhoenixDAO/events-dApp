@@ -298,15 +298,15 @@ const chartOptions = {
 
 const Analytics = (props, context) => {
 	const classes = useStyles();
-	const [graphData, setGraphData] = useState([]);
-	const [todayGraphData, setTodayGraphData] = useState([]);
+	// const [graphData, setGraphData] = useState([]);
+	// const [todayGraphData, setTodayGraphData] = useState([]);
 	const [graphDays, setGraphDays] = useState([]);
 	const [userDetails, setUserDetails] = useState([]);
-	const [TicketSales, setTicketSales] = useState([]);
-	const [eventName, setEventName] = useState([]);
+	// const [TicketSales, setTicketSales] = useState([]);
+	// const [eventName, setEventName] = useState([]);
 	const [revenueCategory, setrevenueCategory] =
 		useState("eventRevenueInPhnx");
-	const [ticketBought, setTicketBought] = useState(0);
+	// const [ticketBought, setTicketBought] = useState(0);
 	const [timeStamp, setTimeStamp] = useState("86400");
 	const [dollarRevenue, setDollarRevenue] = useState(0);
 	const [phnxRevenue, setPhnxRevenue] = useState(0);
@@ -328,35 +328,41 @@ const Analytics = (props, context) => {
 	useEffect(() => {
 		// getPhnxRevenue();
 		getViewsAndFavourites();
-		loadApis();
-	}, []);
-	const loadApis = async () => {
-		const eventName = await getEventName(props.accounts);
-		setEventName(eventName);
-		if (eventName.length != 0) {
-			const tickets = await generateJSON(eventName[0].eventId);
-			setTicketSales(tickets);
-		}
-		const blockChainTickets = await props.eventsContract.methods
-			.ticketsOf(props.accounts)
-			.call();
-		setTicketBought(blockChainTickets.length);
-		// const timeData = await getTimeData(props.accounts);
-		const timeData = await getTimeData(
-			"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b"
-		);
-		console.log("timeData", timeData);
-		setGraphData(timeData);
-		console.log("timestamp", Number(moment().unix()));
-		const todayData = await getTodayData(
-			"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b",
-			Number(moment().unix()- 86400)
-		);
-		console.log("time stamp--- ", moment().unix())
-		console.log("todayData", todayData);
-		setTodayGraphData(todayData);
-		handleTimeStampChange(null, todayData);
-	};
+		handleTimeStampChange();
+		console.log("recalled");
+		// loadApis();
+	}, [props.graphData]);
+
+	useEffect(() => {
+		getDollarRevenue();
+	}, [graphDays]);
+	// const loadApis = async () => {
+	// 	const eventName = await getEventName(props.accounts);
+	// 	setEventName(eventName);
+	// 	if (eventName.length != 0) {
+	// 		const tickets = await generateJSON(eventName[0].eventId);
+	// 		setTicketSales(tickets);
+	// 	}
+	// 	const blockChainTickets = await props.eventsContract.methods
+	// 		.ticketsOf(props.accounts)
+	// 		.call();
+	// 	setTicketBought(blockChainTickets.length);
+	// 	// const timeData = await getTimeData(props.accounts);
+	// 	const timeData = await getTimeData(
+	// 		"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b"
+	// 	);
+	// 	console.log("timeData", timeData);
+	// 	setGraphData(timeData);
+	// 	console.log("timestamp", Number(moment().unix()));
+	// 	const todayData = await getTodayData(
+	// 		"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b",
+	// 		Number(moment().unix()- 86400)
+	// 	);
+	// 	console.log("time stamp--- ", moment().unix())
+	// 	console.log("todayData", todayData);
+	// 	setTodayGraphData(todayData);
+	// 	handleTimeStampChange(null, todayData);
+	// };
 	const events = getEvents({
 		_isMounted: true,
 		accounts: props.accounts,
@@ -392,12 +398,12 @@ const Analytics = (props, context) => {
 	const data2 = {
 		maintainAspectRatio: false,
 		responsive: false,
-		labels: TicketSales.map((event) => {
+		labels: props.TicketSales.map((event) => {
 			return event.location;
 		}),
 		datasets: [
 			{
-				data: TicketSales.map((event) => {
+				data: props.TicketSales.map((event) => {
 					return event.ticketSold;
 				}),
 				backgroundColor: chartColors,
@@ -503,10 +509,10 @@ const Analytics = (props, context) => {
 	};
 
 	const TicketAnalytics = () => {
-		if (TicketSales.length == 0) {
+		if (props.TicketSales.length == 0) {
 			return <Grid className={classes.noTicket}>No tickets sold</Grid>;
 		} else {
-			return TicketSales.map((event, index) => (
+			return props.TicketSales.map((event, index) => (
 				<Grid className={classes.row3}>
 					<Grid className={classes.city}>
 						<div
@@ -586,7 +592,7 @@ const Analytics = (props, context) => {
 	};
 
 	//filterations and calculations of earnuings card section
-	const handleTimeStampChange = async (event, todayDat) => {
+	const handleTimeStampChange = async (event) => {
 		let timestamp;
 		if (event) {
 			timestamp = event.target.value;
@@ -596,26 +602,23 @@ const Analytics = (props, context) => {
 		setTimeStamp(timestamp);
 		let today = Math.floor(Date.now() / 1000);
 		let elapsedTime = today - timestamp;
-		console.log("graph",graphData);
-		if (graphData.length != 0) {
-			let graphForDays;
+		console.log("graph", props.graphData);
+		if (props.graphData.length != 0) {
+			let graphForDays = [];
 			console.log("called herer");
 			if (timestamp === "86400") {
 				console.log("graphData", "called here");
-				if (todayDat != undefined && todayDat.length > 0) {
-					console.log("graphData", "if called here", todayDat);
-					graphForDays = todayDat;
-				} else if (todayGraphData.length > 0) {
+				if (props.todayGraphData.length > 0) {
 					console.log(
 						"graphData",
 						"else if called here",
-						todayGraphData
+						props.todayGraphData
 					);
-					graphForDays = todayGraphData;
+					graphForDays = props.todayGraphData;
 				}
 			} else {
-				console.log("graphData", graphData);
-				graphForDays = graphData.filter(
+				console.log("graphData", props.graphData);
+				graphForDays = props.graphData.filter(
 					(event) => event.startTimeStamp >= elapsedTime
 				);
 			}
@@ -710,10 +713,10 @@ const Analytics = (props, context) => {
 	// const calculatePercentage =() =>{
 	//         let price = (((newNumber - orignalNumber) / orignalNumber) * 100);
 	// }
-	const handleEvent = async (event) => {
-		const tickets = await generateJSON(Number(event.target.value));
-		setTicketSales(tickets);
-	};
+	// const handleEvent = async (event) => {
+	// 	const tickets = await generateJSON(Number(event.target.value));
+	// 	setTicketSales(tickets);
+	// };
 	const provideGraph = () => {
 		if (dollarClicked) {
 			return (
@@ -807,8 +810,8 @@ const Analytics = (props, context) => {
 				</Grid>
 				<EventsAnalytics
 					userDetails={userDetails}
-					createdEvents={eventName.length}
-					ticketBought={ticketBought}
+					createdEvents={props.eventName.length}
+					ticketBought={props.ticketBought}
 				/>
 				<Grid className={classes.box}>
 					<Grid className={classes.row}>
@@ -833,13 +836,13 @@ const Analytics = (props, context) => {
 								<Select
 									native
 									// value={state.age}
-									onChange={handleEvent}
+									onChange={props.handleEvent}
 									inputProps={{
 										name: "age",
 										id: "outlined-age-native-simple",
 									}}
 								>
-									{eventName.map((event) => {
+									{props.eventName.map((event) => {
 										return (
 											<option value={event.eventId}>
 												{event.name}

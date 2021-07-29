@@ -390,7 +390,7 @@ input[type="number"] {
     top: 0;
     padding-top: 40px;
     background-color: #fcfcfd;
-    width: 101% !important;
+    /* width: 101% !important; */
 }
 
 .header3 h2 {

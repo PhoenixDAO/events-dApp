@@ -1,17 +1,25 @@
 .dtl-hldr {
 	margin-top: 20px;
+	background-color: white;
+	margin: 40px 0px;
+	padding: 50px;
+	border-radius: 8px;
+	padding-bottom: 80px;
 }
 .acc-basic-info {
 	margin: 0 auto;
 }
-
+.banner{
+	width:"100%";
+	margin-bottom: 50px;
+}
 .acc-av-hldr {
 	border: 1px solid #e4e4e4;
 	border-radius: 50%;
-	height: 60px;
-	width: 60px;
-	padding: 10px;
+	height: 70px;
+	width: 70px;
 	margin: 0 auto;
+	display: flex;
 }
 
 .acc-av {
@@ -24,10 +32,13 @@
 	text-align: center;
 	display: flex;
 	justify-content: center;
+	padding-top: 10px;
 }
 
 .acc-title {
 	margin-right: 3px;
+	font-weight: 700;
+	font-size: 19px;
 }
 
 .redirect-img-hldr {
@@ -40,10 +51,11 @@
 }
 
 .acc-inpt-heading {
-	color: #999999;
+	color: #4E4E55;
 	font-weight: bold;
 	margin: 0;
-	font-size: 0.8rem;
+	font-size: 14px;
+	padding-bottom: 10px;
 }
 
 .acc-wallet-input-holder {
@@ -54,7 +66,7 @@
 .acc-copy-img-holder {
 	position: absolute;
 	left: 94%;
-	top: 10%;
+	top: 21%;
 }
 
 .acc-copy-img {
@@ -69,7 +81,8 @@
 .acc-inpt {
 	border-radius: 5px;
 	border: 1px solid #e4e4e4;
-	padding: 5px 2px;
+	padding: 10px;
+	padding-right: 30px;
 	width: 100%;
 }
 
@@ -82,13 +95,15 @@
 .org-heading {
 	color: #413ae2;
 	font-weight: bold;
-	font-size: 15px;
+	font-size: 18px;
 	margin: 0;
+	padding-bottom: 10px;
+
 }
 
 .org-subheading {
 	color: #999999;
-	font-size: 0.6rem;
+	font-size: 14px;
 }
 
 .frm-btn-hldr {
