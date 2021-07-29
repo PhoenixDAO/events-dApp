@@ -7,8 +7,10 @@ import AddIcon from "@material-ui/icons/Add";
 const useStyles = makeStyles((theme) => ({
 	button: {
 		margin: theme.spacing(1),
+		fontFamily: "'Aeonik', sans-serif",
 		background: "#413AE2",
 		color: "white",
+		textTransform: 'Capitalize',
 		// maxHeight: 54,
 		// maxWidth: 230,
 		"&:focus": {
@@ -17,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const ConnectWalletButton = () => {
+const ConnectWalletButton = (props) => {
 	const classes = useStyles();
 
 	return (
@@ -27,6 +29,7 @@ const ConnectWalletButton = () => {
 			size="large"
 			className={classes.button}
 			startIcon={<AddIcon fontSize="large" />}
+			onClick={props.onClick}
 		>
 			Connect Wallet
 		</Button>

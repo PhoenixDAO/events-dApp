@@ -70,6 +70,9 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		height: "364px",
 	},
+	gridContainer: {
+		background: '#fff'
+	}
 }));
 
 const questions = [
@@ -151,11 +154,11 @@ const FAQ = (props) => {
 	return (
 		<div className="event-page-wrapper">
 							<Header title="Frequently Asked Questions" phnxButton={true}/>
-			<Grid container>
+			<Grid container className={classes.gridContainer}>
 				<div className={classes.imageContainer}>
 					<img
 						className={classes.image}
-						src={"/images/arrow.png"}
+						src={"/images/Frame-223.svg"}
 					></img>
 				</div>
 

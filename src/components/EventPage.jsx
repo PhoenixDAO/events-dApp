@@ -50,7 +50,6 @@ import Header from "./common/Header";
 import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
-
 let numeral = require("numeral");
 var moment = require("moment");
 

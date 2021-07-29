@@ -315,7 +315,7 @@ const EventCard = (props, context) => {
 										<ConfirmationNumberOutlined fontSize="medium" />
 										<span>&nbsp;</span>
 										{event_data.tktTotalQuantitySold}/
-										{event_data.tktTotalQuantity == 0 ? (
+										{event_data.tktTotalQuantity === 0 ? (
 											<span style={{ fontSize: "21px" }}>
 												∞
 											</span>
@@ -378,7 +378,7 @@ const EventCard = (props, context) => {
 								>
 									{!event_data.token ? (
 										"Free"
-									) : phnx_price.length == 1 ? (
+									) : phnx_price.length === 1 ? (
 										<div>
 											<p>{phnx_price[0]} PHNX</p>
 											<p className={classes.starting}>

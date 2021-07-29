@@ -1,84 +1,87 @@
 .idn-head {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .idn-heading {
-	margin: 0;
-	font-size: 18px;
-	color: black;
-	margin-right: 5px;
+    margin: 0;
+    font-size: 20px;
+    color: black;
+    margin-right: 5px;
+    font-weight: 600;
+    padding-left: 6px;
+
 }
 
 .idn-av-hldr {
-	border: 1px solid #e4e4e4;
-	border-radius: 50%;
-	height: 80px;
-	width: 80px;
-	padding: 10px;
-	margin: 0 auto;
+    border: 1px solid #e4e4e4;
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
 }
 
 .idn-av {
-	width: 50px;
-	display: block;
-	margin: 0 auto;
+    width: 50px;
+    display: block;
+    margin: 0 auto;
 }
 
 .custom-file-upload-idn {
-	border: 1px solid #ccc;
-	display: block;
-	padding: 15px 12px;
-	cursor: pointer;
-	margin: 0 auto;
-	border-radius: 50%;
-	height: 80px;
-	width: 80px;
-	text-align: center;
-	color: #000000;
-	font-size: 30px;
+    border: 1px solid #ccc;
+    display: block;
+    padding: 15px 12px;
+    cursor: pointer;
+    margin: 0 auto;
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+    text-align: center;
+    color: #000000;
+    font-size: 30px;
 }
 
-
 .idn-sub {
-	margin-top: 20px;
+    margin-top: 20px;
 }
 
 .idn-subhead1 {
-	text-align: center;
-	color: blueviolet;
-	font-weight: bold;
+    text-align: center;
+    color: #413ae2;
+    font-weight: bold;
 }
 
 .idn-subhead2 {
-	text-align: center;
-	color: #929292;
-	font-size: 12px;
+    text-align: center;
+    color: #929292;
+    font-size: 12px;
 }
 
 .avatar-hldr {
-	display: flex;
-	flex-wrap: wrap;
-	margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0;
 }
 
 .single-avatar-hldr {
-	flex-grow: 1;
-	width: 33%;
+    flex-grow: 1;
+    width: 33%;
 }
 
 .select-av-img {
-	border: 1px solid blueviolet;
+    border: 1px solid #413ae2;
 }
 
 .avatar-select-btn {
-	background-color: blueviolet;
-	color: #ffffff;
-	width: 100%;
-	padding: 5px 10px;
-	border-radius: 5px;
-	font-weight: bold;
-	text-align: center;
-	border: 0px;
+    background-color: #413ae2;
+    color: #ffffff;
+    width: 100%;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    border: 0px;
 }

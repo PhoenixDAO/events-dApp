@@ -11,6 +11,18 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 	},
 	carouselCaption: {
+		"& p": {
+			'@media (max-width: 600px)': {
+				fontSize: '14px'
+			},
+			textAlign: "left",
+			width: "70%",
+			marginLeft: "-64px",
+			fontFamily: '"Aeonik" ,sans-serif',
+		},
+		'@media (max-width: 767px)': {
+			bottom: '-50px'
+		},
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
@@ -18,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
 		// paddingLeft: 64,
 	},
 	title: {
+		'@media (max-width: 767px)': {
+			marginBottom: '0',
+			fontSize:'16px'
+		},
 		fontSize: 36,
 		fontWeight: "700",
 	},
