@@ -436,7 +436,16 @@ const Analytics = (props, context) => {
 			phxRevenue.push(
 				Web3.utils.fromWei(obj.totalPhnxRevenue.toString())
 			);
-			phnxLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
+			if(timeStamp==86400)
+			{
+				phnxLabel.push(moment.unix(obj.startTimeStamp).format('HH:mm'));
+
+			}
+			else
+			{
+				phnxLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
+
+			}
 		}
 		setDollarClicked(false);
 		setSoldClicked(false);
@@ -467,7 +476,14 @@ const Analytics = (props, context) => {
 		for (let i = 0; i < soldKey.length; i++) {
 			const obj = soldData[soldKey[i]];
 			soldTickets.push(obj.soldTickets);
-			soldLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
+			if(timeStamp==86400)
+			{
+				soldLabel.push(moment.unix(obj.startTimeStamp).format('HH:mm'));
+			}
+			else
+			{
+				soldLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
+			}
 		}
 		setPhnxClicked(false);
 		setDollarClicked(false);
@@ -499,7 +515,14 @@ const Analytics = (props, context) => {
 			dollarRev.push(
 				Web3.utils.fromWei(obj.totalDollarRevenue.toString())
 			);
-			dollarLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
+			if(timeStamp==86400)
+			{
+				dollarLabel.push(moment.unix(obj.startTimeStamp).format('HH:mm'));
+			}
+			else
+			{
+				dollarLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
+			}
 		}
 		setPhnxClicked(false);
 		setSoldClicked(false);
