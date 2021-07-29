@@ -61,6 +61,14 @@ const useStyles = makeStyles((theme) => ({
         color: "#A3A3A3",
         fontSize: "12px",
         height: "20px"
+    },
+    card:{
+        display: "flex",
+         alignItems: "center",
+         [theme.breakpoints.down("md")]:{
+            display: "grid",
+
+         }
     }
 }));
 
@@ -92,7 +100,7 @@ export const Card = (props) => {
                 alt="Event Price"
             />
             <Typography className={classes.dollar}>{header}</Typography>
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div className={classes.card}>
                 <Typography className={classes.total}>{value}</Typography>
                 <Typography className={(profit > 0 ? classes.green : classes.red)}>{profit.toFixed(0)}%</Typography>
             </div>
