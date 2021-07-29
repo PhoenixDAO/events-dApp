@@ -52,7 +52,6 @@ const IdentityForm = (props) => {
 					<div
 						onClick={(e) =>
 							handleSelectedAvatar(e, {
-								index: i,
 								img: data.img,
 								name: data.name,
 							})

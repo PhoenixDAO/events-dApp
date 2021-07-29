@@ -10,7 +10,11 @@ import {
 	Select,
 	IconButton,
 } from "@material-ui/core";
-import { ShoppingCartOutlined, ModeCommentOutlined } from "@material-ui/icons";
+import {
+	ShoppingCartOutlined,
+	ModeCommentOutlined,
+	ContactlessOutlined,
+} from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
@@ -44,7 +48,10 @@ import BuyTicket from "./common/BuyTicket";
 import { updateEventViews } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { generateBuyerArr } from "../utils/graphApis";
+import RichTextEditor from "react-rte";
+import BodyTextEditor from "./common/BodyTextEditor";
 let numeral = require("numeral");
+var moment = require("moment");
 
 const customStyles = {
 	ul: {
@@ -211,6 +218,20 @@ class EventPage extends Component {
 			pageTransactions: [],
 			approvalGranted: false,
 			selectedCategoryIndex: 0,
+			//new ipfs data
+			image0: null,
+			image1: null,
+			image2: null,
+			eventOrganizer: null,
+			eventDate: null,
+			eventStartDate: null,
+			eventEndDate: null,
+			eventStartTime: null,
+			eventEndTime: null,
+			eventTime: null,
+			eventType: null,
+			eventDescription: null,
+			eventLocation: null,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -483,10 +504,23 @@ class EventPage extends Component {
 									loaded: true,
 									// description: data.text,
 									description: "",
-
 									image: data.image,
 									locations: data.location,
 									organizer: data.organizer,
+									//new
+									image0: data.image0,
+									image1: data.image1,
+									image2: data.image2,
+									eventOrganizer: data.eventOrganizer,
+									eventDate: data.eventDate,
+									eventStartDate: data.eventStartDate,
+									eventEndDate: data.eventEndDate,
+									eventStartTime: data.eventStartTime,
+									eventEndTime: data.eventEndTime,
+									eventTime: data.eventTime,
+									eventType: data.eventType,
+									eventDescription: data.eventDescription,
+									eventLocation: data.location,
 								});
 							}
 						})
@@ -523,11 +557,27 @@ class EventPage extends Component {
 				</p>
 			);
 		if (this.state.description !== null)
-			description = (
-				<p style={{ whiteSpace: "pre-line" }}>
-					{this.state.description}
-				</p>
-			);
+			console.log("desc", this.state.eventDescription);
+		description = (
+			// <p style={{ whiteSpace: "pre-line" }}>
+			// 	{this.state.description}
+			// </p>
+			<RichTextEditor
+				readOnly
+				value={RichTextEditor.createValueFromString(
+					this.state.eventDescription,
+					"html"
+				)}
+				// onChange={handleChange}
+				required
+				id="body-text"
+				name="bodyText"
+				type="string"
+				multiline
+				variant="filled"
+				// className={classes.editor}
+			/>
+		);
 		return description;
 	};
 	handleClickOpen2 = () => {
@@ -967,7 +1017,19 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{" "}
-											{event_date}
+											{/* {event_date} */}
+											{!this.state.eventTime
+												? `Date`
+												: this.state.eventTime ===
+												  "onedayevent"
+												? moment(
+														this.state.eventDate
+												  ).format("Do MMM, YYYY")
+												: `
+							${moment(this.state.eventStartDate).format("Do MMM")}
+							-
+							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
+							`}
 										</p>
 										<p className={classes.eventHeading}>
 											<ScheduleOutlined /> Time

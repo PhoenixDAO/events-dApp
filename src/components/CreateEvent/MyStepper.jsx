@@ -53,6 +53,9 @@ import dollarIcon from "../Images/dollar.png";
 import altIcon from "../Images/altIcon.png";
 import editIcon from "../Images/editIcon.png";
 import deleteIcon from "../Images/deleteIcon.png";
+import BodyTextEditor from "../common/BodyTextEditor";
+import PublishIcon from "@material-ui/icons/Publish";
+import publishIcon from "../Images/publish.png";
 
 var badWords = require("bad-words");
 
@@ -192,7 +195,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
+const MyStepper = ({
+	handleCreateEvent,
+	onFieldsChange,
+	onStepsChange,
+	onFlamingStepsChange,
+	activeFlamingStep,
+}) => {
 	const classes = useStyles();
 	const { handleSubmit, control, register } = useForm();
 
@@ -222,7 +231,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	const [eventOrganizer, setEventOrganizer] = useState("");
 
 	//flaming stepper
-	const [activeFlamingStep, setActiveFlamingStep] = useState(0);
+	// const [activeFlamingStep, setActiveFlamingStep] = useState(0);
 	const flamingSteps = getFlamingSteps();
 
 	//oneday event state & more than a day event
@@ -310,6 +319,10 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	useEffect(() => {
 		getPhoenixdaoMarket();
 	}, []);
+
+	useEffect(() => {
+		onStepsChange(activeStep);
+	}, [activeStep]);
 
 	const getPhoenixdaoMarket = async () => {
 		fetch(
@@ -1032,35 +1045,6 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 									</MuiPickersUtilsProvider>
 								</div>
 							)}
-
-							{/* preview button */}
-							{/* <EventPreviewPage
-								open={open}
-								handleClose={handleClose}
-								description="Yayy, I’m getting Married Yáll
-								Him boisterous invitation dispatched had connection inhabiting projection. By mutual an mr danger garret edward an. Diverted as strictly exertion addition no disposal by stanhill. This call wife do so sigh no gate felt. You and abode spite order get. Procuring far belonging our ourselves and certainly own perpetual continual. It elsewhere of sometimes or my certainty. Lain no as five or at high. Everything travelling set how law literature. 
-								belonging our ourselves and certainly own perpetual continual. It elsewhere of sometimes or my certainty. Lain no as five or at high. Everything travelling set how law literature. "
-								image="./images/problem_ipfs.png"
-								category={category}
-								title="Moe's Wedding"
-								startDate={"startDate"}
-								startTime={startTime}
-								endDate={"endDate"}
-								endTime={endTime}
-								eventOrganizer={eventOrganizer}
-								availability={availability}
-								location="karachi"
-							/> */}
-							{/* <Button
-								color="primary"
-								size="large"
-								startIcon={
-									<VisibilityOutlinedIcon fontSize="large" />
-								}
-								onClick={handleClickOpen}
-							>
-								Preview Event
-							</Button> */}
 						</div>
 					</React.Fragment>
 				);
@@ -1189,7 +1173,7 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 								return (
 									<div key={index}>
 										<label className={classes.label}>
-											COVER IMAGE {index}
+											COVER IMAGE {index + 1}
 										</label>
 
 										<Controller
@@ -1585,6 +1569,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 														}
 														disabled
 														id="input-with-icon-textfield"
+														onKeyDown={
+															formatInputDollarPrice
+														}
 														type="number"
 														variant="outlined"
 														InputProps={{
@@ -1895,9 +1882,6 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													>
 														<Controller
 															name={`dollarPrice${ticketCategory}`}
-															onKeyDown={
-																formatInputDollarPrice
-															}
 															control={control}
 															defaultValue=""
 															render={({
@@ -1914,6 +1898,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																		classes.margin
 																	}
 																	id="input-with-icon-textfield"
+																	onKeyDown={
+																		formatInputDollarPrice
+																	}
 																	type="number"
 																	variant="outlined"
 																	InputProps={{
@@ -1988,6 +1975,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																	}
 																	disabled
 																	id="input-with-icon-textfield"
+																	onKeyDown={
+																		formatInputDollarPrice
+																	}
 																	type="number"
 																	variant="outlined"
 																	InputProps={{
@@ -2107,9 +2097,6 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																TICKETS
 															</label>
 															<Controller
-																onKeyDown={
-																	formatInputNoOfTickets
-																}
 																name={`noOfTickets${ticketCategory}`}
 																control={
 																	control
@@ -2128,6 +2115,10 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 																	<TextField
 																		id="outlined-basic"
 																		// label="Event Organizer"
+																		onKeyDown={
+																			formatInputNoOfTickets
+																		}
+																		type="number"
 																		fullWidth
 																		variant="outlined"
 																		value={
@@ -2244,26 +2235,21 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 							<Controller
 								name="eventDescription"
 								control={control}
-								defaultValue={RichTextEditor.createEmptyValue()}
+								defaultValue="<p><br></p>"
 								render={({
 									field: { onChange, value },
 									fieldState: { error },
 								}) => (
 									<FormControl
-										// required
 										error={!!error}
 										component="fieldset"
 									>
-										<RichTextEditor
-											autoFocus
-											className={classes.editor}
-											// editorClassName={}
+										<BodyTextEditor
 											value={value}
-											onChange={(v) => {
-												onChange(v);
+											setValue={(bodyText) => {
+												onChange(bodyText);
 											}}
-											// toolbarConfig={toolbarConfig}
-											placeholder="Type something here....."
+											readOnly={false}
 										/>
 										<FormHelperText>
 											{error ? error.message : null}
@@ -2273,9 +2259,9 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 								rules={{
 									required: "Please enter event details.",
 									minLength: {
-										value: 500,
+										value: 100,
 										message:
-											"Event description should contain atleast 500 characters.",
+											"Event description is too short.",
 									},
 								}}
 							/>
@@ -2302,7 +2288,34 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 													color="primary"
 												/>
 											}
-											label="By creating an event, I agree to the policies and terms of use."
+											// label="By creating an event, I agree to the policies and terms of use."
+
+											label={
+												<span
+												// className={
+												// 	"custom-control-label "
+												// }
+												// style={{
+												// 	color:
+												// 		warning.terms ===
+												// 		"is-invalid"
+												// 			? "#dc3545"
+												// 			: "#333333",
+												// }}
+												// htmlFor="terms"
+												>
+													By creating an event, I
+													agree to the{" "}
+													<a
+														target="_blank"
+														href="/terms-and-conditions"
+													>
+														policies and terms of
+														use
+													</a>
+													.
+												</span>
+											}
 										/>
 										<FormHelperText>
 											{error ? error.message : null}
@@ -2336,11 +2349,13 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 	function getFlamingStepContent(step) {
 		switch (step) {
 			case 0:
-				return "Select campaign settings...";
+				return "One Moment we are Uploading your Data";
 			case 1:
-				return "What is an ad group anyways?";
+				return "Data Uploaded Successfully";
 			case 2:
-				return "This is the bit I really care about!";
+				return "Transaction Confirmed";
+			case 3:
+				return "Event Published";
 			default:
 				return "Unknown step";
 		}
@@ -2363,21 +2378,11 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 					alt="flaming..."
 				/>
 				<br />
+				<br />
 
-				{/* <Stepper
-					alternativeLabel
-					activeStep={activeFlamingStep}
-					connector={<QontoConnector />}
-					orientation="vertical"
-				>
-					{flamingSteps.map((label) => (
-						<Step key={label}>
-							<StepLabel StepIconComponent={QontoStepIcon}>
-								{label}
-							</StepLabel>
-						</Step>
-					))}
-				</Stepper> */}
+				<div>
+					<p>{getFlamingStepContent(activeFlamingStep)}</p>
+				</div>
 
 				<Stepper activeStep={activeFlamingStep} orientation="vertical">
 					{flamingSteps.map((label, index) => (
@@ -2392,46 +2397,25 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 
 	return (
 		<div className={classes.root}>
-			{/* <div
-				className="block-icon"
-				style={{
-					position: "relative",
-					display: "inline-flex",
-				}}
-			>
-				<img
-					className="m-2 shadow-sm"
-					width="32px"
-					src={
-						"https://www.google.com/s2/favicons?sz=64&domain_url=yahoo.com"
-					}
-					rounded
-				/>
-				<FontAwesomeIcon
-					style={{
-						position: "absolute",
-						top: 0,
-						right: 0,
-						zIndex: 1,
-					}}
-					color="red"
-					className="fa-stack the-wrapper icon-tag"
-					icon={faTimesCircle}
-				/>
-			</div> */}
+			{activeStep === steps.length ? null : (
+				<Stepper activeStep={activeStep} alternativeLabel>
+					{steps.map((label, i) => (
+						<Step key={i}>
+							<StepLabel>{label}</StepLabel>
+						</Step>
+					))}
+				</Stepper>
+			)}
 
-			<Stepper activeStep={activeStep} alternativeLabel className={classes.step}>
-				{steps.map((label, i) => (
-					<Step key={i}>
-						<StepLabel>{label}</StepLabel>
-					</Step>
-				))}
-			</Stepper>
 			<div className={classes.mainStepperContainer}>
 				<br />
 				{activeStep === steps.length ? (
 					<div>
-						{publishedEventComponent()}
+						{activeFlamingStep === flamingSteps.length ? (
+							<p>hurray</p>
+						) : (
+							publishedEventComponent()
+						)}
 						{/* <Typography className={classes.instructions}>
 							All steps completed
 						</Typography>
@@ -2445,23 +2429,37 @@ const MyStepper = ({ handleCreateEvent, onFieldsChange }) => {
 						<br />
 
 						<div className={classes.buttonsContainer}>
-							<Button
-								disabled={activeStep === 0}
-								onClick={handleBack}
-								className={classes.backButton}
-								startIcon={
-									<KeyboardBackspaceIcon fontSize="large" />
-								}
-							>
-								Back
-							</Button>
+							{activeStep === 0 ? (
+								<span />
+							) : (
+								<Button
+									disabled={activeStep === 0}
+									onClick={handleBack}
+									className={classes.backButton}
+									startIcon={
+										<KeyboardBackspaceIcon fontSize="large" />
+									}
+								>
+									Back
+								</Button>
+							)}
+
 							<Button
 								size="large"
 								variant="contained"
 								color="primary"
 								onClick={handleSubmit(handleNext)}
 								className={classes.nextButton}
-								endIcon={<ArrowRightAltIcon fontSize="large" />}
+								endIcon={
+									activeStep === steps.length - 1 ? null : (
+										<ArrowRightAltIcon fontSize="large" />
+									)
+								}
+								startIcon={
+									activeStep === steps.length - 1 ? (
+										<img src={publishIcon} atl="publish" />
+									) : null
+								}
 							>
 								{activeStep === steps.length - 1
 									? "Publish Event"
