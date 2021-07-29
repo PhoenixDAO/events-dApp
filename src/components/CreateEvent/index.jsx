@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
+import { ToastContainer, toast } from "react-toastify";
+import Notify from "../Notify";
 
 import ipfs from "../../utils/ipfs";
 
@@ -77,24 +79,47 @@ class CreateEvent extends Component {
 			fields: {},
 			activeStep: 0,
 			activeFlamingStep: 0,
+			isEventCreated: false,
 		};
 		this.contracts = context.drizzle.contracts;
+		this.onHandleTxReject = this.onHandleTxReject.bind(this);
 	}
 
 	onFieldsChange = (f) => {
 		this.setState({ fields: { ...this.state.fields, ...f } });
 	};
 
-	onStepsChange = (s) => {
-		this.setState({
-			activeStep: s,
+	onStepsChange = (type) => {
+		console.log("type", type);
+		this.setState((prevState) => {
+			return {
+				activeStep:
+					type == "inc"
+						? prevState.activeStep + 1
+						: prevState.activeStep - 1,
+			};
 		});
 	};
 
 	onFlamingStepsChange = () => {
 		console.log("onFlamingStepsChange");
-		this.setState({ activeFlamingStep: this.state.activeFlamingStep + 1 });
+		// this.setState({ activeFlamingStep: this.state.activeFlamingStep + 1 });
+		this.setState((prevState) => {
+			return {
+				activeFlamingStep: prevState.activeFlamingStep + 1,
+			};
+		});
 	};
+
+	onHandleTxReject(err) {
+		console.log("onHandleTxReject", err);
+		this.setState((prevState) => {
+			return {
+				activeStep: prevState.activeStep - 1,
+				activeFlamingStep: 0,
+			};
+		});
+	}
 
 	handleCreateEvent = async () => {
 		console.log("handleCreateEvent", this.state.fields);
@@ -185,6 +210,10 @@ class CreateEvent extends Component {
 				// 	console.log("data", data);
 				// });
 
+				let txreceipt = "";
+				let txconfirmed = "";
+				let txerror = "";
+
 				await this.props.eventsContract.methods
 					.createEvent([
 						oneTimeBuy,
@@ -207,30 +236,66 @@ class CreateEvent extends Component {
 					.send({
 						from: this.props.accounts[0],
 					})
-					.on("transactionHash", (hash) => {
+					.on("transactionHash", (txhash) => {
 						// hash of tx
-						console.log("hash", hash);
-						this.onFlamingStepsChange();
-					})
-					.on("confirmation", function (confirmationNumber, receipt) {
-						if (confirmationNumber === 2) {
-							console.log(
-								"confirmationNumber",
-								confirmationNumber
+						if (txhash !== null) {
+							console.log("txhash", txhash);
+							this.onFlamingStepsChange();
+							toast(
+								<Notify
+									hash={txhash}
+									text={"Preparing your event...🚀"}
+								/>,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true,
+								}
 							);
-							this.setState({
-								activeFlamingStep:
-									this.state.activeFlamingStep + 1,
-							});
 						}
 					})
-					.on("error", function (err) {
-						console.log("error", err);
+					.then((receipt) => {
+						console.log("receipt", receipt);
+						toast(
+							<Notify
+								text={
+									"Transaction successfull!\nYou can check event now."
+								}
+								icon="fas fa-check-circle fa-3x"
+								color="#413AE2"
+								hash={receipt.transactionHash}
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
+
+						this.onFlamingStepsChange();
+					})
+					.catch((error) => {
+						console.log("tx error", error);
+						this.onHandleTxReject(error);
+						if (error !== null) {
+							txerror = error;
+							toast(
+								<Notify
+									error={error}
+									message={txerror.message}
+								/>,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true,
+								}
+							);
+						}
 					});
 			})
 			.catch((error) => {
-				//
-				console.log("error", error);
+				console.log("ipfs error", error);
+				this.onHandleTxReject(error);
 			});
 	};
 
@@ -471,8 +536,10 @@ class CreateEvent extends Component {
 								handleCreateEvent={this.handleCreateEvent}
 								onFieldsChange={this.onFieldsChange}
 								onStepsChange={this.onStepsChange}
+								activeStep={this.state.activeStep}
 								onFlamingStepsChange={this.onFlamingStepsChange}
 								activeFlamingStep={this.state.activeFlamingStep}
+								isEventCreated={this.state.isEventCreated}
 							/>
 						</div>
 						<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
@@ -483,9 +550,6 @@ class CreateEvent extends Component {
 								fields={this.state.fields}
 								activeStep={this.state.activeStep}
 							/>
-							<button onClick={this.onFlamingStepsChange}>
-								step
-							</button>
 						</div>
 
 						{/* <Form
@@ -527,6 +591,7 @@ class CreateEvent extends Component {
 							onStepsChange={this.onStepsChange}
 							onFlamingStepsChange={this.onFlamingStepsChange}
 							activeFlamingStep={this.state.activeFlamingStep}
+							isEventCreated={this.state.isEventCreated}
 						/>
 					</div>
 					<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">

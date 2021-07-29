@@ -89,7 +89,7 @@ class App extends Component {
 			openSnackbarForNoMetaMask: false,
 			openSnackbarForPendingRequest: false,
 			disabledStatus: false,
-			eventsContract:{}
+			eventsContract: {},
 		};
 		this.myRef = React.createRef();
 
@@ -309,7 +309,6 @@ class App extends Component {
 									pauseOnHover: true,
 								}
 							);
-							this.setState({ disabledStatus: false });
 						}
 					}
 				})
