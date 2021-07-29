@@ -2398,7 +2398,7 @@ const MyStepper = ({
 	return (
 		<div className={classes.root}>
 			{activeStep === steps.length ? null : (
-				<Stepper activeStep={activeStep} alternativeLabel>
+				<Stepper activeStep={activeStep} alternativeLabel className={classes.step}>
 					{steps.map((label, i) => (
 						<Step key={i}>
 							<StepLabel>{label}</StepLabel>

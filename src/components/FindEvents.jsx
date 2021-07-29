@@ -60,15 +60,18 @@ const useStyles = (theme) => ({
 		"& .MuiTabScrollButton-root": {
 			"& .MuiSvgIcon-root": {
 				background: "#413AE2",
-				borderRadius: '10px',
-				color: "#fff"
-			}
+				borderRadius: "10px",
+				color: "#fff",
+			},
+		},
+		"& .MuiTabScrollButton-root.Mui-disabled": {
+			position: 'absolute'
 		}
 	},
 	tabBar: {
 		fontWeight: "500",
 		fontFamily: '"Aeonik" ,sans-serif',
-		textTransform: 'Capitalize',
+		textTransform: "Capitalize",
 
 		"&:hover, &:focus ": {
 			outline: "none",
@@ -82,20 +85,25 @@ const useStyles = (theme) => ({
 			fontWeight: "700",
 		},
 	},
-	formControl: {
+	formControls: {
 		margin: theme.spacing(1),
 		minWidth: 120,
-		marginLeft: '0',
+		'@media (min-width: 900px) and (max-width: 1230px)': {
+			marginLeft: "-50px",
+		},
+		"& .MuiSelect-root.MuiSelect-select": {
+			fontWeight: 700,
+		},
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
 	},
 	sortBy: {
-		position: 'absolute',
-		left: '-50px',
-		top: '15px',
-		color: '#73727D',
-		fontSize: '18px'
+		position: "absolute",
+		left: "-50px",
+		top: "15px",
+		color: "#73727D",
+		fontSize: "18px",
 	},
 });
 
@@ -580,7 +588,7 @@ class FindEvents extends Component {
 					</div> */}
 
 					{/* sticky bar start */}
-					<div className={classes.sticky}>
+					<div className={`${classes.sticky}`}>
 						<Header
 							page="dashboard"
 							searchBar="true"
@@ -667,7 +675,7 @@ class FindEvents extends Component {
 										aria-label="scrollable auto tabs example"
 									>
 										<Tab
-											className={classes.tabBar}
+											className={`${classes.tabBar} ${classes.tabBar-2}`}
 											label="All Events"
 											{...a11yProps(0)}
 										/>
@@ -745,24 +753,26 @@ class FindEvents extends Component {
 							</h2>
 							<FormControl
 								variant="outlined"
-								className={classes.formControl}
+								className={classes.formControls}
 							>
-								<Typography variant="p" className={classes.sortBy}>
+								<Typography
+									variant="p"
+									className={classes.sortBy}
+								>
 									Sort:
 								</Typography>
-								<InputLabel id="demo-simple-select-outlined-label" style={{"z-index": '-1'}}>
-									Events
-								</InputLabel>
 								<Select
-									labelId="demo-simple-select-outlined-label"
-									id="demo-simple-select-outlined"
-									// value={category}
-									// onChange={event => handleCategoryChange(event.target.value)}
-									label="All Events"
+									native
+									// value={this.state.category}
+									// onChange={this.categoryChange}
 								>
-									<MenuItem value={10}>All Events</MenuItem>
-									<MenuItem value={20}>Trending Events</MenuItem>
-									<MenuItem value={30}>Popular Events</MenuItem>
+									<option aria-label="None" value="all">
+										All Events
+									</option>
+									<option value="tickets">Trending Events</option>
+									<option value="created">
+										Popular Events
+									</option>
 								</Select>
 							</FormControl>
 							{/* <button
