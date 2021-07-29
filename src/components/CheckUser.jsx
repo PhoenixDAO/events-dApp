@@ -88,9 +88,7 @@ class CheckUser extends Component {
 					pauseOnHover: true,
 				});
 			}
-			
 			this.props.history.push("/upcomingevents/1");
-
 			this.setState({
 				loading: false,
 			});
