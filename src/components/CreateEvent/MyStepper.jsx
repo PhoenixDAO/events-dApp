@@ -56,6 +56,9 @@ import deleteIcon from "../Images/deleteIcon.png";
 import BodyTextEditor from "../common/BodyTextEditor";
 import PublishIcon from "@material-ui/icons/Publish";
 import publishIcon from "../Images/publish.png";
+import Checkmark from "../Images/Checkmark.gif";
+import { withRouter } from "react-router-dom";
+import SocialMedia from "../common/SocialMedia";
 
 var badWords = require("bad-words");
 
@@ -88,6 +91,7 @@ const useQontoStepIconStyles = makeStyles({
 		display: "flex",
 		height: 22,
 		alignItems: "center",
+		backgroundColor: "red",
 	},
 	active: {
 		color: "#784af4",
@@ -188,13 +192,16 @@ const MyStepper = ({
 	handleCreateEvent,
 	onFieldsChange,
 	onStepsChange,
+	activeStep,
 	onFlamingStepsChange,
 	activeFlamingStep,
+	isEventCreated,
+	history,
 }) => {
 	const classes = useStyles();
 	const { handleSubmit, control, register } = useForm();
 
-	const [activeStep, setActiveStep] = useState(0);
+	// const [activeStep, setActiveStep] = useState(0);
 	const steps = ["", "", "", ""];
 	const [value, setValue] = useState("onedayevent");
 	const [eventTime, setEventTime] = useState("onedayevent");
@@ -309,9 +316,9 @@ const MyStepper = ({
 		getPhoenixdaoMarket();
 	}, []);
 
-	useEffect(() => {
-		onStepsChange(activeStep);
-	}, [activeStep]);
+	// useEffect(() => {
+	// 	onStepsChange(activeStep);
+	// }, [activeStep]);
 
 	const getPhoenixdaoMarket = async () => {
 		fetch(
@@ -364,11 +371,13 @@ const MyStepper = ({
 			const badEventOrg = filter.clean(fields.eventOrganizer);
 			fields.eventOrganizer = badEventOrg;
 			onFieldsChange(fields);
-			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			onStepsChange("inc");
 		} else if (activeStep === 1) {
 			//2nd stpper - location/link, images, topicI
 			onFieldsChange(fields);
-			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			onStepsChange("inc");
 		} else if (activeStep === 2) {
 			// 3rd stepper -  event categories (free, single paid, multiple paid)
 			// bool token; // false means free
@@ -390,7 +399,8 @@ const MyStepper = ({
 				fields.categories = cat;
 				fields.token = false; // false means free
 				onFieldsChange(fields);
-				setActiveStep((prevActiveStep) => prevActiveStep + 1);
+				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
+				onStepsChange("inc");
 			} else if (fields.eventCategory === "single") {
 				let cat = [];
 				let obj = {
@@ -409,17 +419,20 @@ const MyStepper = ({
 				fields.categories = cat;
 				fields.token = true; // false means free
 				onFieldsChange(fields);
-				setActiveStep((prevActiveStep) => prevActiveStep + 1);
+				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
+				onStepsChange("inc");
 			} else {
 				fields.categories = categories;
 				fields.token = true; // false means free
 				onFieldsChange(fields);
-				setActiveStep((prevActiveStep) => prevActiveStep + 1);
+				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
+				onStepsChange("inc");
 			}
 		} else if (activeStep === 3) {
 			// 4th stepper
 			onFieldsChange(fields);
-			setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
+			onStepsChange("inc");
 			handleCreateEvent();
 		} else {
 			//publish event
@@ -429,12 +442,13 @@ const MyStepper = ({
 
 	//back button stepper
 	const handleBack = () => {
-		setActiveStep((prevActiveStep) => prevActiveStep - 1);
+		// setActiveStep((prevActiveStep) => prevActiveStep - 1);
+		onStepsChange("dec");
 	};
 
 	//reset stepper
 	const handleReset = () => {
-		setActiveStep(0);
+		// setActiveStep(0);
 	};
 
 	const onChangeRichText = (value) => {
@@ -2398,10 +2412,61 @@ const MyStepper = ({
 
 			<div className={classes.mainStepperContainer}>
 				<br />
+
 				{activeStep === steps.length ? (
 					<div>
 						{activeFlamingStep === flamingSteps.length ? (
-							<p>hurray</p>
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "center",
+									flexDirection: "column",
+									alignItems: "center",
+								}}
+							>
+								<img
+									src={Checkmark}
+									width={238}
+									height={238}
+									alt="hurray"
+								/>
+								<br />
+								<p
+									style={{
+										fontSize: 32,
+										fontWeight: 700,
+										color: "#413AE2",
+									}}
+								>
+									Hurray, Event Published
+								</p>
+								<br />
+								<div style={{ justifyContent: "center" }}>
+									<SocialMedia />
+								</div>
+								<br />
+								<p
+									style={{
+										fontWeight: 500,
+										fontSize: 20,
+										color: "#4E4E55",
+									}}
+								>
+									Share on Social Media
+								</p>
+								<br />
+								<Button
+									color="primary"
+									size="large"
+									variant="contained"
+									startIcon={
+										<VisibilityOutlinedIcon fontSize="large" />
+									}
+									onClick={() => history.push("/myevents/1")}
+								>
+									View your Event
+								</Button>
+							</div>
 						) : (
 							publishedEventComponent()
 						)}
@@ -2462,4 +2527,4 @@ const MyStepper = ({
 	);
 };
 
-export default MyStepper;
+export default withRouter(MyStepper);
