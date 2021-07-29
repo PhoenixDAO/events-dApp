@@ -655,20 +655,21 @@ const Analytics = (props, context) => {
 					totalDollarRevenue += Number(
 						Web3.utils.fromWei(event.totalDollarRevenue.toString())
 					);
+					console.log("totalDollarRevenue",totalDollarRevenue);
 					soldTicket += Number(event.soldTickets.toString());
 					totalPhnxRevenue += Number(
 						Web3.utils.fromWei(event.totalPhnxRevenue.toString())
 					);
 				});
-				totalPhnxRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
-				totalDollarRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
+				// totalPhnxRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
+				// totalDollarRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
 				console.log("totalDollarRevenue", totalDollarRevenue);
 				let liveDollarRevenue = await getPhoenixDAOMarketValue(
 					totalDollarRevenue
 				);
 				setLiveDollarRevenue(liveDollarRevenue);
-				setDollarRevenue(totalDollarRevenue);
-				setPhnxRevenue(totalPhnxRevenue);
+				setDollarRevenue(totalDollarRevenue.toFixed(3));
+				setPhnxRevenue(totalPhnxRevenue.toFixed(6));
 				setSoldTicket(soldTicket);
 				//calculate data for change and difference of cards
 				let lastIndex = graphForDays.length - 1;
