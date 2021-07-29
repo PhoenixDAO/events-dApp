@@ -1,19 +1,28 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
-import Web3 from 'web3';
+import Web3 from "web3";
 import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
-import { Menu, DashboardOutlined, ModeCommentOutlined, TodayOutlined, ListAltOutlined, InfoOutlined, ForumOutlined, FavoriteBorder } from '@material-ui/icons';
-import '../styles/navbar.css';
+import {
+	Menu,
+	DashboardOutlined,
+	ModeCommentOutlined,
+	TodayOutlined,
+	ListAltOutlined,
+	InfoOutlined,
+	ForumOutlined,
+	FavoriteBorder,
+} from "@material-ui/icons";
+import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
 class Sidebar extends Component {
 	constructor(props, context) {
-		console.log("accounts props in sidebar", typeof props.account)
+		console.log("accounts props in sidebar", typeof props.account);
 		super(props);
 		this.state = {
 			errorMessage: "",
-			openSnackbar: false
+			openSnackbar: false,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
@@ -33,9 +42,8 @@ class Sidebar extends Component {
 
 	toggleSidebarClass = (closeOnly) => {
 		if (!closeOnly) {
-			const oldSidebarClassName = document.getElementById(
-				"sidebar-wrapper"
-			).className;
+			const oldSidebarClassName =
+				document.getElementById("sidebar-wrapper").className;
 			const newSidebarClassName =
 				oldSidebarClassName === "my-sidebar sidebar-closed"
 					? "my-sidebar sidebar-open"
@@ -49,12 +57,10 @@ class Sidebar extends Component {
 					? "sidebar-open"
 					: "sidebar-closed";
 
-			document.getElementById(
-				"sidebar-wrapper"
-			).className = newSidebarClassName;
-			document.getElementById(
-				"page-content-wrapper"
-			).className = newPageWrapperClassName;
+			document.getElementById("sidebar-wrapper").className =
+				newSidebarClassName;
+			document.getElementById("page-content-wrapper").className =
+				newPageWrapperClassName;
 		} else {
 			const newSidebarClassName = "my-sidebar sidebar-closed";
 
@@ -68,7 +74,6 @@ class Sidebar extends Component {
 	};
 	async connectToMetaMask() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
-
 			let web3 = new Web3(window.ethereum);
 			try {
 				const a = await window.ethereum.enable();
@@ -100,7 +105,6 @@ class Sidebar extends Component {
 	};
 
 	render() {
-
 		let user = (
 			<div>
 				<div className="user-status-icon">
@@ -108,8 +112,8 @@ class Sidebar extends Component {
 				</div>
 				<p className="mt-3 small connection">
 					<span className="toggleHidden">
-						You are not connected to the Matic Mainnet. Please
-						check MetaMask.
+						You are not connected to the Matic Mainnet. Please check
+						MetaMask.
 					</span>
 				</p>
 			</div>
@@ -118,7 +122,10 @@ class Sidebar extends Component {
 			user = (
 				<div>
 					<div className="user-status-icon">
-						<NavLink to="/accountdetails" style={{ display: "flex" }}>
+						<NavLink
+							to="/accountdetails"
+							style={{ display: "flex" }}
+						>
 							{/* <img
 								src={makeBlockie(this.props.account)}
 								alt={this.props.account}
@@ -130,12 +137,10 @@ class Sidebar extends Component {
 									marginLeft: "20px",
 									fontSize: "15px",
 									marginTop: "8px",
-									fontWeight: "bold"
+									fontWeight: "bold",
 								}}
 							>
-								{this.props.account.substring(
-									0,
-									2)}
+								{this.props.account.substring(0, 2)}
 								...
 								{this.props.account.substring(
 									this.props.account.length - 10,
@@ -163,20 +168,23 @@ class Sidebar extends Component {
 						handleClose={() => this.handleSnackbarClose(2)}
 					/>
 
-					<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
-
+					<div
+						id="sidebar-wrapper"
+						className="my-sidebar sidebar-closed"
+					>
 						<div
 							className="hamburgerNav"
 							onClick={() => {
 								this.toggleSidebarClass(false);
 							}}
 						>
-
 							<Menu className="icon" />
 						</div>
 						<div className="user-status mt-5">{user}</div>
 						<div className="menu mt-5">
-							<h5 className="toggleHidden header">Events & Tickets</h5>
+							<h5 className="toggleHidden header">
+								Events & Tickets
+							</h5>
 							<ul className="nav flex-column">
 								<li>
 									<NavLink
@@ -198,8 +206,10 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
-										<DashboardOutlined /> {" "}
-										<span className="toggleHidden">Dashboard</span>
+										<DashboardOutlined />{" "}
+										<span className="toggleHidden">
+											Dashboard
+										</span>
 									</NavLink>
 								</li>
 								{/* <li>
@@ -240,7 +250,9 @@ class Sidebar extends Component {
 										}}
 									>
 										<ModeCommentOutlined />{" "}
-										<span className="toggleHidden">Topics</span>
+										<span className="toggleHidden">
+											Topics
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -292,7 +304,9 @@ class Sidebar extends Component {
 									</NavLink>
 								</li>
 							</ul> */}
-							<h5 className="mt-5 toggleHidden header">Resources</h5>
+							<h5 className="mt-5 toggleHidden header">
+								Resources
+							</h5>
 							<ul className="nav flex-column">
 								<li>
 									<NavLink
@@ -319,7 +333,9 @@ class Sidebar extends Component {
 										}}
 									>
 										<ForumOutlined />{" "}
-										<span className="toggleHidden">FAQ's</span>
+										<span className="toggleHidden">
+											FAQ's
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -334,8 +350,7 @@ class Sidebar extends Component {
 										<i
 											className="fa fa-file-alt fontAwesomeIcon"
 											title="How It Works"
-										>
-										</i>{" "}
+										></i>{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
 										</span>
@@ -381,12 +396,10 @@ class Sidebar extends Component {
 						</div>
 					</div>
 				</React.Fragment>
-			)
-		}
-		else
+			);
+		} else
 			return (
 				<React.Fragment>
-
 					<Snackbar
 						open={this.state.Snackbar1}
 						message={this.state.errorMessage}
@@ -397,8 +410,10 @@ class Sidebar extends Component {
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(2)}
 					/>
-					<div id="sidebar-wrapper" className="my-sidebar sidebar-closed">
-
+					<div
+						id="sidebar-wrapper"
+						className="my-sidebar sidebar-closed"
+					>
 						<div
 							className="hamburgerNav"
 							onClick={() => {
@@ -409,7 +424,9 @@ class Sidebar extends Component {
 						</div>
 						<div className="user-status mt-5">{user}</div>
 						<div className="menu mt-5">
-							<h5 className="toggleHidden header">Events & Tickets</h5>
+							<h5 className="toggleHidden header">
+								Events & Tickets
+							</h5>
 							<ul className="nav flex-column">
 								<li>
 									<NavLink
@@ -431,8 +448,10 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
-										<DashboardOutlined /> {" "}
-										<span className="toggleHidden">Dashboard</span>
+										<DashboardOutlined />{" "}
+										<span className="toggleHidden">
+											Dashboard
+										</span>
 									</NavLink>
 								</li>
 
@@ -477,7 +496,9 @@ class Sidebar extends Component {
 										}}
 									>
 										<ModeCommentOutlined />{" "}
-										<span className="toggleHidden">Topics</span>
+										<span className="toggleHidden">
+											Topics
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -496,7 +517,7 @@ class Sidebar extends Component {
 									</NavLink>
 								</li>
 								<li>
-								<NavLink
+									<NavLink
 										to="/confirm-purchase"
 										className="nav-link"
 										activeClassName="nav-link-active"
@@ -511,10 +532,10 @@ class Sidebar extends Component {
 									</NavLink>
 								</li>
 							</ul>
-							<h5 className="mt-5 toggleHidden header">Manage Events</h5>
+							<h5 className="mt-5 toggleHidden header">
+								Manage Events
+							</h5>
 							<ul className="nav flex-column">
-
-
 								<li>
 									<NavLink
 										to="/createevent"
@@ -526,6 +547,8 @@ class Sidebar extends Component {
 									>
 										<i
 											className="fa fa-edit fontAwesomeIcon"
+											// class="fa fa-pencil-square"
+											// class="fas fa-pen-square"
 											title="Create Event"
 										></i>{" "}
 										<span className="toggleHidden">
@@ -585,7 +608,8 @@ class Sidebar extends Component {
 											this.toggleSidebarClass(true);
 										}}
 									>
-										<FavoriteBorder />{"  "}
+										<FavoriteBorder />
+										{"  "}
 										<span className="toggleHidden">
 											Favourites
 										</span>
@@ -603,14 +627,17 @@ class Sidebar extends Component {
 										<i
 											className="fas fa-chart-bar fontAwesomeIcon"
 											title="Dashboard"
-										></i>{"  "}
+										></i>
+										{"  "}
 										<span className="toggleHidden">
 											Analytics
 										</span>
 									</NavLink>
 								</li>
 							</ul>
-							<h5 className="mt-5 toggleHidden header">Resources</h5>
+							<h5 className="mt-5 toggleHidden header">
+								Resources
+							</h5>
 							<ul className="nav flex-column">
 								<li>
 									<NavLink
@@ -637,7 +664,9 @@ class Sidebar extends Component {
 										}}
 									>
 										<ForumOutlined />{" "}
-										<span className="toggleHidden">FAQ's</span>
+										<span className="toggleHidden">
+											FAQ's
+										</span>
 									</NavLink>
 								</li>
 								<li>
@@ -652,23 +681,19 @@ class Sidebar extends Component {
 										<i
 											className="fa fa-file-alt fontAwesomeIcon"
 											title="How It Works"
-										>
-										</i>{" "}
+										></i>{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
 										</span>
 									</NavLink>
 								</li>
-								<li
-								>
+								<li>
 									<ThemeSwitch />
 								</li>
 							</ul>
 
-
 							<ul className="grid toggleHidden">
 								<div className="imageHolder">
-
 									<a
 										aria-label="Homepage"
 										target="blank"
@@ -679,7 +704,6 @@ class Sidebar extends Component {
 									</a>
 								</div>
 								<div className="imageHolder">
-
 									<a
 										aria-label="Homepage"
 										target="blank"
@@ -690,7 +714,6 @@ class Sidebar extends Component {
 									</a>
 								</div>
 								<div className="imageHolder">
-
 									<a
 										aria-label="Homepage"
 										target="blank"
@@ -704,9 +727,7 @@ class Sidebar extends Component {
 						</div>
 					</div>
 				</React.Fragment>
-
-			)
-
+			);
 	}
 }
 
