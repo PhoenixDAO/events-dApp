@@ -206,7 +206,6 @@ export async function getTodayData(owner, timestamp) {
               }`,
 		},
 	});
-	let totalDollarRevenue = 0;
 	console.log(result.data.data.ownerHourDatas);
 	const timeDataArr = result.data.data.ownerHourDatas;
 	if (timeDataArr.length === 0) {
@@ -219,11 +218,6 @@ export async function getTodayData(owner, timestamp) {
 		});
 		return timeDataArr;
 	}
-	// timeDataArr.forEach((event) => {
-	//     console.log("event", event);
-	//     totalDollarRevenue += Number(event.totalDollarRevenue);
-	// });
-	// console.log("getTimeData > ", timeDataArr);
 	let newTimeDataArr = [];
 	let timeInterval = timestamp;
 	let finalTimestamp = timestamp + 86400;
@@ -278,13 +272,7 @@ export async function getTodayData(owner, timestamp) {
 				Number(newTimeDataArr[i + 1].startTimeStamp)
 			) {
 				const hldr = Number(newTimeDataArr[i].startTimeStamp) + 3600;
-				// newTimeDataObj[hldr] = {
-				// 	startTimeStamp: hldr,
-				// 	eventId: "0",
-				// 	soldTickets: "0",
-				// 	totalDollarRevenue: "0",
-				// 	totalPhnxRevenue: "0",
-				// };
+
 				newTimeDataArr.splice(i + 1, 0, {
 					startTimeStamp: hldr,
 					eventId: "0",
@@ -297,7 +285,7 @@ export async function getTodayData(owner, timestamp) {
 	}
 	if (newTimeDataArr.length > 0) {
 		let temp = timestamp;
-		let prevTimeStamp =newTimeDataArr[i].startTimeStamp
+		// let prevTimeStamp =newTimeDataArr[i].startTimeStamp
 		// 	newTimeDataArr[newTimeDataArr.length - 1].startTimeStamp;
 		// for (let i = newTimeDataArr.length; i > 0; i--) {
 		// 	prevTimeStamp = prevTimeStamp - 3600;

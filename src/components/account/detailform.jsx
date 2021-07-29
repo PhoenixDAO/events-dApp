@@ -10,12 +10,10 @@ import Tooltip from "@material-ui/core/Tooltip";
 
 const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
-	const [name, setName] = useState("Bennue");
 	const [organizer, setOrganizer] = useState("");
 	const [avatarCustom, setAvatarCustom] = useState(false);
-	const [avatar, setAvatar] = useState("");
-	const [avatarNumber, setAvatarNumber] = useState(0);
 	const [alternateCurrency, setAlternateCurrency] = useState("Dollar");
+	const [file, setFile] = useState({});
 	const [nextForm, setNextForm] = useState(false);
 	const orgref = useRef(null);
 	const [copytext, setCopyText] = useState("Copy");
@@ -34,48 +32,28 @@ const DetailForm = (props) => {
 		setOpen(false);
 	};
 
-	const handleName = (value) => {
-		setName(value);
-	};
-
-	const handleCustomAvatar = (value) => {
-		setAvatarCustom(value);
-	};
-
-	const handleAvatar = (value) => {
-		setAvatar(value);
-	};
-
-	const handleAvatarNumber = (value) => {
-		setAvatarNumber(value);
-	};
-
 	const updateUserInfo = (e) => {
 		e.preventDefault();
-		console.log({
-			address: props.account,
-			networkId: props.networkId,
-			name,
-			organizerDetails: organizer,
-			avatarCustom,
-			avatarNumber,
-			avatar,
-			alternateCurrency,
-		});
 		updateUserDetails({
 			address: props.account,
 			networkId: props.networkId,
-			name,
-			organizerDetails: organizer,
-			avatarCustom,
-			avatarNumber: avatarNumber,
-			avatar,
+			name: "Bennu", //we need to change this when the design is finalised
+			organizer,
+			avatarCustom, //we need to change this when the design is finalised
+			avatarNumber: 1, //we need to change this when the design is finalised
 			alternateCurrency,
 		});
-		setAvatarNumber(0)
-		setAvatarCustom(false)
-		setAvatar("")
 	};
+
+	// const orgDetails = (e) => {
+	// 	// if (e.target.value.split(" ").length <= 500) {
+	// 	// 	orgref.current.enabled;
+	// 	setOrganizer(e.target.value);
+	// 	// } else {
+	// 	// 	e.preventDefault();
+	// 	// 	console.log("Length of organizer details exceeded");
+	// 	// }
+	// };
 
 	const currency = [
 		{ name: "Dollar", flag: "" },
@@ -88,7 +66,7 @@ const DetailForm = (props) => {
 	return (
 		<div className="dtl-hldr">
 			<div className="acc-basic-info">
-			<img alt="banner" src="/images/accountDetails.jpg" />
+			<img alt="banner"  className="banner" src="/images/accountDetails.jpg" />
 
 				<div className="acc-av-hldr">
 
@@ -186,15 +164,7 @@ const DetailForm = (props) => {
 				</form>
 			</div>
 			<DialogueBox open={open} handleClose={handleClose} maxWidth="sm">
-				<IdentityForm
-					setNextForm={setNextForm}
-					nextForm={nextForm}
-					handleAvatarNumber={handleAvatarNumber}
-					handleName={handleName}
-					handleCustomAvatar={handleCustomAvatar}
-					handleAvatar={handleAvatar}
-					handleClose={handleClose}
-				/>
+				<IdentityForm setNextForm={setNextForm} nextForm={nextForm} />
 			</DialogueBox>
 		</div>
 	);
