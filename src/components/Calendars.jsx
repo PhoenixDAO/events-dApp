@@ -342,7 +342,7 @@ class Calendars extends Component {
                                 meridiem: true
                             }}
                             eventMaxStack={1}
-                            allDaySlot={false}
+                        allDaySlot={false}
                         />
                     </div>
                 </div>
