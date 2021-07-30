@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Slider = () => {
 	const classes = useStyles();
-	const [duration, setDuration] = useState(100000)
+	const [duration, setDuration] = useState(3000)
 
 	return (
 		<div className={classes.root}>
