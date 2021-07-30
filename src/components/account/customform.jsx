@@ -36,6 +36,8 @@ const CustomForm = (props) => {
 			ipfs.add(buffer, { pin: pinit })
 				.then((hash) => {
 					console.log("hash", hash);
+					
+
 					props.handleCustomAvatar(true);
 					props.handleAvatar(hash[0].hash);
 					props.handleClose();

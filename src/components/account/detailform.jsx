@@ -13,10 +13,13 @@ const DetailForm = (props) => {
 	const [organizer, setOrganizer] = useState("");
 	const [avatarCustom, setAvatarCustom] = useState(false);
 	const [alternateCurrency, setAlternateCurrency] = useState("Dollar");
+	const [avatar, setAvatar] = useState("");
 	const [file, setFile] = useState({});
 	const [nextForm, setNextForm] = useState(false);
 	const orgref = useRef(null);
 	const [copytext, setCopyText] = useState("Copy");
+	const [name, setName] = useState("Bennu");
+	const [avatarNumber, setAvatarNumber] = useState(0);
 
 	const handleCopy = (value) => {
 		navigator.clipboard.writeText(value);
@@ -32,16 +35,43 @@ const DetailForm = (props) => {
 		setOpen(false);
 	};
 
+	const handleAvatar = (value) => {
+		setAvatar(value);
+	};
+
+	const handleCustomAvatar = (value) => {
+		setAvatarCustom(value);
+	};
+
+	const handleName = (value) => {
+		setName(value);
+	};
+
+	const handleAvatarNumber = (value) => {
+		setAvatarNumber(value);
+	};
+
 	const updateUserInfo = (e) => {
 		e.preventDefault();
+		console.log({
+			address: props.account,
+			networkId: props.networkId,
+			name: name, //we need to change this when the design is finalised
+			organizerDetails: organizer,
+			avatarCustom: avatarCustom, //we need to change this when the design is finalised
+			avatarNumber: avatarNumber, //we need to change this when the design is finalised
+			avatar: avatar,
+			alternateCurrency: alternateCurrency,
+		});
 		updateUserDetails({
 			address: props.account,
 			networkId: props.networkId,
-			name: "Bennu", //we need to change this when the design is finalised
-			organizer,
-			avatarCustom, //we need to change this when the design is finalised
-			avatarNumber: 1, //we need to change this when the design is finalised
-			alternateCurrency,
+			name: name, //we need to change this when the design is finalised
+			organizerDetails: organizer,
+			avatarCustom: avatarCustom, //we need to change this when the design is finalised
+			avatarNumber: avatarNumber, //we need to change this when the design is finalised
+			avatar: avatar,
+			alternateCurrency: alternateCurrency,
 		});
 	};
 
@@ -66,10 +96,13 @@ const DetailForm = (props) => {
 	return (
 		<div className="dtl-hldr">
 			<div className="acc-basic-info">
-			<img alt="banner"  className="banner" src="/images/accountDetails.jpg" />
+				<img
+					alt="banner"
+					className="banner"
+					src="/images/accountDetails.jpg"
+				/>
 
 				<div className="acc-av-hldr">
-
 					<img className="acc-av" src="/images/metamask.svg" />
 				</div>
 				<div className="acc-title-hlder">
@@ -164,7 +197,15 @@ const DetailForm = (props) => {
 				</form>
 			</div>
 			<DialogueBox open={open} handleClose={handleClose} maxWidth="sm">
-				<IdentityForm setNextForm={setNextForm} nextForm={nextForm} />
+				<IdentityForm
+					setNextForm={setNextForm}
+					nextForm={nextForm}
+					handleName={handleName}
+					handleAvatar={handleAvatar}
+					handleCustomAvatar={handleCustomAvatar}
+					handleClose={handleClose}
+					handleAvatarNumber={handleAvatarNumber}
+				/>
 			</DialogueBox>
 		</div>
 	);

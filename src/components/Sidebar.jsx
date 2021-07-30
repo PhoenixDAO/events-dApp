@@ -16,13 +16,19 @@ import {
 } from "@material-ui/icons";
 import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
+import { getUserDetails } from "../config/serverAPIs";
+import ipfs from "../utils/ipfs";
+
 class Sidebar extends Component {
 	constructor(props, context) {
-		console.log("accounts props in sidebar", typeof props.account);
+		console.log("accounts props in sidebar", props.account);
 		super(props);
 		this.state = {
 			errorMessage: "",
 			openSnackbar: false,
+			avatarCustom: false,
+			avatar: "",
+			avatarId: 0,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
@@ -104,6 +110,66 @@ class Sidebar extends Component {
 		}
 	};
 
+	getIpfsImage = (data) => {
+		console.log("ipfs data,", data);
+		ipfs.get(data).then((file) => {
+			console.log("ipfs file,", file);
+			let data = JSON.parse(file[0].content.toString());
+			console.log("dataaaa", data.image0);
+			return data.image0;
+		});
+	};
+	imageData = (index) => {
+		let myArray = [
+			{ img: "/images/avatars/bennu.svg", name: "Bennu", onclick: false },
+			{
+				img: "/images/avatars/milcham.svg",
+				name: "Milcham",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/thunderbird.svg",
+				name: "Thunderbird",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/garuda.svg",
+				name: "Garuda",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/firebird.svg",
+				name: "Firebird",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/metamask.svg",
+				name: "Custom",
+				onclick: true,
+			},
+		];
+		return myArray[index].img;
+	};
+	provideImage = (userDetails) => {
+		if (Object.keys(userDetails).length > 0) {
+			const avatarCustom = userDetails.result.result.avatarCustom;
+			const avatarId = userDetails.result.result.avatarNumber;
+			const avatar = userDetails.result.result.avatar;
+			if (avatarCustom) {
+				// const ava = await ipfs.get(avatar)
+				// console.log("avatar", ava)
+				ipfs.get(avatar).then((file) => {
+					console.log("ipfs file,", file);
+					let data = JSON.parse(file[0].content.toString());
+					console.log("dataaaa", data.image0);
+					// return data.image0;
+				});
+			} else {
+				return <img src={this.imageData(avatarId)} className="bird" />;
+			}
+		}
+	};
+
 	render() {
 		let user = (
 			<div>
@@ -130,8 +196,12 @@ class Sidebar extends Component {
 								src={makeBlockie(this.props.account)}
 								alt={this.props.account}
 							/> */}
-
-							<img src="./images/metamask.svg" className="bird" />
+							{console.log(
+								"this.props.userDetails",
+								this.props.userDetails
+							)}
+							{this.provideImage(this.props.userDetails)}
+							{/* <img src="./images/metamask.svg" className="bird" /> */}
 							<span
 								style={{
 									marginLeft: "20px",

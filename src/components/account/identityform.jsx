@@ -29,12 +29,19 @@ const IdentityForm = (props) => {
 	};
 
 	const avatars = [
-
 		{ img: "/images/avatars/bennu.svg", name: "Bennu", onclick: false },
 		{ img: "/images/avatars/milcham.svg", name: "Milcham", onclick: false },
-		{ img: "/images/avatars/thunderbird.svg", name: "Thunderbird", onclick: false },
+		{
+			img: "/images/avatars/thunderbird.svg",
+			name: "Thunderbird",
+			onclick: false,
+		},
 		{ img: "/images/avatars/garuda.svg", name: "Garuda", onclick: false },
-		{ img: "/images/avatars/firebird.svg", name: "Firebird", onclick: false },
+		{
+			img: "/images/avatars/firebird.svg",
+			name: "Firebird",
+			onclick: false,
+		},
 		{ img: "/images/avatars/metamask.svg", name: "Custom", onclick: true },
 	].map((data) => {
 		return (
@@ -113,6 +120,7 @@ const IdentityForm = (props) => {
 							<AlreadyForm
 								selectImage={selectImage}
 								handleClose={props.handleClose}
+								handleAvatarNumber={props.handleAvatarNumber}
 							/>
 						) : (
 							<CustomForm
