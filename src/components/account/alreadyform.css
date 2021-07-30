@@ -3,33 +3,47 @@
 	height: 100px;
 	width: 100px;
 	border: 1px solid #ccc;
-    margin: 0 auto;
+	margin: 0 auto;
 }
 
-.already-av-img{
-    width: 80px;
-    display: block;
-    margin: 0 auto;
+.already-av-img {
+	margin: 0 auto;
+	width: 71px;
+	height: 100px;
+	justify-content: center;
+	align-items: center;
+	display: flex;
 }
 
 .already-av-text {
 	text-align: center;
-    font-weight: bold;
-    color: #000000;
+	font-weight: bold;
+	color: #000;
+	margin-top: 20px;
+	font-size: 18px;
 }
-
+.flexClass {
+	display: flex;
+	justify-content: center;
+}
 .alread-av-desc {
 	text-align: center;
-    color: #000000;
+	color: #4e4e55;
+	margin-bottom: 40px;
+	margin: 30px auto;
+    width: 80%;
 }
-
+.alreadydiv {
+	width: 81%;
+	justify-content: center;
+	margin: 0 auto;
+}
 .already-select-btn {
-	background-color: blueviolet;
+	background-color: #413ae2;
 	color: #ffffff;
-	width: 100%;
+	width: 81%;
 	padding: 5px 10px;
 	border-radius: 5px;
-	font-weight: bold;
 	text-align: center;
 	border: 0px;
 }

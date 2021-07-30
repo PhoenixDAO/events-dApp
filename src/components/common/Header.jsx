@@ -86,9 +86,9 @@ const Header = ({
 
 			{searchBar ? <SearchBar /> : null}
 
-			{Object.keys(accounts).length > 0 ? (
+			{/* {Object.keys(accounts).length > 0 ? (
 				<ConnectWalletButton onClick={handleOpen} />
-			) : null}
+			) : null} */}
 			{connectWallet ? (
 				<ConnectWalletButton />
 			) : buyTicket ? (

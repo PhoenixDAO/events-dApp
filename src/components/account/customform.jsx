@@ -63,8 +63,8 @@ const CustomForm = (props) => {
 			<div className="idn-sub">
 				<h5 className="idn-subhead1"> Choose your identity</h5>
 				<p className="idn-subhead2">Create your own custom Avatar</p>
-				{}
-				<div>
+				{ }
+				<div >
 					{file.length > 0 ? (
 						<div
 							className="custom-img-hldr"
@@ -100,16 +100,21 @@ const CustomForm = (props) => {
 					)}
 				</div>
 			</div>
-			<div>
-				<div className="frm-single">
+			<div className="upload-text">
+				Click to upload an image. Max Size 3MB
+			</div>
+			<div style={{ display: "flex", justifyContent: "center" }}>
+				<div className="frm-single" style={{ width: "81%" }}>
 					<p className="avatar-name-heading">AVATAR NAME</p>
 					<input
 						className="avatar-name-inpt"
 						onChange={(e) => props.handleName(e.target.value)}
 					/>
+					<p className="org-subheading" style={{ marginTop: "4px" }}>
+						Use a fun and playful name					</p>
 				</div>
 			</div>
-			<div className="" style={{ marginTop: "20px" }}>
+			<div className="" style={{ marginTop: "20px", justifyContent: "center", display: "flex" }}>
 				<button className="avatar-select-btn" onClick={uploadImage}>
 					Save
 				</button>

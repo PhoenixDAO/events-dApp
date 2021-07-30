@@ -24,8 +24,8 @@ const IdentityForm = (props) => {
 	const handleSelectedAvatar = (e, { index, img, name }) => {
 		e.preventDefault();
 		setSelectImage({ img, name });
-		props.handleAvatarNumber(index);
-		props.handleName(name);
+		// props.handleAvatarNumber(index);
+		// props.handleName(name);
 	};
 
 	const avatars = [
@@ -95,7 +95,7 @@ const IdentityForm = (props) => {
 						</p>
 					</div>
 					<div className="avatar-hldr">{avatars}</div>
-					<div className="">
+					<div className="avatar-select-div">
 						<button
 							className="avatar-select-btn"
 							onClick={(e) =>

@@ -27,7 +27,7 @@ const AlreadyForm = (props) => {
 					This will be used as your avatar in the dApp
 				</p>
 			</div>
-			<div>
+			<div className="already-div">
 				<div className="already-av-holder">
 					<img
 						className="already-av-img"
@@ -42,7 +42,7 @@ const AlreadyForm = (props) => {
 					years rather than a thousand
 				</p>
 			</div>
-			<div>
+			<div className="flexClass">
 				<button
 					className="already-select-btn"
 					onClick={closeForm}
