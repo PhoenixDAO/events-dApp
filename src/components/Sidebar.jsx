@@ -18,6 +18,7 @@ import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
 import { getUserDetails } from "../config/serverAPIs";
 import ipfs from "../utils/ipfs";
+import { throws } from "assert";
 
 class Sidebar extends Component {
 	constructor(props, context) {
@@ -28,9 +29,15 @@ class Sidebar extends Component {
 			openSnackbar: false,
 			avatarCustom: false,
 			avatar: "",
-			avatarId: 0,
+			avatarId: 1,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
+	}
+
+	componentDidMount() {
+		console.log("this callled");
+		console.log(this.props.userDetails);
+		this.provideImage();
 	}
 
 	sidebarClick() {
@@ -110,15 +117,6 @@ class Sidebar extends Component {
 		}
 	};
 
-	getIpfsImage = (data) => {
-		console.log("ipfs data,", data);
-		ipfs.get(data).then((file) => {
-			console.log("ipfs file,", file);
-			let data = JSON.parse(file[0].content.toString());
-			console.log("dataaaa", data.image0);
-			return data.image0;
-		});
-	};
 	imageData = (index) => {
 		let myArray = [
 			{ img: "/images/avatars/bennu.svg", name: "Bennu", onclick: false },
@@ -150,23 +148,44 @@ class Sidebar extends Component {
 		];
 		return myArray[index].img;
 	};
-	provideImage = (userDetails) => {
-		if (Object.keys(userDetails).length > 0) {
-			const avatarCustom = userDetails.result.result.avatarCustom;
-			const avatarId = userDetails.result.result.avatarNumber;
-			const avatar = userDetails.result.result.avatar;
+
+	provideImage = () => {
+		if (Object.keys(this.props.userDetails).length > 0) {
+			console.log("userdetailsss", this.props.userDetails);
+			console.log("", this.props.userDetails);
+			const avatarCustom =
+				this.props.userDetails.result.result.avatarCustom;
+			const avatarId = this.props.userDetails.result.result.avatarNumber;
+			const avatar = this.props.userDetails.result.result.avatar;
+			this.setState({
+				avatarCustom: avatarCustom,
+				avatarId: avatarId,
+			});
 			if (avatarCustom) {
-				// const ava = await ipfs.get(avatar)
-				// console.log("avatar", ava)
 				ipfs.get(avatar).then((file) => {
-					console.log("ipfs file,", file);
+					// console.log("ipfs file,", file);
 					let data = JSON.parse(file[0].content.toString());
-					console.log("dataaaa", data.image0);
-					// return data.image0;
+					// console.log("dataaaa", data.image0);
+					this.setState({
+						avatar: data.image0,
+					});
 				});
-			} else {
-				return <img src={this.imageData(avatarId)} className="bird" />;
 			}
+		}
+	};
+
+	renderImage = () => {
+		if (this.state.avatarCustom) {
+			// return <image
+			console.log("avatar ipfs image", this.state.avatar);
+			return <img src={this.state.avatar} className="bird" />;
+		} else {
+			return (
+				<img
+					src={this.imageData(this.state.avatarId)}
+					className="bird"
+				/>
+			);
 		}
 	};
 
@@ -200,8 +219,9 @@ class Sidebar extends Component {
 								"this.props.userDetails",
 								this.props.userDetails
 							)}
-							{this.provideImage(this.props.userDetails)}
+							{/* {this.provideImage(this.props.userDetails)} */}
 							{/* <img src="./images/metamask.svg" className="bird" /> */}
+							{this.renderImage()}
 							<span
 								style={{
 									marginLeft: "20px",
