@@ -45,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
 			display: "none",
 		},
 		overflow: "scroll",
+		padding: "20px",
+		background: "#fff",
+		marginTop: "15px"
 	},
 	videoResponsive: {
 		overflow: "hidden",
@@ -73,6 +76,17 @@ const useStyles = makeStyles((theme) => ({
 		lineHeight: "30px",
 	},
 	alignTextWithVideo: { width: "88%", marginLeft: "30px" },
+	hideScroll1: {
+		"@media (min-width:1200px)": {
+			maxWidth: "65.66667% !important",
+			flexBasis: "65.66667% !important",
+		},
+	},
+	hideScroll2: {
+		"@media (min-width:1200px)": {
+			marginLeft: "1%",
+		},
+	},
 }));
 const Terms = (props) => {
 	const classes = useStyles();
@@ -86,10 +100,10 @@ const Terms = (props) => {
 	}
 	return (
 		<div className="event-page-wrapper">
-			<Header title="Terms and Conditions" phnxButton={true} />
+			<Header title="How it Works" phnxButton={true} />
 			<Grid container>
 				<Grid
-					className={classes.hideScroll}
+					className={`${classes.hideScroll} ${classes.hideScroll1}`}
 					style={{ height: "88vh" }}
 					lg={8}
 					md={8}
@@ -119,20 +133,20 @@ const Terms = (props) => {
 					<div className={classes.alignTextWithVideo}>
 						<h2
 							ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								InstallationAndConfiguration: el,
-							})
+								(pageRefs.current = {
+									...pageRefs.current,
+									InstallationAndConfiguration: el,
+								})
 							}
 						>
 							Installation and Configuration
 						</h2>
 						<h3
 							ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Installation: el,
-							})
+								(pageRefs.current = {
+									...pageRefs.current,
+									Installation: el,
+								})
 							}
 						>
 							MetaMask Installation
@@ -156,10 +170,10 @@ const Terms = (props) => {
 
 						<h3
 							ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Configuration: el,
-							})
+								(pageRefs.current = {
+									...pageRefs.current,
+									Configuration: el,
+								})
 							}
 						>
 							MetaMask Configuration
@@ -204,10 +218,10 @@ const Terms = (props) => {
 						</ul>
 						<h2
 							ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Getting: el,
-							})
+								(pageRefs.current = {
+									...pageRefs.current,
+									Getting: el,
+								})
 							}
 						>
 							Getting into app and connecting wallet - Ethereum /
@@ -229,7 +243,7 @@ const Terms = (props) => {
 					</div>
 				</Grid>
 				<Grid
-					className={classes.hideScroll}
+					className={`${classes.hideScroll} ${classes.hideScroll2}`}
 					style={{ height: "510px" }}
 					lg={4}
 					md={8}
