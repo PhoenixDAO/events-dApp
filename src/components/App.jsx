@@ -156,6 +156,7 @@ class App extends Component {
 			address: account,
 			networkId: networkId,
 		});
+		console.log("user",userDetails);
 		console.log("user details", userDetails);
 		if (!userDetails.error) {
 			console.log("user details", userDetails);

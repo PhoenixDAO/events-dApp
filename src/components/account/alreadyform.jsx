@@ -1,14 +1,22 @@
 import React from "react";
 import "./alreadyform.css";
 import roundlogo from "../Images/roundlogo.svg";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
+import IconButton from '@material-ui/core/IconButton';
 
 const AlreadyForm = (props) => {
-	const closeForm=(e)=>{
+	const closeForm = (e) => {
 		e.preventDefault()
 		props.handleClose()
 	}
 	return (
 		<div className="idn-hldr">
+			<IconButton aria-label="delete" className="backArrow" onClick={props.toggleForm}>
+				<KeyboardBackspaceIcon
+					fontSize="40px"
+					style={{ fill: "#1E1E22" }}
+				/>
+			</IconButton>
 			<div className="idn-head">
 				<div>
 					<img
@@ -36,10 +44,7 @@ const AlreadyForm = (props) => {
 				</div>
 				<p className="already-av-text"> {props.selectImage.name}</p>
 				<p className="alread-av-desc">
-					The creature called Bennu was known to be a bird that was
-					similar to a heron. Bennu was said to have lived on top of
-					stones and obelisks. The Bennu was reborn over every 500
-					years rather than a thousand
+					{props.selectImage.detail}
 				</p>
 			</div>
 			<div className="flexClass">

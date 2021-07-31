@@ -13,19 +13,25 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 const useStyles = makeStyles((theme) => ({
+	root: {
+		"& .MuiPaper-root":{
+			borderRadius: "17px",
+			height:"100%"
+		}
+	},
 	closeButton: {
 		position: 'absolute',
-		right: theme.spacing(1),
-		top: theme.spacing(1),
+		right: theme.spacing(2),
+		top: theme.spacing(2),
 		color: "#000000",
 		"&:focus": {
-		  outline: "none"
+			outline: "none"
 		}
-	  },
+	},
 }));
 const DialogueBox = (props) => {
 	const classes = useStyles();
-
+	
 	return (
 		<Dialog
 			open={props.open}
@@ -36,13 +42,14 @@ const DialogueBox = (props) => {
 			aria-describedby="alert-dialog-slide-description"
 			maxWidth={props.maxWidth}
 			fullWidth={true}
+			className={classes.root}
 		>
 			<DialogTitle id="alert-dialog-slide-title">
 				{props.heading}
-					<IconButton aria-label="close" className={classes.closeButton} onClick={props.handleClose}>
-						<CloseIcon />
-					</IconButton>
-			
+				<IconButton aria-label="close" className={classes.closeButton} onClick={props.handleClose}>
+					<CloseIcon />
+				</IconButton>
+
 			</DialogTitle>
 			<DialogContent>
 				<DialogContentText id="alert-dialog-slide-description">
