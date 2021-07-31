@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import  Header  from "./common/Header";
+import Header from "./common/Header";
 import { Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
@@ -44,6 +44,20 @@ const useStyles = makeStyles((theme) => ({
 			display: "none",
 		},
 		overflow: "scroll",
+		padding: "20px",
+		background: "#fff",
+		marginTop: "15px",
+	},
+	hideScroll1: {
+		"@media (min-width:1200px)": {
+			maxWidth: "65.66667% !important",
+			flexBasis: "65.66667% !important",
+		},
+	},
+	hideScroll2: {
+		"@media (min-width:1200px)": {
+			marginLeft: "1%",
+		},
 	},
 }));
 const Terms = (props) => {
@@ -57,11 +71,12 @@ const Terms = (props) => {
 		});
 	}
 	return (
-		<div className="event-page-wrapper">
-		<Header title="Terms and Conditions" phnxButton={true}/>
+		<div className={`event-page-wrapper ${classes.termsPage}`}>
+			<Header title="Terms and Conditions" phnxButton={true} />
 			<Grid container>
 				<Grid
-					className={classes.hideScroll}
+					item
+					className={`${classes.hideScroll} ${classes.hideScroll1}`}
 					style={{ height: "88vh" }}
 					lg={8}
 					md={8}
@@ -586,10 +601,11 @@ const Terms = (props) => {
 					{/* </ul> */}
 				</Grid>
 				<Grid
-					className={classes.hideScroll}
+					item
+					className={`${classes.hideScroll} ${classes.hideScroll2}`}
 					style={{ height: "720px" }}
 					lg={4}
-					md={8}
+					md={4}
 					sm={6}
 					xs={12}
 				>
