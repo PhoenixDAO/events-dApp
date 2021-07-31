@@ -51,7 +51,7 @@ const DetailForm = (props) => {
 		setAvatarNumber(value);
 	};
 
-	const updateUserInfo = (e) => {
+	const updateUserInfo = async (e) => {
 		e.preventDefault();
 		console.log({
 			address: props.account,
@@ -63,7 +63,7 @@ const DetailForm = (props) => {
 			avatar: avatar,
 			alternateCurrency: alternateCurrency,
 		});
-		updateUserDetails({
+		const detail = await updateUserDetails({
 			address: props.account,
 			networkId: props.networkId,
 			name: "fgfg", //we need to change this when the design is finalised
@@ -73,6 +73,11 @@ const DetailForm = (props) => {
 			avatar: avatar,
 			alternateCurrency: alternateCurrency,
 		});
+		if(detail.error){
+			console.log("error occured");
+		}else{
+			window.location.reload();
+		}
 	};
 
 
