@@ -36,10 +36,7 @@ const AlreadyForm = (props) => {
 				</div>
 				<p className="already-av-text"> {props.selectImage.name}</p>
 				<p className="alread-av-desc">
-					The creature called Bennu was known to be a bird that was
-					similar to a heron. Bennu was said to have lived on top of
-					stones and obelisks. The Bennu was reborn over every 500
-					years rather than a thousand
+					{props.selectImage.detail}
 				</p>
 			</div>
 			<div className="flexClass">

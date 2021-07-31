@@ -29,15 +29,26 @@ class Sidebar extends Component {
 			openSnackbar: false,
 			avatarCustom: false,
 			avatar: "",
-			avatarId: 1,
+			avatarId: 0,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
 
-	componentDidMount() {
-		console.log("this callled");
-		console.log(this.props.userDetails);
-		this.provideImage();
+	// componentDidMount() {
+	// 	console.log("this callled");
+	// 	console.log(this.props.userDetails);
+	// 	this.provideImage();
+	// }
+
+	componentDidUpdate(prevProps) {
+		console.log("this.props.userDetails", this.props.userDetails);
+		console.log("prevProps.userDetails", prevProps.userDetails);
+		if (
+			JSON.stringify(this.props.userDetails) !==
+			JSON.stringify(prevProps.userDetails)
+		) {
+			this.provideImage();
+		}
 	}
 
 	sidebarClick() {

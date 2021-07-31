@@ -21,29 +21,46 @@ const IdentityForm = (props) => {
 		}
 	};
 
-	const handleSelectedAvatar = (e, { index, img, name }) => {
+	const handleSelectedAvatar = (e, { index, detail, img, name }) => {
 		e.preventDefault();
-		setSelectImage({ img, name });
-		// props.handleAvatarNumber(index);
-		// props.handleName(name);
+		setSelectImage({ img, detail, name });
+		props.handleAvatarNumber(index);
+		props.handleName(name);
 	};
 
 	const avatars = [
-		{ img: "/images/avatars/bennu.svg", name: "Bennu", onclick: false },
-		{ img: "/images/avatars/milcham.svg", name: "Milcham", onclick: false },
+		{
+			img: "/images/avatars/bennu.svg",
+			name: "Bennu",
+			detail: "The creature called Bennu was known to be a bird that was similar to a heron. Bennu was said to have lived on top of stones and obelisks. The Bennu was reborn over every 500 years rather than a thousand",
+			onclick: false,
+		},
+		{
+			img: "/images/avatars/milcham.svg",
+			name: "Milcham",
+			detail: "The Milcham bird was said to have refused the fruit in the garden of Eden and was therefore rewarded for its faithfulness. Every 1,000 years, the Milcham bird would end one cycle of life",
+			onclick: false,
+		},
 		{
 			img: "/images/avatars/thunderbird.svg",
 			name: "Thunderbird",
+			detail: "Similarly to Garuda, the Thunderbird is known to guard against the evil serpent figure and is thought of as a protector. Many legends suggest that Thunderbirds had the ability to shapeshift into human form.",
 			onclick: false,
 		},
-		{ img: "/images/avatars/garuda.svg", name: "Garuda", onclick: false },
+		{
+			img: "/images/avatars/garuda.svg",
+			name: "Garuda",
+			detail: "Garuda is a solar bird that is known to be the mount of the god Vishnu and was also seen as a protector against the evil serpent. He is known to have been described as ‘the King of all birds",
+			onclick: false,
+		},
 		{
 			img: "/images/avatars/firebird.svg",
 			name: "Firebird",
+			detail: "The Firebird was also different from the traditional Phoenix because of its life cycle. It symbolizes the different seasons. The bird finishes its life cycle in the fall months but is revived again in the spring",
 			onclick: false,
 		},
 		{ img: "/images/avatars/metamask.svg", name: "Custom", onclick: true },
-	].map((data) => {
+	].map((data, i) => {
 		return (
 			<div className="single-avatar-hldr">
 				{data.onclick ? (
@@ -59,6 +76,8 @@ const IdentityForm = (props) => {
 					<div
 						onClick={(e) =>
 							handleSelectedAvatar(e, {
+								index: i,
+								detail: data.detail,
 								img: data.img,
 								name: data.name,
 							})

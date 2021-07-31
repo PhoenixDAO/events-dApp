@@ -46,11 +46,12 @@ import {
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import BuyTicket from "./common/BuyTicket";
-import { updateEventViews } from "../config/serverAPIs";
+import { updateEventViews, getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
+
 let numeral = require("numeral");
 var moment = require("moment");
 
@@ -233,6 +234,7 @@ class EventPage extends Component {
 			eventType: null,
 			eventDescription: null,
 			eventLocation: null,
+			organizerDetails: "",
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -300,7 +302,7 @@ class EventPage extends Component {
 			  `,
 			},
 		})
-			.then((graphEvents) => {
+			.then(async(graphEvents) => {
 				console.log(
 					"GraphQL query response of events in eventPage",
 					graphEvents.data.data.events[0]
@@ -324,6 +326,14 @@ class EventPage extends Component {
 					address: graphEvents.data.data.events[0].owner,
 					networkId: this.props.networkId,
 				});
+				const userDetails = await getUserDetails({
+					address: graphEvents.data.data.events[0].owner,
+					networkId: this.props.networkId,
+				});
+				this.setState({
+					organizerDetails: userDetails.result.result.organizerDetails
+				})
+				console.log("userDetaillll", userDetails)
 			})
 			.catch((err) => {
 				console.log(
@@ -472,6 +482,11 @@ class EventPage extends Component {
 	// }
 
 	//get market cap & dollar value of PhoenixDAO
+	componentDidUpdate() {
+		this.updateIPFS();
+	}
+
+
 	async getPhoenixDAOMarketValue() {
 		fetch(
 			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
@@ -1171,15 +1186,7 @@ class EventPage extends Component {
 									{this.state.organizer}
 								</h3>
 								<Grid className={classes.organizerDescription}>
-									Him boisterous invitation dispatched had
-									connection inhabiting projection. By mutual
-									an mr danger garret edward an. Diverted as
-									strictly exertion addition no disposal by
-									stanhill. This call wife do so sigh no gate
-									felt. You and abode spite order get.
-									Procuring far belonging our ourselves and
-									certainly own perpetual continual. It
-									elsewhere of{" "}
+									{this.state.organizerDetails}
 								</Grid>
 							</Grid>
 
@@ -1412,10 +1419,6 @@ class EventPage extends Component {
 		this.updateIPFS();
 		// this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
-	}
-
-	componentDidUpdate() {
-		this.updateIPFS();
 	}
 
 	componentWillUnmount() {
