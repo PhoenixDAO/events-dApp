@@ -680,6 +680,9 @@ class EventPage extends Component {
 			.call();
 		console.log("balance in eventsPage", balance);
 
+		const geoFindUser = await this.geoFindMe();
+		console.log("geoFindUser", geoFindUser);
+
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
@@ -688,7 +691,7 @@ class EventPage extends Component {
 				buyticket: this.props.eventsContract.methods.buyTicket([
 					this.props.match.params.id,
 					this.state.selectedCategoryIndex,
-					"Sydney",
+					geoFindUser, //"Sydney",
 				]),
 				approve: this.props.phnxContract.methods.approve(
 					Open_events_Address,
@@ -1413,6 +1416,23 @@ class EventPage extends Component {
 		// this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
 	}
+
+	geoFindMe = async () => {
+		//http://ip-api.com/json
+		//https://ipinfo.io/
+		//https://geoip-db.com/
+		try {
+			const get = await axios.get(`http://ip-api.com/json`);
+			console.log("geoFindMe", get.data);
+			if (!get.data) {
+				return "Unknown";
+			}
+			return get.data.country;
+		} catch (error) {
+			console.log("check error", error);
+			return "Unknown";
+		}
+	};
 
 	componentDidUpdate() {
 		this.updateIPFS();
