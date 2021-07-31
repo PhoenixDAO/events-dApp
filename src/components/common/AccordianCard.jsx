@@ -10,32 +10,38 @@ import AddIcon from "@material-ui/icons/Add";
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: "100%",
-		'@media (min-width: 992px)' : {
-			width: '70%',
-			left: '15%',
-			padding: '30px',
-  		},
+		boxShadow: "none",
+		paddingTop: "30px",
+		paddingBottom: "30px",
+		"@media (min-width: 992px)": {
+			width: "70%",
+			left: "15%",
+		},
 		"& .MuiAccordionSummary-expandIcon": {
 			transform: "unset",
 			transition: "unset",
 		},
-		boxShadow: "none",
-		paddingTop: "30px",
-		paddingBottom: "30px",
+		"& .MuiAccordionSummary-root": {
+			padding: "0",
+		},
 	},
 	heading: {
-		fontWeight: "600",
+		fontWeight: "400",
 		fontSize: "24px",
 		lineHeight: "116.6%",
 		letterSpacing: "-0.03em",
 		color: "#1E1E22",
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	description: {
 		color: "#4E4E55",
-		fontStyle: "normal",
-		fontWeight: "normal",
+		fontWeight: "200",
 		fontSize: "20px",
 		lineHeight: "150%",
+		fontFamily: "'AeonikReg', sans-serif",
+	},
+	detailsParent: {
+		padding: "8px 50px 16px 0",
 	},
 }));
 
@@ -53,7 +59,7 @@ export default function (props) {
 						{props.heading}
 					</Typography>
 				</AccordionSummary>
-				<AccordionDetails>
+				<AccordionDetails className={classes.detailsParent}>
 					<Typography className={classes.description}>
 						{props.description}
 					</Typography>
