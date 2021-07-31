@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "./customform.css";
 import roundlogo from "../Images/roundlogo.svg";
 import ipfs from "../../utils/ipfs";
-
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
+import IconButton from '@material-ui/core/IconButton';
 const CustomForm = (props) => {
 	const [file, setFile] = useState([]);
+	console.log("file",file);
 	const handleFile = (e) => {
 		console.log(e.target.files);
 		if (
@@ -50,6 +52,12 @@ const CustomForm = (props) => {
 
 	return (
 		<div className="idn-hldr">
+				<IconButton aria-label="delete" className="backArrow" onClick={props.toggleForm}>
+				<KeyboardBackspaceIcon
+					fontSize="40px"
+					style={{ fill: "#1E1E22" }}
+				/>
+			</IconButton>
 			<div className="idn-head">
 				<div>
 					<img
@@ -84,8 +92,8 @@ const CustomForm = (props) => {
 							>
 								<span
 									style={{
-										marginTop: "20px",
 										display: "block",
+										color:"#1E1E22"
 									}}
 								>
 									+{" "}
@@ -106,17 +114,18 @@ const CustomForm = (props) => {
 				Click to upload an image. Max Size 3MB
 			</div>
 			<div style={{ display: "flex", justifyContent: "center" }}>
-				<div className="frm-single" style={{ width: "81%" }}>
+				<div className="frm-single" style={{ width: "76%" }}>
 					<p className="avatar-name-heading">AVATAR NAME</p>
 					<input
 						className="avatar-name-inpt"
 						onChange={(e) => props.handleName(e.target.value)}
 					/>
 					<p className="org-subheading" style={{ marginTop: "4px" }}>
-						Use a fun and playful name					</p>
+						Use a nickname preferrably
+					</p>
 				</div>
 			</div>
-			<div className="" style={{ marginTop: "20px", justifyContent: "center", display: "flex" }}>
+			<div className="" style={{ marginTop: "34px", justifyContent: "center", display: "flex" }}>
 				<button className="avatar-select-btn" onClick={uploadImage}>
 					Save
 				</button>

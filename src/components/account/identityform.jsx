@@ -4,6 +4,7 @@ import roundlogo from "../Images/roundlogo.svg";
 import AlreadyForm from "./alreadyform";
 import HolderForm from "./holderform";
 import CustomForm from "./customform";
+
 const IdentityForm = (props) => {
 	const [selectImage, setSelectImage] = useState({});
 	const [formType, setFormType] = useState("");
@@ -27,21 +28,16 @@ const IdentityForm = (props) => {
 		// props.handleAvatarNumber(index);
 		// props.handleName(name);
 	};
-
+	const toggleForm = () => {
+		props.setNextForm("");
+	}
 	const avatars = [
+
 		{ img: "/images/avatars/bennu.svg", name: "Bennu", onclick: false },
 		{ img: "/images/avatars/milcham.svg", name: "Milcham", onclick: false },
-		{
-			img: "/images/avatars/thunderbird.svg",
-			name: "Thunderbird",
-			onclick: false,
-		},
+		{ img: "/images/avatars/thunderbird.svg", name: "Thunderbird", onclick: false },
 		{ img: "/images/avatars/garuda.svg", name: "Garuda", onclick: false },
-		{
-			img: "/images/avatars/firebird.svg",
-			name: "Firebird",
-			onclick: false,
-		},
+		{ img: "/images/avatars/firebird.svg", name: "Firebird", onclick: false },
 		{ img: "/images/avatars/metamask.svg", name: "Custom", onclick: true },
 	].map((data) => {
 		return (
@@ -82,6 +78,7 @@ const IdentityForm = (props) => {
 	return (
 		<div>
 			{!props.nextForm ? (
+
 				<div className="idn-hldr">
 					<div className="idn-head">
 						<div>
@@ -119,8 +116,8 @@ const IdentityForm = (props) => {
 						formType === "alreadyform" ? (
 							<AlreadyForm
 								selectImage={selectImage}
+								toggleForm={toggleForm}
 								handleClose={props.handleClose}
-								handleAvatarNumber={props.handleAvatarNumber}
 							/>
 						) : (
 							<CustomForm
@@ -128,6 +125,7 @@ const IdentityForm = (props) => {
 								handleName={props.handleName}
 								handleClose={props.handleClose}
 								handleAvatar={props.handleAvatar}
+								toggleForm={toggleForm}
 							/>
 						)
 					}

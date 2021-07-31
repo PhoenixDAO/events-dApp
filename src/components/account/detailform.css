@@ -38,8 +38,9 @@
 .acc-title {
 	margin-right: 3px;
 	font-weight: 400;
-	font-size: 19px;
+	font-size: 17px;
 	color:#1E1E22;
+font-family: "Aeonik";
 }
 
 .redirect-img-hldr {
@@ -116,10 +117,11 @@
 	background-color: #413ae2;
 	color: #ffffff;
 	width: 100%;
-	padding: 5px 10px;
+	padding: 8px 10px;
 	border-radius: 5px;
 	text-align: center;
 	border: 0px;
+	font-family: "Aeonik"
 }
 
 input[type="file"] {
@@ -139,3 +141,23 @@ input[type="file"] {
 	color: #000000;
 	font-size: 30px;
 }
+@media screen and (max-width:1200px) {
+	.acc-copy-img-holder {
+		left: 91%;
+	}
+	.acc-inpt{
+		padding-right: 43px;
+	}
+	.acc-form-prt{
+		width: 72%;
+	}
+}
+@media screen and (max-width:600px) {
+	.acc-form-prt{
+		width: 100%;
+	}
+	.acc-copy-img-holder {
+		left: 89%;
+	}
+}
+
