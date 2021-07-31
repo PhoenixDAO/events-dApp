@@ -42,7 +42,7 @@ var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		maxWidth: 345,
+		maxWidth: 361,
 		"& .MuiCardContent-root": {
 			padding: "16px 16px 0px",
 		},
