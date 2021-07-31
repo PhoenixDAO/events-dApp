@@ -55,7 +55,7 @@ const styles = (theme) => ({
         flexDirection: "column",
         justifyContent: "space-between",
         alignItems: "end",
-        paddingRight:"20px"
+        paddingRight: "20px",
     },
     paper: {
         padding: theme.spacing(2),

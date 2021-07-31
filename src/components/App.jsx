@@ -73,7 +73,7 @@ class App extends Component {
 		this.state = {
 			sent_tx: [],
 			showSidebar: true,
-			account: [],
+			account: "",
 			id: "",
 			fee: "",
 			token: "",
@@ -90,6 +90,7 @@ class App extends Component {
 			openSnackbarForPendingRequest: false,
 			disabledStatus: false,
 			eventsContract: {},
+			userDetails :{}
 		};
 		this.myRef = React.createRef();
 
@@ -150,6 +151,21 @@ class App extends Component {
 		}
 	}
 
+	getUserInfo = async (account, networkId) => {
+		const userDetails = await getUserDetails({
+			address: account,
+			networkId: networkId,
+		});
+		console.log("user details", userDetails);
+		if (!userDetails.error) {
+			console.log("user details", userDetails);
+			this.setState({
+				userDetails: userDetails,
+			});
+		} else {
+		}
+	};
+
 	//Get Account
 	async loadBlockchainData() {
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
@@ -190,14 +206,23 @@ class App extends Component {
 				window.location.reload();
 			});
 			const accounts = await web3.eth.getAccounts();
+			
+
 			this.setState({ account: accounts[0] });
 			// console.log("getUserDetail account[0]",accounts[0],"getUserDetail networkId",GLOBAL_NETWORK_ID)
 
 			if (accounts[0] && GLOBAL_NETWORK_ID) {
-				await getUserDetails({
+				const userDetails = await getUserDetails({
 					address: accounts[0],
 					networkId: GLOBAL_NETWORK_ID,
 				});
+				if (!userDetails.error) {
+					console.log("user details", userDetails);
+					this.setState({
+						userDetails: userDetails,
+					});
+				} else {
+				}
 			}
 		}
 	}
@@ -1113,6 +1138,7 @@ class App extends Component {
 						connection={!connecting}
 						account={this.state.account}
 						connect={this.loadBlockchainData}
+						userDetails={this.state.userDetails}
 					/>
 					<div id="page-content-wrapper" className="sidebar-open">
 						{/* <div

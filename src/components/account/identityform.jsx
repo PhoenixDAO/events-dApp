@@ -24,17 +24,24 @@ const IdentityForm = (props) => {
 	const handleSelectedAvatar = (e, { index, img, name }) => {
 		e.preventDefault();
 		setSelectImage({ img, name });
-		props.handleAvatarNumber(index);
-		props.handleName(name);
+		// props.handleAvatarNumber(index);
+		// props.handleName(name);
 	};
 
 	const avatars = [
-
 		{ img: "/images/avatars/bennu.svg", name: "Bennu", onclick: false },
 		{ img: "/images/avatars/milcham.svg", name: "Milcham", onclick: false },
-		{ img: "/images/avatars/thunderbird.svg", name: "Thunderbird", onclick: false },
+		{
+			img: "/images/avatars/thunderbird.svg",
+			name: "Thunderbird",
+			onclick: false,
+		},
 		{ img: "/images/avatars/garuda.svg", name: "Garuda", onclick: false },
-		{ img: "/images/avatars/firebird.svg", name: "Firebird", onclick: false },
+		{
+			img: "/images/avatars/firebird.svg",
+			name: "Firebird",
+			onclick: false,
+		},
 		{ img: "/images/avatars/metamask.svg", name: "Custom", onclick: true },
 	].map((data) => {
 		return (
@@ -95,7 +102,7 @@ const IdentityForm = (props) => {
 						</p>
 					</div>
 					<div className="avatar-hldr">{avatars}</div>
-					<div className="">
+					<div className="avatar-select-div">
 						<button
 							className="avatar-select-btn"
 							onClick={(e) =>
@@ -113,6 +120,7 @@ const IdentityForm = (props) => {
 							<AlreadyForm
 								selectImage={selectImage}
 								handleClose={props.handleClose}
+								handleAvatarNumber={props.handleAvatarNumber}
 							/>
 						) : (
 							<CustomForm

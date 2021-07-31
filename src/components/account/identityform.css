@@ -1,3 +1,8 @@
+.idn-hldr {
+margin: 20px 0px 50px;
+
+}
+
 .idn-head {
     display: flex;
     justify-content: center;
@@ -52,11 +57,13 @@
     text-align: center;
     color: #413ae2;
     font-weight: bold;
+    font-family: 'aeonik';
+    font-weight: 700;
 }
 
 .idn-subhead2 {
     text-align: center;
-    color: #929292;
+    color: #1E1E22;
     font-size: 12px;
 }
 
@@ -72,16 +79,20 @@
 }
 
 .select-av-img {
-    border: 1px solid #413ae2;
+    border: 2px solid #413ae2;
 }
 
 .avatar-select-btn {
     background-color: #413ae2;
     color: #ffffff;
-    width: 100%;
+    width: 81%;
     padding: 5px 10px;
     border-radius: 5px;
     font-weight: bold;
     text-align: center;
     border: 0px;
+}
+.avatar-select-div{
+    display: flex;
+    justify-content: center;
 }

@@ -2853,3 +2853,7 @@ h2.main-title {
 .dropdown-row .MuiSelect-selectMenu{
     font-weight: 700;
 }
+
+.event-page-wrapper .editor {
+    flex: 0 0 100%;
+}

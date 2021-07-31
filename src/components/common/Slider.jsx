@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Carousel } from "react-bootstrap";
 import { makeStyles } from "@material-ui/core/styles";
 import slider1 from "../Images/slider1.svg";
@@ -12,29 +12,35 @@ const useStyles = makeStyles((theme) => ({
 	},
 	carouselCaption: {
 		"& p": {
-			'@media (max-width: 600px)': {
-				fontSize: '14px'
+			"@media (max-width: 800px)": {
+				fontSize: "14px",
+			},
+			"@media (min-width: 1100px)": {
+				marginLeft: "-220px",
 			},
 			textAlign: "left",
 			width: "70%",
-			marginLeft: "-64px",
 			fontFamily: '"Aeonik" ,sans-serif',
+			textShadow: "none",
+			fontSize: "19px",
 		},
-		'@media (max-width: 767px)': {
-			bottom: '-50px'
+		"@media (max-width: 900px)": {
+			paddingTop: "0",
 		},
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
 		alignItems: "center",
+		boxShadow: "inset 508px -389px 187px rgb(0 0 0 / 80%)",
+		paddingTop: "210px",
 		// paddingLeft: 64,
 	},
 	title: {
-		'@media (max-width: 767px)': {
-			marginBottom: '0',
-			fontSize:'16px'
+		"@media (max-width: 767px)": {
+			marginBottom: "0",
+			fontSize: "18px !important",
 		},
-		fontSize: 36,
+		fontSize: "36px !important",
 		fontWeight: "700",
 	},
 	text: {
@@ -45,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Slider = () => {
 	const classes = useStyles();
+	const [duration, setDuration] = useState(3000);
 
 	return (
 		<div className={classes.root}>
@@ -53,7 +60,7 @@ const Slider = () => {
 				nextIcon={<span />}
 				style={{ zIndex: 0 }}
 			>
-				<Carousel.Item interval={1000}>
+				<Carousel.Item interval={duration}>
 					<img
 						className="d-block w-100"
 						src={slider1}
@@ -72,12 +79,8 @@ const Slider = () => {
 					</Carousel.Caption>
 				</Carousel.Item>
 
-				<Carousel.Item interval={1000}>
-					<img
-						className="d-block w-100"
-						src={slider2}
-						alt="Second slide"
-					/>
+				<Carousel.Item interval={duration}>
+					<img className="d-block w-100" src={slider2} alt="Second slide" />
 					<Carousel.Caption className={classes.carouselCaption}>
 						<p className={classes.title}>Privacy Assured</p>
 						<p className={classes.text}>
@@ -89,12 +92,8 @@ const Slider = () => {
 					</Carousel.Caption>
 				</Carousel.Item>
 
-				<Carousel.Item interval={1000}>
-					<img
-						className="d-block w-100"
-						src={slider3}
-						alt="Third slide"
-					/>
+				<Carousel.Item interval={duration}>
+					<img className="d-block w-100" src={slider3} alt="Third slide" />
 					<Carousel.Caption className={classes.carouselCaption}>
 						<p className={classes.title}>Privacy Assured</p>
 						<p className={classes.text}>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import SocialMedia from "./common/SocialMedia";
+import { makeStyles } from "@material-ui/core/styles";
 import {
 	Button,
 	Grid,
@@ -575,7 +576,7 @@ class EventPage extends Component {
 				type="string"
 				multiline
 				variant="filled"
-				// className={classes.editor}
+				className="editor"
 			/>
 		);
 		return description;

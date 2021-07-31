@@ -203,6 +203,16 @@ const useStyles = makeStyles((theme) => ({
 	},
 	SocialMediaDiv: {
 		margin: "30px 0px 20px",
+	step: {
+		"& .MuiStepIcon-root.MuiStepIcon-active": {
+			color: "#fff",
+			borderRadius: "100%",
+			border: "1px solid #CECED2",
+		},
+		"& .MuiStepIcon-root.MuiStepIcon-active text": {
+			fill: "#413AE2",
+			fontWeight: '900'
+		},
 	},
 }));
 
@@ -2429,7 +2439,7 @@ const MyStepper = ({
 	return (
 		<div className={classes.root}>
 			{activeStep === steps.length ? null : (
-				<Stepper activeStep={activeStep} alternativeLabel>
+				<Stepper activeStep={activeStep} alternativeLabel className={classes.step}>
 					{steps.map((label, i) => (
 						<Step key={i}>
 							<StepLabel>{label}</StepLabel>

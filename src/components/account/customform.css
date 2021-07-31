@@ -1,6 +1,5 @@
 .avatar-name-heading {
-	color: #999999;
-	font-weight: bold;
+	color: #73727D;
 	margin: 0;
 	font-size: 0.8rem;
 }
@@ -17,7 +16,7 @@ input[type="file"] {
 }
 
 .custom-file-upload1 {
-	border: 1px solid #ccc;
+	border: 1px solid #D8D8D8;
 	display: block;
 	padding: 6px 12px;
 	cursor: pointer;
@@ -28,6 +27,7 @@ input[type="file"] {
 	text-align: center;
 	color: #000000;
 	font-size: 30px;
+	background-color: #FCFCFD;
 }
 
 .custom-img-hldr {
@@ -42,4 +42,10 @@ input[type="file"] {
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
+}
+.upload-text{
+	color:#4E4E55;
+	text-align: center;
+	margin: 15px 0px 30px;
+    font-size: 13px;
 }
