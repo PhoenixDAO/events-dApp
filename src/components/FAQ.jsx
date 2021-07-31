@@ -64,15 +64,22 @@ const useStyles = makeStyles((theme) => ({
 		lineHeight: "150%",
 	},
 
-	imageContainer: { textAlign: "center", padding: "48px",width:"100%" },
+	imageContainer: {
+		textAlign: "center",
+		width: "100%",
+		padding: "20px",
+		"@media (min-width: 1200px)": {
+			padding: "48px",
+		},
+	},
 	image: {
 		borderRadius: "12px",
 		width: "100%",
-		height: "364px",
+		height: "auto",
 	},
 	gridContainer: {
-		background: '#fff'
-	}
+		background: "#fff",
+	},
 }));
 
 const questions = [
