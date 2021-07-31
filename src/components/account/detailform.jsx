@@ -66,7 +66,7 @@ const DetailForm = (props) => {
 		const detail = await updateUserDetails({
 			address: props.account,
 			networkId: props.networkId,
-			name: name, //we need to change this when the design is finalised
+			name: "fgfg", //we need to change this when the design is finalised
 			organizerDetails: organizer,
 			avatarCustom: avatarCustom, //we need to change this when the design is finalised
 			avatarNumber: avatarNumber, //we need to change this when the design is finalised
@@ -79,6 +79,7 @@ const DetailForm = (props) => {
 			window.location.reload();
 		}
 	};
+
 
 	// const orgDetails = (e) => {
 	// 	// if (e.target.value.split(" ").length <= 500) {
@@ -101,13 +102,10 @@ const DetailForm = (props) => {
 	return (
 		<div className="dtl-hldr">
 			<div className="acc-basic-info">
-				<img
-					alt="banner"
-					className="banner"
-					src="/images/accountDetails.jpg"
-				/>
+			<img alt="banner"  className="banner" src="/images/accountDetails.jpg" />
 
 				<div className="acc-av-hldr">
+
 					<img className="acc-av" src="/images/metamask.svg" />
 				</div>
 				<div className="acc-title-hlder">
@@ -202,15 +200,14 @@ const DetailForm = (props) => {
 				</form>
 			</div>
 			<DialogueBox open={open} handleClose={handleClose} maxWidth="sm">
-				<IdentityForm
-					setNextForm={setNextForm}
+				<IdentityForm setNextForm={setNextForm}
+				goBack={props.goBack}
 					nextForm={nextForm}
 					handleName={handleName}
 					handleAvatar={handleAvatar}
 					handleCustomAvatar={handleCustomAvatar}
 					handleClose={handleClose}
-					handleAvatarNumber={handleAvatarNumber}
-				/>
+					handleAvatarNumber={handleAvatarNumber} />
 			</DialogueBox>
 		</div>
 	);

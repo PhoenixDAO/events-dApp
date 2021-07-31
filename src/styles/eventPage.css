@@ -15,7 +15,7 @@ body{
 }
 @media screen and (min-width: 1100px) {
 	.event-image {
-		height: 40vw !important;
+		height: 29vw !important;
 		width: 100%;
 		object-fit: fill;
 	}

@@ -23,8 +23,8 @@
 
 #sidebar-wrapper.my-sidebar .user-status .user-status-icon img {
 	border-radius: 50%;
-	width: 100%;
-	height: 100%;
+	width: 65%;
+	height: 50%;
 	vertical-align: top;
 	background-color: #FCFCFD;
 	/* box-shadow: 0 0 17px rgba(0, 0, 0, 0.5); */
