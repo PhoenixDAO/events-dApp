@@ -151,7 +151,9 @@ body {
     color: #333;
     font-weight: 300;
 }
-
+.MuiIconButton-root:focus{
+    outline: none;
+}
 
 /* body {
 	background-color: #fafafa;

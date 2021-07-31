@@ -906,7 +906,7 @@ class EventPage extends Component {
 							<Grid
 								style={{
 									marginBottom: "40px",
-									marginTop: "40px",
+									marginTop: "25px",
 								}}
 							>
 								<label className="pl-2 small">
