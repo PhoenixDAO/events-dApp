@@ -1431,7 +1431,7 @@ class EventPage extends Component {
 		try {
 			const get = await axios.get(`http://ip-api.com/json`);
 			console.log("geoFindMe", get.data);
-			if (!get.data) {
+			if (!get.data) {				
 				return "Unknown";
 			}
 			return get.data.country;
