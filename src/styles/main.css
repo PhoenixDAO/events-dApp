@@ -2952,3 +2952,18 @@ h2.main-title {
 		padding: 0 20px;
 	}
 }
+
+.fc .fc-prev-button.fc-button:focus,
+.fc .fc-next-button.fc-button:focus {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+.fc-toolbar-chunk:nth-child(2) {
+    padding-left: 0 !important;
+    padding-right: 154px;
+}
+
+.fc-scrollgrid .fc-event-title, .fc-scrollgrid .fc-event-time {
+	font-size: 13px !important;
+}
