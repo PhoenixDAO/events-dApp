@@ -4,6 +4,7 @@
 	width: 100px;
 	border: 1px solid #ccc;
 	margin: 0 auto;
+
 }
 
 .already-av-img {
@@ -30,7 +31,7 @@
 	text-align: center;
 	color: #4e4e55;
 	margin-bottom: 40px;
-	margin: 30px auto;
+    margin: 30px auto 45px;
     width: 80%;
 }
 .alreadydiv {
@@ -42,8 +43,17 @@
 	background-color: #413ae2;
 	color: #ffffff;
 	width: 81%;
-	padding: 5px 10px;
+	padding: 8px 10px;
 	border-radius: 5px;
 	text-align: center;
 	border: 0px;
+	font-family: 'Aeonik';
+}
+.already-select-btn:focus{
+	outline: none;
+}
+.backArrow{
+	position:absolute !important;
+	top:20px;
+	left:20px;
 }

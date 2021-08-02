@@ -59,6 +59,7 @@ import publishIcon from "../Images/publish.png";
 import Checkmark from "../Images/Checkmark.gif";
 import { withRouter } from "react-router-dom";
 import SocialMedia from "../common/SocialMedia";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 var badWords = require("bad-words");
 
@@ -186,6 +187,23 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 15,
 		fontWeight: 500,
 	},
+	eventUrl: {
+		textAlign: "center",
+		fontSize: "14px",
+		color: "#4E4E55",
+	},
+	UrlField: {
+		width: "100%",
+		margin: "0px auto",
+	},
+	copyButton: {
+		"&:focus": {
+			outline: "none",
+		},
+	},
+	SocialMediaDiv: {
+		margin: "30px 0px 20px",
+	},
 	step: {
 		"& .MuiStepIcon-root.MuiStepIcon-active": {
 			color: "#fff",
@@ -194,7 +212,7 @@ const useStyles = makeStyles((theme) => ({
 		},
 		"& .MuiStepIcon-root.MuiStepIcon-active text": {
 			fill: "#413AE2",
-			fontWeight: '900'
+			fontWeight: "900",
 		},
 	},
 }));
@@ -252,6 +270,9 @@ const MyStepper = ({
 	const [ticketCategory, setTicketCategory] = useState(0);
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState({});
 	const [phnxValue, setPhnxValue] = useState(0);
+	const [isCopied, setIsCopied] = useState(false);
+
+	let URL = "https://phoenixdao-events-dapp.herokuapp.com";
 
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
@@ -277,6 +298,13 @@ const MyStepper = ({
 			{ label: "UL", style: "unordered-list-item" },
 			{ label: "OL", style: "ordered-list-item" },
 		],
+	};
+
+	const onCopyText = () => {
+		setIsCopied(true);
+		setTimeout(() => {
+			setIsCopied(false);
+		}, 1000);
 	};
 
 	const formatInputNoOfTickets = (e) => {
@@ -2412,7 +2440,11 @@ const MyStepper = ({
 	return (
 		<div className={classes.root}>
 			{activeStep === steps.length ? null : (
-				<Stepper activeStep={activeStep} alternativeLabel className={classes.step}>
+				<Stepper
+					activeStep={activeStep}
+					alternativeLabel
+					className={classes.step}
+				>
 					{steps.map((label, i) => (
 						<Step key={i}>
 							<StepLabel>{label}</StepLabel>
@@ -2452,19 +2484,72 @@ const MyStepper = ({
 									Hurray, Event Published
 								</p>
 								<br />
-								<div style={{ justifyContent: "center" }}>
-									<SocialMedia />
-								</div>
-								<br />
-								<p
-									style={{
-										fontWeight: 500,
-										fontSize: 20,
-										color: "#4E4E55",
-									}}
+								<Typography
+									gutterBottom
+									className={classes.eventUrl}
 								>
+									Event URL
+								</Typography>
+								<FormControl
+									variant="outlined"
+									className={classes.UrlField}
+								>
+									<TextField
+										id="outlined-helperText"
+										label=""
+										value={URL}
+										defaultValue={URL}
+										variant="outlined"
+										InputProps={{
+											endAdornment: (
+												<InputAdornment position="end">
+													<CopyToClipboard
+														text={URL}
+														onCopy={onCopyText}
+													>
+														<IconButton
+															className={
+																classes.copyButton
+															}
+															aria-label="copy text"
+														>
+															<span
+																style={
+																	isCopied
+																		? {
+																				fontSize:
+																					"14px",
+																		  }
+																		: {
+																				color: "#413AE2",
+																		  }
+																}
+															>
+																{isCopied ? (
+																	"Copied!"
+																) : (
+																	<i class="far fa-copy fa-md"></i>
+																)}
+															</span>
+														</IconButton>
+													</CopyToClipboard>
+												</InputAdornment>
+											),
+										}}
+									/>
+								</FormControl>
+
+								<Grid
+									lg={12}
+									item
+									className={classes.SocialMediaDiv}
+								>
+									<SocialMedia />
+								</Grid>
+								<h5 className={classes.share}>
 									Share on Social Media
-								</p>
+								</h5>
+								<br />
 								<br />
 								<Button
 									color="primary"

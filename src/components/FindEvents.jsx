@@ -65,8 +65,8 @@ const useStyles = (theme) => ({
 			},
 		},
 		"& .MuiTabScrollButton-root.Mui-disabled": {
-			position: 'absolute'
-		}
+			position: "absolute",
+		},
 	},
 	tabBar: {
 		fontWeight: "500",
@@ -86,10 +86,11 @@ const useStyles = (theme) => ({
 		},
 	},
 	formControls: {
-		margin: theme.spacing(1),
 		minWidth: 120,
-		'@media (min-width: 900px) and (max-width: 1230px)': {
-			marginLeft: "-50px",
+		"& .MuiInputBase-formControl": {
+			"@media (max-width: 575px)": {
+				marginLeft: "50px",
+			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
@@ -104,6 +105,9 @@ const useStyles = (theme) => ({
 		top: "15px",
 		color: "#73727D",
 		fontSize: "18px",
+		"@media (max-width: 575px)": {
+			left: "0",
+		},
 	},
 });
 
@@ -743,9 +747,9 @@ class FindEvents extends Component {
 					<br />
 
 					<div>
-						<div className="row row_mobile dropdown-row">
+						<div className="row row_mobile dashboard-dropdown-row">
 							<h2
-								className="col-lg-10 col-md-9 col-sm-8 main-title"
+								className="col-lg-9 col-md-8 col-sm-7 main-title"
 								// style={{ fontWeight: "bold" }}
 							>
 								{/* <i className="fa fa-calendar-alt"></i>  */}
@@ -753,7 +757,7 @@ class FindEvents extends Component {
 							</h2>
 							<FormControl
 								variant="outlined"
-								className={classes.formControls}
+								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
 							>
 								<Typography
 									variant="p"

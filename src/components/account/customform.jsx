@@ -2,6 +2,8 @@ import React, { useCallback, useMemo, useState } from "react";
 import "./customform.css";
 import roundlogo from "../Images/roundlogo.svg";
 import ipfs from "../../utils/ipfs";
+import { IconButton } from "@material-ui/core";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 
 const CustomForm = React.memo((props) => {
 	const [file, setFile] = useState([]);
@@ -55,13 +57,23 @@ const CustomForm = React.memo((props) => {
 		if (file.length > 0) {
 			console.log(file[0]);
 			return URL.createObjectURL(file[0]);
-		}else{
-			console.log("not rendered")
+		} else {
+			console.log("not rendered");
 		}
 	}, [file, setFile]);
 
 	return (
 		<div className="idn-hldr">
+			<IconButton
+				aria-label="delete"
+				className="backArrow"
+				onClick={props.toggleForm}
+			>
+				<KeyboardBackspaceIcon
+					fontSize="40px"
+					style={{ fill: "#1E1E22" }}
+				/>
+			</IconButton>
 			<div className="idn-head">
 				<div>
 					<img
@@ -94,8 +106,8 @@ const CustomForm = React.memo((props) => {
 							>
 								<span
 									style={{
-										marginTop: "20px",
 										display: "block",
+										color: "#1E1E22",
 									}}
 								>
 									+{" "}
@@ -116,7 +128,7 @@ const CustomForm = React.memo((props) => {
 				Click to upload an image. Max Size 3MB
 			</div>
 			<div style={{ display: "flex", justifyContent: "center" }}>
-				<div className="frm-single" style={{ width: "81%" }}>
+				<div className="frm-single" style={{ width: "76%" }}>
 					<p className="avatar-name-heading">AVATAR NAME</p>
 					<input
 						className="avatar-name-inpt"
