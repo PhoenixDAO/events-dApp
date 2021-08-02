@@ -17,6 +17,11 @@ import Slider from "./common/Slider";
 import TopicCard from "./common/TopicCard";
 import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
+import {
+	Typography,
+} from "@material-ui/core";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -37,8 +42,22 @@ const useStyles = (theme) => ({
 		"&.MuiPaper-elevation4": {
 			boxShadow: "none",
 		},
+		"& .MuiTabScrollButton-root": {
+			"& .MuiSvgIcon-root": {
+				background: "#413AE2",
+				borderRadius: "10px",
+				color: "#fff",
+			},
+		},
+		"& .MuiTabScrollButton-root.Mui-disabled": {
+			position: "absolute",
+		},
 	},
 	tabBar: {
+		fontWeight: "500",
+		fontFamily: '"Aeonik" ,sans-serif',
+		textTransform: "Capitalize",
+
 		"&:hover, &:focus ": {
 			outline: "none",
 		},
@@ -48,6 +67,31 @@ const useStyles = (theme) => ({
 		"&.MuiTab-textColorPrimary.Mui-selected": {
 			color: "#413AE2",
 			borderBottom: "2.5px solid #413AE2",
+			fontWeight: "700",
+		},
+	},
+	formControls: {
+		minWidth: 120,
+		"& .MuiInputBase-formControl": {
+			"@media (max-width: 575px)": {
+				marginLeft: "50px",
+			},
+		},
+		"& .MuiSelect-root.MuiSelect-select": {
+			fontWeight: 700,
+		},
+	},
+	selectEmpty: {
+		marginTop: theme.spacing(2),
+	},
+	sortBy: {
+		position: "absolute",
+		left: "-50px",
+		top: "15px",
+		color: "#73727D",
+		fontSize: "18px",
+		"@media (max-width: 575px)": {
+			left: "0",
 		},
 	},
 });
@@ -191,7 +235,7 @@ class TopicsLandingPage extends Component {
       </div> */}
 
 						{/* top sticky header */}
-						<Header title="Topics" searchBar={true}/>
+						<Header title="Topics" searchBar={true} />
 						<br />
 						<br />
 						{/* slider */}
@@ -245,26 +289,33 @@ class TopicsLandingPage extends Component {
 						</div> */}
 
 						<div>
-							<div className="row row_mobile">
-								<h2 className="col-lg-10 col-md-9 col-sm-8">
+							<div className="row row_mobile dashboard-dropdown-row">
+								<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 									All Topics
 								</h2>
-								<div
-									style={{
-										display: "flex",
-										justifyContent: "center",
-									}}
+								<FormControl
+									variant="outlined"
+									className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
 								>
-									{/* <p>Sort:</p> */}
-									<select
-										name="category"
-									// value={category}
-									// onChange={event => handleCategoryChange(event.target.value)}
+									<Typography
+										variant="p"
+										className={classes.sortBy}
 									>
-										<option id="0">All Topics</option>
-										<option id="1">Trending Topics</option>
-									</select>
-								</div>
+										Sort:
+									</Typography>
+									<Select
+										native
+										// value={this.state.category}
+										// onChange={this.categoryChange}
+									>
+										<option aria-label="None" value="all">
+											All Topics
+										</option>
+										<option value="tickets">
+											Trending Topics
+										</option>
+									</Select>
+								</FormControl>
 							</div>
 
 							<br />

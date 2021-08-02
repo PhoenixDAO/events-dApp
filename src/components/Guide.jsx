@@ -246,7 +246,7 @@ const Terms = (props) => {
 					className={`${classes.hideScroll} ${classes.hideScroll2}`}
 					style={{ height: "510px" }}
 					lg={4}
-					md={8}
+					md={4}
 					sm={6}
 					xs={12}
 				>
