@@ -45,7 +45,8 @@ const useStyles = makeStyles((theme) => ({
 			fontSize: "18px !important",
 		},
 		fontSize: "36px !important",
-		fontFamily: '"Aeonik" ,sans-serif',
+		fontFamily: '"AeonikReg" ,sans-serif',
+		fontWeight: "600 !important",
 	},
 	text: {
 		fontSize: 20,
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Slider = () => {
 	const classes = useStyles();
-	const [duration, setDuration] = useState(300000);
+	const [duration, setDuration] = useState(3000);
 
 	return (
 		<div className={classes.root}>

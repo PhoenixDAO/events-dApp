@@ -77,7 +77,7 @@ const Terms = (props) => {
 				<Grid
 					item
 					className={`${classes.hideScroll} ${classes.hideScroll1}`}
-					style={{ height: "88vh" }}
+					style={{ height: "99vh" }}
 					lg={8}
 					md={8}
 					sm={6}
@@ -603,7 +603,7 @@ const Terms = (props) => {
 				<Grid
 					item
 					className={`${classes.hideScroll} ${classes.hideScroll2}`}
-					style={{ height: "720px" }}
+					style={{ height: "99vh" }}
 					lg={4}
 					md={4}
 					sm={6}
