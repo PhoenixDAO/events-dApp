@@ -9,7 +9,10 @@ const AccountDetail = (props) => {
 				page="accountdetails"
 				phnxButton="true"
 			/>
-			<DetailForm account={props.account} />
+			<DetailForm
+				account={props.account}
+				userDetails={props.userDetails}
+			/>
 		</div>
 	);
 };
