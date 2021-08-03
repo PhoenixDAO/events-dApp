@@ -170,6 +170,13 @@ const useStyles = makeStyles((theme) => ({
 	mainStepperContainer: {
 		marginLeft: theme.spacing(5),
 		marginRight: theme.spacing(5),
+		"& .MuiButton-label": {
+			fontFamily: "'Aeonik', sans-serif",
+			fontWeight: "500",
+		},
+		"& .MuiFormControl-root .MuiMenuItem-root": {
+			fontFamily: "'Aeonik', sans-serif",
+		},
 	},
 	addAnotherImageBtn: {
 		textTransform: "none",
@@ -186,6 +193,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#999999",
 		fontSize: 15,
 		fontWeight: 500,
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	eventUrl: {
 		textAlign: "center",
@@ -205,6 +213,9 @@ const useStyles = makeStyles((theme) => ({
 		margin: "30px 0px 20px",
 	},
 	step: {
+		"& .MuiStepIcon-root text": {
+			fontFamily: "'Aeonik', sans-serif",
+		},
 		"& .MuiStepIcon-root.MuiStepIcon-active": {
 			color: "#fff",
 			borderRadius: "100%",
@@ -213,8 +224,20 @@ const useStyles = makeStyles((theme) => ({
 		"& .MuiStepIcon-root.MuiStepIcon-active text": {
 			fill: "#413AE2",
 			fontWeight: "900",
+			fontFamily: "'Aeonik', sans-serif",
 		},
 	},
+	radioGroup: {
+		"& .MuiFormControlLabel-label.MuiTypography-body1": {
+			fontFamily: "'Aeonik', sans-serif",
+		},
+	},
+	formControlDesc: {
+		maxWidth: "100%"
+	},
+	dropdownMenu: {
+		fontFamily: "'Aeonik', sans-serif"
+	}
 }));
 
 const MyStepper = ({
@@ -586,11 +609,10 @@ const MyStepper = ({
 										message:
 											"Event name should contain at least 3 characters.",
 									},
-									maxLength:{
+									maxLength: {
 										value: 300,
-										message:
-											"Event name too long.",
-									}
+										message: "Event name too long.",
+									},
 								}}
 							/>
 
@@ -627,11 +649,11 @@ const MyStepper = ({
 										message:
 											"Event organizer name should contain at least 3 characters.",
 									},
-									maxLength:{
+									maxLength: {
 										value: 300,
 										message:
 											"Event organizer name too long.",
-									}
+									},
 								}}
 							/>
 
@@ -655,6 +677,7 @@ const MyStepper = ({
 											aria-label="eventTime"
 											name="eventTime"
 											value={value}
+											className={classes.radioGroup}
 											onChange={(e) => {
 												onChange(e);
 												setEventTime(e.target.value);
@@ -1181,16 +1204,16 @@ const MyStepper = ({
 										rules={{
 											required:
 												"Please enter event location.",
-												minLength: {
-													value: 3,
-													message:
-														"Event location should contain at least 3 characters.",
-												},
-												maxLength:{
-													value: 300,
-													message:
-														"Event location too long.",
-												}
+											minLength: {
+												value: 3,
+												message:
+													"Event location should contain at least 3 characters.",
+											},
+											maxLength: {
+												value: 300,
+												message:
+													"Event location too long.",
+											},
 										}}
 									/>
 								</div>
@@ -1233,7 +1256,9 @@ const MyStepper = ({
 							<br />
 							{images.slice(0, 3).map((img, index) => {
 								return (
-									<div key={index}>
+									<div
+										key={index}
+									>
 										<label className={classes.label}>
 											COVER IMAGE {index + 1}
 										</label>
@@ -1252,6 +1277,7 @@ const MyStepper = ({
 													disabled
 													value={img.name}
 													error={!!error}
+													placeholder="Select Image"
 													helperText={
 														error
 															? error.message
@@ -1259,7 +1285,15 @@ const MyStepper = ({
 													}
 													InputProps={{
 														endAdornment: (
-															<Button component="label">
+															<Button
+																component="label"
+																style={{
+																	padding: "15px 25px",
+																	background: "#FFF9E5",
+																	left: "13px",
+																	textTransform: "capitalize"
+																}}
+															>
 																Browse
 																<input
 																	type="file"
@@ -1356,7 +1390,7 @@ const MyStepper = ({
 									<FormControl
 										variant="outlined"
 										fullWidth
-										// className={classes.formControl}
+										className={classes.formControl}
 										error={!!error}
 									>
 										<Select
@@ -1370,6 +1404,7 @@ const MyStepper = ({
 												<MenuItem
 													key={topic.name}
 													value={topic.slug}
+													style={{fontFamily: "'Aeonik', sans-serif"}}
 												>
 													{topic.name}
 												</MenuItem>
@@ -1417,6 +1452,7 @@ const MyStepper = ({
 												setCategory(e.target.value);
 											}}
 											fullWidth
+											className={classes.dropdownMenu}
 										>
 											<MenuItem value="free">
 												Free Event
@@ -1919,16 +1955,16 @@ const MyStepper = ({
 														rules={{
 															required:
 																"Please enter ticket name.",
-																minLength: {
-																	value: 3,
-																	message:
-																		"Ticket name should contain at least 3 characters.",
-																},
-																maxLength:{
-																	value: 300,
-																	message:
-																		"Ticket name too long.",
-																}
+															minLength: {
+																value: 3,
+																message:
+																	"Ticket name should contain at least 3 characters.",
+															},
+															maxLength: {
+																value: 300,
+																message:
+																	"Ticket name too long.",
+															},
 														}}
 													/>
 
@@ -2315,6 +2351,7 @@ const MyStepper = ({
 									<FormControl
 										error={!!error}
 										component="fieldset"
+										className={classes.formControlDesc}
 									>
 										<BodyTextEditor
 											value={value}

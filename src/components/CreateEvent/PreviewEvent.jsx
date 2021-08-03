@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#4E4E55",
 		fontSize: 17,
 		fontWeight: 500,
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	shareButton: {
 		"&:hover": {
@@ -62,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#4E4E55",
 		fontSize: 17,
 		fontWeight: 500,
+		fontFamily: "'Aeonik', sans-serif",
 		"&:focus": {
 			outline: "none",
 		},
@@ -76,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: "center",
 		width: "100%",
 		color: "#4E4E55",
+		fontFamily: "'Aeonik', sans-serif",
 		fontSize: 17,
 		fontWeight: 500,
 		"&:focus": {
@@ -100,23 +103,27 @@ const useStyles = makeStyles((theme) => ({
 	eventinfo: {
 		fontSize: "22px",
 		fontWeight: "700",
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
 		fontWeight: "700",
 		color: "#413AE2",
 		textAlign: "end",
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	starting: {
 		color: "#73727D",
 		fontSize: "14px",
 		marginBottom: "0px",
 		fontWeight: "400",
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	price: {
 		color: "#413AE2",
 		fontWeight: "700",
 		fontSize: "17px",
+		fontFamily: "'Aeonik', sans-serif",
 		"& p": {
 			marginBottom: "0px",
 		},
@@ -184,6 +191,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 									fontSize: 17,
 									fontWeight: 700,
 									paddingBottom: "16px",
+									fontFamily: "'Aeonik', sans-serif",
 								}}
 							>
 								Event Preview
@@ -216,6 +224,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 										color: "#1E1E22",
 										fontSize: 17,
 										fontWeight: 700,
+										fontFamily: "'Aeonik', sans-serif",
 									}}
 									noWrap
 								>

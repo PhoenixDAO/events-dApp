@@ -2952,10 +2952,11 @@ h2.main-title {
 }
 
 .editor-demo .editor {
-	white-space: nowrap;
-	width: 544px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: scroll;
+    /* text-overflow: ellipsis; */
+    overflow-wrap: break-word;
+    word-break: break-all;
 }
 
 @media screen and (min-width: 600px) {
