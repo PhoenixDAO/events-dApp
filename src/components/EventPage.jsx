@@ -302,7 +302,7 @@ class EventPage extends Component {
 			  `,
 			},
 		})
-			.then(async(graphEvents) => {
+			.then(async (graphEvents) => {
 				console.log(
 					"GraphQL query response of events in eventPage",
 					graphEvents.data.data.events[0]
@@ -331,9 +331,10 @@ class EventPage extends Component {
 					networkId: this.props.networkId,
 				});
 				this.setState({
-					organizerDetails: userDetails.result.result.organizerDetails
-				})
-				console.log("userDetaillll", userDetails)
+					organizerDetails:
+						userDetails.result.result.organizerDetails,
+				});
+				console.log("userDetaillll", userDetails);
 			})
 			.catch((err) => {
 				console.log(
@@ -486,7 +487,6 @@ class EventPage extends Component {
 		this.updateIPFS();
 	}
 
-
 	async getPhoenixDAOMarketValue() {
 		fetch(
 			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
@@ -575,9 +575,6 @@ class EventPage extends Component {
 		if (this.state.description !== null)
 			console.log("desc", this.state.eventDescription);
 		description = (
-			// <p style={{ whiteSpace: "pre-line" }}>
-			// 	{this.state.description}
-			// </p>
 			<RichTextEditor
 				readOnly
 				value={RichTextEditor.createValueFromString(
@@ -1431,7 +1428,7 @@ class EventPage extends Component {
 		try {
 			const get = await axios.get(`http://ip-api.com/json`);
 			console.log("geoFindMe", get.data);
-			if (!get.data) {				
+			if (!get.data) {
 				return "Unknown";
 			}
 			return get.data.city;
