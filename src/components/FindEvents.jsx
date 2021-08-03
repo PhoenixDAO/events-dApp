@@ -29,10 +29,10 @@ import {
 	Grid,
 	Typography,
 } from "@material-ui/core";
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import Slider from "./common/Slider";
 import roundlogo from "./Images/roundlogo.svg";
 import ConnectWalletButton from "./common/ConnectWalletButton";
@@ -140,6 +140,7 @@ class FindEvents extends Component {
 			hideEvent: [],
 			selectedTab: 0,
 			eventCount: 0,
+			category: "allevents",
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -150,6 +151,72 @@ class FindEvents extends Component {
 		this.myRef = React.createRef();
 
 		this.toggleSortDate = this.toggleSortDate.bind(this);
+		this.categoryChange = this.categoryChange.bind(this);
+	}
+
+	async categoryChange(event) {
+		if (event.target.value === "populartopics") {
+			this.props.history.push("/topics");
+		} else {
+			this.setState({ category: event.target.value });
+			let query;
+			if (event.target.value === "allevents") {
+				query = `
+				{
+				  events(orderBy:eventId orderDirection:asc) {
+					  id
+					  eventId
+					  owner
+					  name
+					  topic
+					  location
+					  ipfsHash
+					  tktLimited
+					  tktTotalQuantity
+					  tktTotalQuantitySold
+					  oneTimeBuy
+					  token
+					  time
+					  duration
+					  catTktQuantity
+					  catTktQuantitySold	
+					  categories
+					  prices
+					  eventRevenueInDollar
+					  eventRevenueInPhnx
+				  }
+				}
+				`;
+			} else {
+				query = `
+				{
+				  events(where: {tktTotalQuantitySold_gte: 5} orderBy:eventId orderDirection:asc) {
+					  id
+					  eventId
+					  owner
+					  name
+					  topic
+					  location
+					  ipfsHash
+					  tktLimited
+					  tktTotalQuantity
+					  tktTotalQuantitySold
+					  oneTimeBuy
+					  token
+					  time
+					  duration
+					  catTktQuantity
+					  catTktQuantitySold	
+					  categories
+					  prices
+					  eventRevenueInDollar
+					  eventRevenueInPhnx
+				  }
+				}
+				`;
+			}
+			this.loadBlockchain(query);
+		}
 	}
 
 	topicClick(slug) {
@@ -173,12 +240,13 @@ class FindEvents extends Component {
 	caruselClick(location) {
 		this.props.history.push(location);
 	}
+
 	executeScroll = () => {
 		this.myRef.current.scrollIntoView();
 	};
 
 	//Loads Blockhain Data,
-	async loadBlockchain() {
+	async loadBlockchain(query) {
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
 
@@ -220,32 +288,7 @@ class FindEvents extends Component {
 			url: graphURL,
 			method: "post",
 			data: {
-				query: `
-			  {
-				events(orderBy:eventId orderDirection:asc) {
-					id
-					eventId
-					owner
-					name
-					topic
-					location
-					ipfsHash
-					tktLimited
-					tktTotalQuantity
-					tktTotalQuantitySold
-					oneTimeBuy
-					token
-					time
-					duration
-					catTktQuantity
-					catTktQuantitySold	
-					categories
-					prices
-					eventRevenueInDollar
-					eventRevenueInPhnx
-				}
-			  }
-			  `,
+				query: query,
 			},
 		})
 			.then((graphEvents) => {
@@ -679,7 +722,9 @@ class FindEvents extends Component {
 										aria-label="scrollable auto tabs example"
 									>
 										<Tab
-											className={`${classes.tabBar} ${classes.tabBar-2}`}
+											className={`${classes.tabBar} ${
+												classes.tabBar - 2
+											}`}
 											label="All Events"
 											{...a11yProps(0)}
 										/>
@@ -752,8 +797,9 @@ class FindEvents extends Component {
 								className="col-lg-9 col-md-8 col-sm-7 main-title"
 								// style={{ fontWeight: "bold" }}
 							>
-								{/* <i className="fa fa-calendar-alt"></i>  */}
-								All Events
+								{this.state.category === "allevents"
+									? `All Events`
+									: `Trending Events`}
 							</h2>
 							<FormControl
 								variant="outlined"
@@ -767,15 +813,17 @@ class FindEvents extends Component {
 								</Typography>
 								<Select
 									native
-									// value={this.state.category}
-									// onChange={this.categoryChange}
+									value={this.state.category}
+									onChange={this.categoryChange}
 								>
-									<option aria-label="None" value="all">
+									<option aria-label="None" value="allevents">
 										All Events
 									</option>
-									<option value="tickets">Trending Events</option>
-									<option value="created">
-										Popular Events
+									<option value="trendingevents">
+										Trending Events
+									</option>
+									<option value="populartopics">
+										Popular Topics
 									</option>
 								</Select>
 							</FormControl>
@@ -865,7 +913,34 @@ class FindEvents extends Component {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}
 		// this._isMounted = true;
-		this.loadBlockchain();
+		//where: {tktTotalQuantitySold_gte: 0}
+		const query = `
+		{
+		  events(orderBy:eventId orderDirection:asc) {
+			  id
+			  eventId
+			  owner
+			  name
+			  topic
+			  location
+			  ipfsHash
+			  tktLimited
+			  tktTotalQuantity
+			  tktTotalQuantitySold
+			  oneTimeBuy
+			  token
+			  time
+			  duration
+			  catTktQuantity
+			  catTktQuantitySold	
+			  categories
+			  prices
+			  eventRevenueInDollar
+			  eventRevenueInPhnx
+		  }
+		}
+		`;
+		this.loadBlockchain(query);
 		this.filterHideEvent();
 	}
 
