@@ -45,8 +45,8 @@ const useStyles = makeStyles((theme) => ({
 			fontSize: "18px !important",
 		},
 		fontSize: "36px !important",
-		fontWeight: "700 !important",
-		fontFamily: '"Aeonik" ,sans-serif',
+		fontFamily: '"AeonikReg" ,sans-serif',
+		fontWeight: "600 !important",
 	},
 	text: {
 		fontSize: 20,
@@ -67,7 +67,7 @@ const Slider = () => {
 			>
 				<Carousel.Item interval={duration}>
 					<img
-						className="d-block slider-image"
+						className="d-block slider-image shadow-none"
 						src={slider1}
 						alt="First slide"
 					/>
@@ -86,7 +86,7 @@ const Slider = () => {
 
 				<Carousel.Item interval={duration}>
 					<img
-						className="d-block slider-image"
+						className="d-block slider-image shadow-none"
 						src={slider2}
 						alt="Second slide"
 					/>
@@ -103,7 +103,7 @@ const Slider = () => {
 
 				<Carousel.Item interval={duration}>
 					<img
-						className="d-block slider-image"
+						className="d-block slider-image shadow-none"
 						src={slider3}
 						alt="Third slide"
 					/>
