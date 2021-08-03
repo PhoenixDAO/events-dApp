@@ -11,11 +11,12 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		width: "100%",
 		boxShadow: "none",
-		paddingTop: "30px",
-		paddingBottom: "30px",
+		padding: "30px",
 		"@media (min-width: 992px)": {
 			width: "70%",
 			left: "15%",
+			paddingTop: "30px",
+			paddingBottom: "30px",
 		},
 		"& .MuiAccordionSummary-expandIcon": {
 			transform: "unset",

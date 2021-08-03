@@ -1431,7 +1431,7 @@ class EventPage extends Component {
 			if (!get.data) {
 				return "Unknown";
 			}
-			return get.data.country;
+			return get.data.city;
 		} catch (error) {
 			console.log("check error", error);
 			return "Unknown";

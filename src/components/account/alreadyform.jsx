@@ -52,7 +52,7 @@ const AlreadyForm = (props) => {
 					className="already-select-btn"
 					onClick={closeForm}
 				>
-					Enter Events Dapp
+					Enter Events dApp
 				</button>
 			</div>
 		</div>

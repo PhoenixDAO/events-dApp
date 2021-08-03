@@ -519,7 +519,7 @@ input[type="number"] {
 	transform: scale(1.05);
 } */
 
-.carousel:before {
+/* .carousel:before {
 	content: "";
 	position: absolute;
 	z-index: -1;
@@ -529,9 +529,9 @@ input[type="number"] {
 	left: 2%;
 	border-radius: 100px / 5px;
 	box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
-}
+} */
 
-.carousel:after {
+/* .carousel:after {
 	content: "";
 	position: absolute;
 	z-index: 0;
@@ -542,10 +542,10 @@ input[type="number"] {
 	border-radius: 100px / 5px;
 	-webkit-box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
 	box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
-}
+} */
 
 .carousel-inner {
-	border-radius: 5px !important;
+	border-radius: 15px !important;
 }
 
 .carousel-caption {
@@ -2962,4 +2962,19 @@ h2.main-title {
 	.dashboard-dropdown-row {
 		padding: 0 20px;
 	}
+}
+
+.fc .fc-prev-button.fc-button:focus,
+.fc .fc-next-button.fc-button:focus {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+.fc-toolbar-chunk:nth-child(2) {
+    padding-left: 0 !important;
+    padding-right: 154px;
+}
+
+.fc-scrollgrid .fc-event-title, .fc-scrollgrid .fc-event-time {
+	font-size: 13px !important;
 }
