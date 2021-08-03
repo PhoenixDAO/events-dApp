@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import "./customform.css";
 import roundlogo from "../Images/roundlogo.svg";
 import ipfs from "../../utils/ipfs";
+import { IconButton } from "@material-ui/core";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import IconButton from '@material-ui/core/IconButton';
-const CustomForm = (props) => {
+
+const CustomForm = React.memo((props) => {
 	const [file, setFile] = useState([]);
-	console.log("file",file);
+	const [loading, setLoading] = useState(false);
 	const handleFile = (e) => {
 		console.log(e.target.files);
 		if (
@@ -29,6 +30,7 @@ const CustomForm = (props) => {
 		e.preventDefault();
 		let pinit = process.env.NODE_ENV === "production";
 		const base64Img = await getBase64(file[0]);
+		setLoading(true);
 		if (file[0] !== undefined) {
 			let ipfsData = JSON.stringify({
 				image0: base64Img,
@@ -37,22 +39,36 @@ const CustomForm = (props) => {
 			console.log("buffer", buffer);
 			ipfs.add(buffer, { pin: pinit })
 				.then((hash) => {
+					setLoading(false);
 					console.log("hash", hash);
-					
-
 					props.handleCustomAvatar(true);
 					props.handleAvatar(hash[0].hash);
 					props.handleClose();
 				})
 				.catch((err) => {
+					setLoading(false);
 					console.log(err);
 				});
 		}
 	};
 
+	const showImage = useCallback(() => {
+		console.log("re rendered file");
+		if (file.length > 0) {
+			console.log(file[0]);
+			return URL.createObjectURL(file[0]);
+		} else {
+			console.log("not rendered");
+		}
+	}, [file, setFile]);
+
 	return (
 		<div className="idn-hldr">
-				<IconButton aria-label="delete" className="backArrow" onClick={props.toggleForm}>
+			<IconButton
+				aria-label="delete"
+				className="backArrow"
+				onClick={props.toggleForm}
+			>
 				<KeyboardBackspaceIcon
 					fontSize="40px"
 					style={{ fill: "#1E1E22" }}
@@ -73,15 +89,13 @@ const CustomForm = (props) => {
 			<div className="idn-sub">
 				<h5 className="idn-subhead1"> Choose your identity</h5>
 				<p className="idn-subhead2">Create your own custom Avatar</p>
-				{ }
-				<div >
+				{}
+				<div>
 					{file.length > 0 ? (
 						<div
 							className="custom-img-hldr"
 							style={{
-								backgroundImage: `url(${URL.createObjectURL(
-									file[0]
-								)})`,
+								backgroundImage: `url(${showImage()})`,
 							}}
 						></div>
 					) : (
@@ -93,7 +107,7 @@ const CustomForm = (props) => {
 								<span
 									style={{
 										display: "block",
-										color:"#1E1E22"
+										color: "#1E1E22",
 									}}
 								>
 									+{" "}
@@ -121,16 +135,27 @@ const CustomForm = (props) => {
 						onChange={(e) => props.handleName(e.target.value)}
 					/>
 					<p className="org-subheading" style={{ marginTop: "4px" }}>
-						Use a nickname preferrably
+						Use a fun and playful name{" "}
 					</p>
 				</div>
 			</div>
-			<div className="" style={{ marginTop: "34px", justifyContent: "center", display: "flex" }}>
-				<button className="avatar-select-btn" onClick={uploadImage}>
-					Save
+			<div
+				className=""
+				style={{
+					marginTop: "20px",
+					justifyContent: "center",
+					display: "flex",
+				}}
+			>
+				<button
+					className="avatar-select-btn"
+					onClick={uploadImage}
+					disabled={loading}
+				>
+					{loading ? "saving to ipfs" : "Save"}
 				</button>
 			</div>
 		</div>
 	);
-};
+});
 export default CustomForm;

@@ -948,6 +948,7 @@ class App extends Component {
 								account={this.state.account}
 								executeScroll={this.executeScroll}
 								eventsContract={this.state.eventsContract}
+								userDetails={this.state.userDetails}
 							/>
 						)}
 					/>

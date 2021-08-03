@@ -1,12 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./detailform.css";
-import CreateOutlinedIcon from "@material-ui/icons/CreateOutlined";
 import DialogueBox from "../common/DialogueBox";
 import { drizzleConnect } from "drizzle-react";
 import { updateUserDetails } from "../../config/serverAPIs";
 import PropTypes from "prop-types";
 import IdentityForm from "./identityform";
 import Tooltip from "@material-ui/core/Tooltip";
+import ipfs from "../../utils/ipfs";
 
 const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
@@ -14,12 +14,91 @@ const DetailForm = (props) => {
 	const [avatarCustom, setAvatarCustom] = useState(false);
 	const [alternateCurrency, setAlternateCurrency] = useState("Dollar");
 	const [avatar, setAvatar] = useState("");
-	const [file, setFile] = useState({});
 	const [nextForm, setNextForm] = useState(false);
 	const orgref = useRef(null);
 	const [copytext, setCopyText] = useState("Copy");
 	const [name, setName] = useState("Bennu");
 	const [avatarNumber, setAvatarNumber] = useState(0);
+	const [ipfsImage, setIpfsImage] = useState("");
+	useEffect(() => {
+		console.log("this.props.userDetails", props.userDetails);
+		provideImage();
+	}, [props.userDetails]);
+	const imageData = (index) => {
+		let myArray = [
+			{ img: "/images/avatars/bennu.svg", name: "Bennu", onclick: false },
+			{
+				img: "/images/avatars/milcham.svg",
+				name: "Milcham",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/thunderbird.svg",
+				name: "Thunderbird",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/garuda.svg",
+				name: "Garuda",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/firebird.svg",
+				name: "Firebird",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/metamask.svg",
+				name: "Custom",
+				onclick: true,
+			},
+		];
+		return myArray[index].img;
+	};
+
+	const provideImage = () => {
+		if (Object.keys(props.userDetails).length > 0) {
+			console.log("userdetailsss", props.userDetails);
+			const avaCustom = props.userDetails.result.result.avatarCustom;
+			const avatarId = props.userDetails.result.result.avatarNumber;
+			const ava = props.userDetails.result.result.avatar;
+			const name = props.userDetails.result.result.name;
+			const org = props.userDetails.result.result.organizerDetails;
+			console.log("avatarCustom,", avaCustom);
+			if (avaCustom) {
+				// ipfs.get(ava).then((f) => {
+				// 	let data = JSON.parse(f[0].content.toString());
+				// 	console.log("Data image", data);
+				// 	setAvatar(data.image0);
+				// });
+				setAvatar(ava);
+			}
+			setAvatarCustom(avaCustom);
+			setAvatarNumber(avatarId);
+			setName(name);
+			setOrganizer(org);
+		}
+	};
+
+	const renderImage = () => {
+		if (avatarCustom) {
+			ipfs.get(avatar)
+				.then((f) => {
+					let data = JSON.parse(f[0].content.toString());
+					console.log("Data image", data);
+					setIpfsImage(data.image0);
+				})
+				.catch((err) => {
+					console.log("ipfs error", err);
+				});
+			console.log("avatar ipfs image", avatar);
+			if (ipfsImage) {
+				return <img src={ipfsImage} className="bird" />;
+			}
+		} else {
+			return <img src={imageData(avatarNumber)} className="bird" />;
+		}
+	};
 
 	const handleCopy = (value) => {
 		navigator.clipboard.writeText(value);
@@ -73,9 +152,9 @@ const DetailForm = (props) => {
 			avatar: avatar,
 			alternateCurrency: alternateCurrency,
 		});
-		if(detail.error){
+		if (detail.error) {
 			console.log("error occured");
-		}else{
+		} else {
 			window.location.reload();
 		}
 	};
@@ -102,14 +181,14 @@ const DetailForm = (props) => {
 	return (
 		<div className="dtl-hldr">
 			<div className="acc-basic-info">
-			<img alt="banner"  className="banner" src="/images/accountDetails.jpg" />
-
-				<div className="acc-av-hldr">
-
-					<img className="acc-av" src="/images/metamask.svg" />
-				</div>
+				<img
+					alt="banner"
+					className="banner"
+					src="/images/accountDetails.jpg"
+				/>
+				<div className="acc-av-hldr">{renderImage()}</div>
 				<div className="acc-title-hlder">
-					<p className="acc-title"> Bennu </p>
+					<p className="acc-title"> {name} </p>
 					<div className="redirect-img-hldr" onClick={handleOpen}>
 						<img
 							className="redirect-img"
@@ -157,7 +236,7 @@ const DetailForm = (props) => {
 								onChange={(e) =>
 									setAlternateCurrency(e.target.value)
 								}
-								value={organizer}
+								value={alternateCurrency}
 							>
 								{currency}
 							</select>
@@ -177,6 +256,7 @@ const DetailForm = (props) => {
 								ORGANIZER DETAILS
 							</p>
 							<textarea
+								value={organizer}
 								className="acc-inpt"
 								rows="4"
 								cols="50"

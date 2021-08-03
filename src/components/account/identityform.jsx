@@ -27,6 +27,7 @@ const IdentityForm = (props) => {
 		setSelectImage({ img, detail, name });
 		props.handleAvatarNumber(index);
 		props.handleName(name);
+		props.handleCustomAvatar(false);
 	};
 	const toggleForm = () => {
 		props.setNextForm("");
@@ -144,6 +145,8 @@ const IdentityForm = (props) => {
 								selectImage={selectImage}
 								toggleForm={toggleForm}
 								handleClose={props.handleClose}
+								handleAvatarNumber={props.handleAvatarNumber}
+								handleCustomAvatar={props.handleCustomAvatar}
 							/>
 						) : (
 							<CustomForm

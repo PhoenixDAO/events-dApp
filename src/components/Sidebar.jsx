@@ -16,7 +16,6 @@ import {
 } from "@material-ui/icons";
 import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
-import { getUserDetails } from "../config/serverAPIs";
 import ipfs from "../utils/ipfs";
 import { throws } from "assert";
 

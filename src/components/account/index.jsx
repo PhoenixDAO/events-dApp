@@ -13,7 +13,10 @@ const AccountDetail = (props) => {
 				phnxButton="true"
 				goBack={goBack}
 			/>
-			<DetailForm account={props.account} goBack={goBack} />
+			<DetailForm
+				account={props.account}
+				userDetails={props.userDetails}
+			/>
 		</div>
 	);
 };
