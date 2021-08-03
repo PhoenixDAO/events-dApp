@@ -2957,6 +2957,7 @@ h2.main-title {
     /* text-overflow: ellipsis; */
     overflow-wrap: break-word;
     word-break: break-all;
+	height: 290px;
 }
 
 @media screen and (min-width: 600px) {
