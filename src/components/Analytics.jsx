@@ -246,55 +246,7 @@ const options2 = {
 	},
 };
 //line chart options
-const chartOptions = {
-	// capBezierPoints: true,
-	legend: {
-		display: false,
-	},
-	scales: {
-		yAxes: [
-			{
-				gridLines: {
-					drawBorder: true,
-					display: true,
-					borderDash: [8, 4],
-				},
-				ticks: {
-					display: true,
-					fontColor: "black",
-					fontWeight: "700",
-					fontSize: 16,
-				},
-				scaleLabel: {
-					display: true,
-					labelString: "REVENUE",
-					fontSize: 14,
-					fontColor: "#73727D",
-				},
-			},
-		],
-		xAxes: [
-			{
-				gridLines: {
-					drawBorder: false,
-					display: false,
-				},
-				ticks: {
-					display: true, //this will remove only the label
-					fontColor: "black",
-					fontWeight: "700",
-					fontSize: 16,
-				},
-				scaleLabel: {
-					display: true,
-					labelString: "DATE",
-					fontSize: 14,
-					fontColor: "#73727D",
-				},
-			},
-		],
-	},
-};
+
 
 const Analytics = (props, context) => {
 	const classes = useStyles();
@@ -325,6 +277,9 @@ const Analytics = (props, context) => {
 	const [phnxClicked, setPhnxClicked] = useState(false);
 	const [phnxRev, setPhnxRev] = useState([]);
 	const [labels, setLabels] = useState([]);
+	const [legend, setlegend] = useState("REVENUE ($) ");
+	const [timeLabel, settimeLabel] = useState("TIME");
+
 	useEffect(() => {
 		// getPhnxRevenue();
 		getViewsAndFavourites();
@@ -363,6 +318,55 @@ const Analytics = (props, context) => {
 	// 	setTodayGraphData(todayData);
 	// 	handleTimeStampChange(null, todayData);
 	// };
+	const chartOptions = {
+		// capBezierPoints: true,
+		legend: {
+			display: false,
+		},
+		scales: {
+			yAxes: [
+				{
+					gridLines: {
+						drawBorder: true,
+						display: true,
+						borderDash: [8, 4],
+					},
+					ticks: {
+						display: true,
+						fontColor: "black",
+						fontWeight: "700",
+						fontSize: 16,
+					},
+					scaleLabel: {
+						display: true,
+						labelString: legend,
+						fontSize: 14,
+						fontColor: "#73727D",
+					},
+				},
+			],
+			xAxes: [
+				{
+					gridLines: {
+						drawBorder: false,
+						display: false,
+					},
+					ticks: {
+						display: true, //this will remove only the label
+						fontColor: "black",
+						fontWeight: "700",
+						fontSize: 16,
+					},
+					scaleLabel: {
+						display: true,
+						labelString: timeLabel,
+						fontSize: 14,
+						fontColor: "#73727D",
+					},
+				},
+			],
+		},
+	};
 	const events = getEvents({
 		_isMounted: true,
 		accounts: props.accounts,
@@ -416,6 +420,7 @@ const Analytics = (props, context) => {
 		let phxRevenue = [];
 		let phnxLabel = [];
 		let phxData = {};
+		setlegend("REVENUE (PHNX) ");
 		console.log(graphDays);
 		for (let i = 0; i < graphDays.length; i++) {
 			let key = graphDays[i].startTimeStamp;
@@ -458,6 +463,7 @@ const Analytics = (props, context) => {
 		let soldTickets = [];
 		let soldLabel = [];
 		let soldData = {};
+		setlegend("NO. OF TICKETS SOLD");
 		for (let i = 0; i < graphDays.length; i++) {
 			let key = graphDays[i].startTimeStamp;
 			if (key in soldData) {
@@ -496,6 +502,7 @@ const Analytics = (props, context) => {
 		let dollarRev = [];
 		let dollarLabel = [];
 		let dollarData = {};
+		setlegend("REVENUE ($)");
 		for (let i = 0; i < graphDays.length; i++) {
 			let key = graphDays[i].startTimeStamp;
 			if (key in dollarData) {
@@ -599,12 +606,12 @@ const Analytics = (props, context) => {
 							? (
 									event.eventRevenueInPhnx /
 									1000000000000000000
-							  ).toFixed(2) + " PHNX"
+							  ).toFixed(3) + " PHNX"
 							: "$ " +
 							  (
 									event.eventRevenueInDollar /
 									1000000000000000000
-							  ).toFixed(2)}
+							  ).toFixed(3)}
 					</Grid>
 				</Grid>
 			));
@@ -630,6 +637,7 @@ const Analytics = (props, context) => {
 			let graphForDays = [];
 			console.log("called herer");
 			if (timestamp === "86400") {
+				settimeLabel("TIME");
 				console.log("graphData", "called here");
 				if (props.todayGraphData.length > 0) {
 					console.log(
@@ -640,6 +648,7 @@ const Analytics = (props, context) => {
 					graphForDays = props.todayGraphData;
 				}
 			} else {
+				settimeLabel("DATE");
 				console.log("graphData", props.graphData);
 				graphForDays = props.graphData.filter(
 					(event) => event.startTimeStamp >= elapsedTime
