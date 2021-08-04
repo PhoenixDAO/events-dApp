@@ -85,7 +85,7 @@ class TopicLandingPage extends Component {
 			Filtered_Events_length: 0,
 			hideEvent: [],
 			disabledBuying: false,
-			eventCount:0,
+			eventCount: 0,
 			dateNow: "",
 		};
 		this.perPage = 6;
@@ -109,7 +109,6 @@ class TopicLandingPage extends Component {
 	goBack() {
 		this.props.history.goBack();
 	}
-	
 
 	componentDidUpdate() {}
 
@@ -138,12 +137,13 @@ class TopicLandingPage extends Component {
 
 	getTopicData() {
 		let topicSlug = this.getLastURLSegment();
-
-		let theTopic = topicsJson.filter(function (topic) {
-			return topic.slug == topicSlug;
-		});
-
-		return theTopic[0];
+		console.log("topicSlug", topicSlug);
+		let theTopic = {}
+		if( topicsJson[topicSlug]){
+			theTopic = topicsJson[topicSlug]
+		}
+		console.log("theTopic", theTopic);
+		return theTopic.name
 	}
 
 	//Loadblockchain Data
@@ -202,29 +202,39 @@ class TopicLandingPage extends Component {
 				active_length: 0,
 			});
 		}
+		const dateTime = Date.now();
+		const dateNow = Math.floor(dateTime / 1000);
 		// GRAPH BLOCK //
 		await axios({
 			url: graphURL,
 			method: "post",
 			data: {
 				query: `
-  		{
-			events {
-			  id
-			  eventId
-			  name
-			  time
-	 		price
-			  token
-	 		 limited
-			  seats
-			  sold
-	 		 ipfs
-	  		category
-	 		 owner
-	 		 revenueOfEvent
-			}
- 		 }
+				{
+					events( where:{topic:"${this.props.match.params.page}" time_gte: "${dateNow}"} orderBy:time orderDirection:desc) {
+						id
+						eventId
+						owner
+						name
+						topic
+						location
+						ipfsHash
+						tktLimited
+						tktTotalQuantity
+						tktTotalQuantitySold
+						oneTimeBuy
+						token
+						time
+						duration
+						catTktQuantity
+						catTktQuantitySold	
+						categories
+						prices
+						eventRevenueInDollar
+						eventRevenueInPhnx
+					}
+					
+				  }
   	`,
 			},
 		})
@@ -233,6 +243,7 @@ class TopicLandingPage extends Component {
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
 					// console.log("GraphQL query -- graphEvents undefined")
+					console.log("topic data", graphEvents.data);
 					this.setState({
 						loading: false,
 						Topic_Events: [],
@@ -240,19 +251,20 @@ class TopicLandingPage extends Component {
 					});
 				} else {
 					if (this._isMounted) {
-						const dateTime = Date.now();
-						const dateNow = Math.floor(dateTime / 1000);
+						console.log("topic data", graphEvents.data);
+						console.log("topic data", graphEvents.data.data.events);
 						let newsort = graphEvents.data.data.events
 							.concat()
 							.sort((a, b) => b.blockNumber - a.blockNumber)
-							.filter(
-								(activeEvents) =>
-									activeEvents.time >= dateNow &&
-									activeEvents.category ===
-										this.props.match.params.page
-							);
-						// console.log("GraphQL query newsort",newsort)
-
+							// .filter(
+							// 	(activeEvents) =>{
+							// 		console.log("activeEvents", activeEvents.topic)
+							// 		console.log("this.props.match.params.page", this.props.match.params.page)
+							// 		// activeEvents.time >= dateNow &&
+							// 		activeEvents.topic ===
+							// 			this.props.match.params.page}
+							// );
+						console.log("GraphQL query newsort", newsort);
 						if (this._isMounted) {
 							this.setState({
 								Topic_Events: newsort,
@@ -289,23 +301,30 @@ class TopicLandingPage extends Component {
 			method: "post",
 			data: {
 				query: `
-		{
-			events {
-			id
-			eventId
-			name
-			time
-			price
-			token
-			limited
-			seats
-			sold
-			ipfs
-			category
-			owner
-			revenueOfEvent
-			}
-		}
+				{
+					events(orderBy:eventId orderDirection:asc) {
+						id
+						eventId
+						owner
+						name
+						topic
+						location
+						ipfsHash
+						tktLimited
+						tktTotalQuantity
+						tktTotalQuantitySold
+						oneTimeBuy
+						token
+						time
+						duration
+						catTktQuantity
+						catTktQuantitySold	
+						categories
+						prices
+						eventRevenueInDollar
+						eventRevenueInPhnx
+					}
+				  }
 		`,
 			},
 		})
@@ -458,10 +477,49 @@ class TopicLandingPage extends Component {
 		// if (
 		// this.state.active_length == 0
 		// ) {
-			let count = this.state.active_length;
-			if (this.state.loading) {
-				body = <PhoenixDAOLoader />;
-			} else if (count === 0 && !this.state.loading) {
+		let count = this.state.active_length;
+		if (this.state.loading) {
+			body = <PhoenixDAOLoader />;
+		} else if (count === 0 && !this.state.loading) {
+			body = (
+				<p className="text-center not-found">
+					<span role="img" aria-label="thinking">
+						🤔
+					</span>
+					&nbsp;No events found.{" "}
+					<a href="/createevent">Try creating one.</a>
+				</p>
+			);
+		} else {
+			// console.log("this.props.match.params.page",this.props.match.params.id)
+			let currentPage = Number(this.props.match.params.id);
+			let events_list = [];
+			let skip = false;
+			for (let i = 0; i < this.state.Topic_Events.length; i++) {
+				for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+					if (
+						this.state.Topic_Events[i].eventId ==
+						this.state.Deleted_Events[j].eventId
+					) {
+						skip = true;
+					}
+				}
+				if (!skip) {
+					for (let j = 0; j < this.state.hideEvent.length; j++) {
+						if (
+							this.state.Topic_Events[i].eventId ==
+							this.state.hideEvent[j].id
+						) {
+							skip = true;
+						}
+					}
+				}
+				if (!skip) {
+					events_list.push(this.state.Topic_Events[i]);
+				}
+				skip = false;
+			}
+			if (events_list.length == 0) {
 				body = (
 					<p className="text-center not-found">
 						<span role="img" aria-label="thinking">
@@ -472,119 +530,78 @@ class TopicLandingPage extends Component {
 					</p>
 				);
 			} else {
-				// console.log("this.props.match.params.page",this.props.match.params.id)
-				let currentPage = Number(this.props.match.params.id);
-				let events_list = [];
-				let skip = false;
-				for (let i = 0; i < this.state.Topic_Events.length; i++) {
-					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
-						if (
-							this.state.Topic_Events[i].eventId ==
-							this.state.Deleted_Events[j].eventId
-						) {
-							skip = true;
-						}
-					}
-					if (!skip) {
-						for (let j = 0; j < this.state.hideEvent.length; j++) {
-							if (
-								this.state.Topic_Events[i].eventId ==
-								this.state.hideEvent[j].id
-							) {
-								skip = true;
-							}
-						}
-					}
-					if (!skip) {
-						events_list.push(this.state.Topic_Events[i]);
-					}
-					skip = false;
-				}
-				if (events_list.length == 0) {
-					body = (
-						<p className="text-center not-found">
-							<span role="img" aria-label="thinking">
-								🤔
-							</span>
-							&nbsp;No events found.{" "}
-							<a href="/createevent">Try creating one.</a>
-						</p>
+				let updated_list = [];
+				// console.log("events_list",events_list)
+				count = events_list.length;
+				// console.log("currentPage",currentPage)
+				// console.log("this.perPage",this.perPage)
+				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+				let end = currentPage * this.perPage;
+				let start = end - this.perPage;
+				if (end > count) end = count;
+				let pages = Math.ceil(count / this.perPage);
+
+				for (let i = start; i < end; i++) {
+					updated_list.push(
+						<Event
+							eventData={events_list[i]}
+							toggleBuying={this.toggleBuying}
+							disabledBuying={this.state.disabledBuying}
+							disabledStatus={this.props.disabledStatus}
+							inquire={this.props.inquire}
+							key={events_list[i].eventId}
+							id={events_list[i].eventId}
+							ipfs={events_list[i].ipfs}
+						/>
 					);
-				} else {
-					let updated_list = [];
-					// console.log("events_list",events_list)
-					count = events_list.length;
-					// console.log("currentPage",currentPage)
-					// console.log("this.perPage",this.perPage)
-					if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-					let end = currentPage * this.perPage;
-					let start = end - this.perPage;
-					if (end > count) end = count;
-					let pages = Math.ceil(count / this.perPage);
+				}
+				// console.log("updated_list",updated_list)
+				// updated_list.reverse();
 
-					for (let i = start; i < end; i++) {
-						updated_list.push(
-							<Event
-								eventData={events_list[i]}
-								toggleBuying={this.toggleBuying}
-								disabledBuying={this.state.disabledBuying}
-								disabledStatus={this.props.disabledStatus}
-								inquire={this.props.inquire}
-								key={events_list[i].eventId}
-								id={events_list[i].eventId}
-								ipfs={events_list[i].ipfs}
-							/>
-						);
-					}
-					// console.log("updated_list",updated_list)
-					// updated_list.reverse();
+				let pagination = "";
+				if (pages > 1) {
+					let links = [];
 
-					let pagination = "";
-					if (pages > 1) {
-						let links = [];
-
-						for (let i = 1; i <= pages; i++) {
-							let active = i === currentPage ? "active" : "";
-							links.push(
-								<li
-									className={"page-item " + active}
-									key={i}
-									onClick={this.scrollTo()}
+					for (let i = 1; i <= pages; i++) {
+						let active = i === currentPage ? "active" : "";
+						links.push(
+							<li
+								className={"page-item " + active}
+								key={i}
+								onClick={this.scrollTo()}
+							>
+								<Link
+									to={
+										"/topic/" +
+										this.props.match.params.page +
+										"/" +
+										i
+									}
+									className="page-link"
 								>
-									<Link
-										to={
-											"/topic/" +
-											this.props.match.params.page +
-											"/" +
-											i
-										}
-										className="page-link"
-									>
-										{i}
-									</Link>
-								</li>
-							);
-						}
-
-						pagination = (
-							<nav>
-								<ul className="pagination justify-content-center">
-									{links}
-								</ul>
-							</nav>
+									{i}
+								</Link>
+							</li>
 						);
 					}
 
-					body = (
-						<div>
-							<div className="row user-list mt-4">
-								{updated_list}
-							</div>
-							{pagination}
-						</div>
+					pagination = (
+						<nav>
+							<ul className="pagination justify-content-center">
+								{links}
+							</ul>
+						</nav>
 					);
 				}
+
+				body = (
+					<div>
+						<div className="row user-list mt-4">{updated_list}</div>
+						{pagination}
+					</div>
+				);
 			}
+		}
 
 		return (
 			<React.Fragment>
@@ -598,7 +615,12 @@ class TopicLandingPage extends Component {
 				</div> */}
 
 				<div className="retract-page-inner-wrapper-alternative dash topicsDiv">
-							<Header title={topic.name} phnxButton={true} goBack={this.goBack} page="topic"/>
+					<Header
+						title={topic.name}
+						phnxButton={true}
+						goBack={this.goBack}
+						page="topic"
+					/>
 					<br />
 					<br />
 					<div
