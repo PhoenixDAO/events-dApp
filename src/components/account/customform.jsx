@@ -4,6 +4,7 @@ import roundlogo from "../Images/roundlogo.svg";
 import ipfs from "../../utils/ipfs";
 import { IconButton } from "@material-ui/core";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const CustomForm = React.memo((props) => {
 	const [file, setFile] = useState([]);
@@ -152,7 +153,7 @@ const CustomForm = React.memo((props) => {
 					onClick={uploadImage}
 					disabled={loading}
 				>
-					{loading ? "saving to ipfs" : "Save"}
+					{loading ?      <CircularProgress style={{color:"white",width:"15px",height:"15px"}} /> : "Save"}
 				</button>
 			</div>
 		</div>
