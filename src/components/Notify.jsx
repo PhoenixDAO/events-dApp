@@ -1,16 +1,53 @@
-import React from 'react';
-import makeBlockie from 'ethereum-blockies-base64';
+import React from "react";
+import makeBlockie from "ethereum-blockies-base64";
+import { explorerWithTX, explorerWithAddress } from "../config/const";
+import { Link } from "react-router-dom";
 
-function Notify(props) {
-	return (
-		<div className="notify">
-			<a href={"https://rinkeby.etherscan.io/tx/" + props.hash} title={props.hash} target="blank">
-				<img src={makeBlockie(props.hash)} alt={props.hash} />
-			</a>
-			<a href={"https://rinkeby.etherscan.io/tx/" + props.hash} title={props.hash} target = "blank">Transaction sent!</a> <span role="img" aria-labelledby="rocket">🚀 {props.tx}</span>
-			<p> Preparing your ticket...</p>
-		</div>
-	);
+function Notify({ text, icon, error, link, color, createdEvent, url, hash }) {
+	let titleURL = "";
+	if (createdEvent) {
+		let rawTitle = createdEvent.name;
+		var titleRemovedSpaces = rawTitle;
+		titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
+
+		var pagetitle = titleRemovedSpaces
+			.toLowerCase()
+			.split(" ")
+			.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+			.join(" ");
+		titleURL = "/event-stat/" + pagetitle + "/" + createdEvent.eventId;
+	}
+	if (error) {
+		return (
+			<div className="notify2">
+				<div>
+					<i
+						className="fas fa-exclamation-circle fa-3x"
+						style={{ color: "#F43C3C" }}
+					></i>
+				</div>
+				<div>
+					Transaction{" "}
+					{error && error.code == 4001 ? "Rejected" : "failed"}😥. Try
+					again later.
+				</div>
+			</div>
+		);
+	} else {
+		return (
+			<div className="notify2">
+				<div>
+					<i className={icon} style={{ color: color }}></i>
+				</div>
+				<a href={explorerWithTX + hash} title={hash} target="blank">
+					<div style={{ whiteSpace: "break-spaces" }}>{text}</div>
+				</a>
+				<Link to={url ? url : titleURL}>
+					<p> {link}</p>
+				</Link>
+			</div>
+		);
+	}
 }
 
 export default Notify;

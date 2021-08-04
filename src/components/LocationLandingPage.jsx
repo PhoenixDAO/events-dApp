@@ -13,7 +13,7 @@ class LocationLandingPage extends Component {
   constructor(props, context) {
     super(props);
     this.contracts = context.drizzle.contracts;
-    this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
+    this.eventCount = this.contracts['DaoEvents'].methods.getEventsCount.cacheCall();
     this.perPage = 6;
     this.locationClick = this.locationClick.bind(this);;
     this.theLocation = this.getLocationData();
@@ -21,12 +21,13 @@ class LocationLandingPage extends Component {
   }
 
   componentDidUpdate() {
-    //this.theTopic = this.getTopicData();
   }
 
   componentDidMount() {
-    //this.theTopic = this.getTopicData();
-    window.scrollTo(0, 0);
+    window.scroll({
+			top: 0,
+			behavior: 'smooth'
+		  });
 
     
   }
@@ -43,7 +44,7 @@ class LocationLandingPage extends Component {
   }
 
   getLastURLSegment() {
-    console.log(this.props.history.location.pathname);
+    // console.log(this.props.history.location.pathname);
     let currentRoute = this.props.history.location.pathname;
     let lastSegment = currentRoute.substr(currentRoute.lastIndexOf('/') + 1);
 
@@ -64,8 +65,8 @@ class LocationLandingPage extends Component {
     let body = <Loading />;
     const location = this.theLocation;
 
-    if (typeof this.props.contracts['OpenEvents'].getEventsCount[this.eventCount] !== 'undefined') {
-      let count = Number(this.props.contracts['OpenEvents'].getEventsCount[this.eventCount].value);
+    if (typeof this.props.contracts['DaoEvents'].getEventsCount[this.eventCount] !== 'undefined') {
+      let count = Number(this.props.contracts['DaoEvents'].getEventsCount[this.eventCount].value);
       if (count === 0) {
         body = <p className="text-center not-found"><span role="img" aria-label="thinking">🤔</span>&nbsp;No events found. <a href="/createevent">Try creating one.</a></p>;
       } else {
@@ -91,7 +92,7 @@ class LocationLandingPage extends Component {
             let active = i === currentPage ? 'active' : '';
             links.push(
               <li className={"page-item " + active} key={i}>
-                <Link to={"/findevents/" + i} className="page-link">{i}</Link>
+                <Link to={"/upcomingevents/" + i} className="page-link">{i}</Link>
               </li>
             );
           }
