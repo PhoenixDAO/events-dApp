@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 		},
 		fontSize: "36px !important",
 		fontFamily: '"AeonikReg" ,sans-serif',
-		fontWeight: "600 !important",
+		// fontWeight: "600 !important",
 	},
 	text: {
 		fontSize: 20,

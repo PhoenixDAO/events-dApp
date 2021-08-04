@@ -94,7 +94,11 @@ const useStyles = (theme) => ({
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
+			padding: "13px",
 		},
+		"& option": {
+			padding: "10px",
+		}
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
