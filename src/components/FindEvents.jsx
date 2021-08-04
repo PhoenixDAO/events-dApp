@@ -98,7 +98,7 @@ const useStyles = (theme) => ({
 		},
 		"& option": {
 			padding: "10px",
-		}
+		},
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
@@ -142,7 +142,7 @@ class FindEvents extends Component {
 			event_copy: [],
 			prevPath: -1,
 			hideEvent: [],
-			selectedTab: 0,
+			selectedTab: "allevents",
 			eventCount: 0,
 			category: "allevents",
 		};
@@ -296,11 +296,11 @@ class FindEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				console.log(
-					"GraphQL query response",
-					Date.now(),
-					graphEvents.data.data.events
-				);
+				// console.log(
+				// 	"GraphQL query response",
+				// 	Date.now(),
+				// 	graphEvents.data.data.events
+				// );
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
 					// console.log("GraphQL query -- graphEvents undefined")
@@ -314,7 +314,7 @@ class FindEvents extends Component {
 					const dateTime = Date.now();
 					const dateNow = Math.floor(dateTime / 1000);
 					this.setState({ loading: true });
-					console.log("events", graphEvents.data.data.events);
+					// console.log("events", graphEvents.data.data.events);
 					let newsort = graphEvents.data.data.events
 						.concat()
 						.sort((a, b) => b.blockNumber - a.blockNumber)
@@ -392,7 +392,7 @@ class FindEvents extends Component {
 			this.setState({
 				hideEvent: get.data.result,
 			});
-			console.log("hide event", this.state.hideEvent);
+			// console.log("hide event", this.state.hideEvent);
 			return;
 		} catch (error) {
 			console.log("check error", error);
@@ -401,7 +401,56 @@ class FindEvents extends Component {
 
 	onTabChange = (event, newValue) => {
 		this.setState({ selectedTab: newValue });
+		let query;
+
+		if (newValue === "allevents") {
+		} else if (newValue === "neartoyou") {
+			console.log(newValue);
+			query = `
+			{
+			  events(orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  duration
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+		} else if (newValue === "today") {
+			console.log(newValue);
+		} else if (newValue === "thisweek") {
+			console.log(newValue);
+		} else if (newValue === "thismonth") {
+			console.log(newValue);
+		} else if (newValue === "paidevents") {
+			console.log(newValue);
+		} else if (newValue === "freeevents") {
+			console.log(newValue);
+		} else if (newValue === "onlineevents") {
+			console.log(newValue);
+		} else if (newValue === "physicalevents") {
+			console.log(newValue);
+		} else {
+			console.log(newValue);
+		}
 	};
+
 	// async componentDidMount() {
 	// 	console.log("props", this.props);
 	// 	let eventCount = await this.props.eventsContract.methods
@@ -502,7 +551,7 @@ class FindEvents extends Component {
 				let links = [];
 
 				if (pages > 5 && currentPage >= 3) {
-					console.log("pag pages > 5 && currentPage >= 3");
+					// console.log("pag pages > 5 && currentPage >= 3");
 					for (
 						let i = currentPage - 2;
 						i <= currentPage + 2 && i <= pages;
@@ -532,7 +581,7 @@ class FindEvents extends Component {
 						}
 					}
 				} else if (pages > 5 && currentPage < 3) {
-					console.log("pag pages > 5 && currentPage < 3");
+					// console.log("pag pages > 5 && currentPage < 3");
 					for (let i = 1; i <= 5 && i <= pages; i++) {
 						let active = i === currentPage ? "active" : "";
 						links.push(
@@ -558,7 +607,7 @@ class FindEvents extends Component {
 						}
 					}
 				} else {
-					console.log("pag else");
+					// console.log("pag else");
 					for (let i = 1; i <= pages; i++) {
 						let active = i === currentPage ? "active" : "";
 						links.push(
@@ -730,47 +779,56 @@ class FindEvents extends Component {
 												classes.tabBar - 2
 											}`}
 											label="All Events"
-											{...a11yProps(0)}
+											value="allevents"
+											// {...a11yProps(0)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Near to you"
-											{...a11yProps(1)}
+											value="neartoyou"
+											// {...a11yProps(1)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Today"
-											{...a11yProps(2)}
+											value="today"
+											// {...a11yProps(2)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Week"
-											{...a11yProps(3)}
+											value="thisweek"
+											// {...a11yProps(3)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Month"
-											{...a11yProps(4)}
+											value="thismonth"
+											// {...a11yProps(4)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Paid Events"
-											{...a11yProps(5)}
+											value="paidevents"
+											// {...a11yProps(5)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Free Events"
-											{...a11yProps(6)}
+											value="freeevents"
+											// {...a11yProps(6)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Online Events"
-											{...a11yProps(7)}
+											value="onlineevents"
+											// {...a11yProps(7)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Physical Events"
-											{...a11yProps(8)}
+											value="physicalevents"
+											// {...a11yProps(8)}
 										/>
 									</Tabs>
 									<Divider light />
@@ -905,7 +963,7 @@ class FindEvents extends Component {
 	}
 
 	async componentDidMount() {
-		console.log("props", this.props);
+		// console.log("props", this.props);
 		// let eventCount = await this.props.eventsContract.methods
 		// 	.getEventsCount()
 		// 	.call();
