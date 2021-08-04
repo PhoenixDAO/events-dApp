@@ -49,6 +49,7 @@ import {
 
 import NetworkError from "./NetworkError";
 import PageNotFound from "./PageNotFound";
+import EmptyState from "./EmptyState";
 import Favorites from "./Favorite.jsx";
 import { getUserDetails } from "../config/serverAPIs";
 import AccountDetail from "./account/index";
@@ -1129,6 +1130,7 @@ class App extends Component {
 							<Terms executeScroll={this.executeScroll} />
 						)}
 					/>
+					{/* <Route path="*" exact component={EmptyState} /> */}
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>
 			);
