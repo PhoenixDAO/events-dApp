@@ -8,7 +8,7 @@ import Loading from "./Loading";
 import Event from "./Event";
 
 import topicsJson from "../config/topics.json";
-import  Header  from "./common/Header";
+import Header from "./common/Header";
 
 // material UI styles
 import { withStyles } from "@material-ui/core/styles";
@@ -17,9 +17,7 @@ import Slider from "./common/Slider";
 import TopicCard from "./common/TopicCard";
 import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
-import {
-	Typography,
-} from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
@@ -101,8 +99,14 @@ class TopicsLandingPage extends Component {
 		super(props);
 		// this.contracts = context.drizzle.contracts;
 		this.state = {
-			eventCount: 0
-		}
+			eventCount: 0,
+			category: "all",
+			loading: true,
+			Topic_Events: [],
+			topic_copy: [],
+			active_length: "",
+			isActive: true,
+		};
 		// this.eventCount =
 		// 	this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
 
@@ -131,6 +135,38 @@ class TopicsLandingPage extends Component {
 		return 0;
 	}
 
+	handleChangeCategory = (e) => {
+		this.setState({
+			category: e.target.value,
+		});
+	};
+
+	// displayTrendingTopics = topicsJson.filter(
+	// 	(data) => data.popular === "true"
+	// );
+	// renderTopicCard = Object.keys(this.props.eventObj).map((key) => {
+	// 	console.log("this.props.eventObj", key);
+	// 	return (
+	// 		<div
+	// 			key={this.props.eventObj[key].topic}
+	// 			className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
+	// 		>
+	// 			<TopicCard
+	// 				image={"images/topics/" + this.props.eventObj[key].image}
+	// 				name={this.props.eventObj[key].topic}
+	// 				slug={this.props.eventObj[key].topic}
+	// 			/>
+	// 		</div>
+	// 	);
+	// });
+	// renderTopicCard = () => {
+	// 	const keys = Object.keys(this.props.eventObj);
+	// 	console.log("keys", keys);
+	// 	for (let i = 0; i < keys.length; i++) {
+	// 		console.log(this.props.eventObj[keys[i]]);
+	// 	}
+	// };
+
 	render() {
 		const { classes } = this.props;
 		let body = <Loading />;
@@ -139,74 +175,73 @@ class TopicsLandingPage extends Component {
 		// 	// typeof this.props.contracts["DaoEvents"].getEventsCount[
 		// 	// this.eventCount
 		// 	// ] !== "undefined"
-			
+
 		// ) {
 		// 	let count = Number(
 		// 		this.props.contracts["DaoEvents"].getEventsCount[
 		// 			this.eventCount
 		// 		].value
+		// // 	);
+		// let count = this.state.eventCount;
+		// if (count === 0) {
+		// 	body = (
+		// 		<p className="text-center not-found">
+		// 			<span role="img" aria-label="thinking">
+		// 				🤔
+		// 			</span>
+		// 			&nbsp;No events found.{" "}
+		// 			<a href="/createevent">Try creating one.</a>
+		// 		</p>
 		// 	);
-		let count=this.state.eventCount;
-			if (count === 0) {
-				body = (
-					<p className="text-center not-found">
-						<span role="img" aria-label="thinking">
-							🤔
-						</span>
-						&nbsp;No events found.{" "}
-						<a href="/createevent">Try creating one.</a>
-					</p>
-				);
-			} else {
-				let currentPage = Number(this.props.match.params.page);
-				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+		// } else {
+		// 	let currentPage = Number(this.props.match.params.page);
+		// 	if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 
-				let end = currentPage * this.perPage;
-				let start = end - this.perPage;
-				if (end > count) end = count;
-				let pages = Math.ceil(count / this.perPage);
+		// 	let end = currentPage * this.perPage;
+		// 	let start = end - this.perPage;
+		// 	if (end > count) end = count;
+		// 	let pages = Math.ceil(count / this.perPage);
 
-				let events_list = [];
+		// 	let events_list = [];
 
-				for (let i = start; i < end; i++) {
-					events_list.push(<Event key={i} id={i} />);
-				}
+		// 	for (let i = start; i < end; i++) {
+		// 		events_list.push(<Event key={i} id={i} />);
+		// 	}
 
-				let pagination = "";
-				if (pages > 1) {
-					let links = [];
+		// 	let pagination = "";
+		// 	if (pages > 1) {
+		// 		let links = [];
 
-					for (let i = 1; i <= pages; i++) {
-						let active = i === currentPage ? "active" : "";
-						links.push(
-							<li className={"page-item " + active} key={i}>
-								<Link
-									to={"/upcomingevents/" + i}
-									className="page-link"
-								>
-									{i}
-								</Link>
-							</li>
-						);
-					}
+		// 		for (let i = 1; i <= pages; i++) {
+		// 			let active = i === currentPage ? "active" : "";
+		// 			links.push(
+		// 				<li className={"page-item " + active} key={i}>
+		// 					<Link
+		// 						to={"/upcomingevents/" + i}
+		// 						className="page-link"
+		// 					>
+		// 						{i}
+		// 					</Link>
+		// 				</li>
+		// 			);
+		// 		}
 
-					pagination = (
-						<nav>
-							<ul className="pagination justify-content-center">
-								{links}
-							</ul>
-						</nav>
-					);
-				}
+		// 		pagination = (
+		// 			<nav>
+		// 				<ul className="pagination justify-content-center">
+		// 					{links}
+		// 				</ul>
+		// 			</nav>
+		// 		);
+		// 	}
 
-				body = (
-					<div>
-						<div className="row user-list mt-4">{events_list}</div>
-						{pagination}
-					</div>
-				);
-			}
-		
+		// 	body = (
+		// 		<div>
+		// 			<div className="row user-list mt-4">{events_list}</div>
+		// 			{pagination}
+		// 		</div>
+		// 	);
+		// }
 
 		return (
 			<React.Fragment>
@@ -305,8 +340,8 @@ class TopicsLandingPage extends Component {
 									</Typography>
 									<Select
 										native
-										// value={this.state.category}
-										// onChange={this.categoryChange}
+										value={this.state.category}
+										onChange={this.handleChangeCategory}
 									>
 										<option aria-label="None" value="all">
 											All Topics
@@ -322,24 +357,45 @@ class TopicsLandingPage extends Component {
 							<br />
 							<div>
 								<div className="row user-list mt-4">
-									{topicsJson &&
-										topicsJson.map((topic, index) => {
+									{
+									Object.keys(this.props.eventObj).length > 0 ?	
+									this.state.category === "all"
+										? Object.keys(this.props.eventObj).map((key) => {
 											return (
 												<div
-													key={topic.slug}
+													key={this.props.eventObj[key].topic}
 													className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
 												>
 													<TopicCard
-														image={
-															"images/topics/" +
-															topic.image
-														}
-														name={topic.name}
-														slug={topic.slug}
+														image={"images/topics/" + this.props.eventObj[key].image}
+														name={this.props.eventObj[key].name}
+														slug={this.props.eventObj[key].topic}
+														count={this.props.eventObj[key].eventCount}
 													/>
 												</div>
 											);
-										})}
+										})
+										: 
+										Object.keys(this.props.eventObj).map((key) => {
+											if(this.props.eventObj[key].eventCount >= 7){
+											return (
+												<div
+													key={this.props.eventObj[key].topic}
+													className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
+												>
+													<TopicCard
+														image={"images/topics/" + this.props.eventObj[key].image}
+														name={this.props.eventObj[key].name}
+														slug={this.props.eventObj[key].topic}
+														count={this.props.eventObj[key].eventCount}
+													/>
+												</div>
+											);
+											}
+										})
+										:
+										null
+										}
 								</div>
 							</div>
 						</div>
@@ -355,12 +411,14 @@ class TopicsLandingPage extends Component {
 		});
 	}
 	async componentWillMount() {
-		let eventCount = await this.props.eventsContract.methods.getEventsCount().call();
+		let eventCount = await this.props.eventsContract.methods
+			.getEventsCount()
+			.call();
 		if (eventCount) {
-			this.setState({ eventCount })
+			console.log("events count", eventCount);
+			this.setState({ eventCount });
 		}
 	}
-
 }
 
 // TopicsLandingPage.contextTypes = {

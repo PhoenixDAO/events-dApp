@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const TopicCard = ({ image, name, slug }) => {
+const TopicCard = ({ image, name, slug, count }) => {
 	const classes = useStyles();
 
 	return (
@@ -69,7 +69,7 @@ const TopicCard = ({ image, name, slug }) => {
 						>
 							<EventNoteIcon fontSize="small" />{" "}
 							<span>&nbsp;</span>
-							12 Events
+							{count} Events
 						</Typography>
 					</CardContent>
 				</CardActionArea>

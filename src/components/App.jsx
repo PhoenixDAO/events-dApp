@@ -27,6 +27,7 @@ import TopicsLandingPage from "./TopicsLandingPage";
 import LocationLandingPage from "./LocationLandingPage";
 import LocationsLandingPage from "./LocationsLandingPage";
 import Calendars from "./Calendars";
+import WrapperTopicsLandingPage from './WrapperTopicsLandingPage'
 import Token from "./Token";
 // import Dashboard from "./Dashboard";
 import Terms from "./Terms";
@@ -1062,7 +1063,7 @@ class App extends Component {
 						path="/topics"
 						//  component={TopicsLandingPage}
 						component={(props) => (
-							<TopicsLandingPage
+							<WrapperTopicsLandingPage
 								{...props}
 								eventsContract={this.state.eventsContract}
 							/>

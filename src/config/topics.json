@@ -1,5 +1,5 @@
-[
-	{
+{
+	"auto-boat-and-air": {
 		"name": "Auto, Boat & Air",
 		"slug": "auto-boat-and-air",
 		"icon": "",
@@ -7,7 +7,7 @@
 		"image": "auto-boat-and-air.jpg",
 		"popular": "false"
 	},
-	{
+	"bar-crawls": {
 		"name": "Bar Crawls",
 		"slug": "bar-crawls",
 		"icon": "",
@@ -16,7 +16,7 @@
 		"image": "bar-crawl.jpg",
 		"popular": "true"
 	},
-	{
+	"business-and-professional": {
 		"name": "Business & Professional",
 		"slug": "business-and-professional",
 		"icon": "",
@@ -24,7 +24,7 @@
 		"image": "business-and-professional.jpg",
 		"popular": "false"
 	},
-	{
+	"charity-and-causes": {
 		"name": "Charity & Causes",
 		"slug": "charity-and-causes",
 		"icon": "",
@@ -32,7 +32,7 @@
 		"image": "charity-and-causes.jpg",
 		"popular": "true"
 	},
-	{
+	"community-and-culture": {
 		"name": "Community & Culture",
 		"slug": "community-and-culture",
 		"icon": "",
@@ -40,7 +40,7 @@
 		"image": "community-and-culture.jpg",
 		"popular": "false"
 	},
-	{
+	"dj": {
 		"name": "DJ",
 		"slug": "dj",
 		"icon": "",
@@ -49,7 +49,7 @@
 		"image": "dj.jpg",
 		"popular": "true"
 	},
-	{
+	"farmers-markets": {
 		"name": "Farmers Markets",
 		"slug": "farmers-markets",
 		"icon": "",
@@ -58,7 +58,7 @@
 		"image": "farmers-market.jpg",
 		"popular": "false"
 	},
-	{
+	"family-and-education": {
 		"name": "Family & Education",
 		"slug": "family-and-education",
 		"icon": "",
@@ -66,7 +66,7 @@
 		"image": "family-and-education.jpg",
 		"popular": "false"
 	},
-	{
+	"fashion-and-beauty": {
 		"name": "Fashion & Beauty",
 		"slug": "fashion-and-beauty",
 		"icon": "",
@@ -74,7 +74,7 @@
 		"image": "fashion-and-beauty.jpg",
 		"popular": "false"
 	},
-	{
+	"film-media-and-entertainment": {
 		"name": "Film, Media & Entertainment",
 		"slug": "film-media-and-entertainment",
 		"icon": "",
@@ -82,7 +82,7 @@
 		"image": "film-media-and-entertainment.jpg",
 		"popular": "false"
 	},
-	{
+	"food-and-drink": {
 		"name": "Food & Drink",
 		"slug": "food-and-drink",
 		"icon": "",
@@ -90,7 +90,7 @@
 		"image": "food-and-drink.jpg",
 		"popular": "false"
 	},
-	{
+	"government-and-politics": {
 		"name": "Government & Politics",
 		"slug": "government-and-politics",
 		"icon": "",
@@ -98,7 +98,7 @@
 		"image": "government-and-politics.jpg",
 		"popular": "false"
 	},
-	{
+	"hackathons": {
 		"name": "Hackathons",
 		"slug": "hackathons",
 		"icon": "",
@@ -107,7 +107,7 @@
 		"image": "hackathons.jpg",
 		"popular": "true"
 	},
-	{
+	"health-and-wellness": {
 		"name": "Health & Wellness",
 		"slug": "health-and-wellness",
 		"icon": "",
@@ -115,7 +115,7 @@
 		"image": "health-and-wellness.jpg",
 		"popular": "false"
 	},
-	{
+	"hobbies-and-special-interest": {
 		"name": "Hobbies & Special Interest",
 		"slug": "hobbies-and-special-interest",
 		"icon": "",
@@ -123,7 +123,7 @@
 		"image": "hobbies-and-special-interest.jpg",
 		"popular": "false"
 	},
-	{
+	"home-and-lifestyle": {
 		"name": "Home & Lifestyle",
 		"slug": "home-and-lifestyle",
 		"icon": "",
@@ -131,7 +131,7 @@
 		"image": "home-and-lifestyle.jpg",
 		"popular": "false"
 	},
-	{
+	"music": {
 		"name": "Music",
 		"slug": "music",
 		"icon": "",
@@ -139,7 +139,7 @@
 		"image": "music.jpg",
 		"popular": "false"
 	},
-	{
+	"other": {
 		"name": "Other",
 		"slug": "other",
 		"icon": "",
@@ -147,7 +147,7 @@
 		"image": "other.jpg",
 		"popular": "false"
 	},
-	{
+	"parties": {
 		"name": "Parties",
 		"slug": "parties",
 		"icon": "",
@@ -157,7 +157,7 @@
 		"popular": "true"
 	},
 
-	{
+	"performing-and-visual-arts": {
 		"name": "Performing & Visual Arts",
 		"slug": "performing-and-visual-arts",
 		"icon": "",
@@ -165,7 +165,7 @@
 		"image": "performing-and-visual-arts.jpg",
 		"popular": "false"
 	},
-	{
+	"religion-and-spirituality": {
 		"name": "Religion & Spirituality",
 		"slug": "religion-and-spirituality",
 		"icon": "",
@@ -173,7 +173,7 @@
 		"image": "religion-and-spirituality.jpg",
 		"popular": "false"
 	},
-	{
+	"school-activities": {
 		"name": "School Activities",
 		"slug": "school-activities",
 		"icon": "",
@@ -181,7 +181,7 @@
 		"image": "school-activities.jpg",
 		"popular": "false"
 	},
-	{
+	"science-and-technology": {
 		"name": "Science & Technology",
 		"slug": "science-and-technology",
 		"icon": "",
@@ -189,7 +189,7 @@
 		"image": "science-and-technology.jpg",
 		"popular": "false"
 	},
-	{
+	"seasonal-and-holiday": {
 		"name": "Seasonal & Holiday",
 		"slug": "seasonal-and-holiday",
 		"icon": "",
@@ -197,7 +197,7 @@
 		"image": "seasonal-and-holiday.jpg",
 		"popular": "false"
 	},
-	{
+	"sports-and-fitness": {
 		"name": "Sports & Fitness",
 		"slug": "sports-and-fitness",
 		"icon": "",
@@ -205,7 +205,7 @@
 		"image": "sports-and-fitness.jpg",
 		"popular": "true"
 	},
-	{
+	"travel-and-outdoor": {
 		"name": "Travel & Outdoor",
 		"slug": "travel-and-outdoor",
 		"icon": "",
@@ -213,4 +213,4 @@
 		"image": "travel-and-outdoor.jpg",
 		"popular": "false"
 	}
-]
+}

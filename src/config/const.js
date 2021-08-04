@@ -44,6 +44,7 @@ export const INFURA_WEB_URL =
     "wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b";
 
 export const GLOBAL_NETWORK_ID = 4;
+
 export const API_URL = "https://events-api.phoenixdao.io/";
  //"https://phoenix-event-dapp-backend-tst.herokuapp.com/";
 // export const API_URL = "http://localhost:5000/"
