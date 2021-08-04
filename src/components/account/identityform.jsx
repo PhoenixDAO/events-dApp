@@ -8,11 +8,16 @@ import CustomForm from "./customform";
 const IdentityForm = (props) => {
 	const [selectImage, setSelectImage] = useState({});
 	const [formType, setFormType] = useState("");
-
+	const [name, setName] = useState(props.name);
+	const [avatarNumber, setavatarNumber] = useState(props.avatarNumber);
+	const [avatarCustom, setavatarCustom] = useState(props.avatarCustom);
 	const handleNextForm = (e, value, type) => {
 		e.preventDefault();
 		if (type === "alreadyform") {
 			if (selectImage.name) {
+				props.handleAvatarNumber(avatarNumber);
+				props.handleName(name);
+				props.handleCustomAvatar(avatarCustom);
 				setFormType(type);
 				props.setNextForm(value);
 			}
@@ -25,13 +30,16 @@ const IdentityForm = (props) => {
 	const handleSelectedAvatar = (e, { index, detail, img, name }) => {
 		e.preventDefault();
 		setSelectImage({ img, detail, name });
-		props.handleAvatarNumber(index);
-		props.handleName(name);
-		props.handleCustomAvatar(false);
+		setName(name);
+		setavatarCustom(false);
+		setavatarNumber(index);
+		// props.handleAvatarNumber(index);
+		// props.handleName(name);
+		// props.handleCustomAvatar(false);
 	};
 	const toggleForm = () => {
 		props.setNextForm("");
-	}
+	};
 	const avatars = [
 		{
 			img: "/images/avatars/bennu.svg",
@@ -105,7 +113,6 @@ const IdentityForm = (props) => {
 	return (
 		<div>
 			{!props.nextForm ? (
-
 				<div className="idn-hldr">
 					<div className="idn-head">
 						<div>
