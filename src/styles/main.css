@@ -2937,6 +2937,11 @@ h2.main-title {
 	font-family: "Aeonik", sans-serif;
 	font-weight: 700;
 }
+@media screen and (min-width: 1024px) {
+	h2.main-title {
+		top: 5px;
+	}
+}
 
 .dropdown-row .MuiSelect-selectMenu {
 	font-weight: 700;
@@ -2953,9 +2958,11 @@ h2.main-title {
 
 .editor-demo .editor {
 	white-space: nowrap;
-	width: 544px;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	overflow: scroll;
+	/* text-overflow: ellipsis; */
+	overflow-wrap: break-word;
+	word-break: break-all;
+	height: 290px;
 }
 
 @media screen and (min-width: 600px) {
@@ -2971,10 +2978,11 @@ h2.main-title {
 }
 
 .fc-toolbar-chunk:nth-child(2) {
-    padding-left: 0 !important;
-    padding-right: 154px;
+	padding-left: 0 !important;
+	padding-right: 154px;
 }
 
-.fc-scrollgrid .fc-event-title, .fc-scrollgrid .fc-event-time {
+.fc-scrollgrid .fc-event-title,
+.fc-scrollgrid .fc-event-time {
 	font-size: 13px !important;
 }

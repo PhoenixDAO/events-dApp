@@ -14,9 +14,6 @@ import {
 import EventNoteIcon from "@material-ui/icons/EventNote";
 
 const useStyles = makeStyles((theme) => ({
-	root: {
-		maxWidth: 345,
-	},
 	avatar: {
 		backgroundColor: "red",
 	},
@@ -24,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#4E4E55",
 		fontSize: 17,
 		fontWeight: 500,
+		fontFamily: "'Aeonik', sans-serif",
 	},
 }));
 
@@ -55,6 +53,7 @@ const TopicCard = ({ image, name, slug, count }) => {
 								color: "#1E1E22",
 								fontSize: 17,
 								fontWeight: 700,
+								fontFamily: "'Aeonik', sans-serif",
 							}}
 						>
 							{name}

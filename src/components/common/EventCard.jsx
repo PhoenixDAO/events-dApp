@@ -42,7 +42,6 @@ var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
 	root: {
-		maxWidth: 361,
 		"& .MuiCardContent-root": {
 			padding: "16px 16px 0px",
 		},
@@ -62,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#4E4E55",
 		fontSize: 17,
 		fontWeight: 500,
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	shareButton: {
 		"&:hover": {
@@ -75,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#4E4E55",
 		fontSize: 17,
 		fontWeight: 500,
+		fontFamily: "'Aeonik', sans-serif",
 		"&:focus": {
 			outline: "none",
 		},
@@ -96,13 +97,13 @@ const useStyles = makeStyles((theme) => ({
 		},
 		borderLeft: "1px solid #E4E4E7",
 		borderRadius: "0px",
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	FavoriteIcon: {
 		border: "none",
 		backgroundColor: "transparent",
 		fontSize: 15,
 		fontWeight: 500,
-		backgroundColor: "white",
 		borderRadius: "50%",
 		width: "32px",
 		height: "32px",
@@ -113,30 +114,31 @@ const useStyles = makeStyles((theme) => ({
 	eventinfo: {
 		fontSize: "22px",
 		fontWeight: "700",
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
 		fontWeight: "700",
 		color: "#413AE2",
 		textAlign: "end",
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	starting: {
 		color: "#73727D",
 		fontSize: "14px",
 		marginBottom: "0px",
 		fontWeight: "400",
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	price: {
 		color: "#413AE2",
 		fontWeight: "700",
 		fontSize: "17px",
+		fontFamily: "'Aeonik', sans-serif",
 		"& p": {
 			marginBottom: "0px",
 		},
 		minHeight: "71px",
-	},
-	actionArea: {
-		cursor: "auto !important"
 	},
 }));
 
@@ -277,85 +279,88 @@ const EventCard = (props, context) => {
 			/>
 
 			<Card className={classes.root}>
-				<CardActionArea
-					className={classes.actionArea}
-					style={{ backgroundColor: "transparent !important" }}
+				<Link
+					underline="none"
+					component={RouterLink}
+					to={titleURL}
+					style={{ textDecoration: "none" }}
 				>
-					<div style={{ position: "relative" }}>
-						<CardMedia
-							component="img"
-							alt={event_data.name}
-							height="200"
-							image={image}
-							title={event_data.name}
-						/>
-						<div
-							style={{
-								position: "absolute",
-								bottom: 0,
-								left: 0,
-								right: 0,
-							}}
-						>
+					<CardActionArea
+						className={classes.actionArea}
+						style={{
+							backgroundColor: "transparent !important",
+							fontFamily: "'Aeonik', sans-serif",
+						}}
+					>
+						<div style={{ position: "relative" }}>
+							<CardMedia
+								component="img"
+								alt={event_data.name}
+								height="200"
+								image={image}
+								title={event_data.name}
+							/>
+							<div
+								style={{
+									position: "absolute",
+									bottom: 0,
+									left: 0,
+									right: 0,
+								}}
+							>
+								<div
+									style={{
+										display: "flex",
+										justifyContent: "space-between",
+										padding: 10,
+										backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)`,
+									}}
+								>
+									<Typography
+										style={{
+											color: "#fff",
+											fontSize: 17,
+											fontWeight: 500,
+										}}
+									>
+										<ConfirmationNumberOutlined fontSize="medium" />
+										<span>&nbsp;</span>
+										{event_data.tktTotalQuantitySold}/
+										{event_data.tktTotalQuantity === 0 ? (
+											<span style={{ fontSize: "21px" }}>
+												∞
+											</span>
+										) : (
+											event_data.tktTotalQuantity
+										)}
+									</Typography>
+									{!myEvent && !ticket ? (
+										<Typography
+											className={classes.FavoriteIcon}
+											component="button"
+											onClick={addTofavorite}
+										>
+											{Icon ? (
+												<Favorite
+													fontSize="small"
+													style={{ color: "#413AE2" }}
+												/>
+											) : (
+												<FavoriteBorder fontSize="small" />
+											)}
+											{Icon}
+										</Typography>
+									) : null}
+								</div>
+							</div>
+						</div>
+
+						<CardContent>
 							<div
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
-									padding: 10,
-									backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)`,
 								}}
-							>
-								<Typography
-									style={{
-										color: "#fff",
-										fontSize: 17,
-										fontWeight: 500,
-									}}
-								>
-									<ConfirmationNumberOutlined fontSize="medium" />
-									<span>&nbsp;</span>
-									{event_data.tktTotalQuantitySold}/
-									{event_data.tktTotalQuantity === 0 ? (
-										<span style={{ fontSize: "21px" }}>
-											∞
-										</span>
-									) : (
-										event_data.tktTotalQuantity
-									)}
-								</Typography>
-								{!myEvent && !ticket ? (
-									<Typography
-										className={classes.FavoriteIcon}
-										component="button"
-										onClick={addTofavorite}
-									>
-										{Icon ? (
-											<Favorite
-												fontSize="small"
-												style={{ color: "#413AE2" }}
-											/>
-										) : (
-											<FavoriteBorder fontSize="small" />
-										)}
-										{Icon}
-									</Typography>
-								) : null}
-							</div>
-						</div>
-					</div>
-
-					<CardContent>
-						<div
-							style={{
-								display: "flex",
-								justifyContent: "space-between",
-							}}
-						>
-							<Link
-								underline="none"
-								component={RouterLink}
-								to={titleURL}
-								style={{ textDecoration: "none" }}
 							>
 								<Typography
 									variant="h6"
@@ -364,6 +369,8 @@ const EventCard = (props, context) => {
 										color: "#1E1E22",
 										fontSize: 17,
 										fontWeight: 700,
+										fontFamily: "'Aeonik', sans-serif",
+										width: "60%",
 									}}
 								>
 									{event_data.tktTotalQuantitySold >= 2 ? (
@@ -377,38 +384,44 @@ const EventCard = (props, context) => {
 									)}
 									{event_data.name}
 								</Typography>
-							</Link>
-							<Typography
-								className={classes.price}
-								variant="body1"
-								component="h2"
-							>
-								{!event_data.token ? (
-									"Free"
-								) : phnx_price.length === 1 ? (
-									<div>
-										<p>{phnx_price[0]} PHNX</p>
-										<p className={classes.starting}>
-											{" "}
-											${dollar_price}
-										</p>
-									</div>
-								) : (
-									<div>
-										<p className={classes.starting}>
-											Starting from
-										</p>
-										<p>{phnx_price[0]} PHNX</p>
-										<p className={classes.starting}>
-											{" "}
-											${dollar_price}
-										</p>
-									</div>
-								)}
-							</Typography>
-							{/* ? `Starting from ${prices[0]} PHNX` : prices[0]} */}
+								<Typography
+									className={classes.price}
+									variant="body1"
+									component="h2"
+								>
+									{!event_data.token ? (
+										"Free"
+									) : phnx_price.length === 1 ? (
+										<div>
+											<p
+												style={{
+													fontFamily:
+														'"Aeonik", sans-serif',
+												}}
+											>
+												{phnx_price[0]} PHNX
+											</p>
+											<p className={classes.starting}>
+												{" "}
+												${dollar_price}
+											</p>
+										</div>
+									) : (
+										<div>
+											<p className={classes.starting}>
+												Starting from
+											</p>
+											<p>{phnx_price[0]} PHNX</p>
+											<p className={classes.starting}>
+												{" "}
+												${dollar_price}
+											</p>
+										</div>
+									)}
+								</Typography>
+								{/* ? `Starting from ${prices[0]} PHNX` : prices[0]} */}
 
-							{/* <div className={classes.eventinfo}>
+								{/* <div className={classes.eventinfo}>
 									<span className={classes.PhnxPrice} >{event_data[3]
 										? numeral(price).format("0.000") + "PHNX"
 										: "FREE"}
@@ -424,166 +437,169 @@ const EventCard = (props, context) => {
 											: ""}
 									</div>
 								</div> */}
-						</div>
-						<Typography
-							variant="body2"
-							color="textSecondary"
-							component="p"
-							gutterBottom
-							className={classes.text}
-						>
-							<DateRange fontSize="small" /> <span>&nbsp;</span>
-							{/* {date.toLocaleDateString()} */}
-							{!eventTime
-								? `Date`
-								: eventTime === "onedayevent"
-								? moment(eventDate).format("Do MMM, YYYY")
-								: `
+							</div>
+							<Typography
+								variant="body2"
+								color="textSecondary"
+								component="p"
+								gutterBottom
+								className={classes.text}
+							>
+								<DateRange fontSize="small" />{" "}
+								<span>&nbsp;</span>
+								{/* {date.toLocaleDateString()} */}
+								{!eventTime
+									? `Date`
+									: eventTime === "onedayevent"
+									? moment(eventDate).format("Do MMM, YYYY")
+									: `
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
 							`}
-						</Typography>
+							</Typography>
 
-						<Typography
-							variant="body2"
-							color="textSecondary"
-							component="p"
-							gutterBottom
-							className={classes.text}
-						>
-							<AccessTime fontSize="small" /> <span>&nbsp;</span>
-							{/* {date.toLocaleTimeString([], {
+							<Typography
+								variant="body2"
+								color="textSecondary"
+								component="p"
+								gutterBottom
+								className={classes.text}
+							>
+								<AccessTime fontSize="small" />{" "}
+								<span>&nbsp;</span>
+								{/* {date.toLocaleTimeString([], {
 									hour: "2-digit",
 									minute: "2-digit",
 								})} */}
-							{!eventStartTime
-								? `Time`
-								: moment(eventStartTime).format("LT")}
-						</Typography>
+								{!eventStartTime
+									? `Time`
+									: moment(eventStartTime).format("LT")}
+							</Typography>
 
-						<Typography
-							variant="body2"
-							color="textSecondary"
-							component="div"
-							gutterBottom
-							noWrap
-							style={{ paddingBottom: "16px" }}
-							className={classes.text}
-						>
-							<LocationOnOutlined fontSize="small" />{" "}
-							<span>&nbsp;</span>
-							{/* {event_data.location} */}
-							{!eventType
-								? `Location`
-								: !eventType === "physical"
-								? `Online`
-								: eventLocation}
-						</Typography>
+							<Typography
+								variant="body2"
+								color="textSecondary"
+								component="div"
+								gutterBottom
+								noWrap
+								style={{ paddingBottom: "16px" }}
+								className={classes.text}
+							>
+								<LocationOnOutlined fontSize="small" />{" "}
+								<span>&nbsp;</span>
+								{/* {event_data.location} */}
+								{!eventType
+									? `Location`
+									: !eventType === "physical"
+									? `Online`
+									: eventLocation}
+							</Typography>
 
-						{/* For my events page */}
-						{myEvent ? (
-							<Grid item>
-								<Divider style={{ marginBottom: "20px" }} />
-								<Typography
-									variant="body2"
-									color="textSecondary"
-									component="p"
-									gutterBottom
-									className={classes.text}
-								>
-									{"Ticket Sold: "}
-									<span>&nbsp;</span>
-									{event_data.tktTotalQuantitySold}/
-									{event_data.tktTotalQuantity}
-								</Typography>
-								<Typography
-									variant="body2"
-									color="textSecondary"
-									component="p"
-									gutterBottom
-									className={classes.text}
-								>
-									PHNX Revenue:{" "}
-									{Web3.utils.fromWei(
-										event_data.eventRevenueInPhnx
-									)}{" "}
-									PHNX
-								</Typography>
-								<Typography
-									variant="body2"
-									color="textSecondary"
-									component="p"
-									gutterBottom
-									className={classes.text}
-									style={{ marginBottom: "20px" }}
-								>
-									Dollar Revenue: ${" "}
-									{Web3.utils.fromWei(
-										event_data.eventRevenueInDollar
-									)}
-								</Typography>
-								<Divider />
-								<Button
-									className={classes.shareButton}
-									onClick={handleClickOpen}
-								>
-									<LaunchSharp
-										style={{
-											marginRight: "7px",
-											fontSize: "19px",
-										}}
-									/>{" "}
-									Share Event
-								</Button>
-							</Grid>
-						) : // For my ticket page
-						ticket ? (
-							<Grid item className={classes.row}>
-								<Button
-									className={classes.shareButton}
-									onClick={handleClickOpen}
-								>
-									<LaunchSharp
-										style={{
-											marginRight: "7px",
-											fontSize: "19px",
-										}}
-									/>{" "}
-									Share Event
-								</Button>
-								<Button
-									className={classes.sendTicket}
-									onClick={handleClickOpen2}
-								>
-									<Send
-										style={{
-											marginRight: "7px",
-											fontSize: "19px",
-										}}
-									/>{" "}
-									Send Ticket
-								</Button>
-							</Grid>
-						) : // For my Favorite page
-						myFavorites ? (
-							<Grid item className={classes.row}>
-								<Button
-									className={classes.shareButton}
-									onClick={handleClickOpen}
-								>
-									<LaunchSharp
-										style={{
-											marginRight: "7px",
-											fontSize: "19px",
-										}}
-									/>{" "}
-									Share Event
-								</Button>
-							</Grid>
-						) : null}
-					</CardContent>
-				</CardActionArea>
+							{/* For my events page */}
+							{myEvent ? (
+								<Grid item>
+									<Divider style={{ marginBottom: "20px" }} />
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										component="p"
+										gutterBottom
+										className={classes.text}
+									>
+										{"Ticket Sold: "}
+										<span>&nbsp;</span>
+										{event_data.tktTotalQuantitySold}/
+										{event_data.tktTotalQuantity}
+									</Typography>
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										component="p"
+										gutterBottom
+										className={classes.text}
+									>
+										PHNX Revenue:{" "}
+										{Web3.utils.fromWei(
+											event_data.eventRevenueInPhnx
+										)}{" "}
+										PHNX
+									</Typography>
+									<Typography
+										variant="body2"
+										color="textSecondary"
+										component="p"
+										gutterBottom
+										className={classes.text}
+										style={{ marginBottom: "20px" }}
+									>
+										Dollar Revenue: ${" "}
+										{Web3.utils.fromWei(
+											event_data.eventRevenueInDollar
+										)}
+									</Typography>
+									<Divider />
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+								</Grid>
+							) : // For my ticket page
+							ticket ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+									<Button
+										className={classes.sendTicket}
+										onClick={handleClickOpen2}
+									>
+										<Send
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Send Ticket
+									</Button>
+								</Grid>
+							) : // For my Favorite page
+							myFavorites ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+								</Grid>
+							) : null}
+						</CardContent>
+					</CardActionArea>
+				</Link>
 			</Card>
 		</div>
 	);
