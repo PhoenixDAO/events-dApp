@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
     imageContainer: {
         textAlign: "center",
-        padding: "48px",
+        padding: "100px",
         width: "100%",
-        '@media (max-width: 600px)': {
+        '@media (max-width: 900px)': {
             padding: '20px',
         }
     },
@@ -16,9 +16,6 @@ const useStyles = makeStyles((theme) => ({
 		borderRadius: "12px",
 		width: "100%",
 		// height: "364px",
-	},
-	wrapper: {
-		background: "#fff",
 	},
 	btnGo: {
 		textTransform: "Capitalize",

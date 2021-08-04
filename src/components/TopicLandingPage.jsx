@@ -8,6 +8,7 @@ import Header from "./common/Header";
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
+import EmptyState from "./EmptyState";
 import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 // import {INFURA_WEB_URL} from "../config/const.js";
 // import Web3 from "web3";
@@ -482,13 +483,7 @@ class TopicLandingPage extends Component {
 			body = <PhoenixDAOLoader />;
 		} else if (count === 0 && !this.state.loading) {
 			body = (
-				<p className="text-center not-found">
-					<span role="img" aria-label="thinking">
-						🤔
-					</span>
-					&nbsp;No events found.{" "}
-					<a href="/createevent">Try creating one.</a>
-				</p>
+				<EmptyState text="No events found 🤔.Be the first;" btnText="Try creating one" url="/createevent" />
 			);
 		} else {
 			// console.log("this.props.match.params.page",this.props.match.params.id)
@@ -521,13 +516,11 @@ class TopicLandingPage extends Component {
 			}
 			if (events_list.length == 0) {
 				body = (
-					<p className="text-center not-found">
-						<span role="img" aria-label="thinking">
-							🤔
-						</span>
-						&nbsp;No events found.{" "}
-						<a href="/createevent">Try creating one.</a>
-					</p>
+					<EmptyState
+						text="No events found 🤔.Be the first;"
+						btnText="Try creating one"
+						url="/createevent"
+					/>
 				);
 			} else {
 				let updated_list = [];

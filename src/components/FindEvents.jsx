@@ -9,6 +9,7 @@ import axios from "axios";
 // import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
+import EmptyState from "./EmptyState";
 // import Web3 from "web3";
 // import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 // import { INFURA_WEB_URL } from "../config/const.js";
@@ -86,7 +87,13 @@ const useStyles = (theme) => ({
 		},
 	},
 	formControls: {
+		"@media (min-width: 1024px)": {
+			maxWidth: "20% !important",
+			flex: "0 0 20% !important",
+			marginLeft: "5%"
+		},
 		minWidth: 120,
+		background: "#fff",
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
@@ -486,13 +493,7 @@ class FindEvents extends Component {
 			!this.state.loading
 		) {
 			body = (
-				<p className="text-center not-found">
-					<span role="img" aria-label="thinking">
-						🤔
-					</span>
-					&nbsp;No events found.{" "}
-					<a href="/createevent">Try creating one.</a>
-				</p>
+				<EmptyState text="No events found 🤔.Be the first;" btnText="Try creating one" url="/createevent" />
 			);
 		} else {
 			let currentPage = Number(this.props.match.params.page);
@@ -878,13 +879,23 @@ class FindEvents extends Component {
 									value={this.state.category}
 									onChange={this.categoryChange}
 								>
-									<option aria-label="None" value="allevents">
+									<option
+										aria-label="None"
+										value="allevents"
+										style={{ padding: "20px" }}
+									>
 										All Events
 									</option>
-									<option value="trendingevents">
+									<option
+										value="trendingevents"
+										style={{ padding: "20px" }}
+									>
 										Trending Events
 									</option>
-									<option value="populartopics">
+									<option
+										value="populartopics"
+										style={{ padding: "20px" }}
+									>
 										Popular Topics
 									</option>
 								</Select>

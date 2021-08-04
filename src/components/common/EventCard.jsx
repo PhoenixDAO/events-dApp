@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	FavoriteIcon: {
 		border: "none",
-		backgroundColor: "transparent",
+		backgroundColor: "#fff",
 		fontSize: 15,
 		fontWeight: 500,
 		borderRadius: "50%",

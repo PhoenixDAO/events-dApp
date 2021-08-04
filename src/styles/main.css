@@ -2936,6 +2936,7 @@ canvas#doughnut {
 h2.main-title {
 	font-family: "Aeonik", sans-serif;
 	font-weight: 700;
+	padding-left: 0;
 }
 @media screen and (min-width: 1024px) {
 	h2.main-title {
@@ -2948,12 +2949,10 @@ h2.main-title {
 }
 
 .event-page-wrapper .editor {
-	flex: 0 0 100%;
-	overflow: auto;
-}
-
-.editor-demo {
-	/* border: 2px solid red; */
+    flex: 0 0 95%;
+    overflow: auto;
+    background: #FAFAFA;
+    border: none;
 }
 
 .editor-demo .editor {
