@@ -858,7 +858,6 @@ class FindEvents extends Component {
 						<div className="row row_mobile dashboard-dropdown-row">
 							<h2
 								className="col-lg-9 col-md-8 col-sm-7 main-title"
-								// style={{ fontWeight: "bold" }}
 							>
 								{this.state.category === "allevents"
 									? `All Events`

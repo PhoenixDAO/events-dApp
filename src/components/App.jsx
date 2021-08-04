@@ -28,6 +28,7 @@ import LocationLandingPage from "./LocationLandingPage";
 import LocationsLandingPage from "./LocationsLandingPage";
 import Calendars from "./Calendars";
 import WrapperTopicsLandingPage from './WrapperTopicsLandingPage'
+import ConfirmPurchase from "./ConfirmPurchase";
 import Token from "./Token";
 // import Dashboard from "./Dashboard";
 import Terms from "./Terms";
@@ -1228,6 +1229,7 @@ class App extends Component {
 						)}
 					/>
 					{/* <Route path="*" exact component={EmptyState} /> */}
+					<Route path="/confirm-purchase" exact component={ConfirmPurchase} />
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>
 			);

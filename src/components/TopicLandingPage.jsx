@@ -27,7 +27,9 @@ import topicsJson from "../config/topics.json";
 
 // material UI styles
 import { withStyles } from "@material-ui/core/styles";
-import { Divider, IconButton } from "@material-ui/core";
+import { Divider, IconButton, Typography } from "@material-ui/core";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import Slider from "./common/Slider";
 import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
@@ -64,6 +66,37 @@ const useStyles = (theme) => ({
 		"&.MuiTab-textColorPrimary.Mui-selected": {
 			color: "#413AE2",
 			borderBottom: "2.5px solid #413AE2",
+		},
+	},
+	formControls: {
+		"@media (min-width: 1024px)": {
+			maxWidth: "20% !important",
+			flex: "0 0 20% !important",
+			marginLeft: "5%",
+		},
+		minWidth: 120,
+		background: "#fff",
+		"& .MuiInputBase-formControl": {
+			"@media (max-width: 575px)": {
+				marginLeft: "50px",
+			},
+		},
+		"& .MuiSelect-root.MuiSelect-select": {
+			fontWeight: 700,
+			padding: "13px",
+		},
+		"& option": {
+			padding: "10px",
+		},
+	},
+	sortBy: {
+		position: "absolute",
+		left: "-40px",
+		top: "15px",
+		color: "#73727D",
+		fontSize: "18px",
+		"@media (max-width: 575px)": {
+			left: "0",
 		},
 	},
 });
@@ -139,12 +172,12 @@ class TopicLandingPage extends Component {
 	getTopicData() {
 		let topicSlug = this.getLastURLSegment();
 		console.log("topicSlug", topicSlug);
-		let theTopic = {}
-		if( topicsJson[topicSlug]){
-			theTopic = topicsJson[topicSlug]
+		let theTopic = {};
+		if (topicsJson[topicSlug]) {
+			theTopic = topicsJson[topicSlug];
 		}
 		console.log("theTopic", theTopic);
-		return theTopic.name
+		return theTopic.name;
 	}
 
 	//Loadblockchain Data
@@ -256,15 +289,15 @@ class TopicLandingPage extends Component {
 						console.log("topic data", graphEvents.data.data.events);
 						let newsort = graphEvents.data.data.events
 							.concat()
-							.sort((a, b) => b.blockNumber - a.blockNumber)
-							// .filter(
-							// 	(activeEvents) =>{
-							// 		console.log("activeEvents", activeEvents.topic)
-							// 		console.log("this.props.match.params.page", this.props.match.params.page)
-							// 		// activeEvents.time >= dateNow &&
-							// 		activeEvents.topic ===
-							// 			this.props.match.params.page}
-							// );
+							.sort((a, b) => b.blockNumber - a.blockNumber);
+						// .filter(
+						// 	(activeEvents) =>{
+						// 		console.log("activeEvents", activeEvents.topic)
+						// 		console.log("this.props.match.params.page", this.props.match.params.page)
+						// 		// activeEvents.time >= dateNow &&
+						// 		activeEvents.topic ===
+						// 			this.props.match.params.page}
+						// );
 						console.log("GraphQL query newsort", newsort);
 						if (this._isMounted) {
 							this.setState({
@@ -483,7 +516,11 @@ class TopicLandingPage extends Component {
 			body = <PhoenixDAOLoader />;
 		} else if (count === 0 && !this.state.loading) {
 			body = (
-				<EmptyState text="No events found 🤔.Be the first;" btnText="Try creating one" url="/createevent" />
+				<EmptyState
+					text="No events found 🤔.Be the first;"
+					btnText="Try creating one"
+					url="/createevent"
+				/>
 			);
 		} else {
 			// console.log("this.props.match.params.page",this.props.match.params.id)
@@ -609,7 +646,8 @@ class TopicLandingPage extends Component {
 
 				<div className="retract-page-inner-wrapper-alternative dash topicsDiv">
 					<Header
-						title={topic.name}
+						// title={this.theTopic.name}
+						title={topic}
 						phnxButton={true}
 						goBack={this.goBack}
 						page="topic"
@@ -693,28 +731,30 @@ class TopicLandingPage extends Component {
 							</button>
 						</div> */}
 
-						<div className="row row_mobile">
-							<h2 className="col-lg-10 col-md-9 col-sm-8">
-								{/* <i className="fa fa-calendar-alt"></i>  */}
-								{topic.name}
+						<div className="row row_mobile dashboard-dropdown-row">
+							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
+								{topic}
 							</h2>
-							<div
-								style={{
-									display: "flex",
-									justifyContent: "center",
-								}}
+							<FormControl
+								variant="outlined"
+								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
 							>
-								{/* <p>Sort:</p> */}
-								<select
-									name="category"
-									// value={category}
-									// onChange={event => handleCategoryChange(event.target.value)}
+								<Typography
+									variant="p"
+									className={classes.sortBy}
+								>
+									Sort:
+								</Typography>
+								<Select
+									native
+									//value={this.state.category}
+									//onChange={this.categoryChange}
 								>
 									<option id="0">All Events</option>
 									<option id="1">Trending Events</option>
 									<option id="2">Near you</option>
-								</select>
-							</div>
+								</Select>
+							</FormControl>
 						</div>
 
 						<br />
