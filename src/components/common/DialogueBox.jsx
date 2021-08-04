@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		"& .MuiPaper-root":{
 			borderRadius: "17px",
-			height:"100%"
 		}
 	},
 	closeButton: {

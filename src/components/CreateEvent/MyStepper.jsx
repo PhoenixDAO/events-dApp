@@ -93,6 +93,8 @@ const useQontoStepIconStyles = makeStyles({
 		height: 22,
 		alignItems: "center",
 		backgroundColor: "red",
+		
+	
 	},
 	active: {
 		color: "#784af4",
@@ -143,6 +145,11 @@ QontoStepIcon.propTypes = {
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: "100%",
+		paddingTop: "20px",
+		backgroundColor: "white",
+		borderRadius: "12px",
+		paddingBottom: "50px",
+	
 	},
 	backButton: {
 		textTransform: "none",
@@ -584,8 +591,13 @@ const MyStepper = ({
 									minLength: {
 										value: 3,
 										message:
-											"Event name should contain atleast 3 characters.",
+											"Event name should contain at least 3 characters.",
 									},
+									maxLength:{
+										value: 300,
+										message:
+											"Event name too long.",
+									}
 								}}
 							/>
 
@@ -620,8 +632,13 @@ const MyStepper = ({
 									minLength: {
 										value: 3,
 										message:
-											"Event organizer name should contain atleast 3 characters.",
+											"Event organizer name should contain at least 3 characters.",
 									},
+									maxLength:{
+										value: 300,
+										message:
+											"Event organizer name too long.",
+									}
 								}}
 							/>
 
@@ -989,7 +1006,7 @@ const MyStepper = ({
 													className={classes.label}
 													style={{ marginBottom: 0 }}
 												>
-													TO
+													FROM
 												</label>
 												<br />
 												<Controller
@@ -1039,7 +1056,7 @@ const MyStepper = ({
 													className={classes.label}
 													style={{ marginBottom: 0 }}
 												>
-													FROM
+													TO
 												</label>
 												<br />
 												<Controller
@@ -1171,6 +1188,16 @@ const MyStepper = ({
 										rules={{
 											required:
 												"Please enter event location.",
+												minLength: {
+													value: 3,
+													message:
+														"Event location should contain at least 3 characters.",
+												},
+												maxLength:{
+													value: 300,
+													message:
+														"Event location too long.",
+												}
 										}}
 									/>
 								</div>
@@ -1508,7 +1535,7 @@ const MyStepper = ({
 														min: {
 															value: 1,
 															message:
-																"Number of ticket should be atleast 1",
+																"Number of ticket should be at least 1",
 														},
 													}}
 												/>
@@ -1582,7 +1609,7 @@ const MyStepper = ({
 													min: {
 														value: 1,
 														message:
-															"Price of ticket should be atleast 1 dollar.",
+															"Price of ticket should be at least 1 dollar.",
 													},
 												}}
 											/>
@@ -1737,7 +1764,7 @@ const MyStepper = ({
 														min: {
 															value: 1,
 															message:
-																"Number of ticket should be atleast 1",
+																"Number of ticket should be at least 1",
 														},
 													}}
 												/>
@@ -1899,6 +1926,16 @@ const MyStepper = ({
 														rules={{
 															required:
 																"Please enter ticket name.",
+																minLength: {
+																	value: 3,
+																	message:
+																		"Ticket name should contain at least 3 characters.",
+																},
+																maxLength:{
+																	value: 300,
+																	message:
+																		"Ticket name too long.",
+																}
 														}}
 													/>
 
@@ -2185,7 +2222,7 @@ const MyStepper = ({
 																	min: {
 																		value: 1,
 																		message:
-																			"Number of ticket should be atleast 1",
+																			"Number of ticket should be at least 1",
 																	},
 																}}
 															/>
