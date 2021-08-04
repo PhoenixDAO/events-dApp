@@ -93,8 +93,6 @@ const useQontoStepIconStyles = makeStyles({
 		height: 22,
 		alignItems: "center",
 		backgroundColor: "red",
-		
-	
 	},
 	active: {
 		color: "#784af4",
@@ -149,7 +147,6 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: "white",
 		borderRadius: "12px",
 		paddingBottom: "50px",
-	
 	},
 	backButton: {
 		textTransform: "none",
@@ -240,11 +237,11 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	formControlDesc: {
-		maxWidth: "100%"
+		maxWidth: "100%",
 	},
 	dropdownMenu: {
-		fontFamily: "'Aeonik', sans-serif"
-	}
+		fontFamily: "'Aeonik', sans-serif",
+	},
 }));
 
 const MyStepper = ({
@@ -1263,9 +1260,7 @@ const MyStepper = ({
 							<br />
 							{images.slice(0, 3).map((img, index) => {
 								return (
-									<div
-										key={index}
-									>
+									<div key={index}>
 										<label className={classes.label}>
 											COVER IMAGE {index + 1}
 										</label>
@@ -1295,10 +1290,13 @@ const MyStepper = ({
 															<Button
 																component="label"
 																style={{
-																	padding: "15px 25px",
-																	background: "#FFF9E5",
+																	padding:
+																		"15px 25px",
+																	background:
+																		"#FFF9E5",
 																	left: "13px",
-																	textTransform: "capitalize"
+																	textTransform:
+																		"capitalize",
 																}}
 															>
 																Browse
@@ -1407,15 +1405,20 @@ const MyStepper = ({
 											value={value}
 											onChange={onChange}
 										>
-											{eventTopics.map((topic) => (
-												<MenuItem
-													key={topic.name}
-													value={topic.slug}
-													style={{fontFamily: "'Aeonik', sans-serif"}}
-												>
-													{topic.name}
-												</MenuItem>
-											))}
+											{Object.entries(eventTopics).map(
+												(topic) => (
+													<MenuItem
+														key={topic[1].name}
+														value={topic[1].slug}
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														{topic[1].name}
+													</MenuItem>
+												)
+											)}
 										</Select>
 										<FormHelperText>
 											{error ? error.message : null}
