@@ -1,12 +1,7 @@
 #folders
 node_modules
-.env
 
 #files
 yarn-error.log
 .yarnrc
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local

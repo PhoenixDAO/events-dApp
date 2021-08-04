@@ -1,259 +1,144 @@
-import React, { Component } from "react";
-import { drizzleConnect } from "drizzle-react";
-import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
-// import Carousel from 'react-bootstrap/Carousel'
+import React, { Component } from 'react';
+import { drizzleConnect } from 'drizzle-react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import Carousel from 'react-bootstrap/Carousel'
 
-import Loading from "./Loading";
-import Event from "./Event";
+import Loading from './Loading';
+import Event from './Event';
 
-import topicsJson from "../config/topics.json";
-import Header from "./common/Header";
-
-// material UI styles
-import { withStyles } from "@material-ui/core/styles";
-import { Divider } from "@material-ui/core";
-import Slider from "./common/Slider";
-import TopicCard from "./common/TopicCard";
-import ConnectWalletButton from "./common/ConnectWalletButton";
-import SearchBar from "./common/SearchBar";
-import { Typography } from "@material-ui/core";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-
-const useStyles = (theme) => ({
-	sticky: {
-		position: "sticky",
-		zIndex: 1,
-		top: 0,
-		display: "flex",
-		flexDirection: "column",
-		background: `#FCFCFD !important`,
-		opacity: `1 !important`,
-		marginLeft: -2,
-	},
-	root: {
-		flexGrow: 1,
-		width: "100%",
-	},
-	appBar: {
-		"&.MuiPaper-elevation4": {
-			boxShadow: "none",
-		},
-		"& .MuiTabScrollButton-root": {
-			"& .MuiSvgIcon-root": {
-				background: "#413AE2",
-				borderRadius: "10px",
-				color: "#fff",
-			},
-		},
-		"& .MuiTabScrollButton-root.Mui-disabled": {
-			position: "absolute",
-		},
-	},
-	tabBar: {
-		fontWeight: "500",
-		fontFamily: '"Aeonik" ,sans-serif',
-		textTransform: "Capitalize",
-
-		"&:hover, &:focus ": {
-			outline: "none",
-		},
-		" &:active ": {
-			borderBottom: "2.5px solid #413AE2",
-		},
-		"&.MuiTab-textColorPrimary.Mui-selected": {
-			color: "#413AE2",
-			borderBottom: "2.5px solid #413AE2",
-			fontWeight: "700",
-		},
-	},
-	formControls: {
-		minWidth: 120,
-		"& .MuiInputBase-formControl": {
-			"@media (max-width: 575px)": {
-				marginLeft: "50px",
-			},
-		},
-		"& .MuiSelect-root.MuiSelect-select": {
-			fontWeight: 700,
-		},
-	},
-	selectEmpty: {
-		marginTop: theme.spacing(2),
-	},
-	sortBy: {
-		position: "absolute",
-		left: "-50px",
-		top: "15px",
-		color: "#73727D",
-		fontSize: "18px",
-		"@media (max-width: 575px)": {
-			left: "0",
-		},
-	},
-});
+import topicsJson from '../config/topics.json';
 
 class TopicsLandingPage extends Component {
-	constructor(props, context) {
-		super(props);
-		// this.contracts = context.drizzle.contracts;
-		this.state = {
-			eventCount: 0,
-			category: "all",
-			loading: true,
-			Topic_Events: [],
-			topic_copy: [],
-			active_length: "",
-			isActive: true,
-		};
-		// this.eventCount =
-		// 	this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
-
-		this.perPage = 6;
-		this.topicClick = this.topicClick.bind(this);
-		this.compare = this.compare.bind(this);
+  constructor(props, context) {
+      super(props);
+	    this.contracts = context.drizzle.contracts;
+	    this.eventCount = this.contracts['OpenEvents'].methods.getEventsCount.cacheCall();
+	    this.perPage = 6;
+      this.topicClick = this.topicClick.bind(this);
 	}
 
-	topicClick(slug) {
-		console.log("/topic/" + slug + "/" + 1);
-		// this.props.history.push("/topic/" + slug + "/" + 1);
-		// window.scrollTo(0, 180);
-	}
+  topicClick(slug) {
+    this.props.history.push("/topic/"+slug+"/"+1);
+    window.scrollTo(0, 180);
+  }
 
-	caruselClick(location) {
-		this.props.history.push(location);
-		window.scrollTo(0, 80);
-	}
-	compare(a, b) {
-		if (a.last_nom < b.last_nom) {
-			return -1;
-		}
-		if (a.last_nom > b.last_nom) {
-			return 1;
-		}
-		return 0;
-	}
-
-	handleChangeCategory = (e) => {
-		this.setState({
-			category: e.target.value,
-		});
-	};
-
-	// displayTrendingTopics = topicsJson.filter(
-	// 	(data) => data.popular === "true"
-	// );
-	// renderTopicCard = Object.keys(this.props.eventObj).map((key) => {
-	// 	console.log("this.props.eventObj", key);
-	// 	return (
-	// 		<div
-	// 			key={this.props.eventObj[key].topic}
-	// 			className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
-	// 		>
-	// 			<TopicCard
-	// 				image={"images/topics/" + this.props.eventObj[key].image}
-	// 				name={this.props.eventObj[key].topic}
-	// 				slug={this.props.eventObj[key].topic}
-	// 			/>
-	// 		</div>
-	// 	);
-	// });
-	// renderTopicCard = () => {
-	// 	const keys = Object.keys(this.props.eventObj);
-	// 	console.log("keys", keys);
-	// 	for (let i = 0; i < keys.length; i++) {
-	// 		console.log(this.props.eventObj[keys[i]]);
-	// 	}
-	// };
+  caruselClick(location)
+  {
+    this.props.history.push(location);
+    window.scrollTo(0, 80);
+  }
 
 	render() {
-		const { classes } = this.props;
 		let body = <Loading />;
 
-		// if (
-		// 	// typeof this.props.contracts["DaoEvents"].getEventsCount[
-		// 	// this.eventCount
-		// 	// ] !== "undefined"
+		if (typeof this.props.contracts['OpenEvents'].getEventsCount[this.eventCount] !== 'undefined') {
 
-		// ) {
-		// 	let count = Number(
-		// 		this.props.contracts["DaoEvents"].getEventsCount[
-		// 			this.eventCount
-		// 		].value
-		// // 	);
-		// let count = this.state.eventCount;
-		// if (count === 0) {
-		// 	body = (
-		// 		<p className="text-center not-found">
-		// 			<span role="img" aria-label="thinking">
-		// 				🤔
-		// 			</span>
-		// 			&nbsp;No events found.{" "}
-		// 			<a href="/createevent">Try creating one.</a>
-		// 		</p>
-		// 	);
-		// } else {
-		// 	let currentPage = Number(this.props.match.params.page);
-		// 	if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+			let count = Number(this.props.contracts['OpenEvents'].getEventsCount[this.eventCount].value);
+			if (count === 0) {
+				body = <p className="text-center not-found"><span role="img" aria-label="thinking">🤔</span>&nbsp;No events found. <a href="/createevent">Try creating one.</a></p>;
+			} else {
 
-		// 	let end = currentPage * this.perPage;
-		// 	let start = end - this.perPage;
-		// 	if (end > count) end = count;
-		// 	let pages = Math.ceil(count / this.perPage);
+				let currentPage = Number(this.props.match.params.page);
+				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 
-		// 	let events_list = [];
+				let end = currentPage * this.perPage;
+				let start = end - this.perPage;
+				if (end > count) end = count;
+				let pages = Math.ceil(count / this.perPage);
 
-		// 	for (let i = start; i < end; i++) {
-		// 		events_list.push(<Event key={i} id={i} />);
-		// 	}
+				let events_list = [];
 
-		// 	let pagination = "";
-		// 	if (pages > 1) {
-		// 		let links = [];
+				for (let i = start; i < end; i++) {
+					events_list.push(<Event key={i} id={i} />);
+				}
 
-		// 		for (let i = 1; i <= pages; i++) {
-		// 			let active = i === currentPage ? "active" : "";
-		// 			links.push(
-		// 				<li className={"page-item " + active} key={i}>
-		// 					<Link
-		// 						to={"/upcomingevents/" + i}
-		// 						className="page-link"
-		// 					>
-		// 						{i}
-		// 					</Link>
-		// 				</li>
-		// 			);
-		// 		}
+				let pagination = '';
+				if (pages > 1) {
+					let links = [];
 
-		// 		pagination = (
-		// 			<nav>
-		// 				<ul className="pagination justify-content-center">
-		// 					{links}
-		// 				</ul>
-		// 			</nav>
-		// 		);
-		// 	}
+					for (let i = 1; i <= pages; i++) {
+						let active = i === currentPage ? 'active' : '';
+						links.push(
+							<li className={"page-item " + active} key={i}>
+								<Link to={"/findevents/" + i} className="page-link">{i}</Link>
+							</li>
+						);
+					}
 
-		// 	body = (
-		// 		<div>
-		// 			<div className="row user-list mt-4">{events_list}</div>
-		// 			{pagination}
-		// 		</div>
-		// 	);
-		// }
+					pagination =
+						<nav>
+							<ul className="pagination justify-content-center">
+								{links}
+							</ul>
+						</nav>
+					;
+				}
 
-		return (
-			<React.Fragment>
-				<div
-				// className="retract-page-inner-wrapper-alternative topicsDiv"
-				>
-					<div
-					// className="topics-wrapper"
-					>
-						{/* <h2><i className="fa fa-calendar-alt"></i> Popular Topics</h2>
-      <hr /> */}
-						{/* <div className="row user-list mt-4">
+				body =
+					<div >
+						<div className="row user-list mt-4">
+							{events_list}
+						</div>
+						{pagination}
+					</div>
+				;
+			}
+		}
+
+		return(
+      <React.Fragment>
+      <Carousel className="retract-page-inner-wrapper">
+          <Carousel.Item className="slide1">
+            <img className="d-block w-100 slider" src="/images/topics/music.jpg" alt="First slide" />
+            <Carousel.Caption>
+              <h3>Check out a Concert</h3>
+              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+              <button className="btn btn-dark" onClick={() => {this.caruselClick("/topic/music/1")}}><i className="fas fa-ticket-alt"></i> Find Events</button>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item className="slide2">
+          <img className="d-block w-100 slider" src="/images/topics/charity-and-causes.jpg" alt="First slide" />
+            <Carousel.Caption>
+              <h3>Support a Local Charity</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <button className="btn btn-dark" onClick={() => {this.caruselClick("/topic/charity-and-causes/1")}}><i className="fas fa-ticket-alt"></i> Find Events</button>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item className="slide3">
+          <img className="d-block w-100 slider" src="/images/topics/parties.jpg" alt="First slide" />
+            <Carousel.Caption>
+              <h3>Attend an Exclusive Party</h3>
+              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+              <button className="btn btn-dark" onClick={() => {this.caruselClick("/topic/parties/1")}}><i className="fas fa-ticket-alt"></i> Find Events</button>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item className="slide4">
+          <img className="d-block w-100 slider" src="/images/topics/sports-and-fitness.jpg" alt="First slide" />
+            <Carousel.Caption>
+              <h3>Play a New Sport</h3>
+              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+              <button className="btn btn-dark" onClick={() => {this.caruselClick("/topic/sports-and-fitness/1")}}><i className="fas fa-ticket-alt"></i> Find Events</button>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item className="slide5">
+          <img className="d-block w-100 slider" src="/images/slides/slide5.png" alt="First slide" />
+            <Carousel.Caption>
+              <h3>Create and Sell Tickets</h3>
+              <p>Create your own event, it takes only a minute.</p>
+              <button className="btn btn-dark" onClick={() => {this.caruselClick("/createevent")}}><i className="fas fa-ticket-alt"></i> Create Event</button>
+            </Carousel.Caption>
+          </Carousel.Item>
+        </Carousel>
+
+			<div className="retract-page-inner-wrapper-alternative topicsDiv">
+
+      <br /><br />
+
+      <div className="topics-wrapper">
+      <h2><i className="fa fa-calendar-alt"></i> Popular Topics</h2>
+      <hr />
+      <div className="row user-list mt-4">
       {
         topicsJson && topicsJson
           .filter(topic => topic.popular === "true")
@@ -262,175 +147,55 @@ class TopicsLandingPage extends Component {
               <div className="col-lg-4 pb-4 d-flex align-items-stretch" key={topic.slug}>
                 <div className="topic" style={{ backgroundImage: "url(/images/topics/" + topic.image +")"}} onClick={() => {this.topicClick(topic.slug)}}>
                 <div className="topic-caption"><h3>{topic.name}</h3><button className="btn sort_button">View Topic</button></div>
+
                 </div>
               </div>
             );
           })
       }
-      </div> */}
+      </div>
+      <br /><br />
 
-						{/* top sticky header */}
-						<Header title="Topics" searchBar={true} />
-						<br />
-						<br />
-						{/* slider */}
-						<div>
-							<div>
-								<Slider />
-							</div>
-						</div>
-						<br />
-						<br />
-						<br />
+      <h2><i className="fa fa-calendar-alt"></i> Alls Topics</h2>
+      <hr />
+      <div className="row user-list mt-4">
 
-						{/* <h2>All Topics</h2> */}
-						{/* <div className="row user-list mt-4">
-							{topicsJson &&
-								topicsJson.map((topic, index) => {
-									return (
-										<div
-											className="col-lg-4 pb-4 d-flex align-items-stretch"
-											key={topic.slug}
-										>
-											<TopicCard
-												image={
-													"images/topics/" +
-													topic.image
-												}
-												name={topic.name}
-											/>
-											<div
-												className="topic"
-												style={{
-													backgroundImage:
-														"url(/images/topics/" +
-														topic.image +
-														")",
-												}}
-												onClick={() => {
-													this.topicClick(topic.slug);
-												}}
-											>
-												<div className="topic-caption">
-													<h3>{topic.name}</h3>
-													<button className="btn sort_button">
-														View Topic
-													</button>
-												</div>
-											</div>
-										</div>
-									);
-								})}
-						</div> */}
+        {
+          topicsJson && topicsJson
+            .filter(topic => topic.popular === "false")
+            .map((topic, index) => {
+              return (
+                <div className="col-lg-4 pb-4 d-flex align-items-stretch" key={topic.slug}>
+                  <div className="topic" style={{ backgroundImage: "url(/images/topics/" + topic.image +")"}} onClick={() => {this.topicClick(topic.slug)}}>
+                  <div className="topic-caption"><h3>{topic.name}</h3><button className="btn sort_button">View Topic</button></div>
 
-						<div>
-							<div className="row row_mobile dashboard-dropdown-row">
-								<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
-									All Topics
-								</h2>
-								<FormControl
-									variant="outlined"
-									className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
-								>
-									<Typography
-										variant="p"
-										className={classes.sortBy}
-									>
-										Sort:
-									</Typography>
-									<Select
-										native
-										value={this.state.category}
-										onChange={this.handleChangeCategory}
-									>
-										<option aria-label="None" value="all">
-											All Topics
-										</option>
-										<option value="tickets">
-											Trending Topics
-										</option>
-									</Select>
-								</FormControl>
-							</div>
+                  </div>
+                </div>
+              );
+            })
+        }
+        </div>
+      </div>
+    </div>
 
-							<br />
-							<br />
-							<div>
-								<div className="row user-list mt-4">
-									{
-									Object.keys(this.props.eventObj).length > 0 ?	
-									this.state.category === "all"
-										? Object.keys(this.props.eventObj).map((key) => {
-											return (
-												<div
-													key={this.props.eventObj[key].topic}
-													className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
-												>
-													<TopicCard
-														image={"images/topics/" + this.props.eventObj[key].image}
-														name={this.props.eventObj[key].name}
-														slug={this.props.eventObj[key].topic}
-														count={this.props.eventObj[key].eventCount}
-													/>
-												</div>
-											);
-										})
-										: 
-										Object.keys(this.props.eventObj).map((key) => {
-											if(this.props.eventObj[key].eventCount >= 7){
-											return (
-												<div
-													key={this.props.eventObj[key].topic}
-													className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
-												>
-													<TopicCard
-														image={"images/topics/" + this.props.eventObj[key].image}
-														name={this.props.eventObj[key].name}
-														slug={this.props.eventObj[key].topic}
-														count={this.props.eventObj[key].eventCount}
-													/>
-												</div>
-											);
-											}
-										})
-										:
-										null
-										}
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</React.Fragment>
+    </React.Fragment>
 		);
-	}
-	componentDidMount() {
-		window.scroll({
-			top: 0,
-			behavior: "smooth",
-		});
-	}
-	async componentWillMount() {
-		let eventCount = await this.props.eventsContract.methods
-			.getEventsCount()
-			.call();
-		if (eventCount) {
-			console.log("events count", eventCount);
-			this.setState({ eventCount });
-		}
+  }
+  componentDidMount() {
+		window.scrollTo(0, 0);
 	}
 }
 
-// TopicsLandingPage.contextTypes = {
-// 	drizzle: PropTypes.object,
-// };
+TopicsLandingPage.contextTypes = {
+    drizzle: PropTypes.object
+}
 
-// const mapStateToProps = (state) => {
-// 	return {
-// 		// contracts: state.contracts,
-// 		accounts: state.accounts,
-// 	};
-// };
+const mapStateToProps = state => {
+    return {
+		contracts: state.contracts,
+		accounts: state.accounts
+    };
+};
 
-// const AppContainer = drizzleConnect(TopicsLandingPage, mapStateToProps);
-export default withStyles(useStyles)(TopicsLandingPage);
+const AppContainer = drizzleConnect(TopicsLandingPage, mapStateToProps);
+export default AppContainer;

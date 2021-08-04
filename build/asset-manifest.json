@@ -1,11 +1,7 @@
 {
-  "main.css": "static/css/main.0e09c21e.css",
-  "main.css.map": "static/css/main.0e09c21e.css.map",
-  "main.js": "static/js/main.dc203dd0.js",
-  "static\\media\\Aeonik-Bold.otf": "static/media/Aeonik-Bold.3ab5a630.otf",
-  "static\\media\\Aeonik-Medium.otf": "static/media/Aeonik-Medium.79b61679.otf",
-  "static\\media\\Aeonik-Regular.otf": "static/media/Aeonik-Regular.844324dc.otf",
-  "static\\media\\GoldonBlue.gif": "static/media/GoldonBlue.6f757c43.gif",
+  "main.css": "static/css/main.eee22029.css",
+  "main.css.map": "static/css/main.eee22029.css.map",
+  "main.js": "static/js/main.dba3db7c.js",
   "static\\media\\fa-brands-400.eot": "static/media/fa-brands-400.e2ca6541.eot",
   "static\\media\\fa-brands-400.svg": "static/media/fa-brands-400.2f122423.svg",
   "static\\media\\fa-brands-400.ttf": "static/media/fa-brands-400.8300bd7f.ttf",
@@ -20,9 +16,5 @@
   "static\\media\\fa-solid-900.svg": "static/media/fa-solid-900.664de393.svg",
   "static\\media\\fa-solid-900.ttf": "static/media/fa-solid-900.205f07b3.ttf",
   "static\\media\\fa-solid-900.woff": "static/media/fa-solid-900.4451e1d8.woff",
-  "static\\media\\fa-solid-900.woff2": "static/media/fa-solid-900.8e1ed89b.woff2",
-  "static\\media\\roundlogo.svg": "static/media/roundlogo.d5d1056b.svg",
-  "static\\media\\slider1.svg": "static/media/slider1.59b267dd.svg",
-  "static\\media\\slider2.svg": "static/media/slider2.c0c38f96.svg",
-  "static\\media\\slider3.svg": "static/media/slider3.6fc4991c.svg"
+  "static\\media\\fa-solid-900.woff2": "static/media/fa-solid-900.8e1ed89b.woff2"
 }
