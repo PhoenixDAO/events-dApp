@@ -160,4 +160,15 @@ input[type="file"] {
 		left: 89%;
 	}
 }
-
+.acc-av-hldr .bird{
+	width: 50px;
+	height: 68px;
+	margin: 0px auto;
+}
+.bird2{
+	width: 68px;
+	height: 68px;
+	margin: 0px auto;
+	border-radius: 50%;
+	border: 1px solid #FCFCFD;
+}

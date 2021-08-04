@@ -93,6 +93,8 @@ const useQontoStepIconStyles = makeStyles({
 		height: 22,
 		alignItems: "center",
 		backgroundColor: "red",
+		
+	
 	},
 	active: {
 		color: "#784af4",
@@ -143,6 +145,11 @@ QontoStepIcon.propTypes = {
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: "100%",
+		paddingTop: "20px",
+		backgroundColor: "white",
+		borderRadius: "12px",
+		paddingBottom: "50px",
+	
 	},
 	backButton: {
 		textTransform: "none",
