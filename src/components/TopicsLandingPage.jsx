@@ -69,10 +69,16 @@ const useStyles = (theme) => ({
 		},
 	},
 	formControls: {
+		"@media (min-width: 1024px)": {
+			maxWidth: "20% !important",
+			flex: "0 0 20% !important",
+			marginLeft: "5%",
+		},
 		minWidth: 120,
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
+				padding: "13px",
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
