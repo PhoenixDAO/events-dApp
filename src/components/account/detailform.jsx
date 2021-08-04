@@ -93,7 +93,7 @@ const DetailForm = (props) => {
 				});
 			console.log("avatar ipfs image", avatar);
 			if (ipfsImage) {
-				return <img src={ipfsImage} className="bird" />;
+				return <img src={ipfsImage} className="bird2" />;
 			}
 		} else {
 			return <img src={imageData(avatarNumber)} className="bird" />;
@@ -145,7 +145,7 @@ const DetailForm = (props) => {
 		const detail = await updateUserDetails({
 			address: props.account,
 			networkId: props.networkId,
-			name: "fgfg", //we need to change this when the design is finalised
+			name: name, //we need to change this when the design is finalised
 			organizerDetails: organizer,
 			avatarCustom: avatarCustom, //we need to change this when the design is finalised
 			avatarNumber: avatarNumber, //we need to change this when the design is finalised
@@ -214,7 +214,7 @@ const DetailForm = (props) => {
 										className="acc-copy-img-holder"
 										onMouseEnter={() => setCopyText("Copy")}
 										onClick={() => {
-											handleCopy("Copied");
+											handleCopy(props.account);
 										}}
 									>
 										<img
