@@ -54,12 +54,8 @@ const CustomForm = React.memo((props) => {
 	};
 
 	const showImage = useCallback(() => {
-		console.log("re rendered file");
 		if (file.length > 0) {
-			console.log(file[0]);
 			return URL.createObjectURL(file[0]);
-		} else {
-			console.log("not rendered");
 		}
 	}, [file, setFile]);
 
@@ -95,10 +91,12 @@ const CustomForm = React.memo((props) => {
 					{file.length > 0 ? (
 						<div
 							className="custom-img-hldr"
-							style={{
-								backgroundImage: `url(${showImage()})`,
-							}}
-						></div>
+							// style={{
+							// 	backgroundImage: `url(${showImage()})`,
+							// }}
+						>
+							<img className="custom-img" src={showImage()} />
+						</div>
 					) : (
 						<div>
 							<label

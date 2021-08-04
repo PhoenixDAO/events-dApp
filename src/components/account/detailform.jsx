@@ -159,7 +159,6 @@ const DetailForm = (props) => {
 		}
 	};
 
-
 	// const orgDetails = (e) => {
 	// 	// if (e.target.value.split(" ").length <= 500) {
 	// 	// 	orgref.current.enabled;
@@ -280,14 +279,19 @@ const DetailForm = (props) => {
 				</form>
 			</div>
 			<DialogueBox open={open} handleClose={handleClose} maxWidth="sm">
-				<IdentityForm setNextForm={setNextForm}
-				goBack={props.goBack}
+				<IdentityForm
+					setNextForm={setNextForm}
+					goBack={props.goBack}
 					nextForm={nextForm}
+					name={name}
+					avatarNumber={avatarNumber}
+					avatarCustom={avatarCustom}
 					handleName={handleName}
 					handleAvatar={handleAvatar}
 					handleCustomAvatar={handleCustomAvatar}
 					handleClose={handleClose}
-					handleAvatarNumber={handleAvatarNumber} />
+					handleAvatarNumber={handleAvatarNumber}
+				/>
 			</DialogueBox>
 		</div>
 	);

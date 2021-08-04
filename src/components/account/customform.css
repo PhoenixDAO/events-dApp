@@ -56,3 +56,12 @@ input[type="file"] {
 	top:20px;
 	left:20px;
 }
+
+.custom-img{
+	height: 70px;
+    width: 70px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 5px auto;
+}
