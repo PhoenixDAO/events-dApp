@@ -80,18 +80,15 @@ const Header = ({
 				<h2>{title}</h2>
 			</div>
 
-			{page == "analytics" || page == "create" || phnxButton ? (
+			{/* {page == "analytics" || page == "create" || phnxButton ? (
 				<BuyPhnxButton />
-			) : null}
+			) : null} */}
 
 			{searchBar ? <SearchBar /> : null}
 
 			{Object.keys(accounts).length == 0 ? (
 				<ConnectWalletButton onClick={handleOpen} />
-			) : null}
-			{connectWallet ? (
-				<ConnectWalletButton />
-			) : buyTicket ? (
+			): buyTicket ? (
 				<div>
 					<Button
 						variant="contained"
@@ -105,6 +102,8 @@ const Header = ({
 						{buttonText}
 					</Button>
 				</div>
+			) : page == "analytics" || page == "create" || phnxButton ? (
+				<BuyPhnxButton />
 			) : null}
 			<DialogueBox open={open} handleClose={handleClose} maxWidth="xs">
 				{/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}

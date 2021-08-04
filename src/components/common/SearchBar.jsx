@@ -7,6 +7,7 @@ import SearchIcon from "@material-ui/icons/Search";
 const useStyles = makeStyles((theme) => ({
 	textField: {
 		margin: theme.spacing(1),
+		color:"#C1C1C1"
 	},
 	input: {
 		maxHeight: 44,
@@ -28,7 +29,7 @@ const SearchBar = () => {
 				className: classes.input,
 				startAdornment: (
 					<InputAdornment position="start">
-						<SearchIcon />
+						<SearchIcon style={{color:"#C1C1C1"}}/>
 					</InputAdornment>
 				),
 			}}

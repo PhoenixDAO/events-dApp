@@ -69,7 +69,7 @@ class App extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {}
+		} catch (e) { }
 		super(props);
 		this.state = {
 			sent_tx: [],
@@ -91,11 +91,11 @@ class App extends Component {
 			openSnackbarForPendingRequest: false,
 			disabledStatus: false,
 			eventsContract: {},
-			userDetails :{}
+			userDetails: {}
 		};
 		this.myRef = React.createRef();
 
-		this.contracts = context.drizzle.contracts;
+		// this.contracts = context.drizzle.contracts;
 		this.loadBlockchainData = this.loadBlockchainData.bind(this);
 		this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
 		this.executeScroll = this.executeScroll.bind(this);
@@ -157,7 +157,7 @@ class App extends Component {
 			address: account,
 			networkId: networkId,
 		});
-		console.log("user",userDetails);
+		console.log("user", userDetails);
 		console.log("user details", userDetails);
 		if (!userDetails.error) {
 			console.log("user details", userDetails);
@@ -198,7 +198,7 @@ class App extends Component {
 					new Web3.providers.HttpProvider(INFURA_URL)
 				);
 			}
-			window.ethereum.on("connect", function (accounts) {});
+			window.ethereum.on("connect", function (accounts) { });
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
 				window.location.reload();
@@ -208,7 +208,7 @@ class App extends Component {
 				window.location.reload();
 			});
 			const accounts = await web3.eth.getAccounts();
-			
+
 
 			this.setState({ account: accounts[0] });
 			// console.log("getUserDetail account[0]",accounts[0],"getUserDetail networkId",GLOBAL_NETWORK_ID)
@@ -357,10 +357,12 @@ class App extends Component {
 		}, 2000);
 
 	allowance = async () => {
-		let a = await this.contracts["PHNX"].methods
-			.allowance(this.state.account, this.contracts["DaoEvents"].address)
-			.call();
-		return a;
+		if (this.state.account) {
+			let a = await this.state.phnxContract.methods
+				.allowance(this.state.account, this.state.eventsContract.address)
+				.call();
+			return a;
+		}
 	};
 
 	//Buy Function, Notify listen for transaction status.
@@ -558,10 +560,10 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-													.returnValues
+												.returnValues
 											: txreceipt.events
-													.NewAndUpdatedEvent
-													.returnValues
+												.NewAndUpdatedEvent
+												.returnValues
 									}
 									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
@@ -690,11 +692,17 @@ class App extends Component {
 		// if( !this.props.drizzleStatus.initialized || this.props.web3.status === "failed" ||
 		// 	(this.props.web3.status === "initialized" && Object.keys(this.props.accounts).length === 0) ||
 		// 	this.props.web3.networkId != GLOBAL_NETWORK_ID) {
+
+		//condition when drizzle is not initialized
 		if (!this.props.drizzleStatus.initialized) {
+			console.log("I am in this condition")
+
 			body = (
 				<div>
 					<Switch>
 						<Route
+							exact
+							path="/"
 							component={(props) => (
 								<FindEvents
 									{...props}
@@ -706,6 +714,84 @@ class App extends Component {
 								/>
 							)}
 						/>
+						<Route
+							exact
+							path="/upcomingevents/:page"
+							render={(props) => (
+								<FindEvents
+									{...props}
+									executeScroll={this.executeScroll}
+									inquire={this.inquireBuy}
+									disabledStatus={this.state.disabledStatus}
+									toggleDisabling={this.toggleDisabling}
+									eventsContract={this.state.eventsContract}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path="/event/:page/:id"
+							render={(props) => (
+								<EventPage
+									{...props}
+									inquire={this.inquireBuy}
+									disabledStatus={this.state.disabledStatus}
+									toggleDisabling={this.toggleDisabling}
+									eventsContract={this.state.eventsContract}
+									phnxContract={this.state.phnxContract}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path="/topics"
+							//  component={TopicsLandingPage}
+							component={(props) => (
+								<TopicsLandingPage
+									{...props}
+									eventsContract={this.state.eventsContract}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path="/topic/:page/:id"
+							render={(props) => (
+								<TopicLandingPage
+									{...props}
+									disabledStatus={this.state.disabledStatus}
+									inquire={this.inquireBuy}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path="/guide"
+							component={(props) => (
+								<Guide
+									{...props}
+									executeScroll={this.executeScroll}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path="/faq"
+							component={(props) => (
+								<FAQ
+									{...props}
+									executeScroll={this.executeScroll}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path="/terms-and-conditions"
+							render={(props) => (
+								<Terms executeScroll={this.executeScroll} />
+							)}
+						/>
+						<Route path="*" exact component={PageNotFound} />
 					</Switch>
 				</div>
 			);
@@ -750,6 +836,17 @@ class App extends Component {
 									inquire={this.inquireBuy}
 									disabledStatus={this.state.disabledStatus}
 									toggleDisabling={this.toggleDisabling}
+									eventsContract={this.state.eventsContract}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path="/topics"
+							//  component={TopicsLandingPage}
+							component={(props) => (
+								<TopicsLandingPage
+									{...props}
 									eventsContract={this.state.eventsContract}
 								/>
 							)}
@@ -1210,7 +1307,7 @@ const mapStateToProps = (state) => {
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
 		transactions: state.transactions,
-		contracts: state.contracts,
+		// contracts: state.contracts,
 	};
 };
 

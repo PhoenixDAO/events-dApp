@@ -695,7 +695,7 @@ class FindEvents extends Component {
 							title={
 								<div style={{ display: "flex" }}>
 									<img src={roundlogo} alt="phnx logo" />
-									<span>&nbsp;&nbsp;&nbsp;</span>
+									<span>&nbsp;&nbsp;</span>
 									<h2
 										style={{
 											fontWeight: 900,
