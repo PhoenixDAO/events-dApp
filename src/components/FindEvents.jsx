@@ -402,12 +402,9 @@ class FindEvents extends Component {
 	onTabChange = (event, newValue) => {
 		this.setState({ selectedTab: newValue });
 		let query;
-
 		if (newValue === "allevents") {
-		} else if (newValue === "neartoyou") {
-			console.log(newValue);
 			query = `
-			{
+			{	
 			  events(orderBy:eventId orderDirection:asc) {
 				  id
 				  eventId
@@ -432,6 +429,10 @@ class FindEvents extends Component {
 			  }
 			}
 			`;
+			this.loadBlockchain(query);
+		} else if (newValue === "neartoyou") {
+			//to discuss with Hugbo Clement
+			console.log(newValue);
 		} else if (newValue === "today") {
 			console.log(newValue);
 		} else if (newValue === "thisweek") {
@@ -440,8 +441,62 @@ class FindEvents extends Component {
 			console.log(newValue);
 		} else if (newValue === "paidevents") {
 			console.log(newValue);
+			query = `
+			{	
+			  events(where: {token: true} orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  duration
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		} else if (newValue === "freeevents") {
 			console.log(newValue);
+			query = `
+			{	
+			  events(where: {token: false} orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  duration
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		} else if (newValue === "onlineevents") {
 			console.log(newValue);
 		} else if (newValue === "physicalevents") {
