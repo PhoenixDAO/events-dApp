@@ -21,15 +21,15 @@
 	padding-left: 6px;
 }
 
-#sidebar-wrapper.my-sidebar .user-status .user-status-icon img {
+/* #sidebar-wrapper.my-sidebar .user-status .user-status-icon img {
 	border-radius: 50%;
 	width: 65%;
 	height: 50%;
 	vertical-align: top;
 	background-color: #FCFCFD;
-	/* box-shadow: 0 0 17px rgba(0, 0, 0, 0.5); */
-}
-#sidebar-wrapper.my-sidebar .user-status .user-status-icon {
+} */
+
+/* #sidebar-wrapper.my-sidebar .user-status .user-status-icon {
 	font-size: 23px;
 	border: 1px solid #E4E4E7;
 	border-radius: 50%;
@@ -37,13 +37,33 @@
 	height: 40px;
 	margin-top: -53px;
 	background-color: #FCFCFD;
+}  */
 
+#sidebar-wrapper.my-sidebar .user-status .user-status-icon {
+	border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    margin-top: -53px;
+    background-color: #FCFCFD;
 }
+
+#sidebar-wrapper.my-sidebar .user-status .user-status-icon > a {
+	 width: 100%;
+}
+
+#sidebar-wrapper.my-sidebar .user-status .user-status-icon img {
+    border-radius: 100%;
+    width: 100%;
+    vertical-align: top;
+    background-color: #FCFCFD;
+    margin: 0;
+}
+
+
 #sidebar-wrapper.my-sidebar {
 	background-color: #ffffff;
 	color: #1E1E22;
 	padding: 30px 0px;
-	box-shadow: 4px 8px 8px rgba(0, 0, 0, 0.4);
 	text-align: left !important;
 	width: 100%;
 	overflow-x: hidden;

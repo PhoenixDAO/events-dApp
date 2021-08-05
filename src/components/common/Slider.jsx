@@ -10,46 +10,35 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 		width: "100%",
 		"& .slider-image": {
-			"@media (min-width: 900px)": {
+			"@media (min-width: 1200px)": {
 				width: "100%",
-			}
-		}
+			},
+		},
 	},
 	carouselCaption: {
 		"& p": {
 			"@media (max-width: 800px)": {
 				fontSize: "14px",
 			},
-			"@media (min-width: 1100px) and (max-width: 1400px)": {
-				marginLeft: "-220px",
-			},
-			"@media (min-width: 1401px)": {
-				marginLeft: "-260px",
-			},
 			textAlign: "left",
 			width: "70%",
 			textShadow: "none",
 			fontSize: "19px",
-		},
-		"@media (max-width: 900px)": {
-			paddingTop: "0",
 		},
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
 		alignItems: "center",
 		boxShadow: "none",
-		// paddingTop: "340px",
 		background: "rgba(0,0,0,0.7)",
 	},
 	title: {
-		"@media (max-width: 767px)": {
-			marginBottom: "0",
-			fontSize: "18px !important",
+		"@media (max-width: 800px)": {
+			marginBottom: "15px",
+			fontSize: "24px !important",
 		},
 		fontSize: "36px !important",
 		fontFamily: '"AeonikReg" ,sans-serif',
-		// fontWeight: "600 !important",
 	},
 	text: {
 		fontSize: 20,
@@ -59,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Slider = () => {
 	const classes = useStyles();
-	const [duration, setDuration] = useState(300000);
+	const [duration, setDuration] = useState(3000);
 
 	return (
 		<div className={classes.root}>

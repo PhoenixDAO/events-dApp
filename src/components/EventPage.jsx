@@ -881,6 +881,9 @@ class EventPage extends Component {
 						</div>
 					</div>
 				);
+
+				let ticketPrices = event_data.token && event_data.categories.length > 1;
+
 				if (this.props.match.params.page === pagetitle) {
 					body = (
 						<Grid>
@@ -967,7 +970,7 @@ class EventPage extends Component {
 											/>
 											TICKET PRICE
 										</p>
-										{event_data.token && (
+										{ticketPrices && (
 											<FormControl
 												variant="outlined"
 												className={classes.ticketSelect}
