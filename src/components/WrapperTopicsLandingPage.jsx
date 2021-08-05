@@ -77,6 +77,8 @@ const WrapperTopicsLandingPage = (props) => {
 		setTopicEvents([]);
 		setActiveLength(0);
 		// GRAPH BLOCK //
+		const dateTime = Date.now();
+		const dateNow = Math.floor(dateTime / 1000);
 		try {
 			const graphEvents = await axios({
 				url: graphURL,
@@ -84,7 +86,7 @@ const WrapperTopicsLandingPage = (props) => {
 				data: {
 					query: `
 				{
-					events(orderBy:eventId orderDirection:asc) {
+					events( where:{time_gte: "${dateNow}"} orderBy:time orderDirection:desc) {
 						id
 						eventId
 						owner
