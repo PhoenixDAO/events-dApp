@@ -60,85 +60,36 @@ import Checkmark from "../Images/Checkmark.gif";
 import { withRouter } from "react-router-dom";
 import SocialMedia from "../common/SocialMedia";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-
+import AccessTime from "@material-ui/icons/AccessTime";
 var badWords = require("bad-words");
 
-const QontoConnector = withStyles({
+const ColorlibConnector = withStyles({
+	root: {
+		width: 50,
+		height: 50,
+	},
 	alternativeLabel: {
-		top: 10,
-		left: "calc(-50% + 16px)",
-		right: "calc(50% + 16px)",
+		top: 22,
 	},
 	active: {
 		"& $line": {
-			borderColor: "#784af4",
+			backgroundImage:
+				"linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)",
 		},
 	},
 	completed: {
 		"& $line": {
-			borderColor: "#784af4",
+			backgroundImage:
+				"linear-gradient( 95deg,rgb(242,113,33) 0%,rgb(233,64,87) 50%,rgb(138,35,135) 100%)",
 		},
 	},
 	line: {
-		borderColor: "#eaeaf0",
-		borderTopWidth: 3,
+		height: 3,
+		border: 0,
+		backgroundColor: "#eaeaf0",
 		borderRadius: 1,
 	},
 })(StepConnector);
-
-const useQontoStepIconStyles = makeStyles({
-	root: {
-		color: "#eaeaf0",
-		display: "flex",
-		height: 22,
-		alignItems: "center",
-		backgroundColor: "red",
-	},
-	active: {
-		color: "#784af4",
-	},
-	circle: {
-		width: 8,
-		height: 8,
-		borderRadius: "50%",
-		backgroundColor: "currentColor",
-	},
-	completed: {
-		color: "#784af4",
-		zIndex: 1,
-		fontSize: 18,
-	},
-});
-
-function QontoStepIcon(props) {
-	const classes = useQontoStepIconStyles();
-	const { active, completed } = props;
-
-	return (
-		<div
-			className={clsx(classes.root, {
-				[classes.active]: active,
-			})}
-		>
-			{completed ? (
-				<Check className={classes.completed} />
-			) : (
-				<div className={classes.circle} />
-			)}
-		</div>
-	);
-}
-
-QontoStepIcon.propTypes = {
-	/**
-	 * Whether this step is active.
-	 */
-	active: PropTypes.bool,
-	/**
-	 * Mark the step as completed. Is passed to child components.
-	 */
-	completed: PropTypes.bool,
-};
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -219,6 +170,7 @@ const useStyles = makeStyles((theme) => ({
 	step: {
 		"& .MuiStepIcon-root text": {
 			fontFamily: "'Aeonik', sans-serif",
+			// fontSize: "24px",
 		},
 		"& .MuiStepIcon-root.MuiStepIcon-active": {
 			color: "#fff",
@@ -230,6 +182,22 @@ const useStyles = makeStyles((theme) => ({
 			fontWeight: "900",
 			fontFamily: "'Aeonik', sans-serif",
 		},
+		// "& .MuiStepIcon-root": {
+		// 	height: "48px",
+		// 	width: "48px",
+		// },
+	},
+	alternativeLabel: {
+		"font-size": "11px",
+	},
+	alternativeLabelActive: {
+		"font-weight": "bold !important",
+	},
+	stepIcon: {
+		transform: "scale(0.5)",
+		"font-size": "50px",
+		// height: "48px",
+		// width: "48px",
 	},
 	radioGroup: {
 		"& .MuiFormControlLabel-label.MuiTypography-body1": {
@@ -241,6 +209,34 @@ const useStyles = makeStyles((theme) => ({
 	},
 	dropdownMenu: {
 		fontFamily: "'Aeonik', sans-serif",
+	},
+	timeContainer: {
+		display: "flex",
+		justifyContent: "space-between",
+		[theme.breakpoints.between("xs", "sm")]: {
+			flexDirection: "column",
+		},
+	},
+	timeAndDate: {
+		[theme.breakpoints.between("xs", "sm")]: {
+			width: "100%",
+		},
+	},
+	ticketPriceContainer: {
+		display: "flex",
+		justifyContent: "space-between",
+		alignItems: "center",
+		[theme.breakpoints.between("xs", "sm")]: {
+			flexDirection: "column",
+		},
+	},
+	altImage: {
+		[theme.breakpoints.between("xs", "sm")]: {
+			transform: `rotate(90deg)`,
+		},
+	},
+	menuPaper: {
+		maxHeight: "200px",
 	},
 }));
 
@@ -779,12 +775,7 @@ const MyStepper = ({
 
 										<br />
 
-										<div
-											style={{
-												display: "flex",
-												justifyContent: "space-between",
-											}}
-										>
+										<div className={classes.timeContainer}>
 											<div>
 												<label
 													className={classes.label}
@@ -805,6 +796,12 @@ const MyStepper = ({
 														fieldState: { error },
 													}) => (
 														<KeyboardTimePicker
+															className={
+																classes.timeAndDate
+															}
+															keyboardIcon={
+																<AccessTime />
+															}
 															margin="normal"
 															id="start-time-picker"
 															// label="START TIME"
@@ -854,6 +851,12 @@ const MyStepper = ({
 														fieldState: { error },
 													}) => (
 														<KeyboardTimePicker
+															className={
+																classes.timeAndDate
+															}
+															keyboardIcon={
+																<AccessTime />
+															}
 															required={false}
 															margin="normal"
 															id="end-time-picker"
@@ -892,12 +895,7 @@ const MyStepper = ({
 									<MuiPickersUtilsProvider
 										utils={DateFnsUtils}
 									>
-										<div
-											style={{
-												display: "flex",
-												justifyContent: "space-between",
-											}}
-										>
+										<div className={classes.timeContainer}>
 											<div>
 												<label
 													className={classes.label}
@@ -918,6 +916,9 @@ const MyStepper = ({
 														fieldState: { error },
 													}) => (
 														<KeyboardDatePicker
+															className={
+																classes.timeAndDate
+															}
 															disableToolbar
 															variant="inline"
 															format="dd-MM-yyyy"
@@ -976,6 +977,9 @@ const MyStepper = ({
 														fieldState: { error },
 													}) => (
 														<KeyboardDatePicker
+															className={
+																classes.timeAndDate
+															}
 															disableToolbar
 															variant="inline"
 															format="dd-MM-yyyy"
@@ -1015,12 +1019,7 @@ const MyStepper = ({
 
 										<br />
 
-										<div
-											style={{
-												display: "flex",
-												justifyContent: "space-between",
-											}}
-										>
+										<div className={classes.timeContainer}>
 											<div>
 												<label
 													className={classes.label}
@@ -1041,6 +1040,12 @@ const MyStepper = ({
 														fieldState: { error },
 													}) => (
 														<KeyboardTimePicker
+															className={
+																classes.timeAndDate
+															}
+															keyboardIcon={
+																<AccessTime />
+															}
 															margin="normal"
 															id="time-picker"
 															// label="TO"
@@ -1091,6 +1096,12 @@ const MyStepper = ({
 														fieldState: { error },
 													}) => (
 														<KeyboardTimePicker
+															className={
+																classes.timeAndDate
+															}
+															keyboardIcon={
+																<AccessTime />
+															}
 															margin="normal"
 															id="time-picker"
 															// label="FROM"
@@ -1150,6 +1161,7 @@ const MyStepper = ({
 										<RadioGroup
 											row
 											aria-label="eventType"
+											className={classes.radioGroup}
 											name="eventType"
 											value={value}
 											onChange={(e) => {
@@ -1352,11 +1364,18 @@ const MyStepper = ({
 										/>
 
 										{index === 0 ? (
-											<span>
+											<p
+												style={{
+													fontSize: 14,
+													fontWeight: 400,
+													fontFamily:
+														"'Aeonik', sans-serif",
+												}}
+											>
 												Max: 3 Pictures. Not greater
 												than 5MB (Recommended 1000px *
 												1000px)
-											</span>
+											</p>
 										) : null}
 										<br />
 										<br />
@@ -1404,7 +1423,24 @@ const MyStepper = ({
 											fullWidth
 											value={value}
 											onChange={onChange}
+											displayEmpty
+											className={classes.menuPaper}
+											MenuProps={{
+												classes: {
+													paper: classes.menuPaper,
+												},
+											}}
 										>
+											<MenuItem
+												disabled
+												value=""
+												style={{
+													fontFamily:
+														"'Aeonik', sans-serif",
+												}}
+											>
+												<em>Topic</em>
+											</MenuItem>
 											{Object.entries(eventTopics).map(
 												(topic) => (
 													<MenuItem
@@ -1503,6 +1539,9 @@ const MyStepper = ({
 														aria-label="ticketAvailability"
 														name="ticketAvailability"
 														value={value}
+														className={
+															classes.radioGroup
+														}
 														onChange={(e) => {
 															onChange(e);
 															setAvailability(
@@ -1588,11 +1627,9 @@ const MyStepper = ({
 										</label>
 										<br />
 										<div
-											style={{
-												display: "flex",
-												justifyContent: "space-between",
-												alignItems: "center",
-											}}
+											className={
+												classes.ticketPriceContainer
+											}
 										>
 											<Controller
 												name="dollarPrice"
@@ -1602,65 +1639,71 @@ const MyStepper = ({
 													field: { onChange, value },
 													fieldState: { error },
 												}) => (
-													<TextField
-														className={
-															classes.margin
-														}
-														onKeyDown={
-															formatInputDollarPrice
-														}
-														id="input-with-icon-textfield"
-														type="number"
-														variant="outlined"
-														InputProps={{
-															startAdornment: (
-																<InputAdornment position="start">
-																	<img
-																		src={
-																			dollarIcon
-																		}
-																		alt="dollar sign"
-																	/>
-																</InputAdornment>
-															),
-														}}
-														value={value}
-														onChange={(e) => {
-															onChange(e);
-															onPriceChanges(e);
-														}}
-														error={!!error}
-														helperText={
-															error
-																? error.message
-																: " "
-														}
-													/>
+													<span>
+														<InputLabel htmlFor="input-with-icon-adornment">
+															<span>&nbsp;</span>
+														</InputLabel>
+														<TextField
+															className={
+																classes.margin
+															}
+															onKeyDown={
+																formatInputDollarPrice
+															}
+															id="input-with-icon-textfield"
+															type="number"
+															variant="outlined"
+															InputProps={{
+																startAdornment:
+																	(
+																		<InputAdornment position="start">
+																			<img
+																				src={
+																					dollarIcon
+																				}
+																				alt="dollar sign"
+																			/>
+																		</InputAdornment>
+																	),
+															}}
+															value={value}
+															onChange={(e) => {
+																onChange(e);
+																onPriceChanges(
+																	e
+																);
+															}}
+															error={!!error}
+															helperText={
+																error
+																	? error.message
+																	: " "
+															}
+														/>
+													</span>
 												)}
 												rules={{
 													required:
 														"Price in dollars.",
-													pattern: {
-														value: /\d+(\.\d+)?$/,
-														message:
-															"Please enter an integer",
-													},
-													min: {
-														value: 1,
-														message:
-															"Price of ticket should be at least 1 dollar.",
-													},
+													// min: {
+													// 	value: 1,
+													// 	message:
+													// 		"Price of ticket should be at least 1 dollar.",
+													// },
 												}}
 											/>
 
-											<div>
+											<div
+												style={{
+													display: "flex",
+													justifyContent: "center",
+													alignItems: "center",
+												}}
+											>
 												<img
 													src={altIcon}
 													alt="alt icon"
-													// style={{
-													// 	marginTop: "auto",
-													// 	marginBottom: "auto",
-													// }}
+													className={classes.altImage}
 												/>
 											</div>
 											<Controller
@@ -1671,39 +1714,45 @@ const MyStepper = ({
 													field: { onChange, value },
 													fieldState: { error },
 												}) => (
-													<TextField
-														className={
-															classes.margin
-														}
-														disabled
-														id="input-with-icon-textfield"
-														onKeyDown={
-															formatInputDollarPrice
-														}
-														type="number"
-														variant="outlined"
-														InputProps={{
-															startAdornment: (
-																<InputAdornment position="start">
-																	<img
-																		src={
-																			phnxLogo
-																		}
-																		alt="phnx logo"
-																	/>
-																</InputAdornment>
-															),
-														}}
-														// value={value}
-														value={phnxValue}
-														onChange={onChange}
-														error={!!error}
-														helperText={
-															error
-																? error.message
-																: " "
-														}
-													/>
+													<span>
+														<InputLabel htmlFor="input-with-icon-adornment">
+															<span>&nbsp;</span>
+														</InputLabel>
+														<TextField
+															className={
+																classes.margin
+															}
+															disabled
+															id="input-with-icon-textfield"
+															onKeyDown={
+																formatInputDollarPrice
+															}
+															type="number"
+															variant="outlined"
+															InputProps={{
+																startAdornment:
+																	(
+																		<InputAdornment position="start">
+																			<img
+																				src={
+																					phnxLogo
+																				}
+																				alt="phnx logo"
+																			/>
+																		</InputAdornment>
+																	),
+															}}
+															// value={value}
+															value={phnxValue}
+															onChange={onChange}
+															error={!!error}
+															helperText={
+																error
+																	? error.message
+																	: " "
+															}
+														/>
+													</span>
 												)}
 												rules={{
 													required: false,
@@ -1729,6 +1778,9 @@ const MyStepper = ({
 														row
 														aria-label="ticketAvailability"
 														name="ticketAvailability"
+														className={
+															classes.radioGroup
+														}
 														value={value}
 														onChange={(e) => {
 															onChange(e);
@@ -1990,13 +2042,9 @@ const MyStepper = ({
 													</label>
 													<br />
 													<div
-														style={{
-															display: "flex",
-															justifyContent:
-																"space-between",
-															alignItems:
-																"center",
-														}}
+														className={
+															classes.ticketPriceContainer
+														}
 													>
 														<Controller
 															name={`dollarPrice${ticketCategory}`}
@@ -2011,51 +2059,58 @@ const MyStepper = ({
 																	error,
 																},
 															}) => (
-																<TextField
-																	className={
-																		classes.margin
-																	}
-																	id="input-with-icon-textfield"
-																	onKeyDown={
-																		formatInputDollarPrice
-																	}
-																	type="number"
-																	variant="outlined"
-																	InputProps={{
-																		startAdornment:
-																			(
-																				<InputAdornment position="start">
-																					<img
-																						src={
-																							dollarIcon
-																						}
-																						alt="dollar sign"
-																					/>
-																				</InputAdornment>
-																			),
-																	}}
-																	value={
-																		value
-																	}
-																	onChange={(
-																		e
-																	) => {
-																		onChange(
+																<span>
+																	<InputLabel htmlFor="input-with-icon-adornment">
+																		<span>
+																			&nbsp;
+																		</span>
+																	</InputLabel>
+																	<TextField
+																		className={
+																			classes.margin
+																		}
+																		id="input-with-icon-textfield"
+																		onKeyDown={
+																			formatInputDollarPrice
+																		}
+																		type="number"
+																		variant="outlined"
+																		InputProps={{
+																			startAdornment:
+																				(
+																					<InputAdornment position="start">
+																						<img
+																							src={
+																								dollarIcon
+																							}
+																							alt="dollar sign"
+																						/>
+																					</InputAdornment>
+																				),
+																		}}
+																		value={
+																			value
+																		}
+																		onChange={(
 																			e
-																		);
-																		onPriceChanges(
-																			e
-																		);
-																	}}
-																	error={
-																		!!error
-																	}
-																	helperText={
-																		error
-																			? error.message
-																			: " "
-																	}
-																/>
+																		) => {
+																			onChange(
+																				e
+																			);
+																			onPriceChanges(
+																				e
+																			);
+																		}}
+																		error={
+																			!!error
+																		}
+																		helperText={
+																			error
+																				? error.message
+																				: " "
+																		}
+																	/>
+																</span>
 															)}
 															rules={{
 																required:
@@ -2063,14 +2118,21 @@ const MyStepper = ({
 															}}
 														/>
 
-														<div>
+														<div
+															style={{
+																display: "flex",
+																justifyContent:
+																	"center",
+																alignItems:
+																	"center",
+															}}
+														>
 															<img
 																src={altIcon}
 																alt="alt icon"
-																// style={{
-																// 	marginTop: "auto",
-																// 	marginBottom: "auto",
-																// }}
+																className={
+																	classes.altImage
+																}
 															/>
 														</div>
 
@@ -2087,48 +2149,55 @@ const MyStepper = ({
 																	error,
 																},
 															}) => (
-																<TextField
-																	className={
-																		classes.margin
-																	}
-																	disabled
-																	id="input-with-icon-textfield"
-																	onKeyDown={
-																		formatInputDollarPrice
-																	}
-																	type="number"
-																	variant="outlined"
-																	InputProps={{
-																		startAdornment:
-																			(
-																				<InputAdornment position="start">
-																					<img
-																						src={
-																							phnxLogo
-																						}
-																						alt="phnx logo"
-																					/>
-																				</InputAdornment>
-																			),
-																	}}
-																	// value={
-																	// 	value
-																	// }
-																	value={
-																		phnxValue
-																	}
-																	onChange={
-																		onChange
-																	}
-																	error={
-																		!!error
-																	}
-																	helperText={
-																		error
-																			? error.message
-																			: " "
-																	}
-																/>
+																<span>
+																	<InputLabel htmlFor="input-with-icon-adornment">
+																		<span>
+																			&nbsp;
+																		</span>
+																	</InputLabel>
+																	<TextField
+																		className={
+																			classes.margin
+																		}
+																		disabled
+																		id="input-with-icon-textfield"
+																		onKeyDown={
+																			formatInputDollarPrice
+																		}
+																		type="number"
+																		variant="outlined"
+																		InputProps={{
+																			startAdornment:
+																				(
+																					<InputAdornment position="start">
+																						<img
+																							src={
+																								phnxLogo
+																							}
+																							alt="phnx logo"
+																						/>
+																					</InputAdornment>
+																				),
+																		}}
+																		// value={
+																		// 	value
+																		// }
+																		value={
+																			phnxValue
+																		}
+																		onChange={
+																			onChange
+																		}
+																		error={
+																			!!error
+																		}
+																		helperText={
+																			error
+																				? error.message
+																				: " "
+																		}
+																	/>
+																</span>
 															)}
 															rules={{
 																required: false,
@@ -2165,6 +2234,9 @@ const MyStepper = ({
 																	row
 																	aria-label="ticketAvailability"
 																	name="ticketAvailability"
+																	className={
+																		classes.radioGroup
+																	}
 																	value={
 																		value
 																	}
@@ -2520,7 +2592,13 @@ const MyStepper = ({
 				<Stepper
 					activeStep={activeStep}
 					alternativeLabel
+					// connector={<ColorlibConnector />}
 					className={classes.step}
+					// classes={{
+					// 	alternativeLabel: classes.alternativeLabel,
+					// 	active: classes.alternativeLabelActive,
+					// 	iconContainer: classes.stepIcon,
+					// }}
 				>
 					{steps.map((label, i) => (
 						<Step key={i}>
