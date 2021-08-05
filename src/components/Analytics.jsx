@@ -10,6 +10,7 @@ import { Card } from "./common/Card";
 import { getEvents } from "../utils/getEvents";
 import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
+import EmptyState from "./EmptyState";
 import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 import axios from "axios";
 import {
@@ -53,6 +54,22 @@ const useStyles = makeStyles((theme) => ({
 		marginBottom: "25px",
 		[theme.breakpoints.down("xs")]: {
 			display: "grid",
+		},
+	},
+	emptyContent: {
+		padding: "0 !important"
+	},
+	EmptyRow: {
+		display: "flex",
+		justifyContent: "space-between",
+		width: "100%",
+		alignItems: "center",
+		marginBottom: "25px",
+		[theme.breakpoints.down("xs")]: {
+			display: "grid",
+		},
+		"& > div": {
+			flex: "0 0 100%",
 		},
 	},
 	heading: {
@@ -247,7 +264,6 @@ const options2 = {
 };
 //line chart options
 
-
 const Analytics = (props, context) => {
 	const classes = useStyles();
 	// const [graphData, setGraphData] = useState([]);
@@ -441,15 +457,10 @@ const Analytics = (props, context) => {
 			phxRevenue.push(
 				Web3.utils.fromWei(obj.totalPhnxRevenue.toString())
 			);
-			if(timeStamp==86400)
-			{
-				phnxLabel.push(moment.unix(obj.startTimeStamp).format('HH:mm'));
-
-			}
-			else
-			{
+			if (timeStamp == 86400) {
+				phnxLabel.push(moment.unix(obj.startTimeStamp).format("HH:mm"));
+			} else {
 				phnxLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
-
 			}
 		}
 		setDollarClicked(false);
@@ -482,12 +493,9 @@ const Analytics = (props, context) => {
 		for (let i = 0; i < soldKey.length; i++) {
 			const obj = soldData[soldKey[i]];
 			soldTickets.push(obj.soldTickets);
-			if(timeStamp==86400)
-			{
-				soldLabel.push(moment.unix(obj.startTimeStamp).format('HH:mm'));
-			}
-			else
-			{
+			if (timeStamp == 86400) {
+				soldLabel.push(moment.unix(obj.startTimeStamp).format("HH:mm"));
+			} else {
 				soldLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
 			}
 		}
@@ -522,13 +530,14 @@ const Analytics = (props, context) => {
 			dollarRev.push(
 				Web3.utils.fromWei(obj.totalDollarRevenue.toString())
 			);
-			if(timeStamp==86400)
-			{
-				dollarLabel.push(moment.unix(obj.startTimeStamp).format('HH:mm'));
-			}
-			else
-			{
-				dollarLabel.push(moment.unix(obj.startTimeStamp).format("DD/MM"));
+			if (timeStamp == 86400) {
+				dollarLabel.push(
+					moment.unix(obj.startTimeStamp).format("HH:mm")
+				);
+			} else {
+				dollarLabel.push(
+					moment.unix(obj.startTimeStamp).format("DD/MM")
+				);
 			}
 		}
 		setPhnxClicked(false);
@@ -572,46 +581,91 @@ const Analytics = (props, context) => {
 		if (events.length == 0) {
 			// console.log("MyEvents", events);
 			return (
-				<p
-					className="text-center not-found"
-					style={{ marginTop: "40px" }}
-				>
-					<span role="img" aria-label="thinking">
-						🤔
-					</span>
-					&nbsp;No events found.{" "}
-					<a href="/createevent">Try creating one.</a>
-				</p>
+				<Grid className={classes.Top5Events}>
+					<Grid className={classes.row}>
+						<h2 className={classes.heading2}>Top 5 Events</h2>
+					</Grid>
+					<EmptyState
+						text="No events found 🤔."
+						btnText="Try creating one"
+						url="/createevent"
+					/>
+				</Grid>
 			);
 		} else {
 			return events.map((event, index) => (
-				<Grid container className={classes.row3}>
-					<Grid lg={3} className={classes.ticketSold}>
-						<i
-							className="fa fa-ticket-alt"
-							title="My Tickets"
-							style={{ color: "#73727D", paddingRight: "10px" }}
-						></i>
-						{event.tktTotalQuantitySold}
+				<Grid className={classes.Top5Events}>
+					<Grid className={classes.row}>
+						<h2 className={classes.heading2}>Top 5 Events</h2>
+						<FormControl
+							variant="outlined"
+							className={classes.select}
+						>
+							<Select
+								native
+								// value={state.age}
+								onChange={handleRevenue}
+								inputProps={{
+									name: "age",
+									id: "outlined-age-native-simple",
+								}}
+							>
+								<option value="eventRevenueInPhnx">PHNX</option>
+								<option value="eventRevenueInDollar">
+									Dollar
+								</option>
+							</Select>
+						</FormControl>
 					</Grid>
-					<Grid lg={6} className={classes.city}>
-						{event.name}
-					</Grid>
-					<Grid
-						lg={3}
-						className={classes.ticketSold}
-						style={{ textAlign: "end" }}
-					>
-						{revenueCategory == "eventRevenueInPhnx"
-							? (
-									event.eventRevenueInPhnx /
-									1000000000000000000
-							  ).toFixed(3) + " PHNX"
-							: "$ " +
-							  (
-									event.eventRevenueInDollar /
-									1000000000000000000
-							  ).toFixed(3)}
+
+					<Grid className={classes.box} style={{ marginTop: "30px" }}>
+						<Grid className={classes.row2}>
+							<Grid className={classes.header} lg={3}>
+								No of Tickets
+							</Grid>
+							<Grid className={classes.header} lg={6}>
+								Event Name
+							</Grid>
+							<Grid
+								className={classes.header}
+								style={{ textAlign: "end" }}
+								lg={3}
+							>
+								Revenue
+							</Grid>
+						</Grid>
+						<Grid container className={classes.row3}>
+							<Grid lg={3} className={classes.ticketSold}>
+								<i
+									className="fa fa-ticket-alt"
+									title="My Tickets"
+									style={{
+										color: "#73727D",
+										paddingRight: "10px",
+									}}
+								></i>
+								{event.tktTotalQuantitySold}
+							</Grid>
+							<Grid lg={6} className={classes.city}>
+								{event.name}
+							</Grid>
+							<Grid
+								lg={3}
+								className={classes.ticketSold}
+								style={{ textAlign: "end" }}
+							>
+								{revenueCategory == "eventRevenueInPhnx"
+									? (
+											event.eventRevenueInPhnx /
+											1000000000000000000
+									  ).toFixed(3) + " PHNX"
+									: "$ " +
+									  (
+											event.eventRevenueInDollar /
+											1000000000000000000
+									  ).toFixed(3)}
+							</Grid>
+						</Grid>
 					</Grid>
 				</Grid>
 			));
@@ -664,7 +718,7 @@ const Analytics = (props, context) => {
 					totalDollarRevenue += Number(
 						Web3.utils.fromWei(event.totalDollarRevenue.toString())
 					);
-					console.log("totalDollarRevenue",totalDollarRevenue);
+					console.log("totalDollarRevenue", totalDollarRevenue);
 					soldTicket += Number(event.soldTickets.toString());
 					totalPhnxRevenue += Number(
 						Web3.utils.fromWei(event.totalPhnxRevenue.toString())
@@ -777,189 +831,177 @@ const Analytics = (props, context) => {
 	return (
 		<div>
 			<Header title="Analytics" page="analytics" phnxButton="true" />
-			<Grid container className={classes.content}>
-				<Grid className={classes.row}>
-					<h3 className={classes.heading}>Earnings</h3>
-
-					<FormControl variant="outlined" className={classes.select}>
-						<Select
-							native
-							value={timeStamp}
-							onChange={handleTimeStampChange}
-							inputProps={{
-								name: "age",
-								id: "outlined-age-native-simple",
-							}}
-						>
-							<option value="86400">Today</option>
-							{/* <option aria-label="None" value="Yesterday">
-								Yesterday
-							</option> */}
-							<option value="604800">Last 7 Days</option>
-							<option value="2419200">Last 28 Days</option>
-							<option value="7776000">Last 90 Days</option>
-						</Select>
-					</FormControl>
-				</Grid>
-				<Grid container style={{ justifyContent: "space-evenly" }}>
-					<Card
-						color="#E5AB00"
-						click={getDollarRevenue}
-						imageSrc="/images/icons/Dollar.png"
-						header="Dollar Revenue"
-						value={"$" + dollarRevenue}
-						profit={dollarChange}
-						diffrence={dollarDifference}
-						entity="$"
-						days={timeStamp}
-						liveDollarRevenue={liveDollarRevenue}
-					/>
-					<Card
-						color="#413AE2"
-						click={getPhnxRevenue}
-						imageSrc="/images/icons/PHNX.png"
-						header="Phnx Revenue"
-						value={phnxRevenue + "PHNX"}
-						profit={phnxChange}
-						diffrence={phnxDifference}
-						entity="PHNX"
-						days={timeStamp}
-					/>
-					<Card
-						color="#963AE2"
-						click={getSoldTickets}
-						imageSrc="/images/icons/Events.png"
-						header="Tickets Sold"
-						value={soldTicket}
-						profit={ticketSoldChange}
-						diffrence={ticketDifference}
-						entity="Tickets"
-						days={timeStamp}
-					/>
-				</Grid>
-				<Grid container style={{ margin: "70px 0px" }}>
-					{provideGraph()}
-					{/* <Line data={data} options={chartOptions} /> */}
-				</Grid>
-				<EventsAnalytics
-					userDetails={userDetails}
-					createdEvents={props.eventName.length}
-					ticketBought={props.ticketBought}
-				/>
-				<Grid className={classes.box}>
+			{props.eventName.length > 0 ? (
+				<Grid container className={classes.content}>
 					<Grid className={classes.row}>
-						<Grid className={classes.row}>
-							<h5 className={classes.heading2}>
-								Ticket sales by Location
-							</h5>
-						</Grid>
-						<Grid style={{ display: "flex", alignItems: "center" }}>
-							<span
-								style={{
-									color: "#73727D",
-									marginRight: "10px",
-								}}
-							>
-								Event
-							</span>
-							<FormControl
-								variant="outlined"
-								className={classes.select}
-							>
-								<Select
-									native
-									// value={state.age}
-									onChange={props.handleEvent}
-									inputProps={{
-										name: "age",
-										id: "outlined-age-native-simple",
-									}}
-								>
-									{props.eventName.map((event) => {
-										return (
-											<option value={event.eventId}>
-												{event.name}
-											</option>
-										);
-									})}
-								</Select>
-							</FormControl>
-						</Grid>
-					</Grid>
+						<h3 className={classes.heading}>Earnings</h3>
 
-					<Grid container>
-						<Grid lg={7} sm={12} xs={12} md={6}>
-							<Grid className={classes.row2}>
-								<span>Cities</span>
-								<span>No of Tickets</span>
-							</Grid>
-							<TicketAnalytics />
-						</Grid>
-						<Grid
-							lg={5}
-							sm={12}
-							xs={12}
-							md={6}
-							className={classes.chartDiv}
-						>
-							<Doughnut
-								id="doughnut"
-								data={data2}
-								options={options2}
-							/>
-							<img
-								src="/images/graph.svg"
-								className={classes.image}
-							/>
-						</Grid>
-					</Grid>
-				</Grid>
-
-				{/* Top 5 Events */}
-				<Grid className={classes.Top5Events}>
-					<Grid className={classes.row}>
-						<h2 className={classes.heading2}>Top 5 Events</h2>
 						<FormControl
 							variant="outlined"
 							className={classes.select}
 						>
 							<Select
 								native
-								// value={state.age}
-								onChange={handleRevenue}
+								value={timeStamp}
+								onChange={handleTimeStampChange}
 								inputProps={{
 									name: "age",
 									id: "outlined-age-native-simple",
 								}}
 							>
-								<option value="eventRevenueInPhnx">PHNX</option>
-								<option value="eventRevenueInDollar">
-									Dollar
-								</option>
+								<option value="86400">Today</option>
+								{/* <option aria-label="None" value="Yesterday">
+								Yesterday
+							</option> */}
+								<option value="604800">Last 7 Days</option>
+								<option value="2419200">Last 28 Days</option>
+								<option value="7776000">Last 90 Days</option>
 							</Select>
 						</FormControl>
 					</Grid>
-
-					<Grid className={classes.box} style={{ marginTop: "30px" }}>
-						<Grid className={classes.row2}>
-							<Grid className={classes.header} lg={3}>
-								No of Tickets
-							</Grid>
-							<Grid className={classes.header} lg={6}>
-								Event Name
+					<Grid container style={{ justifyContent: "space-evenly" }}>
+						<Card
+							color="#E5AB00"
+							click={getDollarRevenue}
+							imageSrc="/images/icons/Dollar.png"
+							header="Dollar Revenue"
+							value={"$" + dollarRevenue}
+							profit={dollarChange}
+							diffrence={dollarDifference}
+							entity="$"
+							days={timeStamp}
+							liveDollarRevenue={liveDollarRevenue}
+						/>
+						<Card
+							color="#413AE2"
+							click={getPhnxRevenue}
+							imageSrc="/images/icons/PHNX.png"
+							header="Phnx Revenue"
+							value={phnxRevenue + "PHNX"}
+							profit={phnxChange}
+							diffrence={phnxDifference}
+							entity="PHNX"
+							days={timeStamp}
+						/>
+						<Card
+							color="#963AE2"
+							click={getSoldTickets}
+							imageSrc="/images/icons/Events.png"
+							header="Tickets Sold"
+							value={soldTicket}
+							profit={ticketSoldChange}
+							diffrence={ticketDifference}
+							entity="Tickets"
+							days={timeStamp}
+						/>
+					</Grid>
+					<Grid container style={{ margin: "70px 0px" }}>
+						{provideGraph()}
+						{/* <Line data={data} options={chartOptions} /> */}
+					</Grid>
+					<EventsAnalytics
+						userDetails={userDetails}
+						createdEvents={props.eventName.length}
+						ticketBought={props.ticketBought}
+					/>
+					<Grid className={classes.box}>
+						<Grid className={classes.row}>
+							<Grid className={classes.row}>
+								<h5 className={classes.heading2}>
+									Ticket sales by Location
+								</h5>
 							</Grid>
 							<Grid
-								className={classes.header}
-								style={{ textAlign: "end" }}
-								lg={3}
+								style={{
+									display: "flex",
+									alignItems: "center",
+								}}
 							>
-								Revenue
+								{props.eventName.length > 0 ? (
+									<div>
+										<span
+											style={{
+												color: "#73727D",
+												marginRight: "10px",
+											}}
+										>
+											Event
+										</span>
+										<FormControl
+											variant="outlined"
+											className={classes.select}
+										>
+											<Select
+												native
+												// value={state.age}
+												onChange={props.handleEvent}
+												inputProps={{
+													name: "age",
+													id: "outlined-age-native-simple",
+												}}
+											>
+												{props.eventName.map(
+													(event) => {
+														return (
+															<option
+																value={
+																	event.eventId
+																}
+															>
+																{event.name}
+															</option>
+														);
+													}
+												)}
+											</Select>
+										</FormControl>
+									</div>
+								) : null}
 							</Grid>
 						</Grid>
-						<Top5Events />
+
+						<Grid container>
+							<Grid lg={7} sm={12} xs={12} md={6}>
+								<Grid className={classes.row2}>
+									<span>Cities</span>
+									<span>No of Tickets</span>
+								</Grid>
+								<TicketAnalytics />
+							</Grid>
+							<Grid
+								lg={5}
+								sm={12}
+								xs={12}
+								md={6}
+								className={classes.chartDiv}
+							>
+								<Doughnut
+									id="doughnut"
+									data={data2}
+									options={options2}
+								/>
+								<img
+									src="/images/graph.svg"
+									className={classes.image}
+								/>
+							</Grid>
+						</Grid>
+					</Grid>
+
+					{/* Top 5 Events */}
+					<Top5Events />
+				</Grid>
+			) : (
+					<Grid container className={`${classes.emptyContent} ${classes.content}`}>
+					<Grid className={classes.EmptyRow}>
+						<EmptyState
+							text="No analytics to see"
+							btnText="Create an Event"
+							url="/createevent"
+						/>
 					</Grid>
 				</Grid>
-			</Grid>
+			)}
 		</div>
 	);
 };

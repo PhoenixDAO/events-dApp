@@ -59,7 +59,7 @@ const Header = ({
 		<Grid
 			className="header3"
 			style={
-				page == "dashboard" || page == "myEvent"
+				page === "dashboard" || page === "myEvent"
 					? { borderBottom: "0px" }
 					: null
 			}
@@ -102,7 +102,7 @@ const Header = ({
 						{buttonText}
 					</Button>
 				</div>
-			) : page == "analytics" || page == "create" || phnxButton ? (
+			) : page === "analytics" || page === "create" || page === "confirm-purchase" || phnxButton ? (
 				<BuyPhnxButton />
 			) : null}
 			<DialogueBox open={open} handleClose={handleClose} maxWidth="xs">
