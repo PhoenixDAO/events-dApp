@@ -491,9 +491,9 @@ const EventCard = (props, context) => {
 								{/* {event_data.location} */}
 								{!eventType
 									? `Location`
-									: !eventType === "physical"
-									? `Online`
-									: eventLocation}
+									: eventType === "physical"
+									? eventLocation
+									: `Online`}
 							</Typography>
 
 							{/* For my events page */}

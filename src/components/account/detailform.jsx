@@ -21,7 +21,7 @@ const DetailForm = (props) => {
 	const [avatarNumber, setAvatarNumber] = useState(0);
 	const [ipfsImage, setIpfsImage] = useState("");
 	useEffect(() => {
-		console.log("this.props.userDetails", props.userDetails);
+		// console.log("this.props.userDetails", props.userDetails);
 		provideImage();
 	}, [props.userDetails]);
 	const imageData = (index) => {
