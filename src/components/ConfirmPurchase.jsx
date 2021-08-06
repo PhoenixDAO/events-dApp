@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import {
@@ -23,7 +23,8 @@ import {
 } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import Header from "./common/Header";
-
+import { generateBuyerArr } from "../utils/graphApis";
+import Web3 from "web3";
 const useStyles = makeStyles((theme) => ({
 	imageContainer: {
 		textAlign: "center",
@@ -48,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "16px",
 		background: "#413AE2",
 		fontFamily: "'Aeonik', sans-serif",
+		"& :focus": {
+			outline: "none"
+		}
 	},
 	title: {
 		color: "#413AE2",
@@ -56,11 +60,55 @@ const useStyles = makeStyles((theme) => ({
 	text: {
 		fontFamily: "'Aeonik', sans-serif",
 	},
+	message: {
+		fontFamily: "Aeonik",
+		color: "green",
+		marginTop: "10px",
+	},
+	message2: {
+		fontFamily: "Aeonik",
+		color: "red",
+		marginTop: "10px",
+	},
+	textDiv: {
+		height: "20px"
+	}
 }));
 
 const ConfirmPurchase = () => {
-    const classes = useStyles();
-    const { handleSubmit, control, register } = useForm();
+	const classes = useStyles();
+	const { handleSubmit, control, register } = useForm();
+	const [eventId, setEventId] = useState();
+	const [address, setAddress] = useState("");
+	const [text, setText] = useState("");
+	const [errorAddress, setErrorAddress] = useState(false);
+
+	const checkTickets = async () => {
+		const buyers = await generateBuyerArr(eventId);
+		const isaddress = Web3.utils.isAddress(address);
+		if (!isaddress) {
+			setErrorAddress(true);
+		}
+		else{
+		const isowner = buyers.find(element => {
+			console.log("element", element.address == address
+			);
+			return element.address == address
+		});
+
+		if (isowner) {
+			setText(<p className={classes.message}>
+				This address has a ticket to the event		</p>)
+		}
+		else {
+			setText(<p className={classes.message2}>
+				This address has no ticket to the event.		</p>)
+		}
+	}
+
+	};
+
+
 
 	return (
 		<div>
@@ -92,25 +140,28 @@ const ConfirmPurchase = () => {
 							fieldState: { error },
 						}) => (
 							<TextField
-								id="event-name"
+								id="event-id"
 								fullWidth
+								type="number"
 								variant="outlined"
-								value={value}
-								onChange={onChange}
+								value={eventId}
 								error={!!error}
 								helperText={error ? error.message : null}
+								onChange={(e) => {
+									onChange(e);
+									setText("")
+									setEventId(e.target.value)
+								}}
+							// inputProps={{ pattern: "[0-9]{1,15}" }}
+
 							/>
 						)}
 						rules={{
-							required: "Please enter event name.",
-							minLength: {
-								value: 3,
-								message:
-									"Event name should contain at least 3 characters.",
-							},
+							required: "Please enter event Id.",
+
 							maxLength: {
 								value: 300,
-								message: "Event name too long.",
+								message: "Event Id too long.",
 							},
 						}}
 					/>
@@ -131,25 +182,33 @@ const ConfirmPurchase = () => {
 								fullWidth
 								variant="outlined"
 								value={value}
-								onChange={onChange}
-								error={!!error}
-								helperText={error ? error.message : null}
+								onChange={(e) => {
+									onChange(e);
+									setText("");
+									setAddress(e.target.value)
+								}}
+
+								error={errorAddress}
+								helperText={errorAddress ? "Invalid account address" : null}
 							/>
 						)}
 						rules={{
-							required: "Please enter event organizer name.",
+							required: "Please enter account address.",
 							minLength: {
 								value: 3,
 								message:
-									"Event organizer name should contain at least 3 characters.",
+									"Invalid Address",
 							},
 							maxLength: {
-								value: 300,
-								message: "Event organizer name too long.",
+								value: 42,
+								message: "Invalid address",
 							},
+							
 						}}
 					/>
-					<br />
+					<div className={classes.textDiv}>
+						{text}
+					</div>
 					<br />
 					<Button
 						color="primary"
@@ -157,6 +216,7 @@ const ConfirmPurchase = () => {
 						fullWidth
 						type="submit"
 						className={classes.confirmBtn}
+						onClick={handleSubmit(checkTickets)}
 					>
 						Confirm Purchase
 					</Button>

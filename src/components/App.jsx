@@ -106,8 +106,8 @@ class App extends Component {
 	async initializeContract() {
 		try {
 			const web3 = new Web3(
-				// new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
-				window.ethereum
+				new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+				// window.ethereum
 			);
 			const openEvents = await new web3.eth.Contract(
 				Open_events_ABI,
@@ -361,7 +361,7 @@ class App extends Component {
 	allowance = async () => {
 		if (this.state.account) {
 			let a = await this.state.phnxContract.methods
-				.allowance(this.state.account, this.state.eventsContract.address)
+				.allowance(this.state.account,Open_events_Address )
 				.call();
 			return a;
 		}

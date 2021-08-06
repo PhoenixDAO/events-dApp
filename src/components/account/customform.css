@@ -33,13 +33,13 @@ input[type="file"] {
 }
 
 .custom-img-hldr {
-	border: 1px solid #ccc;
+	border: 1px solid #D8D8D8;
 	border-radius: 50%;
 	height: 100px;
 	width: 100px;
 	text-align: center;
 	display: block;
-	padding: 6px 12px;
+	/* padding: 6px 12px; */
 	margin: 0 auto;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -58,10 +58,11 @@ input[type="file"] {
 }
 
 .custom-img{
-	height: 70px;
-    width: 70px;
+	height: 100px;
+    width: 100px;
     display: flex;
-    justify-content: space-around;
     align-items: center;
-    margin: 5px auto;
+	border-radius:50%;
+	border: 1px solid #D8D8D8;
+
 }
