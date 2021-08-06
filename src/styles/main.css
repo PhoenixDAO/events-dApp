@@ -381,7 +381,7 @@ input[type="number"] {
 	/*  margin-right: -1px; */
 	z-index: 999;
 	display: flex;
-	/* justify-content: space-between; */
+	justify-content: space-between;
 	border-bottom: 1px solid #e4e4e7;
 	padding-bottom: 10px;
 	position: sticky;
@@ -397,9 +397,9 @@ input[type="number"] {
 }
 
 @media screen and (min-width: 1200px) {
-	.header3 > div {
+	/* .header3 > div {
 		flex: 1 1 auto;
-	}
+	} */
 }
 
 @media screen and (max-width: 900px) {
@@ -408,7 +408,6 @@ input[type="number"] {
 		/* width: 102% !important; */
 	}
 }
-
 
 @media screen and (max-width: 370px) {
 	.header3 {
@@ -1540,6 +1539,9 @@ body,
 	left: 39px;
 	width: 260px;
 	transition-duration: 0.5s;
+	-moz-box-shadow: -3px 0 5px 0 #555;
+	-webkit-box-shadow: -3px 0 5px 0 #555;
+	box-shadow: -3px 0 5px 0 #555;
 }
 
 @media (max-width: 650px) {
@@ -2853,8 +2855,8 @@ canvas#doughnut {
 
 .wallets-heading {
 	margin-left: 10px;
-    color: #000000;
-    font-weight: 550;
+	color: #000000;
+	font-weight: 550;
 }
 
 .wallet-main-hldr {

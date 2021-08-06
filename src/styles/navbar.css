@@ -57,6 +57,7 @@
     vertical-align: top;
     background-color: #FCFCFD;
     margin: 0;
+	border: 1px solid #CECED3;
 }
 
 
@@ -169,4 +170,8 @@
 	margin-right: 0px !important;
 	width: 32px !important;
 	margin-left: -6px;
+}
+
+.sidebar-closed .makeStyles-textField-12 {
+	left: 0;
 }
