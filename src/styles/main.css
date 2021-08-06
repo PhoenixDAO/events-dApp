@@ -2846,6 +2846,8 @@ canvas#doughnut {
 
 .wallets-heading {
 	margin-left: 10px;
+    color: #000000;
+    font-weight: 550;
 }
 
 .wallet-main-hldr {
@@ -2864,6 +2866,7 @@ canvas#doughnut {
 	align-items: center;
 	margin-top: 15px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+	padding-bottom: 15px;
 }
 
 .wallets-first {
@@ -2888,12 +2891,11 @@ canvas#doughnut {
 
 .wallets-name {
 	color: #000000;
-	font-weight: bold;
 	font-size: 0.9rem;
 }
 
 .wallets-name-hldr {
-	margin-left: 10px;
+	margin-left: 20px;
 }
 
 .coming-hldr {
@@ -2916,6 +2918,7 @@ canvas#doughnut {
 .wallets-footer {
 	text-align: center;
 	font-size: 0.7rem;
+	color: #000000;
 }
 
 h2.main-title {

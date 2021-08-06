@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import roundlogo from "../Images/roundlogo.svg";
+import Snackbar from "@material-ui/core/Snackbar";
 import Web3 from "web3";
 
 const Wallet = () => {
+	const [error, setError] = useState("");
+	const [open, setOpen] = useState(false);
+	const handleClose = () => {
+		setOpen(false);
+	};
 	const openMetaMask = async () => {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			let web3 = new Web3(window.ethereum);
@@ -10,12 +16,20 @@ const Wallet = () => {
 				const a = await window.ethereum.enable();
 			} catch (e) {
 				if ((e.code = -32002)) {
+					setError(
+						"Connection request already pending. Please check MetaMask !"
+					);
+					setOpen(true);
 					console.log(
 						"Connection request already pending. Please check MetaMask !"
 					);
 				}
 			}
 		} else {
+			setError(
+				"MetaMask is not installed. Please install MetaMask to continue !"
+			);
+			setOpen(true);
 			console.log(
 				"MetaMask is not installed. Please install MetaMask to continue !"
 			);
@@ -99,6 +113,14 @@ const Wallet = () => {
 					<span style={{ color: "#413AE2" }}>Terms of service</span>{" "}
 				</p>
 			</div>
+			<Snackbar
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+				open={open}
+				onClose={handleClose}
+				message={error}
+				autoHideDuration={3000}
+				key={"bottom" + "center"}
+			/>
 		</div>
 	);
 };
