@@ -40,8 +40,8 @@ class Sidebar extends Component {
 	// }
 
 	componentDidUpdate(prevProps) {
-		console.log("this.props.userDetails", this.props.userDetails);
-		console.log("prevProps.userDetails", prevProps.userDetails);
+		// console.log("this.props.userDetails", this.props.userDetails);
+		// console.log("prevProps.userDetails", prevProps.userDetails);
 		if (
 			JSON.stringify(this.props.userDetails) !==
 			JSON.stringify(prevProps.userDetails)

@@ -27,7 +27,7 @@ import TopicsLandingPage from "./TopicsLandingPage";
 import LocationLandingPage from "./LocationLandingPage";
 import LocationsLandingPage from "./LocationsLandingPage";
 import Calendars from "./Calendars";
-import WrapperTopicsLandingPage from './WrapperTopicsLandingPage'
+import WrapperTopicsLandingPage from "./WrapperTopicsLandingPage";
 import ConfirmPurchase from "./ConfirmPurchase";
 import Token from "./Token";
 // import Dashboard from "./Dashboard";
@@ -71,7 +71,7 @@ class App extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) { }
+		} catch (e) {}
 		super(props);
 		this.state = {
 			sent_tx: [],
@@ -93,7 +93,7 @@ class App extends Component {
 			openSnackbarForPendingRequest: false,
 			disabledStatus: false,
 			eventsContract: {},
-			userDetails: {}
+			userDetails: {},
 		};
 		this.myRef = React.createRef();
 
@@ -200,7 +200,7 @@ class App extends Component {
 					new Web3.providers.HttpProvider(INFURA_URL)
 				);
 			}
-			window.ethereum.on("connect", function (accounts) { });
+			window.ethereum.on("connect", function (accounts) {});
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
 				window.location.reload();
@@ -210,7 +210,6 @@ class App extends Component {
 				window.location.reload();
 			});
 			const accounts = await web3.eth.getAccounts();
-
 
 			this.setState({ account: accounts[0] });
 			// console.log("getUserDetail account[0]",accounts[0],"getUserDetail networkId",GLOBAL_NETWORK_ID)
@@ -361,7 +360,7 @@ class App extends Component {
 	allowance = async () => {
 		if (this.state.account) {
 			let a = await this.state.phnxContract.methods
-				.allowance(this.state.account,Open_events_Address )
+				.allowance(this.state.account, Open_events_Address)
 				.call();
 			return a;
 		}
@@ -562,10 +561,10 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-												.returnValues
+													.returnValues
 											: txreceipt.events
-												.NewAndUpdatedEvent
-												.returnValues
+													.NewAndUpdatedEvent
+													.returnValues
 									}
 									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
@@ -697,7 +696,7 @@ class App extends Component {
 
 		//condition when drizzle is not initialized
 		if (!this.props.drizzleStatus.initialized) {
-			console.log("I am in this condition")
+			console.log("I am in this condition");
 
 			body = (
 				<div>
@@ -1229,7 +1228,11 @@ class App extends Component {
 						)}
 					/>
 					{/* <Route path="*" exact component={EmptyState} /> */}
-					<Route path="/confirm-purchase" exact component={ConfirmPurchase} />
+					<Route
+						path="/confirm-purchase"
+						exact
+						component={ConfirmPurchase}
+					/>
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>
 			);
