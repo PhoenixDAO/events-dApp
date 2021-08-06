@@ -261,39 +261,39 @@ class FindEvents extends Component {
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
 
-		await axios({
-			url: graphURL,
-			method: "post",
-			data: {
-				query: `
-				  {
-					eventsRemoveds {
-					  id
-					  eventId
-					}
-				  }
-				  `,
-			},
-		})
-			.then((graphDeletedEvents) => {
-				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
-
-				if (
-					!graphDeletedEvents.data ||
-					!graphDeletedEvents.data.data == "undefined"
-				) {
-					this.setState({ Deleted_Events: [] });
-				} else {
-					this.setState({
-						Deleted_Events:
-							graphDeletedEvents.data.data.eventsRemoveds,
-					});
-				}
-			})
-			.catch((err) => {
-				console.error(err);
-				this.setState({ Deleted_Events: [] });
-			});
+		// await axios({
+		// 	url: graphURL,
+		// 	method: "post",
+		// 	data: {
+		// 		query: `
+		// 		  {
+		// 			eventsRemoveds {
+		// 			  id
+		// 			  eventId
+		// 			}
+		// 		  }
+		// 		  `,
+		// 	},
+		// })
+		// 	.then((graphDeletedEvents) => {
+		// 		// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+		// 		if (
+		// 			!graphDeletedEvents.data ||
+		// 			!graphDeletedEvents.data.data == "undefined"
+		// 		) {
+		// 			this.setState({ Deleted_Events: [] });
+		// 		} else {
+		// 			console.log("Deleted_Events", graphDeletedEvents.data);
+		// 			this.setState({
+		// 				Deleted_Events:
+		// 					graphDeletedEvents.data.data.eventsRemoveds,
+		// 			});
+		// 		}
+		// 	})
+		// 	.catch((err) => {
+		// 		console.error(err);
+		// 		this.setState({ Deleted_Events: [] });
+		// 	});
 
 		await axios({
 			url: graphURL,
@@ -409,12 +409,9 @@ class FindEvents extends Component {
 	onTabChange = (event, newValue) => {
 		this.setState({ selectedTab: newValue });
 		let query;
-
 		if (newValue === "allevents") {
-		} else if (newValue === "neartoyou") {
-			console.log(newValue);
 			query = `
-			{
+			{	
 			  events(orderBy:eventId orderDirection:asc) {
 				  id
 				  eventId
@@ -439,22 +436,206 @@ class FindEvents extends Component {
 			  }
 			}
 			`;
+			this.loadBlockchain(query);
+		} else if (newValue === "neartoyou") {
+			//to discuss with Hugbo Clement
+			console.log(newValue);
 		} else if (newValue === "today") {
 			console.log(newValue);
+			var todaydate = new Date();
+			todaydate.setDate(todaydate.getDate() + 1);
+			todaydate = parseInt(
+				(new Date(todaydate).getTime() / 1000).toFixed(0)
+			);
+			console.log(todaydate);
+			query = `
+			{
+			  events(where: {time_lte: ${todaydate} } orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  duration
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		} else if (newValue === "thisweek") {
 			console.log(newValue);
+			var thisWeekdate = new Date();
+			thisWeekdate.setDate(thisWeekdate.getDate() + 7);
+			thisWeekdate = parseInt(
+				(new Date(thisWeekdate).getTime() / 1000).toFixed(0)
+			);
+			console.log(thisWeekdate);
+			query = `
+				{
+				  events(where: {time_lte: ${thisWeekdate} } orderBy:eventId orderDirection:asc) {
+					  id
+					  eventId
+					  owner
+					  name
+					  topic
+					  location
+					  ipfsHash
+					  tktLimited
+					  tktTotalQuantity
+					  tktTotalQuantitySold
+					  oneTimeBuy
+					  token
+					  time
+					  duration
+					  catTktQuantity
+					  catTktQuantitySold	
+					  categories
+					  prices
+					  eventRevenueInDollar
+					  eventRevenueInPhnx
+				  }
+				}
+				`;
+			this.loadBlockchain(query);
 		} else if (newValue === "thismonth") {
 			console.log(newValue);
+			var thisMonthdate = new Date();
+			thisMonthdate.setDate(thisMonthdate.getDate() + 30);
+			thisMonthdate = parseInt(
+				(new Date(thisMonthdate).getTime() / 1000).toFixed(0)
+			);
+			console.log(thisMonthdate);
+			query = `
+			{
+			  events(where: {time_lte: ${thisMonthdate} } orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  duration
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		} else if (newValue === "paidevents") {
 			console.log(newValue);
+			query = `
+			{	
+			  events(where: {token: true} orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  duration
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		} else if (newValue === "freeevents") {
 			console.log(newValue);
+			query = `
+			{	
+			  events(where: {token: false} orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  duration
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		} else if (newValue === "onlineevents") {
 			console.log(newValue);
 		} else if (newValue === "physicalevents") {
 			console.log(newValue);
 		} else {
 			console.log(newValue);
+			query = `
+			{	
+			  events(orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  duration
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		}
 	};
 
