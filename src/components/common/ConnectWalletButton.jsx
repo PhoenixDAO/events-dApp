@@ -6,6 +6,10 @@ import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
 	button: {
+		"@media screen and (max-width: 1200px) and (min-width: 900px)": {
+			width: "30%",
+			height: "45px"
+		},
 		margin: theme.spacing(1),
 		fontFamily: "'Aeonik', sans-serif",
 		background: "#413AE2",
