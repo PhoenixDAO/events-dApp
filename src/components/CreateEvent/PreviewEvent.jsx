@@ -230,7 +230,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 								>
 									{eventName ? eventName : `Event Title`}
 								</Typography>
-								<Typography
+								{/* <Typography
 									className={classes.price}
 									variant="body1"
 									component="h2"
@@ -248,6 +248,53 @@ export default function PreviewEvent({ fields, activeStep }) {
 												: "0"}
 										</p>
 									</div>
+								</Typography> */}
+								<Typography
+									className={classes.price}
+									variant="body1"
+									component="h2"
+								>
+									{!token ? (
+										"Free"
+									) : ticketCategories.length === 1 ? (
+										<div>
+											<p
+												style={{
+													fontFamily:
+														'"Aeonik", sans-serif',
+												}}
+											>
+												{ticketCategories[0].phnxPrice}{" "}
+												PHNX
+											</p>
+											<p className={classes.starting}>
+												{" "}
+												$
+												{
+													ticketCategories[0]
+														.dollarPrice
+												}
+											</p>
+										</div>
+									) : (
+										<div>
+											<p className={classes.starting}>
+												Starting from
+											</p>
+											<p>
+												{ticketCategories[0].phnxPrice}{" "}
+												PHNX
+											</p>
+											<p className={classes.starting}>
+												{" "}
+												$
+												{
+													ticketCategories[0]
+														.dollarPrice
+												}
+											</p>
+										</div>
+									)}
 								</Typography>
 							</div>
 
@@ -298,9 +345,9 @@ export default function PreviewEvent({ fields, activeStep }) {
 								<span>&nbsp;</span>
 								{!eventType
 									? `Location`
-									: !eventType === "physical"
-									? `Online`
-									: eventLocation}
+									: eventType === "physical"
+									? eventLocation
+									: `Online`}
 							</Typography>
 
 							<Typography

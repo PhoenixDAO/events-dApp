@@ -90,7 +90,7 @@ const useStyles = (theme) => ({
 		"@media (min-width: 1024px)": {
 			maxWidth: "20% !important",
 			flex: "0 0 20% !important",
-			marginLeft: "5%"
+			marginLeft: "5%",
 		},
 		minWidth: 120,
 		background: "#fff",
@@ -188,7 +188,7 @@ class FindEvents extends Component {
 					  oneTimeBuy
 					  token
 					  time
-					  duration
+					  onsite
 					  catTktQuantity
 					  catTktQuantitySold	
 					  categories
@@ -215,7 +215,7 @@ class FindEvents extends Component {
 					  oneTimeBuy
 					  token
 					  time
-					  duration
+					  onsite
 					  catTktQuantity
 					  catTktQuantitySold	
 					  categories
@@ -303,14 +303,14 @@ class FindEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				// console.log(
-				// 	"GraphQL query response",
-				// 	Date.now(),
-				// 	graphEvents.data.data.events
-				// );
+				console.log(
+					"GraphQL query response",
+					Date.now(),
+					graphEvents.data.data.events
+				);
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
-					// console.log("GraphQL query -- graphEvents undefined")
+					console.log("GraphQL query -- graphEvents undefined");
 					this.setState({
 						Events_Blockchain: [],
 						// active_length: 0,
@@ -426,7 +426,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -464,7 +464,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -499,7 +499,7 @@ class FindEvents extends Component {
 					  oneTimeBuy
 					  token
 					  time
-					  duration
+					  onsite
 					  catTktQuantity
 					  catTktQuantitySold	
 					  categories
@@ -534,7 +534,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -563,7 +563,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -592,7 +592,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -605,8 +605,62 @@ class FindEvents extends Component {
 			this.loadBlockchain(query);
 		} else if (newValue === "onlineevents") {
 			console.log(newValue);
+			query = `
+			{	
+			  events(where: {onsite: false} orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  onsite
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		} else if (newValue === "physicalevents") {
 			console.log(newValue);
+			query = `
+			{	
+			  events(where: {onsite: true} orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  onsite
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		} else {
 			console.log(newValue);
 			query = `
@@ -625,7 +679,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -674,7 +728,11 @@ class FindEvents extends Component {
 			!this.state.loading
 		) {
 			body = (
-				<EmptyState text="No events found 🤔.Be the first;" btnText="Try creating one" url="/createevent" />
+				<EmptyState
+					text="No events found 🤔.Be the first;"
+					btnText="Try creating one"
+					url="/createevent"
+				/>
 			);
 		} else {
 			let currentPage = Number(this.props.match.params.page);
@@ -1037,9 +1095,7 @@ class FindEvents extends Component {
 
 					<div>
 						<div className="row row_mobile dashboard-dropdown-row">
-							<h2
-								className="col-lg-9 col-md-8 col-sm-7 main-title"
-							>
+							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 								{this.state.category === "allevents"
 									? `All Events`
 									: `Trending Events`}
@@ -1183,7 +1239,7 @@ class FindEvents extends Component {
 			  oneTimeBuy
 			  token
 			  time
-			  duration
+			  onsite
 			  catTktQuantity
 			  catTktQuantitySold	
 			  categories

@@ -161,8 +161,8 @@ class Sidebar extends Component {
 
 	provideImage = () => {
 		if (Object.keys(this.props.userDetails).length > 0) {
-			console.log("userdetailsss", this.props.userDetails);
-			console.log("", this.props.userDetails);
+			// console.log("userdetailsss", this.props.userDetails);
+			// console.log("", this.props.userDetails);
 			const avatarCustom =
 				this.props.userDetails.result.result.avatarCustom;
 			const avatarId = this.props.userDetails.result.result.avatarNumber;
@@ -225,10 +225,10 @@ class Sidebar extends Component {
 								src={makeBlockie(this.props.account)}
 								alt={this.props.account}
 							/> */}
-							{console.log(
+							{/* {console.log(
 								"this.props.userDetails",
 								this.props.userDetails
-							)}
+							)} */}
 							{/* {this.provideImage(this.props.userDetails)} */}
 							{/* <img src="./images/metamask.svg" className="bird" /> */}
 							{this.renderImage()}

@@ -61,6 +61,11 @@ import { withRouter } from "react-router-dom";
 import SocialMedia from "../common/SocialMedia";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import AccessTime from "@material-ui/icons/AccessTime";
+import StopIcon from "@material-ui/icons/Stop";
+import checkedIcon from "../Images/checked.png";
+import uncheckedIcon from "../Images/unchecked.png";
+import { CodeSharp } from "@material-ui/icons";
+
 var badWords = require("bad-words");
 
 const ColorlibConnector = withStyles({
@@ -238,6 +243,30 @@ const useStyles = makeStyles((theme) => ({
 	menuPaper: {
 		maxHeight: "200px",
 	},
+	ticketNameCat: {
+		fontSize: 20,
+		fontWeight: 400,
+		color: "#1E1E22",
+		fontFamily: "'Aeonik', sans-serif",
+	},
+	ticketAvailabilityCat: {
+		fontSize: 14,
+		fontWeight: 400,
+		color: "#73727D",
+		fontFamily: "'Aeonik', sans-serif",
+	},
+	dollarPriceCat: {
+		fontSize: 20,
+		fontWeight: 700,
+		color: "#413AE2",
+		fontFamily: "'Aeonik', sans-serif",
+	},
+	phnxPriceCat: {
+		fontSize: 14,
+		fontWeight: 500,
+		color: "#4E4E55",
+		fontFamily: "'Aeonik', sans-serif",
+	},
 }));
 
 const MyStepper = ({
@@ -294,6 +323,10 @@ const MyStepper = ({
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState({});
 	const [phnxValue, setPhnxValue] = useState(0);
 	const [isCopied, setIsCopied] = useState(false);
+	const [ticketPrice, setTicketPrice] = useState({
+		dollarPrice: 0,
+		phnxPrice: 0,
+	});
 
 	let URL = "https://phoenixdao-events-dapp.herokuapp.com";
 
@@ -448,6 +481,7 @@ const MyStepper = ({
 				let obj = {
 					ticketName: "free",
 					dollarPrice: "0",
+					phnxPrice: "0",
 					ticketAvailability:
 						fields.ticketAvailability === "unlimited"
 							? false
@@ -464,10 +498,12 @@ const MyStepper = ({
 				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				onStepsChange("inc");
 			} else if (fields.eventCategory === "single") {
+				console.log(fields);
 				let cat = [];
 				let obj = {
 					ticketName: "single",
 					dollarPrice: fields.dollarPrice,
+					phnxPrice: phnxValue,
 					ticketAvailability:
 						fields.ticketAvailability === "unlimited"
 							? false
@@ -480,15 +516,20 @@ const MyStepper = ({
 				cat.push(obj);
 				fields.categories = cat;
 				fields.token = true; // false means free
+				fields.phnxPrice = phnxValue;
 				onFieldsChange(fields);
 				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				onStepsChange("inc");
 			} else {
-				fields.categories = categories;
-				fields.token = true; // false means free
-				onFieldsChange(fields);
-				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-				onStepsChange("inc");
+				if (categories.length > 0) {
+					fields.categories = categories;
+					fields.token = true; // false means free
+					onFieldsChange(fields);
+					// setActiveStep((prevActiveStep) => prevActiveStep + 1);
+					onStepsChange("inc");
+				} else {
+					console.log("Please add ticket category");
+				}
 			}
 		} else if (activeStep === 3) {
 			// 4th stepper
@@ -525,6 +566,8 @@ const MyStepper = ({
 		let obj = {
 			ticketName: fields[`ticketName${ticketCategory}`],
 			dollarPrice: fields[`dollarPrice${ticketCategory}`],
+			// phnxPrice: fields[`phnxPrice${ticketCategory}`],
+			phnxPrice: phnxValue,
 			ticketAvailability:
 				fields[`ticketAvailability${ticketCategory}`] === "unlimited"
 					? false
@@ -542,6 +585,7 @@ const MyStepper = ({
 		console.log("arr", arr);
 		setCategories([...arr]);
 		setaddAnotherCat(!addAnotherCat);
+		setPhnxValue(0);
 	};
 
 	const handleAddAnotherCategory = () => {
@@ -570,6 +614,10 @@ const MyStepper = ({
 		let phoenixValue = value / usd;
 		phoenixValue = phoenixValue.toFixed(5);
 		setPhnxValue(phoenixValue);
+	};
+
+	const onTicketPriceChange = (evt) => {
+		console.log("evt", evt);
 	};
 
 	function getStepContent(stepIndex) {
@@ -686,14 +734,46 @@ const MyStepper = ({
 											<FormControlLabel
 												value="onedayevent"
 												control={
-													<Radio color="primary" />
+													<Radio
+														color="primary"
+														icon={
+															<img
+																src={
+																	uncheckedIcon
+																}
+															/>
+														}
+														checkedIcon={
+															<img
+																src={
+																	checkedIcon
+																}
+															/>
+														}
+													/>
 												}
 												label="One day Event"
 											/>
 											<FormControlLabel
 												value="morethanaday"
 												control={
-													<Radio color="primary" />
+													<Radio
+														color="primary"
+														icon={
+															<img
+																src={
+																	uncheckedIcon
+																}
+															/>
+														}
+														checkedIcon={
+															<img
+																src={
+																	checkedIcon
+																}
+															/>
+														}
+													/>
 												}
 												label="More than a day"
 											/>
@@ -860,7 +940,6 @@ const MyStepper = ({
 															required={false}
 															margin="normal"
 															id="end-time-picker"
-															// label="END TIME"
 															placeholder="00:00 AM"
 															KeyboardButtonProps={{
 																"aria-label":
@@ -874,16 +953,17 @@ const MyStepper = ({
 															value={value}
 															onChange={onChange}
 															error={!!error}
-															helperText={
-																error
-																	? error.message
-																	: null
-															}
+															helperText="Don’t have an end time? leave here blank"
+															// helperText={
+															// 	error
+															// 		? error.message
+															// 		: null
+															// }
 														/>
 													)}
 													rules={{
-														required:
-															"Please select event end time.",
+														required: false,
+														// "Please select event end time.",
 													}}
 												/>
 											</div>
@@ -1117,17 +1197,18 @@ const MyStepper = ({
 															autoOk={true}
 															value={value}
 															onChange={onChange}
+															helperText="Don’t have an end time? leave here blank"
 															error={!!error}
-															helperText={
-																error
-																	? error.message
-																	: null
-															}
+															// helperText={
+															// 	error
+															// 		? error.message
+															// 		: null
+															// }
 														/>
 													)}
 													rules={{
-														required:
-															"Please select event end time.",
+														required: false,
+														// "Please select event end time.",
 													}}
 												/>
 											</div>
@@ -1172,14 +1253,46 @@ const MyStepper = ({
 											<FormControlLabel
 												value="physical"
 												control={
-													<Radio color="primary" />
+													<Radio
+														color="primary"
+														icon={
+															<img
+																src={
+																	uncheckedIcon
+																}
+															/>
+														}
+														checkedIcon={
+															<img
+																src={
+																	checkedIcon
+																}
+															/>
+														}
+													/>
 												}
 												label="Physical Event"
 											/>
 											<FormControlLabel
 												value="online"
 												control={
-													<Radio color="primary" />
+													<Radio
+														color="primary"
+														icon={
+															<img
+																src={
+																	uncheckedIcon
+																}
+															/>
+														}
+														checkedIcon={
+															<img
+																src={
+																	checkedIcon
+																}
+															/>
+														}
+													/>
 												}
 												label="Online Event"
 											/>
@@ -1496,6 +1609,7 @@ const MyStepper = ({
 											onChange={(e) => {
 												onChange(e);
 												setCategory(e.target.value);
+												setPhnxValue(0);
 											}}
 											fullWidth
 											className={classes.dropdownMenu}
@@ -1552,14 +1666,46 @@ const MyStepper = ({
 														<FormControlLabel
 															value="unlimited"
 															control={
-																<Radio color="primary" />
+																<Radio
+																	color="primary"
+																	icon={
+																		<img
+																			src={
+																				uncheckedIcon
+																			}
+																		/>
+																	}
+																	checkedIcon={
+																		<img
+																			src={
+																				checkedIcon
+																			}
+																		/>
+																	}
+																/>
 															}
 															label="Unlimited Tickets"
 														/>
 														<FormControlLabel
 															value="limited"
 															control={
-																<Radio color="primary" />
+																<Radio
+																	color="primary"
+																	icon={
+																		<img
+																			src={
+																				uncheckedIcon
+																			}
+																		/>
+																	}
+																	checkedIcon={
+																		<img
+																			src={
+																				checkedIcon
+																			}
+																		/>
+																	}
+																/>
 															}
 															label="Limited Tickets"
 														/>
@@ -1653,6 +1799,7 @@ const MyStepper = ({
 															id="input-with-icon-textfield"
 															type="number"
 															variant="outlined"
+															name="dollarPrice"
 															InputProps={{
 																startAdornment:
 																	(
@@ -1685,11 +1832,10 @@ const MyStepper = ({
 												rules={{
 													required:
 														"Price in dollars.",
-													// min: {
-													// 	value: 1,
-													// 	message:
-													// 		"Price of ticket should be at least 1 dollar.",
-													// },
+													validate: {
+														value: (value) =>
+															value > "0",
+													},
 												}}
 											/>
 
@@ -1706,10 +1852,11 @@ const MyStepper = ({
 													className={classes.altImage}
 												/>
 											</div>
+
 											<Controller
 												name="phnxPrice"
 												control={control}
-												defaultValue=""
+												defaultValue={phnxValue}
 												render={({
 													field: { onChange, value },
 													fieldState: { error },
@@ -1728,6 +1875,7 @@ const MyStepper = ({
 																formatInputDollarPrice
 															}
 															type="number"
+															name="phnxPrice"
 															variant="outlined"
 															InputProps={{
 																startAdornment:
@@ -1792,14 +1940,46 @@ const MyStepper = ({
 														<FormControlLabel
 															value="unlimited"
 															control={
-																<Radio color="primary" />
+																<Radio
+																	color="primary"
+																	icon={
+																		<img
+																			src={
+																				uncheckedIcon
+																			}
+																		/>
+																	}
+																	checkedIcon={
+																		<img
+																			src={
+																				checkedIcon
+																			}
+																		/>
+																	}
+																/>
 															}
 															label="Unlimited Tickets"
 														/>
 														<FormControlLabel
 															value="limited"
 															control={
-																<Radio color="primary" />
+																<Radio
+																	color="primary"
+																	icon={
+																		<img
+																			src={
+																				uncheckedIcon
+																			}
+																		/>
+																	}
+																	checkedIcon={
+																		<img
+																			src={
+																				checkedIcon
+																			}
+																		/>
+																	}
+																/>
 															}
 															label="Limited Tickets"
 														/>
@@ -1890,34 +2070,50 @@ const MyStepper = ({
 																item
 																direction="column"
 															>
-																<h4>
+																<p
+																	className={
+																		classes.ticketNameCat
+																	}
+																>
 																	{
 																		cat.ticketName
 																	}
 																	{` Ticket`}
-																</h4>
-																<h6>
+																</p>
+																<p
+																	className={
+																		classes.ticketAvailabilityCat
+																	}
+																>
 																	{cat.ticketAvailability
 																		? cat.noOfTickets
 																		: `Unlimited  Tickets`}
-																</h6>
+																</p>
 															</Grid>
 															<Grid
 																item
 																direction="column"
 															>
-																<h2>
+																<p
+																	className={
+																		classes.dollarPriceCat
+																	}
+																>
 																	$
 																	{
 																		cat.dollarPrice
 																	}
-																</h2>
-																<h6>
+																</p>
+																<p
+																	className={
+																		classes.phnxPriceCat
+																	}
+																>
 																	{
 																		cat.phnxPrice
 																	}
 																	PHNX
-																</h6>
+																</p>
 															</Grid>
 														</Grid>
 														<Grid
@@ -2139,7 +2335,7 @@ const MyStepper = ({
 														<Controller
 															name={`phnxPrice${ticketCategory}`}
 															control={control}
-															defaultValue=""
+															defaultValue="0"
 															render={({
 																field: {
 																	onChange,
@@ -2256,14 +2452,46 @@ const MyStepper = ({
 																	<FormControlLabel
 																		value="unlimited"
 																		control={
-																			<Radio color="primary" />
+																			<Radio
+																				color="primary"
+																				icon={
+																					<img
+																						src={
+																							uncheckedIcon
+																						}
+																					/>
+																				}
+																				checkedIcon={
+																					<img
+																						src={
+																							checkedIcon
+																						}
+																					/>
+																				}
+																			/>
 																		}
 																		label="Unlimited Tickets"
 																	/>
 																	<FormControlLabel
 																		value="limited"
 																		control={
-																			<Radio color="primary" />
+																			<Radio
+																				color="primary"
+																				icon={
+																					<img
+																						src={
+																							uncheckedIcon
+																						}
+																					/>
+																				}
+																				checkedIcon={
+																					<img
+																						src={
+																							checkedIcon
+																						}
+																					/>
+																				}
+																			/>
 																		}
 																		label="Limited Tickets"
 																	/>
