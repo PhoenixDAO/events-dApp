@@ -585,91 +585,46 @@ const Analytics = (props, context) => {
 		if (events.length == 0) {
 			// console.log("MyEvents", events);
 			return (
-				<Grid className={classes.Top5Events}>
-					<Grid className={classes.row}>
-						<h2 className={classes.heading2}>Top 5 Events</h2>
-					</Grid>
-					<EmptyState
-						text="No events found 🤔."
-						btnText="Try creating one"
-						url="/createevent"
-					/>
-				</Grid>
+				<p
+					className="text-center not-found"
+					style={{ marginTop: "40px" }}
+				>
+					<span role="img" aria-label="thinking">
+						🤔
+					</span>
+					&nbsp;No events found.{" "}
+					<a href="/createevent">Try creating one.</a>
+				</p>
 			);
 		} else {
 			return events.map((event, index) => (
-				<Grid className={classes.Top5Events}>
-					<Grid className={classes.row}>
-						<h2 className={classes.heading2}>Top 5 Events</h2>
-						<FormControl
-							variant="outlined"
-							className={classes.select}
-						>
-							<Select
-								native
-								// value={state.age}
-								onChange={handleRevenue}
-								inputProps={{
-									name: "age",
-									id: "outlined-age-native-simple",
-								}}
-							>
-								<option value="eventRevenueInPhnx">PHNX</option>
-								<option value="eventRevenueInDollar">
-									Dollar
-								</option>
-							</Select>
-						</FormControl>
+				<Grid container className={classes.row3}>
+					<Grid lg={3} className={classes.ticketSold}>
+						<i
+							className="fa fa-ticket-alt"
+							title="My Tickets"
+							style={{ color: "#73727D", paddingRight: "10px" }}
+						></i>
+						{event.tktTotalQuantitySold}
 					</Grid>
-
-					<Grid className={classes.box} style={{ marginTop: "30px" }}>
-						<Grid className={classes.row2}>
-							<Grid className={classes.header} lg={3}>
-								No of Tickets
-							</Grid>
-							<Grid className={classes.header} lg={6}>
-								Event Name
-							</Grid>
-							<Grid
-								className={classes.header}
-								style={{ textAlign: "end" }}
-								lg={3}
-							>
-								Revenue
-							</Grid>
-						</Grid>
-						<Grid container className={classes.row3}>
-							<Grid lg={3} className={classes.ticketSold}>
-								<i
-									className="fa fa-ticket-alt"
-									title="My Tickets"
-									style={{
-										color: "#73727D",
-										paddingRight: "10px",
-									}}
-								></i>
-								{event.tktTotalQuantitySold}
-							</Grid>
-							<Grid lg={6} className={classes.city}>
-								{event.name}
-							</Grid>
-							<Grid
-								lg={3}
-								className={classes.ticketSold}
-								style={{ textAlign: "end" }}
-							>
-								{revenueCategory == "eventRevenueInPhnx"
-									? (
-										event.eventRevenueInPhnx /
-										1000000000000000000
-									).toFixed(3) + " PHNX"
-									: "$ " +
-									(
-										event.eventRevenueInDollar /
-										1000000000000000000
-									).toFixed(3)}
-							</Grid>
-						</Grid>
+					<Grid lg={6} className={classes.city}>
+						{event.name}
+					</Grid>
+					<Grid
+						lg={3}
+						className={classes.ticketSold}
+						style={{ textAlign: "end" }}
+					>
+						{revenueCategory == "eventRevenueInPhnx"
+							? (
+									event.eventRevenueInPhnx /
+									1000000000000000000
+							  ).toFixed(2) + " PHNX"
+							: "$ " +
+							  (
+									event.eventRevenueInDollar /
+									1000000000000000000
+							  ).toFixed(2)}
 					</Grid>
 				</Grid>
 			));
@@ -998,10 +953,51 @@ const Analytics = (props, context) => {
 							</Grid>
 						</Grid>
 					</Grid>
+					<Grid className={classes.Top5Events}>
+					<Grid className={classes.row}>
+						<h2 className={classes.heading2}>Top 5 Events</h2>
+						<FormControl
+							variant="outlined"
+							className={classes.select}
+						>
+							<Select
+								native
+								// value={state.age}
+								onChange={handleRevenue}
+								inputProps={{
+									name: "age",
+									id: "outlined-age-native-simple",
+								}}
+							>
+								<option value="eventRevenueInPhnx">PHNX</option>
+								<option value="eventRevenueInDollar">
+									Dollar
+								</option>
+							</Select>
+						</FormControl>
+					</Grid>
 
-					{/* Top 5 Events */}
-					<Top5Events />
+					<Grid className={classes.box} style={{ marginTop: "30px" }}>
+						<Grid className={classes.row2}>
+							<Grid className={classes.header} lg={3}>
+								No of Tickets
+							</Grid>
+							<Grid className={classes.header} lg={6}>
+								Event Name
+							</Grid>
+							<Grid
+								className={classes.header}
+								style={{ textAlign: "end" }}
+								lg={3}
+							>
+								Revenue
+							</Grid>
+						</Grid>
+						<Top5Events />
+					</Grid>
 				</Grid>
+			</Grid>
+				
 			) : (
 				<Grid container className={`${classes.emptyContent} ${classes.content}`}>
 					<Grid className={classes.EmptyRow}>
