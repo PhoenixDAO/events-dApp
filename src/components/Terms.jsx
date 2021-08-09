@@ -59,6 +59,9 @@ const useStyles = makeStyles((theme) => ({
 			marginLeft: "1%",
 		},
 	},
+	gridContainer: {
+		marginTop: "40px",
+	}
 }));
 const Terms = (props) => {
 	const classes = useStyles();
@@ -73,7 +76,7 @@ const Terms = (props) => {
 	return (
 		<div className={`event-page-wrapper ${classes.termsPage}`}>
 			<Header title="Terms and Conditions" phnxButton={true} />
-			<Grid container>
+			<Grid container className={classes.gridContainer}>
 				<Grid
 					item
 					className={`${classes.hideScroll} ${classes.hideScroll1}`}

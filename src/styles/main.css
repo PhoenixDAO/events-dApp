@@ -151,6 +151,10 @@ body {
 	font-weight: 300;
 }
 
+button:focus {
+	outline: none !important;
+}
+
 .MuiIconButton-root:focus {
 	outline: none;
 }
@@ -2981,4 +2985,21 @@ h2.main-title {
 .fc-scrollgrid .fc-event-title,
 .fc-scrollgrid .fc-event-time {
 	font-size: 13px !important;
+}
+
+.sticky-nav-travel img {
+    width: 100%;
+}
+
+.sticky-nav-travel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: .5s;
+}
+
+.sidebar-closed .sticky-nav-travel {
+    left: 13%;
+    transition: .5s;
 }

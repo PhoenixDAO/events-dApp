@@ -48,7 +48,10 @@
 }
 
 #sidebar-wrapper.my-sidebar .user-status .user-status-icon > a {
-	 width: 100%;
+    width: 100%;
+    border: 1px solid #CECED3;
+    border-radius: 100%;
+    padding: 5px;
 }
 
 #sidebar-wrapper.my-sidebar .user-status .user-status-icon img {
@@ -57,7 +60,6 @@
     vertical-align: top;
     background-color: #FCFCFD;
     margin: 0;
-	border: 1px solid #CECED3;
 }
 
 
