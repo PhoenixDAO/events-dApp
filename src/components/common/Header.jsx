@@ -55,6 +55,9 @@ const Header = ({
 	const handleClose = () => {
 		setOpen(false);
 	};
+
+	let connect = searchBar && Object.keys(accounts).length !== 0; 
+
 	return (
 		<Grid
 			className="header3"
@@ -84,7 +87,7 @@ const Header = ({
 				<BuyPhnxButton />
 			) : null} */}
 
-			{searchBar ? <SearchBar /> : null}
+			{searchBar ? <SearchBar connect={connect} /> : null}
 
 			{Object.keys(accounts).length === 0 ? (
 				<ConnectWalletButton onClick={handleOpen} />
