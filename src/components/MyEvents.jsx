@@ -171,7 +171,7 @@ class MyEvents extends Component {
                             tktLimited
                             oneTimeBuy
                             time
-                            duration
+                            onsite
                             tktTotalQuantity
                             tktTotalQuantitySold
                             catTktQuantity
@@ -250,7 +250,7 @@ class MyEvents extends Component {
 							tktLimited
 							oneTimeBuy
 							time
-							duration
+							onsite
 							tktTotalQuantity
 							tktTotalQuantitySold
 							catTktQuantity

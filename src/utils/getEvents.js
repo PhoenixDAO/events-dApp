@@ -85,7 +85,7 @@ export const getEvents = (props, context) => {
 							tktLimited
 							oneTimeBuy
 							time
-							duration
+							onsite
 							tktTotalQuantity
 							tktTotalQuantitySold
 							catTktQuantity

@@ -64,6 +64,7 @@ import AccessTime from "@material-ui/icons/AccessTime";
 import StopIcon from "@material-ui/icons/Stop";
 import checkedIcon from "../Images/checked.png";
 import uncheckedIcon from "../Images/unchecked.png";
+import { CodeSharp } from "@material-ui/icons";
 
 var badWords = require("bad-words");
 
@@ -242,6 +243,30 @@ const useStyles = makeStyles((theme) => ({
 	menuPaper: {
 		maxHeight: "200px",
 	},
+	ticketNameCat: {
+		fontSize: 20,
+		fontWeight: 400,
+		color: "#1E1E22",
+		fontFamily: "'Aeonik', sans-serif",
+	},
+	ticketAvailabilityCat: {
+		fontSize: 14,
+		fontWeight: 400,
+		color: "#73727D",
+		fontFamily: "'Aeonik', sans-serif",
+	},
+	dollarPriceCat: {
+		fontSize: 20,
+		fontWeight: 700,
+		color: "#413AE2",
+		fontFamily: "'Aeonik', sans-serif",
+	},
+	phnxPriceCat: {
+		fontSize: 14,
+		fontWeight: 500,
+		color: "#4E4E55",
+		fontFamily: "'Aeonik', sans-serif",
+	},
 }));
 
 const MyStepper = ({
@@ -298,6 +323,10 @@ const MyStepper = ({
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState({});
 	const [phnxValue, setPhnxValue] = useState(0);
 	const [isCopied, setIsCopied] = useState(false);
+	const [ticketPrice, setTicketPrice] = useState({
+		dollarPrice: 0,
+		phnxPrice: 0,
+	});
 
 	let URL = "https://phoenixdao-events-dapp.herokuapp.com";
 
@@ -474,7 +503,7 @@ const MyStepper = ({
 				let obj = {
 					ticketName: "single",
 					dollarPrice: fields.dollarPrice,
-					phnxPrice: fields.phnxPrice,
+					phnxPrice: phnxValue,
 					ticketAvailability:
 						fields.ticketAvailability === "unlimited"
 							? false
@@ -487,15 +516,20 @@ const MyStepper = ({
 				cat.push(obj);
 				fields.categories = cat;
 				fields.token = true; // false means free
+				fields.phnxPrice = phnxValue;
 				onFieldsChange(fields);
 				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				onStepsChange("inc");
 			} else {
-				fields.categories = categories;
-				fields.token = true; // false means free
-				onFieldsChange(fields);
-				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-				onStepsChange("inc");
+				if (categories.length > 0) {
+					fields.categories = categories;
+					fields.token = true; // false means free
+					onFieldsChange(fields);
+					// setActiveStep((prevActiveStep) => prevActiveStep + 1);
+					onStepsChange("inc");
+				} else {
+					console.log("Please add ticket category");
+				}
 			}
 		} else if (activeStep === 3) {
 			// 4th stepper
@@ -532,7 +566,8 @@ const MyStepper = ({
 		let obj = {
 			ticketName: fields[`ticketName${ticketCategory}`],
 			dollarPrice: fields[`dollarPrice${ticketCategory}`],
-			phnxPrice: fields[`phnxPrice${ticketCategory}`],
+			// phnxPrice: fields[`phnxPrice${ticketCategory}`],
+			phnxPrice: phnxValue,
 			ticketAvailability:
 				fields[`ticketAvailability${ticketCategory}`] === "unlimited"
 					? false
@@ -550,6 +585,7 @@ const MyStepper = ({
 		console.log("arr", arr);
 		setCategories([...arr]);
 		setaddAnotherCat(!addAnotherCat);
+		setPhnxValue(0);
 	};
 
 	const handleAddAnotherCategory = () => {
@@ -578,6 +614,10 @@ const MyStepper = ({
 		let phoenixValue = value / usd;
 		phoenixValue = phoenixValue.toFixed(5);
 		setPhnxValue(phoenixValue);
+	};
+
+	const onTicketPriceChange = (evt) => {
+		console.log("evt", evt);
 	};
 
 	function getStepContent(stepIndex) {
@@ -1569,6 +1609,7 @@ const MyStepper = ({
 											onChange={(e) => {
 												onChange(e);
 												setCategory(e.target.value);
+												setPhnxValue(0);
 											}}
 											fullWidth
 											className={classes.dropdownMenu}
@@ -1758,6 +1799,7 @@ const MyStepper = ({
 															id="input-with-icon-textfield"
 															type="number"
 															variant="outlined"
+															name="dollarPrice"
 															InputProps={{
 																startAdornment:
 																	(
@@ -1790,11 +1832,10 @@ const MyStepper = ({
 												rules={{
 													required:
 														"Price in dollars.",
-													// min: {
-													// 	value: 1,
-													// 	message:
-													// 		"Price of ticket should be at least 1 dollar.",
-													// },
+													validate: {
+														value: (value) =>
+															value > "0",
+													},
 												}}
 											/>
 
@@ -1811,10 +1852,11 @@ const MyStepper = ({
 													className={classes.altImage}
 												/>
 											</div>
+
 											<Controller
 												name="phnxPrice"
 												control={control}
-												defaultValue="0"
+												defaultValue={phnxValue}
 												render={({
 													field: { onChange, value },
 													fieldState: { error },
@@ -1833,6 +1875,7 @@ const MyStepper = ({
 																formatInputDollarPrice
 															}
 															type="number"
+															name="phnxPrice"
 															variant="outlined"
 															InputProps={{
 																startAdornment:
@@ -1847,8 +1890,8 @@ const MyStepper = ({
 																		</InputAdornment>
 																	),
 															}}
-															value={value}
-															// value={phnxValue}
+															// value={value}
+															value={phnxValue}
 															onChange={onChange}
 															error={!!error}
 															helperText={
@@ -2027,34 +2070,50 @@ const MyStepper = ({
 																item
 																direction="column"
 															>
-																<h4>
+																<p
+																	className={
+																		classes.ticketNameCat
+																	}
+																>
 																	{
 																		cat.ticketName
 																	}
 																	{` Ticket`}
-																</h4>
-																<h6>
+																</p>
+																<p
+																	className={
+																		classes.ticketAvailabilityCat
+																	}
+																>
 																	{cat.ticketAvailability
 																		? cat.noOfTickets
 																		: `Unlimited  Tickets`}
-																</h6>
+																</p>
 															</Grid>
 															<Grid
 																item
 																direction="column"
 															>
-																<h2>
+																<p
+																	className={
+																		classes.dollarPriceCat
+																	}
+																>
 																	$
 																	{
 																		cat.dollarPrice
 																	}
-																</h2>
-																<h6>
+																</p>
+																<p
+																	className={
+																		classes.phnxPriceCat
+																	}
+																>
 																	{
 																		cat.phnxPrice
 																	}
 																	PHNX
-																</h6>
+																</p>
 															</Grid>
 														</Grid>
 														<Grid

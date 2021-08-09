@@ -100,7 +100,7 @@ const WrapperTopicsLandingPage = (props) => {
 						oneTimeBuy
 						token
 						time
-						duration
+						onsite
 						catTktQuantity
 						catTktQuantitySold	
 						categories
@@ -168,7 +168,7 @@ const WrapperTopicsLandingPage = (props) => {
 						oneTimeBuy
 						token
 						time
-						duration
+						onsite
 						catTktQuantity
 						catTktQuantitySold	
 						categories

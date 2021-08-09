@@ -392,7 +392,7 @@ export async function getPhoenixDAOMarketValue(price) {
 //                     tktLimited
 //                     oneTimeBuy
 //                     time
-//                     duration
+//                     onsite
 //                     tktTotalQuantity
 //                     tktTotalQuantitySold
 //                     catTktQuantity
