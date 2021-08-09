@@ -4,7 +4,6 @@ import {
 	getEventName,
 	getTimeData,
 	getTodayData,
-	getPhoenixDAOMarketValue,
 } from "../utils/graphApis";
 import Analytics from "./Analytics";
 import PropTypes from "prop-types";
@@ -21,7 +20,7 @@ const AnalyticsWrapper = (props) => {
 		loadApis();
 	}, []);
 	const loadApis = async () => {
-		const eventName = await getEventName(props.accounts);
+		const eventName = await getEventName("0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b");
 		setEventName(eventName);
 		if (eventName.length != 0) {
 			const tickets = await generateJSON(eventName[0].eventId);
@@ -33,7 +32,7 @@ const AnalyticsWrapper = (props) => {
 		setTicketBought(blockChainTickets.length);
 		// const timeData = await getTimeData(props.accounts);
         const todayData = await getTodayData(
-			props.accounts,
+			"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b",
 			Number(moment().unix() - 86400)
 		);
 		console.log("time stamp--- ", moment().unix());
@@ -41,7 +40,7 @@ const AnalyticsWrapper = (props) => {
 		setTodayGraphData(todayData);
         
 		const timeData = await getTimeData(
-			props.accounts
+			"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b"
 		);
 		console.log("timeData", timeData);
 		setGraphData(timeData);
