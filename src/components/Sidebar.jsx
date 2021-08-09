@@ -51,7 +51,7 @@ class Sidebar extends Component {
 	}
 
 	sidebarClick() {
-		this.toggleSidebarClass(true);
+		// this.toggleSidebarClass(true);
 		var isActive = this.context.router.route.location.pathname;
 		var activeClassName = "";
 		var linkLocation = this.props.to;
@@ -362,7 +362,7 @@ class Sidebar extends Component {
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
-											this.toggleSidebarClass(true);
+											this.sidebarClick(this);
 										}}
 									>
 										<i className="far fa-check-square fontAwesomeIcon"></i>{" "}
@@ -603,7 +603,7 @@ class Sidebar extends Component {
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
-											this.toggleSidebarClass(true);
+											this.sidebarClick(this);
 										}}
 									>
 										<TodayOutlined />{" "}
@@ -618,7 +618,7 @@ class Sidebar extends Component {
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
-											this.toggleSidebarClass(true);
+											this.sidebarClick(this);
 										}}
 									>
 										<i className="far fa-check-square fontAwesomeIcon"></i>

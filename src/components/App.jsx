@@ -106,8 +106,8 @@ class App extends Component {
 	async initializeContract() {
 		try {
 			const web3 = new Web3(
-				new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
-				// window.ethereum
+				// new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+				window.ethereum
 			);
 			const openEvents = await new web3.eth.Contract(
 				Open_events_ABI,
@@ -341,6 +341,7 @@ class App extends Component {
 					}
 				})
 				.on("error", (error) => {
+					console.log("error2",error);
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -418,6 +419,7 @@ class App extends Component {
 					}
 				})
 				.on("error", (error) => {
+					console.log("I am in error2",error);
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -500,6 +502,7 @@ class App extends Component {
 				// 	}
 				// })
 				.on("error", (error) => {
+					console.log("error",error);
 					if (error !== null) {
 						txerror = error;
 						toast(
