@@ -10,6 +10,7 @@ import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import { Grid } from "@material-ui/core";
 import SearchBar from './common/SearchBar';
 import  Header  from "./common/Header";
+import EmptyState from './EmptyState';
 
 class MyTickets extends Component {
 	constructor(props, context) {
@@ -72,10 +73,11 @@ class MyTickets extends Component {
 		}
 		else if (this.state.blockChainTickets.length === 0) {
 			body =
-				<div className="no-tickets text-center mt-5">
-					<h3>You have not purchased any tickets yet.</h3>
-					<button className="btn btn-drk read-more" onClick={() => { this.readMoreClick("/upcomingevents/1") }}>Find an Event</button>.
-				</div>
+				<EmptyState
+					text="You have not purchased any tickets yet 🤔"
+					btnText="Find an event"
+					url="/upcomingevents/1"
+				/>
 				;
 		} else {
 			// console.log('MyTickets blockChainTickets',this.state.blockChainTickets)
@@ -165,8 +167,11 @@ class MyTickets extends Component {
 		return (
 			<div ref={this.myRef}>
 				<div className="my-tickets-page">
-				<Header title="My Tickets" searchBar={true}/>
+					<Header title="My Tickets" searchBar={true} />
 					{body}
+				</div>
+				<div className="sticky-nav-travel">
+					<img src={"/images/travel.svg"} />
 				</div>
 			</div>
 		);

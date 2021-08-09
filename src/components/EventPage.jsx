@@ -178,6 +178,11 @@ const styles = (theme) => ({
 		marginRight: "7px",
 		marginTop: "-4px",
 	},
+	clockTime: {
+		"@media (min-width: 700px)": {
+			width: "55%	!important",
+		},
+	},
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -949,7 +954,7 @@ class EventPage extends Component {
 										className={classes.description}
 									>
 										<Grid container>{description}</Grid>
-										<Grid container>
+										<Grid container className={classes.clockTime}>
 											<Clock
 												deadline={date}
 												event_unix={event_data.time}

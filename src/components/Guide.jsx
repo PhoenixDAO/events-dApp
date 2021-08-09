@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 		overflow: "scroll",
 		padding: "20px",
 		background: "#fff",
-		marginTop: "15px"
+		marginTop: "15px",
 	},
 	videoResponsive: {
 		overflow: "hidden",
@@ -87,6 +87,9 @@ const useStyles = makeStyles((theme) => ({
 			marginLeft: "1%",
 		},
 	},
+	gridContainer: {
+		marginTop: "40px",
+	},
 }));
 const Terms = (props) => {
 	const classes = useStyles();
@@ -101,7 +104,7 @@ const Terms = (props) => {
 	return (
 		<div className="event-page-wrapper">
 			<Header title="How it Works" phnxButton={true} />
-			<Grid container>
+			<Grid container className={classes.gridContainer}>
 				<Grid
 					className={`${classes.hideScroll} ${classes.hideScroll1}`}
 					style={{ height: "88vh" }}
