@@ -424,13 +424,13 @@ class TopicsLandingPage extends Component {
 		});
 	}
 	async componentWillMount() {
-		// let eventCount = await this.props.eventsContract.methods
-		// 	.getEventsCount()
-		// 	.call();
-		// if (eventCount) {
-		// 	console.log("events count", eventCount);
-		// 	this.setState({ eventCount });
-		// }
+		let eventCount = await this.props.eventsContract.methods
+			.getEventsCount()
+			.call();
+		if (eventCount) {
+			console.log("events count", eventCount);
+			this.setState({ eventCount });
+		}
 	}
 }
 
