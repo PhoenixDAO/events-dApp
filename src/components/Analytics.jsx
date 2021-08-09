@@ -11,10 +11,10 @@ import { getEvents } from "../utils/getEvents";
 import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
 import EmptyState from "./EmptyState";
-import DateRangePicker from 'react-bootstrap-daterangepicker';
-import 'bootstrap/dist/css/bootstrap.css';
+import DateRangePicker from "react-bootstrap-daterangepicker";
+import "bootstrap/dist/css/bootstrap.css";
 // you will also need the css that comes with bootstrap-daterangepicker
-import 'bootstrap-daterangepicker/daterangepicker.css';
+import "bootstrap-daterangepicker/daterangepicker.css";
 import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 import axios from "axios";
 import {
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	emptyContent: {
-		padding: "0 !important"
+		padding: "0 !important",
 	},
 	EmptyRow: {
 		display: "flex",
@@ -299,14 +299,15 @@ const Analytics = (props, context) => {
 	const [labels, setLabels] = useState([]);
 	const [legend, setlegend] = useState("REVENUE ($) ");
 	const [timeLabel, settimeLabel] = useState("TIME");
-
+	const [startDate, setStartDate] = useState("");
+	const [endDate, setEndDate] = useState("");
 	useEffect(() => {
 		// getPhnxRevenue();
 		getViewsAndFavourites();
 		handleTimeStampChange();
 		console.log("recalled");
 		// loadApis();
-	}, [props.graphData]);
+	}, [props.graphData, startDate, endDate]);
 
 	useEffect(() => {
 		getDollarRevenue();
@@ -436,6 +437,12 @@ const Analytics = (props, context) => {
 		],
 	};
 
+	const handleEvent = (event, picker) => {
+		console.log("startdate", moment(picker.startDate._d).unix());
+		console.log("enddate", moment(picker.endDate._d).unix());
+		setStartDate(moment(picker.startDate._d).unix());
+		setEndDate(moment(picker.endDate._d).unix());
+	};
 	const getPhnxRevenue = () => {
 		let phxRevenue = [];
 		let phnxLabel = [];
@@ -660,6 +667,14 @@ const Analytics = (props, context) => {
 					);
 					graphForDays = props.todayGraphData;
 				}
+			} else if (timestamp === "custom") {
+				console.log("graphData", props.graphData);
+				graphForDays = props.graphData.filter(
+					(event) =>
+						startDate <= event.startTimeStamp &&
+						event.startTimeStamp <= endDate
+				);
+				console.log("graph for days for custom", graphForDays);
 			} else {
 				settimeLabel("DATE");
 				console.log("graphData", props.graphData);
@@ -740,7 +755,7 @@ const Analytics = (props, context) => {
 				setRevenueDifference(revenueDifference);
 				setTicketDifference(
 					graphForDays[lastIndex].soldTickets -
-					graphForDays[0].soldTickets
+						graphForDays[0].soldTickets
 				);
 			} else {
 				setDollarRevenue(0);
@@ -759,7 +774,7 @@ const Analytics = (props, context) => {
 	// const calculatePercentage =() =>{
 	//         let price = (((newNumber - orignalNumber) / orignalNumber) * 100);
 	// }
-	// const handleEvent = async (event) => {
+	// chandleEvent = async (event) => {
 	// 	const tickets = await generateJSON(Number(event.target.value));
 	// 	setTicketSales(tickets);
 	// };
@@ -787,6 +802,7 @@ const Analytics = (props, context) => {
 			);
 		}
 	};
+
 	return (
 		<div>
 			<Header title="Analytics" page="analytics" phnxButton="true" />
@@ -815,15 +831,26 @@ const Analytics = (props, context) => {
 								<option value="604800">Last 7 Days</option>
 								<option value="2419200">Last 28 Days</option>
 								<option value="7776000">Last 90 Days</option>
-
-
+								<option value="custom">Custom</option>
 							</Select>
+							{timeStamp === "custom" ? (
+								<DateRangePicker
+									initialSettings={{
+										startDate: "1/1/2014",
+										endDate: "3/1/2014",
+									}}
+									onShow={
+										timeStamp === "custom"
+											? (e, p) => console.log("event", e, "picker", p)
+											: null
+									}
+									onEvent={handleEvent}
+									style={{ display: "none" }}
+								>
+									{/* <div> custom</div> */}
+								</DateRangePicker>
+							) : null}
 						</FormControl>
-						{/* <DateRangePicker
-							initialSettings={{ startDate: '1/1/2014', endDate: '3/1/2014' }}
-						>
-							<div> custom</div>
-						</DateRangePicker> */}
 					</Grid>
 					<Grid container style={{ justifyContent: "space-evenly" }}>
 						<Card
@@ -999,7 +1026,10 @@ const Analytics = (props, context) => {
 			</Grid>
 				
 			) : (
-				<Grid container className={`${classes.emptyContent} ${classes.content}`}>
+				<Grid
+					container
+					className={`${classes.emptyContent} ${classes.content}`}
+				>
 					<Grid className={classes.EmptyRow}>
 						<EmptyState
 							text="No analytics to see"
