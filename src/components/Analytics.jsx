@@ -841,13 +841,19 @@ const Analytics = (props, context) => {
 									}}
 									onShow={
 										timeStamp === "custom"
-											? (e, p) => console.log("event", e, "picker", p)
+											? (e, p) =>
+													console.log(
+														"event",
+														e,
+														"picker",
+														p
+													)
 											: null
 									}
 									onEvent={handleEvent}
 									style={{ display: "none" }}
 								>
-									{/* <div> custom</div> */}
+									<div> custom</div>
 								</DateRangePicker>
 							) : null}
 						</FormControl>
@@ -981,50 +987,54 @@ const Analytics = (props, context) => {
 						</Grid>
 					</Grid>
 					<Grid className={classes.Top5Events}>
-					<Grid className={classes.row}>
-						<h2 className={classes.heading2}>Top 5 Events</h2>
-						<FormControl
-							variant="outlined"
-							className={classes.select}
-						>
-							<Select
-								native
-								// value={state.age}
-								onChange={handleRevenue}
-								inputProps={{
-									name: "age",
-									id: "outlined-age-native-simple",
-								}}
+						<Grid className={classes.row}>
+							<h2 className={classes.heading2}>Top 5 Events</h2>
+							<FormControl
+								variant="outlined"
+								className={classes.select}
 							>
-								<option value="eventRevenueInPhnx">PHNX</option>
-								<option value="eventRevenueInDollar">
-									Dollar
-								</option>
-							</Select>
-						</FormControl>
-					</Grid>
-
-					<Grid className={classes.box} style={{ marginTop: "30px" }}>
-						<Grid className={classes.row2}>
-							<Grid className={classes.header} lg={3}>
-								No of Tickets
-							</Grid>
-							<Grid className={classes.header} lg={6}>
-								Event Name
-							</Grid>
-							<Grid
-								className={classes.header}
-								style={{ textAlign: "end" }}
-								lg={3}
-							>
-								Revenue
-							</Grid>
+								<Select
+									native
+									// value={state.age}
+									onChange={handleRevenue}
+									inputProps={{
+										name: "age",
+										id: "outlined-age-native-simple",
+									}}
+								>
+									<option value="eventRevenueInPhnx">
+										PHNX
+									</option>
+									<option value="eventRevenueInDollar">
+										Dollar
+									</option>
+								</Select>
+							</FormControl>
 						</Grid>
-						<Top5Events />
+
+						<Grid
+							className={classes.box}
+							style={{ marginTop: "30px" }}
+						>
+							<Grid className={classes.row2}>
+								<Grid className={classes.header} lg={3}>
+									No of Tickets
+								</Grid>
+								<Grid className={classes.header} lg={6}>
+									Event Name
+								</Grid>
+								<Grid
+									className={classes.header}
+									style={{ textAlign: "end" }}
+									lg={3}
+								>
+									Revenue
+								</Grid>
+							</Grid>
+							<Top5Events />
+						</Grid>
 					</Grid>
 				</Grid>
-			</Grid>
-				
 			) : (
 				<Grid
 					container

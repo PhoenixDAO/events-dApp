@@ -236,7 +236,6 @@ class Sidebar extends Component {
 								style={{
 									marginLeft: "20px",
 									fontSize: "15px",
-									marginTop: "8px",
 									fontWeight: "bold",
 								}}
 							>

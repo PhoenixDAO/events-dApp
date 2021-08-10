@@ -29,6 +29,7 @@ import { toast } from "react-toastify";
 
 //eventCard
 import EventCard from "./common/EventCard";
+import SkeletonLayout from "./common/SkeletonLayout.jsx";
 
 var moment = require("moment");
 
@@ -575,8 +576,10 @@ class Event extends Component {
 				this.state.UserFavoriteEvents.indexOf(this.props.id) != -1;
 			body = (
 				<div>
-					{/* new card */}
-					<EventCard
+					{this.props.loading ? 
+					<SkeletonLayout/>
+				: 
+				<EventCard
 						event_data={event_data}
 						date={date}
 						image={image}
@@ -600,6 +603,9 @@ class Event extends Component {
 						eventDescription={this.state.eventDescription}
 						eventLocation={this.state.eventLocation}
 					/>
+				}
+					{/* new card */}
+					
 				</div>
 			);
 		}
