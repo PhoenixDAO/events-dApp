@@ -129,7 +129,7 @@ function a11yProps(index) {
 	};
 }
 
-class FindEvents extends Component {
+class FindEventsTest extends Component {
 	// _isMounted = false;
 
 	constructor(props, context) {
@@ -333,9 +333,7 @@ class FindEvents extends Component {
 						// active_length: newsort.length,
 						event_copy: newsort,
 					});
-					setTimeout(() => {
-						this.setState({ loading: false });
-					}, 3000);
+					this.setState({ loading: false });
 					// }
 				}
 			})
@@ -723,8 +721,21 @@ class FindEvents extends Component {
 		// 	this.state.active_length !== ""
 		// ) {
 		let count = this.state.Events_Blockchain.length;
-		
-		let currentPage = Number(this.props.match.params.page);
+		if (this.state.loading) {
+			body = <PhoenixDAOLoader />;
+		} else if (
+			this.state.Events_Blockchain.length === 0 &&
+			!this.state.loading
+		) {
+			body = (
+				<EmptyState
+					text="No events found 🤔.Be the first;"
+					btnText="Try creating one"
+					url="/createevent"
+				/>
+			);
+		} else {
+			let currentPage = Number(this.props.match.params.page);
 			let events_list = [];
 			let skip = false;
 			for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
@@ -771,7 +782,6 @@ class FindEvents extends Component {
 						id={events_list[i].eventId}
 						ipfs={events_list[i].ipfsHash}
 						eventData={events_list[i]}
-						loading = {this.state.loading}
 					/>
 				);
 			}
@@ -871,7 +881,7 @@ class FindEvents extends Component {
 					</nav>
 				);
 			}
-			if (updated_list.length == 0 && !this.state.loading) {
+			if (updated_list.length == 0) {
 				body = (
 					<EmptyState
 					text="No events found 🤔.Be the first;"
@@ -887,6 +897,7 @@ class FindEvents extends Component {
 					</div>
 				);
 			}
+		}
 		// }
 
 		return (
@@ -1250,7 +1261,7 @@ class FindEvents extends Component {
 	}
 }
 
-FindEvents.contextTypes = {
+FindEventsTest.contextTypes = {
 	drizzle: PropTypes.object,
 };
 
@@ -1261,5 +1272,5 @@ const mapStateToProps = (state) => {
 	};
 };
 
-const AppContainer = drizzleConnect(FindEvents, mapStateToProps);
+const AppContainer = drizzleConnect(FindEventsTest, mapStateToProps);
 export default withStyles(useStyles)(AppContainer);

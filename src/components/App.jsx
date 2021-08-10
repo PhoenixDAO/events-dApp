@@ -55,6 +55,8 @@ import Favorites from "./Favorite.jsx";
 import { getUserDetails } from "../config/serverAPIs";
 import AccountDetail from "./account/index";
 
+import SkeletonLayout from "./common/SkeletonLayout";
+
 let ethereum = window.ethereum;
 let web3 = window.web3;
 const items = ["slide1.png", "slide2.png", "slide3.png", "slide4.png"];
@@ -1235,6 +1237,11 @@ class App extends Component {
 						path="/confirm-purchase"
 						exact
 						component={ConfirmPurchase}
+					/>
+					<Route
+						path="/skull"
+						exact
+						component={SkeletonLayout}
 					/>
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>

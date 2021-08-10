@@ -1,5 +1,5 @@
 import "date-fns";
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import {
 	Stepper,
@@ -64,7 +64,7 @@ import AccessTime from "@material-ui/icons/AccessTime";
 import StopIcon from "@material-ui/icons/Stop";
 import checkedIcon from "../Images/checked.png";
 import uncheckedIcon from "../Images/unchecked.png";
-import { CodeSharp } from "@material-ui/icons";
+import { CodeSharp, CompassCalibrationOutlined } from "@material-ui/icons";
 
 var badWords = require("bad-words");
 
@@ -280,8 +280,12 @@ const MyStepper = ({
 	history,
 }) => {
 	const classes = useStyles();
-	const { handleSubmit, control, register } = useForm();
-
+	const {
+		handleSubmit,
+		control,
+		register,
+		setValue: setFormValue,
+	} = useForm();
 	// const [activeStep, setActiveStep] = useState(0);
 	const steps = ["", "", "", ""];
 	const [value, setValue] = useState("onedayevent");
@@ -320,13 +324,14 @@ const MyStepper = ({
 	const [categories, setCategories] = useState([]);
 	const [addAnotherCat, setaddAnotherCat] = useState(false);
 	const [ticketCategory, setTicketCategory] = useState(0);
+
+	useEffect(() => {
+		setTicketCategory(Math.floor(100000 + Math.random() * 900000));
+	}, []);
+
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState({});
 	const [phnxValue, setPhnxValue] = useState(0);
 	const [isCopied, setIsCopied] = useState(false);
-	const [ticketPrice, setTicketPrice] = useState({
-		dollarPrice: 0,
-		phnxPrice: 0,
-	});
 
 	let URL = "https://phoenixdao-events-dapp.herokuapp.com";
 
@@ -411,10 +416,6 @@ const MyStepper = ({
 		getPhoenixdaoMarket();
 	}, []);
 
-	// useEffect(() => {
-	// 	onStepsChange(activeStep);
-	// }, [activeStep]);
-
 	const getPhoenixdaoMarket = async () => {
 		fetch(
 			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
@@ -498,12 +499,12 @@ const MyStepper = ({
 				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				onStepsChange("inc");
 			} else if (fields.eventCategory === "single") {
-				console.log(fields);
+				console.log("single fields", fields);
 				let cat = [];
 				let obj = {
 					ticketName: "single",
 					dollarPrice: fields.dollarPrice,
-					phnxPrice: phnxValue,
+					phnxPrice: fields.phnxPrice,
 					ticketAvailability:
 						fields.ticketAvailability === "unlimited"
 							? false
@@ -516,7 +517,6 @@ const MyStepper = ({
 				cat.push(obj);
 				fields.categories = cat;
 				fields.token = true; // false means free
-				fields.phnxPrice = phnxValue;
 				onFieldsChange(fields);
 				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				onStepsChange("inc");
@@ -564,10 +564,10 @@ const MyStepper = ({
 		console.log("ticketCategory", ticketCategory);
 
 		let obj = {
+			id: ticketCategory,
 			ticketName: fields[`ticketName${ticketCategory}`],
 			dollarPrice: fields[`dollarPrice${ticketCategory}`],
-			// phnxPrice: fields[`phnxPrice${ticketCategory}`],
-			phnxPrice: phnxValue,
+			phnxPrice: fields[`phnxPrice${ticketCategory}`],
 			ticketAvailability:
 				fields[`ticketAvailability${ticketCategory}`] === "unlimited"
 					? false
@@ -578,46 +578,55 @@ const MyStepper = ({
 					: fields[`noOfTickets${ticketCategory}`],
 		};
 
-		let arr = categories;
-		// arr.splice(ticketCategory, 1, obj);
-
-		arr.push(obj);
-		console.log("arr", arr);
-		setCategories([...arr]);
+		// let arr = categories;
+		// arr.push(obj);
+		// console.log("arr", arr);
+		upsert(categories, obj);
+		// console.log("arr", arr);
+		// setCategories([...arr]);
 		setaddAnotherCat(!addAnotherCat);
-		setPhnxValue(0);
 	};
+
+	function upsert(array, item) {
+		const i = array.findIndex((_item) => _item.id === item.id);
+		if (i > -1) {
+			array[i] = item;
+			setCategories([...array]);
+		} else {
+			array.push(item);
+			setCategories([...array]);
+		}
+	}
 
 	const handleAddAnotherCategory = () => {
 		setaddAnotherCat(!addAnotherCat);
-		setTicketCategory(ticketCategory + 1);
-		// setTicketCategory(categories.length + 1);
+		// setTicketCategory(ticketCategory + 10);
+		setTicketCategory(Math.floor(100000 + Math.random() * 900000));
 	};
 
-	const handleDeleteTicketCategory = (index) => {
-		console.log("delete clicked");
+	const handleDeleteTicketCategory = (data, index, cat) => {
+		console.log("delete clicked", data, index, cat);
 		let arr = categories;
-		arr.splice(index, 1);
+		arr = arr.filter((obj) => obj.id !== cat.id);
+		// arr.splice(index, 1);
+		console.log(arr);
 		setCategories([...arr]);
 	};
 
-	const handleEditTicketCategory = (index) => {
-		console.log("edit index", index);
+	const handleEditTicketCategory = (data, index, cat) => {
+		setTicketCategory(Math.floor(100000 + Math.random() * 900000));
+		console.log("edit index", cat.id);
 		setaddAnotherCat(!addAnotherCat);
-		setTicketCategory(index);
+		setTicketCategory(cat.id);
 	};
 
-	const onPriceChanges = (e) => {
-		let value = parseFloat(e.target.value);
+	const convertDollarToPhnx = (d) => {
+		let value = parseFloat(d);
 		value = value > 0 ? value : 0;
 		let usd = PhoenixDAO_market.usd;
 		let phoenixValue = value / usd;
 		phoenixValue = phoenixValue.toFixed(5);
-		setPhnxValue(phoenixValue);
-	};
-
-	const onTicketPriceChange = (evt) => {
-		console.log("evt", evt);
+		return phoenixValue;
 	};
 
 	function getStepContent(stepIndex) {
@@ -1609,7 +1618,6 @@ const MyStepper = ({
 											onChange={(e) => {
 												onChange(e);
 												setCategory(e.target.value);
-												setPhnxValue(0);
 											}}
 											fullWidth
 											className={classes.dropdownMenu}
@@ -1777,12 +1785,17 @@ const MyStepper = ({
 												classes.ticketPriceContainer
 											}
 										>
+											{/* single_ticket_cateogry */}
 											<Controller
 												name="dollarPrice"
 												control={control}
 												defaultValue=""
 												render={({
-													field: { onChange, value },
+													field: {
+														onChange,
+														value,
+														name,
+													},
 													fieldState: { error },
 												}) => (
 													<span>
@@ -1799,7 +1812,7 @@ const MyStepper = ({
 															id="input-with-icon-textfield"
 															type="number"
 															variant="outlined"
-															name="dollarPrice"
+															name={name}
 															InputProps={{
 																startAdornment:
 																	(
@@ -1816,8 +1829,12 @@ const MyStepper = ({
 															value={value}
 															onChange={(e) => {
 																onChange(e);
-																onPriceChanges(
-																	e
+																setFormValue(
+																	"phnxPrice",
+																	convertDollarToPhnx(
+																		e.target
+																			.value
+																	)
 																);
 															}}
 															error={!!error}
@@ -1831,11 +1848,7 @@ const MyStepper = ({
 												)}
 												rules={{
 													required:
-														"Price in dollars.",
-													validate: {
-														value: (value) =>
-															value > "0",
-													},
+														"Enter price in dollars.",
 												}}
 											/>
 
@@ -1853,12 +1866,17 @@ const MyStepper = ({
 												/>
 											</div>
 
+											{/* single_ticket_cateogry */}
 											<Controller
 												name="phnxPrice"
 												control={control}
-												defaultValue={phnxValue}
+												defaultValue=""
 												render={({
-													field: { onChange, value },
+													field: {
+														onChange,
+														value,
+														name,
+													},
 													fieldState: { error },
 												}) => (
 													<span>
@@ -1875,7 +1893,7 @@ const MyStepper = ({
 																formatInputDollarPrice
 															}
 															type="number"
-															name="phnxPrice"
+															name={name}
 															variant="outlined"
 															InputProps={{
 																startAdornment:
@@ -1890,8 +1908,7 @@ const MyStepper = ({
 																		</InputAdornment>
 																	),
 															}}
-															// value={value}
-															value={phnxValue}
+															value={value}
 															onChange={onChange}
 															error={!!error}
 															helperText={
@@ -2129,11 +2146,16 @@ const MyStepper = ({
 														>
 															<Grid item>
 																<Button
-																// onClick={() =>
-																// 	handleEditTicketCategory(
-																// 		index
-																// 	)
-																// }
+																	onClick={handleSubmit(
+																		(
+																			data
+																		) =>
+																			handleEditTicketCategory(
+																				data,
+																				index,
+																				cat
+																			)
+																	)}
 																>
 																	<img
 																		src={
@@ -2145,11 +2167,16 @@ const MyStepper = ({
 															</Grid>
 															<Grid item>
 																<Button
-																	onClick={() =>
-																		handleDeleteTicketCategory(
-																			index
-																		)
-																	}
+																	onClick={handleSubmit(
+																		(
+																			data
+																		) =>
+																			handleDeleteTicketCategory(
+																				data,
+																				index,
+																				cat
+																			)
+																	)}
 																>
 																	<img
 																		src={
@@ -2165,7 +2192,7 @@ const MyStepper = ({
 												</div>
 											);
 										})}
-
+										{/* for adding new category */}
 										{!addAnotherCat ? (
 											<div>
 												<form
@@ -2250,6 +2277,7 @@ const MyStepper = ({
 																field: {
 																	onChange,
 																	value,
+																	name,
 																},
 																fieldState: {
 																	error,
@@ -2271,6 +2299,9 @@ const MyStepper = ({
 																		}
 																		type="number"
 																		variant="outlined"
+																		name={
+																			name
+																		}
 																		InputProps={{
 																			startAdornment:
 																				(
@@ -2293,8 +2324,13 @@ const MyStepper = ({
 																			onChange(
 																				e
 																			);
-																			onPriceChanges(
-																				e
+																			setFormValue(
+																				`phnxPrice${ticketCategory}`,
+																				convertDollarToPhnx(
+																					e
+																						.target
+																						.value
+																				)
 																			);
 																		}}
 																		error={
@@ -2310,7 +2346,7 @@ const MyStepper = ({
 															)}
 															rules={{
 																required:
-																	"Price in dollars.",
+																	"Enter price in dollars.",
 															}}
 														/>
 
@@ -2335,11 +2371,12 @@ const MyStepper = ({
 														<Controller
 															name={`phnxPrice${ticketCategory}`}
 															control={control}
-															defaultValue="0"
+															defaultValue=""
 															render={({
 																field: {
 																	onChange,
 																	value,
+																	name,
 																},
 																fieldState: {
 																	error,
@@ -2361,6 +2398,9 @@ const MyStepper = ({
 																			formatInputDollarPrice
 																		}
 																		type="number"
+																		name={
+																			name
+																		}
 																		variant="outlined"
 																		InputProps={{
 																			startAdornment:
@@ -2375,11 +2415,8 @@ const MyStepper = ({
 																					</InputAdornment>
 																				),
 																		}}
-																		// value={
-																		// 	value
-																		// }
 																		value={
-																			phnxValue
+																			value
 																		}
 																		onChange={
 																			onChange
