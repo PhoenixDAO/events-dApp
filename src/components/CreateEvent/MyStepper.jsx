@@ -1488,6 +1488,7 @@ const MyStepper = ({
 										{index === 0 ? (
 											<p
 												style={{
+													color: "#73727D",
 													fontSize: 14,
 													fontWeight: 400,
 													fontFamily:
