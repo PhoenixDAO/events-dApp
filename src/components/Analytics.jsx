@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import { Grid, FormControl, Select } from "@material-ui/core";
+import { Grid, FormControl, Select ,Button} from "@material-ui/core";
 // import {Graph} from "../utils/graph";
 import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
@@ -15,13 +15,8 @@ import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap/dist/css/bootstrap.css";
 // you will also need the css that comes with bootstrap-daterangepicker
 import "bootstrap-daterangepicker/daterangepicker.css";
-import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
-import axios from "axios";
+import "../styles/customCalendar.css";
 import {
-	generateJSON,
-	getEventName,
-	getTimeData,
-	getTodayData,
 	getPhoenixDAOMarketValue,
 } from "../utils/graphApis";
 import Web3 from "web3";
@@ -195,6 +190,22 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: "600",
 		letterSpacing: "0.5px",
 		padding: "10px",
+	},
+	button: {
+		"@media screen and (max-width: 1200px) and (min-width: 900px)": {
+			width: "30%",
+			height: "45px"
+		},
+		margin: theme.spacing(1),
+		fontFamily: "'Aeonik', sans-serif",
+		background: "#413AE2",
+		color: "white",
+		textTransform: 'Capitalize',
+		// maxHeight: 54,
+		// maxWidth: 230,
+		"&:focus": {
+			outline: "none",
+		},
 	},
 }));
 
@@ -624,14 +635,14 @@ const Analytics = (props, context) => {
 					>
 						{revenueCategory == "eventRevenueInPhnx"
 							? (
-									event.eventRevenueInPhnx /
-									1000000000000000000
-							  ).toFixed(2) + " PHNX"
+								event.eventRevenueInPhnx /
+								1000000000000000000
+							).toFixed(2) + " PHNX"
 							: "$ " +
-							  (
-									event.eventRevenueInDollar /
-									1000000000000000000
-							  ).toFixed(2)}
+							(
+								event.eventRevenueInDollar /
+								1000000000000000000
+							).toFixed(2)}
 					</Grid>
 				</Grid>
 			));
@@ -649,6 +660,18 @@ const Analytics = (props, context) => {
 		} else {
 			timestamp = timeStamp;
 		}
+		// let element = document.getElementsByClassName("daterangepicker");
+
+		// 		if(timestamp == "custom")
+		// 		{
+		// 			element[0].setAttribute("style", "top: 272.6px; left: auto;right: 0px;display: block;");
+
+		// console.log("element",element[0]);
+		// 		}
+		// 		else{
+		// 			element[0].style.display="none";
+		// 		}
+
 		setTimeStamp(timestamp);
 		let today = Math.floor(Date.now() / 1000);
 		let elapsedTime = today - timestamp;
@@ -755,7 +778,7 @@ const Analytics = (props, context) => {
 				setRevenueDifference(revenueDifference);
 				setTicketDifference(
 					graphForDays[lastIndex].soldTickets -
-						graphForDays[0].soldTickets
+					graphForDays[0].soldTickets
 				);
 			} else {
 				setDollarRevenue(0);
@@ -811,6 +834,7 @@ const Analytics = (props, context) => {
 					<Grid className={classes.row}>
 						<h3 className={classes.heading}>Earnings</h3>
 
+<div>
 						<FormControl
 							variant="outlined"
 							className={classes.select}
@@ -831,32 +855,31 @@ const Analytics = (props, context) => {
 								<option value="604800">Last 7 Days</option>
 								<option value="2419200">Last 28 Days</option>
 								<option value="7776000">Last 90 Days</option>
-								<option value="custom">Custom</option>
 							</Select>
-							{timeStamp === "custom" ? (
-								<DateRangePicker
-									initialSettings={{
-										startDate: "1/1/2014",
-										endDate: "3/1/2014",
-									}}
-									onShow={
-										timeStamp === "custom"
-											? (e, p) =>
-													console.log(
-														"event",
-														e,
-														"picker",
-														p
-													)
-											: null
-									}
-									onEvent={handleEvent}
-									style={{ display: "none" }}
-								>
-									<div> custom</div>
-								</DateRangePicker>
-							) : null}
 						</FormControl>
+						<DateRangePicker
+								initialSettings={{
+									
+									showDropdowns: true
+								}}
+								onShow={
+									timeStamp === "custom"
+										? (e, p) => console.log("event", e, "picker", p)
+										: null
+								}
+								onEvent={handleEvent}
+								style={{ display: "none" }}
+							>
+								<Button
+									variant="contained"
+									color="primary"
+									size="large"
+									className={classes.button}
+								>
+									Custom
+								</Button>
+							</DateRangePicker>
+							</div>
 					</Grid>
 					<Grid container style={{ justifyContent: "space-evenly" }}>
 						<Card
@@ -1002,16 +1025,14 @@ const Analytics = (props, context) => {
 										id: "outlined-age-native-simple",
 									}}
 								>
-									<option value="eventRevenueInPhnx">
-										PHNX
-									</option>
+									<option value="eventRevenueInPhnx">PHNX</option>
 									<option value="eventRevenueInDollar">
 										Dollar
 									</option>
 								</Select>
 							</FormControl>
 						</Grid>
-
+						<Grid className={classes.box} style={{ marginTop: "30px" }}>
 						<Grid
 							className={classes.box}
 							style={{ marginTop: "30px" }}
