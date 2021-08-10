@@ -1753,7 +1753,7 @@ body,
 }
 
 .page-item.active .page-link {
-	background-color: #f2f2fd;
+	background-color: #f2f2fd !important;
 	border-color: #dee2e6 !important;
 	color: #413ae2 !important;
 	font-size: 21px;
