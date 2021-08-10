@@ -28,7 +28,8 @@ import Web3 from "web3";
 const useStyles = makeStyles((theme) => ({
 	wrapper: {
 		background: "#fff",
-		marginTop: "40px",
+		padding: "40px",
+		paddingBottom: "70px",
 	},
 	imageContainer: {
 		textAlign: "center",
@@ -79,6 +80,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	textDiv: {
 		height: "20px"
+	},
+	label: {
+		color: "#73727D",
 	}
 }));
 

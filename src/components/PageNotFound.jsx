@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
 	wrapper: {
 		background: "#fff",
-		marginTop: "40px",
+		paddingTop: "40px",
 	},
 	imageContainer: {
 		textAlign: "center",
