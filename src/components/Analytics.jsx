@@ -856,6 +856,8 @@ const Analytics = (props, context) => {
 								<option value="2419200">Last 28 Days</option>
 								<option value="7776000">Last 90 Days</option>
 							</Select>
+						
+
 						</FormControl>
 						<DateRangePicker
 								initialSettings={{
@@ -1032,11 +1034,8 @@ const Analytics = (props, context) => {
 								</Select>
 							</FormControl>
 						</Grid>
+
 						<Grid className={classes.box} style={{ marginTop: "30px" }}>
-						<Grid
-							className={classes.box}
-							style={{ marginTop: "30px" }}
-						>
 							<Grid className={classes.row2}>
 								<Grid className={classes.header} lg={3}>
 									No of Tickets
@@ -1056,6 +1055,7 @@ const Analytics = (props, context) => {
 						</Grid>
 					</Grid>
 				</Grid>
+
 			) : (
 				<Grid
 					container

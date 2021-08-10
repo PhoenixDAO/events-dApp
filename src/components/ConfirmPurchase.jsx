@@ -28,8 +28,9 @@ import Web3 from "web3";
 const useStyles = makeStyles((theme) => ({
 	wrapper: {
 		background: "#fff",
-		padding: "40px",
-		paddingBottom: "70px",
+		paddingBottom: "100px",
+		margin: "40px 0px",
+		borderRadius: "8px"
 	},
 	imageContainer: {
 		textAlign: "center",
@@ -47,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 		width: "45%",
 		margin: "0 auto",
 		"& .MuiOutlinedInput-input": {
-			padding: "12px",	
+			padding: "12px",
 		},
 	},
 	confirmBtn: {
@@ -100,22 +101,22 @@ const ConfirmPurchase = () => {
 		if (!isaddress) {
 			setErrorAddress(true);
 		}
-		else{
-		const isowner = buyers.find(element => {
-			console.log("element", element.address == address
-			);
-			return element.address == address
-		});
-
-		if (isowner) {
-			setText(<p className={classes.message}>
-				This address has a ticket to the event		</p>)
-		}
 		else {
-			setText(<p className={classes.message2}>
-				This address has no ticket to the event.		</p>)
+			const isowner = buyers.find(element => {
+				console.log("element", element.address == address
+				);
+				return element.address == address
+			});
+
+			if (isowner) {
+				setText(<p className={classes.message}>
+					This address has a ticket to the event		</p>)
+			}
+			else {
+				setText(<p className={classes.message2}>
+					This address has no ticket to the event.		</p>)
+			}
 		}
-	}
 
 	};
 
@@ -167,7 +168,7 @@ const ConfirmPurchase = () => {
 									setText("");
 									setEventId(e.target.value);
 								}}
-								// inputProps={{ pattern: "[0-9]{1,15}" }}
+							// inputProps={{ pattern: "[0-9]{1,15}" }}
 							/>
 						)}
 						rules={{
