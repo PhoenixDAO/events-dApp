@@ -1,0 +1,58 @@
+.monthselect,
+.yearselect {
+	border: 1px solid white;
+	font-size: 16px !important;
+	font-family: "Aeonik";
+}
+.yearselect option,
+.monthselect option {
+	font-size: 14px !important;
+	font-family: "AeonikReg";
+    padding:10px !important;
+}
+.yearselect {
+	margin-left: 11px !important;
+}
+.daterangepicker .drp-selected {
+	left: 21px;
+	position: absolute;
+	padding-top: 11px;
+}
+.daterangepicker td.in-range {
+	background-color: #f2f2fd;
+	color: #7047eb;
+}
+.daterangepicker td.active,
+.daterangepicker td.active:hover {
+	background-color: #413ae2;
+	color: white;
+}
+td {
+	font-family: "AeonikReg";
+}
+.applyBtn {
+	background-color: #413ae2;
+	font-family: "Aeonik";
+	padding: 7px 12px !important;
+	border-radius: 8px;
+}
+.cancelBtn {
+	background-color: #f8f7fa;
+	font-family: "AeonikReg";
+	font-weight: normal;
+	padding: 7px 12px !important;
+	border-radius: 8px;
+}
+.daterangepicker {
+	z-index: 10;
+	box-shadow: 0px 30px 84px rgba(19, 10, 46, 0.08),
+		0px 8px 32px rgba(19, 10, 46, 0.07), 0px 3px 14px rgba(19, 10, 46, 0.03),
+		0px 1px 3px rgba(19, 10, 46, 0.13);
+	border-radius: 10px;
+	border: 0px solid white;
+    right:35px;
+}
+.daterangepicker .calendar-table .next span,
+.daterangepicker .calendar-table .prev span {
+	padding: 2px;
+}

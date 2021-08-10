@@ -417,20 +417,24 @@ class TopicsLandingPage extends Component {
 			</React.Fragment>
 		);
 	}
-	componentDidMount() {
+async componentDidMount() {
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
 		});
-	}
-	async componentWillMount() {
-		let eventCount = await this.props.eventsContract.methods
+		if(this.props.eventsContract){
+			let eventCount = await this.props.eventsContract.methods
 			.getEventsCount()
 			.call();
 		if (eventCount) {
 			console.log("events count", eventCount);
 			this.setState({ eventCount });
 		}
+		}
+	}
+	async componentWillMount() {
+		
+	
 	}
 }
 
