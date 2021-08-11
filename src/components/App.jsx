@@ -721,6 +721,11 @@ class App extends Component {
 							)}
 						/>
 						<Route
+						path="/confirm-purchase"
+						exact
+						component={ConfirmPurchase}
+					/>
+						<Route
 							exact
 							path="/upcomingevents/:page"
 							render={(props) => (

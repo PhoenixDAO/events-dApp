@@ -370,7 +370,7 @@ class TopicsLandingPage extends Component {
 							<br />
 							<div>
 								<div className="row user-list mt-4">
-									{this.props.loading ?<div>loadingg</div> :
+									{this.props.loading ? <div>loadingg</div> :
 									this.props.eventObj &&
 									Object.keys(this.props.eventObj).length > 0 ?	
 									this.state.category === "all"
