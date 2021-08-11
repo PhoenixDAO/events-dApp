@@ -247,6 +247,7 @@ class EventPage extends Component {
 		this.inquire = this.inquire.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this);
 		this.goBack = this.goBack.bind(this); // i think you are missing this
+		console.log("purchased",this.props.purchased);
 	}
 
 	goBack() {
@@ -602,6 +603,7 @@ class EventPage extends Component {
 	};
 	handleClose2 = () => {
 		this.setState({ open2: false });
+		this.props.togglePurchase();
 	};
 	handleCategoryChange = (event) => {
 		this.setState({ selectedCategoryIndex: event.target.value });
@@ -683,14 +685,11 @@ class EventPage extends Component {
 	}
 
 	inquire = async () => {
-		console.log("in eventsPage", Open_events_Address);
 		let balance = await this.props.phnxContract.methods
 			.totalSupply()
 			.call();
-		console.log("balance in eventsPage", balance);
 
 		const geoFindUser = await this.geoFindMe();
-		console.log("geoFindUser", geoFindUser);
 
 		this.setState(
 			{
@@ -894,7 +893,7 @@ class EventPage extends Component {
 					body = (
 						<Grid>
 							<BuyTicket
-								open={this.state.open2}
+								open={this.state.open2 || this.props.purchased}
 								handleClose={this.handleClose2}
 								image={image}
 								eventTitle={event_data.name}
@@ -903,6 +902,7 @@ class EventPage extends Component {
 								price={priceGrid}
 								buy={this.inquire}
 								buttonText={buttonText}
+								purchased={this.props.purchased}
 							/>
 							<Header
 								disabled={
