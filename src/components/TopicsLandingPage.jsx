@@ -370,7 +370,8 @@ class TopicsLandingPage extends Component {
 							<br />
 							<div>
 								<div className="row user-list mt-4">
-									{this.props.eventObj &&
+									{this.props.loading ?<div>loadingg</div> :
+									this.props.eventObj &&
 									Object.keys(this.props.eventObj).length > 0 ?	
 									this.state.category === "all"
 										? Object.keys(this.props.eventObj).map((key) => {
@@ -422,20 +423,18 @@ async componentDidMount() {
 			top: 0,
 			behavior: "smooth",
 		});
-		if(this.props.eventsContract){
-			let eventCount = await this.props.eventsContract.methods
-			.getEventsCount()
-			.call();
-		if (eventCount) {
-			console.log("events count", eventCount);
-			this.setState({ eventCount });
-		}
-		}
+		// console.log("this.props",this.props.eventsContract.methods.getEventsCount());
+		// if(this.props.eventsContract){
+		// 	let eventCount = await this.props.eventsContract.methods
+		// 	.getEventsCount()
+		// 	.call();
+		// if (eventCount) {
+		// 	console.log("events count", eventCount);
+		// 	this.setState({ eventCount });
+		// }
+		// }	
 	}
-	async componentWillMount() {
-		
 	
-	}
 }
 
 // TopicsLandingPage.contextTypes = {

@@ -120,6 +120,7 @@ const Wallet = () => {
 				message={error}
 				autoHideDuration={3000}
 				key={"bottom" + "center"}
+				className="snackbar"
 			/>
 		</div>
 	);

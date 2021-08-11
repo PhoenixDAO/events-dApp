@@ -753,7 +753,7 @@ class App extends Component {
 							path="/topics"
 							//  component={TopicsLandingPage}
 							component={(props) => (
-								<TopicsLandingPage
+								<WrapperTopicsLandingPage
 									{...props}
 									eventsContract={this.state.eventsContract}
 								/>
@@ -851,7 +851,7 @@ class App extends Component {
 							path="/topics"
 							//  component={TopicsLandingPage}
 							component={(props) => (
-								<TopicsLandingPage
+								<WrapperTopicsLandingPage
 									{...props}
 									eventsContract={this.state.eventsContract}
 								/>
