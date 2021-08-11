@@ -96,6 +96,7 @@ class App extends Component {
 			disabledStatus: false,
 			eventsContract: {},
 			userDetails: {},
+			purchased:false
 		};
 		this.myRef = React.createRef();
 
@@ -104,6 +105,7 @@ class App extends Component {
 		this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
 		this.executeScroll = this.executeScroll.bind(this);
 		this.initializeContract = this.initializeContract.bind(this);
+		console.log("purchased",this.state.purchased);
 	}
 	async initializeContract() {
 		try {
@@ -416,7 +418,7 @@ class App extends Component {
 								}
 							);
 							this.afterApprove();
-							this.setState({ disabledStatus: false });
+							this.setState({ disabledStatus: false ,purchased:true });
 						}
 					}
 				})
@@ -474,7 +476,7 @@ class App extends Component {
 									pauseOnHover: true,
 								}
 							);
-							this.setState({ disabledStatus: false });
+							this.setState({ disabledStatus: false, purchased:true });
 							clearInterval(intervalVar);
 						}
 					}, 5000);
@@ -606,6 +608,9 @@ class App extends Component {
 	toggleDisabling = () => {
 		this.setState({ disabledStatus: !this.state.disabledStatus });
 	};
+	togglePurchase = () => {
+		this.setState({ purchased: false });
+	};
 	getPhoenixDAO = (getPhoenixDAO) => {
 		let txreceipt = "";
 		let txconfirmed = "";
@@ -721,6 +726,11 @@ class App extends Component {
 							)}
 						/>
 						<Route
+						path="/confirm-purchase"
+						exact
+						component={ConfirmPurchase}
+					/>
+						<Route
 							exact
 							path="/upcomingevents/:page"
 							render={(props) => (
@@ -745,6 +755,9 @@ class App extends Component {
 									toggleDisabling={this.toggleDisabling}
 									eventsContract={this.state.eventsContract}
 									phnxContract={this.state.phnxContract}
+									purchased={this.state.purchased}
+									togglePurchase={this.togglePurchase}
+
 								/>
 							)}
 						/>
@@ -753,7 +766,7 @@ class App extends Component {
 							path="/topics"
 							//  component={TopicsLandingPage}
 							component={(props) => (
-								<TopicsLandingPage
+								<WrapperTopicsLandingPage
 									{...props}
 									eventsContract={this.state.eventsContract}
 								/>
@@ -851,7 +864,7 @@ class App extends Component {
 							path="/topics"
 							//  component={TopicsLandingPage}
 							component={(props) => (
-								<TopicsLandingPage
+								<WrapperTopicsLandingPage
 									{...props}
 									eventsContract={this.state.eventsContract}
 								/>
@@ -1056,53 +1069,6 @@ class App extends Component {
 							/>
 						)}
 					/>
-
-					{/* 
-					<Route
-						exact
-						path="/pastevents/:page"
-						render={(props) => (
-							<PastEvents
-								{...props}
-								executeScroll={this.executeScroll}
-							/>
-						)}
-					/>
-				
-
-					
-					<Route
-						exact
-						path="/editevent"
-						render={(props) => (
-							<EditEvent
-								{...props}
-								executeScroll={this.executeScroll}
-								passtransaction={this.passtransaction}
-								createNewEvent={this.createNewEvent}
-								upload={this.state.upload}
-								disabledStatus={this.state.disabledStatus}
-								done={this.state.done}
-								toggleDisabling={this.toggleDisabling}
-								error={this.state.error}
-								account={this.state.account}
-							/>
-						)}
-					/>
-
-					
-					<Route
-						exact
-						path="/event-stat/:page/:id"
-						render={(props) => (
-							<MyEventStat
-								{...props}
-								inquire={this.inquireBuy}
-								disabledStatus={this.state.disabledStatus}
-								toggleDisabling={this.toggleDisabling}
-							/>
-						)}
-					/> */}
 					<Route
 						exact
 						path="/myevents/:page"
@@ -1126,6 +1092,9 @@ class App extends Component {
 								toggleDisabling={this.toggleDisabling}
 								eventsContract={this.state.eventsContract}
 								phnxContract={this.state.phnxContract}
+								purchased={this.state.purchased}
+								togglePurchase={this.togglePurchase}
+
 							/>
 						)}
 					/>

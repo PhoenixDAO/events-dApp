@@ -211,6 +211,7 @@ const WrapperTopicsLandingPage = (props) => {
 		<TopicsLandingPage
 			eventsContract={props.eventsContract}
 			eventObj={eventObj}
+			loading={loading}
 		/>
 	);
 };
