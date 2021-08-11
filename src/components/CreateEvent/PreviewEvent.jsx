@@ -28,6 +28,15 @@ import EventPreviewPage from "./EventPreviewPage";
 var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
+	main: {
+		display: "flex",
+		justifyContent: "flex-end",
+		marginRight: 3,
+		[theme.breakpoints.down("md")]: {
+			justifyContent: "center",
+			marginRight: 0,
+		},
+	},
 	root: {
 		maxWidth: 345,
 		"& .MuiCardContent-root": {
@@ -179,7 +188,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 
 	return (
 		<div>
-			<div style={{ display: "flex", justifyContent: "center" }}>
+			<div className={classes.main}>
 				<Card className={classes.root}>
 					<CardActionArea>
 						<CardContent>

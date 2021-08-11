@@ -77,7 +77,7 @@ class CreateEvent extends Component {
 				file_name: null,
 			},
 			fields: {},
-			activeStep: 0,
+			activeStep: 1,
 			activeFlamingStep: 0,
 			isEventCreated: false,
 		};
@@ -552,30 +552,6 @@ class CreateEvent extends Component {
 								activeStep={this.state.activeStep}
 							/>
 						</div>
-
-						{/* <Form
-							createEvent={this.createEvent}
-							account={this.props.account}
-							data={{
-								name: this.state.data.name,
-								description: this.state.data.description,
-								organizer: this.state.data.organizer,
-								location: this.state.data.location,
-								time: this.state.data.time,
-								price: this.state.data.price,
-								currency:
-									this.state.data.currency === "eth"
-										? false
-										: true,
-								limited: this.state.data.limited,
-								seats: this.state.data.seats,
-								ipfs: this.state.ipfs,
-								type: this.state.data.type,
-								fileImg: this.state.data.fileImg,
-								topic: this.state.data.topic,
-								file_name: this.state.data.file_name,
-							}}
-						/> */}
 					</div>
 				</React.Fragment>
 			);
@@ -604,57 +580,12 @@ class CreateEvent extends Component {
 							activeStep={this.state.activeStep}
 						/>
 					</div>
-
-					{/* <Form
-						data={{
-							name: this.state.data.name,
-							description: this.state.data.description,
-							organizer: this.state.data.organizer,
-							location: this.state.data.location,
-							time: this.state.data.time,
-							price: this.state.price,
-							currency:
-								this.state.data.currency === "eth"
-									? false
-									: true,
-							limited: this.state.data.limited,
-							seats: this.state.data.seats,
-							ipfs: this.state.ipfs,
-							type: this.state.data.type,
-							fileImg: this.state.data.fileImg,
-							topic: this.state.data.topic,
-							file_name: this.state.data.file_name,
-						}}
-						createEvent={this.createEvent}
-						account={this.props.account}
-					/> */}
 				</div>
 			);
 		}
 
 		return (
 			<div className="home-wrapper">
-				{/* <h2>
-					<i className="fa fa-edit"></i> Create Event
-				</h2> */}
-
-				{/* top sticky header */}
-				{/* <div className={classes.sticky}>
-					<div>
-						<br />
-						<br />
-						<div className={classes.main}>
-							<div>
-								<h2 className={classes.title}>Create Event</h2>
-							</div>
-							<div>
-								<BuyPhnxButton />
-							</div>
-						</div>
-						<Divider light />
-					</div>
-				</div> */}
-
 				<Header
 					title="Create Event"
 					page="createevent"
