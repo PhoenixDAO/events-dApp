@@ -309,13 +309,23 @@ class FindEvents extends Component {
 					graphEvents.data.data.events
 				);
 
-				if (!graphEvents.data || graphEvents.data.data == "undefined") {
+				if (
+					!graphEvents.data ||
+					graphEvents.data.data == "undefined" ||
+					graphEvents.data.data.events.length === 0) {
 					console.log("GraphQL query -- graphEvents undefined");
-					this.setState({
-						Events_Blockchain: [],
-						// active_length: 0,
-						event_copy: [],
-					});
+					// this.setState({
+					// 	Events_Blockchain: [],
+					// 	// active_length: 0,
+					// 	event_copy: [],
+					// });
+					setTimeout(() => {
+						this.setState({
+							loading: false,
+							Events_Blockchain: [],
+							event_copy: [],
+						});
+					}, 1000);
 				} else {
 					// if (this._isMounted) {
 					const dateTime = Date.now();
@@ -335,7 +345,7 @@ class FindEvents extends Component {
 					});
 					setTimeout(() => {
 						this.setState({ loading: false });
-					}, 3000);
+					}, 1000);
 					// }
 				}
 			})
@@ -707,6 +717,15 @@ class FindEvents extends Component {
 	// }
 
 	render() {
+		if (this.state.Events_Blockchain.length === 0 && !this.state.loading) {
+			body = (
+				<EmptyState
+					text="No events found 🤔.Be the first;"
+					btnText="Try creating one"
+					url="/createevent"
+				/>
+			);
+		} 
 		//when user is not connectd hide connect wallet button
 		// console.log("accounts---->", this.props.accounts);
 
