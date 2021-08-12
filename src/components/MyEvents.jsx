@@ -14,6 +14,7 @@ import EmptyState from "./EmptyState";
 
 import Event from "./Event";
 import axios from "axios";
+import { setTimeout } from "drizzle";
 function a11yProps(index) {
 	return {
 		id: `scrollable-auto-tab-${index}`,
@@ -185,7 +186,7 @@ class MyEvents extends Component {
           }`
 			}
 		}).then((graphEvents) => {
-			console.log("GraphQL query response in MyEvents Past Events", Date.now(), graphEvents.data.data)
+			console.log("GraphQL query response in MyEvents Upcoming Events", Date.now(), graphEvents.data.data)
 			if (!graphEvents.data || graphEvents.data.data === undefined) {
 				// console.log("GraphQL query -- graphEvents undefined")
 				this.setState({ loading: false, Topic_Events: [], active_length: 0 });
@@ -210,8 +211,9 @@ class MyEvents extends Component {
 							active_length: newsort.length,
 						});
 					}
-
-					this.setState({ loading: false });
+					setTimeout(() => {
+						this.setState({ loading: false });
+					},3000)
 				}
 
 			}
@@ -290,8 +292,13 @@ class MyEvents extends Component {
 							check: newsort,
 							active_length: newsort.length,
 						});
+						setTimeout(() => {
+							this.setState({ loading: false });
+						}, 3000);
 					}
-					this.setState({ loading: false });
+					setTimeout(() => {
+						this.setState({ loading: false });
+					}, 3000);
 				}
 
 			}
@@ -375,16 +382,17 @@ class MyEvents extends Component {
 	};
 	render() {
 		const { classes } = this.props;
-		let body = <PhoenixDAOLoader />;
+		let body;
 		// if (
 		// 	// typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
 		// 	// "undefined"
 		// 	this.state.active_length != ""
 		// ) {
 		let events = this.state.MyEvents.length;
-		if (this.state.loading) {
-			body = <PhoenixDAOLoader />;
-		} else if (events === 0) {
+		// if (this.state.loading) {
+		// 	body = <PhoenixDAOLoader />;
+		// }
+		if (events === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
 					text="No events found 🤔.Be the first;"
@@ -392,7 +400,7 @@ class MyEvents extends Component {
 					url="/createevent"
 				/>
 			);
-		} else {
+		} 
 			let count = this.state.MyEvents.length;
 			let currentPage = Number(this.props.match.params.page);
 			let events_list = [];
@@ -430,6 +438,7 @@ class MyEvents extends Component {
 						id={events_list[i].eventId}
 						ipfs={events_list[i].ipfsHash}
 						myEvents={true}
+						loading={this.state.loading}
 					/>
 				);
 			}
@@ -526,15 +535,13 @@ class MyEvents extends Component {
 					</nav>
 				);
 			}
-			if (updated_list.length === 0) {
+			if (updated_list.length === 0 && !this.state.loading) {
 				body = (
-					<p className="text-center not-found">
-						<span role="img" aria-label="thinking">
-							🤔
-						</span>
-						&nbsp;No events found.{" "}
-						<a href="/createevent">Try creating one.</a>
-					</p>
+					<EmptyState
+						text="No events found 🤔.Be the first;"
+						btnText="Try creating one"
+						url="/createevent"
+					/>
 				);
 			} else {
 				body = (
@@ -546,7 +553,6 @@ class MyEvents extends Component {
 					</div>
 				);
 			}
-		}
 		return (
 			<div className="event-page-wrapper" ref={this.myRef}>
 				<Header title="Created Events" page="myEvent" searchBar={true} />

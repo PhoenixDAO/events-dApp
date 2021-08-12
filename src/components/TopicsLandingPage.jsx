@@ -20,6 +20,8 @@ import SearchBar from "./common/SearchBar";
 import { Typography } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import SkeletonTopic from "./common/SkeletonTopic";
+import EmptyState from "./EmptyState";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -98,12 +100,11 @@ const useStyles = (theme) => ({
 			left: "0",
 		},
 	},
-	dropdownStyle: 
-    {
-      border: "1px solid black",
-      borderRadius: "5%",
-      backgroundColor:'black',
-    },
+	dropdownStyle: {
+		border: "1px solid black",
+		borderRadius: "5%",
+		backgroundColor: "black",
+	},
 });
 
 class TopicsLandingPage extends Component {
@@ -113,7 +114,6 @@ class TopicsLandingPage extends Component {
 		this.state = {
 			eventCount: 0,
 			category: "all",
-			loading: true,
 			Topic_Events: [],
 			topic_copy: [],
 			active_length: "",
@@ -181,7 +181,30 @@ class TopicsLandingPage extends Component {
 
 	render() {
 		const { classes } = this.props;
-		let body = <Loading />;
+		// let body = <Loading />;
+		let body;
+		if (this.props.eventObj) {
+			body = Object.keys(this.props.eventObj)
+				.filter((key) => this.props.eventObj[key].eventCount >= 7)
+				.map((key) => {
+					return (
+						<div
+							key={this.props.eventObj[key].topic}
+							className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
+						>
+							<TopicCard
+								image={
+									"images/topics/" +
+									this.props.eventObj[key].image
+								}
+								name={this.props.eventObj[key].name}
+								slug={this.props.eventObj[key].topic}
+								count={this.props.eventObj[key].eventCount}
+							/>
+						</div>
+					);
+				});
+		}
 
 		// if (
 		// 	// typeof this.props.contracts["DaoEvents"].getEventsCount[
@@ -354,7 +377,11 @@ class TopicsLandingPage extends Component {
 										native
 										value={this.state.category}
 										onChange={this.handleChangeCategory}
-										MenuProps={{ classes: { paper: classes.dropdownStyle } }}
+										MenuProps={{
+											classes: {
+												paper: classes.dropdownStyle,
+											},
+										}}
 									>
 										<option aria-label="None" value="all">
 											All Topics
@@ -370,46 +397,75 @@ class TopicsLandingPage extends Component {
 							<br />
 							<div>
 								<div className="row user-list mt-4">
-									{this.props.loading ? <div>loadingg</div> :
-									this.props.eventObj &&
-									Object.keys(this.props.eventObj).length > 0 ?	
-									this.state.category === "all"
-										? Object.keys(this.props.eventObj).map((key) => {
-											return (
-												<div
-													key={this.props.eventObj[key].topic}
-													className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
-												>
-													<TopicCard
-														image={"images/topics/" + this.props.eventObj[key].image}
-														name={this.props.eventObj[key].name}
-														slug={this.props.eventObj[key].topic}
-														count={this.props.eventObj[key].eventCount}
-													/>
-												</div>
-											);
-										})
-										: 
-									Object.keys(this.props.eventObj).map((key) => {
-											if(this.props.eventObj[key].eventCount >= 7){
-											return (
-												<div
-													key={this.props.eventObj[key].topic}
-													className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
-												>
-													<TopicCard
-														image={"images/topics/" + this.props.eventObj[key].image}
-														name={this.props.eventObj[key].name}
-														slug={this.props.eventObj[key].topic}
-														count={this.props.eventObj[key].eventCount}
-													/>
-												</div>
-											);
-											}
-										})
-										:
-										null
-										}
+									{Object.keys(this.props.eventObj).length ===
+										0 && !this.props.loading ? (
+										<EmptyState
+											text="No events found 🤔.Be the first;"
+											btnText="Try creating one"
+											url="/createevent"
+										/>
+									) : this.props.eventObj &&
+									  Object.keys(this.props.eventObj).length >
+											0 ? (
+										this.state.category === "all" ? (
+											Object.keys(
+												this.props.eventObj
+											).map((key) => {
+												return (
+													<div
+														key={
+															this.props.eventObj[
+																key
+															].topic
+														}
+														className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
+													>
+														{this.props.loading ? (
+															<SkeletonTopic />
+														) : (
+															<TopicCard
+																image={
+																	"images/topics/" +
+																	this.props
+																		.eventObj[
+																		key
+																	].image
+																}
+																name={
+																	this.props
+																		.eventObj[
+																		key
+																	].name
+																}
+																slug={
+																	this.props
+																		.eventObj[
+																		key
+																	].topic
+																}
+																count={
+																	this.props
+																		.eventObj[
+																		key
+																	].eventCount
+																}
+															/>
+														)}
+													</div>
+												);
+											})
+										) : body.length > 0 ? (
+											{ body }
+										) : (
+											<div style={{margin: "0 auto"}}>
+												<EmptyState
+													text="No events found 🤔.Be the first;"
+													btnText="Try creating one"
+													url="/createevent"
+												/>
+											</div>
+										)
+									) : null}
 								</div>
 							</div>
 						</div>
@@ -418,7 +474,7 @@ class TopicsLandingPage extends Component {
 			</React.Fragment>
 		);
 	}
-async componentDidMount() {
+	async componentDidMount() {
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
@@ -432,9 +488,8 @@ async componentDidMount() {
 		// 	console.log("events count", eventCount);
 		// 	this.setState({ eventCount });
 		// }
-		// }	
+		// }
 	}
-	
 }
 
 // TopicsLandingPage.contextTypes = {

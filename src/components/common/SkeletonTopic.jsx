@@ -15,12 +15,11 @@ import {
 
 const useStyles = makeStyles((theme) => ({
 	row1: {
-		display: "flex",
-		justifyContent: "space-between",
+		paddingBottom: "20px",
 	},
 }));
 
-const SkeletonTopic = (props) => {
+const SkeletonLayout = (props) => {
 	const classes = useStyles();
 
 	return (
@@ -39,35 +38,10 @@ const SkeletonTopic = (props) => {
 					</div>
 					<CardContent>
 						<div className={classes.row1}>
-							<Skeleton width="40%" />
-							<Skeleton width="10%" />
-						</div>
-						<div
-							style={{
-								float: "right",
-								clear: "both",
-								width: "20%",
-							}}
-						>
-							<Skeleton />
-						</div>
-						<div
-							style={{
-								float: "right",
-								clear: "both",
-								width: "10%",
-							}}
-						>
-							<Skeleton />
-						</div>
-						<div style={{ clear: "both" }}>
-							<Skeleton width="50%" />
-						</div>
-						<div>
-							<Skeleton width="50%" />
-						</div>
-						<div>
 							<Skeleton width="60%" />
+						</div>
+						<div>
+							<Skeleton width="30%" />
 						</div>
 					</CardContent>
 				</CardActionArea>
@@ -76,4 +50,4 @@ const SkeletonTopic = (props) => {
 	);
 };
 
-export default SkeletonTopic;
+export default SkeletonLayout;
