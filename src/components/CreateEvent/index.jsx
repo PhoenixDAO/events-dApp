@@ -77,7 +77,7 @@ class CreateEvent extends Component {
 				file_name: null,
 			},
 			fields: {},
-			activeStep: 1,
+			activeStep: 0,
 			activeFlamingStep: 0,
 			isEventCreated: false,
 		};
@@ -145,6 +145,9 @@ class CreateEvent extends Component {
 			image1,
 			image2,
 			eventDescription,
+			country,
+			state,
+			city,
 		} = this.state.fields;
 
 		// image0 = image0 ? URL.createObjectURL(image0) : "";
@@ -163,6 +166,11 @@ class CreateEvent extends Component {
 		let totalQuantity = 0;
 		let location = eventType === "physical" ? eventLocation : eventLink;
 		let onsite = eventType === "physical" ? true : false;
+
+		let countryName = eventType === "physical" ? country.name : "";
+		let stateName = eventType === "physical" ? state.name : "";
+		let cityName = eventType === "physical" ? city.name : "";
+
 		let time =
 			Date.parse(
 				eventTime === "onedayevent" ? eventDate : eventStartDate

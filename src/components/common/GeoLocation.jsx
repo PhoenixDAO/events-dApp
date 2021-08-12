@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function GeoLocation(props) {
 	const classes = useStyles();
-	const { locationTitle, geoId, onChange, isCountry } = props;
+	const { locationTitle, geoId, onChange, isCountry, error, value } = props;
 	const [options, setOptions] = useState([]);
 	const [currentItem, setCurrentItem] = useState("");
 	const [labelWidth, setLabelWidth] = useState(0);
@@ -62,12 +63,23 @@ export default function GeoLocation(props) {
 	// const inputLabel = useRef(null);
 
 	const handleChange = (e) => {
-		setCurrentItem(e.target.value);
-		onChange(e.target.value);
+		const { myValue, value } = e.currentTarget.dataset;
+		console.log(myValue, value);
+		// setCurrentItem(value);
+		onChange({ name: myValue, id: value });
+	};
+
+	const handleClick = (event) => {
+		const { myValue } = event.currentTarget.dataset;
+		console.log(myValue.geonameId); // --> 123
 	};
 
 	return (
-		<FormControl variant="outlined" className={classes.formControl}>
+		<FormControl
+			variant="outlined"
+			className={classes.formControl}
+			error={!!error}
+		>
 			{/* <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
 				{locationTitle}
 			</InputLabel> */}
@@ -77,20 +89,37 @@ export default function GeoLocation(props) {
 			<Select
 				// labelId="demo-simple-select-outlined-label"
 				id="demo-simple-select-outlined"
-				value={currentItem}
+				// value={currentItem}
+				value={value.id ? value.id : ""}
 				onChange={handleChange}
 				// labelWidth={labelWidth}
+				displayEmpty
 				defaultValue=""
 			>
-				<MenuItem value="">
-					<em>-</em>
+				<MenuItem
+					disabled
+					value=""
+					style={{
+						fontFamily: "'Aeonik', sans-serif",
+						color: "#73727D",
+					}}
+				>
+					<em>{`SELECT ${locationTitle}`}</em>
 				</MenuItem>
 				{options.map((v, index) => (
-					<MenuItem key={index} value={v.geonameId}>
+					<MenuItem
+						key={index}
+						data-my-value={isCountry ? v.countryName : v.name}
+						value={v.geonameId}
+						style={{
+							fontFamily: "'Aeonik', sans-serif",
+						}}
+					>
 						{isCountry ? v.countryName : v.name}
 					</MenuItem>
 				))}
 			</Select>
+			<FormHelperText>{error ? error.message : null}</FormHelperText>
 		</FormControl>
 	);
 }

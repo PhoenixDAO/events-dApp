@@ -472,6 +472,7 @@ const MyStepper = ({
 
 	//next button steeper
 	const handleNext = (fields) => {
+		console.log("fields", fields);
 		// console.log("categories", categories);
 		const filter = new badWords();
 
@@ -1334,24 +1335,81 @@ const MyStepper = ({
 									<br />
 									<Grid container spacing={2}>
 										<Grid item xs={12} sm={4}>
-											<GeoLocation
-												locationTitle="COUNTRY"
-												isCountry
-												onChange={setCountry}
+											<Controller
+												name="country"
+												control={control}
+												defaultValue=""
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<GeoLocation
+														locationTitle="COUNTRY"
+														isCountry
+														onChange={(v) => {
+															onChange(v);
+															setCountry(v.id);
+														}}
+														error={error}
+														value={value}
+													/>
+												)}
+												rules={{
+													required:
+														"Please select country.",
+												}}
 											/>
 										</Grid>
 										<Grid item xs={12} sm={4}>
-											<GeoLocation
-												locationTitle="STATE"
-												onChange={setState}
-												geoId={country}
+											<Controller
+												name="state"
+												control={control}
+												defaultValue=""
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<GeoLocation
+														locationTitle="STATE"
+														onChange={(v) => {
+															onChange(v);
+															setState(v.id);
+														}}
+														error={error}
+														geoId={country}
+														value={value}
+													/>
+												)}
+												rules={{
+													required:
+														"Please select state.",
+												}}
 											/>
 										</Grid>
 										<Grid item xs={12} sm={4}>
-											<GeoLocation
-												locationTitle="CITY"
-												onChange={setCity}
-												geoId={state}
+											<Controller
+												name="city"
+												control={control}
+												defaultValue=""
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<GeoLocation
+														locationTitle="CITY"
+														onChange={(v) => {
+															onChange(v);
+															setCity(v.id);
+														}}
+														error={error}
+														geoId={state}
+														value={value}
+													/>
+												)}
+												rules={{
+													required:
+														"Please select city.",
+												}}
 											/>
 										</Grid>
 									</Grid>
