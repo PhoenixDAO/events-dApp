@@ -53,8 +53,9 @@ const WrapperTopicsLandingPage = (props) => {
 							eventObj[event[i].topic].name =
 								topicsJson[event[i].topic].name;
 						} else {
-							eventObj[event[i].topic].image = "/images/PhoenixDAO.png"
-							eventObj[event[i].topic].name = "Some topic name"
+							eventObj[event[i].topic].image =
+								"/images/PhoenixDAO.png";
+							eventObj[event[i].topic].name = "Some topic name";
 						}
 					}
 				}
@@ -65,6 +66,7 @@ const WrapperTopicsLandingPage = (props) => {
 
 			setEventObj(eventObj);
 			console.log("eventObj", eventObj);
+			console.log("This is object array", Object.keys(eventObj))
 		} else {
 			console.log("this called", isActive);
 			loadPastEvents();
@@ -115,7 +117,9 @@ const WrapperTopicsLandingPage = (props) => {
 			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 			if (!graphEvents.data || graphEvents.data.data == "undefined") {
 				// console.log("GraphQL query -- graphEvents undefined")
-				setLoading(false);
+				setTimeout(() => {
+					setLoading(false);
+				}, 2000);
 				setTopicEvents([]);
 				setActiveLength(0);
 				return [];
@@ -127,7 +131,9 @@ const WrapperTopicsLandingPage = (props) => {
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
 				console.log("GraphQL query newsort", newsort);
-				setLoading(false);
+				setTimeout(() => {
+					setLoading(false);
+				}, 2000);
 				setTopicEvents(newsort);
 				setTopicCopy(newsort);
 				setActiveLength(newsort.length);
@@ -185,7 +191,9 @@ const WrapperTopicsLandingPage = (props) => {
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
 					// console.log("GraphQL query -- graphEvents undefined")
-					setLoading(false);
+					setTimeout(() => {
+						setLoading(false);
+					}, 2000);
 					setTopicEvents([]);
 					setActiveLength(0);
 				} else {
@@ -195,7 +203,9 @@ const WrapperTopicsLandingPage = (props) => {
 						.concat()
 						.sort((a, b) => b.blockNumber - a.blockNumber);
 					// console.log("GraphQL query newsort",newsort)
-					setLoading(false);
+					setTimeout(() => {
+						setLoading(false);
+					}, 2000);
 					setTopicEvents(newsort);
 					setActiveLength(newsort.length);
 					setTopicCopy(newsort);
@@ -211,6 +221,8 @@ const WrapperTopicsLandingPage = (props) => {
 		<TopicsLandingPage
 			eventsContract={props.eventsContract}
 			eventObj={eventObj}
+			loading={loading}
+			topicEvents={Topic_Events}
 		/>
 	);
 };

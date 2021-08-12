@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import { Link } from "react-router-dom";
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -114,9 +115,35 @@ const useStyles = makeStyles((theme) => ({
     padding: "9px 15px",
     display: "flex",
     width: "100%"
+  },
+
+  seeTicket:{
+		margin: theme.spacing(1),
+		textTransform: "initial",
+		fontWeight: "600",
+		background: "#413AE2",
+		padding: "8px 35px",
+		paddingInline: "40px",
+		[theme.breakpoints.down("xs")]: {
+			paddingInline: "20px",
+		},
+    width:"100%",
+    		border: "1px solid #413AE2",
+  },
+  link:{
+    width:"97%",
+    display:"flex",
+    paddingRight:"13px"
+  },
+  image: {
+    margin: "15px 43px 50px",
+    borderRadius: "10px",
+  },
+  TicketPurchase:{
+    fontWeight: "900",
+    color: "#413AE2",
+    padding: "12px 0px 0px",
   }
-
-
 }));
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -135,6 +162,8 @@ const styles = (theme) => ({
       outline: "none"
     }
   },
+  
+
 
 });
 
@@ -168,13 +197,13 @@ const DialogActions = withStyles((theme) => ({
   root: {
     margin: 0,
     padding: theme.spacing(1),
-    padding: "20px"
+    padding: "18px"
   },
 
 }))(MuiDialogActions);
 
 
-export default function BuyTicket({ handleClose, open, eventTitle, image, date, time,price,buy,buttonText}) {
+export default function BuyTicket({ handleClose, open, eventTitle, image, date, time, price, buy, buttonText, purchased }) {
   const classes = useStyles();
   const buyTicket = () => {
     buy();
@@ -182,17 +211,21 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, date, 
     handleClose();
 
   }
+  console.log("purchased", purchased);
   return (
     <div >
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" TransitionComponent={Transition} open={open} className={classes.root} >
         <DialogTitle id="customized-dialog-title" className={classes.header} onClose={handleClose} >
           <img src={roundlogo} className={classes.logo} alt="phnx logo" />
           PhoenixDAO
-          <h2 className={classes.sharelink}>
-          {buttonText}
-          </h2>
+          {    purchased ? 
+          <h2 className={classes.TicketPurchase}>
+            Ticket Purchase Successful
+          </h2>:
+          <h2 className={classes.sharelink}>{buttonText}</h2>
+}
           <Typography gutterBottom className={classes.eventTitle} style={{ color: "#73727D", fontWeight: "500" }}>
-            You’re about to purchase this ticket
+         {purchased? null: "You’re about to purchase this ticket"}
           </Typography>
 
         </DialogTitle>
@@ -209,7 +242,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, date, 
                   {date},{time}
                 </Typography>
               </div>
-              <div style={{textAlign:"end"}}>
+              <div style={{ textAlign: "end" }}>
                 {price}
               </div>
             </Grid>
@@ -218,27 +251,43 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, date, 
 
         </DialogContent>
         <DialogActions>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ marginRight: "10px" }}
-            className={classes.cancel}
-            onClick={handleClose}
-          >
-            <Cancel style={{ marginRight: "7px", fontSize: "19px" }} />
-            Cancel Purchase
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ marginRight: "10px" }}
-            className={classes.send}
+          {purchased ? 
+          <Link to="/mytickets/1" className={classes.link}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginRight: "10px" }}
+              className={classes.seeTicket}
+            > See Ticket</Button></Link> :
+            (<Grid item style={{display:"contents"}}>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ marginRight: "10px" }}
+                className={classes.cancel}
+                onClick={handleClose}
+              >
+                <Cancel style={{ marginRight: "7px", fontSize: "19px" }} />
+                Cancel Purchase
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ marginRight: "10px" }}
+                className={classes.send}
 
-            onClick={buyTicket}
-          >
-            <ShoppingCartOutlined style={{ marginRight: "10px" }} />
-            {buttonText}								</Button>
+                onClick={buyTicket}
+              >
+                <ShoppingCartOutlined style={{ marginRight: "10px" }} />
+                {buttonText}
+              </Button>
+              </Grid>)}
         </DialogActions>
+        {
+          purchased ?
+          <img src="/images/travala.svg" className={classes.image} />
+          :null
+        }
       </Dialog>
     </div>
   );

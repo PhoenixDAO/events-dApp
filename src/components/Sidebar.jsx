@@ -17,7 +17,6 @@ import {
 import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
 import ipfs from "../utils/ipfs";
-import { throws } from "assert";
 
 class Sidebar extends Component {
 	constructor(props, context) {
@@ -33,11 +32,11 @@ class Sidebar extends Component {
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
 
-	// componentDidMount() {
-	// 	console.log("this callled");
-	// 	console.log(this.props.userDetails);
-	// 	this.provideImage();
-	// }
+	componentDidMount() {
+		
+		this.toggleSidebarClass(false);
+
+	}
 
 	componentDidUpdate(prevProps) {
 		// console.log("this.props.userDetails", this.props.userDetails);

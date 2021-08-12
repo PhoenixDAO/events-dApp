@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -16,15 +16,14 @@ import {
 const useStyles = makeStyles((theme) => ({
 	row1: {
 		display: "flex",
-		justifyContent: "space-between"
-	}
+		justifyContent: "space-between",
+	},
+}));
 
-}))
-
-const SkeletonLayout = props => {
+const SkeletonTopic = (props) => {
 	const classes = useStyles();
 
-    return (
+	return (
 		<div>
 			<Card className={classes.root}>
 				<CardActionArea>
@@ -75,6 +74,6 @@ const SkeletonLayout = props => {
 			</Card>
 		</div>
 	);
-}
+};
 
-export default SkeletonLayout
+export default SkeletonTopic;
