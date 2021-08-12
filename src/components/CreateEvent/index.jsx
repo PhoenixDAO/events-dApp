@@ -162,6 +162,7 @@ class CreateEvent extends Component {
 		let categories = [];
 		let totalQuantity = 0;
 		let location = eventType === "physical" ? eventLocation : eventLink;
+		let onsite = eventType === "physical" ? true : false;
 		let time =
 			Date.parse(
 				eventTime === "onedayevent" ? eventDate : eventStartDate
@@ -218,9 +219,9 @@ class CreateEvent extends Component {
 					.createEvent([
 						oneTimeBuy,
 						token, // false means free
-						this.props.accounts[0],
+						onsite, // true means event is onsite
+						this.props.accounts[0], //owner
 						time.toString(), //time
-						"86400", //duration
 						totalQuantity.toString(), //totalQuantity
 						"0", //totalQntySold
 						eventName,

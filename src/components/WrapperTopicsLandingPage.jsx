@@ -39,7 +39,7 @@ const WrapperTopicsLandingPage = (props) => {
 			const event = await loadActiveEvents();
 			console.log("EVENTS", event);
 			let eventObj = {};
-			if (event.length > 0) {
+			if (event && event.length > 0) {
 				for (let i = 0; i < event.length; i++) {
 					let objHolder = eventObj[event[i].topic];
 					if (objHolder) {
@@ -59,9 +59,9 @@ const WrapperTopicsLandingPage = (props) => {
 					}
 				}
 			}
-			delete eventObj["topic name"];
-			delete eventObj["musfira topic name"];
-			delete eventObj["topic name free"];
+			// delete eventObj["topic name"];
+			// delete eventObj["musfira topic name"];
+			// delete eventObj["topic name free"];
 
 			setEventObj(eventObj);
 			console.log("eventObj", eventObj);
@@ -100,7 +100,7 @@ const WrapperTopicsLandingPage = (props) => {
 						oneTimeBuy
 						token
 						time
-						duration
+						onsite
 						catTktQuantity
 						catTktQuantitySold	
 						categories
@@ -168,7 +168,7 @@ const WrapperTopicsLandingPage = (props) => {
 						oneTimeBuy
 						token
 						time
-						duration
+						onsite
 						catTktQuantity
 						catTktQuantitySold	
 						categories
@@ -211,6 +211,7 @@ const WrapperTopicsLandingPage = (props) => {
 		<TopicsLandingPage
 			eventsContract={props.eventsContract}
 			eventObj={eventObj}
+			loading={loading}
 		/>
 	);
 };

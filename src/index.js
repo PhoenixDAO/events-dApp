@@ -20,7 +20,7 @@ import { CssBaseline } from "@material-ui/core";
 // var web3s = new Web3(window.ethereum);
 const options = {
 	web3: {
-		customProvider: new Web3(INFURA_URL),
+		customProvider: new Web3(INFURA_WEB_URL),
 		fallback: {
 			type: "ws",
 			url: INFURA_WEB_URL,

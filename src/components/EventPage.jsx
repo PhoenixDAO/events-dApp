@@ -178,6 +178,11 @@ const styles = (theme) => ({
 		marginRight: "7px",
 		marginTop: "-4px",
 	},
+	clockTime: {
+		"@media (min-width: 700px)": {
+			width: "55%	!important",
+		},
+	},
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -242,6 +247,7 @@ class EventPage extends Component {
 		this.inquire = this.inquire.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this);
 		this.goBack = this.goBack.bind(this); // i think you are missing this
+		console.log("purchased",this.props.purchased);
 	}
 
 	goBack() {
@@ -269,7 +275,6 @@ class EventPage extends Component {
 	// }
 
 	async loadEventFromBlockchain() {
-		// duration to be changed to ending time or send duration in create event
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -290,7 +295,7 @@ class EventPage extends Component {
 					oneTimeBuy
 					token
 					time
-					duration
+					onsite
 					catTktQuantity
 					catTktQuantitySold	
 					categories
@@ -598,6 +603,7 @@ class EventPage extends Component {
 	};
 	handleClose2 = () => {
 		this.setState({ open2: false });
+		this.props.togglePurchase();
 	};
 	handleCategoryChange = (event) => {
 		this.setState({ selectedCategoryIndex: event.target.value });
@@ -679,14 +685,11 @@ class EventPage extends Component {
 	}
 
 	inquire = async () => {
-		console.log("in eventsPage", Open_events_Address);
 		let balance = await this.props.phnxContract.methods
 			.totalSupply()
 			.call();
-		console.log("balance in eventsPage", balance);
 
 		const geoFindUser = await this.geoFindMe();
-		console.log("geoFindUser", geoFindUser);
 
 		this.setState(
 			{
@@ -780,6 +783,7 @@ class EventPage extends Component {
 						this.state.PhoenixDAO_market.usd
 					).toFixed(2);
 				});
+
 				let dollar_price = Web3.utils.fromWei(
 					event_data.prices[this.state.selectedCategoryIndex]
 				);
@@ -788,8 +792,8 @@ class EventPage extends Component {
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-					this.state.selectedCategoryIndex
-					]
+							this.state.selectedCategoryIndex
+					  ]
 					: "∞";
 
 				let disabled = false;
@@ -800,14 +804,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-						this.state.selectedCategoryIndex
+							this.state.selectedCategoryIndex
 						]
 					) >=
-					Number(
-						event_data.catTktQuantity[
-						this.state.selectedCategoryIndex
-						]
-					)
+						Number(
+							event_data.catTktQuantity[
+								this.state.selectedCategoryIndex
+							]
+						)
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -873,7 +877,7 @@ class EventPage extends Component {
 						<span className={classes.PhnxPrice}>
 							{event_data.token
 								? phnx_price[this.state.selectedCategoryIndex] +
-								"PHNX"
+								  "PHNX"
 								: "FREE"}
 						</span>
 						<div style={{ color: "#56555D", fontSize: "14px" }}>
@@ -882,13 +886,14 @@ class EventPage extends Component {
 					</div>
 				);
 
-				let ticketPrices = event_data.token && event_data.categories.length > 1;
+				let ticketPrices =
+					event_data.token && event_data.categories.length > 1;
 
 				if (this.props.match.params.page === pagetitle) {
 					body = (
 						<Grid>
 							<BuyTicket
-								open={this.state.open2}
+								open={this.state.open2 || this.props.purchased}
 								handleClose={this.handleClose2}
 								image={image}
 								eventTitle={event_data.name}
@@ -897,6 +902,7 @@ class EventPage extends Component {
 								price={priceGrid}
 								buy={this.inquire}
 								buttonText={buttonText}
+								purchased={this.props.purchased}
 							/>
 							<Header
 								disabled={
@@ -948,7 +954,7 @@ class EventPage extends Component {
 										className={classes.description}
 									>
 										<Grid container>{description}</Grid>
-										<Grid container>
+										<Grid container className={classes.clockTime}>
 											<Clock
 												deadline={date}
 												event_unix={event_data.time}
@@ -990,21 +996,21 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-															(
-																category,
-																i
-															) => (
-																<option
-																	value={
-																		i
-																	}
-																>
-																	{
-																		category
-																	}
-																</option>
-															)
-														)
+																(
+																	category,
+																	i
+																) => (
+																	<option
+																		value={
+																			i
+																		}
+																	>
+																		{
+																			category
+																		}
+																	</option>
+																)
+														  )
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1033,11 +1039,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-													"onedayevent"
-													? moment(
+												  "onedayevent"
+												? moment(
 														this.state.eventDate
-													).format("Do MMM, YYYY")
-													: `
+												  ).format("Do MMM, YYYY")
+												: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1070,8 +1076,8 @@ class EventPage extends Component {
 										<p className={classes.eventinfo}>
 											{
 												event_data.catTktQuantitySold[
-												this.state
-													.selectedCategoryIndex
+													this.state
+														.selectedCategoryIndex
 												]
 											}
 											/{max_seats}

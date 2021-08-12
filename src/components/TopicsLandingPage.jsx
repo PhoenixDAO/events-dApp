@@ -98,6 +98,12 @@ const useStyles = (theme) => ({
 			left: "0",
 		},
 	},
+	dropdownStyle: 
+    {
+      border: "1px solid black",
+      borderRadius: "5%",
+      backgroundColor:'black',
+    },
 });
 
 class TopicsLandingPage extends Component {
@@ -348,6 +354,7 @@ class TopicsLandingPage extends Component {
 										native
 										value={this.state.category}
 										onChange={this.handleChangeCategory}
+										MenuProps={{ classes: { paper: classes.dropdownStyle } }}
 									>
 										<option aria-label="None" value="all">
 											All Topics
@@ -363,7 +370,8 @@ class TopicsLandingPage extends Component {
 							<br />
 							<div>
 								<div className="row user-list mt-4">
-									{
+									{this.props.loading ? <div>loadingg</div> :
+									this.props.eventObj &&
 									Object.keys(this.props.eventObj).length > 0 ?	
 									this.state.category === "all"
 										? Object.keys(this.props.eventObj).map((key) => {
@@ -382,7 +390,7 @@ class TopicsLandingPage extends Component {
 											);
 										})
 										: 
-										Object.keys(this.props.eventObj).map((key) => {
+									Object.keys(this.props.eventObj).map((key) => {
 											if(this.props.eventObj[key].eventCount >= 7){
 											return (
 												<div
@@ -410,21 +418,23 @@ class TopicsLandingPage extends Component {
 			</React.Fragment>
 		);
 	}
-	componentDidMount() {
+async componentDidMount() {
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
 		});
+		// console.log("this.props",this.props.eventsContract.methods.getEventsCount());
+		// if(this.props.eventsContract){
+		// 	let eventCount = await this.props.eventsContract.methods
+		// 	.getEventsCount()
+		// 	.call();
+		// if (eventCount) {
+		// 	console.log("events count", eventCount);
+		// 	this.setState({ eventCount });
+		// }
+		// }	
 	}
-	async componentWillMount() {
-		let eventCount = await this.props.eventsContract.methods
-			.getEventsCount()
-			.call();
-		if (eventCount) {
-			console.log("events count", eventCount);
-			this.setState({ eventCount });
-		}
-	}
+	
 }
 
 // TopicsLandingPage.contextTypes = {

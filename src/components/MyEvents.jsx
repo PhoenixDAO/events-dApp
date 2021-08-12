@@ -10,6 +10,7 @@ import { withStyles } from "@material-ui/core/styles";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import { graphURL } from "../config/const.js";
 import Header from "./common/Header";
+import EmptyState from "./EmptyState";
 
 import Event from "./Event";
 import axios from "axios";
@@ -171,7 +172,7 @@ class MyEvents extends Component {
                             tktLimited
                             oneTimeBuy
                             time
-                            duration
+                            onsite
                             tktTotalQuantity
                             tktTotalQuantitySold
                             catTktQuantity
@@ -250,7 +251,7 @@ class MyEvents extends Component {
 							tktLimited
 							oneTimeBuy
 							time
-							duration
+							onsite
 							tktTotalQuantity
 							tktTotalQuantitySold
 							catTktQuantity
@@ -385,13 +386,11 @@ class MyEvents extends Component {
 			body = <PhoenixDAOLoader />;
 		} else if (events === 0) {
 			body = (
-				<p className="text-center not-found">
-					<span role="img" aria-label="thinking">
-						🤔
-					</span>
-					&nbsp;No events found.{" "}
-					<a href="/createevent">Try creating one.</a>
-				</p>
+				<EmptyState
+					text="No events found 🤔.Be the first;"
+					btnText="Try creating one"
+					url="/createevent"
+				/>
 			);
 		} else {
 			let count = this.state.MyEvents.length;

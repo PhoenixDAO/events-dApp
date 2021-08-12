@@ -4,14 +4,18 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
-    imageContainer: {
-        textAlign: "center",
-        padding: "100px",
-        width: "100%",
-        '@media (max-width: 900px)': {
-            padding: '20px',
-        }
-    },
+	wrapper: {
+		background: "#fff",
+		paddingTop: "40px",
+	},
+	imageContainer: {
+		textAlign: "center",
+		padding: "100px",
+		margin: "0 auto",
+		"@media (max-width: 900px)": {
+			padding: "20px",
+		},
+	},
 	image: {
 		borderRadius: "12px",
 		width: "100%",
@@ -35,7 +39,7 @@ function PageNotFound() {
 				<div className={classes.imageContainer}>
 					<img
 						className={classes.image}
-						src={"/images/Frame-223.svg"}
+						src={"/images/notFound.png"}
 					/>
 				</div>
 			</Grid>

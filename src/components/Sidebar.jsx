@@ -17,7 +17,6 @@ import {
 import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
 import ipfs from "../utils/ipfs";
-import { throws } from "assert";
 
 class Sidebar extends Component {
 	constructor(props, context) {
@@ -33,11 +32,11 @@ class Sidebar extends Component {
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
 
-	// componentDidMount() {
-	// 	console.log("this callled");
-	// 	console.log(this.props.userDetails);
-	// 	this.provideImage();
-	// }
+	componentDidMount() {
+		
+		this.toggleSidebarClass(false);
+
+	}
 
 	componentDidUpdate(prevProps) {
 		// console.log("this.props.userDetails", this.props.userDetails);
@@ -51,7 +50,7 @@ class Sidebar extends Component {
 	}
 
 	sidebarClick() {
-		this.toggleSidebarClass(true);
+		// this.toggleSidebarClass(true);
 		var isActive = this.context.router.route.location.pathname;
 		var activeClassName = "";
 		var linkLocation = this.props.to;
@@ -161,8 +160,8 @@ class Sidebar extends Component {
 
 	provideImage = () => {
 		if (Object.keys(this.props.userDetails).length > 0) {
-			console.log("userdetailsss", this.props.userDetails);
-			console.log("", this.props.userDetails);
+			// console.log("userdetailsss", this.props.userDetails);
+			// console.log("", this.props.userDetails);
 			const avatarCustom =
 				this.props.userDetails.result.result.avatarCustom;
 			const avatarId = this.props.userDetails.result.result.avatarNumber;
@@ -225,10 +224,10 @@ class Sidebar extends Component {
 								src={makeBlockie(this.props.account)}
 								alt={this.props.account}
 							/> */}
-							{console.log(
+							{/* {console.log(
 								"this.props.userDetails",
 								this.props.userDetails
-							)}
+							)} */}
 							{/* {this.provideImage(this.props.userDetails)} */}
 							{/* <img src="./images/metamask.svg" className="bird" /> */}
 							{this.renderImage()}
@@ -236,7 +235,6 @@ class Sidebar extends Component {
 								style={{
 									marginLeft: "20px",
 									fontSize: "15px",
-									marginTop: "8px",
 									fontWeight: "bold",
 								}}
 							>
@@ -362,7 +360,7 @@ class Sidebar extends Component {
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
-											this.toggleSidebarClass(true);
+											this.sidebarClick(this);
 										}}
 									>
 										<i className="far fa-check-square fontAwesomeIcon"></i>{" "}
@@ -603,7 +601,7 @@ class Sidebar extends Component {
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
-											this.toggleSidebarClass(true);
+											this.sidebarClick(this);
 										}}
 									>
 										<TodayOutlined />{" "}
@@ -618,7 +616,7 @@ class Sidebar extends Component {
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
-											this.toggleSidebarClass(true);
+											this.sidebarClick(this);
 										}}
 									>
 										<i className="far fa-check-square fontAwesomeIcon"></i>

@@ -26,6 +26,12 @@ import Header from "./common/Header";
 import { generateBuyerArr } from "../utils/graphApis";
 import Web3 from "web3";
 const useStyles = makeStyles((theme) => ({
+	wrapper: {
+		background: "#fff",
+		paddingBottom: "100px",
+		margin: "40px 0px",
+		borderRadius: "8px"
+	},
 	imageContainer: {
 		textAlign: "center",
 		padding: "40px",
@@ -36,14 +42,17 @@ const useStyles = makeStyles((theme) => ({
 	},
 	image: {
 		borderRadius: "12px",
-		width: "90%",
+		width: "100%"
 	},
 	formWrapper: {
-		width: "60%",
+		width: "45%",
 		margin: "0 auto",
+		"& .MuiOutlinedInput-input": {
+			padding: "12px",
+		},
 	},
 	confirmBtn: {
-		padding: "13px",
+		padding: "10px",
 		textTransform: "capitalize",
 		fontWeight: "500",
 		fontSize: "16px",
@@ -72,6 +81,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	textDiv: {
 		height: "20px"
+	},
+	label: {
+		color: "#73727D",
 	}
 }));
 
@@ -89,22 +101,22 @@ const ConfirmPurchase = () => {
 		if (!isaddress) {
 			setErrorAddress(true);
 		}
-		else{
-		const isowner = buyers.find(element => {
-			console.log("element", element.address == address
-			);
-			return element.address == address
-		});
-
-		if (isowner) {
-			setText(<p className={classes.message}>
-				This address has a ticket to the event		</p>)
-		}
 		else {
-			setText(<p className={classes.message2}>
-				This address has no ticket to the event.		</p>)
+			const isowner = buyers.find(element => {
+				console.log("element", element.address == address
+				);
+				return element.address == address
+			});
+
+			if (isowner) {
+				setText(<p className={classes.message}>
+					This address has a ticket to the event		</p>)
+			}
+			else {
+				setText(<p className={classes.message2}>
+					This address has no ticket to the event.		</p>)
+			}
 		}
-	}
 
 	};
 
@@ -112,13 +124,17 @@ const ConfirmPurchase = () => {
 
 	return (
 		<div>
-			<Header title="Confirm Purchase" page="confirm-purchase" phnxButton="true" />
+			<Header
+				title="Confirm Purchase"
+				page="confirm-purchase"
+				phnxButton="true"
+			/>
 			<div className={classes.wrapper}>
 				<Grid container className={classes.gridContainer}>
 					<div className={classes.imageContainer}>
 						<img
 							className={classes.image}
-							src={"/images/Frame-223.svg"}
+							src={"/images/accountDetails.jpg"}
 						/>
 					</div>
 				</Grid>
@@ -149,11 +165,10 @@ const ConfirmPurchase = () => {
 								helperText={error ? error.message : null}
 								onChange={(e) => {
 									onChange(e);
-									setText("")
-									setEventId(e.target.value)
+									setText("");
+									setEventId(e.target.value);
 								}}
 							// inputProps={{ pattern: "[0-9]{1,15}" }}
-
 							/>
 						)}
 						rules={{
@@ -185,30 +200,29 @@ const ConfirmPurchase = () => {
 								onChange={(e) => {
 									onChange(e);
 									setText("");
-									setAddress(e.target.value)
+									setAddress(e.target.value);
 								}}
-
 								error={errorAddress}
-								helperText={errorAddress ? "Invalid account address" : null}
+								helperText={
+									errorAddress
+										? "Invalid account address"
+										: null
+								}
 							/>
 						)}
 						rules={{
 							required: "Please enter account address.",
 							minLength: {
 								value: 3,
-								message:
-									"Invalid Address",
+								message: "Invalid Address",
 							},
 							maxLength: {
 								value: 42,
 								message: "Invalid address",
 							},
-							
 						}}
 					/>
-					<div className={classes.textDiv}>
-						{text}
-					</div>
+					<div className={classes.textDiv}>{text}</div>
 					<br />
 					<Button
 						color="primary"

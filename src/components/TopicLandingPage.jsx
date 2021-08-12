@@ -259,7 +259,7 @@ class TopicLandingPage extends Component {
 						oneTimeBuy
 						token
 						time
-						duration
+						onsite
 						catTktQuantity
 						catTktQuantitySold	
 						categories
@@ -278,11 +278,17 @@ class TopicLandingPage extends Component {
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
 					// console.log("GraphQL query -- graphEvents undefined")
 					console.log("topic data", graphEvents.data);
-					this.setState({
-						loading: false,
-						Topic_Events: [],
-						active_length: 0,
-					});
+					// this.setState({
+					// 	Topic_Events: [],
+					// 	active_length: 0,
+					// });
+					setTimeout(() => {
+						this.setState({
+							loading: false,
+							Topic_Events: [],
+							active_length: 0,
+						});
+					}, 1000);
 				} else {
 					if (this._isMounted) {
 						console.log("topic data", graphEvents.data);
@@ -304,10 +310,11 @@ class TopicLandingPage extends Component {
 								Topic_Events: newsort,
 								topic_copy: newsort,
 								active_length: newsort.length,
-								loading: false,
 							});
 						}
-						this.setState({ loading: false });
+						setTimeout(() => {
+							this.setState({ loading: false });
+						}, 1000);
 					}
 				}
 			})
@@ -350,7 +357,7 @@ class TopicLandingPage extends Component {
 						oneTimeBuy
 						token
 						time
-						duration
+						onsite
 						catTktQuantity
 						catTktQuantitySold	
 						categories
@@ -504,6 +511,15 @@ class TopicLandingPage extends Component {
 	};
 
 	render() {
+		if (count === 0 && !this.state.loading) {
+			body = (
+				<EmptyState
+					text="No events found 🤔.Be the first;"
+					btnText="Try creating one"
+					url="/createevent"
+				/>
+			);
+		} 
 		const { classes } = this.props;
 		let body = <Loading />;
 		const topic = this.theTopic;
@@ -512,9 +528,36 @@ class TopicLandingPage extends Component {
 		// this.state.active_length == 0
 		// ) {
 		let count = this.state.active_length;
-		if (this.state.loading) {
-			body = <PhoenixDAOLoader />;
-		} else if (count === 0 && !this.state.loading) {
+
+		// console.log("this.props.match.params.page",this.props.match.params.id)
+		let currentPage = Number(this.props.match.params.id);
+		let events_list = [];
+		let skip = false;
+		for (let i = 0; i < this.state.Topic_Events.length; i++) {
+			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+				if (
+					this.state.Topic_Events[i].eventId ==
+					this.state.Deleted_Events[j].eventId
+				) {
+					skip = true;
+				}
+			}
+			if (!skip) {
+				for (let j = 0; j < this.state.hideEvent.length; j++) {
+					if (
+						this.state.Topic_Events[i].eventId ==
+						this.state.hideEvent[j].id
+					) {
+						skip = true;
+					}
+				}
+			}
+			if (!skip) {
+				events_list.push(this.state.Topic_Events[i]);
+			}
+			skip = false;
+		}
+		if (events_list.length == 0 && !this.state.loading) {
 			body = (
 				<EmptyState
 					text="No events found 🤔.Be the first;"
@@ -523,114 +566,77 @@ class TopicLandingPage extends Component {
 				/>
 			);
 		} else {
-			// console.log("this.props.match.params.page",this.props.match.params.id)
-			let currentPage = Number(this.props.match.params.id);
-			let events_list = [];
-			let skip = false;
-			for (let i = 0; i < this.state.Topic_Events.length; i++) {
-				for (let j = 0; j < this.state.Deleted_Events.length; j++) {
-					if (
-						this.state.Topic_Events[i].eventId ==
-						this.state.Deleted_Events[j].eventId
-					) {
-						skip = true;
-					}
-				}
-				if (!skip) {
-					for (let j = 0; j < this.state.hideEvent.length; j++) {
-						if (
-							this.state.Topic_Events[i].eventId ==
-							this.state.hideEvent[j].id
-						) {
-							skip = true;
-						}
-					}
-				}
-				if (!skip) {
-					events_list.push(this.state.Topic_Events[i]);
-				}
-				skip = false;
-			}
-			if (events_list.length == 0) {
-				body = (
-					<EmptyState
-						text="No events found 🤔.Be the first;"
-						btnText="Try creating one"
-						url="/createevent"
+			let updated_list = [];
+			// console.log("events_list",events_list)
+			count = events_list.length;
+			// console.log("currentPage",currentPage)
+			// console.log("this.perPage",this.perPage)
+			if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+			let end = currentPage * this.perPage;
+			let start = end - this.perPage;
+			if (end > count) end = count;
+			let pages = Math.ceil(count / this.perPage);
+
+			for (let i = start; i < end; i++) {
+				updated_list.push(
+					<Event
+						eventData={events_list[i]}
+						toggleBuying={this.toggleBuying}
+						disabledBuying={this.state.disabledBuying}
+						disabledStatus={this.props.disabledStatus}
+						inquire={this.props.inquire}
+						key={events_list[i].eventId}
+						id={events_list[i].eventId}
+						ipfs={events_list[i].ipfs}
+						loading={this.state.loading}
 					/>
 				);
-			} else {
-				let updated_list = [];
-				// console.log("events_list",events_list)
-				count = events_list.length;
-				// console.log("currentPage",currentPage)
-				// console.log("this.perPage",this.perPage)
-				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-				let end = currentPage * this.perPage;
-				let start = end - this.perPage;
-				if (end > count) end = count;
-				let pages = Math.ceil(count / this.perPage);
+			}
+			// console.log("updated_list",updated_list)
+			// updated_list.reverse();
 
-				for (let i = start; i < end; i++) {
-					updated_list.push(
-						<Event
-							eventData={events_list[i]}
-							toggleBuying={this.toggleBuying}
-							disabledBuying={this.state.disabledBuying}
-							disabledStatus={this.props.disabledStatus}
-							inquire={this.props.inquire}
-							key={events_list[i].eventId}
-							id={events_list[i].eventId}
-							ipfs={events_list[i].ipfs}
-						/>
-					);
-				}
-				// console.log("updated_list",updated_list)
-				// updated_list.reverse();
+			let pagination = "";
+			if (pages > 1) {
+				let links = [];
 
-				let pagination = "";
-				if (pages > 1) {
-					let links = [];
-
-					for (let i = 1; i <= pages; i++) {
-						let active = i === currentPage ? "active" : "";
-						links.push(
-							<li
-								className={"page-item " + active}
-								key={i}
-								onClick={this.scrollTo()}
+				for (let i = 1; i <= pages; i++) {
+					let active = i === currentPage ? "active" : "";
+					links.push(
+						<li
+							className={"page-item " + active}
+							key={i}
+							onClick={this.scrollTo()}
+						>
+							<Link
+								to={
+									"/topic/" +
+									this.props.match.params.page +
+									"/" +
+									i
+								}
+								className="page-link"
 							>
-								<Link
-									to={
-										"/topic/" +
-										this.props.match.params.page +
-										"/" +
-										i
-									}
-									className="page-link"
-								>
-									{i}
-								</Link>
-							</li>
-						);
-					}
-
-					pagination = (
-						<nav>
-							<ul className="pagination justify-content-center">
-								{links}
-							</ul>
-						</nav>
+								{i}
+							</Link>
+						</li>
 					);
 				}
 
-				body = (
-					<div>
-						<div className="row user-list mt-4">{updated_list}</div>
-						{pagination}
-					</div>
+				pagination = (
+					<nav>
+						<ul className="pagination justify-content-center">
+							{links}
+						</ul>
+					</nav>
 				);
 			}
+
+			body = (
+				<div>
+					<div className="row user-list mt-4">{updated_list}</div>
+					{pagination}
+				</div>
+			);
 		}
 
 		return (

@@ -151,6 +151,10 @@ body {
 	font-weight: 300;
 }
 
+button:focus {
+	outline: none !important;
+}
+
 .MuiIconButton-root:focus {
 	outline: none;
 }
@@ -389,6 +393,12 @@ input[type="number"] {
 	padding-top: 40px;
 	background-color: #fcfcfd;
 	/* width: 101% !important; */
+	transition: .5s;
+}
+
+.sidebar-closed .header3 {
+	padding-top: 20px !important;
+	transition: .5s;
 }
 
 .zIndx-1{
@@ -1746,7 +1756,7 @@ body,
 }
 
 .page-item.active .page-link {
-	background-color: #f2f2fd;
+	background-color: #f2f2fd !important;
 	border-color: #dee2e6 !important;
 	color: #413ae2 !important;
 	font-size: 21px;
@@ -2858,8 +2868,9 @@ canvas#doughnut {
 
 .wallets-heading {
 	margin-left: 10px;
-	color: #000000;
-	font-weight: 550;
+	color: #1E1E22;
+	font-weight: 600;
+	font-size: 20px;
 }
 
 .wallet-main-hldr {
@@ -2876,9 +2887,13 @@ canvas#doughnut {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-top: 15px;
+	margin-top: 25px;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-	padding-bottom: 15px;
+	padding-bottom: 25px;
+}
+.wallets-single:last-child{
+	border-bottom: 0px solid rgba(0, 0, 0, 0.15);
+
 }
 
 .wallets-first {
@@ -2902,14 +2917,22 @@ canvas#doughnut {
 }
 
 .wallets-name {
-	color: #000000;
-	font-size: 0.9rem;
+	color: #1E1E22;
+	font-family: "Aeonik";
 }
 
 .wallets-name-hldr {
 	margin-left: 20px;
 }
-
+.snackbar .MuiSnackbarContent-root{
+	background-color: white;
+	color:#F43C3C;
+	font-family:"Aeonik";
+    padding: 10px 20px;
+}
+.snackbar{
+	border-radius: 8px;
+}
 .coming-hldr {
 	font-size: 0.7rem;
 	border-radius: 10px;
@@ -2929,8 +2952,11 @@ canvas#doughnut {
 
 .wallets-footer {
 	text-align: center;
-	font-size: 0.7rem;
-	color: #000000;
+	font-size: 0.9rem;
+	color: #1E1E22;
+	font-family: "Aeonik";
+	padding-bottom: 25px;
+	padding-top: 10px;
 }
 
 h2.main-title {
@@ -2984,4 +3010,21 @@ h2.main-title {
 .fc-scrollgrid .fc-event-title,
 .fc-scrollgrid .fc-event-time {
 	font-size: 13px !important;
+}
+
+.sticky-nav-travel img {
+    width: 100%;
+}
+
+.sticky-nav-travel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: .5s;
+}
+
+.sidebar-closed .sticky-nav-travel {
+    left: 13%;
+    transition: .5s;
 }

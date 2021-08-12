@@ -183,7 +183,7 @@ class Favorites extends Component {
 					oneTimeBuy
 					token
 					time
-					duration
+					onsite
 					catTktQuantity
 					catTktQuantitySold	
 					categories

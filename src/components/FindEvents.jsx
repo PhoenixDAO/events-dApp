@@ -90,7 +90,7 @@ const useStyles = (theme) => ({
 		"@media (min-width: 1024px)": {
 			maxWidth: "20% !important",
 			flex: "0 0 20% !important",
-			marginLeft: "5%"
+			marginLeft: "5%",
 		},
 		minWidth: 120,
 		background: "#fff",
@@ -188,7 +188,7 @@ class FindEvents extends Component {
 					  oneTimeBuy
 					  token
 					  time
-					  duration
+					  onsite
 					  catTktQuantity
 					  catTktQuantitySold	
 					  categories
@@ -215,7 +215,7 @@ class FindEvents extends Component {
 					  oneTimeBuy
 					  token
 					  time
-					  duration
+					  onsite
 					  catTktQuantity
 					  catTktQuantitySold	
 					  categories
@@ -303,19 +303,29 @@ class FindEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				// console.log(
-				// 	"GraphQL query response",
-				// 	Date.now(),
-				// 	graphEvents.data.data.events
-				// );
+				console.log(
+					"GraphQL query response",
+					Date.now(),
+					graphEvents.data.data.events
+				);
 
-				if (!graphEvents.data || graphEvents.data.data == "undefined") {
-					// console.log("GraphQL query -- graphEvents undefined")
-					this.setState({
-						Events_Blockchain: [],
-						// active_length: 0,
-						event_copy: [],
-					});
+				if (
+					!graphEvents.data ||
+					graphEvents.data.data == "undefined" ||
+					graphEvents.data.data.events.length === 0) {
+					console.log("GraphQL query -- graphEvents undefined");
+					// this.setState({
+					// 	Events_Blockchain: [],
+					// 	// active_length: 0,
+					// 	event_copy: [],
+					// });
+					setTimeout(() => {
+						this.setState({
+							loading: false,
+							Events_Blockchain: [],
+							event_copy: [],
+						});
+					}, 1000);
 				} else {
 					// if (this._isMounted) {
 					const dateTime = Date.now();
@@ -333,7 +343,9 @@ class FindEvents extends Component {
 						// active_length: newsort.length,
 						event_copy: newsort,
 					});
-					this.setState({ loading: false });
+					setTimeout(() => {
+						this.setState({ loading: false });
+					}, 1000);
 					// }
 				}
 			})
@@ -426,7 +438,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -464,7 +476,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -499,7 +511,7 @@ class FindEvents extends Component {
 					  oneTimeBuy
 					  token
 					  time
-					  duration
+					  onsite
 					  catTktQuantity
 					  catTktQuantitySold	
 					  categories
@@ -534,7 +546,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -563,7 +575,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -592,7 +604,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -605,8 +617,62 @@ class FindEvents extends Component {
 			this.loadBlockchain(query);
 		} else if (newValue === "onlineevents") {
 			console.log(newValue);
+			query = `
+			{	
+			  events(where: {onsite: false} orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  onsite
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		} else if (newValue === "physicalevents") {
 			console.log(newValue);
+			query = `
+			{	
+			  events(where: {onsite: true} orderBy:eventId orderDirection:asc) {
+				  id
+				  eventId
+				  owner
+				  name
+				  topic
+				  location
+				  ipfsHash
+				  tktLimited
+				  tktTotalQuantity
+				  tktTotalQuantitySold
+				  oneTimeBuy
+				  token
+				  time
+				  onsite
+				  catTktQuantity
+				  catTktQuantitySold	
+				  categories
+				  prices
+				  eventRevenueInDollar
+				  eventRevenueInPhnx
+			  }
+			}
+			`;
+			this.loadBlockchain(query);
 		} else {
 			console.log(newValue);
 			query = `
@@ -625,7 +691,7 @@ class FindEvents extends Component {
 				  oneTimeBuy
 				  token
 				  time
-				  duration
+				  onsite
 				  catTktQuantity
 				  catTktQuantitySold	
 				  categories
@@ -651,6 +717,15 @@ class FindEvents extends Component {
 	// }
 
 	render() {
+		if (this.state.Events_Blockchain.length === 0 && !this.state.loading) {
+			body = (
+				<EmptyState
+					text="No events found 🤔.Be the first;"
+					btnText="Try creating one"
+					url="/createevent"
+				/>
+			);
+		} 
 		//when user is not connectd hide connect wallet button
 		// console.log("accounts---->", this.props.accounts);
 
@@ -667,17 +742,8 @@ class FindEvents extends Component {
 		// 	this.state.active_length !== ""
 		// ) {
 		let count = this.state.Events_Blockchain.length;
-		if (this.state.loading) {
-			body = <PhoenixDAOLoader />;
-		} else if (
-			this.state.Events_Blockchain.length === 0 &&
-			!this.state.loading
-		) {
-			body = (
-				<EmptyState text="No events found 🤔.Be the first;" btnText="Try creating one" url="/createevent" />
-			);
-		} else {
-			let currentPage = Number(this.props.match.params.page);
+		
+		let currentPage = Number(this.props.match.params.page);
 			let events_list = [];
 			let skip = false;
 			for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
@@ -724,6 +790,7 @@ class FindEvents extends Component {
 						id={events_list[i].eventId}
 						ipfs={events_list[i].ipfsHash}
 						eventData={events_list[i]}
+						loading = {this.state.loading}
 					/>
 				);
 			}
@@ -823,15 +890,13 @@ class FindEvents extends Component {
 					</nav>
 				);
 			}
-			if (updated_list.length == 0) {
+			if (updated_list.length == 0 && !this.state.loading) {
 				body = (
-					<p className="text-center not-found">
-						<span role="img" aria-label="thinking">
-							🤔
-						</span>
-						&nbsp;No events found.{" "}
-						<a href="/createevent">Try creating one.</a>
-					</p>
+					<EmptyState
+					text="No events found 🤔.Be the first;"
+					btnText="Try creating one"
+					url="/createevent"
+				/>
 				);
 			} else {
 				body = (
@@ -841,7 +906,6 @@ class FindEvents extends Component {
 					</div>
 				);
 			}
-		}
 		// }
 
 		return (
@@ -1037,9 +1101,7 @@ class FindEvents extends Component {
 
 					<div>
 						<div className="row row_mobile dashboard-dropdown-row">
-							<h2
-								className="col-lg-9 col-md-8 col-sm-7 main-title"
-							>
+							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 								{this.state.category === "allevents"
 									? `All Events`
 									: `Trending Events`}
@@ -1183,7 +1245,7 @@ class FindEvents extends Component {
 			  oneTimeBuy
 			  token
 			  time
-			  duration
+			  onsite
 			  catTktQuantity
 			  catTktQuantitySold	
 			  categories
