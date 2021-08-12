@@ -65,6 +65,7 @@ import StopIcon from "@material-ui/icons/Stop";
 import checkedIcon from "../Images/checked.png";
 import uncheckedIcon from "../Images/unchecked.png";
 import { CodeSharp, CompassCalibrationOutlined } from "@material-ui/icons";
+import GeoLocation from "../common/GeoLocation";
 
 var badWords = require("bad-words");
 
@@ -267,6 +268,10 @@ const useStyles = makeStyles((theme) => ({
 		color: "#4E4E55",
 		fontFamily: "'Aeonik', sans-serif",
 	},
+	formLocation: {
+		width: "100%", // Fix IE 11 issue.
+		marginTop: theme.spacing(3),
+	},
 }));
 
 const MyStepper = ({
@@ -302,10 +307,10 @@ const MyStepper = ({
 	const [images, setImages] = useState([{ name: "" }]);
 
 	//state object variable
-	const [state, setState] = useState({
-		eventName: "",
-		eventOrganizer: "",
-	});
+	// const [state, setState] = useState({
+	// 	eventName: "",
+	// 	eventOrganizer: "",
+	// });
 
 	//state variable
 	const [eventName, setEventName] = useState("");
@@ -332,6 +337,16 @@ const MyStepper = ({
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState({});
 	const [phnxValue, setPhnxValue] = useState(0);
 	const [isCopied, setIsCopied] = useState(false);
+
+	const [country, setCountry] = useState("");
+	const [state, setState] = useState("");
+	const [city, setCity] = useState("");
+
+	console.log({
+		country,
+		state,
+		city,
+	});
 
 	let URL = "https://phoenixdao-events-dapp.herokuapp.com";
 
@@ -457,6 +472,7 @@ const MyStepper = ({
 
 	//next button steeper
 	const handleNext = (fields) => {
+		console.log("fields", fields);
 		// console.log("categories", categories);
 		const filter = new badWords();
 
@@ -1316,6 +1332,88 @@ const MyStepper = ({
 							<br />
 							{type === "physical" ? (
 								<div>
+									<br />
+									<Grid container spacing={2}>
+										<Grid item xs={12} sm={4}>
+											<Controller
+												name="country"
+												control={control}
+												defaultValue=""
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<GeoLocation
+														locationTitle="COUNTRY"
+														isCountry
+														onChange={(v) => {
+															onChange(v);
+															setCountry(v.id);
+														}}
+														error={error}
+														value={value}
+													/>
+												)}
+												rules={{
+													required:
+														"Please select country.",
+												}}
+											/>
+										</Grid>
+										<Grid item xs={12} sm={4}>
+											<Controller
+												name="state"
+												control={control}
+												defaultValue=""
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<GeoLocation
+														locationTitle="STATE"
+														onChange={(v) => {
+															onChange(v);
+															setState(v.id);
+														}}
+														error={error}
+														geoId={country}
+														value={value}
+													/>
+												)}
+												rules={{
+													required:
+														"Please select state.",
+												}}
+											/>
+										</Grid>
+										<Grid item xs={12} sm={4}>
+											<Controller
+												name="city"
+												control={control}
+												defaultValue=""
+												render={({
+													field: { onChange, value },
+													fieldState: { error },
+												}) => (
+													<GeoLocation
+														locationTitle="CITY"
+														onChange={(v) => {
+															onChange(v);
+															setCity(v.id);
+														}}
+														error={error}
+														geoId={state}
+														value={value}
+													/>
+												)}
+												rules={{
+													required:
+														"Please select city.",
+												}}
+											/>
+										</Grid>
+									</Grid>
+									<br />
 									<label className={classes.label}>
 										EVENT LOCATION
 									</label>
