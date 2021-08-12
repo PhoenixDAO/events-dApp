@@ -847,7 +847,7 @@ const Analytics = (props, context) => {
 									onEvent={handleEvent}
 									style={{ display: "none" }}
 								>
-									{/* <div> custom</div> */}
+									<div> custom</div>
 								</DateRangePicker>
 							) : null}
 						</FormControl>

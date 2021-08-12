@@ -18,6 +18,7 @@ import ConnectWalletButton from "./ConnectWalletButton";
 import SearchBar from "./SearchBar";
 import DialogueBox from "./DialogueBox";
 import Wallet from "./Wallet";
+import BuyPhoenixModal from "./BuyPhoenixModal";
 const useStyles = makeStyles((theme) => ({
 	buy: {
 		marginLeft: "13px",
@@ -47,24 +48,43 @@ const Header = ({
 	accounts,
 }) => {
 	const classes = useStyles();
-	const [open, setOpen] = useState(false);
-	const handleOpen = () => {
-		setOpen(true);
+	const [openWallet, setOpenWallet] = useState(false);
+	const [openBuyPhnx, setOpenBuyPhnx] = useState(false);
+	const [transak, setTransak] = useState(false);
+
+	const handleOpenWallet = () => {
+		setOpenWallet(true);
 	};
 
-	const handleClose = () => {
-		setOpen(false);
+	const handleCloseWallet = () => {
+		setOpenWallet(false);
 	};
 
-	let connect = searchBar && Object.keys(accounts).length !== 0; 
+	const handleOpenBuyPhnx = () => {
+		setOpenBuyPhnx(true);
+	};
+
+	const handleCloseBuyPhnx = () => {
+		setOpenBuyPhnx(false);
+	};
+
+	const openTransak = () => {
+		setTransak(true);
+	};
+
+	const closeTransak = () => {
+		setTransak(false);
+	};
+
+	let connect = searchBar && Object.keys(accounts).length !== 0;
 
 	return (
 		<Grid
-			className="header3"
+			className={transak ? "zIndx-1 header3": "header3"}
 			style={
-				page === "dashboard" || page === "myEvent"
+				(page === "dashboard" || page === "myEvent"
 					? { borderBottom: "0px" }
-					: null
+					: null)
 			}
 		>
 			{/* Back button Arrow */}
@@ -90,8 +110,8 @@ const Header = ({
 			{searchBar ? <SearchBar connect={connect} /> : null}
 
 			{Object.keys(accounts).length === 0 ? (
-				<ConnectWalletButton onClick={handleOpen} />
-			): buyTicket ? (
+				<ConnectWalletButton onClick={handleOpenWallet} />
+			) : buyTicket ? (
 				<div>
 					<Button
 						variant="contained"
@@ -105,12 +125,31 @@ const Header = ({
 						{buttonText}
 					</Button>
 				</div>
-			) : page === "analytics" || page === "create" || page === "confirm-purchase" || phnxButton ? (
-				<BuyPhnxButton />
+			) : page === "analytics" ||
+			  page === "create" ||
+			  page === "confirm-purchase" ||
+			  phnxButton ? (
+				<BuyPhnxButton onClick={handleOpenBuyPhnx} />
 			) : null}
-			<DialogueBox open={open} handleClose={handleClose} maxWidth="xs">
+			<DialogueBox
+				open={openWallet}
+				handleClose={handleCloseWallet}
+				maxWidth="xs"
+			>
 				{/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}
 				<Wallet />
+			</DialogueBox>
+			<DialogueBox
+				open={openBuyPhnx}
+				handleClose={handleCloseBuyPhnx}
+				maxWidth="xs"
+			>
+				<BuyPhoenixModal
+					handleClose={handleCloseBuyPhnx}
+					openTransak={openTransak}
+					closeTransak={closeTransak}
+					transak={transak}
+				/>
 			</DialogueBox>
 		</Grid>
 	);

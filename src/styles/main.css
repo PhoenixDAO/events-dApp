@@ -391,6 +391,9 @@ input[type="number"] {
 	/* width: 101% !important; */
 }
 
+.zIndx-1{
+	z-index: -1;
+}
 .header3 h2 {
 	font-weight: 700;
 	color: black;
