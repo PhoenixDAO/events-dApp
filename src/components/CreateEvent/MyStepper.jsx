@@ -1609,8 +1609,7 @@ const MyStepper = ({
 													color: "#73727D",
 													fontSize: 14,
 													fontWeight: 400,
-													fontFamily:
-														"'Aeonik', sans-serif",
+		paddingTop:"10px"
 												}}
 											>
 												Max: 3 Pictures. Not greater

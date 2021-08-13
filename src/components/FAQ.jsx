@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	gridContainer: {
 		background: "#fff",
-		marginTop: "40px",
+		marginTop: "35px",
 	},
 }));
 
