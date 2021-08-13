@@ -55,7 +55,7 @@ import Favorites from "./Favorite.jsx";
 import { getUserDetails } from "../config/serverAPIs";
 import AccountDetail from "./account/index";
 
-import SkeletonTopic from "./common/SkeletonTopic"
+import SkeletonEvent from "./common/SkeletonEvent"
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -1210,7 +1210,7 @@ class App extends Component {
 					<Route
 						path="/skull"
 						exact
-						component={SkeletonTopic}
+						component={SkeletonEvent}
 					/>
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>

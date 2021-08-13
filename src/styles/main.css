@@ -381,7 +381,7 @@ input[type="number"] {
 /* sticky header */
 
 .header3 {
-	margin-left: -2px;
+	/*margin: 0 -17px;*/
 	/*  margin-right: -1px; */
 	z-index: 999;
 	display: flex;
@@ -390,12 +390,23 @@ input[type="number"] {
 	padding-bottom: 10px;
 	position: sticky;
 	top: 0;
-	padding-top: 40px;
+	padding: 40px 10px 0 10px;
 	background-color: #fcfcfd;
 	/* width: 101% !important; */
 	transition: 0.5s;
 }
 
+.r-sticky-4 {
+	margin: 0 -20px !important;
+}
+
+/* .r-sticky-4 .header3{
+	margin: 0 -17px;
+} */
+
+/* .r-sticky-4 .header-heading {
+	margin-left: 15px;
+} */
 .sidebar-closed .header3 {
 	padding-top: 40px !important;
 	transition: .5s;
@@ -3028,4 +3039,13 @@ h2.main-title {
 .sidebar-closed .sticky-nav-travel {
 	left: 13%;
 	transition: 0.5s;
+}
+
+@media (max-width: 1200px) {
+	.sidebar-closed .r-selectDiv-19 {
+		top: 255px !important
+	}
+	.sidebar-closed .fc .fc-view-harness {
+		margin-top: 46px !important;
+	}
 }

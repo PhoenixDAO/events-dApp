@@ -32,11 +32,6 @@ const useStyles = makeStyles((theme) => ({
 			width: "160px",
 		},
 	},
-	heading: {
-		"@media screen and (min-width: 1100px) ": {
-			width: "41%"
-		},
-	},
 }));
 
 const Header = ({
@@ -93,7 +88,7 @@ const Header = ({
 			}
 		>
 			{/* Back button Arrow */}
-			<div className={classes.heading} style={{ display: "flex", alignItems: "center" }}>
+			<div className="header-heading" style={{ display: "flex", alignItems: "center" }}>
 				{page === "event" ||
 				page === "topic" ||
 				page === "accountdetails" ? (
