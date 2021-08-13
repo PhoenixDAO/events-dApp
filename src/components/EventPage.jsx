@@ -51,6 +51,7 @@ import Header from "./common/Header";
 import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
+import SkeletonLayout from "./common/SkeletonLayout";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -113,6 +114,7 @@ const styles = (theme) => ({
 	eventinfo: {
 		fontSize: "22px",
 		fontWeight: "700",
+		wordBreak: "break-word",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
@@ -749,7 +751,7 @@ class EventPage extends Component {
 	render() {
 		const { classes } = this.props;
 
-		let body = <Loading />;
+		let body = <SkeletonLayout/>
 
 		if (this.state.blockChainEventLoaded) {
 			if (!this.state.blockChainEvent) {

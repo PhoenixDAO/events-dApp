@@ -15,6 +15,7 @@ import { explorerWithAddress } from "../config/const";
 import EventCard from "./common/EventCard.jsx";
 
 import Loading from "./Loading";
+import SkeletonLayout from "./common/SkeletonLayout";
 
 var QRCode = require("qrcode.react");
 
@@ -365,7 +366,7 @@ class Ticket extends Component {
 		let body = (
 			<div className="card">
 				<div className="card-body">
-					<Loading />
+					<SkeletonLayout/>
 				</div>
 			</div>
 		);
