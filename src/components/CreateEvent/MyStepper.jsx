@@ -123,6 +123,9 @@ const useStyles = makeStyles((theme) => ({
 	title: {
 		color: "#413AE2",
 		marginBottom: theme.spacing(1),
+		fontSize: 32,
+		fontWeight: 500,
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	buttonsContainer: {
 		display: "flex",
@@ -144,6 +147,10 @@ const useStyles = makeStyles((theme) => ({
 		"&:focus": {
 			outline: "none",
 		},
+		height: "54px",
+		fontweight: "400px",
+		fontSize: "20px",
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	editor: {
 		height: 430,
@@ -151,10 +158,11 @@ const useStyles = makeStyles((theme) => ({
 		zIndex: 2,
 	},
 	label: {
-		color: "#999999",
+		color: "#73727D",
 		fontSize: 15,
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
+		// marginBottom: "-10",
 	},
 	eventUrl: {
 		textAlign: "center",
@@ -271,6 +279,15 @@ const useStyles = makeStyles((theme) => ({
 	formLocation: {
 		width: "100%", // Fix IE 11 issue.
 		marginTop: theme.spacing(3),
+	},
+	timeHelperText: {
+		fontSize: 14,
+		fontWeight: 400,
+		color: "#73727D",
+		fontFamily: "'Aeonik', sans-serif",
+	},
+	adornedStart: {
+		backgroundColor: "#000",
 	},
 }));
 
@@ -734,9 +751,6 @@ const MyStepper = ({
 							<br />
 
 							<FormControl component="fieldset">
-								<label className={classes.label}>
-									TICKET AVAILABILITY
-								</label>
 								<Controller
 									name="eventTime"
 									control={control}
@@ -979,6 +993,11 @@ const MyStepper = ({
 															onChange={onChange}
 															error={!!error}
 															helperText="Don’t have an end time? leave here blank"
+															FormHelperTextProps={{
+																classes: {
+																	root: classes.timeHelperText,
+																},
+															}}
 															// helperText={
 															// 	error
 															// 		? error.message
@@ -1223,6 +1242,11 @@ const MyStepper = ({
 															value={value}
 															onChange={onChange}
 															helperText="Don’t have an end time? leave here blank"
+															FormHelperTextProps={{
+																classes: {
+																	root: classes.timeHelperText,
+																},
+															}}
 															error={!!error}
 															// helperText={
 															// 	error
@@ -1251,11 +1275,7 @@ const MyStepper = ({
 							<h3 className={classes.title}>Event Details</h3>
 							<Divider light />
 							<br />
-
 							<FormControl component="fieldset">
-								<label className={classes.label}>
-									TICKET AVAILABILITY
-								</label>
 								<Controller
 									name="eventType"
 									control={control}
@@ -1924,6 +1944,7 @@ const MyStepper = ({
 																			/>
 																		</InputAdornment>
 																	),
+																classes: {},
 															}}
 															value={value}
 															onChange={(e) => {
