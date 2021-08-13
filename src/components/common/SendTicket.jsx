@@ -13,7 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import roundlogo from "../Images/roundlogo.svg";
 import { makeStyles } from "@material-ui/core/styles";
 import Slide from '@material-ui/core/Slide';
-
+import { useForm, Controller } from "react-hook-form";
+import Web3 from "web3";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -151,17 +152,25 @@ const DialogActions = withStyles((theme) => ({
 export default function sendTicket({ handleClose, open, eventTitle, sendTicket2, eventId }) {
   const [address, setAddress] = useState("");
   const classes = useStyles();
+	const { handleSubmit, control, register } = useForm();
+	const [errorAddress, setErrorAddress] = useState(false);
 
   const accountChange = (event) => {
     setAddress(event.target.value);
     console.log("address", address);
   }
   const send = () => {
-
+    const isaddress = Web3.utils.isAddress(address);
+		if (!isaddress) {
+			setErrorAddress(true);
+		}
     // console.log("props", sendTicket2)
-    sendTicket2(address, eventId);
-    handleClose();
-
+    else{
+      sendTicket2(address, eventId);
+      handleClose();
+  
+    }
+   
   }
   return (
     <div >
@@ -181,14 +190,43 @@ export default function sendTicket({ handleClose, open, eventTitle, sendTicket2,
           <h5 className={classes.ethereum}>ETHEREUM ADDRESS</h5>
 
           <FormControl variant="outlined" lg={12} className={classes.UrlField}>
-
+          <Controller
+						name="eventOrganizer"
+						control={control}
+						defaultValue=""
+						render={({
+							field: { onChange, value },
+							fieldState: { error },
+						}) => (
             <TextField
               id="outlined-helperText"
               label=""
-              onChange={accountChange}
               value={address}
               variant="outlined"
+              error={errorAddress || error}
+              helperText={
+                errorAddress
+                  ? "Invalid account address" 
+                  : error? error.message :null
+              }
+              onChange={(e) => {
+                onChange(e);
+                accountChange(e);
+              }}
             />
+            )}
+						rules={{
+							required: "Please enter account address.",
+							minLength: {
+								value: 3,
+								message: "Invalid Address",
+							},
+							maxLength: {
+								value: 43,
+								message: "Invalid address",
+							},
+						}}
+					/>
           </FormControl>
         </DialogContent>
         <DialogActions>

@@ -397,8 +397,8 @@ input[type="number"] {
 }
 
 .sidebar-closed .header3 {
-	padding-top: 20px !important;
-	transition: 0.5s;
+	padding-top: 40px !important;
+	transition: .5s;
 }
 
 .header3 h2 {
@@ -776,7 +776,7 @@ input[type="number"] {
 	margin-right: 0;
 	padding-right: 80px;
 	padding-left: 325px;
-	padding-top: 30px;
+	padding-top: 0px !important;
 	transition-duration: 0.5s;
 	margin-top: -1px;
 	margin-left: -1px;
@@ -1580,6 +1580,7 @@ body,
 }
 
 .connection {
+	color:#413AE2;
 	max-width: 175px;
 }
 

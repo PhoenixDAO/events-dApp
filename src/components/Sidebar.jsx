@@ -201,13 +201,14 @@ class Sidebar extends Component {
 	render() {
 		let user = (
 			<div>
-				<div className="user-status-icon">
+				{/* <div className="user-status-icon">
 					<i className="fas fa-plug"></i>
-				</div>
-				<p className="mt-3 small connection">
+				</div> */}
+
+				<p className="small connection">
+					<img src="images/icons/switch.svg"/>
 					<span className="toggleHidden">
-						You are not connected to the Matic Mainnet. Please check
-						MetaMask.
+					Connect Wallet
 					</span>
 				</p>
 			</div>
@@ -279,7 +280,7 @@ class Sidebar extends Component {
 						>
 							<Menu className="icon" />
 						</div>
-						<div className="user-status mt-5">{user}</div>
+						<div className="user-status">{user}</div>
 						<div className="menu mt-5">
 							<h5 className="toggleHidden header">
 								Events & Tickets
@@ -699,7 +700,7 @@ class Sidebar extends Component {
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
-											this.toggleSidebarClass(true);
+											this.sidebarClick(this);
 										}}
 									>
 										<FavoriteBorder />
@@ -715,7 +716,7 @@ class Sidebar extends Component {
 										className="nav-link"
 										activeClassName="nav-link-active"
 										onClick={() => {
-											this.toggleSidebarClass(true);
+											this.sidebarClick(this);
 										}}
 									>
 										<i

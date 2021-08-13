@@ -18,7 +18,7 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
-
+import { getTickets } from "../utils/graphApis";
 const styles = (theme) => ({
 	content: {
 		backgroundColor: "white",
@@ -49,12 +49,12 @@ const styles = (theme) => ({
 	},
 	selectDiv: {
 		position: "absolute",
-        top: "195px",
-        right: "50px"
+		top: "195px",
+		right: "50px"
 	},
-    calenderContainer: {
-        position: "relative",
-    },
+	calenderContainer: {
+		position: "relative",
+	},
 });
 class Calendars extends Component {
 	constructor(props) {
@@ -78,7 +78,8 @@ class Calendars extends Component {
 
 	async loadBlockchain() {
 		// GRAPH BLOCK //
-
+		const ownerTickets = await getTickets(this.props.accounts[0]);
+		this.setState({ activeEvents: ownerTickets });
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -220,16 +221,8 @@ class Calendars extends Component {
 				});
 			}
 		} else if (category == "tickets") {
-			// const openEvents = new this.web3.eth.Contract(
-			//     Open_events_ABI,
-			//     Open_events_Address
-			// );
-			const blockChainTickets = await this.props.eventsContract.methods
-				.ticketsOf(this.props.accounts[0])
-				.call();
-			const newsort = blockChainTickets.concat().sort((a, b) => b - a);
 			let tickets = this.state.event_copy.filter((item) =>
-				newsort.includes(item.eventId)
+				this.state.activeEvents.includes(item.eventId)
 			);
 			this.setState({
 				Events_Blockchain: tickets,
@@ -297,8 +290,8 @@ class Calendars extends Component {
 							displayEventTime={true}
 							headerToolbar={{
 								left: "dayGridMonth,timeGridWeek,timeGridDay",
-                                center: "prev,title,next",
-                                right: "",
+								center: "prev,title,next",
+								right: "",
 							}}
 							selectable={true}
 							plugins={[
@@ -335,10 +328,10 @@ class Calendars extends Component {
 									native
 									value={this.state.category}
 									onChange={this.categoryChange}
-									// inputProps={{
-									//     name: "age",
-									//     id: "outlined-age-native-simple",
-									// }}
+								// inputProps={{
+								//     name: "age",
+								//     id: "outlined-age-native-simple",
+								// }}
 								>
 									<option aria-label="None" value="all">
 										All Events

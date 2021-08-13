@@ -435,3 +435,22 @@ export async function getPhoenixDAOMarketValue(price) {
 //     dataset = [1, 2, 34, 0, 6, 7];
 //     setGraphData(dataset);
 // };
+export async function getTickets(owner) {
+	let result = await axios({
+		url: graphURL,
+		method: "post",
+		data: {
+			query: `
+        {
+          tickets(where:{buyer:"${owner}"}){
+            eventId
+          }
+        }
+        `,
+		},
+	});
+	let array =result.data.data.tickets.map((e)=>{
+		return e.eventId;
+	})
+	return array;
+}
