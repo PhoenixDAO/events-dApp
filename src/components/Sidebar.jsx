@@ -206,7 +206,7 @@ class Sidebar extends Component {
 				</div> */}
 
 				<p className="small connection">
-					<img src="images/icons/switch.svg"/>
+					<img className="switch-img" src="images/icons/switch.svg"/>
 					<span className="toggleHidden">
 					Connect Wallet
 					</span>

@@ -44,7 +44,7 @@
 	border-radius: 100%;
     width: 40px;
     height: 40px;
-    margin-top: -58px;
+    margin-top: -53px;
     background-color: #FCFCFD;
 }
 
@@ -120,7 +120,7 @@
     padding: 12px 20px 0px;
 
 }
-.user-status img{
+.switch-img{
 	padding: 0px 10px 4px 0px;
 
 }

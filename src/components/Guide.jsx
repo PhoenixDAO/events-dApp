@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	gridContainer: {
-		marginTop: "40px",
+		marginTop: "20px",
 	},
 }));
 const Terms = (props) => {
