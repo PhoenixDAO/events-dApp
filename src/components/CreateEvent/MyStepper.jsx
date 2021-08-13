@@ -240,7 +240,7 @@ const useStyles = makeStyles((theme) => ({
 		display: "flex",
 		justifyContent: "space-between",
 		alignItems: "center",
-		[theme.breakpoints.between("xs", "sm")]: {
+		[theme.breakpoints.down("md")]: {
 			flexDirection: "column",
 		},
 	},
@@ -1894,9 +1894,6 @@ const MyStepper = ({
 									</div>
 								) : category === "single" ? (
 									<div>
-										<label className={classes.label}>
-											TICKET PRICE
-										</label>
 										<br />
 										<div
 											className={
@@ -1918,7 +1915,14 @@ const MyStepper = ({
 												}) => (
 													<span>
 														<InputLabel htmlFor="input-with-icon-adornment">
-															<span>&nbsp;</span>
+															{/* <span>&nbsp;</span> */}
+															<label
+																className={
+																	classes.label
+																}
+															>
+																TICKET PRICE
+															</label>
 														</InputLabel>
 														<TextField
 															className={
@@ -1935,12 +1939,23 @@ const MyStepper = ({
 																startAdornment:
 																	(
 																		<InputAdornment position="start">
-																			<img
-																				src={
-																					dollarIcon
-																				}
-																				alt="dollar sign"
-																			/>
+																			<Button
+																				component="label"
+																				style={{
+																					padding:
+																						"15px 15px",
+																					background:
+																						"#F2F2FD",
+																					left: "-13px",
+																				}}
+																			>
+																				<img
+																					src={
+																						dollarIcon
+																					}
+																					alt="dollar sign"
+																				/>
+																			</Button>
 																		</InputAdornment>
 																	),
 																classes: {},
@@ -2018,12 +2033,23 @@ const MyStepper = ({
 																startAdornment:
 																	(
 																		<InputAdornment position="start">
-																			<img
-																				src={
-																					phnxLogo
-																				}
-																				alt="phnx logo"
-																			/>
+																			<Button
+																				component="label"
+																				style={{
+																					padding:
+																						"15px 15px",
+																					background:
+																						"#F2F2FD",
+																					left: "-13px",
+																				}}
+																			>
+																				<img
+																					src={
+																						phnxLogo
+																					}
+																					alt="phnx logo"
+																				/>
+																			</Button>
 																		</InputAdornment>
 																	),
 															}}
@@ -2425,12 +2451,23 @@ const MyStepper = ({
 																			startAdornment:
 																				(
 																					<InputAdornment position="start">
-																						<img
-																							src={
-																								dollarIcon
-																							}
-																							alt="dollar sign"
-																						/>
+																						<Button
+																							component="label"
+																							style={{
+																								padding:
+																									"15px 15px",
+																								background:
+																									"#F2F2FD",
+																								left: "-13px",
+																							}}
+																						>
+																							<img
+																								src={
+																									dollarIcon
+																								}
+																								alt="dollar sign"
+																							/>
+																						</Button>
 																					</InputAdornment>
 																				),
 																		}}
@@ -2525,12 +2562,23 @@ const MyStepper = ({
 																			startAdornment:
 																				(
 																					<InputAdornment position="start">
-																						<img
-																							src={
-																								phnxLogo
-																							}
-																							alt="phnx logo"
-																						/>
+																						<Button
+																							component="label"
+																							style={{
+																								padding:
+																									"15px 15px",
+																								background:
+																									"#F2F2FD",
+																								left: "-13px",
+																							}}
+																						>
+																							<img
+																								src={
+																									phnxLogo
+																								}
+																								alt="phnx logo"
+																							/>
+																						</Button>
 																					</InputAdornment>
 																				),
 																		}}
