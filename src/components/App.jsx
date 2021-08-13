@@ -331,7 +331,7 @@ class App extends Component {
 							toast(
 								<Notify
 									hash={txreceiptApproved.transactionHash}
-									text="Ticket purchase successfull!"
+									text="Ticket purchase successful!"
 									icon="fa-ticket-alt"
 									link="Check out your TICKET here"
 								/>,

@@ -103,9 +103,7 @@ const ConfirmPurchase = () => {
 		}
 		else {
 			const isowner = buyers.find(element => {
-				console.log("element", element.address == address
-				);
-				return element.address == address
+				return element.address.toLowerCase() == address.toLowerCase()
 			});
 
 			if (isowner) {
@@ -202,11 +200,11 @@ const ConfirmPurchase = () => {
 									setText("");
 									setAddress(e.target.value);
 								}}
-								error={errorAddress}
+								error={errorAddress || error}
 								helperText={
 									errorAddress
-										? "Invalid account address"
-										: null
+										? "Invalid account address" 
+										: error? error.message :null
 								}
 							/>
 						)}
@@ -217,7 +215,7 @@ const ConfirmPurchase = () => {
 								message: "Invalid Address",
 							},
 							maxLength: {
-								value: 42,
+								value: 43,
 								message: "Invalid address",
 							},
 						}}
