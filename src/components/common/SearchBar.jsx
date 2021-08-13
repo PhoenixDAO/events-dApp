@@ -9,12 +9,12 @@ const useStyles = makeStyles((theme) => ({
 	textField: {
 		margin: theme.spacing(1),
 		color: "#C1C1C1",
-		"@media screen and (max-width: 1500px) and (min-width: 1300px)": {
-			left: "7%",
-		},
-		"@media screen and (min-width: 1500px) ": {
-			left: "12%",
-		},
+		// "@media screen and (max-width: 1500px) and (min-width: 1300px)": {
+		// 	left: "7%",
+		// },
+		// "@media screen and (min-width: 1500px) ": {
+		// 	left: "12%",
+		// },
 	},
 	textFieldMargin: {
 		left: "0",
