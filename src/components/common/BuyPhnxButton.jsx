@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const BuyPhnxButton = () => {
+const BuyPhnxButton = (props) => {
 	const classes = useStyles();
 
 	return (
@@ -42,6 +42,7 @@ const BuyPhnxButton = () => {
 					alt="phnx logo"
 				/>
 			}
+			onClick={props.onClick}
 		>
 			Buy PHNX
 		</Button>
