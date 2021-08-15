@@ -381,8 +381,7 @@ input[type="number"] {
 /* sticky header */
 
 .header3 {
-	/*margin: 0 -17px;*/
-	/*  margin-right: -1px; */
+	margin: 0 -17px;
 	z-index: 999;
 	display: flex;
 	justify-content: space-between;
@@ -396,13 +395,13 @@ input[type="number"] {
 	transition: 0.5s;
 }
 
-.r-sticky-4 {
+div[class|="r-sticky"]{
 	margin: 0 -20px !important;
 }
 
-/* .r-sticky-4 .header3{
-	margin: 0 -17px;
-} */
+div[class|="r-sticky"] .header3{
+	margin: 0;
+}
 
 /* .r-sticky-4 .header-heading {
 	margin-left: 15px;

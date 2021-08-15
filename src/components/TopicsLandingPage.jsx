@@ -181,16 +181,20 @@ class TopicsLandingPage extends Component {
 
 	render() {
 		const { classes } = this.props;
+		let check = this.props.eventObj && !this.state.loading;
 		// let body = <Loading />;
 		let body;
-		if (this.props.eventObj) {
+		if (
+			this.props.eventObj &&
+			Object.keys(this.props.eventObj).length > 0
+		) {
 			body = Object.keys(this.props.eventObj)
 				.filter((key) => this.props.eventObj[key].eventCount >= 7)
 				.map((key) => {
 					return (
 						<div
 							key={this.props.eventObj[key].topic}
-							className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
+							// className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
 						>
 							<TopicCard
 								image={
@@ -397,13 +401,16 @@ class TopicsLandingPage extends Component {
 							<br />
 							<div>
 								<div className="row user-list mt-4">
-									{Object.keys(this.props.eventObj).length ===
-										0 && !this.props.loading ? (
-										<EmptyState
-											text="No events found 🤔.Be the first;"
-											btnText="Try creating one"
-											url="/createevent"
-										/>
+									{check &&
+									Object.keys(this.props.eventObj).length ===
+										0 ? (
+										<div style={{ margin: "0 auto" }}>
+											<EmptyState
+												text="No events found 🤔.Be the first;"
+												btnText="Try creating one"
+												url="/createevent"
+											/>
+										</div>
 									) : this.props.eventObj &&
 									  Object.keys(this.props.eventObj).length >
 											0 ? (
@@ -455,9 +462,11 @@ class TopicsLandingPage extends Component {
 												);
 											})
 										) : body.length > 0 ? (
-											{ body }
+											<div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4">
+												{body}
+											</div>
 										) : (
-											<div style={{margin: "0 auto"}}>
+											<div style={{ margin: "0 auto" }}>
 												<EmptyState
 													text="No events found 🤔.Be the first;"
 													btnText="Try creating one"
