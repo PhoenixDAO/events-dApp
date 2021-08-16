@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 		background: "#413AE2",
 		color: "#fff",
 		padding: "10px 40px",
-		marginTop: "20px",
+		margin: "20px 13px",
 		fontFamily: "'Aeonik', sans-serif",
 		fontWeight: "600",
 	},
@@ -29,38 +29,40 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const EmptyState = props => {
-    const classes = useStyles();
-    // const [text, setText] = useState("This is text")
-    // const [btnText, setBtnText] = useState("Go to btn")
-    // const [url, setUrl] = useState("/upcomingevents/1");
-
-	const { text, btnText, url } = props;
-
+const EmptyStateAnalytics = (props) => {
+	const classes = useStyles();
 	return (
 		<div className={classes.wrapper}>
 			<Grid container className={classes.gridContainer}>
 				<div className={classes.imageContainer}>
-					<img
-						className={classes.image}
-						src={"/images/empty.svg"}
-					/>
+					<img className={classes.image} src={"/images/empty.svg"} />
 				</div>
 			</Grid>
 			<div className="mt-5 text-center">
-				<h3 className={`mt-5 ${classes.title}`}>{text}</h3>
-				<Link to={url}>
+				<h3 className={`mt-5 ${classes.title}`}>
+					No analytics to see 😔
+				</h3>
+				<Link to="/upcomingevents/1">
 					<Button
 						className={classes.btnGo}
 						variant="contained"
 						color="primary"
 					>
-						{btnText}
+						Buy a ticket
+					</Button>
+				</Link>
+				<Link to="/createevent">
+					<Button
+						className={classes.btnGo}
+						variant="contained"
+						color="primary"
+					>
+						Create an Event
 					</Button>
 				</Link>
 			</div>
 		</div>
 	);
-}
+};
 
-export default EmptyState;
+export default EmptyStateAnalytics;

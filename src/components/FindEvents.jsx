@@ -1007,6 +1007,7 @@ class FindEvents extends Component {
 						<div>
 							<div className={classes.root}>
 								<AppBar
+									style={{padding: "0 19px"}}
 									position="sticky"
 									className={classes.appBar}
 									color="transparent"

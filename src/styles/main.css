@@ -379,13 +379,20 @@ input[type="number"] {
 }
 
 /* sticky header */
+@media screen and (max-width: 1100px){
+	.sidebar-closed .header3 {
+		display: block !important;
+	}
+}
 
+.header-top {
+	border-bottom: 1px solid #e4e4e7;
+}
 .header3 {
-	margin: 0 -17px;
+	margin: 0 -11px;
 	z-index: 999;
 	display: flex;
 	justify-content: space-between;
-	border-bottom: 1px solid #e4e4e7;
 	padding-bottom: 10px;
 	position: sticky;
 	top: 0;
@@ -3047,4 +3054,8 @@ h2.main-title {
 	.sidebar-closed .fc .fc-view-harness {
 		margin-top: 46px !important;
 	}
+}
+
+.dashboard-dropdown-row div[class*="imageContainer"] img {
+	width: 100%;
 }

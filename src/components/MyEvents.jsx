@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
-import {
-	AppBar, Tabs, Tab, Typography, Box, Divider
-} from "@material-ui/core";
+import { AppBar, Tabs, Tab, Typography, Box, Divider } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
@@ -34,46 +32,40 @@ function TabPanel(props) {
 		>
 			{value === index && (
 				<Box p={3}>
-					<Typography component={'div'} >{children}</Typography>
+					<Typography component={"div"}>{children}</Typography>
 				</Box>
 			)}
 		</div>
 	);
 }
-const styles = theme => ({
+const styles = (theme) => ({
 	AppBar: {
 		"&.MuiPaper-elevation4": {
 			boxShadow: "none",
 		},
-
 	},
 	tabBar: {
 		"&:hover, &:focus ": {
 			outline: "none",
-
 		},
 		" &:active ": {
 			borderBottom: "2.5px solid #413AE2",
-
 		},
 		"&.MuiTab-textColorPrimary.Mui-selected": {
 			color: "#413AE2",
 			borderBottom: "2.5px solid #413AE2",
-
 		},
 
 		fontWeight: 700,
 		textTransform: "Capitalize",
-		fontFamily: "AeonikReg"
-
-
+		fontFamily: "AeonikReg",
 	},
 	searchRow: {
 		display: "flex",
 		justifyContent: "space-between",
 		paddingTop: "40px",
 		alignItems: "baseline",
-	}
+	},
 });
 class MyEvents extends Component {
 	constructor(props, context) {
@@ -94,9 +86,8 @@ class MyEvents extends Component {
 			Deleted_Events: [],
 			disabledBuying: false,
 			selectedTab: 0,
-
 		};
-		console.log("qwe", this.props.accounts[0])
+		console.log("qwe", this.props.accounts[0]);
 		// this.contracts = context.drizzle.contracts;
 		// this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
 		// 	this.props.accounts[0]
@@ -112,10 +103,14 @@ class MyEvents extends Component {
 	//Get Blockchain State
 	async loadBlockchain() {
 		if (this._isMounted) {
-			this.setState({ MyEvents: [], active_length: false, loading: true });
+			this.setState({
+				MyEvents: [],
+				active_length: false,
+				loading: true,
+			});
 			await axios({
 				url: graphURL,
-				method: 'post',
+				method: "post",
 				data: {
 					query: `
 				  {
@@ -124,19 +119,27 @@ class MyEvents extends Component {
 					  eventId
 					}
 				  }
-				  `
-				}
-			}).then((graphDeletedEvents) => {
-				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
-
-				if (!graphDeletedEvents.data || !graphDeletedEvents.data.data === undefined) {
-					this.setState({ Deleted_Events: [] });
-				} else {
-					this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
-				}
-			}).catch((err) => {
-				this.setState({ Deleted_Events: [], loading: false });
+				  `,
+				},
 			})
+				.then((graphDeletedEvents) => {
+					// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+
+					if (
+						!graphDeletedEvents.data ||
+						!graphDeletedEvents.data.data === undefined
+					) {
+						this.setState({ Deleted_Events: [] });
+					} else {
+						this.setState({
+							Deleted_Events:
+								graphDeletedEvents.data.data.eventsRemoveds,
+						});
+					}
+				})
+				.catch((err) => {
+					this.setState({ Deleted_Events: [], loading: false });
+				});
 			// console.log("Graph this.state.isActive",this.state.isActive)
 			if (this.state.isActive) {
 				this.loadActiveEvents();
@@ -154,13 +157,16 @@ class MyEvents extends Component {
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
 
-		console.log("checking this.accounts", typeof this.account, this.account)
+		console.log(
+			"checking this.accounts",
+			typeof this.account,
+			this.account
+		);
 		await axios({
 			url: graphURL,
-			method: 'post',
+			method: "post",
 			data: {
-				query:
-					`{
+				query: `{
                         events(where : {owner:"${this.account.toLowerCase()}"}) {
                             id
                             token
@@ -183,47 +189,52 @@ class MyEvents extends Component {
                             eventRevenueInDollar
                             eventRevenueInPhnx
             }
-          }`
-			}
-		}).then((graphEvents) => {
-			console.log("GraphQL query response in MyEvents Upcoming Events", Date.now(), graphEvents.data.data)
-			if (!graphEvents.data || graphEvents.data.data === undefined) {
-				// console.log("GraphQL query -- graphEvents undefined")
-				this.setState({ loading: false, Topic_Events: [], active_length: 0 });
-			} else {
-				if (this._isMounted) {
-					const dateTime = Date.now();
-					const dateNow = Math.floor(dateTime / 1000);
-					let userEvents = graphEvents.data.data.events;
-					//graphEvents.data.data.users.find((user) => user.account.toLowerCase() === this.account.toLowerCase())
-					if (userEvents) {
-						// let newsort = userEvents.userEvents
-						let newsort = userEvents
-							.concat()
-							.sort((a, b) => b.blockNumber - a.blockNumber)
-							.filter(
-								(activeEvents) =>
-									activeEvents.time >= dateNow
-							)
-						this.setState({
-							MyEvents: newsort,
-							check: newsort,
-							active_length: newsort.length,
-						});
-					}
-					setTimeout(() => {
-						this.setState({ loading: false });
-					},3000)
-				}
-
-			}
-
-		}).catch((err) => {
-			this.setState({ loading: false });
+          }`,
+			},
 		})
-
-
-
+			.then((graphEvents) => {
+				console.log(
+					"GraphQL query response in MyEvents Upcoming Events",
+					Date.now(),
+					graphEvents.data.data
+				);
+				if (!graphEvents.data || graphEvents.data.data === undefined) {
+					// console.log("GraphQL query -- graphEvents undefined")
+					this.setState({
+						loading: false,
+						Topic_Events: [],
+						active_length: 0,
+					});
+				} else {
+					if (this._isMounted) {
+						const dateTime = Date.now();
+						const dateNow = Math.floor(dateTime / 1000);
+						let userEvents = graphEvents.data.data.events;
+						//graphEvents.data.data.users.find((user) => user.account.toLowerCase() === this.account.toLowerCase())
+						if (userEvents) {
+							// let newsort = userEvents.userEvents
+							let newsort = userEvents
+								.concat()
+								.sort((a, b) => b.blockNumber - a.blockNumber)
+								.filter(
+									(activeEvents) =>
+										activeEvents.time >= dateNow
+								);
+							this.setState({
+								MyEvents: newsort,
+								check: newsort,
+								active_length: newsort.length,
+							});
+						}
+						setTimeout(() => {
+							this.setState({ loading: false });
+						}, 3000);
+					}
+				}
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
 	}
 
 	//Get My Concluded Events on Blockchain
@@ -236,11 +247,9 @@ class MyEvents extends Component {
 
 		await axios({
 			url: graphURL,
-			method: 'post',
+			method: "post",
 			data: {
-				query:
-
-					`{
+				query: `{
 						events(where : {owner: "${this.account.toLowerCase()}"}) {
 							id
 							token
@@ -263,49 +272,56 @@ class MyEvents extends Component {
 							eventRevenueInDollar
 							eventRevenueInPhnx
 						  }
-		  }`
+		  }`,
+			},
+		})
+			.then((graphEvents) => {
+				console.log(
+					"GraphQL query response in MyEvents Past Events",
+					Date.now(),
+					graphEvents.data.data
+				);
 
-			}
-		}).then((graphEvents) => {
-			console.log("GraphQL query response in MyEvents Past Events", Date.now(), graphEvents.data.data)
-
-			if (!graphEvents.data || graphEvents.data.data === undefined) {
-				// console.log("GraphQL query -- graphEvents undefined")
-				this.setState({ loading: false, Topic_Events: [], active_length: 0 });
-			} else {
-				if (this._isMounted) {
-					const dateTime = Date.now();
-					const dateNow = Math.floor(dateTime / 1000);
-					let userEvents = graphEvents.data.data.events;
-					//graphEvents.data.data.users.find((user) => user.account.toLowerCase() === this.account.toLowerCase())
-					if (userEvents) {
-						// let newsort = userEvents.userEvents
-						let newsort = userEvents
-							.concat()
-							.sort((a, b) => b.blockNumber - a.blockNumber)
-							.filter(
-								(activeEvents) =>
-									activeEvents.time < dateNow
-							)
-						this.setState({
-							MyEvents: newsort,
-							check: newsort,
-							active_length: newsort.length,
-						});
+				if (!graphEvents.data || graphEvents.data.data === undefined) {
+					// console.log("GraphQL query -- graphEvents undefined")
+					this.setState({
+						loading: false,
+						Topic_Events: [],
+						active_length: 0,
+					});
+				} else {
+					if (this._isMounted) {
+						const dateTime = Date.now();
+						const dateNow = Math.floor(dateTime / 1000);
+						let userEvents = graphEvents.data.data.events;
+						//graphEvents.data.data.users.find((user) => user.account.toLowerCase() === this.account.toLowerCase())
+						if (userEvents) {
+							// let newsort = userEvents.userEvents
+							let newsort = userEvents
+								.concat()
+								.sort((a, b) => b.blockNumber - a.blockNumber)
+								.filter(
+									(activeEvents) =>
+										activeEvents.time < dateNow
+								);
+							this.setState({
+								MyEvents: newsort,
+								check: newsort,
+								active_length: newsort.length,
+							});
+							setTimeout(() => {
+								this.setState({ loading: false });
+							}, 3000);
+						}
 						setTimeout(() => {
 							this.setState({ loading: false });
 						}, 3000);
 					}
-					setTimeout(() => {
-						this.setState({ loading: false });
-					}, 3000);
 				}
-
-			}
-
-		}).catch((err) => {
-			this.setState({ loading: false });
-		})
+			})
+			.catch((err) => {
+				this.setState({ loading: false });
+			});
 	}
 	//Display My Concluded Events
 	PastEvent = (e) => {
@@ -342,7 +358,7 @@ class MyEvents extends Component {
 	};
 	toggleBuying = () => {
 		this.setState({ disabledBuying: !this.state.disabledBuying });
-	}
+	};
 
 	//Search for My Events By Name
 	updateSearch = (e) => {
@@ -361,7 +377,7 @@ class MyEvents extends Component {
 				} else {
 					filteredEvents = this.state.check;
 				}
-			} catch (e) { }
+			} catch (e) {}
 			this.setState({
 				MyEvents: filteredEvents,
 				active_length: filteredEvents.length,
@@ -377,7 +393,6 @@ class MyEvents extends Component {
 		}
 		if (newValue === 1) {
 			this.PastEvent();
-
 		}
 	};
 	render() {
@@ -400,164 +415,172 @@ class MyEvents extends Component {
 					url="/createevent"
 				/>
 			);
-		} 
-			let count = this.state.MyEvents.length;
-			let currentPage = Number(this.props.match.params.page);
-			let events_list = [];
-			let skip = false;
-			for (let i = 0; i < count; i++) {
-				for (let j = 0; j < this.state.Deleted_Events.length; j++) {
-					if (
-						this.state.MyEvents[i].eventId ===
-						this.state.Deleted_Events[j].eventId
-					) {
-						skip = true;
-					}
+		}
+		let count = this.state.MyEvents.length;
+		let currentPage = Number(this.props.match.params.page);
+		let events_list = [];
+		let skip = false;
+		for (let i = 0; i < count; i++) {
+			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+				if (
+					this.state.MyEvents[i].eventId ===
+					this.state.Deleted_Events[j].eventId
+				) {
+					skip = true;
 				}
-				if (!skip) {
-					events_list.push(this.state.MyEvents[i]);
-				}
-				skip = false;
 			}
-			let updated_list = [];
-			count = events_list.length;
-			if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-			let end = currentPage * this.perPage;
-			let start = end - this.perPage;
-			if (end > count) end = count;
-			let pages = Math.ceil(count / this.perPage);
-			for (let i = start; i < end; i++) {
-				updated_list.push(
-					<Event
-						eventData={events_list[i]}
-						toggleBuying={this.toggleBuying}
-						disabledBuying={this.state.disabledBuying}
-						disabledStatus={this.props.disabledStatus}
-						inquire={this.props.inquire}
-						key={events_list[i].eventId}
-						id={events_list[i].eventId}
-						ipfs={events_list[i].ipfsHash}
-						myEvents={true}
-						loading={this.state.loading}
-					/>
-				);
+			if (!skip) {
+				events_list.push(this.state.MyEvents[i]);
 			}
+			skip = false;
+		}
+		let updated_list = [];
+		count = events_list.length;
+		if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+		let end = currentPage * this.perPage;
+		let start = end - this.perPage;
+		if (end > count) end = count;
+		let pages = Math.ceil(count / this.perPage);
+		for (let i = start; i < end; i++) {
+			updated_list.push(
+				<Event
+					eventData={events_list[i]}
+					toggleBuying={this.toggleBuying}
+					disabledBuying={this.state.disabledBuying}
+					disabledStatus={this.props.disabledStatus}
+					inquire={this.props.inquire}
+					key={events_list[i].eventId}
+					id={events_list[i].eventId}
+					ipfs={events_list[i].ipfsHash}
+					myEvents={true}
+					loading={this.state.loading}
+				/>
+			);
+		}
 
-			let pagination;
+		let pagination;
 
-			if (pages > 1) {
-				let links = [];
-				if (pages > 5 && currentPage >= 3) {
-					for (
-						let i = currentPage - 2;
-						i <= currentPage + 2 && i <= pages;
-						i++
-					) {
-						let active = i === currentPage ? "active" : "";
-						links.push(
-							<li className={"page-item " + active} key={i}>
-								<Link
-									to={"/myevents/" + i}
-									onClick={() =>
-										this.setState({
-											prevPath: currentPage,
-										})
-									}
-									className="page-link"
-								>
-									{i}
-								</Link>
-							</li>
-						);
-						if (this.state.prevPath !== -1) {
-							this.executeScroll({
-								behavior: "smooth",
-								block: "start",
-							});
-						}
-					}
-				} else if (pages > 5 && currentPage < 3) {
-					for (let i = 1; i <= 5 && i <= pages; i++) {
-						let active = i === currentPage ? "active" : "";
-						links.push(
-							<li className={"page-item " + active} key={i}>
-								<Link
-									to={"/myevents/" + i}
-									onClick={() =>
-										this.setState({
-											prevPath: currentPage,
-										})
-									}
-									className="page-link"
-								>
-									{i} am
-								</Link>
-							</li>
-						);
-						if (this.state.prevPath !== -1) {
-							this.executeScroll({
-								behavior: "smooth",
-								block: "start",
-							});
-						}
-					}
-				} else {
-					for (let i = 1; i <= pages; i++) {
-						let active = i === currentPage ? "active" : "";
-						links.push(
-							<li className={"page-item " + active} key={i}>
-								<Link
-									to={"/myevents/" + i}
-									onClick={() =>
-										this.setState({
-											prevPath: currentPage,
-										})
-									}
-									className="page-link"
-								>
-									{i}
-								</Link>
-							</li>
-						);
-						if (this.state.prevPath !== -1) {
-							this.executeScroll({
-								behavior: "smooth",
-								block: "start",
-							});
-						}
+		if (pages > 1) {
+			let links = [];
+			if (pages > 5 && currentPage >= 3) {
+				for (
+					let i = currentPage - 2;
+					i <= currentPage + 2 && i <= pages;
+					i++
+				) {
+					let active = i === currentPage ? "active" : "";
+					links.push(
+						<li className={"page-item " + active} key={i}>
+							<Link
+								to={"/myevents/" + i}
+								onClick={() =>
+									this.setState({
+										prevPath: currentPage,
+									})
+								}
+								className="page-link"
+							>
+								{i}
+							</Link>
+						</li>
+					);
+					if (this.state.prevPath !== -1) {
+						this.executeScroll({
+							behavior: "smooth",
+							block: "start",
+						});
 					}
 				}
-				pagination = (
-					<nav>
-						<ul className="pagination justify-content-center">
-							{links}
-						</ul>
-					</nav>
-				);
-			}
-			if (updated_list.length === 0 && !this.state.loading) {
-				body = (
-					<EmptyState
-						text="No events found 🤔.Be the first;"
-						btnText="Try creating one"
-						url="/createevent"
-					/>
-				);
+			} else if (pages > 5 && currentPage < 3) {
+				for (let i = 1; i <= 5 && i <= pages; i++) {
+					let active = i === currentPage ? "active" : "";
+					links.push(
+						<li className={"page-item " + active} key={i}>
+							<Link
+								to={"/myevents/" + i}
+								onClick={() =>
+									this.setState({
+										prevPath: currentPage,
+									})
+								}
+								className="page-link"
+							>
+								{i} am
+							</Link>
+						</li>
+					);
+					if (this.state.prevPath !== -1) {
+						this.executeScroll({
+							behavior: "smooth",
+							block: "start",
+						});
+					}
+				}
 			} else {
-				body = (
-					<div>
-						<div className="row user-list mt-4">
-							{updated_list}
-						</div>
-						{pagination}
-					</div>
-				);
+				for (let i = 1; i <= pages; i++) {
+					let active = i === currentPage ? "active" : "";
+					links.push(
+						<li className={"page-item " + active} key={i}>
+							<Link
+								to={"/myevents/" + i}
+								onClick={() =>
+									this.setState({
+										prevPath: currentPage,
+									})
+								}
+								className="page-link"
+							>
+								{i}
+							</Link>
+						</li>
+					);
+					if (this.state.prevPath !== -1) {
+						this.executeScroll({
+							behavior: "smooth",
+							block: "start",
+						});
+					}
+				}
 			}
+			pagination = (
+				<nav>
+					<ul className="pagination justify-content-center">
+						{links}
+					</ul>
+				</nav>
+			);
+		}
+		if (updated_list.length === 0 && this.state.loading) {
+			body = <PhoenixDAOLoader />;
+		} else if (updated_list.length === 0 && !this.state.loading) {
+			body = (
+				<EmptyState
+					text="No events found 🤔.Be the first; haha"
+					btnText="Try creating one"
+					url="/createevent"
+				/>
+			);
+		} else {
+			body = (
+				<div>
+					<div className="row user-list mt-4">{updated_list}</div>
+					{pagination}
+				</div>
+			);
+		}
 		return (
 			<div className="event-page-wrapper" ref={this.myRef}>
-				<Header title="Created Events" page="myEvent" searchBar={true} />
+				<Header
+					title="Created Events"
+					page="myEvent"
+					searchBar={true}
+				/>
 
-				<AppBar position="static" className={classes.AppBar} color="transparent">
+				<AppBar
+					position="static"
+					className={classes.AppBar}
+					color="transparent"
+				>
 					<Tabs
 						value={this.state.selectedTab}
 						onChange={this.onTabChange.bind(this)}
@@ -568,24 +591,21 @@ class MyEvents extends Component {
 						aria-label="scrollable auto tabs example"
 						style={{ height: "40px" }}
 					>
-
 						<Tab
 							className={classes.tabBar}
-
 							label="Upcoming Events"
 							{...a11yProps(0)}
 						/>
 						<Tab
 							className={classes.tabBar}
-							label="Past Events" {...a11yProps(1)} />
-
+							label="Past Events"
+							{...a11yProps(1)}
+						/>
 					</Tabs>
 					<Divider light />
 				</AppBar>
 				<TabPanel value={this.state.selectedTab} index={0}>
-					<div>
-						{body}
-					</div>
+					<div>{body}</div>
 				</TabPanel>
 				<TabPanel value={this.state.selectedTab} index={1}>
 					{body}

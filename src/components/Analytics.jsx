@@ -10,7 +10,7 @@ import { Card } from "./common/Card";
 import { getEvents } from "../utils/getEvents";
 import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
-import EmptyState from "./EmptyState";
+import EmptyStateAnalytics from "./EmptyStateAnalytics";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap/dist/css/bootstrap.css";
 // you will also need the css that comes with bootstrap-daterangepicker
@@ -1060,11 +1060,7 @@ const Analytics = (props, context) => {
 					className={`${classes.emptyContent} ${classes.content}`}
 				>
 					<Grid className={classes.EmptyRow}>
-						<EmptyState
-							text="No analytics to see"
-							btnText="Create an Event"
-							url="/createevent"
-						/>
+						<EmptyStateAnalytics/>
 					</Grid>
 				</Grid>
 			)}
