@@ -316,6 +316,7 @@ const EventCard = (props, context) => {
 										backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)`,
 									}}
 								>
+								{event_data.tktTotalQuantity != 0 ? (
 									<Typography
 										style={{
 											color: "#fff",
@@ -326,14 +327,10 @@ const EventCard = (props, context) => {
 										<ConfirmationNumberOutlined fontSize="medium" />
 										<span>&nbsp;</span>
 										{event_data.tktTotalQuantitySold}/
-										{event_data.tktTotalQuantity === 0 ? (
-											<span style={{ fontSize: "21px" }}>
-												∞
-											</span>
-										) : (
-											event_data.tktTotalQuantity
-										)}
+										{event_data.tktTotalQuantity}
+										
 									</Typography>
+									):null}
 									{!myEvent && !ticket ? (
 										<Typography
 											className={classes.FavoriteIcon}

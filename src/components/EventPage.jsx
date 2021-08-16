@@ -249,7 +249,6 @@ class EventPage extends Component {
 		this.inquire = this.inquire.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this);
 		this.goBack = this.goBack.bind(this); // i think you are missing this
-		console.log("purchased",this.props.purchased);
 	}
 
 	goBack() {
@@ -275,8 +274,8 @@ class EventPage extends Component {
 	// 	this.updateIPFS();
 	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
-
 	async loadEventFromBlockchain() {
+
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -321,26 +320,29 @@ class EventPage extends Component {
 				});
 				this.updateIPFS();
 				if (this.props.networkId) {
+					console.log("graphData", graphEvents.data.data.events[0].owner);
 					updateEventViews({
 						eventId: graphEvents.data.data.events[0].eventId,
 						address: graphEvents.data.data.events[0].owner,
 						networkId: this.props.networkId,
 					});
+
 					const userDetails = await getUserDetails({
 						address: graphEvents.data.data.events[0].owner,
 						networkId: this.props.networkId,
 					});
-					this.setState({
-						organizerDetails:
-							userDetails.result.result.organizerDetails,
-					});
+					console.log("networkID", userDetails);
+					if (!userDetails.error) {
+						this.setState({
+							organizerDetails:
+								userDetails.result.result.organizerDetails,
+						});
+					}
+
 				}
 			})
 			.catch((err) => {
-				console.log(
-					"Error in GraphQL query response of events in eventPage",
-					err
-				);
+				console.log("Error", err);
 				this.setState({
 					blockChainEvent: {},
 					blockChainEventLoaded: true,
@@ -506,6 +508,7 @@ class EventPage extends Component {
 			this.state.loading === false &&
 			this.state.blockChainEvent
 		) {
+			console.log("Iam in update");
 			this.setState(
 				{
 					loading: true,
@@ -751,7 +754,7 @@ class EventPage extends Component {
 	render() {
 		const { classes } = this.props;
 
-		let body = <SkeletonLayout/>
+		let body = <SkeletonLayout />
 
 		if (this.state.blockChainEventLoaded) {
 			if (!this.state.blockChainEvent) {
@@ -779,6 +782,7 @@ class EventPage extends Component {
 				// 	event_data.prices[this.state.selectedCategoryIndex]
 				// );
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
+				console.log("phnx prices", event_data);
 				let phnx_price = event_data.prices.map((price) => {
 					return (
 						Web3.utils.fromWei(price) /
@@ -794,8 +798,8 @@ class EventPage extends Component {
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-							this.state.selectedCategoryIndex
-					  ]
+					this.state.selectedCategoryIndex
+					]
 					: "∞";
 
 				let disabled = false;
@@ -806,14 +810,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-							this.state.selectedCategoryIndex
+						this.state.selectedCategoryIndex
 						]
 					) >=
-						Number(
-							event_data.catTktQuantity[
-								this.state.selectedCategoryIndex
-							]
-						)
+					Number(
+						event_data.catTktQuantity[
+						this.state.selectedCategoryIndex
+						]
+					)
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -879,7 +883,7 @@ class EventPage extends Component {
 						<span className={classes.PhnxPrice}>
 							{event_data.token
 								? phnx_price[this.state.selectedCategoryIndex] +
-								  "PHNX"
+								"PHNX"
 								: "FREE"}
 						</span>
 						<div style={{ color: "#56555D", fontSize: "14px" }}>
@@ -998,21 +1002,21 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-																(
-																	category,
-																	i
-																) => (
-																	<option
-																		value={
-																			i
-																		}
-																	>
-																		{
-																			category
-																		}
-																	</option>
-																)
-														  )
+															(
+																category,
+																i
+															) => (
+																<option
+																	value={
+																		i
+																	}
+																>
+																	{
+																		category
+																	}
+																</option>
+															)
+														)
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1041,11 +1045,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-												  "onedayevent"
-												? moment(
+													"onedayevent"
+													? moment(
 														this.state.eventDate
-												  ).format("Do MMM, YYYY")
-												: `
+													).format("Do MMM, YYYY")
+													: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1078,8 +1082,8 @@ class EventPage extends Component {
 										<p className={classes.eventinfo}>
 											{
 												event_data.catTktQuantitySold[
-													this.state
-														.selectedCategoryIndex
+												this.state
+													.selectedCategoryIndex
 												]
 											}
 											/{max_seats}
@@ -1415,12 +1419,15 @@ class EventPage extends Component {
 		const buyers = await generateBuyerArr(this.props.match.params.id);
 		this.setState({ soldTicket: buyers });
 		this.loadEventFromBlockchain();
+		console.log(
+			"count", this.props.accounts[0]
+		)
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
 		});
 		this._isMounted = true;
-		this.updateIPFS();
+		// this.updateIPFS();
 		// this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
 	}
@@ -1431,13 +1438,11 @@ class EventPage extends Component {
 		//https://geoip-db.com/
 		try {
 			const get = await axios.get(`http://ip-api.com/json`);
-			console.log("geoFindMe", get.data);
 			if (!get.data) {
 				return "Unknown";
 			}
 			return get.data.city;
 		} catch (error) {
-			console.log("check error", error);
 			return "Unknown";
 		}
 	};
