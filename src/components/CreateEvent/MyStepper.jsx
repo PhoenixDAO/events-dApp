@@ -232,9 +232,10 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	timeAndDate: {
-		[theme.breakpoints.between("xs", "sm")]: {
-			width: "100%",
-		},
+		width: "100%",
+		// [theme.breakpoints.between("xs", "sm")]: {
+		// 	width: "100%",
+		// },
 	},
 	ticketPriceContainer: {
 		display: "flex",
@@ -834,12 +835,6 @@ const MyStepper = ({
 									>
 										<div>
 											<div>
-												<label
-													className={classes.label}
-													style={{ marginBottom: 0 }}
-												>
-													DATE
-												</label>
 												<Controller
 													name="eventDate"
 													control={control}
@@ -852,36 +847,58 @@ const MyStepper = ({
 														fieldState: { error },
 													}) => {
 														return (
-															<KeyboardDatePicker
-																fullWidth
-																disableToolbar
-																variant="inline"
-																format="dd-MM-yyyy"
-																margin="normal"
-																id="event-date"
-																// label="DATE"
-																KeyboardButtonProps={{
-																	"aria-label":
-																		"change date",
-																}}
-																InputProps={{
-																	readOnly: true,
-																}}
-																inputVariant="outlined"
-																autoOk={true}
-																disablePast
-																placeholder="DD-MM-YYYY"
-																value={value}
-																onChange={
-																	onChange
-																}
-																error={!!error}
-																helperText={
-																	error
-																		? error.message
-																		: null
-																}
-															/>
+															<span>
+																<InputLabel
+																	style={{
+																		marginBottom:
+																			"-7px",
+																	}}
+																	htmlFor="input-with-icon-adornment"
+																>
+																	<label
+																		className={
+																			classes.label
+																		}
+																	>
+																		DATE
+																	</label>
+																</InputLabel>
+																<KeyboardDatePicker
+																	fullWidth
+																	disableToolbar
+																	variant="inline"
+																	format="dd-MM-yyyy"
+																	margin="normal"
+																	id="event-date"
+																	KeyboardButtonProps={{
+																		"aria-label":
+																			"change date",
+																	}}
+																	InputProps={{
+																		readOnly: true,
+																	}}
+																	inputVariant="outlined"
+																	autoOk={
+																		true
+																	}
+																	disablePast
+																	placeholder="DD-MM-YYYY"
+																	value={
+																		value
+																	}
+																	onChange={
+																		onChange
+																	}
+																	error={
+																		!!error
+																	}
+																	helperText={
+																		error
+																			? error.message
+																			: null
+																	}
+																/>
+															</span>
 														);
 													}}
 													rules={{
@@ -894,15 +911,14 @@ const MyStepper = ({
 
 										<br />
 
-										<div className={classes.timeContainer}>
-											<div>
-												<label
-													className={classes.label}
-													style={{ marginBottom: 0 }}
-												>
-													START TIME
-												</label>
-												<br />
+										<Grid container spacing={6}>
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+											>
 												<Controller
 													name="eventStartTime"
 													control={control}
@@ -914,50 +930,68 @@ const MyStepper = ({
 														},
 														fieldState: { error },
 													}) => (
-														<KeyboardTimePicker
-															className={
-																classes.timeAndDate
-															}
-															keyboardIcon={
-																<AccessTime />
-															}
-															margin="normal"
-															id="start-time-picker"
-															// label="START TIME"
-															placeholder="00:00 AM"
-															KeyboardButtonProps={{
-																"aria-label":
-																	"change time",
-															}}
-															InputProps={{
-																readOnly: true,
-															}}
-															inputVariant="outlined"
-															autoOk={true}
-															value={value}
-															onChange={onChange}
-															error={!!error}
-															helperText={
-																error
-																	? error.message
-																	: null
-															}
-														/>
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	START TIME
+																</label>
+															</InputLabel>
+															<KeyboardTimePicker
+																className={
+																	classes.timeAndDate
+																}
+																keyboardIcon={
+																	<AccessTime />
+																}
+																margin="normal"
+																id="start-time-picker"
+																placeholder="00:00 AM"
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change time",
+																}}
+																InputProps={{
+																	readOnly: true,
+																}}
+																fullwidth
+																inputVariant="outlined"
+																autoOk={true}
+																value={value}
+																onChange={
+																	onChange
+																}
+																error={!!error}
+																helperText={
+																	error
+																		? error.message
+																		: null
+																}
+															/>
+														</span>
 													)}
 													rules={{
 														required:
 															"Please select event time.",
 													}}
 												/>
-											</div>
-											<div>
-												<label
-													className={classes.label}
-													style={{ marginBottom: 0 }}
-												>
-													END TIME
-												</label>
-												<br />
+											</Grid>
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+											>
 												<Controller
 													name="eventEndTime"
 													control={control}
@@ -969,49 +1003,69 @@ const MyStepper = ({
 														},
 														fieldState: { error },
 													}) => (
-														<KeyboardTimePicker
-															className={
-																classes.timeAndDate
-															}
-															keyboardIcon={
-																<AccessTime />
-															}
-															required={false}
-															margin="normal"
-															id="end-time-picker"
-															placeholder="00:00 AM"
-															KeyboardButtonProps={{
-																"aria-label":
-																	"change time",
-															}}
-															InputProps={{
-																readOnly: true,
-															}}
-															inputVariant="outlined"
-															autoOk={true}
-															value={value}
-															onChange={onChange}
-															error={!!error}
-															helperText="Don’t have an end time? leave here blank"
-															FormHelperTextProps={{
-																classes: {
-																	root: classes.timeHelperText,
-																},
-															}}
-															// helperText={
-															// 	error
-															// 		? error.message
-															// 		: null
-															// }
-														/>
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	END TIME
+																</label>
+															</InputLabel>
+															<KeyboardTimePicker
+																className={
+																	classes.timeAndDate
+																}
+																keyboardIcon={
+																	<AccessTime />
+																}
+																required={false}
+																margin="normal"
+																id="end-time-picker"
+																placeholder="00:00 AM"
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change time",
+																}}
+																InputProps={{
+																	readOnly: true,
+																}}
+																fullwidth
+																inputVariant="outlined"
+																autoOk={true}
+																value={value}
+																onChange={
+																	onChange
+																}
+																error={!!error}
+																helperText="Don’t have an end time? leave here blank"
+																FormHelperTextProps={{
+																	classes: {
+																		root: classes.timeHelperText,
+																	},
+																}}
+																// helperText={
+																// 	error
+																// 		? error.message
+																// 		: null
+																// }
+															/>
+														</span>
 													)}
 													rules={{
 														required: false,
 														// "Please select event end time.",
 													}}
 												/>
-											</div>
-										</div>
+											</Grid>
+										</Grid>
 									</MuiPickersUtilsProvider>
 								</div>
 							) : (
@@ -1019,15 +1073,14 @@ const MyStepper = ({
 									<MuiPickersUtilsProvider
 										utils={DateFnsUtils}
 									>
-										<div className={classes.timeContainer}>
-											<div>
-												<label
-													className={classes.label}
-													style={{ marginBottom: 0 }}
-												>
-													START DATE
-												</label>
-												<br />
+										<Grid container spacing={6}>
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+											>
 												<Controller
 													name="eventStartDate"
 													control={control}
@@ -1039,56 +1092,74 @@ const MyStepper = ({
 														},
 														fieldState: { error },
 													}) => (
-														<KeyboardDatePicker
-															className={
-																classes.timeAndDate
-															}
-															disableToolbar
-															variant="inline"
-															format="dd-MM-yyyy"
-															margin="normal"
-															id="date-picker-inline"
-															placeholder="DD-MM-YYYY"
-															InputProps={{
-																readOnly: true,
-															}}
-															// label="START DATE"
-															// value={startDate}
-															// onChange={(d) =>
-															// 	setStartDate(d)
-															// }
-															KeyboardButtonProps={{
-																"aria-label":
-																	"change date",
-															}}
-															inputVariant="outlined"
-															autoOk={true}
-															disablePast
-															value={value}
-															onChange={onChange}
-															error={!!error}
-															helperText={
-																error
-																	? error.message
-																	: null
-															}
-														/>
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	START DATE
+																</label>
+															</InputLabel>
+															<KeyboardDatePicker
+																className={
+																	classes.timeAndDate
+																}
+																disableToolbar
+																variant="inline"
+																format="dd-MM-yyyy"
+																margin="normal"
+																id="date-picker-inline"
+																placeholder="DD-MM-YYYY"
+																InputProps={{
+																	readOnly: true,
+																}}
+																// label="START DATE"
+																// value={startDate}
+																// onChange={(d) =>
+																// 	setStartDate(d)
+																// }
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change date",
+																}}
+																inputVariant="outlined"
+																autoOk={true}
+																disablePast
+																value={value}
+																onChange={
+																	onChange
+																}
+																error={!!error}
+																helperText={
+																	error
+																		? error.message
+																		: null
+																}
+															/>
+														</span>
 													)}
 													rules={{
 														required:
 															"Please select event start date.",
 													}}
 												/>
-											</div>
+											</Grid>
 
-											<div>
-												<label
-													className={classes.label}
-													style={{ marginBottom: 0 }}
-												>
-													END DATE
-												</label>
-												<br />
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+											>
 												<Controller
 													name="eventEndDate"
 													control={control}
@@ -1100,58 +1171,76 @@ const MyStepper = ({
 														},
 														fieldState: { error },
 													}) => (
-														<KeyboardDatePicker
-															className={
-																classes.timeAndDate
-															}
-															disableToolbar
-															variant="inline"
-															format="dd-MM-yyyy"
-															margin="normal"
-															id="date-picker-inline"
-															// label="END DATE"
-															// value={endDate}
-															// onChange={(d) => setEndDate(d)}
-															InputProps={{
-																readOnly: true,
-															}}
-															KeyboardButtonProps={{
-																"aria-label":
-																	"change date",
-															}}
-															inputVariant="outlined"
-															placeholder="DD-MM-YYYY"
-															autoOk={true}
-															disablePast
-															value={value}
-															onChange={onChange}
-															error={!!error}
-															helperText={
-																error
-																	? error.message
-																	: null
-															}
-														/>
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	END DATE
+																</label>
+															</InputLabel>
+															<KeyboardDatePicker
+																className={
+																	classes.timeAndDate
+																}
+																disableToolbar
+																variant="inline"
+																format="dd-MM-yyyy"
+																margin="normal"
+																id="date-picker-inline"
+																// label="END DATE"
+																// value={endDate}
+																// onChange={(d) => setEndDate(d)}
+																InputProps={{
+																	readOnly: true,
+																}}
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change date",
+																}}
+																inputVariant="outlined"
+																placeholder="DD-MM-YYYY"
+																autoOk={true}
+																disablePast
+																value={value}
+																onChange={
+																	onChange
+																}
+																error={!!error}
+																helperText={
+																	error
+																		? error.message
+																		: null
+																}
+															/>
+														</span>
 													)}
 													rules={{
 														required:
 															"Please select event end date.",
 													}}
 												/>
-											</div>
-										</div>
+											</Grid>
+										</Grid>
 
 										<br />
 
-										<div className={classes.timeContainer}>
-											<div>
-												<label
-													className={classes.label}
-													style={{ marginBottom: 0 }}
-												>
-													FROM
-												</label>
-												<br />
+										<Grid container spacing={6}>
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+											>
 												<Controller
 													name="eventStartTime"
 													control={control}
@@ -1163,51 +1252,69 @@ const MyStepper = ({
 														},
 														fieldState: { error },
 													}) => (
-														<KeyboardTimePicker
-															className={
-																classes.timeAndDate
-															}
-															keyboardIcon={
-																<AccessTime />
-															}
-															margin="normal"
-															id="time-picker"
-															// label="TO"
-															placeholder="00:00 AM"
-															KeyboardButtonProps={{
-																"aria-label":
-																	"change time",
-															}}
-															InputProps={{
-																readOnly: true,
-															}}
-															inputVariant="outlined"
-															autoOk={true}
-															value={value}
-															onChange={onChange}
-															error={!!error}
-															helperText={
-																error
-																	? error.message
-																	: null
-															}
-														/>
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	FROM
+																</label>
+															</InputLabel>
+															<KeyboardTimePicker
+																className={
+																	classes.timeAndDate
+																}
+																keyboardIcon={
+																	<AccessTime />
+																}
+																margin="normal"
+																id="time-picker"
+																// label="TO"
+																placeholder="00:00 AM"
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change time",
+																}}
+																InputProps={{
+																	readOnly: true,
+																}}
+																inputVariant="outlined"
+																autoOk={true}
+																value={value}
+																onChange={
+																	onChange
+																}
+																error={!!error}
+																helperText={
+																	error
+																		? error.message
+																		: null
+																}
+															/>
+														</span>
 													)}
 													rules={{
 														required:
 															"Please select event start time.",
 													}}
 												/>
-											</div>
+											</Grid>
 
-											<div>
-												<label
-													className={classes.label}
-													style={{ marginBottom: 0 }}
-												>
-													TO
-												</label>
-												<br />
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+											>
 												<Controller
 													name="eventEndTime"
 													control={control}
@@ -1219,49 +1326,68 @@ const MyStepper = ({
 														},
 														fieldState: { error },
 													}) => (
-														<KeyboardTimePicker
-															className={
-																classes.timeAndDate
-															}
-															keyboardIcon={
-																<AccessTime />
-															}
-															margin="normal"
-															id="time-picker"
-															// label="FROM"
-															placeholder="00:00 AM"
-															KeyboardButtonProps={{
-																"aria-label":
-																	"change time",
-															}}
-															InputProps={{
-																readOnly: true,
-															}}
-															inputVariant="outlined"
-															autoOk={true}
-															value={value}
-															onChange={onChange}
-															helperText="Don’t have an end time? leave here blank"
-															FormHelperTextProps={{
-																classes: {
-																	root: classes.timeHelperText,
-																},
-															}}
-															error={!!error}
-															// helperText={
-															// 	error
-															// 		? error.message
-															// 		: null
-															// }
-														/>
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	TO
+																</label>
+															</InputLabel>
+															<KeyboardTimePicker
+																className={
+																	classes.timeAndDate
+																}
+																keyboardIcon={
+																	<AccessTime />
+																}
+																margin="normal"
+																id="time-picker"
+																// label="FROM"
+																placeholder="00:00 AM"
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change time",
+																}}
+																InputProps={{
+																	readOnly: true,
+																}}
+																inputVariant="outlined"
+																autoOk={true}
+																value={value}
+																onChange={
+																	onChange
+																}
+																helperText="Don’t have an end time? leave here blank"
+																FormHelperTextProps={{
+																	classes: {
+																		root: classes.timeHelperText,
+																	},
+																}}
+																error={!!error}
+																// helperText={
+																// 	error
+																// 		? error.message
+																// 		: null
+																// }
+															/>
+														</span>
 													)}
 													rules={{
 														required: false,
 														// "Please select event end time.",
 													}}
 												/>
-											</div>
-										</div>
+											</Grid>
+										</Grid>
 									</MuiPickersUtilsProvider>
 								</div>
 							)}
@@ -1354,7 +1480,7 @@ const MyStepper = ({
 								<div>
 									<br />
 									<Grid container spacing={2}>
-										<Grid item xs={12} sm={4}>
+										<Grid item xs={12} sm={12} lg={4}>
 											<Controller
 												name="country"
 												control={control}
@@ -1380,7 +1506,7 @@ const MyStepper = ({
 												}}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={4}>
+										<Grid item xs={12} sm={12} lg={4}>
 											<Controller
 												name="state"
 												control={control}
@@ -1406,7 +1532,7 @@ const MyStepper = ({
 												}}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={4}>
+										<Grid item xs={12} sm={12} lg={4}>
 											<Controller
 												name="city"
 												control={control}
@@ -1609,7 +1735,7 @@ const MyStepper = ({
 													color: "#73727D",
 													fontSize: 14,
 													fontWeight: 400,
-		paddingTop:"10px"
+													paddingTop: "10px",
 												}}
 											>
 												Max: 3 Pictures. Not greater
@@ -2401,13 +2527,6 @@ const MyStepper = ({
 													<br />
 													<br />
 
-													<label
-														className={
-															classes.label
-														}
-													>
-														TICKET PRICE
-													</label>
 													<br />
 													<div
 														className={
@@ -2430,9 +2549,17 @@ const MyStepper = ({
 															}) => (
 																<span>
 																	<InputLabel htmlFor="input-with-icon-adornment">
-																		<span>
+																		{/* <span>
 																			&nbsp;
-																		</span>
+																		</span> */}
+																		<label
+																			className={
+																				classes.label
+																			}
+																		>
+																			TICKET
+																			PRICE
+																		</label>
 																	</InputLabel>
 																	<TextField
 																		className={
@@ -2824,13 +2951,33 @@ const MyStepper = ({
 									<FormControlLabel
 										control={
 											<Checkbox
+												icon={
+													<img src={uncheckedIcon} />
+												}
+												checkedIcon={
+													<img src={checkedIcon} />
+												}
 												checked={value}
 												onChange={onChange}
 												name="checkedB"
 												color="primary"
 											/>
 										}
-										label="Restrict Wallet Address to one Ticket"
+										// label="Restrict Wallet Address to one Ticket"
+										label={
+											<span
+												style={{
+													fontSize: 20,
+													fontWeight: 400,
+													color: "#1E1E22",
+													fontFamily:
+														"'Aeonik', sans-serif",
+												}}
+											>
+												Restrict Wallet Address to one
+												Ticket
+											</span>
+										}
 									/>
 								)}
 								rules={{
@@ -2905,6 +3052,16 @@ const MyStepper = ({
 										<FormControlLabel
 											control={
 												<Checkbox
+													icon={
+														<img
+															src={uncheckedIcon}
+														/>
+													}
+													checkedIcon={
+														<img
+															src={checkedIcon}
+														/>
+													}
 													checked={value}
 													onChange={onChange}
 													name="checkedB"
@@ -2915,17 +3072,13 @@ const MyStepper = ({
 
 											label={
 												<span
-												// className={
-												// 	"custom-control-label "
-												// }
-												// style={{
-												// 	color:
-												// 		warning.terms ===
-												// 		"is-invalid"
-												// 			? "#dc3545"
-												// 			: "#333333",
-												// }}
-												// htmlFor="terms"
+													style={{
+														fontSize: 20,
+														fontWeight: 400,
+														color: "#1E1E22",
+														fontFamily:
+															"'Aeonik', sans-serif",
+													}}
 												>
 													By creating an event, I
 													agree to the{" "}
