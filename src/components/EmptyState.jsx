@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	imageContainer: {
-		"& img": {
-			width: "30%",
-		},
+		// "& img": {
+		// 	width: "30%",
+		// },
 		textAlign: "center",
 		padding: "40px",
 		width: "100%",

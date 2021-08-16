@@ -353,8 +353,8 @@ class Favorites extends Component {
 			if (count === 0 && !this.state.loading) {
 				body = (
 					<EmptyState
-						text="No events found 🤔.Be the first;"
-						btnText="Try creating one"
+						text="You have no favorites 😔"
+						btnText="Find events near you"
 						url="/createevent"
 					/>
 				);
@@ -512,8 +512,8 @@ class Favorites extends Component {
 				if (updated_list.length == 0) {
 					body = (
 						<EmptyState
-							text="No events found 🤔.Be the first;"
-							btnText="Try creating one"
+							text="You have no favorites 😔"
+							btnText="Find events near you"
 							url="/createevent"
 						/>
 					);

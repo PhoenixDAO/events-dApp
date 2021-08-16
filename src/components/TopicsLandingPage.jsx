@@ -406,7 +406,7 @@ class TopicsLandingPage extends Component {
 										0 ? (
 										<div style={{ margin: "0 auto" }}>
 											<EmptyState
-												text="No events found 🤔.Be the first;"
+												text="No topics found 😔.Be the first;"
 												btnText="Try creating one"
 												url="/createevent"
 											/>
@@ -468,7 +468,7 @@ class TopicsLandingPage extends Component {
 										) : (
 											<div style={{ margin: "0 auto" }}>
 												<EmptyState
-													text="No events found 🤔.Be the first;"
+													text="There is no trending Topics 😔.Be the first;"
 													btnText="Try creating one"
 													url="/createevent"
 												/>
