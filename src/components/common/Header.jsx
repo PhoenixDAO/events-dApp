@@ -32,11 +32,6 @@ const useStyles = makeStyles((theme) => ({
 			width: "160px",
 		},
 	},
-	heading: {
-		"@media screen and (min-width: 1100px) ": {
-			width: "41%"
-		},
-	},
 }));
 
 const Header = ({
@@ -84,79 +79,86 @@ const Header = ({
 	let connect = searchBar && Object.keys(accounts).length !== 0;
 
 	return (
-		<Grid
-			className={transak ? "zIndx-1 header3": "header3"}
+		<div
+			className="header-top"
 			style={
-				(page === "dashboard" || page === "myEvent"
+				page === "dashboard" || page === "myEvent"
 					? { borderBottom: "0px" }
-					: null)
+					: null
 			}
 		>
-			{/* Back button Arrow */}
-			<div className={classes.heading} style={{ display: "flex", alignItems: "center" }}>
-				{page === "event" ||
-				page === "topic" ||
-				page === "accountdetails" ? (
-					<IconButton aria-label="delete" onClick={goBack}>
-						<KeyboardBackspaceIcon
-							fontSize="large"
-							style={{ fill: "#1E1E22" }}
-						/>
-					</IconButton>
-				) : null}
-				{/* Header Title */}
-				<h2>{title}</h2>
-			</div>
+			<Grid className={transak ? "zIndx-1 header3" : "header3"}>
+				{/* Back button Arrow */}
+				<div
+					className="header-heading"
+					style={{ display: "flex", alignItems: "center" }}
+				>
+					{page === "event" ||
+					page === "topic" ||
+					page === "accountdetails" ? (
+						<IconButton aria-label="delete" onClick={goBack}>
+							<KeyboardBackspaceIcon
+								fontSize="large"
+								style={{ fill: "#1E1E22" }}
+							/>
+						</IconButton>
+					) : null}
+					{/* Header Title */}
+					<h2>{title}</h2>
+				</div>
 
-			{/* {page == "analytics" || page == "create" || phnxButton ? (
+				{/* {page == "analytics" || page == "create" || phnxButton ? (
 				<BuyPhnxButton />
 			) : null} */}
 
-			{searchBar ? <SearchBar connect={connect} /> : null}
+				{searchBar ? <SearchBar connect={connect} /> : null}
 
-			{Object.keys(accounts).length === 0 ? (
-				<ConnectWalletButton onClick={handleOpenWallet} />
-			) : buyTicket ? (
-				<div>
-					<Button
-						variant="contained"
-						color="primary"
-						style={{ marginRight: "10px" }}
-						className={classes.buy}
-						onClick={handleClickOpen2}
-						disabled={disabled}
-					>
-						<ShoppingCartOutlined style={{ marginRight: "10px" }} />
-						{buttonText}
-					</Button>
-				</div>
-			) : page === "analytics" ||
-			  page === "create" ||
-			  page === "confirm-purchase" ||
-			  phnxButton ? (
-				<BuyPhnxButton onClick={handleOpenBuyPhnx} />
-			) : null}
-			<DialogueBox
-				open={openWallet}
-				handleClose={handleCloseWallet}
-				maxWidth="xs"
-			>
-				{/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}
-				<Wallet />
-			</DialogueBox>
-			<DialogueBox
-				open={openBuyPhnx}
-				handleClose={handleCloseBuyPhnx}
-				maxWidth="xs"
-			>
-				<BuyPhoenixModal
+				{Object.keys(accounts).length === 0 ? (
+					<ConnectWalletButton onClick={handleOpenWallet} />
+				) : buyTicket ? (
+					<div>
+						<Button
+							variant="contained"
+							color="primary"
+							style={{ marginRight: "10px" }}
+							className={classes.buy}
+							onClick={handleClickOpen2}
+							disabled={disabled}
+						>
+							<ShoppingCartOutlined
+								style={{ marginRight: "10px" }}
+							/>
+							{buttonText}
+						</Button>
+					</div>
+				) : page === "analytics" ||
+				  page === "create" ||
+				  page === "confirm-purchase" ||
+				  phnxButton ? (
+					<BuyPhnxButton onClick={handleOpenBuyPhnx} />
+				) : null}
+				<DialogueBox
+					open={openWallet}
+					handleClose={handleCloseWallet}
+					maxWidth="xs"
+				>
+					{/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}
+					<Wallet />
+				</DialogueBox>
+				<DialogueBox
+					open={openBuyPhnx}
 					handleClose={handleCloseBuyPhnx}
-					openTransak={openTransak}
-					closeTransak={closeTransak}
-					transak={transak}
-				/>
-			</DialogueBox>
-		</Grid>
+					maxWidth="xs"
+				>
+					<BuyPhoenixModal
+						handleClose={handleCloseBuyPhnx}
+						openTransak={openTransak}
+						closeTransak={closeTransak}
+						transak={transak}
+					/>
+				</DialogueBox>
+			</Grid>
+		</div>
 	);
 };
 

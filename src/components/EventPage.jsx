@@ -51,7 +51,7 @@ import Header from "./common/Header";
 import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
-import SkeletonLayout from "./common/SkeletonLayout";
+import SkeletonEvent from "./common/SkeletonEvent";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -754,7 +754,7 @@ class EventPage extends Component {
 	render() {
 		const { classes } = this.props;
 
-		let body = <SkeletonLayout />
+		let body = <SkeletonEvent/>
 
 		if (this.state.blockChainEventLoaded) {
 			if (!this.state.blockChainEvent) {
