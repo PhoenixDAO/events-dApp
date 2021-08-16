@@ -614,6 +614,20 @@ class CreateEvent extends Component {
 					</div>
 				)}
 
+				{/* <button
+					type="button"
+					onClick={() => {
+						ipfs.get(
+							"Qmbw4rc97n8F4KrjrRnxCw6Fm72EgUR2nE9YsTFiUdSSL1"
+						).then((file) => {
+							let data = JSON.parse(file[0].content.toString());
+							console.log("data", data);
+						});
+					}}
+				>
+					doIPFS
+				</button> */}
+
 				{/* <hr /> */}
 				{body}
 			</div>
