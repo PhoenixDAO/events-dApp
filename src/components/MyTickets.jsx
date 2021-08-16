@@ -80,6 +80,10 @@ class MyTickets extends Component {
 		// }
 		//this was else if before
 		if (
+			this.state.blockChainTicketsLoaded
+		) {
+			body = <PhoenixDAOLoader />;
+		} else if (
 			this.state.blockChainTickets.length === 0 &&
 			!this.state.blockChainTicketsLoaded
 		) {
@@ -213,12 +217,22 @@ class MyTickets extends Component {
 			);
 		}
 
-		body = (
-			<div>
-				<div className="row user-list mt-4">{tickets}</div>
-				{pagination}
-			</div>
-		);
+		if (tickets.length === 0 && !this.state.loading) {
+			body = (
+				<EmptyState
+					text="You have not purchased any tickets yet 🤔"
+					btnText="Find an event"
+					url="/upcomingevents/1"
+				/>
+			);
+		} else {
+			body = (
+				<div>
+					<div className="row user-list mt-4">{tickets}</div>
+					{pagination}
+				</div>
+			);
+		}
 
 		return (
 			<div ref={this.myRef}>
@@ -226,9 +240,9 @@ class MyTickets extends Component {
 					<Header title="My Tickets" searchBar={true} />
 					{body}
 				</div>
-				<div className="sticky-nav-travel">
+				{/* <div className="sticky-nav-travel">
 					<img src={"/images/travel.svg"} />
-				</div>
+				</div> */}
 			</div>
 		);
 	}

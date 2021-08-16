@@ -5,18 +5,21 @@ import { Button } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
+	btnDiv: {
+		"@media screen and (max-width: 1100px)": {
+			display: "inline-block"
+		},
+	},
 	button: {
-		"@media screen and (max-width: 1200px) and (min-width: 900px)": {
-			width: "30%",
-			height: "45px"
+		"@media screen and (max-width: 1200px)": {
+			height: "45px",
+			lineHeight: "1"
 		},
 		margin: theme.spacing(1),
 		fontFamily: "'Aeonik', sans-serif",
 		background: "#413AE2",
 		color: "white",
-		textTransform: 'Capitalize',
-		// maxHeight: 54,
-		// maxWidth: 230,
+		textTransform: "Capitalize",
 		"&:focus": {
 			outline: "none",
 		},
@@ -27,16 +30,18 @@ const ConnectWalletButton = (props) => {
 	const classes = useStyles();
 
 	return (
-		<Button
-			variant="contained"
-			color="primary"
-			size="large"
-			className={classes.button}
-			startIcon={<AddIcon fontSize="large" />}
-			onClick={props.onClick}
-		>
-			Connect Wallet
-		</Button>
+		<div className={classes.btnDiv}>
+			<Button
+				variant="contained"
+				color="primary"
+				size="large"
+				className={classes.button}
+				startIcon={<AddIcon fontSize="large" />}
+				onClick={props.onClick}
+			>
+				Connect Wallet
+			</Button>
+		</div>
 	);
 };
 
