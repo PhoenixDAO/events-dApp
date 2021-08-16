@@ -105,7 +105,6 @@ class App extends Component {
 		this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
 		this.executeScroll = this.executeScroll.bind(this);
 		this.initializeContract = this.initializeContract.bind(this);
-		console.log("purchased",this.state.purchased);
 	}
 	async initializeContract() {
 		try {
@@ -121,7 +120,6 @@ class App extends Component {
 				PhoenixDAO_Testnet_Token_ABI,
 				PhoenixDAO_Mainnet_Token_Address
 			);
-			console.log("contract initialized", openEvents, PHNX);
 			this.setState({ eventsContract: openEvents, phnxContract: PHNX });
 		} catch (err) {
 			console.log("error initializing the contract", err);
@@ -135,7 +133,6 @@ class App extends Component {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
-			console.log("accounts", accounts);
 			if (accounts.length == 0) {
 				localStorage.removeItem("account");
 			}
@@ -163,8 +160,6 @@ class App extends Component {
 			address: account,
 			networkId: networkId,
 		});
-		console.log("user", userDetails);
-		console.log("user details", userDetails);
 		if (!userDetails.error) {
 			console.log("user details", userDetails);
 			this.setState({
@@ -185,13 +180,10 @@ class App extends Component {
 			});
 		} else {
 			if (typeof ethereum !== "undefined") {
-				console.log("accounts I am here");
 				// const a = await ethereum.enable();
 				const a = ethereum.enable();
-				console.log("accounts I am here2");
 				web3 = new Web3(ethereum);
 				const accounts = await web3.eth.getAccounts();
-				console.log("accounts in loadBlockchainData", accounts);
 				const check = localStorage.getItem("account");
 				if (!check) {
 					// window.location.reload();
@@ -216,20 +208,16 @@ class App extends Component {
 			const accounts = await web3.eth.getAccounts();
 
 			this.setState({ account: accounts[0] });
-			// console.log("getUserDetail account[0]",accounts[0],"getUserDetail networkId",GLOBAL_NETWORK_ID)
-
 			if (accounts[0] && GLOBAL_NETWORK_ID) {
 				const userDetails = await getUserDetails({
 					address: accounts[0],
 					networkId: GLOBAL_NETWORK_ID,
 				});
 				if (!userDetails.error) {
-					console.log("user details", userDetails);
 					this.setState({
 						userDetails: userDetails,
 					});
-				} else {
-				}
+				} 
 			}
 		}
 	}
@@ -345,7 +333,6 @@ class App extends Component {
 					}
 				})
 				.on("error", (error) => {
-					console.log("error2",error);
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -377,7 +364,6 @@ class App extends Component {
 		let txconfirmed = "";
 		let txerror = "";
 		if ((await this.allowance()) == 0) {
-			console.log("in buy function giving allowance");
 			this.state.approve
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
@@ -423,7 +409,6 @@ class App extends Component {
 					}
 				})
 				.on("error", (error) => {
-					console.log("I am in error2",error);
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -706,8 +691,6 @@ class App extends Component {
 
 		//condition when drizzle is not initialized
 		if (!this.props.drizzleStatus.initialized) {
-			console.log("I am in this condition");
-
 			body = (
 				<div>
 					<Switch>
