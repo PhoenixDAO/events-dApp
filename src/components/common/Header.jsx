@@ -3,6 +3,7 @@ import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { makeStyles } from "@material-ui/core/styles";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
+import clsx from "clsx";
 import {
 	Button,
 	Grid,
@@ -80,7 +81,11 @@ const Header = ({
 
 	return (
 		<div
-			className="header-top"
+			className={clsx(
+				"header-top",
+				(page === "dashboard" || page === "myEvent") &&
+					"header-top-dashboard"
+			)}
 			style={
 				page === "dashboard" || page === "myEvent"
 					? { borderBottom: "0px" }

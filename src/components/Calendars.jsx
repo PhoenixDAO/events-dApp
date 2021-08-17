@@ -21,8 +21,10 @@ import Header from "./common/Header";
 import { getTickets } from "../utils/graphApis";
 const styles = (theme) => ({
 	content: {
+		"@media screen and (min-width: 1200px)": {
+			margin: "40px 0px",
+		},
 		backgroundColor: "white",
-		margin: "40px 0px",
 		padding: "50px",
 		borderRadius: "8px",
 		paddingBottom: "80px",
@@ -319,7 +321,7 @@ class Calendars extends Component {
 							eventMaxStack={1}
 							allDaySlot={false}
 						/>
-						<div className={classes.selectDiv}>
+						<div className={`${classes.selectDiv} calendar-select-div`}>
 							<FormControl
 								variant="outlined"
 								className={classes.categorySelect}
@@ -328,10 +330,10 @@ class Calendars extends Component {
 									native
 									value={this.state.category}
 									onChange={this.categoryChange}
-								// inputProps={{
-								//     name: "age",
-								//     id: "outlined-age-native-simple",
-								// }}
+									// inputProps={{
+									//     name: "age",
+									//     id: "outlined-age-native-simple",
+									// }}
 								>
 									<option aria-label="None" value="all">
 										All Events
