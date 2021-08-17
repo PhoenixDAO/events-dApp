@@ -100,10 +100,11 @@ const ColorlibConnector = withStyles({
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: "100%",
-		paddingTop: "20px",
+		paddingTop: theme.spacing(5),
 		backgroundColor: "white",
 		borderRadius: "12px",
 		paddingBottom: "50px",
+		paddingLeft: 25,
 	},
 	backButton: {
 		textTransform: "none",
@@ -111,6 +112,7 @@ const useStyles = makeStyles((theme) => ({
 			outline: "none",
 		},
 		color: "#413AE2",
+		fontSize: 18,
 	},
 	nextButton: {
 		textTransform: "none",
@@ -123,14 +125,17 @@ const useStyles = makeStyles((theme) => ({
 	title: {
 		color: "#413AE2",
 		marginBottom: theme.spacing(1),
+		fontSize: 32,
+		fontWeight: 500,
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	buttonsContainer: {
 		display: "flex",
 		justifyContent: "space-between",
 	},
 	mainStepperContainer: {
-		marginLeft: theme.spacing(5),
-		marginRight: theme.spacing(5),
+		marginLeft: theme.spacing(12),
+		marginRight: theme.spacing(12),
 		"& .MuiButton-label": {
 			fontFamily: "'Aeonik', sans-serif",
 			fontWeight: "500",
@@ -144,6 +149,10 @@ const useStyles = makeStyles((theme) => ({
 		"&:focus": {
 			outline: "none",
 		},
+		height: "54px",
+		fontweight: "400px",
+		fontSize: "20px",
+		fontFamily: "'Aeonik', sans-serif",
 	},
 	editor: {
 		height: 430,
@@ -151,10 +160,11 @@ const useStyles = makeStyles((theme) => ({
 		zIndex: 2,
 	},
 	label: {
-		color: "#999999",
+		color: "#73727D",
 		fontSize: 15,
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
+		// marginBottom: "-10",
 	},
 	eventUrl: {
 		textAlign: "center",
@@ -264,7 +274,7 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: "'Aeonik', sans-serif",
 	},
 	phnxPriceCat: {
-		fontSize: 14,
+		fontSize: 16,
 		fontWeight: 500,
 		color: "#4E4E55",
 		fontFamily: "'Aeonik', sans-serif",
@@ -272,6 +282,36 @@ const useStyles = makeStyles((theme) => ({
 	formLocation: {
 		width: "100%", // Fix IE 11 issue.
 		marginTop: theme.spacing(3),
+	},
+	timeHelperText: {
+		fontSize: 14,
+		fontWeight: 400,
+		color: "#73727D",
+		fontFamily: "'Aeonik', sans-serif",
+	},
+	adornedStart: {
+		backgroundColor: "#000",
+	},
+	stepperCircle: {
+		"& .MuiSvgIcon-root": {
+			width: 40,
+			height: 40,
+			marginTop: -8,
+		},
+		"& .MuiStepIcon-root.MuiStepIcon-completed": {
+			color: "#413AE2",
+		},
+	},
+	secondField: {
+		[theme.breakpoints.down("md")]: {
+			paddingTop: "0px !important",
+		},
+	},
+	ticketCard: {
+		padding: "18px 20px !important",
+		borderRadius: "5px",
+		border: "1px solid #E4E4E7",
+		background: `linear-gradient(270deg, rgba(94, 91, 255, 0.12) 0%, rgba(124, 118, 255, 0) 131.25%)`,
 	},
 }));
 
@@ -735,9 +775,6 @@ const MyStepper = ({
 							<br />
 
 							<FormControl component="fieldset">
-								<label className={classes.label}>
-									TICKET AVAILABILITY
-								</label>
 								<Controller
 									name="eventTime"
 									control={control}
@@ -977,6 +1014,7 @@ const MyStepper = ({
 												sm={12}
 												md={12}
 												lg={6}
+												className={classes.secondField}
 											>
 												<Controller
 													name="eventEndTime"
@@ -1145,6 +1183,7 @@ const MyStepper = ({
 												sm={12}
 												md={12}
 												lg={6}
+												className={classes.secondField}
 											>
 												<Controller
 													name="eventEndDate"
@@ -1300,6 +1339,7 @@ const MyStepper = ({
 												sm={12}
 												md={12}
 												lg={6}
+												className={classes.secondField}
 											>
 												<Controller
 													name="eventEndTime"
@@ -1366,7 +1406,6 @@ const MyStepper = ({
 																// }
 															/>
 														</span>
-
 													)}
 													rules={{
 														required: false,
@@ -1388,11 +1427,7 @@ const MyStepper = ({
 							<h3 className={classes.title}>Event Details</h3>
 							<Divider light />
 							<br />
-
 							<FormControl component="fieldset">
-								<label className={classes.label}>
-									TICKET AVAILABILITY
-								</label>
 								<Controller
 									name="eventType"
 									control={control}
@@ -1626,10 +1661,11 @@ const MyStepper = ({
 									/>
 								</div>
 							)}
-							<br />
 							{images.slice(0, 3).map((img, index) => {
 								return (
 									<div key={index}>
+										<br />
+
 										<label className={classes.label}>
 											COVER IMAGE {index + 1}
 										</label>
@@ -1727,6 +1763,7 @@ const MyStepper = ({
 													fontSize: 14,
 													fontWeight: 400,
 													paddingTop: "10px",
+													marginBottom: 0,
 												}}
 											>
 												Max: 3 Pictures. Not greater
@@ -1734,10 +1771,11 @@ const MyStepper = ({
 												1000px)
 											</p>
 										) : null}
-										<br />
 									</div>
 								);
 							})}
+
+							<br />
 
 							<Button
 								disabled={images.length > 3 ? true : false}
@@ -2074,6 +2112,7 @@ const MyStepper = ({
 																			</Button>
 																		</InputAdornment>
 																	),
+																classes: {},
 															}}
 															value={value}
 															onChange={(e) => {
@@ -2325,14 +2364,15 @@ const MyStepper = ({
 										{categories.map((cat, index) => {
 											// console.log("cat", cat);
 											return (
-												<div key={index}>
-													<br />
-													<Grid container spacing={2}>
+												<div
+													key={index}
+													style={{ marginBottom: 20 }}
+												>
+													<Grid container>
 														<Grid
-															style={{
-																background: `linear-gradient(270deg, rgba(94, 91, 255, 0.12) 0%, rgba(124, 118, 255, 0) 131.25%)`,
-																padding: 15,
-															}}
+															className={
+																classes.ticketCard
+															}
 															container
 															item
 															xs={11}
@@ -2370,6 +2410,10 @@ const MyStepper = ({
 															<Grid
 																item
 																direction="column"
+																style={{
+																	textAlign:
+																		"end",
+																}}
 															>
 																<p
 																	className={
@@ -2403,6 +2447,7 @@ const MyStepper = ({
 															xl={1}
 															direction="column"
 															justify="space-evenly"
+															alignContent="flex-start"
 														>
 															<Grid item>
 																<Button
@@ -2416,6 +2461,10 @@ const MyStepper = ({
 																				cat
 																			)
 																	)}
+																	style={{
+																		justifyContent:
+																			"flex-end",
+																	}}
 																>
 																	<img
 																		src={
@@ -2437,6 +2486,10 @@ const MyStepper = ({
 																				cat
 																			)
 																	)}
+																	style={{
+																		justifyContent:
+																			"flex-end",
+																	}}
 																>
 																	<img
 																		src={
@@ -2448,10 +2501,10 @@ const MyStepper = ({
 															</Grid>
 														</Grid>
 													</Grid>
-													<br />
 												</div>
 											);
 										})}
+
 										{/* for adding new category */}
 										{!addAnotherCat ? (
 											<div>
@@ -2904,10 +2957,9 @@ const MyStepper = ({
 													</Button>
 												</form>
 												<br />
-												<br />
 											</div>
 										) : (
-											<div>
+											<div style={{ marginTop: 35 }}>
 												<Button
 													variant="outlined"
 													fullWidth
@@ -2928,7 +2980,7 @@ const MyStepper = ({
 									</div>
 								)}
 							</div>
-
+							<br />
 							<Controller
 								name="restrictWallet"
 								control={control}
@@ -2952,11 +3004,10 @@ const MyStepper = ({
 												color="primary"
 											/>
 										}
-										// label="Restrict Wallet Address to one Ticket"
 										label={
 											<span
 												style={{
-													fontSize: 20,
+													// fontSize: 20,
 													fontWeight: 400,
 													color: "#1E1E22",
 													fontFamily:
@@ -3062,7 +3113,7 @@ const MyStepper = ({
 											label={
 												<span
 													style={{
-														fontSize: 20,
+														// fontSize: 20,
 														fontWeight: 400,
 														color: "#1E1E22",
 														fontFamily:
@@ -3176,7 +3227,9 @@ const MyStepper = ({
 				>
 					{steps.map((label, i) => (
 						<Step key={i}>
-							<StepLabel>{label}</StepLabel>
+							<StepLabel className={classes.stepperCircle}>
+								{label}
+							</StepLabel>
 						</Step>
 					))}
 				</Stepper>

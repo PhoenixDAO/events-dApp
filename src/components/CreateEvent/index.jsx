@@ -77,7 +77,7 @@ class CreateEvent extends Component {
 				file_name: null,
 			},
 			fields: {},
-			activeStep: 2,
+			activeStep: 0,
 			activeFlamingStep: 0,
 			isEventCreated: false,
 		};
@@ -537,7 +537,7 @@ class CreateEvent extends Component {
 			) : (
 				<React.Fragment>
 					<div className="row">
-						<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
+						<div className="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<br />
 							<br />
 							<br />
@@ -551,7 +551,7 @@ class CreateEvent extends Component {
 								isEventCreated={this.state.isEventCreated}
 							/>
 						</div>
-						<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
+						<div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 create-event">
 							<br />
 							<br />
 							<br />
@@ -566,7 +566,7 @@ class CreateEvent extends Component {
 		if (this.state.error || this.props.error) {
 			body = (
 				<div className="row">
-					<div className="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12">
+					<div className="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12">
 						<br />
 						<br />
 						<br />
@@ -579,7 +579,7 @@ class CreateEvent extends Component {
 							isEventCreated={this.state.isEventCreated}
 						/>
 					</div>
-					<div className="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 create-event">
+					<div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 create-event">
 						<br />
 						<br />
 						<br />

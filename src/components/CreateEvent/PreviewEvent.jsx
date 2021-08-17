@@ -138,6 +138,13 @@ const useStyles = makeStyles((theme) => ({
 		},
 		minHeight: "71px",
 	},
+	previewEventButton: {
+		color: "#413AE2",
+		fontWeight: "700",
+		fontSize: "18px",
+		fontFamily: "'Aeonik', sans-serif",
+		textTransform: "capitalize",
+	},
 }));
 
 export default function PreviewEvent({ fields, activeStep }) {
@@ -197,8 +204,8 @@ export default function PreviewEvent({ fields, activeStep }) {
 								component="h2"
 								style={{
 									color: "#1E1E22",
-									fontSize: 17,
-									fontWeight: 700,
+									fontSize: 22,
+									fontWeight: 500,
 									paddingBottom: "16px",
 									fontFamily: "'Aeonik', sans-serif",
 								}}
@@ -381,7 +388,6 @@ export default function PreviewEvent({ fields, activeStep }) {
 				</Card>
 			</div>
 			<br />
-			<br />
 			{activeStep === 3 ? (
 				<div style={{ display: "flex", justifyContent: "center" }}>
 					<EventPreviewPage
@@ -406,6 +412,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 						size="large"
 						startIcon={<VisibilityOutlinedIcon fontSize="large" />}
 						onClick={handleClickOpen}
+						className={classes.previewEventButton}
 					>
 						Preview Event
 					</Button>
