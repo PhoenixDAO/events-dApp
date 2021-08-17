@@ -1071,9 +1071,7 @@ const Analytics = (props, context) => {
 									<option value="2419200">
 										Last 28 Days
 									</option>
-									<option value="7776000">
-										Last 90 Days
-									</option>
+							
 								</Select>
 							</FormControl>
 							<DateRangePicker

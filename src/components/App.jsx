@@ -160,8 +160,8 @@ class App extends Component {
 			address: account,
 			networkId: networkId,
 		});
+
 		if (!userDetails.error) {
-			console.log("user details", userDetails);
 			this.setState({
 				userDetails: userDetails,
 			});
