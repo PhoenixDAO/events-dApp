@@ -1,8 +1,14 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import React, {
+	useState,
+	useEffect,
+	useMemo,
+	useCallback,
+	useRef,
+} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import { Grid, FormControl, Select ,Button} from "@material-ui/core";
+import { Grid, FormControl, Select, Button } from "@material-ui/core";
 // import {Graph} from "../utils/graph";
 import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
@@ -16,12 +22,16 @@ import "bootstrap/dist/css/bootstrap.css";
 // you will also need the css that comes with bootstrap-daterangepicker
 import "bootstrap-daterangepicker/daterangepicker.css";
 import "../styles/customCalendar.css";
-import {
-	getPhoenixDAOMarketValue,
-} from "../utils/graphApis";
+import { getPhoenixDAOMarketValue } from "../utils/graphApis";
 import Web3 from "web3";
 import MyEvents from "./MyEvents";
 import moment from "moment";
+import {
+	generateJSON,
+	getEventName,
+	getTimeData,
+	getTodayData,
+} from "../utils/graphApis";
 const useStyles = makeStyles((theme) => ({
 	content: {
 		backgroundColor: "white",
@@ -194,13 +204,13 @@ const useStyles = makeStyles((theme) => ({
 	button: {
 		"@media screen and (max-width: 1200px) and (min-width: 900px)": {
 			width: "30%",
-			height: "45px"
+			height: "45px",
 		},
 		margin: theme.spacing(1),
 		fontFamily: "'Aeonik', sans-serif",
 		background: "#413AE2",
 		color: "white",
-		textTransform: 'Capitalize',
+		textTransform: "Capitalize",
 		// maxHeight: 54,
 		// maxWidth: 230,
 		"&:focus": {
@@ -310,15 +320,20 @@ const Analytics = (props, context) => {
 	const [labels, setLabels] = useState([]);
 	const [legend, setlegend] = useState("REVENUE ($) ");
 	const [timeLabel, settimeLabel] = useState("TIME");
-	const [startDate, setStartDate] = useState("");
-	const [endDate, setEndDate] = useState("");
+	// const [startDate, setStartDate] = useState("");
+	// const [endDate, setEndDate] = useState("");
+	const [customDate, setCustomDate] = useState({
+		startDate: "",
+		endDate: "",
+	});
+	const [reload, setReload] = useState(false);
 	useEffect(() => {
 		// getPhnxRevenue();
 		getViewsAndFavourites();
 		handleTimeStampChange();
 		console.log("recalled");
 		// loadApis();
-	}, [props.graphData, startDate, endDate]);
+	}, [props.graphData, customDate.startDate, customDate.endDate]);
 
 	useEffect(() => {
 		getDollarRevenue();
@@ -451,8 +466,12 @@ const Analytics = (props, context) => {
 	const handleEvent = (event, picker) => {
 		console.log("startdate", moment(picker.startDate._d).unix());
 		console.log("enddate", moment(picker.endDate._d).unix());
-		setStartDate(moment(picker.startDate._d).unix());
-		setEndDate(moment(picker.endDate._d).unix());
+		// setStartDate(moment(picker.startDate._d).unix());
+		// setEndDate(moment(picker.endDate._d).unix());
+		setCustomDate({
+			startDate: moment(picker.startDate._d).unix(),
+			endDate: moment(picker.endDate._d).unix(),
+		});
 	};
 	const getPhnxRevenue = () => {
 		let phxRevenue = [];
@@ -635,14 +654,14 @@ const Analytics = (props, context) => {
 					>
 						{revenueCategory == "eventRevenueInPhnx"
 							? (
-								event.eventRevenueInPhnx /
-								1000000000000000000
-							).toFixed(2) + " PHNX"
+									event.eventRevenueInPhnx /
+									1000000000000000000
+							  ).toFixed(2) + " PHNX"
 							: "$ " +
-							(
-								event.eventRevenueInDollar /
-								1000000000000000000
-							).toFixed(2)}
+							  (
+									event.eventRevenueInDollar /
+									1000000000000000000
+							  ).toFixed(2)}
 					</Grid>
 				</Grid>
 			));
@@ -650,6 +669,94 @@ const Analytics = (props, context) => {
 	};
 	const handleRevenue = (event) => {
 		setrevenueCategory(event.target.value);
+	};
+
+	const dayHelper = (day, data) => {
+		settimeLabel("DATE");
+		let newDataObj = {};
+		const timeDataArr = data;
+		console.log("Day helper", data);
+		for (let i = 0; i < timeDataArr.length; i++) {
+			if (newDataObj[timeDataArr[i].startTimeStamp]) {
+				const soldTickets = Number(
+					newDataObj[timeDataArr[i].startTimeStamp].soldTickets
+				);
+				const totalDollarRevenue = Number(
+					newDataObj[timeDataArr[i].startTimeStamp].totalDollarRevenue
+				);
+				const totalPhnxRevenue = Number(
+					newDataObj[timeDataArr[i].startTimeStamp].totalPhnxRevenue
+				);
+				newDataObj[timeDataArr[i].startTimeStamp] = {
+					...timeDataArr[i],
+					soldTickets:
+						soldTickets + Number(timeDataArr[i].soldTickets),
+					totalDollarRevenue:
+						totalDollarRevenue +
+						Number(timeDataArr[i].totalDollarRevenue),
+					totalPhnxRevenue:
+						totalPhnxRevenue +
+						Number(timeDataArr[i].totalPhnxRevenue),
+				};
+			} else {
+				newDataObj[timeDataArr[i].startTimeStamp] = timeDataArr[i];
+			}
+		}
+
+		console.log("newDataObj", newDataObj);
+		const todayTimeStamp = Number(moment().unix());
+		console.log("todayTimeStamp", todayTimeStamp);
+		const today = new Date();
+		const d = new Date(today.setHours(0, 0, 0, 0));
+		d.setDate(d.getDate() - day);
+		d.setHours(0, 0, 0, 0);
+		d.setUTCHours(0, 0, 0, 0);
+		const calculatedTimestamp = moment(d).unix() + 172800;
+		console.log("calculatedTimestamp", calculatedTimestamp);
+
+		const d1 = new Date(today.setHours(0, 0, 0, 0));
+		d1.setDate(d1.getDate() - (day + day));
+		d1.setHours(0, 0, 0, 0);
+		d1.setUTCHours(0, 0, 0, 0);
+		const calculatedTimestamp1 = moment(d).unix() + 172800;
+		console.log("calculatedTimestamp1", calculatedTimestamp1);
+
+		let dataArr = [];
+		for (let i = calculatedTimestamp; i <= todayTimeStamp; i = i + 86400) {
+			console.log("newDataObj[i]", newDataObj[i]);
+			if (newDataObj[i]) {
+				dataArr.push(newDataObj[i]);
+			} else {
+				dataArr.push({
+					startTimeStamp: i,
+					eventId: "0",
+					soldTickets: "0",
+					totalDollarRevenue: "0",
+					totalPhnxRevenue: "0",
+				});
+			}
+		}
+
+		let dataArr1 = [];
+		for (let i = calculatedTimestamp1; i <= todayTimeStamp; i = i + 86400) {
+			console.log("newDataObj[i]", newDataObj[i]);
+			if (newDataObj[i]) {
+				dataArr1.push(newDataObj[i]);
+			} else {
+				dataArr1.push({
+					startTimeStamp: i,
+					eventId: "0",
+					soldTickets: "0",
+					totalDollarRevenue: "0",
+					totalPhnxRevenue: "0",
+				});
+			}
+		}
+
+		return {
+			dataArr,
+			dataArr1,
+		};
 	};
 
 	//filterations and calculations of earnuings card section
@@ -678,6 +785,7 @@ const Analytics = (props, context) => {
 		console.log("graph", props.graphData);
 		if (props.graphData.length != 0) {
 			let graphForDays = [];
+			let difference = [];
 			console.log("called herer");
 			if (timestamp === "86400") {
 				settimeLabel("TIME");
@@ -689,28 +797,97 @@ const Analytics = (props, context) => {
 						props.todayGraphData
 					);
 					graphForDays = props.todayGraphData;
+					difference = await getTodayData(
+						"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b",
+						Number(moment().unix() - 172800)
+					);
 				}
 			} else if (timestamp === "custom") {
-				console.log("graphData", props.graphData);
+				console.log(
+					"graphData",
+					props.graphData,
+					"start",
+					customDate.startDate,
+					"end",
+					customDate.endDate
+				);
 				graphForDays = props.graphData.filter(
 					(event) =>
-						startDate <= event.startTimeStamp &&
-						event.startTimeStamp <= endDate
+						customDate.startDate <= event.startTimeStamp &&
+						event.startTimeStamp <= customDate.endDate
+				);
+
+				let newEndDate = moment
+					.unix(customDate.startDate)
+					.format("YYYY-MM-DD");
+				let betweenDays = Math.ceil(
+					moment
+						.duration(
+							moment
+								.unix(customDate.endDate)
+								.diff(moment.unix(customDate.startDate))
+						)
+						.asDays()
+				);
+				let newStartDate = moment(newEndDate).subtract(
+					betweenDays,
+					"days"
+				);
+				console.log(
+					"newStartDate",
+					moment(newStartDate).unix(),
+					"betweenDays",
+					betweenDays,
+					"newEndDate",
+					moment(newEndDate).unix()
+				);
+
+				difference = props.graphData.filter(
+					(event) =>
+						moment(newStartDate).unix() <= event.startTimeStamp &&
+						event.startTimeStamp <= moment(newEndDate).unix()
 				);
 				console.log("graph for days for custom", graphForDays);
-			} else {
-				settimeLabel("DATE");
-				console.log("graphData", props.graphData);
-				graphForDays = props.graphData.filter(
-					(event) => event.startTimeStamp >= elapsedTime
-				);
+				console.log("difference", difference);
+			} else if (timestamp === "604800") {
+				const { dataArr, dataArr1 } = dayHelper(7, props.graphData);
+				graphForDays = dataArr;
+				difference = dataArr1;
+			} else if (timestamp === "2419200") {
+				const { dataArr, dataArr1 } = dayHelper(28, props.graphData);
+				graphForDays = dataArr;
+				difference = dataArr1;
+			} else if (timestamp === "7776000") {
+				const { dataArr, dataArr1 } = dayHelper(90, props.graphData);
+				graphForDays = dataArr;
+				difference = dataArr1;
 			}
+			// else {
+			// 	settimeLabel("DATE");
+			// 	console.log("graphData", props.graphData);
+			// 	graphForDays = props.graphData.filter(
+			// 		(event) => event.startTimeStamp >= elapsedTime
+			// 	);
+			// }
 			setGraphDays(graphForDays);
 			console.log("graph", graphForDays);
-			if (graphForDays.length != 0) {
-				let totalDollarRevenue = 0;
-				let totalPhnxRevenue = 0;
-				let soldTicket = 0;
+			let totalDollarRevenue = 0;
+			let totalPhnxRevenue = 0;
+			let soldTicket = 0;
+			let totalDollarPrev = 0;
+			let totalPhnxPrev = 0;
+			let totalSoldTicketsPrev = 0;
+			difference.forEach((event) => {
+				totalDollarPrev += Number(
+					Web3.utils.fromWei(event.totalDollarRevenue.toString())
+				);
+				console.log("totalDollarPrev", totalDollarPrev);
+				totalSoldTicketsPrev += Number(event.soldTickets.toString());
+				totalPhnxPrev += Number(
+					Web3.utils.fromWei(event.totalPhnxRevenue.toString())
+				);
+			});
+			if (graphForDays.length > 0) {
 				graphForDays.forEach((event) => {
 					totalDollarRevenue += Number(
 						Web3.utils.fromWei(event.totalDollarRevenue.toString())
@@ -721,6 +898,8 @@ const Analytics = (props, context) => {
 						Web3.utils.fromWei(event.totalPhnxRevenue.toString())
 					);
 				});
+
+				console.log("DIFFERENCE", difference);
 				// totalPhnxRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
 				// totalDollarRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
 				console.log("totalDollarRevenue", totalDollarRevenue);
@@ -734,17 +913,17 @@ const Analytics = (props, context) => {
 				//calculate data for change and difference of cards
 				let lastIndex = graphForDays.length - 1;
 				let originalNumber = Web3.utils.fromWei(
-					graphForDays[0].totalDollarRevenue
+					graphForDays[0].totalDollarRevenue.toString()
 				);
 				let newNumber = Web3.utils.fromWei(
-					graphForDays[lastIndex].totalDollarRevenue
+					graphForDays[lastIndex].totalDollarRevenue.toString()
 				);
 				console.log("phnx", originalNumber, newNumber);
 				let PHNXoriginalNumber = Web3.utils.fromWei(
-					graphForDays[0].totalPhnxRevenue
+					graphForDays[0].totalPhnxRevenue.toString()
 				);
 				let PHNXnewNumber = Web3.utils.fromWei(
-					graphForDays[lastIndex].totalPhnxRevenue
+					graphForDays[lastIndex].totalPhnxRevenue.toString()
 				);
 				let PhnxChange, price;
 				price = ((newNumber - originalNumber) / originalNumber) * 100;
@@ -772,25 +951,60 @@ const Analytics = (props, context) => {
 				console.log("new", newNumber, originalNumber);
 				// originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenue);
 				// newNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenue);
-				let priceDifference = newNumber - originalNumber;
-				setdollarDifference(priceDifference);
-				let revenueDifference = PHNXnewNumber - PHNXoriginalNumber;
-				setRevenueDifference(revenueDifference);
+				let dollartDifference =
+					totalDollarRevenue - (totalDollarRevenue - totalDollarPrev);
+				setdollarDifference(
+					totalDollarPrev > totalDollarRevenue
+						? -dollartDifference
+						: totalDollarRevenue
+				);
+				let revenueDifference =
+					totalPhnxRevenue - (totalPhnxRevenue - totalPhnxPrev);
+				setRevenueDifference(
+					totalPhnxPrev > totalPhnxRevenue
+						? -revenueDifference
+						: totalPhnxRevenue
+				);
+				let ticketsDifference =
+					soldTicket - (soldTicket - totalSoldTicketsPrev);
 				setTicketDifference(
-					graphForDays[lastIndex].soldTickets -
-					graphForDays[0].soldTickets
+					totalSoldTicketsPrev > soldTicket
+						? -ticketsDifference
+						: soldTicket
 				);
 			} else {
+				console.log(
+					"GRpah for day else called",
+					graphForDays,
+					dollarRevenue
+				);
 				setDollarRevenue(0);
 				setPhnxRevenue(0);
 				setSoldTicket(0);
 				setLiveDollarRevenue(0);
 				setPhnxChange(0);
 				setDollarChange(0);
-				setTicketSoldChange(0);
-				setdollarDifference(0);
-				setTicketDifference(0);
-				setRevenueDifference(0);
+				let dollartDifference =
+					totalDollarRevenue - (totalDollarRevenue - totalDollarPrev);
+				setdollarDifference(
+					totalDollarPrev > totalDollarRevenue
+						? -dollartDifference
+						: totalDollarRevenue
+				);
+				let revenueDifference =
+					totalPhnxRevenue - (totalPhnxRevenue - totalPhnxPrev);
+				setRevenueDifference(
+					totalPhnxPrev > totalPhnxRevenue
+						? -revenueDifference
+						: totalPhnxRevenue
+				);
+				let ticketsDifference =
+					soldTicket - (soldTicket - totalSoldTicketsPrev);
+				setTicketDifference(
+					totalSoldTicketsPrev > soldTicket
+						? -ticketsDifference
+						: soldTicket
+				);
 			}
 		}
 	};
@@ -801,6 +1015,7 @@ const Analytics = (props, context) => {
 	// 	const tickets = await generateJSON(Number(event.target.value));
 	// 	setTicketSales(tickets);
 	// };
+
 	const provideGraph = () => {
 		if (dollarClicked) {
 			return (
@@ -834,37 +1049,46 @@ const Analytics = (props, context) => {
 					<Grid className={classes.row}>
 						<h3 className={classes.heading}>Earnings</h3>
 
-<div>
-						<FormControl
-							variant="outlined"
-							className={classes.select}
-						>
-							<Select
-								native
-								value={timeStamp}
-								onChange={handleTimeStampChange}
-								inputProps={{
-									name: "age",
-									id: "outlined-age-native-simple",
-								}}
+						<div>
+							<FormControl
+								variant="outlined"
+								className={classes.select}
 							>
-								<option value="86400">Today</option>
-								{/* <option aria-label="None" value="Yesterday">
+								<Select
+									native
+									value={timeStamp}
+									onChange={handleTimeStampChange}
+									inputProps={{
+										name: "age",
+										id: "outlined-age-native-simple",
+									}}
+								>
+									<option value="86400">Today</option>
+									{/* <option aria-label="None" value="Yesterday">
 								Yesterday
 							</option> */}
-								<option value="604800">Last 7 Days</option>
-								<option value="2419200">Last 28 Days</option>
-								<option value="7776000">Last 90 Days</option>
-							</Select>
-						</FormControl>
-						<DateRangePicker
+									<option value="604800">Last 7 Days</option>
+									<option value="2419200">
+										Last 28 Days
+									</option>
+									<option value="7776000">
+										Last 90 Days
+									</option>
+								</Select>
+							</FormControl>
+							<DateRangePicker
 								initialSettings={{
-									
-									showDropdowns: true
+									showDropdowns: true,
 								}}
 								onShow={
 									timeStamp === "custom"
-										? (e, p) => console.log("event", e, "picker", p)
+										? (e, p) =>
+												console.log(
+													"event",
+													e,
+													"picker",
+													p
+												)
 										: null
 								}
 								onEvent={handleEvent}
@@ -875,13 +1099,15 @@ const Analytics = (props, context) => {
 									color="primary"
 									size="large"
 									className={classes.button}
+									onClick={(e) => setTimeStamp("custom")}
 								>
 									Custom
 								</Button>
 							</DateRangePicker>
-							</div>
+						</div>
 					</Grid>
 					<Grid container style={{ justifyContent: "space-evenly" }}>
+						{console.log("DOLLAR REVENUE", dollarRevenue)}
 						<Card
 							color="#E5AB00"
 							click={getDollarRevenue}
@@ -892,6 +1118,8 @@ const Analytics = (props, context) => {
 							diffrence={dollarDifference}
 							entity="$"
 							days={timeStamp}
+							startDate={customDate.startDate}
+							endDate={customDate.endDate}
 							liveDollarRevenue={liveDollarRevenue}
 						/>
 						<Card
@@ -1025,7 +1253,9 @@ const Analytics = (props, context) => {
 										id: "outlined-age-native-simple",
 									}}
 								>
-									<option value="eventRevenueInPhnx">PHNX</option>
+									<option value="eventRevenueInPhnx">
+										PHNX
+									</option>
 									<option value="eventRevenueInDollar">
 										Dollar
 									</option>
@@ -1033,7 +1263,10 @@ const Analytics = (props, context) => {
 							</FormControl>
 						</Grid>
 
-						<Grid className={classes.box} style={{ marginTop: "30px" }}>
+						<Grid
+							className={classes.box}
+							style={{ marginTop: "30px" }}
+						>
 							<Grid className={classes.row2}>
 								<Grid className={classes.header} lg={3}>
 									No of Tickets
@@ -1053,7 +1286,6 @@ const Analytics = (props, context) => {
 						</Grid>
 					</Grid>
 				</Grid>
-
 			) : (
 				<Grid
 					container

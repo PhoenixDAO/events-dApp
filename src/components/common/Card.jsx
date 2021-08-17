@@ -4,6 +4,8 @@ import {
     Grid,
     Typography,
 } from "@material-ui/core";
+import { SettingsSystemDaydreamSharp } from "@material-ui/icons";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
     box: {
@@ -90,7 +92,15 @@ export const Card = (props) => {
 
     }, []);
     const classes = useStyles();
-    let timestamp = days / 86400;
+    let timestamp = days === "custom" ?  Math.ceil(
+        moment
+            .duration(
+                moment
+                    .unix(props.endDate)
+                    .diff(moment.unix(props.startDate))
+            )
+            .asDays()
+    ) :  days/ 86400;
     return (
         <Grid lg={4} sm={12} xs={12} item className={classes.box} onClick={click} style={{ borderLeft: `4px solid ${color}` }} component="button">
             <img

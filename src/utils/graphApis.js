@@ -144,16 +144,25 @@ export async function getTimeData(owner) {
 			) {
 				return;
 			}
-			newTimeDataArr.push({
-				startTimeStamp:
-					Number(timeDataArr[i + 1].startTimeStamp) + 86400,
-				eventId: "0",
-				soldTickets: "0",
-				totalDollarRevenue: "0",
-				totalPhnxRevenue: "0",
-			});
+			const todayTimeStamp = Number(moment().unix());
+			if (
+				Number(timeDataArr[i + 1].startTimeStamp) + 86400 <
+				todayTimeStamp
+			) {
+				newTimeDataArr.push({
+					startTimeStamp:
+						Number(timeDataArr[i + 1].startTimeStamp) + 86400,
+					eventId: "0",
+					soldTickets: "0",
+					totalDollarRevenue: "0",
+					totalPhnxRevenue: "0",
+				});
+			}
+			// }
 		}
 	}, timeDataArr);
+
+	console.log("new TIme Data", newTimeDataArr);
 	let max = newTimeDataArr.length;
 	for (let i = 0; i < max; i++) {
 		if (i + 1 < max) {
@@ -168,13 +177,6 @@ export async function getTimeData(owner) {
 				Number(newTimeDataArr[i + 1].startTimeStamp)
 			) {
 				const hldr = Number(newTimeDataArr[i].startTimeStamp) + 86400;
-				// newTimeDataObj[hldr] = {
-				// 	startTimeStamp: hldr,
-				// 	eventId: "0",
-				// 	soldTickets: "0",
-				// 	totalDollarRevenue: "0",
-				// 	totalPhnxRevenue: "0",
-				// };
 				newTimeDataArr.splice(i + 1, 0, {
 					startTimeStamp: hldr,
 					eventId: "0",
@@ -185,7 +187,7 @@ export async function getTimeData(owner) {
 			}
 		}
 	}
-	console.log(newTimeDataArr);
+	console.log("new time data arr", newTimeDataArr);
 	return newTimeDataArr;
 }
 export async function getTodayData(owner, timestamp) {
@@ -272,7 +274,6 @@ export async function getTodayData(owner, timestamp) {
 				Number(newTimeDataArr[i + 1].startTimeStamp)
 			) {
 				const hldr = Number(newTimeDataArr[i].startTimeStamp) + 3600;
-
 				newTimeDataArr.splice(i + 1, 0, {
 					startTimeStamp: hldr,
 					eventId: "0",
@@ -291,7 +292,7 @@ export async function getTodayData(owner, timestamp) {
 		// 	prevTimeStamp = prevTimeStamp - 3600;
 		// }
 		// for (let i = 0; i < newTimeDataArr.length; i++) {
-        //     prevTimeStamp = prevTimeStamp+3600,
+		//     prevTimeStamp = prevTimeStamp+3600,
 		// 	console.log(
 		// 		"prevTimeStamp",
 		// 		prevTimeStamp,

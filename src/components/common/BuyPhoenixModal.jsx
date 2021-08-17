@@ -8,7 +8,7 @@ const settings = {
 	defaultCryptoCurrency: "ETH",
 	themeColor: "000000", // App theme color
 	hostURL: window.location.origin,
-	widgetHeight: "700px",
+	widgetHeight: "650px",
 	widgetWidth: "500px",
 };
 
