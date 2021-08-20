@@ -21,7 +21,14 @@ const useStyles = makeStyles((theme) => ({
     "& .MuiPaper-root":
     {
       width: "100%",
-    }
+    },
+    "& .MuiTypography-body1":{
+      fontFamily: "AeonikReg",
+    },
+    "& .MuiButton-label":{
+      fontFamily: 'Aeonik',
+      textTransform: "capitalize",
+       }
   },
   header: {
     justifyContent: "center",
@@ -41,12 +48,14 @@ const useStyles = makeStyles((theme) => ({
   sharelink: {
     fontWeight: "900",
     color: "#413AE2",
-    padding: "12px 0px",
+    padding: "9px 0px 3px",
   },
   logo: {
     width: "22px",
     height: "22px",
-    marginRight: "7px"
+    marginRight: "7px",
+    marginBottom: "4px",
+
   },
   eventTitle: {
     textAlign: "center",
@@ -177,7 +186,7 @@ export default function sendTicket({ handleClose, open, eventTitle, sendTicket2,
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} className={classes.root} TransitionComponent={Transition} >
         <DialogTitle id="customized-dialog-title" className={classes.header} onClose={handleClose} >
           <img src={roundlogo} className={classes.logo} alt="phnx logo" />
-          PhoenixDAO
+          <span style={{fontSize:"20px"}}>PhoenixDAO</span>
           <h2 className={classes.sharelink}>
             Send Ticket
           </h2>

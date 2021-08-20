@@ -909,6 +909,9 @@ class EventPage extends Component {
 								buy={this.inquire}
 								buttonText={buttonText}
 								purchased={this.props.purchased}
+								eventTime={this.state.eventTime}
+								eventDate={this.state.eventDate}
+								eventEndDate={this.state.eventEndDate}
 							/>
 							<Header
 								disabled={
@@ -1081,10 +1084,11 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{
-												event_data.catTktQuantitySold[
-												this.state
-													.selectedCategoryIndex
-												]
+												// event_data.catTktQuantitySold[
+												// this.state
+												// 	.selectedCategoryIndex
+												// ]
+												event_data.tktTotalQuantitySold
 											}
 											/{max_seats}
 										</p>
@@ -1129,10 +1133,9 @@ class EventPage extends Component {
 														>
 															bought
 														</a>
-														{"  "}
+														{" "}
 														{" " +
-															sold.count +
-															" "}{" "}
+															sold.count }{" "}
 														ticket for this event{" "}
 														{/* <strong>
 														{event_data[0]}
@@ -1144,8 +1147,7 @@ class EventPage extends Component {
 										</Grid>
 										{this.state.soldTicket.length == 0 && (
 											<p className="sold_text col-md-12 no-tickets">
-												There are currently no purchases
-												for this ticket.
+												There are currently no purchases of this Event.
 											</p>
 										)}
 									</div>
