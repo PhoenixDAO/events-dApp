@@ -316,19 +316,20 @@ class App extends Component {
 							txconfirmedApproved == 0 &&
 							txreceiptApproved.status == true
 						) {
-							toast(
-								<Notify
-									hash={txreceiptApproved.transactionHash}
-									text="Ticket purchase successful!"
-									icon="fa-ticket-alt"
-									link="Check out your TICKET here"
-								/>,
-								{
-									position: "bottom-right",
-									autoClose: true,
-									pauseOnHover: true,
-								}
-							);
+							// toast(
+							// 	<Notify
+							// 		hash={txreceiptApproved.transactionHash}
+							// 		text="Ticket purchase successful!"
+							// 		icon="fa-ticket-alt"
+							// 		link="Check out your TICKET here"
+							// 	/>,
+							// 	{
+							// 		position: "bottom-right",
+							// 		autoClose: true,
+							// 		pauseOnHover: true,
+							// 	}
+							// );
+							this.setState({ disabledStatus: false, purchased:true });
 						}
 					}
 				})
@@ -446,21 +447,6 @@ class App extends Component {
 							hash
 						);
 						if (receipt) {
-							toast(
-								<Notify
-									hash={txreceipt.transactionHash}
-									text="Ticket purchase successfull!"
-									icon="fa fa-ticket-alt fa-3x"
-									link="Check out your TICKET here"
-									url="/mytickets/1"
-									color="#413AE2"
-								/>,
-								{
-									position: "bottom-right",
-									autoClose: true,
-									pauseOnHover: true,
-								}
-							);
 							this.setState({ disabledStatus: false, purchased:true });
 							clearInterval(intervalVar);
 						}

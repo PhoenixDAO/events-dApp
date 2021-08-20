@@ -66,6 +66,7 @@ import checkedIcon from "../Images/checked.png";
 import uncheckedIcon from "../Images/unchecked.png";
 import { CodeSharp, CompassCalibrationOutlined } from "@material-ui/icons";
 import GeoLocation from "../common/GeoLocation";
+import { setDate } from "date-fns/esm";
 
 var badWords = require("bad-words");
 
@@ -370,7 +371,7 @@ const MyStepper = ({
 	const [categories, setCategories] = useState([]);
 	const [addAnotherCat, setaddAnotherCat] = useState(false);
 	const [ticketCategory, setTicketCategory] = useState(0);
-
+     const [date,setDate] = useState(new Date());
 	useEffect(() => {
 		setTicketCategory(Math.floor(100000 + Math.random() * 900000));
 	}, []);
@@ -500,7 +501,10 @@ const MyStepper = ({
 	const handleDateChange = (date) => {
 		setSelectedDate(date);
 	};
-
+ const handleDate =(e)=>{
+	 console.log("e",e);
+	 setDate(e);
+ }
 	//first stepper time setter
 	const handleTimeChange = (time) => {
 		setSelectTime(time);
@@ -909,8 +913,10 @@ const MyStepper = ({
 																	value={
 																		value
 																	}
-																	onChange={
-																		onChange
+																	onChange={(e) =>{
+																		onChange(e);
+																		handleDate(e);
+																	}
 																	}
 																	error={
 																		!!error
@@ -989,7 +995,7 @@ const MyStepper = ({
 																fullwidth
 																inputVariant="outlined"
 																autoOk={true}
-																value={value}
+																value={date}
 																onChange={
 																	onChange
 																}
