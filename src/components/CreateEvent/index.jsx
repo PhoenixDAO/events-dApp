@@ -80,6 +80,7 @@ class CreateEvent extends Component {
 			activeStep: 0,
 			activeFlamingStep: 0,
 			isEventCreated: false,
+			progressText: 0,
 		};
 		this.contracts = context.drizzle.contracts;
 		this.onHandleTxReject = this.onHandleTxReject.bind(this);
@@ -123,6 +124,9 @@ class CreateEvent extends Component {
 
 	handleCreateEvent = async () => {
 		console.log("handleCreateEvent", this.state.fields);
+		this.setState({
+			progressText: 5,
+		});
 
 		let {
 			eventName,
@@ -149,10 +153,6 @@ class CreateEvent extends Component {
 			state,
 			city,
 		} = this.state.fields;
-
-		// image0 = image0 ? URL.createObjectURL(image0) : "";
-		// image1 = image1 ? URL.createObjectURL(image1) : "";
-		// image2 = image2 ? URL.createObjectURL(image2) : "";
 
 		let image0Base64 = image0 ? await this.getBase64(image0) : "";
 		let image1Base64 = image1 ? await this.getBase64(image1) : "";
@@ -201,6 +201,9 @@ class CreateEvent extends Component {
 			eventTime,
 			eventType,
 			eventDescription,
+			country: countryName,
+			state: stateName,
+			city: cityName,
 			//old
 			image: image0Base64,
 			text: eventDescription,
@@ -213,7 +216,11 @@ class CreateEvent extends Component {
 		ipfs.add(buffer, { pin: pinit })
 			.then(async (hash) => {
 				console.log("hashhh", hash[0].hash);
+				this.setState({
+					progressText: 100,
+				});
 				this.onFlamingStepsChange();
+
 				// ipfs.get(hash[0].hash).then((file) => {
 				// 	let data = JSON.parse(file[0].content.toString());
 				// 	console.log("data", data);
@@ -235,6 +242,7 @@ class CreateEvent extends Component {
 						eventName,
 						eventTopic,
 						location,
+						cityName,
 						hash[0].hash,
 						ticketLimited,
 						tktQnty,
@@ -264,7 +272,7 @@ class CreateEvent extends Component {
 						}
 					})
 					.then((receipt) => {
-						console.log("receipt", receipt);
+						console.log("receipt----->", receipt);
 						toast(
 							<Notify
 								text={
@@ -305,6 +313,24 @@ class CreateEvent extends Component {
 			.catch((error) => {
 				console.log("ipfs error", error);
 				this.onHandleTxReject(error);
+				if (error !== null) {
+					let txerror = error;
+					toast(
+						<Notify
+							error={error}
+							message={
+								txerror.message
+									? txerror.message
+									: "Something went wrong!"
+							}
+						/>,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
+				}
 			});
 	};
 
@@ -549,6 +575,7 @@ class CreateEvent extends Component {
 								onFlamingStepsChange={this.onFlamingStepsChange}
 								activeFlamingStep={this.state.activeFlamingStep}
 								isEventCreated={this.state.isEventCreated}
+								progressText={this.state.progressText}
 							/>
 						</div>
 						<div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 create-event">
@@ -577,6 +604,7 @@ class CreateEvent extends Component {
 							onFlamingStepsChange={this.onFlamingStepsChange}
 							activeFlamingStep={this.state.activeFlamingStep}
 							isEventCreated={this.state.isEventCreated}
+							progressText={this.state.progressText}
 						/>
 					</div>
 					<div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 create-event">

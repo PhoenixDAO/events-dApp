@@ -32,6 +32,7 @@ export default function BodyTextEditor({ value, setValue, readOnly }) {
 				variant="filled"
 				className="editor"
 				// className={classes.editor}
+				placeholder="Type something here....."
 			/>
 		</div>
 	);
