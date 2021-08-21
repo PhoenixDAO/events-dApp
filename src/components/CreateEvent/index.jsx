@@ -21,7 +21,11 @@ import BuyPhnxButton from "../common/BuyPhnxButton";
 
 import Header from "../common/Header";
 
-import web3 from "web3";
+import Web3 from "web3";
+import { INFURA_URL } from "../../config/const";
+
+
+
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -80,6 +84,7 @@ class CreateEvent extends Component {
 			activeStep: 0,
 			activeFlamingStep: 0,
 			isEventCreated: false,
+			progressText: 0,
 		};
 		this.contracts = context.drizzle.contracts;
 		this.onHandleTxReject = this.onHandleTxReject.bind(this);
@@ -117,12 +122,14 @@ class CreateEvent extends Component {
 			return {
 				activeStep: prevState.activeStep - 1,
 				activeFlamingStep: 0,
+				progressText:0
 			};
 		});
 	}
 
 	handleCreateEvent = async () => {
 		console.log("handleCreateEvent", this.state.fields);
+		this.stageUpdater(90);
 
 		let {
 			eventName,
@@ -150,10 +157,6 @@ class CreateEvent extends Component {
 			city,
 		} = this.state.fields;
 
-		// image0 = image0 ? URL.createObjectURL(image0) : "";
-		// image1 = image1 ? URL.createObjectURL(image1) : "";
-		// image2 = image2 ? URL.createObjectURL(image2) : "";
-
 		let image0Base64 = image0 ? await this.getBase64(image0) : "";
 		let image1Base64 = image1 ? await this.getBase64(image1) : "";
 		let image2Base64 = image2 ? await this.getBase64(image2) : "";
@@ -179,7 +182,7 @@ class CreateEvent extends Component {
 		for (var i = 0; i < ticketCategories.length; i++) {
 			ticketLimited.push(ticketCategories[i].ticketAvailability);
 			tktQnty.push(ticketCategories[i].noOfTickets);
-			prices.push(web3.utils.toWei(ticketCategories[i].dollarPrice));
+			prices.push(Web3.utils.toWei(ticketCategories[i].dollarPrice));
 			tktQntySold.push("0");
 			categories.push(ticketCategories[i].ticketName);
 			totalQuantity =
@@ -201,6 +204,9 @@ class CreateEvent extends Component {
 			eventTime,
 			eventType,
 			eventDescription,
+			country: countryName,
+			state: stateName,
+			city: cityName,
 			//old
 			image: image0Base64,
 			text: eventDescription,
@@ -213,7 +219,11 @@ class CreateEvent extends Component {
 		ipfs.add(buffer, { pin: pinit })
 			.then(async (hash) => {
 				console.log("hashhh", hash[0].hash);
+				this.setState({
+					progressText: 100,
+				});
 				this.onFlamingStepsChange();
+
 				// ipfs.get(hash[0].hash).then((file) => {
 				// 	let data = JSON.parse(file[0].content.toString());
 				// 	console.log("data", data);
@@ -235,6 +245,7 @@ class CreateEvent extends Component {
 						eventName,
 						eventTopic,
 						location,
+						cityName,
 						hash[0].hash,
 						ticketLimited,
 						tktQnty,
@@ -261,27 +272,59 @@ class CreateEvent extends Component {
 									pauseOnHover: true,
 								}
 							);
+
+							const web3 = new Web3(INFURA_URL);
+					
+							let intervalVar = setInterval(async () => {
+								
+
+								console.log('web3.eth',web3.eth)
+								let receipt = await web3.eth.getTransactionReceipt(
+									txhash
+								);
+								if (receipt) {
+									toast(
+										<Notify
+											text={
+												"Transaction successfull!\nYou can check event now."
+											}
+											icon="fas fa-check-circle fa-3x"
+											color="#413AE2"
+											hash={receipt.transactionHash}
+										/>,
+										{
+											position: "bottom-right",
+											autoClose: true,
+											pauseOnHover: true,
+										}
+									);
+									this.onFlamingStepsChange();
+									clearInterval(intervalVar);
+								}
+							}, 5000);
 						}
+
+					
+
 					})
 					.then((receipt) => {
-						console.log("receipt", receipt);
-						toast(
-							<Notify
-								text={
-									"Transaction successfull!\nYou can check event now."
-								}
-								icon="fas fa-check-circle fa-3x"
-								color="#413AE2"
-								hash={receipt.transactionHash}
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
-
-						this.onFlamingStepsChange();
+						console.log("receipt----->", receipt);
+						// toast(
+						// 	<Notify
+						// 		text={
+						// 			"Transaction successfull!\nYou can check event now."
+						// 		}
+						// 		icon="fas fa-check-circle fa-3x"
+						// 		color="#413AE2"
+						// 		hash={receipt.transactionHash}
+						// 	/>,
+						// 	{
+						// 		position: "bottom-right",
+						// 		autoClose: true,
+						// 		pauseOnHover: true,
+						// 	}
+						// );
+						// this.onFlamingStepsChange();
 					})
 					.catch((error) => {
 						console.log("tx error", error);
@@ -305,6 +348,24 @@ class CreateEvent extends Component {
 			.catch((error) => {
 				console.log("ipfs error", error);
 				this.onHandleTxReject(error);
+				if (error !== null) {
+					let txerror = error;
+					toast(
+						<Notify
+							error={error}
+							message={
+								txerror.message
+									? txerror.message
+									: "Something went wrong!"
+							}
+						/>,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
+				}
 			});
 	};
 
@@ -495,9 +556,10 @@ class CreateEvent extends Component {
 
 	stageUpdater = (max) => {
 		this.updaterInterval = setInterval(() => {
-			if (this.state.stage < max) {
+			if (this.state.progressText < max) {
 				this.setState({
-					stage: this.state.stage + 1,
+					// stage: this.state.stage + 1,
+					progressText:this.state.progressText+10
 				});
 			} else {
 				clearInterval(this.updaterInterval);
@@ -549,6 +611,7 @@ class CreateEvent extends Component {
 								onFlamingStepsChange={this.onFlamingStepsChange}
 								activeFlamingStep={this.state.activeFlamingStep}
 								isEventCreated={this.state.isEventCreated}
+								progressText={this.state.progressText}
 							/>
 						</div>
 						<div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 create-event">
@@ -577,6 +640,7 @@ class CreateEvent extends Component {
 							onFlamingStepsChange={this.onFlamingStepsChange}
 							activeFlamingStep={this.state.activeFlamingStep}
 							isEventCreated={this.state.isEventCreated}
+							progressText={this.state.progressText}
 						/>
 					</div>
 					<div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 create-event">
