@@ -21,7 +21,11 @@ import BuyPhnxButton from "../common/BuyPhnxButton";
 
 import Header from "../common/Header";
 
-import web3 from "web3";
+import Web3 from "web3";
+import { INFURA_URL } from "../../config/const";
+
+
+
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -118,15 +122,14 @@ class CreateEvent extends Component {
 			return {
 				activeStep: prevState.activeStep - 1,
 				activeFlamingStep: 0,
+				progressText:0
 			};
 		});
 	}
 
 	handleCreateEvent = async () => {
 		console.log("handleCreateEvent", this.state.fields);
-		this.setState({
-			progressText: 5,
-		});
+		this.stageUpdater(90);
 
 		let {
 			eventName,
@@ -179,7 +182,7 @@ class CreateEvent extends Component {
 		for (var i = 0; i < ticketCategories.length; i++) {
 			ticketLimited.push(ticketCategories[i].ticketAvailability);
 			tktQnty.push(ticketCategories[i].noOfTickets);
-			prices.push(web3.utils.toWei(ticketCategories[i].dollarPrice));
+			prices.push(Web3.utils.toWei(ticketCategories[i].dollarPrice));
 			tktQntySold.push("0");
 			categories.push(ticketCategories[i].ticketName);
 			totalQuantity =
@@ -269,27 +272,59 @@ class CreateEvent extends Component {
 									pauseOnHover: true,
 								}
 							);
+
+							const web3 = new Web3(INFURA_URL);
+					
+							let intervalVar = setInterval(async () => {
+								
+
+								console.log('web3.eth',web3.eth)
+								let receipt = await web3.eth.getTransactionReceipt(
+									txhash
+								);
+								if (receipt) {
+									toast(
+										<Notify
+											text={
+												"Transaction successfull!\nYou can check event now."
+											}
+											icon="fas fa-check-circle fa-3x"
+											color="#413AE2"
+											hash={receipt.transactionHash}
+										/>,
+										{
+											position: "bottom-right",
+											autoClose: true,
+											pauseOnHover: true,
+										}
+									);
+									this.onFlamingStepsChange();
+									clearInterval(intervalVar);
+								}
+							}, 5000);
 						}
+
+					
+
 					})
 					.then((receipt) => {
 						console.log("receipt----->", receipt);
-						toast(
-							<Notify
-								text={
-									"Transaction successfull!\nYou can check event now."
-								}
-								icon="fas fa-check-circle fa-3x"
-								color="#413AE2"
-								hash={receipt.transactionHash}
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
-
-						this.onFlamingStepsChange();
+						// toast(
+						// 	<Notify
+						// 		text={
+						// 			"Transaction successfull!\nYou can check event now."
+						// 		}
+						// 		icon="fas fa-check-circle fa-3x"
+						// 		color="#413AE2"
+						// 		hash={receipt.transactionHash}
+						// 	/>,
+						// 	{
+						// 		position: "bottom-right",
+						// 		autoClose: true,
+						// 		pauseOnHover: true,
+						// 	}
+						// );
+						// this.onFlamingStepsChange();
 					})
 					.catch((error) => {
 						console.log("tx error", error);
@@ -521,9 +556,10 @@ class CreateEvent extends Component {
 
 	stageUpdater = (max) => {
 		this.updaterInterval = setInterval(() => {
-			if (this.state.stage < max) {
+			if (this.state.progressText < max) {
 				this.setState({
-					stage: this.state.stage + 1,
+					// stage: this.state.stage + 1,
+					progressText:this.state.progressText+10
 				});
 			} else {
 				clearInterval(this.updaterInterval);
