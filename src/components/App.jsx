@@ -39,13 +39,22 @@ import Snackbar2 from "./Snackbar2";
 import {
 	INFURA_URL,
 	INFURA_WEB_URL,
+	INFURA_URL_2,
+	INFURA_WEB_URL_2,
 	GLOBAL_NETWORK_ID,
+	GLOBAL_NETWORK_ID_2,
 } from "../config/const.js";
-import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+
+import {
+	Open_events_ABI,
+	Open_events_Address,
+	Open_events_Address_2,
+} from "../config/OpenEvents";
 
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Mainnet_Token_Address,
+	PhoenixDAO_Testnet_Token_Address_2,
 } from "../config/phoenixDAOcontract_testnet.js";
 
 import NetworkError from "./NetworkError";
@@ -55,7 +64,7 @@ import Favorites from "./Favorite.jsx";
 import { getUserDetails } from "../config/serverAPIs";
 import AccountDetail from "./account/index";
 
-import SkeletonEvent from "./common/SkeletonEvent"
+import SkeletonEvent from "./common/SkeletonEvent";
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -64,17 +73,26 @@ const randomBG = items[Math.floor(Math.random() * items.length)];
 
 class App extends Component {
 	constructor(props, context) {
-		try {
+		super(props);
+		console.log("context", context);
+		this.contractAddressProviders().then((data) => {
+			console.log(
+				"eventAddress, phoenixAddress constructor",
+				context,
+				data.eventAddress,
+				data.phoenixAddress
+			);
 			var contractConfig = {
 				contractName: "PHNX",
-				web3Contract: new context.drizzle.web3.eth.Contract(
-					PhoenixDAO_Testnet_Token_ABI,
-					PhoenixDAO_Mainnet_Token_Address
-				),
+				web3Contract:
+					new context.drizzle.options.web3.customProvider.eth.Contract(
+						PhoenixDAO_Testnet_Token_ABI,
+						data.phoenixAddress
+					),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {}
-		super(props);
+		});
+
 		this.state = {
 			sent_tx: [],
 			showSidebar: true,
@@ -96,7 +114,7 @@ class App extends Component {
 			disabledStatus: false,
 			eventsContract: {},
 			userDetails: {},
-			purchased:false
+			purchased: false,
 		};
 		this.myRef = React.createRef();
 
@@ -106,19 +124,80 @@ class App extends Component {
 		this.executeScroll = this.executeScroll.bind(this);
 		this.initializeContract = this.initializeContract.bind(this);
 	}
+
+	async contractAddressProviders() {
+		let eventAddress = "";
+		let phoenixAddress = "";
+		const networkId = await this.getNetworkId();
+		console.log("This called networkId", networkId);
+		if (networkId === GLOBAL_NETWORK_ID) {
+			eventAddress = Open_events_Address;
+			phoenixAddress = PhoenixDAO_Mainnet_Token_Address;
+		} else if (networkId === GLOBAL_NETWORK_ID_2) {
+			eventAddress = Open_events_Address_2;
+			phoenixAddress = PhoenixDAO_Testnet_Token_Address_2;
+		} else {
+			console.log("Wrong network address | not supported");
+		}
+		console.log(
+			"eventAddress, phoenixAddress",
+			eventAddress,
+			phoenixAddress
+		);
+		return { eventAddress, phoenixAddress };
+	}
+
+	async getNetworkId() {
+		try {
+			if (window.ethereum && window.ethereum.isMetaMask) {
+				web3 = new Web3(ethereum);
+			} else if (typeof web3 !== "undefined") {
+				web3 = new Web3(web3.currentProvider);
+			} else {
+				const network = this.getNetworkId();
+				let infura;
+				if (network === GLOBAL_NETWORK_ID) {
+					infura = INFURA_URL;
+				} else if (network === GLOBAL_NETWORK_ID_2) {
+					infura = INFURA_URL_2;
+				}
+				web3 = new Web3(new Web3.providers.HttpProvider(infura));
+			}
+			const networkId = await web3.eth.net.getId();
+			console.log("This called getNetworkId", networkId);
+			if (networkId === GLOBAL_NETWORK_ID) {
+				return networkId;
+			} else if (networkId === GLOBAL_NETWORK_ID_2) {
+				return networkId;
+			} else {
+				console.log("network id not suported");
+			}
+			return null;
+		} catch (err) {
+			console.log("err", err);
+		}
+	}
 	async initializeContract() {
 		try {
 			const web3 = new Web3(
 				// new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
 				window.ethereum
 			);
+			const { eventAddress, phoenixAddress } =
+				await this.contractAddressProviders();
+			console.log(
+				"eventAddress, phoenixAddress, initializeContract",
+				eventAddress,
+				phoenixAddress
+			);
+
 			const openEvents = await new web3.eth.Contract(
 				Open_events_ABI,
-				Open_events_Address
+				eventAddress
 			);
 			const PHNX = await new web3.eth.Contract(
 				PhoenixDAO_Testnet_Token_ABI,
-				PhoenixDAO_Mainnet_Token_Address
+				phoenixAddress
 			);
 			this.setState({ eventsContract: openEvents, phnxContract: PHNX });
 		} catch (err) {
@@ -192,9 +271,15 @@ class App extends Component {
 			} else if (typeof web3 !== "undefined") {
 				window.web3 = new Web3(web3.currentProvider);
 			} else {
-				window.web3 = new Web3(
-					new Web3.providers.HttpProvider(INFURA_URL)
-				);
+				const network = this.getNetworkId();
+				let infura;
+				if (network === GLOBAL_NETWORK_ID) {
+					infura = INFURA_URL;
+				} else if (network === GLOBAL_NETWORK_ID_2) {
+					infura = INFURA_URL_2;
+				}
+
+				window.web3 = new Web3(new Web3.providers.HttpProvider(infura));
 			}
 			window.ethereum.on("connect", function (accounts) {});
 			window.ethereum.on("accountsChanged", function (accounts) {
@@ -208,16 +293,17 @@ class App extends Component {
 			const accounts = await web3.eth.getAccounts();
 
 			this.setState({ account: accounts[0] });
-			if (accounts[0] && GLOBAL_NETWORK_ID) {
+			const networkId = await this.getNetworkId();
+			if (accounts[0] && networkId) {
 				const userDetails = await getUserDetails({
 					address: accounts[0],
-					networkId: GLOBAL_NETWORK_ID,
+					networkId: networkId,
 				});
 				if (!userDetails.error) {
 					this.setState({
 						userDetails: userDetails,
 					});
-				} 
+				}
 			}
 		}
 	}
@@ -257,7 +343,7 @@ class App extends Component {
 	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
 		if (
 			this.state.account.length !== 0 &&
-			this.props.web3.networkId === GLOBAL_NETWORK_ID
+			this.props.web3.networkId === this.getNetworkId()
 		) {
 			this.setState({ disabledStatus: true });
 			this.setState(
@@ -329,7 +415,10 @@ class App extends Component {
 							// 		pauseOnHover: true,
 							// 	}
 							// );
-							this.setState({ disabledStatus: false, purchased:true });
+							this.setState({
+								disabledStatus: false,
+								purchased: true,
+							});
 						}
 					}
 				})
@@ -352,8 +441,10 @@ class App extends Component {
 
 	allowance = async () => {
 		if (this.state.account) {
+			const { eventAddress, phoenixAddress } =
+				await this.contractAddressProviders();
 			let a = await this.state.phnxContract.methods
-				.allowance(this.state.account, Open_events_Address)
+				.allowance(this.state.account, eventAddress)
 				.call();
 			return a;
 		}
@@ -405,7 +496,10 @@ class App extends Component {
 								}
 							);
 							this.afterApprove();
-							this.setState({ disabledStatus: false ,purchased:true });
+							this.setState({
+								disabledStatus: false,
+								purchased: true,
+							});
 						}
 					}
 				})
@@ -447,7 +541,10 @@ class App extends Component {
 							hash
 						);
 						if (receipt) {
-							this.setState({ disabledStatus: false, purchased:true });
+							this.setState({
+								disabledStatus: false,
+								purchased: true,
+							});
 							clearInterval(intervalVar);
 						}
 					}, 5000);
@@ -477,7 +574,7 @@ class App extends Component {
 				// 	}
 				// })
 				.on("error", (error) => {
-					console.log("error",error);
+					console.log("error", error);
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -695,10 +792,10 @@ class App extends Component {
 							)}
 						/>
 						<Route
-						path="/confirm-purchase"
-						exact
-						component={ConfirmPurchase}
-					/>
+							path="/confirm-purchase"
+							exact
+							component={ConfirmPurchase}
+						/>
 						<Route
 							exact
 							path="/upcomingevents/:page"
@@ -726,7 +823,6 @@ class App extends Component {
 									phnxContract={this.state.phnxContract}
 									purchased={this.state.purchased}
 									togglePurchase={this.togglePurchase}
-
 								/>
 							)}
 						/>
@@ -810,8 +906,10 @@ class App extends Component {
 		} else if (
 			(this.props.web3.status === "initialized" &&
 				Object.keys(this.props.accounts).length === 0) ||
-			this.props.web3.networkId != GLOBAL_NETWORK_ID
+			(this.props.web3.networkId != GLOBAL_NETWORK_ID &&
+				this.props.web3.networkId != GLOBAL_NETWORK_ID_2)
 		) {
+			console.log("third else if", this.props.web3.networkId);
 			body = (
 				<div>
 					<Switch>
@@ -1063,7 +1161,6 @@ class App extends Component {
 								phnxContract={this.state.phnxContract}
 								purchased={this.state.purchased}
 								togglePurchase={this.togglePurchase}
-
 							/>
 						)}
 					/>
@@ -1176,11 +1273,7 @@ class App extends Component {
 						exact
 						component={ConfirmPurchase}
 					/>
-					<Route
-						path="/skull"
-						exact
-						component={SkeletonEvent}
-					/>
+					<Route path="/skull" exact component={SkeletonEvent} />
 					<Route path="*" exact component={PageNotFound} />
 				</Switch>
 			);
@@ -1217,6 +1310,10 @@ class App extends Component {
 							<div className="container">
 								<div className="retract-page-inner-wrapper">
 									{body}
+									{console.log(
+										"Account",
+										this.props.accounts
+									)}
 								</div>
 								{/* <Snackbar
 									open={this.state.openSnackbar}

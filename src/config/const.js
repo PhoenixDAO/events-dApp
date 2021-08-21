@@ -43,7 +43,14 @@ export const INFURA_URL =
 export const INFURA_WEB_URL =
     "wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b";
 
+export const INFURA_URL_2 = "https://goerli.infura.io/v3/0db053799f0e48e99357b6dce022b1e7"
+export const INFURA_WEB_URL_2 ="wss://goerli.infura.io/ws/v3/0db053799f0e48e99357b6dce022b1e7"
+ 
+
 export const GLOBAL_NETWORK_ID = 4;
+export const GLOBAL_NETWORK_ID_2 = 5;
+
+
 
 export const API_URL = "https://events-api.phoenixdao.io/";
  //"https://phoenix-event-dapp-backend-tst.herokuapp.com/";

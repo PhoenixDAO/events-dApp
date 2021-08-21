@@ -255,7 +255,7 @@ class FindEvents extends Component {
 	}
 
 	executeScroll = () => {
-		this.myRef.current.scrollIntoView();
+		// this.myRef.current.scrollIntoView();
 	};
 
 	//Loads Blockhain Data,
@@ -351,10 +351,10 @@ class FindEvents extends Component {
 						this.setState({ loading: false });
 					}, 1000);
 
-					this.executeScroll({
-						behavior: "smooth",
-						block: "center",
-					});
+					// this.executeScroll({
+					// 	behavior: "smooth",
+					// 	block: "center",
+					// });
 
 					// }
 				}
@@ -421,7 +421,7 @@ class FindEvents extends Component {
 			this.setState({
 				hideEvent: get.data.result,
 			});
-			// console.log("hide event", this.state.hideEvent);
+			console.log("hide event", this.state.hideEvent);
 			return;
 		} catch (error) {
 			console.log("check error", error);
@@ -769,6 +769,7 @@ class FindEvents extends Component {
 				}
 			}
 			if (!skip) {
+				console.log("this.state.hideEvent", this.state.hideEvent)
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
 						this.state.Events_Blockchain[i].eventId ==
@@ -836,10 +837,10 @@ class FindEvents extends Component {
 						</li>
 					);
 					if (this.state.prevPath != -1) {
-						this.executeScroll({
-							behavior: "smooth",
-							block: "start",
-						});
+						// this.executeScroll({
+						// 	behavior: "smooth",
+						// 	block: "start",
+						// });
 					}
 				}
 			} else if (pages > 5 && currentPage < 3) {
@@ -862,10 +863,10 @@ class FindEvents extends Component {
 						</li>
 					);
 					if (this.state.prevPath != -1) {
-						this.executeScroll({
-							behavior: "smooth",
-							block: "start",
-						});
+						// this.executeScroll({
+						// 	behavior: "smooth",
+						// 	block: "start",
+						// });
 					}
 				}
 			} else {
@@ -888,10 +889,10 @@ class FindEvents extends Component {
 						</li>
 					);
 					if (this.state.prevPath != -1) {
-						this.executeScroll({
-							behavior: "smooth",
-							block: "start",
-						});
+						// this.executeScroll({
+						// 	behavior: "smooth",
+						// 	block: "start",
+						// });
 					}
 				}
 			}
