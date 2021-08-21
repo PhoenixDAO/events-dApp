@@ -129,6 +129,8 @@ function a11yProps(index) {
 	};
 }
 
+const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop);
+
 class FindEvents extends Component {
 	// _isMounted = false;
 
@@ -253,7 +255,7 @@ class FindEvents extends Component {
 	}
 
 	executeScroll = () => {
-		this.myRef.current.scrollIntoView();
+		// this.myRef.current.scrollIntoView();
 	};
 
 	//Loads Blockhain Data,
@@ -312,7 +314,8 @@ class FindEvents extends Component {
 				if (
 					!graphEvents.data ||
 					graphEvents.data.data == "undefined" ||
-					graphEvents.data.data.events.length === 0) {
+					graphEvents.data.data.events.length === 0
+				) {
 					console.log("GraphQL query -- graphEvents undefined");
 					// this.setState({
 					// 	Events_Blockchain: [],
@@ -343,9 +346,16 @@ class FindEvents extends Component {
 						// active_length: newsort.length,
 						event_copy: newsort,
 					});
+
 					setTimeout(() => {
 						this.setState({ loading: false });
 					}, 1000);
+
+					// this.executeScroll({
+					// 	behavior: "smooth",
+					// 	block: "center",
+					// });
+
 					// }
 				}
 			})
@@ -411,7 +421,7 @@ class FindEvents extends Component {
 			this.setState({
 				hideEvent: get.data.result,
 			});
-			// console.log("hide event", this.state.hideEvent);
+			console.log("hide event", this.state.hideEvent);
 			return;
 		} catch (error) {
 			console.log("check error", error);
@@ -717,6 +727,9 @@ class FindEvents extends Component {
 	// }
 
 	render() {
+		//const pageRefs = useRef({});
+		// const executeScroll = () => scrollToRef(this.myRef);
+
 		if (this.state.Events_Blockchain.length === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
@@ -725,7 +738,7 @@ class FindEvents extends Component {
 					url="/createevent"
 				/>
 			);
-		} 
+		}
 		//when user is not connectd hide connect wallet button
 		// console.log("accounts---->", this.props.accounts);
 
@@ -742,170 +755,171 @@ class FindEvents extends Component {
 		// 	this.state.active_length !== ""
 		// ) {
 		let count = this.state.Events_Blockchain.length;
-		
+
 		let currentPage = Number(this.props.match.params.page);
-			let events_list = [];
-			let skip = false;
-			for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
-				for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+		let events_list = [];
+		let skip = false;
+		for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
+			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+				if (
+					this.state.Events_Blockchain[i].eventId ==
+					this.state.Deleted_Events[j].eventId
+				) {
+					skip = true;
+				}
+			}
+			if (!skip) {
+				console.log("this.state.hideEvent", this.state.hideEvent)
+				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
 						this.state.Events_Blockchain[i].eventId ==
-						this.state.Deleted_Events[j].eventId
+						this.state.hideEvent[j].id
 					) {
 						skip = true;
 					}
 				}
-				if (!skip) {
-					for (let j = 0; j < this.state.hideEvent.length; j++) {
-						if (
-							this.state.Events_Blockchain[i].eventId ==
-							this.state.hideEvent[j].id
-						) {
-							skip = true;
-						}
+			}
+			if (!skip) {
+				events_list.push(this.state.Events_Blockchain[i]);
+			}
+			skip = false;
+		}
+
+		events_list.reverse();
+		// console.log("events_listt",events_list)
+		let updated_list = [];
+		count = events_list.length;
+		if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+		let end = currentPage * this.perPage;
+		let start = end - this.perPage;
+		if (end > count) end = count;
+		let pages = Math.ceil(count / this.perPage);
+		for (let i = start; i < end; i++) {
+			updated_list.push(
+				<Event
+					toggleBuying={this.props.toggleDisabling}
+					disabledStatus={this.props.disabledStatus}
+					inquire={this.props.inquire}
+					key={events_list[i].eventId}
+					id={events_list[i].eventId}
+					ipfs={events_list[i].ipfsHash}
+					eventData={events_list[i]}
+					loading={this.state.loading}
+				/>
+			);
+		}
+
+		let pagination = "";
+		if (pages > 1) {
+			let links = [];
+
+			if (pages > 5 && currentPage >= 3) {
+				// console.log("pag pages > 5 && currentPage >= 3");
+				for (
+					let i = currentPage - 2;
+					i <= currentPage + 2 && i <= pages;
+					i++
+				) {
+					let active = i === currentPage ? "active" : "";
+					links.push(
+						<li className={"page-item " + active} key={i}>
+							<Link
+								to={"/upcomingevents/" + i}
+								onClick={() =>
+									this.setState({
+										prevPath: currentPage,
+									})
+								}
+								className="page-link"
+							>
+								{i}
+							</Link>
+						</li>
+					);
+					if (this.state.prevPath != -1) {
+						// this.executeScroll({
+						// 	behavior: "smooth",
+						// 	block: "start",
+						// });
 					}
 				}
-				if (!skip) {
-					events_list.push(this.state.Events_Blockchain[i]);
-				}
-				skip = false;
-			}
-
-			events_list.reverse();
-			// console.log("events_listt",events_list)
-			let updated_list = [];
-			count = events_list.length;
-			if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-			let end = currentPage * this.perPage;
-			let start = end - this.perPage;
-			if (end > count) end = count;
-			let pages = Math.ceil(count / this.perPage);
-			for (let i = start; i < end; i++) {
-				updated_list.push(
-					<Event
-						toggleBuying={this.props.toggleDisabling}
-						disabledStatus={this.props.disabledStatus}
-						inquire={this.props.inquire}
-						key={events_list[i].eventId}
-						id={events_list[i].eventId}
-						ipfs={events_list[i].ipfsHash}
-						eventData={events_list[i]}
-						loading = {this.state.loading}
-					/>
-				);
-			}
-
-			let pagination = "";
-			if (pages > 1) {
-				let links = [];
-
-				if (pages > 5 && currentPage >= 3) {
-					// console.log("pag pages > 5 && currentPage >= 3");
-					for (
-						let i = currentPage - 2;
-						i <= currentPage + 2 && i <= pages;
-						i++
-					) {
-						let active = i === currentPage ? "active" : "";
-						links.push(
-							<li className={"page-item " + active} key={i}>
-								<Link
-									to={"/upcomingevents/" + i}
-									onClick={() =>
-										this.setState({
-											prevPath: currentPage,
-										})
-									}
-									className="page-link"
-								>
-									{i}
-								</Link>
-							</li>
-						);
-						if (this.state.prevPath != -1) {
-							this.executeScroll({
-								behavior: "smooth",
-								block: "start",
-							});
-						}
-					}
-				} else if (pages > 5 && currentPage < 3) {
-					// console.log("pag pages > 5 && currentPage < 3");
-					for (let i = 1; i <= 5 && i <= pages; i++) {
-						let active = i === currentPage ? "active" : "";
-						links.push(
-							<li className={"page-item " + active} key={i}>
-								<Link
-									to={"/upcomingevents/" + i}
-									onClick={() =>
-										this.setState({
-											prevPath: currentPage,
-										})
-									}
-									className="page-link"
-								>
-									{i}
-								</Link>
-							</li>
-						);
-						if (this.state.prevPath != -1) {
-							this.executeScroll({
-								behavior: "smooth",
-								block: "start",
-							});
-						}
-					}
-				} else {
-					// console.log("pag else");
-					for (let i = 1; i <= pages; i++) {
-						let active = i === currentPage ? "active" : "";
-						links.push(
-							<li className={"page-item " + active} key={i}>
-								<Link
-									to={"/upcomingevents/" + i}
-									onClick={() =>
-										this.setState({
-											prevPath: currentPage,
-										})
-									}
-									className="page-link"
-								>
-									{i}
-								</Link>
-							</li>
-						);
-						if (this.state.prevPath != -1) {
-							this.executeScroll({
-								behavior: "smooth",
-								block: "start",
-							});
-						}
+			} else if (pages > 5 && currentPage < 3) {
+				// console.log("pag pages > 5 && currentPage < 3");
+				for (let i = 1; i <= 5 && i <= pages; i++) {
+					let active = i === currentPage ? "active" : "";
+					links.push(
+						<li className={"page-item " + active} key={i}>
+							<Link
+								to={"/upcomingevents/" + i}
+								onClick={() =>
+									this.setState({
+										prevPath: currentPage,
+									})
+								}
+								className="page-link"
+							>
+								{i}
+							</Link>
+						</li>
+					);
+					if (this.state.prevPath != -1) {
+						// this.executeScroll({
+						// 	behavior: "smooth",
+						// 	block: "start",
+						// });
 					}
 				}
-				pagination = (
-					<nav>
-						<ul className="pagination justify-content-center">
-							{links}
-						</ul>
-					</nav>
-				);
+			} else {
+				// console.log("pag else");
+				for (let i = 1; i <= pages; i++) {
+					let active = i === currentPage ? "active" : "";
+					links.push(
+						<li className={"page-item " + active} key={i}>
+							<Link
+								to={"/upcomingevents/" + i}
+								onClick={() =>
+									this.setState({
+										prevPath: currentPage,
+									})
+								}
+								className="page-link"
+							>
+								{i}
+							</Link>
+						</li>
+					);
+					if (this.state.prevPath != -1) {
+						// this.executeScroll({
+						// 	behavior: "smooth",
+						// 	block: "start",
+						// });
+					}
+				}
 			}
-			if (updated_list.length == 0 && !this.state.loading) {
-				body = (
-					<EmptyState
+			pagination = (
+				<nav>
+					<ul className="pagination justify-content-center">
+						{links}
+					</ul>
+				</nav>
+			);
+		}
+		if (updated_list.length == 0 && !this.state.loading) {
+			body = (
+				<EmptyState
 					text="No events found 🤔.Be the first;"
 					btnText="Try creating one"
 					url="/createevent"
 				/>
-				);
-			} else {
-				body = (
-					<div>
-						<div className="row user-list mt-4">{updated_list}</div>
-						{pagination}
-					</div>
-				);
-			}
+			);
+		} else {
+			body = (
+				<div>
+					<div className="row user-list mt-4">{updated_list}</div>
+					{pagination}
+				</div>
+			);
+		}
 		// }
 
 		return (
@@ -1007,7 +1021,7 @@ class FindEvents extends Component {
 						<div>
 							<div className={classes.root}>
 								<AppBar
-									style={{padding: "0 19px"}}
+									style={{ padding: "0 19px" }}
 									position="sticky"
 									className={classes.appBar}
 									color="transparent"

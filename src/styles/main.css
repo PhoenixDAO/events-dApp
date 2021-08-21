@@ -379,34 +379,34 @@ input[type="number"] {
 }
 
 /* sticky header */
-@media screen and (max-width: 1100px){
-	.sidebar-closed .header3 {
+@media screen and (max-width: 1100px) {
+	.sidebar-closed .header-top-dashboard .header3 {
 		display: block !important;
 	}
 }
 
 .header-top {
 	border-bottom: 1px solid #e4e4e7;
+	position: sticky;
+	z-index: 999;
+	top: 0;
 }
 .header3 {
 	margin: 0 -11px;
-	z-index: 999;
 	display: flex;
 	justify-content: space-between;
 	padding-bottom: 10px;
-	position: sticky;
-	top: 0;
 	padding: 40px 10px 0 10px;
 	background-color: #fcfcfd;
 	/* width: 101% !important; */
 	transition: 0.5s;
 }
 
-div[class|="r-sticky"]{
+div[class|="r-sticky"] {
 	margin: 0 -20px !important;
 }
 
-div[class|="r-sticky"] .header3{
+div[class|="r-sticky"] .header3 {
 	margin: 0;
 }
 
@@ -415,10 +415,10 @@ div[class|="r-sticky"] .header3{
 } */
 .sidebar-closed .header3 {
 	padding-top: 40px !important;
-	transition: .5s;
+	transition: 0.5s;
 }
 
-.zIndx-1{
+.zIndx-1 {
 	z-index: -1;
 }
 .header3 h2 {
@@ -1600,7 +1600,7 @@ body,
 }
 
 .connection {
-	color:#413AE2;
+	color: #413ae2;
 	max-width: 175px;
 }
 
@@ -2886,7 +2886,7 @@ canvas#doughnut {
 
 .wallets-heading {
 	margin-left: 10px;
-	color: #1E1E22;
+	color: #1e1e22;
 	font-weight: 600;
 	font-size: 20px;
 }
@@ -2911,9 +2911,8 @@ canvas#doughnut {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 	padding-bottom: 25px;
 }
-.wallets-single:last-child{
+.wallets-single:last-child {
 	border-bottom: 0px solid rgba(0, 0, 0, 0.15);
-
 }
 
 .wallets-first {
@@ -2937,20 +2936,20 @@ canvas#doughnut {
 }
 
 .wallets-name {
-	color: #1E1E22;
+	color: #1e1e22;
 	font-family: "Aeonik";
 }
 
 .wallets-name-hldr {
 	margin-left: 20px;
 }
-.snackbar .MuiSnackbarContent-root{
+.snackbar .MuiSnackbarContent-root {
 	background-color: white;
-	color:#F43C3C;
-	font-family:"Aeonik";
-    padding: 10px 20px;
+	color: #f43c3c;
+	font-family: "Aeonik";
+	padding: 10px 20px;
 }
-.snackbar{
+.snackbar {
 	border-radius: 8px;
 }
 .coming-hldr {
@@ -2973,7 +2972,7 @@ canvas#doughnut {
 .wallets-footer {
 	text-align: center;
 	font-size: 0.9rem;
-	color: #1E1E22;
+	color: #1e1e22;
 	font-family: "Aeonik";
 	padding-bottom: 25px;
 	padding-top: 10px;
@@ -3049,14 +3048,31 @@ h2.main-title {
 	transition: 0.5s;
 }
 
-@media (max-width: 1200px) {
-	.sidebar-closed .r-selectDiv-19 {
-		top: 255px !important
+@media screen and (min-width: 800px) and (max-width: 1200px) {
+	.sidebar-open .calendar-select-div {
+		top: 160px !important;
 	}
 	.sidebar-closed .fc .fc-view-harness {
 		margin-top: 46px !important;
 	}
 }
+@media screen and (min-width: 900px) and (max-width: 1000px) {
+	.sidebar-closed .calendar-select-div {
+		top: 212px !important;
+	}
+}
+@media screen and (max-width: 799px) {
+	.calendar-select-div {
+		top: 144px !important;
+	}
+}
+@media screen and (max-width: 600px) {
+	.calendar-select-div {
+		top: 232px !important;
+		right: 0;
+	}
+}
+
 
 .dashboard-dropdown-row div[class*="imageContainer"] img {
 	width: 100%;

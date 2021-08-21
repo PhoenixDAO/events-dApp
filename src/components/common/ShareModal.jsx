@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
     width: "22px",
     height: "22px",
     marginRight: "7px",
+    marginBottom: "4px",
   },
   eventUrl: {
     textAlign: "center",

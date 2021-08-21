@@ -8,7 +8,7 @@
 
 // RINKEBY TESTNET
 
-export const Open_events_Address = "0x4cC635b766B39e68b2414f30554730b3eF89148c";
+export const Open_events_Address = "0x4FB4443f1B465270BeCcaaD1af259c6207d63c9e";
 export const Open_events_ABI = [
 	{
 		inputs: [
@@ -108,6 +108,7 @@ export const Open_events_ABI = [
 						name: "location",
 						type: "string",
 					},
+					{ internalType: "string", name: "city", type: "string" },
 					{
 						internalType: "string",
 						name: "ipfsHash",
@@ -397,6 +398,7 @@ export const Open_events_ABI = [
 						name: "location",
 						type: "string",
 					},
+					{ internalType: "string", name: "city", type: "string" },
 					{
 						internalType: "string",
 						name: "ipfsHash",
@@ -472,6 +474,7 @@ export const Open_events_ABI = [
 			{ internalType: "string", name: "name", type: "string" },
 			{ internalType: "string", name: "topic", type: "string" },
 			{ internalType: "string", name: "location", type: "string" },
+			{ internalType: "string", name: "city", type: "string" },
 			{ internalType: "string", name: "ipfsHash", type: "string" },
 		],
 		payable: false,
@@ -760,13 +763,11 @@ export const Open_events_ABI = [
 		type: "function",
 	},
 ];
-
-
 /*------------------------------------------------------------------------------------------------- */
 
-
 //Goerli testnet
-export const Open_events_Address_2 = "0x4cC635b766B39e68b2414f30554730b3eF89148c";
+export const Open_events_Address_2 =
+	"0x74695CEF506d042004f4ebf035447dbA6D9Fd416";
 /*-------------------------------------------------------------------------------------------------*/
 
 // ETHEREUM MAINNET

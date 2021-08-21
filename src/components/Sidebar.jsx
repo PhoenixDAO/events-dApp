@@ -206,7 +206,7 @@ class Sidebar extends Component {
 				</div> */}
 
 				<p className="small connection">
-					<img className="switch-img" src="images/icons/switch.svg"/>
+					<img className="switch-img" src="/images/icons/switch.svg"/>
 					<span className="toggleHidden">
 					Connect Wallet
 					</span>
@@ -464,7 +464,7 @@ class Sidebar extends Component {
 										title="Telegram"
 										href="https://t.me/PHNXDAO"
 									>
-										<img src="./images/navbar/telegram.svg" />
+										<img src="/images/navbar/telegram.svg" />
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -474,7 +474,7 @@ class Sidebar extends Component {
 										title="Twitter"
 										href="https://twitter.com/phnxdao"
 									>
-										<img src="./images/navbar/twitter.svg" />
+										<img src="/images/navbar/twitter.svg" />
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -484,7 +484,7 @@ class Sidebar extends Component {
 										title="GitHub"
 										href="https://github.com/PhoenixDAO/events-dApp/tree/heroku-deployment"
 									>
-										<img src="./images/navbar/github.svg" />
+										<img src="/images/navbar/github.svg" />
 									</a>
 								</div>
 							</ul>
@@ -795,7 +795,7 @@ class Sidebar extends Component {
 										title="Telegram"
 										href="https://t.me/PHNXDAO"
 									>
-										<img src="./images/navbar/telegram.svg" />
+										<img src="/images/navbar/telegram.svg" />
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -805,7 +805,7 @@ class Sidebar extends Component {
 										title="Twitter"
 										href="https://twitter.com/phnxdao"
 									>
-										<img src="./images/navbar/twitter.svg" />
+										<img src="/images/navbar/twitter.svg" />
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -815,7 +815,7 @@ class Sidebar extends Component {
 										title="GitHub"
 										href="https://github.com/PhoenixDAO/events-dApp/tree/heroku-deployment"
 									>
-										<img src="./images/navbar/github.svg" />
+										<img src="/images/navbar/github.svg" />
 									</a>
 								</div>
 							</ul>

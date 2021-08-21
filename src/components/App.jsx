@@ -74,18 +74,25 @@ const randomBG = items[Math.floor(Math.random() * items.length)];
 class App extends Component {
 	constructor(props, context) {
 		super(props);
-		try {
-			const { eventAddress, phoenixAddress } =
-				this.contractAddressProviders();
+		console.log("context", context);
+		this.contractAddressProviders().then((data) => {
+			console.log(
+				"eventAddress, phoenixAddress constructor",
+				context,
+				data.eventAddress,
+				data.phoenixAddress
+			);
 			var contractConfig = {
 				contractName: "PHNX",
-				web3Contract: new context.drizzle.web3.eth.Contract(
-					PhoenixDAO_Testnet_Token_ABI,
-					phoenixAddress
-				),
+				web3Contract:
+					new context.drizzle.options.web3.customProvider.eth.Contract(
+						PhoenixDAO_Testnet_Token_ABI,
+						data.phoenixAddress
+					),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {}
+		});
+
 		this.state = {
 			sent_tx: [],
 			showSidebar: true,
@@ -121,8 +128,8 @@ class App extends Component {
 	async contractAddressProviders() {
 		let eventAddress = "";
 		let phoenixAddress = "";
-		const networkId = await this.getNetworkId()
-		console.log("This called networkId", networkId)
+		const networkId = await this.getNetworkId();
+		console.log("This called networkId", networkId);
 		if (networkId === GLOBAL_NETWORK_ID) {
 			eventAddress = Open_events_Address;
 			phoenixAddress = PhoenixDAO_Mainnet_Token_Address;
@@ -132,22 +139,40 @@ class App extends Component {
 		} else {
 			console.log("Wrong network address | not supported");
 		}
-
+		console.log(
+			"eventAddress, phoenixAddress",
+			eventAddress,
+			phoenixAddress
+		);
 		return { eventAddress, phoenixAddress };
 	}
 
 	async getNetworkId() {
 		try {
+			if (window.ethereum && window.ethereum.isMetaMask) {
+				web3 = new Web3(ethereum);
+			} else if (typeof web3 !== "undefined") {
+				web3 = new Web3(web3.currentProvider);
+			} else {
+				const network = this.getNetworkId();
+				let infura;
+				if (network === GLOBAL_NETWORK_ID) {
+					infura = INFURA_URL;
+				} else if (network === GLOBAL_NETWORK_ID_2) {
+					infura = INFURA_URL_2;
+				}
+				web3 = new Web3(new Web3.providers.HttpProvider(infura));
+			}
 			const networkId = await web3.eth.net.getId();
-			console.log("This called getNetworkId", networkId)
+			console.log("This called getNetworkId", networkId);
 			if (networkId === GLOBAL_NETWORK_ID) {
 				return networkId;
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
 				return networkId;
-			}else{
-				console.log("network id not suported")
+			} else {
+				console.log("network id not suported");
 			}
-			return null
+			return null;
 		} catch (err) {
 			console.log("err", err);
 		}
@@ -159,9 +184,13 @@ class App extends Component {
 				window.ethereum
 			);
 			const { eventAddress, phoenixAddress } =
-				this.contractAddressProviders();
-				console.log("eventAddress, phoenixAddress", eventAddress, phoenixAddress)
-			this.contractAddressProviders();
+				await this.contractAddressProviders();
+			console.log(
+				"eventAddress, phoenixAddress, initializeContract",
+				eventAddress,
+				phoenixAddress
+			);
+
 			const openEvents = await new web3.eth.Contract(
 				Open_events_ABI,
 				eventAddress
@@ -177,7 +206,7 @@ class App extends Component {
 	}
 
 	async componentWillMount() {
-		// await this.initializeContract();
+		await this.initializeContract();
 	}
 	async componentDidMount() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
@@ -187,7 +216,6 @@ class App extends Component {
 				localStorage.removeItem("account");
 			}
 		}
-		await this.initializeContract();
 		await this.loadBlockchainData();
 	}
 
@@ -211,8 +239,8 @@ class App extends Component {
 			address: account,
 			networkId: networkId,
 		});
+
 		if (!userDetails.error) {
-			console.log("user details", userDetails);
 			this.setState({
 				userDetails: userDetails,
 			});
@@ -265,7 +293,7 @@ class App extends Component {
 			const accounts = await web3.eth.getAccounts();
 
 			this.setState({ account: accounts[0] });
-			const networkId = this.getNetworkId();
+			const networkId = await this.getNetworkId();
 			if (accounts[0] && networkId) {
 				const userDetails = await getUserDetails({
 					address: accounts[0],
@@ -374,19 +402,23 @@ class App extends Component {
 							txconfirmedApproved == 0 &&
 							txreceiptApproved.status == true
 						) {
-							toast(
-								<Notify
-									hash={txreceiptApproved.transactionHash}
-									text="Ticket purchase successful!"
-									icon="fa-ticket-alt"
-									link="Check out your TICKET here"
-								/>,
-								{
-									position: "bottom-right",
-									autoClose: true,
-									pauseOnHover: true,
-								}
-							);
+							// toast(
+							// 	<Notify
+							// 		hash={txreceiptApproved.transactionHash}
+							// 		text="Ticket purchase successful!"
+							// 		icon="fa-ticket-alt"
+							// 		link="Check out your TICKET here"
+							// 	/>,
+							// 	{
+							// 		position: "bottom-right",
+							// 		autoClose: true,
+							// 		pauseOnHover: true,
+							// 	}
+							// );
+							this.setState({
+								disabledStatus: false,
+								purchased: true,
+							});
 						}
 					}
 				})
@@ -409,7 +441,8 @@ class App extends Component {
 
 	allowance = async () => {
 		if (this.state.account) {
-			const {eventAddress, phoenixAddress} = this.contractAddressProviders()
+			const { eventAddress, phoenixAddress } =
+				await this.contractAddressProviders();
 			let a = await this.state.phnxContract.methods
 				.allowance(this.state.account, eventAddress)
 				.call();
@@ -508,21 +541,6 @@ class App extends Component {
 							hash
 						);
 						if (receipt) {
-							toast(
-								<Notify
-									hash={txreceipt.transactionHash}
-									text="Ticket purchase successfull!"
-									icon="fa fa-ticket-alt fa-3x"
-									link="Check out your TICKET here"
-									url="/mytickets/1"
-									color="#413AE2"
-								/>,
-								{
-									position: "bottom-right",
-									autoClose: true,
-									pauseOnHover: true,
-								}
-							);
 							this.setState({
 								disabledStatus: false,
 								purchased: true,
@@ -888,8 +906,10 @@ class App extends Component {
 		} else if (
 			(this.props.web3.status === "initialized" &&
 				Object.keys(this.props.accounts).length === 0) ||
-			this.props.web3.networkId != this.getNetworkId()
+			(this.props.web3.networkId != GLOBAL_NETWORK_ID &&
+				this.props.web3.networkId != GLOBAL_NETWORK_ID_2)
 		) {
+			console.log("third else if", this.props.web3.networkId);
 			body = (
 				<div>
 					<Switch>
@@ -1290,6 +1310,10 @@ class App extends Component {
 							<div className="container">
 								<div className="retract-page-inner-wrapper">
 									{body}
+									{console.log(
+										"Account",
+										this.props.accounts
+									)}
 								</div>
 								{/* <Snackbar
 									open={this.state.openSnackbar}

@@ -220,31 +220,12 @@ const EventCard = (props, context) => {
 				props.reloadData();
 			}
 		} catch (error) {
-			// console.log("Consoleee notify report response catch",error)
-
 			if (error.response && error.response.data) {
 				console.log(
 					"Consoleee notify report response error.response.data",
 					error.response.data
 				);
-				toast(
-					<Notify
-						error={error}
-						text={error.response.data.responseMessage + "!"}
-					/>,
-					{
-						position: "bottom-right",
-						autoClose: true,
-						pauseOnHover: true,
-					}
-				);
 			}
-
-			// this.props.history.push("/upcomingevents/1");
-
-			// this.setState({
-			// 	loading: false,
-			// });
 		}
 	};
 	//get market cap & dollar value of PhoenixDAO

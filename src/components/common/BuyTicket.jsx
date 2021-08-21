@@ -14,6 +14,7 @@ import roundlogo from "../Images/roundlogo.svg";
 import { makeStyles } from "@material-ui/core/styles";
 import { ShoppingCartOutlined, Cancel } from '@material-ui/icons';
 import Slide from '@material-ui/core/Slide';
+var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +23,13 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
     textAlign: "center",
+    "& .MuiTypography-body1":{
+      fontFamily: "AeonikReg",
+    },
+    "& .MuiButton-label":{
+      fontFamily: 'Aeonik',
+      textTransform: "capitalize",
+       }
   },
   header: {
     justifyContent: "center",
@@ -41,18 +49,21 @@ const useStyles = makeStyles((theme) => ({
   sharelink: {
     fontWeight: "900",
     color: "#413AE2",
-    padding: "12px 0px",
+    padding: "9px 0px 3px",
   },
   logo: {
     width: "22px",
     height: "22px",
-    marginRight: "7px"
+    marginRight: "7px",
+    marginBottom: "4px",
+
   },
   eventTitle: {
     fontWeight: "700",
     fontSize: "20px",
     color: "#1E1E22",
     textAlign: "initial",
+    fontFamily:"AeonikReg"
 
   },
 
@@ -102,7 +113,7 @@ const useStyles = makeStyles((theme) => ({
 
   },
   eventImage: {
-    width: "80px",
+    width: "86px",
     height: "86px",
     objectFit: "cover",
     borderBottomLeftRadius: "12px",
@@ -203,7 +214,8 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 
-export default function BuyTicket({ handleClose, open, eventTitle, image, date, time, price, buy, buttonText, purchased }) {
+export default function BuyTicket({ handleClose, open, eventTitle, image, eventTime, eventStartDate, eventEndDate,eventDate,date, time, price, buy, buttonText, purchased }) {
+  
   const classes = useStyles();
   const buyTicket = () => {
     buy();
@@ -217,7 +229,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, date, 
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" TransitionComponent={Transition} open={open} className={classes.root} >
         <DialogTitle id="customized-dialog-title" className={classes.header} onClose={handleClose} >
           <img src={roundlogo} className={classes.logo} alt="phnx logo" />
-          PhoenixDAO
+          <span style={{fontSize:"20px"}}>PhoenixDAO</span>
           {    purchased ? 
           <h2 className={classes.TicketPurchase}>
             Ticket Purchase Successful
@@ -239,7 +251,15 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, date, 
                   {eventTitle}
                 </Typography>
                 <Typography gutterBottom style={{ color: "#73727D", fontSize: "17px" }} >
-                  {date},{time}
+                {!eventTime
+									? `Date`
+									: eventTime === "onedayevent"
+									? moment(eventDate).format("Do MMM, YYYY")
+									: `
+							${moment(eventStartDate).format("Do MMM")}
+							-
+							${moment(eventEndDate).format("Do MMM, YYYY")}
+							`},{time}
                 </Typography>
               </div>
               <div style={{ textAlign: "end" }}>

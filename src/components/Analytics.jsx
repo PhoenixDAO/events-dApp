@@ -351,13 +351,13 @@ const Analytics = (props, context) => {
 	// 	setTicketBought(blockChainTickets.length);
 	// 	// const timeData = await getTimeData(props.accounts);
 	// 	const timeData = await getTimeData(
-	// 		"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b"
+	// 		props.accounts
 	// 	);
 	// 	console.log("timeData", timeData);
 	// 	setGraphData(timeData);
 	// 	console.log("timestamp", Number(moment().unix()));
 	// 	const todayData = await getTodayData(
-	// 		"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b",
+	// 		props.accounts,
 	// 		Number(moment().unix()- 86400)
 	// 	);
 	// 	console.log("time stamp--- ", moment().unix())
@@ -798,7 +798,7 @@ const Analytics = (props, context) => {
 					);
 					graphForDays = props.todayGraphData;
 					difference = await getTodayData(
-						"0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b",
+						props.accounts,
 						Number(moment().unix() - 172800)
 					);
 				}
@@ -1071,9 +1071,7 @@ const Analytics = (props, context) => {
 									<option value="2419200">
 										Last 28 Days
 									</option>
-									<option value="7776000">
-										Last 90 Days
-									</option>
+							
 								</Select>
 							</FormControl>
 							<DateRangePicker
