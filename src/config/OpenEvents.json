@@ -137,6 +137,11 @@
 						},
 						{
 							"internalType": "string",
+							"name": "city",
+							"type": "string"
+						},
+						{
+							"internalType": "string",
 							"name": "ipfsHash",
 							"type": "string"
 						},
@@ -484,6 +489,11 @@
 						},
 						{
 							"internalType": "string",
+							"name": "city",
+							"type": "string"
+						},
+						{
+							"internalType": "string",
 							"name": "ipfsHash",
 							"type": "string"
 						},
@@ -589,6 +599,7 @@
 					"name": "location",
 					"type": "string"
 				},
+				{ "internalType": "string", "name": "city", "type": "string" },
 				{
 					"internalType": "string",
 					"name": "ipfsHash",
@@ -11517,8 +11528,8 @@
 				}
 			},
 			"links": {},
-			"address": "0x4cC635b766B39e68b2414f30554730b3eF89148c",
-			"transactionHash": "0x25feb9b23e8fbc6533317c6285c991450b707829be019e9bc0cebd8b3b645686"
+			"address": "0x4FB4443f1B465270BeCcaaD1af259c6207d63c9e",
+			"transactionHash": "0x59eae923500deb5a0a0c0d3e7f25d80945029a1ca8ad3eb2a108ec53c3996b60"
 		},
 		"5777": {
 			"events": {

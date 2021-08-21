@@ -64,6 +64,8 @@ import AccessTime from "@material-ui/icons/AccessTime";
 import StopIcon from "@material-ui/icons/Stop";
 import checkedIcon from "../Images/checked.png";
 import uncheckedIcon from "../Images/unchecked.png";
+import arrowrighticon from "../Images/arrowrighticon.png";
+import arrowbackicon from "../Images/arrowbackicon.png";
 import { CodeSharp, CompassCalibrationOutlined } from "@material-ui/icons";
 import GeoLocation from "../common/GeoLocation";
 import { setDate } from "date-fns/esm";
@@ -122,6 +124,14 @@ const useStyles = makeStyles((theme) => ({
 		},
 		background: "#413AE2",
 		color: "white",
+		height: "54px",
+		width: 230,
+		fontSize: 18,
+		fontWeight: 700,
+		"& .MuiButton-endIcon": {
+			position: "absolute",
+			right: 20,
+		},
 	},
 	title: {
 		color: "#413AE2",
@@ -314,6 +324,24 @@ const useStyles = makeStyles((theme) => ({
 		border: "1px solid #E4E4E7",
 		background: `linear-gradient(270deg, rgba(94, 91, 255, 0.12) 0%, rgba(124, 118, 255, 0) 131.25%)`,
 	},
+	progressStep: {
+		"& $completed": {
+			color: "#234d3d",
+		},
+		"& $active": {
+			color: "#000",
+		},
+		"& $disabled": {
+			color: "#dff",
+		},
+	},
+	progressActive: {
+		color: "rgba(94, 91, 255, 0.12)",
+	},
+	progressCompleted: {
+		color: "rgba(94, 91, 255, 1)",
+	},
+	progressDisabled: {},
 }));
 
 const MyStepper = ({
@@ -325,6 +353,7 @@ const MyStepper = ({
 	activeFlamingStep,
 	isEventCreated,
 	history,
+	progressText,
 }) => {
 	const classes = useStyles();
 	const {
@@ -383,12 +412,6 @@ const MyStepper = ({
 	const [country, setCountry] = useState("");
 	const [state, setState] = useState("");
 	const [city, setCity] = useState("");
-
-	console.log({
-		country,
-		state,
-		city,
-	});
 
 	let URL = "https://phoenixdao-events-dapp.herokuapp.com";
 
@@ -728,7 +751,7 @@ const MyStepper = ({
 											"Event name should contain at least 3 characters.",
 									},
 									maxLength: {
-										value: 300,
+										value: 100,
 										message: "Event name too long.",
 									},
 								}}
@@ -768,7 +791,7 @@ const MyStepper = ({
 											"Event organizer name should contain at least 3 characters.",
 									},
 									maxLength: {
-										value: 300,
+										value: 100,
 										message:
 											"Event organizer name too long.",
 									},
@@ -2047,6 +2070,11 @@ const MyStepper = ({
 															message:
 																"Number of ticket should be at least 1",
 														},
+														maxLength: {
+															value: 12,
+															message:
+																"Number of ticket is too large.",
+														},
 													}}
 												/>
 											</div>
@@ -2143,6 +2171,11 @@ const MyStepper = ({
 												rules={{
 													required:
 														"Enter price in dollars.",
+													maxLength: {
+														value: 16,
+														message:
+															"Ticket price is too large.",
+													},
 												}}
 											/>
 
@@ -2359,6 +2392,11 @@ const MyStepper = ({
 															message:
 																"Number of ticket should be at least 1",
 														},
+														maxLength: {
+															value: 12,
+															message:
+																"Number of ticket is too large.",
+														},
 													}}
 												/>
 											</div>
@@ -2565,7 +2603,7 @@ const MyStepper = ({
 																	"Ticket name should contain at least 3 characters.",
 															},
 															maxLength: {
-																value: 300,
+																value: 100,
 																message:
 																	"Ticket name too long.",
 															},
@@ -2678,6 +2716,11 @@ const MyStepper = ({
 															rules={{
 																required:
 																	"Enter price in dollars.",
+																maxLength: {
+																	value: 16,
+																	message:
+																		"Ticket price is too large.",
+																},
 															}}
 														/>
 
@@ -2942,6 +2985,11 @@ const MyStepper = ({
 																		message:
 																			"Number of ticket should be at least 1",
 																	},
+																	maxLength: {
+																		value: 12,
+																		message:
+																			"Number of ticket is too large.",
+																	},
 																}}
 															/>
 														</div>
@@ -3075,7 +3123,7 @@ const MyStepper = ({
 								rules={{
 									required: "Please enter event details.",
 									minLength: {
-										value: 100,
+										value: 500,
 										message:
 											"Event description is too short.",
 									},
@@ -3200,16 +3248,51 @@ const MyStepper = ({
 					alt="flaming..."
 				/>
 				<br />
+				<p
+					style={{
+						fontSize: 24,
+						fontWeight: 700,
+						color: "#413AE2",
+						fontFamily: "'Aeonik', sans-serif",
+					}}
+				>
+					{progressText}%
+				</p>
 				<br />
-
 				<div>
-					<p>{getFlamingStepContent(activeFlamingStep)}</p>
+					<p
+						style={{
+							fontSize: 20,
+							fontWeight: 500,
+							color: "#4E4E55",
+							fontFamily: "'Aeonik', sans-serif",
+						}}
+					>
+						{getFlamingStepContent(activeFlamingStep)}
+					</p>
 				</div>
 
 				<Stepper activeStep={activeFlamingStep} orientation="vertical">
 					{flamingSteps.map((label, index) => (
-						<Step key={label}>
-							<StepLabel>{label}</StepLabel>
+						<Step
+							key={label}
+							// classes={{
+							// 	root: classes.progressStep,
+							// 	completed: classes.progressCompleted,
+							// 	active: classes.progressActive,
+							// }}
+						>
+							<StepLabel
+							// StepIconProps={{
+							// 	classes: {
+							// 		root: classes.progressStep,
+							// 		completed: classes.progressCompleted,
+							// 		active: classes.progressActive,
+							// 	},
+							// }}
+							>
+								{label}
+							</StepLabel>
 						</Step>
 					))}
 				</Stepper>
@@ -3375,7 +3458,10 @@ const MyStepper = ({
 									onClick={handleBack}
 									className={classes.backButton}
 									startIcon={
-										<KeyboardBackspaceIcon fontSize="large" />
+										<img
+											src={arrowbackicon}
+											alt="arrowbackicon"
+										/>
 									}
 								>
 									Back
@@ -3390,7 +3476,10 @@ const MyStepper = ({
 								className={classes.nextButton}
 								endIcon={
 									activeStep === steps.length - 1 ? null : (
-										<ArrowRightAltIcon fontSize="large" />
+										<img
+											src={arrowrighticon}
+											alt="arrowrighticon"
+										/>
 									)
 								}
 								startIcon={
