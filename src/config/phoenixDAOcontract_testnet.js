@@ -472,7 +472,7 @@ export const PhoenixDAO_Testnet_Token_ABI = [
 ]
   
 
-
+export const PhoenixDAO_Testnet_Token_Address_2 = '0xfe1b6abc39e46cec54d275efb4b29b33be176c2a';
 /*--------------------------------------------------------------------------------------------------------*/
 
 
