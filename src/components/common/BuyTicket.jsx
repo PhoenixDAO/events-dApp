@@ -259,7 +259,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
-							`},{time}
+							`},{time} WAT
                 </Typography>
               </div>
               <div style={{ textAlign: "end" }}>

@@ -162,6 +162,7 @@ class FindEvents extends Component {
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 		this.myRef = React.createRef();
+		this.eventRef = React.createRef();
 
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
@@ -255,7 +256,12 @@ class FindEvents extends Component {
 	}
 
 	executeScroll = () => {
-		// this.myRef.current.scrollIntoView();
+		//this.myRef.current.scrollIntoView();
+	};
+	
+	executeEventScroll = () => {
+		//this.myRef.current.scrollIntoView();
+		this.eventRef.current.scrollIntoView();
 	};
 
 	//Loads Blockhain Data,
@@ -351,10 +357,10 @@ class FindEvents extends Component {
 						this.setState({ loading: false });
 					}, 1000);
 
-					// this.executeScroll({
-					// 	behavior: "smooth",
-					// 	block: "center",
-					// });
+					this.executeEventScroll({
+						behavior: "smooth",
+						block: "center",
+					});
 
 					// }
 				}
@@ -1114,7 +1120,7 @@ class FindEvents extends Component {
 					<br />
 					<br />
 
-					<div>
+					<div ref={this.eventRef}>
 						<div className="row row_mobile dashboard-dropdown-row">
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 								{this.state.category === "allevents"

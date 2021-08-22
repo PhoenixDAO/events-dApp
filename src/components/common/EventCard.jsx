@@ -175,6 +175,10 @@ const EventCard = (props, context) => {
 		setIcon(favoriteEvent);
 		getPhoenixDAOMarketValue();
 	}, [favoriteEvent]);
+
+	console.log("this is event time", eventStartTime)
+	//moment(eventStartTime).tz("Africa/Niamey").format("hh:mma z")}
+
 	const classes = useStyles();
 	const [Icon, setIcon] = useState(false);
 	const [open, setOpen] = useState(false);
@@ -452,7 +456,7 @@ const EventCard = (props, context) => {
 								})} */}
 								{!eventStartTime
 									? `Time`
-									: moment(eventStartTime).format("LT")}
+									: moment(eventStartTime).format("LT") + " WAT"}
 							</Typography>
 
 							<Typography

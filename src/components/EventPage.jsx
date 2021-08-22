@@ -1063,7 +1063,7 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{" "}
-											{time}
+											{time} WAT 
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
