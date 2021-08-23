@@ -175,6 +175,7 @@ class MyEvents extends Component {
                             name
                             topic
                             location
+							city
                             ipfsHash
                             tktLimited
                             oneTimeBuy
@@ -258,6 +259,7 @@ class MyEvents extends Component {
 							name
 							topic
 							location
+							city
 							ipfsHash
 							tktLimited
 							oneTimeBuy

@@ -183,6 +183,8 @@ class FindEvents extends Component {
 					  name
 					  topic
 					  location
+					  city
+					  city
 					  ipfsHash
 					  tktLimited
 					  tktTotalQuantity
@@ -210,6 +212,7 @@ class FindEvents extends Component {
 					  name
 					  topic
 					  location
+					  city
 					  ipfsHash
 					  tktLimited
 					  tktTotalQuantity
@@ -441,6 +444,7 @@ class FindEvents extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -479,6 +483,7 @@ class FindEvents extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -514,6 +519,7 @@ class FindEvents extends Component {
 					  name
 					  topic
 					  location
+					  city
 					  ipfsHash
 					  tktLimited
 					  tktTotalQuantity
@@ -549,6 +555,7 @@ class FindEvents extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -578,6 +585,7 @@ class FindEvents extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -607,6 +615,7 @@ class FindEvents extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -636,6 +645,7 @@ class FindEvents extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -665,6 +675,7 @@ class FindEvents extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -694,6 +705,7 @@ class FindEvents extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -769,7 +781,7 @@ class FindEvents extends Component {
 				}
 			}
 			if (!skip) {
-				console.log("this.state.hideEvent", this.state.hideEvent)
+				console.log("this.state.hideEvent", this.state.hideEvent);
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
 						this.state.Events_Blockchain[i].eventId ==
@@ -1253,6 +1265,7 @@ class FindEvents extends Component {
 			  name
 			  topic
 			  location
+			  city
 			  ipfsHash
 			  tktLimited
 			  tktTotalQuantity
