@@ -3077,3 +3077,11 @@ h2.main-title {
 .dashboard-dropdown-row div[class*="imageContainer"] img {
 	width: 100%;
 }
+.transak_modal
+{
+	z-index: 9999  !important;
+}
+.transak_modal-overlay{
+	z-index: 999 !important;
+
+}

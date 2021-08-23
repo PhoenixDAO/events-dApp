@@ -1130,6 +1130,8 @@ const Analytics = (props, context) => {
 							diffrence={phnxDifference}
 							entity="PHNX"
 							days={timeStamp}
+							startDate={customDate.startDate}
+							endDate={customDate.endDate}
 						/>
 						<Card
 							color="#963AE2"
@@ -1141,6 +1143,8 @@ const Analytics = (props, context) => {
 							diffrence={ticketDifference}
 							entity="Tickets"
 							days={timeStamp}
+							startDate={customDate.startDate}
+							endDate={customDate.endDate}
 						/>
 					</Grid>
 					<Grid container style={{ margin: "70px 0px" }}>

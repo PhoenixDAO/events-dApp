@@ -20,19 +20,19 @@ const AnalyticsWrapper = (props) => {
 		loadApis();
 	}, []);
 	const loadApis = async () => {
-		const eventName = await getEventName(props.accounts);
+		const eventName = await getEventName("0xccb2a821eaf7526c6d8d52aaf7c34cd8d1d10f28");
 		setEventName(eventName);
 		if (eventName.length != 0) {
 			const tickets = await generateJSON(eventName[0].eventId);
 			setTicketSales(tickets);
 		}
 		const blockChainTickets = await props.eventsContract.methods
-			.ticketsOf(props.accounts)
+			.ticketsOf("0xccb2a821eaf7526c6d8d52aaf7c34cd8d1d10f28")
 			.call();
 		setTicketBought(blockChainTickets.length);
-		// const timeData = await getTimeData(props.accounts);
+		// const timeData = await getTimeData("0xccb2a821eaf7526c6d8d52aaf7c34cd8d1d10f28");
         const todayData = await getTodayData(
-			props.accounts,
+			"0xccb2a821eaf7526c6d8d52aaf7c34cd8d1d10f28",
 			Number(moment().unix() - 86400)
 		);
 		console.log("time stamp--- ", moment().unix());
@@ -40,7 +40,7 @@ const AnalyticsWrapper = (props) => {
 		setTodayGraphData(todayData);
         
 		const timeData = await getTimeData(
-			props.accounts
+			"0xccb2a821eaf7526c6d8d52aaf7c34cd8d1d10f28"
 		);
 		console.log("timeData", timeData);
 		setGraphData(timeData);

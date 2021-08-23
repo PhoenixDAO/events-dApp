@@ -3,12 +3,12 @@ import roundlogo from "../Images/roundlogo.svg";
 import transakSDK from "@transak/transak-sdk";
 
 const settings = {
-	apiKey: "e594e508-7690-4b13-bba0-4a79fc3353c8", // Your API Key
-	environment: "STAGING", // STAGING/PRODUCTION
+	apiKey: "71ae55f1-8663-4aaf-9833-a2b15f9f7c6b", // Your API Key
+	environment: "PRODUCTION", // STAGING/PRODUCTION
 	defaultCryptoCurrency: "ETH",
 	themeColor: "000000", // App theme color
 	hostURL: window.location.origin,
-	widgetHeight: "650px",
+	widgetHeight: "550px",
 	widgetWidth: "500px",
 };
 
