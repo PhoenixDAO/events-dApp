@@ -340,10 +340,18 @@ class App extends Component {
 	};
 
 	//get value from buyer/from child components
-	inquireBuy = (id, fee, token, openEvents_address, buyticket, approve) => {
+	inquireBuy = async (
+		id,
+		fee,
+		token,
+		openEvents_address,
+		buyticket,
+		approve
+	) => {
+		let chainId = await this.getNetworkId();
 		if (
 			this.state.account.length !== 0 &&
-			this.props.web3.networkId === this.getNetworkId()
+			this.props.web3.networkId === chainId
 		) {
 			this.setState({ disabledStatus: true });
 			this.setState(
