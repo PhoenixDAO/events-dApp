@@ -195,7 +195,7 @@ class Calendars extends Component {
 		//     titleURL = "/event-stat/" + pagetitle + "/" + event_calendar.id;
 		// }
 		// else {
-		let titleURL = "/event/" + pagetitle + "/" + event_calendar.id;
+		let titleURL = `/event/${event_calendar.id}`;
 		this.props.history.push(titleURL);
 	};
 	categoryChange = async (event) => {
