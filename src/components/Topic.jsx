@@ -63,7 +63,7 @@ class Topic extends Component {
 
 			body =
 				<div className="card">
-					<Link to={"/event/" + this.props.id}>
+					<Link to={`/event/${this.props.id}`}>
 						<img className="card-img-top event-image" src={image} alt={event_data[0]} />
 					</Link>
 					<div className="card-header text-muted event-header">
@@ -76,7 +76,7 @@ class Topic extends Component {
 					</div>
 					<div className="card-body">
 						<h5 className="card-title event-title">
-							<Link to={"/event/" + this.props.id}>{badge}{event_data[0]}</Link>
+							<Link to={`/event/${this.props.id}`}>{badge}{event_data[0]}</Link>
 						</h5>
 						{description}
 					</div>
