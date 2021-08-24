@@ -95,6 +95,7 @@ const WrapperTopicsLandingPage = (props) => {
 						name
 						topic
 						location
+						city
 						ipfsHash
 						tktLimited
 						tktTotalQuantity
@@ -167,6 +168,7 @@ const WrapperTopicsLandingPage = (props) => {
 						name
 						topic
 						location
+						city
 						ipfsHash
 						tktLimited
 						tktTotalQuantity

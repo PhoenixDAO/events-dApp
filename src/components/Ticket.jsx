@@ -295,6 +295,7 @@ class Ticket extends Component {
 							name
 							topic
 							location
+							city
 							ipfsHash
 							tktLimited
 							tktTotalQuantity
