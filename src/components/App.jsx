@@ -63,7 +63,7 @@ import EmptyState from "./EmptyState";
 import Favorites from "./Favorite.jsx";
 import { getUserDetails } from "../config/serverAPIs";
 import AccountDetail from "./account/index";
-
+import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
 
 let ethereum = window.ethereum;
@@ -115,6 +115,7 @@ class App extends Component {
 			eventsContract: {},
 			userDetails: {},
 			purchased: false,
+			open2: false
 		};
 		this.myRef = React.createRef();
 
@@ -247,7 +248,9 @@ class App extends Component {
 		} else {
 		}
 	};
-
+	handleClose2 = () => {
+		this.setState({ open2: false, purchased: false });
+	};
 	//Get Account
 	async loadBlockchainData() {
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
@@ -281,7 +284,7 @@ class App extends Component {
 
 				window.web3 = new Web3(new Web3.providers.HttpProvider(infura));
 			}
-			window.ethereum.on("connect", function (accounts) {});
+			window.ethereum.on("connect", function (accounts) { });
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
 				window.location.reload();
@@ -340,10 +343,25 @@ class App extends Component {
 	};
 
 	//get value from buyer/from child components
-	async inquireBuy(id, fee, token, openEvents_address, buyticket, approve) {
-		if (
+	inquireBuy = async (
+		id,
+		fee,
+		token,
+		openEvents_address,
+		buyticket,
+		approve,
+		eventTime,
+		eventDate,
+		eventEndDate,
+		image,
+		name,
+		phnx_price,
+		dollar_price
+	) => {
+		let chainId = await this.getNetworkId()
+		f 
 			this.state.account.length !== 0 &&
-			this.props.web3.networkId === await this.getNetworkId()
+		this.props.web3.networkId === await this.getNetworkId()
 		) {
 			this.setState({ disabledStatus: true });
 			this.setState(
@@ -352,6 +370,13 @@ class App extends Component {
 					// token: token,
 					buyticket: buyticket,
 					approve: approve,
+					eventTime,
+					eventDate,
+					eventEndDate,
+					image,
+					name,
+					phnx_price,
+					dollar_price
 				},
 				() => this.buy()
 			);
@@ -496,6 +521,8 @@ class App extends Component {
 								}
 							);
 							this.afterApprove();
+							console.log("purchased", this.state.purchased);
+
 							this.setState({
 								disabledStatus: false,
 								purchased: true,
@@ -545,6 +572,8 @@ class App extends Component {
 								disabledStatus: false,
 								purchased: true,
 							});
+							console.log("purchased", this.state.purchased);
+
 							clearInterval(intervalVar);
 						}
 					}, 5000);
@@ -636,10 +665,10 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-													.returnValues
+												.returnValues
 											: txreceipt.events
-													.NewAndUpdatedEvent
-													.returnValues
+												.NewAndUpdatedEvent
+												.returnValues
 									}
 									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
@@ -1282,6 +1311,19 @@ class App extends Component {
 		return (
 			<Router>
 				<div id="wrapper" className="toggled" ref={this.myRef}>
+					<BuyTicket
+						open={this.state.purchased}
+						handleClose={this.handleClose2}
+						image={this.state.image}
+						eventTitle={this.state.name}
+						price={this.state.priceGrid}
+						purchased={this.state.purchased}
+						eventTime={this.state.eventTime}
+						eventDate={this.state.eventDate}
+						eventEndDate={this.state.eventEndDate}
+						phnx_price={this.state.phnx_price}
+						dollar_price={this.state.dollar_price}
+					/>
 					<Sidebar
 						connection={!connecting}
 						account={this.state.account}

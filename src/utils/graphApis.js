@@ -45,7 +45,7 @@ async function ticketLocation(eventId) {
 			query: `
         {
           tickets(where:{eventId:${eventId}}){
-            bought
+            boughtLocation
           }
         }
         `,

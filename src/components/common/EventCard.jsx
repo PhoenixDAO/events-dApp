@@ -140,6 +140,19 @@ const useStyles = makeStyles((theme) => ({
 		},
 		minHeight: "71px",
 	},
+	favouriteGrid: {
+		display: "flex",
+		padding: 10,
+		backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5))`,
+	},
+	quantitySold: {
+		display: "flex",
+		alignItems: "center",
+		color: "#fff",
+		fontSize: 17,
+		fontWeight: 500,
+	}
+
 }));
 
 const EventCard = (props, context) => {
@@ -290,28 +303,20 @@ const EventCard = (props, context) => {
 								}}
 							>
 								<div
-									style={{
-										display: "flex",
-										justifyContent: "space-between",
-										padding: 10,
-										backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)`,
-									}}
+									className={classes.favouriteGrid}
+									style={event_data.tktTotalQuantity != 0 ? { justifyContent: "space-between" } : { justifyContent: "flex-end" }}
 								>
-								{event_data.tktTotalQuantity != 0 ? (
-									<Typography
-										style={{
-											color: "#fff",
-											fontSize: 17,
-											fontWeight: 500,
-										}}
-									>
-										<ConfirmationNumberOutlined fontSize="medium" />
-										<span>&nbsp;</span>
-										{event_data.tktTotalQuantitySold}/
-										{event_data.tktTotalQuantity}
-										
-									</Typography>
-									):null}
+									{event_data.tktTotalQuantity != 0 ? (
+										<Typography
+											className={classes.quantitySold}
+										>
+											<ConfirmationNumberOutlined fontSize="medium" />
+											<span>&nbsp;</span>
+											{event_data.tktTotalQuantitySold}/
+											{event_data.tktTotalQuantity}
+
+										</Typography>
+									) : null}
 									{!myEvent && !ticket ? (
 										<Typography
 											className={classes.FavoriteIcon}
@@ -345,7 +350,7 @@ const EventCard = (props, context) => {
 									component="h2"
 									style={{
 										color: "#1E1E22",
-										fontSize: 17,
+										fontSize: 16,
 										fontWeight: 700,
 										fontFamily: "'Aeonik', sans-serif",
 										width: "60%",
@@ -429,8 +434,8 @@ const EventCard = (props, context) => {
 								{!eventTime
 									? `Date`
 									: eventTime === "onedayevent"
-									? moment(eventDate).format("Do MMM, YYYY")
-									: `
+										? moment(eventDate).format("Do MMM, YYYY")
+										: `
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
@@ -470,8 +475,8 @@ const EventCard = (props, context) => {
 								{!eventType
 									? `Location`
 									: eventType === "physical"
-									? eventLocation
-									: `Online`}
+										? eventLocation
+										: `Online`}
 							</Typography>
 
 							{/* For my events page */}
@@ -531,50 +536,50 @@ const EventCard = (props, context) => {
 									</Button>
 								</Grid>
 							) : // For my ticket page
-							ticket ? (
-								<Grid item className={classes.row}>
-									<Button
-										className={classes.shareButton}
-										onClick={handleClickOpen}
-									>
-										<LaunchSharp
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Share Event
-									</Button>
-									<Button
-										className={classes.sendTicket}
-										onClick={handleClickOpen2}
-									>
-										<Send
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Send Ticket
-									</Button>
-								</Grid>
-							) : // For my Favorite page
-							myFavorites ? (
-								<Grid item className={classes.row}>
-									<Button
-										className={classes.shareButton}
-										onClick={handleClickOpen}
-									>
-										<LaunchSharp
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Share Event
-									</Button>
-								</Grid>
-							) : null}
+								ticket ? (
+									<Grid item className={classes.row}>
+										<Button
+											className={classes.shareButton}
+											onClick={handleClickOpen}
+										>
+											<LaunchSharp
+												style={{
+													marginRight: "7px",
+													fontSize: "19px",
+												}}
+											/>{" "}
+											Share Event
+										</Button>
+										<Button
+											className={classes.sendTicket}
+											onClick={handleClickOpen2}
+										>
+											<Send
+												style={{
+													marginRight: "7px",
+													fontSize: "19px",
+												}}
+											/>{" "}
+											Send Ticket
+										</Button>
+									</Grid>
+								) : // For my Favorite page
+									myFavorites ? (
+										<Grid item className={classes.row}>
+											<Button
+												className={classes.shareButton}
+												onClick={handleClickOpen}
+											>
+												<LaunchSharp
+													style={{
+														marginRight: "7px",
+														fontSize: "19px",
+													}}
+												/>{" "}
+												Share Event
+											</Button>
+										</Grid>
+									) : null}
 						</CardContent>
 					</CardActionArea>
 				</Link>

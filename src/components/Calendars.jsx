@@ -52,7 +52,7 @@ const styles = (theme) => ({
 	},
 	selectDiv: {
 		position: "absolute",
-		top: "195px",
+		top: "183px",
 		right: "50px"
 	},
 	calenderContainer: {
