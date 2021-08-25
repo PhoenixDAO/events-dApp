@@ -16,8 +16,6 @@ const BuyPhoenixModal = (props) => {
 	const [error, setError] = useState("");
 	const transak = new transakSDK(settings);
 
-	console.log("transakApi", transakApi);
-
 	useEffect(() => {
 		transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, (orderData) => {
 			console.log("closed successfully widged");
