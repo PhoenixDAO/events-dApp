@@ -155,7 +155,7 @@ class App extends Component {
 			} else if (typeof web3 !== "undefined") {
 				web3 = new Web3(web3.currentProvider);
 			} else {
-				const network = await web3.eth.net.getId();;
+				const network = this.getNetworkId();
 				let infura;
 				if (network === GLOBAL_NETWORK_ID) {
 					infura = INFURA_URL;
@@ -358,10 +358,10 @@ class App extends Component {
 		phnx_price,
 		dollar_price
 	) => {
-		let chainId = await this.getNetworkId()
-		f 
+		let chainId = await this.getNetworkId();
+		if (
 			this.state.account.length !== 0 &&
-		this.props.web3.networkId === await this.getNetworkId()
+			this.props.web3.networkId === chainId
 		) {
 			this.setState({ disabledStatus: true });
 			this.setState(
@@ -841,7 +841,7 @@ class App extends Component {
 						/>
 						<Route
 							exact
-							path="/event/:id"
+							path="/event/:page/:id"
 							render={(props) => (
 								<EventPage
 									{...props}
@@ -1179,7 +1179,7 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/event/:id"
+						path="/event/:page/:id"
 						render={(props) => (
 							<EventPage
 								{...props}
