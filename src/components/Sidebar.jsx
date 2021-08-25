@@ -186,7 +186,7 @@ class Sidebar extends Component {
 	renderImage = () => {
 		if (this.state.avatarCustom) {
 			// return <image
-			console.log("avatar ipfs image", this.state.avatar);
+			// console.log("avatar ipfs image", this.state.avatar);
 			return <img src={this.state.avatar} className="bird" />;
 		} else {
 			return (
