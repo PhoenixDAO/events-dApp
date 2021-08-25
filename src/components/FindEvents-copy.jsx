@@ -181,6 +181,7 @@ class FindEventsTest extends Component {
 					  name
 					  topic
 					  location
+					  city
 					  ipfsHash
 					  tktLimited
 					  tktTotalQuantity
@@ -208,6 +209,7 @@ class FindEventsTest extends Component {
 					  name
 					  topic
 					  location
+					  city
 					  ipfsHash
 					  tktLimited
 					  tktTotalQuantity
@@ -419,6 +421,7 @@ class FindEventsTest extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -457,6 +460,7 @@ class FindEventsTest extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -492,6 +496,7 @@ class FindEventsTest extends Component {
 					  name
 					  topic
 					  location
+					  city
 					  ipfsHash
 					  tktLimited
 					  tktTotalQuantity
@@ -527,6 +532,7 @@ class FindEventsTest extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -556,6 +562,7 @@ class FindEventsTest extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -585,6 +592,7 @@ class FindEventsTest extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -614,6 +622,7 @@ class FindEventsTest extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -643,6 +652,7 @@ class FindEventsTest extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -672,6 +682,7 @@ class FindEventsTest extends Component {
 				  name
 				  topic
 				  location
+				  city
 				  ipfsHash
 				  tktLimited
 				  tktTotalQuantity
@@ -1230,6 +1241,7 @@ class FindEventsTest extends Component {
 			  name
 			  topic
 			  location
+			  city
 			  ipfsHash
 			  tktLimited
 			  tktTotalQuantity

@@ -52,9 +52,9 @@ export const GLOBAL_NETWORK_ID_2 = 5;
 
 
 
-export const API_URL = "https://events-api.phoenixdao.io/";
+// export const API_URL = "https://events-api.phoenixdao.io/";
  //"https://phoenix-event-dapp-backend-tst.herokuapp.com/";
-// export const API_URL = "http://localhost:5000/"
+export const API_URL = "http://localhost:5000/"
 export const REPORT_EVENT = "event/report";
 export const GET_USER_DETAIL = "user/details";
 export const UPDATE_USER_DETAIL = "user/updateDetails";

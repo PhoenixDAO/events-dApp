@@ -252,6 +252,7 @@ class TopicLandingPage extends Component {
 						name
 						topic
 						location
+						city
 						ipfsHash
 						tktLimited
 						tktTotalQuantity
@@ -350,6 +351,7 @@ class TopicLandingPage extends Component {
 						name
 						topic
 						location
+						city
 						ipfsHash
 						tktLimited
 						tktTotalQuantity

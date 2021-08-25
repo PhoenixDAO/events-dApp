@@ -3,12 +3,12 @@ import roundlogo from "../Images/roundlogo.svg";
 import transakSDK from "@transak/transak-sdk";
 
 const settings = {
-	apiKey: "e594e508-7690-4b13-bba0-4a79fc3353c8", // Your API Key
-	environment: "STAGING", // STAGING/PRODUCTION
+	apiKey: process.env.REACT_APP_TRANSAK_API, // Your API Key
+	environment: "PRODUCTION", // STAGING/PRODUCTION
 	defaultCryptoCurrency: "ETH",
 	themeColor: "000000", // App theme color
 	hostURL: window.location.origin,
-	widgetHeight: "650px",
+	widgetHeight: "642px",
 	widgetWidth: "500px",
 };
 
@@ -18,8 +18,8 @@ const BuyPhoenixModal = (props) => {
 
 	useEffect(() => {
 		transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, (orderData) => {
-			console.log("closed successfully widged")
-            props.closeTransak()
+			console.log("closed successfully widged");
+			props.closeTransak();
 		});
 	}, []);
 

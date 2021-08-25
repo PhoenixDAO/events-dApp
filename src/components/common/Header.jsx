@@ -92,7 +92,7 @@ const Header = ({
 					: null
 			}
 		>
-			<Grid className={transak ? "zIndx-1 header3" : "header3"}>
+			<Grid className="header3">
 				{/* Back button Arrow */}
 				<div
 					className="header-heading"

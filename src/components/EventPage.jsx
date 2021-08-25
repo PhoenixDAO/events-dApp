@@ -275,7 +275,7 @@ class EventPage extends Component {
 	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
 	async loadEventFromBlockchain() {
-
+		console.log("eventid", this.props.match.params.id);
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -289,6 +289,7 @@ class EventPage extends Component {
 					name
 					topic
 					location
+					city
 					ipfsHash
 					tktLimited
 					tktTotalQuantity
@@ -320,7 +321,10 @@ class EventPage extends Component {
 				});
 				this.updateIPFS();
 				if (this.props.networkId) {
-					console.log("graphData", graphEvents.data.data.events[0].owner);
+					console.log(
+						"graphData",
+						graphEvents.data.data.events[0].owner
+					);
 					updateEventViews({
 						eventId: graphEvents.data.data.events[0].eventId,
 						address: graphEvents.data.data.events[0].owner,
@@ -338,7 +342,6 @@ class EventPage extends Component {
 								userDetails.result.result.organizerDetails,
 						});
 					}
-
 				}
 			})
 			.catch((err) => {
@@ -754,7 +757,7 @@ class EventPage extends Component {
 	render() {
 		const { classes } = this.props;
 
-		let body = <SkeletonEvent/>
+		let body = <SkeletonEvent />;
 
 		if (this.state.blockChainEventLoaded) {
 			if (!this.state.blockChainEvent) {
@@ -798,8 +801,8 @@ class EventPage extends Component {
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-					this.state.selectedCategoryIndex
-					]
+							this.state.selectedCategoryIndex
+					  ]
 					: "∞";
 
 				let disabled = false;
@@ -810,14 +813,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-						this.state.selectedCategoryIndex
+							this.state.selectedCategoryIndex
 						]
 					) >=
-					Number(
-						event_data.catTktQuantity[
-						this.state.selectedCategoryIndex
-						]
-					)
+						Number(
+							event_data.catTktQuantity[
+								this.state.selectedCategoryIndex
+							]
+						)
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -883,7 +886,7 @@ class EventPage extends Component {
 						<span className={classes.PhnxPrice}>
 							{event_data.token
 								? phnx_price[this.state.selectedCategoryIndex] +
-								"PHNX"
+								  "PHNX"
 								: "FREE"}
 						</span>
 						<div style={{ color: "#56555D", fontSize: "14px" }}>
@@ -895,7 +898,7 @@ class EventPage extends Component {
 				let ticketPrices =
 					event_data.token && event_data.categories.length > 1;
 
-				if (this.props.match.params.page === pagetitle) {
+				if (this.props.match.params.id == event_data.eventId) {
 					body = (
 						<Grid>
 							<BuyTicket
@@ -963,7 +966,10 @@ class EventPage extends Component {
 										className={classes.description}
 									>
 										<Grid container>{description}</Grid>
-										<Grid container className={classes.clockTime}>
+										<Grid
+											container
+											className={classes.clockTime}
+										>
 											<Clock
 												deadline={date}
 												event_unix={event_data.time}
@@ -1005,21 +1011,21 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-															(
-																category,
-																i
-															) => (
-																<option
-																	value={
-																		i
-																	}
-																>
-																	{
-																		category
-																	}
-																</option>
-															)
-														)
+																(
+																	category,
+																	i
+																) => (
+																	<option
+																		value={
+																			i
+																		}
+																	>
+																		{
+																			category
+																		}
+																	</option>
+																)
+														  )
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1048,11 +1054,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-													"onedayevent"
-													? moment(
+												  "onedayevent"
+												? moment(
 														this.state.eventDate
-													).format("Do MMM, YYYY")
-													: `
+												  ).format("Do MMM, YYYY")
+												: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1132,10 +1138,8 @@ class EventPage extends Component {
 														// target="blank"
 														>
 															bought
-														</a>
-														{" "}
-														{" " +
-															sold.count }{" "}
+														</a>{" "}
+														{" " + sold.count}{" "}
 														ticket for this event{" "}
 														{/* <strong>
 														{event_data[0]}
@@ -1147,7 +1151,8 @@ class EventPage extends Component {
 										</Grid>
 										{this.state.soldTicket.length == 0 && (
 											<p className="sold_text col-md-12 no-tickets">
-												There are currently no purchases of this Event.
+												There are currently no purchases
+												of this Event.
 											</p>
 										)}
 									</div>
@@ -1396,6 +1401,12 @@ class EventPage extends Component {
 								/>
 							</div>
 								*/}
+							<CheckUser
+								blockChainEvent={this.state.blockChainEvent}
+								disabledStatus={disabled}
+								event_id={this.props.match.params.id}
+								history={this.props.history}
+							/>
 						</Grid>
 					);
 				} else {
@@ -1421,9 +1432,7 @@ class EventPage extends Component {
 		const buyers = await generateBuyerArr(this.props.match.params.id);
 		this.setState({ soldTicket: buyers });
 		this.loadEventFromBlockchain();
-		console.log(
-			"count", this.props.accounts[0]
-		)
+		console.log("count", this.props.accounts[0]);
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
