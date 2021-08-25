@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import roundlogo from "../Images/roundlogo.svg";
 import transakSDK from "@transak/transak-sdk";
-import {transakApi} from "../../config/const";
+import { transakApi } from "../../config/const";
 const settings = {
 	apiKey: transakApi, // Your API Key
 	environment: "PRODUCTION", // STAGING/PRODUCTION
@@ -18,8 +18,8 @@ const BuyPhoenixModal = (props) => {
 
 	useEffect(() => {
 		transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, (orderData) => {
-			console.log("closed successfully widged")
-            props.closeTransak()
+			console.log("closed successfully widged");
+			props.closeTransak();
 		});
 	}, []);
 

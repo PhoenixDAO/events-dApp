@@ -400,7 +400,7 @@ const MyStepper = ({
 	const [categories, setCategories] = useState([]);
 	const [addAnotherCat, setaddAnotherCat] = useState(false);
 	const [ticketCategory, setTicketCategory] = useState(0);
-     const [date,setDate] = useState(new Date());
+	const [date, setDate] = useState(new Date());
 	useEffect(() => {
 		setTicketCategory(Math.floor(100000 + Math.random() * 900000));
 	}, []);
@@ -524,10 +524,10 @@ const MyStepper = ({
 	const handleDateChange = (date) => {
 		setSelectedDate(date);
 	};
- const handleDate =(e)=>{
-	 console.log("e",e);
-	 setDate(e);
- }
+	const handleDate = (e) => {
+		console.log("e", e);
+		setDate(e);
+	};
 	//first stepper time setter
 	const handleTimeChange = (time) => {
 		setSelectTime(time);
@@ -606,7 +606,12 @@ const MyStepper = ({
 				onStepsChange("inc");
 			} else {
 				if (categories.length > 0) {
-					fields.categories = categories;
+					let sortedCategories = categories.sort(
+						(a, b) =>
+							parseFloat(a.dollarPrice) -
+							parseFloat(b.dollarPrice)
+					);
+					fields.categories = sortedCategories;
 					fields.token = true; // false means free
 					onFieldsChange(fields);
 					// setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -936,11 +941,16 @@ const MyStepper = ({
 																	value={
 																		value
 																	}
-																	onChange={(e) =>{
-																		onChange(e);
-																		handleDate(e);
-																	}
-																	}
+																	onChange={(
+																		e
+																	) => {
+																		onChange(
+																			e
+																		);
+																		handleDate(
+																			e
+																		);
+																	}}
 																	error={
 																		!!error
 																	}
