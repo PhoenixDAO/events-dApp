@@ -899,22 +899,6 @@ class EventPage extends Component {
 					hour: "2-digit",
 					minute: "2-digit",
 				});
-
-				let priceGrid = (
-					<div className={classes.eventinfo}>
-						<span className={classes.PhnxPrice}>
-							{event_data.token
-								? phnx_price[this.state.selectedCategoryIndex] +
-								  "PHNX"
-								: "FREE"}
-						</span>
-						<div style={{ color: "#56555D", fontSize: "14px" }}>
-							{event_data.token ? "$" + dollar_price : ""}
-						</div>
-					</div>
-				);
-
-				// this.setState({ priceGrid: priceGrid });
 				let ticketPrices =
 					event_data.token && event_data.categories.length > 1;
 
