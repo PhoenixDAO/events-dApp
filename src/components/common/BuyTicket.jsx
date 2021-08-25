@@ -23,13 +23,13 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
     textAlign: "center",
-    "& .MuiTypography-body1":{
+    "& .MuiTypography-body1": {
       fontFamily: "AeonikReg",
     },
-    "& .MuiButton-label":{
+    "& .MuiButton-label": {
       fontFamily: 'Aeonik',
       textTransform: "capitalize",
-       }
+    }
   },
   header: {
     justifyContent: "center",
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "20px",
     color: "#1E1E22",
     textAlign: "initial",
-    fontFamily:"AeonikReg"
+    fontFamily: "AeonikReg"
 
   },
 
@@ -128,33 +128,43 @@ const useStyles = makeStyles((theme) => ({
     width: "100%"
   },
 
-  seeTicket:{
-		margin: theme.spacing(1),
-		textTransform: "initial",
-		fontWeight: "600",
-		background: "#413AE2",
-		padding: "8px 35px",
-		paddingInline: "40px",
-		[theme.breakpoints.down("xs")]: {
-			paddingInline: "20px",
-		},
-    width:"100%",
-    		border: "1px solid #413AE2",
+  seeTicket: {
+    margin: theme.spacing(1),
+    textTransform: "initial",
+    fontWeight: "600",
+    background: "#413AE2",
+    padding: "8px 35px",
+    paddingInline: "40px",
+    [theme.breakpoints.down("xs")]: {
+      paddingInline: "20px",
+    },
+    width: "100%",
+    border: "1px solid #413AE2",
   },
-  link:{
-    width:"97%",
-    display:"flex",
-    paddingRight:"13px"
+  link: {
+    width: "97%",
+    display: "flex",
+    paddingRight: "13px"
   },
   image: {
     margin: "15px 43px 50px",
     borderRadius: "10px",
   },
-  TicketPurchase:{
+  TicketPurchase: {
     fontWeight: "900",
     color: "#413AE2",
     padding: "12px 0px 0px",
-  }
+  },
+  eventinfo: {
+		fontSize: "22px",
+		fontWeight: "700",
+		wordBreak: "break-word",
+	},
+	PhnxPrice: {
+		fontSize: "22px",
+		fontWeight: "700",
+		color: "#413AE2",
+	},
 }));
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -173,7 +183,7 @@ const styles = (theme) => ({
       outline: "none"
     }
   },
-  
+
 
 
 });
@@ -214,12 +224,11 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 
-export default function BuyTicket({ handleClose, open, eventTitle, image, eventTime, eventStartDate, eventEndDate,eventDate,date, time, price, buy, buttonText, purchased }) {
-  
+export default function BuyTicket({ handleClose, open, eventTitle, image, eventTime, eventStartDate, eventEndDate, eventDate, date, time, phnx_price,dollar_price, buy, buttonText, purchased }) {
+
   const classes = useStyles();
   const buyTicket = () => {
     buy();
-    // handleClose();
     handleClose();
 
   }
@@ -229,15 +238,15 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" TransitionComponent={Transition} open={open} className={classes.root} >
         <DialogTitle id="customized-dialog-title" className={classes.header} onClose={handleClose} >
           <img src={roundlogo} className={classes.logo} alt="phnx logo" />
-          <span style={{fontSize:"20px"}}>PhoenixDAO</span>
-          {    purchased ? 
-          <h2 className={classes.TicketPurchase}>
-            Ticket Purchase Successful
-          </h2>:
-          <h2 className={classes.sharelink}>{buttonText}</h2>
-}
+          <span style={{ fontSize: "20px" }}>PhoenixDAO</span>
+          {purchased ?
+            <h2 className={classes.TicketPurchase}>
+              Ticket Purchase Successful
+            </h2> :
+            <h2 className={classes.sharelink}>{buttonText}</h2>
+          }
           <Typography gutterBottom className={classes.eventTitle} style={{ color: "#73727D", fontWeight: "500" }}>
-         {purchased? null: "You’re about to purchase this ticket"}
+            {purchased ? null : "You’re about to purchase this ticket"}
           </Typography>
 
         </DialogTitle>
@@ -251,11 +260,11 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
                   {eventTitle}
                 </Typography>
                 <Typography gutterBottom style={{ color: "#73727D", fontSize: "17px" }} >
-                {!eventTime
-									? `Date`
-									: eventTime === "onedayevent"
-									? moment(eventDate).format("Do MMM, YYYY")
-									: `
+                  {!eventTime
+                    ? `Date`
+                    : eventTime === "onedayevent"
+                      ? moment(eventDate).format("Do MMM, YYYY")
+                      : `
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
@@ -263,7 +272,14 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
                 </Typography>
               </div>
               <div style={{ textAlign: "end" }}>
-                {price}
+                <div className={classes.eventinfo}>
+                  <span className={classes.PhnxPrice}>
+                    {phnx_price}
+                  </span>
+                  <div style={{ color: "#56555D", fontSize: "14px" }}>
+                    {dollar_price}
+                  </div>
+                </div>
               </div>
             </Grid>
 
@@ -271,15 +287,15 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
 
         </DialogContent>
         <DialogActions>
-          {purchased ? 
-          <Link to="/mytickets/1" className={classes.link}>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginRight: "10px" }}
-              className={classes.seeTicket}
-            > See Ticket</Button></Link> :
-            (<Grid item style={{display:"contents"}}>
+          {purchased ?
+            <Link to="/mytickets/1" className={classes.link}>
+              <Button
+                variant="contained"
+                color="primary"
+                style={{ marginRight: "10px" }}
+                className={classes.seeTicket}
+              > See Ticket</Button></Link> :
+            (<Grid item style={{ display: "contents" }}>
               <Button
                 variant="contained"
                 color="primary"
@@ -301,12 +317,12 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
                 <ShoppingCartOutlined style={{ marginRight: "10px" }} />
                 {buttonText}
               </Button>
-              </Grid>)}
+            </Grid>)}
         </DialogActions>
         {
           purchased ?
-          <img src="/images/travala.svg" className={classes.image} />
-          :null
+            <img src="/images/travala.svg" className={classes.image} />
+            : null
         }
       </Dialog>
     </div>

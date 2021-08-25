@@ -45,7 +45,7 @@ class Clock extends Component {
         if (this.props.event_unix < this.state.dateNow)
             return (
                 <div className="justify-content-center">
-                    <div className="countdownEnded col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div className="countdownEnded">
                         <div className="box">
                             <p className="mb-1">
                                 <span>⚠️ This event has already ended.</span>
@@ -56,7 +56,7 @@ class Clock extends Component {
 
         else
             return (
-                <div className="countdown col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div className="countdown">
                     <div className="box">
                         <h5 className="mb-1">This Event Will Close In</h5>
                     </div>

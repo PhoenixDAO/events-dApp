@@ -30,10 +30,12 @@ import {
 	Grid,
 	Typography,
 } from "@material-ui/core";
+// import {MenuList, Paper, Popper, Button, ClickAwayListener} from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import { useForm, Controller } from "react-hook-form";
 import Slider from "./common/Slider";
 import roundlogo from "./Images/roundlogo.svg";
 import ConnectWalletButton from "./common/ConnectWalletButton";
@@ -86,12 +88,20 @@ const useStyles = (theme) => ({
 			fontWeight: "700",
 		},
 	},
+	menuPaper: {
+		maxHeight: "200px",
+	},
+	selectEvent:{
+		minWidth:155
+	},
 	formControls: {
 		"@media (min-width: 1024px)": {
 			maxWidth: "20% !important",
 			flex: "0 0 20% !important",
 			marginLeft: "5%",
 		},
+		justifyContent:"space-around",
+		alignItems:"center",
 		minWidth: 120,
 		background: "#fff",
 		"& .MuiInputBase-formControl": {
@@ -101,7 +111,7 @@ const useStyles = (theme) => ({
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
-			padding: "13px",
+			padding: "10px",
 		},
 		"& option": {
 			padding: "10px",
@@ -110,17 +120,34 @@ const useStyles = (theme) => ({
 	selectEmpty: {
 		marginTop: theme.spacing(2),
 	},
+	"& .MuiPaper-root":{
+		position:"absolute",
+		top:"390px",
+		background: "yellow"
+	},
 	sortBy: {
 		position: "absolute",
-		left: "-50px",
-		top: "15px",
+		left: "-45px",
 		color: "#73727D",
 		fontSize: "18px",
 		"@media (max-width: 575px)": {
 			left: "0",
 		},
 	},
+	nearStyleBlack: {
+		fontSize: 32,
+		fontWeight: "400px",
+		fontFamily: '"Aeonik" ,sans-serif',
+		color: "#4E4E55",
+	},
+	nearStyleBlue: {
+		fontSize: 32,
+		fontWeight: "500px",
+		fontFamily: '"Aeonik" ,sans-serif',
+		color: "#413AE2",
+	},
 });
+
 
 function a11yProps(index) {
 	return {
@@ -128,6 +155,7 @@ function a11yProps(index) {
 		"aria-controls": `scrollable-auto-tabpanel-${index}`,
 	};
 }
+
 
 const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop);
 
@@ -151,9 +179,12 @@ class FindEvents extends Component {
 			event_copy: [],
 			prevPath: -1,
 			hideEvent: [],
-			selectedTab: "allevents",
+			selectedTab: "All Events",
 			eventCount: 0,
-			category: "allevents",
+			category: "All Events",
+			pageTitle: "All Events",
+			cityName: "",
+			stateName: "",
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -171,9 +202,12 @@ class FindEvents extends Component {
 		if (event.target.value === "populartopics") {
 			this.props.history.push("/topics");
 		} else {
-			this.setState({ category: event.target.value });
+			this.setState({
+				category: event.target.value,
+				pageTitle: event.target.value,
+			});
 			let query;
-			if (event.target.value === "allevents") {
+			if (event.target.value === "All Events") {
 				query = `
 				{
 				  events(orderBy:eventId orderDirection:asc) {
@@ -203,6 +237,8 @@ class FindEvents extends Component {
 				}
 				`;
 			} else {
+				//trending events
+
 				query = `
 				{
 				  events(where: {tktTotalQuantitySold_gte: 5} orderBy:eventId orderDirection:asc) {
@@ -347,8 +383,14 @@ class FindEvents extends Component {
 					this.setState({
 						Events_Blockchain: newsort,
 						// active_length: newsort.length,
-						event_copy: newsort,
+						// event_copy: newsort,
 					});
+
+					if (this.state.pageTitle === "All Events") {
+						this.setState({
+							event_copy: newsort,
+						});
+					}
 
 					setTimeout(() => {
 						this.setState({ loading: false });
@@ -418,23 +460,76 @@ class FindEvents extends Component {
 		});
 	};
 
+	geoFindMe = async () => {
+		try {
+			const get = await axios.get(`http://ip-api.com/json`);
+			if (!get.data) {
+				return { cityName: "Unknown", stateName: "Unknown" };
+			}
+			return { cityName: get.data.city, stateName: get.data.regionName };
+		} catch (error) {
+			return { cityName: "Unknown", stateName: "Unknown" };
+		}
+	};
+
+	findNearToYouEvents = async () => {
+		this.setState({ loading: true });
+		const geoFindUser = await this.geoFindMe();
+		if (geoFindUser) {
+			let cityName = geoFindUser.cityName;
+			let stateName = geoFindUser.stateName;
+			this.setState({
+				cityName: cityName,
+				stateName: stateName,
+			});
+			try {
+				if (cityName) {
+					var filteredEvents = this.state.event_copy;
+					console.log("filteredEvents", filteredEvents);
+					filteredEvents = filteredEvents.filter((event) => {
+						return (
+							event.city
+								.toLowerCase()
+								.search(cityName.toLowerCase()) !== -1
+						);
+					});
+					console.log("xord-->", filteredEvents);
+					this.setState({
+						Events_Blockchain: filteredEvents,
+					});
+					setTimeout(() => {
+						this.setState({ loading: false });
+					}, 1000);
+				}
+			} catch (e) {
+				console.log("findNearToYouEvents", e);
+				this.setState({
+					Events_Blockchain: [],
+				});
+				setTimeout(() => {
+					this.setState({ loading: false });
+				}, 1000);
+			}
+		}
+	};
+
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
 			this.setState({
 				hideEvent: get.data.result,
 			});
-			console.log("hide event", this.state.hideEvent);
+			// console.log("hide event", this.state.hideEvent);
 			return;
 		} catch (error) {
 			console.log("check error", error);
 		}
 	};
 
-	onTabChange = (event, newValue) => {
-		this.setState({ selectedTab: newValue });
+	onTabChange = async (event, newValue) => {
+		this.setState({ selectedTab: newValue, pageTitle: newValue });
 		let query;
-		if (newValue === "allevents") {
+		if (newValue === "All Events") {
 			query = `
 			{	
 			  events(orderBy:eventId orderDirection:asc) {
@@ -463,10 +558,9 @@ class FindEvents extends Component {
 			}
 			`;
 			this.loadBlockchain(query);
-		} else if (newValue === "neartoyou") {
-			//to discuss with Hugbo Clement
-			console.log(newValue);
-		} else if (newValue === "today") {
+		} else if (newValue === "Near to you") {
+			await this.findNearToYouEvents();
+		} else if (newValue === "Today") {
 			console.log(newValue);
 			var todaydate = new Date();
 			todaydate.setDate(todaydate.getDate() + 1);
@@ -502,7 +596,7 @@ class FindEvents extends Component {
 			}
 			`;
 			this.loadBlockchain(query);
-		} else if (newValue === "thisweek") {
+		} else if (newValue === "This Week") {
 			console.log(newValue);
 			var thisWeekdate = new Date();
 			thisWeekdate.setDate(thisWeekdate.getDate() + 7);
@@ -538,7 +632,7 @@ class FindEvents extends Component {
 				}
 				`;
 			this.loadBlockchain(query);
-		} else if (newValue === "thismonth") {
+		} else if (newValue === "This Month") {
 			console.log(newValue);
 			var thisMonthdate = new Date();
 			thisMonthdate.setDate(thisMonthdate.getDate() + 30);
@@ -574,7 +668,7 @@ class FindEvents extends Component {
 			}
 			`;
 			this.loadBlockchain(query);
-		} else if (newValue === "paidevents") {
+		} else if (newValue === "Paid Events") {
 			console.log(newValue);
 			query = `
 			{	
@@ -604,7 +698,7 @@ class FindEvents extends Component {
 			}
 			`;
 			this.loadBlockchain(query);
-		} else if (newValue === "freeevents") {
+		} else if (newValue === "Free Events") {
 			console.log(newValue);
 			query = `
 			{	
@@ -634,7 +728,7 @@ class FindEvents extends Component {
 			}
 			`;
 			this.loadBlockchain(query);
-		} else if (newValue === "onlineevents") {
+		} else if (newValue === "Online Events") {
 			console.log(newValue);
 			query = `
 			{	
@@ -664,7 +758,7 @@ class FindEvents extends Component {
 			}
 			`;
 			this.loadBlockchain(query);
-		} else if (newValue === "physicalevents") {
+		} else if (newValue === "Physical Events") {
 			console.log(newValue);
 			query = `
 			{	
@@ -755,6 +849,7 @@ class FindEvents extends Component {
 		// console.log("accounts---->", this.props.accounts);
 
 		const { classes } = this.props;
+
 		let body = <PhoenixDAOLoader />;
 
 		// if (
@@ -781,7 +876,7 @@ class FindEvents extends Component {
 				}
 			}
 			if (!skip) {
-				console.log("this.state.hideEvent", this.state.hideEvent);
+				// console.log("this.state.hideEvent", this.state.hideEvent);
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
 						this.state.Events_Blockchain[i].eventId ==
@@ -1052,55 +1147,55 @@ class FindEvents extends Component {
 												classes.tabBar - 2
 											}`}
 											label="All Events"
-											value="allevents"
+											value="All Events"
 											// {...a11yProps(0)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Near to you"
-											value="neartoyou"
+											value="Near to you"
 											// {...a11yProps(1)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Today"
-											value="today"
+											value="Today"
 											// {...a11yProps(2)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Week"
-											value="thisweek"
+											value="This Week"
 											// {...a11yProps(3)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Month"
-											value="thismonth"
+											value="This Month"
 											// {...a11yProps(4)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Paid Events"
-											value="paidevents"
+											value="Paid Events"
 											// {...a11yProps(5)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Free Events"
-											value="freeevents"
+											value="Free Events"
 											// {...a11yProps(6)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Online Events"
-											value="onlineevents"
+											value="Online Events"
 											// {...a11yProps(7)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Physical Events"
-											value="physicalevents"
+											value="Physical Events"
 											// {...a11yProps(8)}
 										/>
 									</Tabs>
@@ -1126,12 +1221,45 @@ class FindEvents extends Component {
 					<br />
 					<br />
 
+					{this.state.pageTitle === "Near to you" ? (
+						<span>
+							<div
+								style={{
+									height: 94,
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "flex-start",
+									backgroundColor: "#FFFFFF",
+									paddingLeft: 28,
+									border: " 0.5px solid #E4E4E7",
+									borderRadius: 8,
+								}}
+							>
+								<span>
+									<span className={classes.nearStyleBlack}>
+										Events within{" "}
+									</span>
+									<span className={classes.nearStyleBlue}>
+										50 Miles{" "}
+									</span>
+									<span className={classes.nearStyleBlack}>
+										of{" "}
+									</span>
+									<span className={classes.nearStyleBlue}>
+										{this.state.cityName},{" "}
+										{this.state.stateName}
+									</span>
+								</span>
+							</div>
+							<br />
+							<br />
+						</span>
+					) : null}
+
 					<div>
 						<div className="row row_mobile dashboard-dropdown-row">
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
-								{this.state.category === "allevents"
-									? `All Events`
-									: `Trending Events`}
+								{this.state.pageTitle}
 							</h2>
 							<FormControl
 								variant="outlined"
@@ -1139,24 +1267,84 @@ class FindEvents extends Component {
 							>
 								<Typography
 									variant="p"
-									className={classes.sortBy}
-								>
+									className={`${classes.sortBy}`}
+									>
 									Sort:
 								</Typography>
+										<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											fullWidth
+											value={this.state.category}
+											onChange={this.categoryChange}
+											displayEmpty
+											className={classes.menuPaper}
+											MenuProps={{
+												classes: {
+													paper: classes.menuPaper,
+												},
+												getContentAnchorEl: null,
+												anchorOrigin: {
+												vertical: "bottom",
+												horizontal: "left"}
+											}}
+										>
+											<MenuItem			
+														value="allevents"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														All Events
+													</MenuItem>
+													<MenuItem			
+														value="trendingevents"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Trending Events
+													</MenuItem>
+													<MenuItem			
+														value="populartopics"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														popular Topics
+													</MenuItem>
+										</Select>
+									</FormControl>
+							
+							{/* <FormControl
+								variant="outlined"
+								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
+							>
+								<Typography
+									variant="p"
+									className={`${classes.sortBy}`}
+									>
+									Sort:
+								</Typography>
+
 								<Select
 									native
 									value={this.state.category}
 									onChange={this.categoryChange}
+									className={classes.selectEvent}
 								>
 									<option
 										aria-label="None"
-										value="allevents"
+										value="All Events"
 										style={{ padding: "20px" }}
 									>
 										All Events
 									</option>
 									<option
-										value="trendingevents"
+										value="Trending Events"
 										style={{ padding: "20px" }}
 									>
 										Trending Events
@@ -1168,7 +1356,11 @@ class FindEvents extends Component {
 										Popular Topics
 									</option>
 								</Select>
-							</FormControl>
+							</FormControl> 
+							
+							*/}
+
+							
 							{/* <button
 								className="btn sort_button btn-dark col-lg-2 col-md-3 col-sm-3"
 								value={this.state.value}
