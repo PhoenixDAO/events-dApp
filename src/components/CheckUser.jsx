@@ -7,16 +7,24 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 // import PhoenixDAOLoader from "./PhoenixDAOLoader";
 // import Loading from "./Loading";
 import Snackbar from "./Snackbar";
-import { API_URL, REPORT_EVENT } from "../config/const";
+import {
+	API_URL,
+	REPORT_EVENT,
+	INFURA_URL,
+	INFURA_URL_2,
+	GLOBAL_NETWORK_ID,
+	GLOBAL_NETWORK_ID_2,
+} from "../config/const";
 import { toast } from "react-toastify";
 import Notify from "./Notify";
+import Web3 from "web3";
 
 class CheckUser extends Component {
 	constructor(props, context) {
 		super(props);
 		this.contracts = context.drizzle.contracts;
 		this.state = {
-		blockChainEvent:this.props.blockChainEvent,
+			blockChainEvent: this.props.blockChainEvent,
 			tab: 1,
 			wrong_address: false,
 			loading: false,
@@ -52,8 +60,41 @@ class CheckUser extends Component {
 		}
 	};
 
+	// async getNetworkId() {
+	// 	let web3 = window.web3;
+	// 	try {
+	// 		if (window.ethereum && window.ethereum.isMetaMask) {
+	// 			web3 = new Web3(window.ethereum);
+	// 		} else if (typeof web3 !== "undefined") {
+	// 			web3 = new Web3(web3.currentProvider);
+	// 		} else {
+	// 			const network = await web3.eth.net.getId();
+	// 			let infura;
+	// 			if (network === GLOBAL_NETWORK_ID) {
+	// 				infura = INFURA_URL;
+	// 			} else if (network === GLOBAL_NETWORK_ID_2) {
+	// 				infura = INFURA_URL_2;
+	// 			}
+	// 			web3 = new Web3(new Web3.providers.HttpProvider(infura));
+	// 		}
+	// 		const networkId = await web3.eth.net.getId();
+	// 		console.log("This called getNetworkId", networkId);
+	// 		if (networkId === GLOBAL_NETWORK_ID) {
+	// 			return networkId;
+	// 		} else if (networkId === GLOBAL_NETWORK_ID_2) {
+	// 			return networkId;
+	// 		} else {
+	// 			console.log("network id not suported");
+	// 		}
+	// 		return null;
+	// 	} catch (err) {
+	// 		console.log("err", err);
+	// 	}
+	// }
+
 	reportEvent = async () => {
 		try {
+			const networkId = this.props.web3.networkId
 			this.setState({
 				loading: true,
 			});
@@ -62,31 +103,46 @@ class CheckUser extends Component {
 				eventName: this.state.blockChainEvent.name,
 				id: this.props.event_id,
 				count: 1,
+				networkId: networkId,
 			};
 			const report = await axios.post(
 				`${API_URL}${REPORT_EVENT}`,
 				payload
 			);
 			// console.log("Consoleee notify report response",report)
-			toast(<Notify text="Report successful!" icon="fas fa-thumbs-down fa-3x" color="#413AE2"/>, {
+			toast(
+				<Notify
+					text="Report successful!"
+					icon="fas fa-thumbs-down fa-3x"
+					color="#413AE2"
+				/>,
+				{
 					position: "bottom-right",
 					autoClose: true,
 					pauseOnHover: true,
-				});
-				this.props.history.push("/upcomingevents/1");
+				}
+			);
+			this.props.history.push("/upcomingevents/1");
 			this.setState({
 				loading: false,
 			});
 		} catch (error) {
 			// console.log("Consoleee notify report response catch",error)
 
-			if(error.response && error.response.data){
+			if (error.response && error.response.data) {
 				// console.log("Consoleee notify report response error.response.data",error.response.data)
-				toast(<Notify text={error.response.data.responseMessage+"!"} icon="fas fa-exclamation-circle fa-3x" color="#F43C3C"/>, {
-					position: "bottom-right",
-					autoClose: true,
-					pauseOnHover: true,
-				});
+				toast(
+					<Notify
+						text={error.response.data.responseMessage + "!"}
+						icon="fas fa-exclamation-circle fa-3x"
+						color="#F43C3C"
+					/>,
+					{
+						position: "bottom-right",
+						autoClose: true,
+						pauseOnHover: true,
+					}
+				);
 			}
 			this.props.history.push("/upcomingevents/1");
 			this.setState({
@@ -104,9 +160,8 @@ class CheckUser extends Component {
 	};
 
 	runChecking = (address) => {
-		this.ticketsOfUser = this.contracts[
-			"DaoEvents"
-		].methods.ticketsOf.cacheCall(address);
+		this.ticketsOfUser =
+			this.contracts["DaoEvents"].methods.ticketsOf.cacheCall(address);
 		this.setState({
 			wrong_address: false,
 			requests: {
@@ -127,9 +182,9 @@ class CheckUser extends Component {
 			] !== "undefined" &&
 			!this.state.requests.listOfTickets
 		) {
-			let tickets = this.props.contracts["DaoEvents"].ticketsOf[
-				this.ticketsOfUser
-			].value;
+			let tickets =
+				this.props.contracts["DaoEvents"].ticketsOf[this.ticketsOfUser]
+					.value;
 
 			for (let i = 0; i < tickets.length; i++) {
 				this.listOfTickets.push(
@@ -187,10 +242,7 @@ class CheckUser extends Component {
 	};
 
 	render() {
-		<Snackbar
-			open={true}
-			message={"You have alredy report this event"}
-		/>;
+		<Snackbar open={true} message={"You have alredy report this event"} />;
 		let body, message;
 		if (this.state.tab === 1) {
 			let warning = this.state.wrong_address ? "is-invalid" : "";
@@ -205,9 +257,7 @@ class CheckUser extends Component {
 							ref={(input) => (this.address = input)}
 						/>
 					</div>
-					<div
-					className="buttonsDiv"
-					>
+					<div className="buttonsDiv">
 						<button
 							className="btn btn-dark col-xs-12"
 							onClick={this.checkManual}
@@ -215,7 +265,9 @@ class CheckUser extends Component {
 							<i className="fas fa-receipt"></i> Confirm Purchase
 						</button>
 						<button
-							disabled={this.state.loading || this.props.disabledStatus}
+							disabled={
+								this.state.loading || this.props.disabledStatus
+							}
 							className="btn btn-dark reportbtn col-xs-12"
 							onClick={this.reportEvent}
 						>
@@ -270,15 +322,15 @@ class CheckUser extends Component {
 			if (this.state.status) {
 				message = (
 					<div className="alert alert-success" role="alert">
-						<i className="fas fa-check-circle"></i> This address has a ticket to the event.
-
+						<i className="fas fa-check-circle"></i> This address has
+						a ticket to the event.
 					</div>
 				);
 			} else {
 				message = (
 					<div className="alert alert-danger" role="alert">
-						<i className="fas fa-times"></i> This address has no ticket to the event.
-
+						<i className="fas fa-times"></i> This address has no
+						ticket to the event.
 					</div>
 				);
 			}
@@ -312,6 +364,7 @@ const mapStateToProps = (state) => {
 	return {
 		contracts: state.contracts,
 		accounts: state.accounts,
+		web3: state.web3
 	};
 };
 

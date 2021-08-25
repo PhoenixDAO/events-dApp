@@ -561,7 +561,7 @@ class Event extends Component {
 				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 				.join(" ");
 
-			let titleURL = "/event/" + pagetitle + "/" + this.props.id;
+			let titleURL = `/event/${this.props.id}`
 			let myEventStatURL =
 				"/event-stat/" + pagetitle + "/" + this.props.id;
 			let myEvent = false;

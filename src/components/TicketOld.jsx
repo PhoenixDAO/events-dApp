@@ -329,7 +329,7 @@ class Ticket extends Component {
 				.split(" ")
 				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 				.join(" ");
-				let titleURL = "/event/" + pagetitle + "/" + ticket_data[0];
+				let titleURL = 	`/event/${ticket_data[0]}`;
 				let myEventStatURL = "/event-stat/" + pagetitle + "/" + ticket_data[0];
 				let myEvent = false;
 				if (event_data.owner.toLowerCase() == this.account.toLowerCase()) {
