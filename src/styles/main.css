@@ -2968,6 +2968,9 @@ canvas#doughnut {
 .right-arrow-img {
 	width: 100%;
 }
+.MuiTypography-body1 {
+	font-family: "AeonikReg" !important;
+}
 
 .wallets-footer {
 	text-align: center;
