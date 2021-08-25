@@ -253,6 +253,7 @@ class Event extends Component {
 	getTime = () => {
 		let time;
 		if (this.state.ipfs_problem)
+		console.log("test")
 			time = (
 				<div className="text-center mb-0 event-description">
 					<div role="img" aria-label="monkey">
