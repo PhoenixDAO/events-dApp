@@ -3,7 +3,7 @@ import roundlogo from "../Images/roundlogo.svg";
 import transakSDK from "@transak/transak-sdk";
 
 const settings = {
-	apiKey: "71ae55f1-8663-4aaf-9833-a2b15f9f7c6b", // Your API Key
+	apiKey: "", // Your API Key
 	environment: "PRODUCTION", // STAGING/PRODUCTION
 	defaultCryptoCurrency: "ETH",
 	themeColor: "000000", // App theme color
