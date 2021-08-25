@@ -65,4 +65,3 @@ export const explorerWithTX = "https://rinkeby.etherscan.io/tx/";
 export const explorerWithAddress = "https://rinkeby.etherscan.io/address/";
 export const graphURL =
     "https://api.thegraph.com/subgraphs/name/nashaibakbar/eventcheck";
-export const transakApi = "71ae55f1-8663-4aaf-9833-a2b15f9f7c6b";
