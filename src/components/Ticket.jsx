@@ -537,7 +537,7 @@ class Ticket extends Component {
 		}
 
 		return (
-			<div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4 d-flex justify-content-center align-items-stretch">
+			<div className="col-xl-4 col-lg-6 col-md-6 col-sm-12 pb-4 justify-content-center align-items-stretch">
 				{body}
 			</div>
 		);
