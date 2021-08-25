@@ -896,7 +896,7 @@ class App extends Component {
 						/>
 						<Route
 							exact
-							path="/event/:page/:id"
+							path="/event/:id"
 							render={(props) => (
 								<EventPage
 									{...props}
@@ -1234,7 +1234,7 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/event/:page/:id"
+						path="/event/:id"
 						render={(props) => (
 							<EventPage
 								{...props}

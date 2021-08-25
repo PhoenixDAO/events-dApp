@@ -135,15 +135,15 @@ const useStyles = (theme) => ({
 		},
 	},
 	nearStyleBlack: {
-		fontSize: 32,
+		fontSize: 27,
 		fontWeight: "400px",
-		fontFamily: '"Aeonik" ,sans-serif',
+		fontFamily: '"AeonikReg" ,sans-serif',
 		color: "#4E4E55",
 	},
 	nearStyleBlue: {
-		fontSize: 32,
+		fontSize: 27,
 		fontWeight: "500px",
-		fontFamily: '"Aeonik" ,sans-serif',
+		fontFamily: '"AeonikReg" ,sans-serif',
 		color: "#413AE2",
 	},
 });
@@ -1225,7 +1225,7 @@ class FindEvents extends Component {
 						<span>
 							<div
 								style={{
-									height: 94,
+									height: 68,
 									display: "flex",
 									alignItems: "center",
 									justifyContent: "flex-start",
