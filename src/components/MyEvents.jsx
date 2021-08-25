@@ -31,7 +31,7 @@ function TabPanel(props) {
 			{...other}
 		>
 			{value === index && (
-				<Box p={3}>
+				<Box p={0} pt={4}>
 					<Typography component={"div"}>{children}</Typography>
 				</Box>
 			)}
@@ -64,8 +64,8 @@ const styles = (theme) => ({
 		display: "flex",
 		justifyContent: "space-between",
 		paddingTop: "40px",
-		alignItems: "baseline",
-	},
+		alignItems: "baseline"
+	}
 });
 class MyEvents extends Component {
 	constructor(props, context) {
@@ -399,6 +399,7 @@ class MyEvents extends Component {
 	};
 	render() {
 		const { classes } = this.props;
+		console.log("class props for event card", classes.tabBar)
 		let body;
 		// if (
 		// 	// typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
@@ -595,6 +596,7 @@ class MyEvents extends Component {
 					>
 						<Tab
 							className={classes.tabBar}
+							mx="0"
 							label="Upcoming Events"
 							{...a11yProps(0)}
 						/>

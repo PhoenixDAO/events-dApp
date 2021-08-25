@@ -30,10 +30,12 @@ import {
 	Grid,
 	Typography,
 } from "@material-ui/core";
+// import {MenuList, Paper, Popper, Button, ClickAwayListener} from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import { useForm, Controller } from "react-hook-form";
 import Slider from "./common/Slider";
 import roundlogo from "./Images/roundlogo.svg";
 import ConnectWalletButton from "./common/ConnectWalletButton";
@@ -86,12 +88,20 @@ const useStyles = (theme) => ({
 			fontWeight: "700",
 		},
 	},
+	menuPaper: {
+		maxHeight: "200px",
+	},
+	selectEvent:{
+		minWidth:155
+	},
 	formControls: {
 		"@media (min-width: 1024px)": {
 			maxWidth: "20% !important",
 			flex: "0 0 20% !important",
 			marginLeft: "5%",
 		},
+		justifyContent:"space-around",
+		alignItems:"center",
 		minWidth: 120,
 		background: "#fff",
 		"& .MuiInputBase-formControl": {
@@ -101,7 +111,7 @@ const useStyles = (theme) => ({
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
-			padding: "13px",
+			padding: "10px",
 		},
 		"& option": {
 			padding: "10px",
@@ -110,10 +120,14 @@ const useStyles = (theme) => ({
 	selectEmpty: {
 		marginTop: theme.spacing(2),
 	},
+	"& .MuiPaper-root":{
+		position:"absolute",
+		top:"390px",
+		background: "yellow"
+	},
 	sortBy: {
 		position: "absolute",
-		left: "-50px",
-		top: "15px",
+		left: "-45px",
 		color: "#73727D",
 		fontSize: "18px",
 		"@media (max-width: 575px)": {
@@ -134,12 +148,14 @@ const useStyles = (theme) => ({
 	},
 });
 
+
 function a11yProps(index) {
 	return {
 		id: `scrollable-auto-tab-${index}`,
 		"aria-controls": `scrollable-auto-tabpanel-${index}`,
 	};
 }
+
 
 const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop);
 
@@ -833,6 +849,7 @@ class FindEvents extends Component {
 		// console.log("accounts---->", this.props.accounts);
 
 		const { classes } = this.props;
+
 		let body = <PhoenixDAOLoader />;
 
 		// if (
@@ -1250,14 +1267,74 @@ class FindEvents extends Component {
 							>
 								<Typography
 									variant="p"
-									className={classes.sortBy}
-								>
+									className={`${classes.sortBy}`}
+									>
 									Sort:
 								</Typography>
+										<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											fullWidth
+											value={this.state.category}
+											onChange={this.categoryChange}
+											displayEmpty
+											className={classes.menuPaper}
+											MenuProps={{
+												classes: {
+													paper: classes.menuPaper,
+												},
+												getContentAnchorEl: null,
+												anchorOrigin: {
+												vertical: "bottom",
+												horizontal: "left"}
+											}}
+										>
+											<MenuItem			
+														value="allevents"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														All Events
+													</MenuItem>
+													<MenuItem			
+														value="trendingevents"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Trending Events
+													</MenuItem>
+													<MenuItem			
+														value="populartopics"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														popular Topics
+													</MenuItem>
+										</Select>
+									</FormControl>
+							
+							{/* <FormControl
+								variant="outlined"
+								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
+							>
+								<Typography
+									variant="p"
+									className={`${classes.sortBy}`}
+									>
+									Sort:
+								</Typography>
+
 								<Select
 									native
 									value={this.state.category}
 									onChange={this.categoryChange}
+									className={classes.selectEvent}
 								>
 									<option
 										aria-label="None"
@@ -1279,7 +1356,11 @@ class FindEvents extends Component {
 										Popular Topics
 									</option>
 								</Select>
-							</FormControl>
+							</FormControl> 
+							
+							*/}
+
+							
 							{/* <button
 								className="btn sort_button btn-dark col-lg-2 col-md-3 col-sm-3"
 								value={this.state.value}
