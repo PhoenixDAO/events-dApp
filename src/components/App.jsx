@@ -61,10 +61,12 @@ import NetworkError from "./NetworkError";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
 import Favorites from "./Favorite.jsx";
-import { getUserDetails } from "../config/serverAPIs";
+import { getUserDetails, updateUserDetails } from "../config/serverAPIs";
 import AccountDetail from "./account/index";
 import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
+import IdentityForm from "./common/AvatarSelector/identityform";
+import DialogueBox from "./common/DialogueBox";
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -115,6 +117,12 @@ class App extends Component {
 			eventsContract: {},
 			userDetails: {},
 			purchased: false,
+			open: false,
+			avatar: "",
+			nextForm: false,
+			name: "Bennu",
+			avatarNumber: 0,
+			avatarCustom: false,
 			open2: false
 		};
 		this.myRef = React.createRef();
@@ -155,7 +163,7 @@ class App extends Component {
 			} else if (typeof web3 !== "undefined") {
 				web3 = new Web3(web3.currentProvider);
 			} else {
-				const network = this.getNetworkId();
+				const network = await web3.eth.net.getId();
 				let infura;
 				if (network === GLOBAL_NETWORK_ID) {
 					infura = INFURA_URL;
@@ -235,22 +243,24 @@ class App extends Component {
 		}
 	}
 
-	getUserInfo = async (account, networkId) => {
-		const userDetails = await getUserDetails({
-			address: account,
-			networkId: networkId,
-		});
+	// getUserInfo = async (account, networkId) => {
+	// 	const userDetails = await getUserDetails({
+	// 		address: account,
+	// 		networkId: networkId,
+	// 	});
 
-		if (!userDetails.error) {
-			this.setState({
-				userDetails: userDetails,
-			});
-		} else {
-		}
-	};
+	// 	if (!userDetails.error) {
+	// 		this.setState({
+	// 			userDetails: userDetails,
+	// 		});
+	// 	} else {
+	// 	}
+	// };
+
 	handleClose2 = () => {
 		this.setState({ open2: false, purchased: false });
 	};
+
 	//Get Account
 	async loadBlockchainData() {
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
@@ -302,9 +312,11 @@ class App extends Component {
 					address: accounts[0],
 					networkId: networkId,
 				});
+				console.log("userDetals", userDetails);
 				if (!userDetails.error) {
 					this.setState({
 						userDetails: userDetails,
+						open: userDetails.result.result.firstTime,
 					});
 				}
 			}
@@ -361,7 +373,7 @@ class App extends Component {
 		let chainId = await this.getNetworkId();
 		if (
 			this.state.account.length !== 0 &&
-			this.props.web3.networkId === chainId
+			this.props.web3.networkId === (await this.getNetworkId())
 		) {
 			this.setState({ disabledStatus: true });
 			this.setState(
@@ -390,7 +402,7 @@ class App extends Component {
 				}
 			);
 		}
-	};
+	}
 
 	//TransferFrom when buying with PhoenixDAO
 	//After Approval
@@ -791,6 +803,49 @@ class App extends Component {
 		if (this.myRef.current) this.myRef.current.scrollIntoView();
 	};
 
+	handleName = (value) => {
+		this.setState({ name: value });
+	};
+
+	handleAvatar = (value) => {
+		this.setState({ avatar: value });
+	};
+
+	handleCustomAvatar = (value) => {
+		this.setState({ avatarCustom: value });
+	};
+
+	handleClose = () => {
+		this.setState({
+			nextForm: false,
+			open: false,
+		});
+	};
+
+	handleAvatarNumber = (value) => {
+		this.setState({ avatarNumber: value });
+	};
+
+	handleNextForm = (value) => {
+		this.setState({ nextForm: value });
+	};
+
+	updateUserInfo = async (e) => {
+		console.log("Working")
+		const detail = await updateUserDetails({
+			address: this.props.accounts["0"],
+			networkId: this.props.web3.networkId,
+			name: this.state.name, //we need to change this when the design is finalised
+			avatarCustom: this.state.avatarCustom, //we need to change this when the design is finalised
+			avatarNumber: this.state.avatarNumber, //we need to change this when the design is finalised
+			avatar: this.state.avatar,
+		});
+		if (detail.error) {
+			console.log("error occured");
+		} else {
+			window.location.reload();
+		}
+	};
 	render() {
 		let body;
 		let connecting = false;
@@ -1381,6 +1436,35 @@ class App extends Component {
 										this.handleSnackbarClose(2)
 									}
 								/>
+								{console.log(
+									"this.state.open",
+									this.state.open
+								)}
+								<DialogueBox
+									open={this.state.open}
+									handleClose={this.handleClose}
+									maxWidth="sm"
+								>
+									<IdentityForm
+										setNextForm={this.handleNextForm}
+										// goBack={props.goBack}
+										nextForm={this.state.nextForm}
+										name={this.state.name}
+										avatarNumber={this.state.avatarNumber}
+										avatarCustom={this.state.avatarCustom}
+										handleName={this.handleName}
+										handleAvatar={this.handleAvatar}
+										handleCustomAvatar={
+											this.handleCustomAvatar
+										}
+										handleClose={this.handleClose}
+										handleAvatarNumber={
+											this.handleAvatarNumber
+										}
+										updateUserInfo={this.updateUserInfo}
+										origin={"App"}
+									/>
+								</DialogueBox>
 							</div>
 						</div>
 					</div>
