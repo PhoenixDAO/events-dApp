@@ -5,6 +5,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import SocialMedia from "../common/SocialMedia";
+import PropTypes from "prop-types";
+import { drizzleConnect } from "drizzle-react";
 import {
 	CalendarTodayOutlined,
 	ScheduleOutlined,
@@ -13,10 +15,10 @@ import {
 	ConfirmationNumberOutlined,
 	ShoppingCartOutlined,
 	ModeCommentOutlined,
+	Close as CloseIcon,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import eventpreviewplaceholder from "../Images/eventpreviewplaceholder.png";
-
 import {
 	Button,
 	Grid,
@@ -25,6 +27,10 @@ import {
 	Select,
 	IconButton,
 } from "@material-ui/core";
+import { getUserDetails } from "../../config/serverAPIs";
+import RichTextEditor from "react-rte";
+
+var moment = require("moment");
 
 const styles = (theme) => ({
 	root: {
@@ -169,8 +175,47 @@ class EventPreviewPage extends Component {
 		super(props);
 		this.state = {
 			open: this.props.open,
+			organizerDetails: "",
+			topic: "",
+			ticketIndex: 0,
 		};
+		this.getOrganizerDetails = this.getOrganizerDetails.bind(this);
+		this._topicRemovedDashes = this._topicRemovedDashes.bind(this);
 	}
+
+	_topicRemovedDashes() {
+		let rawTopic = this.props.eventTopic;
+		var topicRemovedDashes = rawTopic;
+		topicRemovedDashes = topicRemovedDashes.replace(/-/g, " ");
+		var topic = topicRemovedDashes
+			.toLowerCase()
+			.split(" ")
+			.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+			.join(" ");
+
+		this.setState({
+			topic: topic,
+		});
+	}
+
+	async getOrganizerDetails() {
+		if (this.props.networkId) {
+			const userDetails = await getUserDetails({
+				address: this.props.accounts[0],
+				networkId: this.props.networkId,
+			});
+			if (!userDetails.error) {
+				this.setState({
+					organizerDetails:
+						userDetails.result.result.organizerDetails,
+				});
+			}
+		}
+	}
+
+	handleCategoryChange = (event) => {
+		this.setState({ ticketIndex: event.target.value });
+	};
 
 	render() {
 		const { classes } = this.props;
@@ -194,7 +239,20 @@ class EventPreviewPage extends Component {
 						>
 							<Grid className={classes.header3}>
 								<div />
-								<div>X Close Preview</div>
+								<div>
+									<Button
+										variant="outlined"
+										startIcon={<CloseIcon />}
+										style={{
+											textTransform: "none",
+											outline: "none",
+											border: "none",
+										}}
+										onClick={this.props.handleClose}
+									>
+										Close Preview
+									</Button>
+								</div>
 							</Grid>
 							<br />
 							<Grid lg={12}>
@@ -220,8 +278,25 @@ class EventPreviewPage extends Component {
 									xs={12}
 									className={classes.description}
 								>
+									<span>
+										<h2>About this Event</h2>
+									</span>
 									<Grid container>
-										{this.props.description}
+										<br />
+										<RichTextEditor
+											readOnly
+											value={RichTextEditor.createValueFromString(
+												this.props.eventDescription,
+												"html"
+											)}
+											required
+											id="body-text"
+											name="bodyText"
+											type="string"
+											multiline
+											variant="filled"
+											className="editor"
+										/>
 									</Grid>
 								</Grid>
 								<Grid
@@ -245,49 +320,81 @@ class EventPreviewPage extends Component {
 									>
 										<Select
 											native
-											// value={state.age}
-											// onChange={handleChange}
+											onChange={this.handleCategoryChange}
 											inputProps={{
 												name: "age",
 												id: "outlined-age-native-simple",
 											}}
 										>
-											<option
-												aria-label="None"
-												value={this.props}
-											/>
-											<option value={10}>
-												Bronze Ticket
-											</option>
-											<option value={20}>
-												Silver Ticket
-											</option>
-											<option value={30}>
-												Golden Ticket
-											</option>
+											{this.props.ticketCategories
+												.length > 0 &&
+												this.props.ticketCategories.map(
+													(category, i) => (
+														<option value={i}>
+															{
+																category.ticketName
+															}
+														</option>
+													)
+												)}
 										</Select>
 									</FormControl>
-									{/* {priceGrid} */}
+
+									<div className={classes.eventinfo}>
+										<span className={classes.PhnxPrice}>
+											{this.props.ticketCategories
+												.length > 0
+												? this.props.ticketCategories[
+														this.state.ticketIndex
+												  ]["phnxPrice"]
+												: ""}
+											PHNX
+										</span>
+										<div
+											style={{
+												color: "#56555D",
+												fontSize: "14px",
+											}}
+										>
+											$
+											{this.props.ticketCategories
+												.length > 0
+												? this.props.ticketCategories[
+														this.state.ticketIndex
+												  ]["dollarPrice"]
+												: ""}
+										</div>
+									</div>
+
 									<p className={classes.eventHeading}>
 										{" "}
 										<CalendarTodayOutlined /> Date
 									</p>
 									<p className={classes.eventinfo}>
-										{" "}
-										{this.props.startDate}
+										{this.props.eventTime === "onedayevent"
+											? moment(
+													this.props.eventDate
+											  ).format("Do MMM, YYYY")
+											: `
+									${moment(this.props.eventStartDate).format("Do MMM")}
+									-
+									${moment(this.props.eventEndDate).format("Do MMM, YYYY")}
+										`}
 									</p>
 									<p className={classes.eventHeading}>
 										<ScheduleOutlined /> Time
 									</p>
 									<p className={classes.eventinfo}>
 										{" "}
-										{this.props.startTime}
+										{moment(
+											this.props.eventStartTime
+										).format("LT")}
 									</p>
 									<p className={classes.eventHeading}>
 										<LocationOnOutlined /> Location
 									</p>
 									<p className={classes.eventinfo}>
-										{this.props.locations}
+										{this.props.location}
 									</p>
 									<p className={classes.eventHeading}>
 										<PersonOutlined />
@@ -301,7 +408,16 @@ class EventPreviewPage extends Component {
 										Tickets Bought
 									</p>
 									<p className={classes.eventinfo}>
-										0/{this.props.availability}
+										0/
+										{this.props.ticketCategories.length > 0
+											? this.props.ticketCategories[
+													this.state.ticketIndex
+											  ]["noOfTickets"] == 0
+												? `∞`
+												: this.props.ticketCategories[
+														this.state.ticketIndex
+												  ]["noOfTickets"]
+											: ""}
 									</p>
 								</Grid>
 							</Grid>
@@ -360,11 +476,11 @@ class EventPreviewPage extends Component {
 									<ModeCommentOutlined />
 									Topic
 									<div className={classes.eventinfo}>
-										{this.props.topic}
+										{this.state.topic}
 									</div>
 								</Grid>
 								<Grid lg={10} md={9} sm={10} xs={12}>
-									<SocialMedia />
+									<SocialMedia disabled={true} />
 								</Grid>
 							</Grid>
 						</Grid>
@@ -380,17 +496,10 @@ class EventPreviewPage extends Component {
 								}}
 							/>
 							<h3 style={{ fontWeight: "bold" }}>
-								{this.state.organizer}
+								{this.props.eventOrganizer}
 							</h3>
 							<Grid className={classes.organizerDescription}>
-								Him boisterous invitation dispatched had
-								connection inhabiting projection. By mutual an
-								mr danger garret edward an. Diverted as strictly
-								exertion addition no disposal by stanhill. This
-								call wife do so sigh no gate felt. You and abode
-								spite order get. Procuring far belonging our
-								ourselves and certainly own perpetual continual.
-								It elsewhere of{" "}
+								{this.state.organizerDetails}
 							</Grid>
 						</Grid>
 					</Grid>
@@ -398,5 +507,27 @@ class EventPreviewPage extends Component {
 			</Dialog>
 		);
 	}
+
+	async componentDidMount() {
+		this.getOrganizerDetails();
+		this._topicRemovedDashes();
+
+		console.log("ticketCategories", this.props.ticketCategories);
+	}
 }
-export default withStyles(styles, { withTheme: true })(EventPreviewPage);
+
+EventPreviewPage.contextTypes = {
+	drizzle: PropTypes.object,
+};
+
+const mapStateToProps = (state) => {
+	return {
+		// contracts: state.contracts,
+		accounts: state.accounts,
+		networkId: state.web3.networkId,
+	};
+};
+
+const AppContainer = drizzleConnect(EventPreviewPage, mapStateToProps);
+// export default AppContainer;
+export default withStyles(styles, { withTheme: true })(AppContainer);

@@ -78,7 +78,7 @@ class CreateEvent extends Component {
 				file_name: null,
 			},
 			fields: {},
-			activeStep: 3,
+			activeStep: 0,
 			activeFlamingStep: 0,
 			isEventCreated: false,
 			progressText: 0,

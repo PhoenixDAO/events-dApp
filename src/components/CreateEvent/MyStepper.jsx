@@ -550,9 +550,21 @@ const MyStepper = ({
 			fields.eventName = badEventName;
 			const badEventOrg = filter.clean(fields.eventOrganizer);
 			fields.eventOrganizer = badEventOrg;
-			onFieldsChange(fields);
 			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-			onStepsChange("inc");
+			if (fields.eventTime === "onedayevent") {
+				console.log("onedayevent----->");
+				let eventDateOneDay = fields.eventDate;
+				let eventStartTimeOneday = fields.eventStartTime;
+				let eventEndTimeOneday = fields.eventEndTime;
+				var h = eventStartTimeOneday.getHours();
+				var m = eventStartTimeOneday.getMinutes();
+				eventDateOneDay.setHours(0, h, m, 0);
+				console.log(eventDateOneDay);
+			} else {
+				console.log("morethanaday---->");
+			}
+			// onFieldsChange(fields);
+			// onStepsChange("inc");
 		} else if (activeStep === 1) {
 			//2nd stpper - location/link, images, topicI
 			onFieldsChange(fields);
@@ -1028,7 +1040,7 @@ const MyStepper = ({
 																fullwidth
 																inputVariant="outlined"
 																autoOk={true}
-																value={date}
+																value={value}
 																onChange={
 																	onChange
 																}
