@@ -268,7 +268,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
-							`},{time}
+							`},{" "}{time}
                 </Typography>
               </div>
               <div style={{ textAlign: "end" }}>
@@ -294,6 +294,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
                 color="primary"
                 style={{ marginRight: "10px" }}
                 className={classes.seeTicket}
+                onClick={handleClose}
               > See Ticket</Button></Link> :
             (<Grid item style={{ display: "contents" }}>
               <Button

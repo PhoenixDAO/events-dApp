@@ -87,6 +87,8 @@ const useStyles = (theme) => ({
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
+			background: "#fff",
+
 			padding:"10px",
 			fontWeight: 700,
 			minWidth:130
