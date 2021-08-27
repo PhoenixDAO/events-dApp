@@ -5,7 +5,7 @@ import moment from "moment";
 import "../styles/calendar.css";
 // import main from '../styles/main.css'
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -20,6 +20,8 @@ import PropTypes from "prop-types";
 import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { getTickets } from "../utils/graphApis";
+import GetGraphApi  from '../config/getGraphApi';
+
 const styles = (theme) => ({
 	content: {
 		"@media screen and (min-width: 1200px)": {
@@ -35,9 +37,9 @@ const styles = (theme) => ({
 	},
 	categorySelect: {
 		// width: "219px",
-
 		"& .MuiSelect-select": {
 			paddingRight: "32px !important",
+			background: "#fff",
 		},
 		marginTop: "10px",
 		marginBottom: "10px",
@@ -49,6 +51,11 @@ const styles = (theme) => ({
 			width: "auto",
 			minWidth: "141px",
 		},
+
+	},
+	selectDropDown:{
+		maxHeight: "200px",
+		width:"150px",
 	},
 	selectDiv: {
 		position: "absolute",
@@ -82,6 +89,7 @@ class Calendars extends Component {
 
 	async loadBlockchain() {
 		// GRAPH BLOCK //
+		const graphURL  = await GetGraphApi();
 		const ownerTickets = await getTickets(this.props.accounts[0]);
 		this.setState({ activeEvents: ownerTickets });
 		await axios({
@@ -340,7 +348,7 @@ class Calendars extends Component {
 											value={this.state.category}
 											onChange={this.categoryChange}
 											displayEmpty
-											className={classes.menuPaper}
+											className={classes.selectDropDown}
 											MenuProps={{
 												classes: {
 													paper: classes.menuPaper,

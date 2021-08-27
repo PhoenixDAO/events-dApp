@@ -62,6 +62,12 @@ export const ADD_TO_FAVOURITES = "user/addToFavourites";
 export const UPDATE_EVENT_VIEWS = "user/updateViews";
 export const explorerWithTX = "https://rinkeby.etherscan.io/tx/";
 export const explorerWithAddress = "https://rinkeby.etherscan.io/address/";
-export const graphURL =
-	"https://api.thegraph.com/subgraphs/name/nashaibakbar/eventcheck";
+// export const graphURL =
+// 	"https://api.thegraph.com/subgraphs/name/nashaibakbar/eventcheck";
+	//for rinkeby
+export const graphURLV1 =
+	"https://api.thegraph.com/subgraphs/name/musfirazia/event-subgraph";
+	//for goerli
+export const graphURLV2 = "https://api.thegraph.com/subgraphs/name/musfirazia/event-subgraphv2";
+
 export const transakApi = process.env.REACT_APP_TRANSAK_API;

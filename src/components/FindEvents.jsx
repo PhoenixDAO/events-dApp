@@ -3,7 +3,8 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import Carousel from "react-bootstrap/Carousel";
-import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
+import GetGraphApi  from '../config/getGraphApi';
 import axios from "axios";
 // Import dApp Components
 // import Loading from "./Loading";
@@ -48,7 +49,7 @@ const useStyles = (theme) => ({
 		top: 0,
 		display: "flex",
 		flexDirection: "column",
-		background: `#FCFCFD !important`,
+		background: `#F2F2FD !important`,
 		opacity: `1 !important`,
 		marginLeft: -2,
 	},
@@ -71,6 +72,9 @@ const useStyles = (theme) => ({
 			position: "absolute",
 		},
 	},
+	mobilePadding:{
+		padding: "0 20px"
+	},
 	tabBar: {
 		fontWeight: "500",
 		fontFamily: '"Aeonik" ,sans-serif',
@@ -91,8 +95,12 @@ const useStyles = (theme) => ({
 	menuPaper: {
 		maxHeight: "200px",
 	},
-	selectEvent: {
-		minWidth: 155,
+	selectDropDown:{
+		maxHeight: "200px",
+		width:"85%",
+	},
+	selectEvent:{
+		minWidth:155
 	},
 	formControls: {
 		"@media (min-width: 1024px)": {
@@ -103,15 +111,16 @@ const useStyles = (theme) => ({
 		justifyContent: "space-around",
 		alignItems: "center",
 		minWidth: 120,
-		background: "#fff",
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
+				maxWidth:"80%"
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
 			padding: "10px",
+			background: "#fff",
 		},
 		"& option": {
 			padding: "10px",
@@ -123,11 +132,11 @@ const useStyles = (theme) => ({
 	"& .MuiPaper-root": {
 		position: "absolute",
 		top: "390px",
-		background: "yellow",
+    background: "yellow"
 	},
 	sortBy: {
 		position: "absolute",
-		left: "-45px",
+		left: "-25px",
 		color: "#73727D",
 		fontSize: "18px",
 		"@media (max-width: 575px)": {
@@ -135,15 +144,15 @@ const useStyles = (theme) => ({
 		},
 	},
 	nearStyleBlack: {
-		fontSize: 27,
+		fontSize: 32,
 		fontWeight: "400px",
-		fontFamily: '"AeonikReg" ,sans-serif',
+		fontFamily: '"Aeonik" ,sans-serif',
 		color: "#4E4E55",
 	},
 	nearStyleBlue: {
-		fontSize: 27,
+		fontSize: 32,
 		fontWeight: "500px",
-		fontFamily: '"AeonikReg" ,sans-serif',
+		fontFamily: '"Aeonik" ,sans-serif',
 		color: "#413AE2",
 	},
 });
@@ -196,6 +205,7 @@ class FindEvents extends Component {
 		this.categoryChange = this.categoryChange.bind(this);
 	}
 
+
 	async categoryChange(event) {
 		if (event.target.value === "populartopics") {
 			this.props.history.push("/topics");
@@ -244,6 +254,8 @@ class FindEvents extends Component {
 	//Loads Blockhain Data,
 	async loadBlockchain(filter) {
 		console.log("filter1", filter);
+    		const graphURL  =await GetGraphApi();
+
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -843,60 +855,59 @@ class FindEvents extends Component {
 										aria-label="scrollable auto tabs example"
 									>
 										<Tab
-											className={`${classes.tabBar} ${
-												classes.tabBar - 2
-											}`}
+											className={`${classes.tabBar} ${classes.tabBar - 2
+												}`}
 											label="All Events"
 											value="All Events"
-											// {...a11yProps(0)}
+										// {...a11yProps(0)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Near to you"
 											value="Near to you"
-											// {...a11yProps(1)}
+										// {...a11yProps(1)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Today"
 											value="Today"
-											// {...a11yProps(2)}
+										// {...a11yProps(2)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Week"
 											value="This Week"
-											// {...a11yProps(3)}
+										// {...a11yProps(3)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Month"
 											value="This Month"
-											// {...a11yProps(4)}
+										// {...a11yProps(4)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Paid Events"
 											value="Paid Events"
-											// {...a11yProps(5)}
+										// {...a11yProps(5)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Free Events"
 											value="Free Events"
-											// {...a11yProps(6)}
+										// {...a11yProps(6)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Online Events"
 											value="Online Events"
-											// {...a11yProps(7)}
+										// {...a11yProps(7)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Physical Events"
 											value="Physical Events"
-											// {...a11yProps(8)}
+										// {...a11yProps(8)}
 										/>
 									</Tabs>
 									<Divider light />
@@ -925,7 +936,7 @@ class FindEvents extends Component {
 						<span>
 							<div
 								style={{
-									height: 68,
+									height: 94,
 									display: "flex",
 									alignItems: "center",
 									justifyContent: "flex-start",
@@ -957,7 +968,7 @@ class FindEvents extends Component {
 					) : null}
 
 					<div>
-						<div className="row row_mobile dashboard-dropdown-row">
+						<div className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}>
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 								{this.state.pageTitle}
 							</h2>
@@ -986,14 +997,15 @@ class FindEvents extends Component {
 										getContentAnchorEl: null,
 										anchorOrigin: {
 											vertical: "bottom",
-											horizontal: "left",
-										},
+											horizontal: "left"
+										}
 									}}
 								>
 									<MenuItem
 										value="All Events"
 										style={{
-											fontFamily: "'Aeonik', sans-serif",
+											fontFamily:
+												"'Aeonik', sans-serif",
 										}}
 									>
 										All Events
@@ -1001,7 +1013,8 @@ class FindEvents extends Component {
 									<MenuItem
 										value="Trending Events"
 										style={{
-											fontFamily: "'Aeonik', sans-serif",
+											fontFamily:
+												"'Aeonik', sans-serif",
 										}}
 									>
 										Trending Events
@@ -1009,10 +1022,11 @@ class FindEvents extends Component {
 									<MenuItem
 										value="populartopics"
 										style={{
-											fontFamily: "'Aeonik', sans-serif",
+											fontFamily:
+												"'Aeonik', sans-serif",
 										}}
 									>
-										Popular Topics
+										popular Topics
 									</MenuItem>
 								</Select>
 							</FormControl>
@@ -1168,6 +1182,7 @@ const mapStateToProps = (state) => {
 	return {
 		// contracts: state.contracts,
 		accounts: state.accounts,
+		networkId: state.web3.networkId,
 	};
 };
 

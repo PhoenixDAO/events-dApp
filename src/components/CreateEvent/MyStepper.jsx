@@ -107,7 +107,10 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: "white",
 		borderRadius: "12px",
 		paddingBottom: "50px",
-		paddingLeft: 25,
+		"@media (min-width:400px)":{
+			paddingLeft: 25,
+			paddingRight: 25,
+		}
 	},
 	backButton: {
 		textTransform: "none",
@@ -125,12 +128,19 @@ const useStyles = makeStyles((theme) => ({
 		background: "#413AE2",
 		color: "white",
 		height: "54px",
-		width: 230,
+		width: "40%",
 		fontSize: 18,
 		fontWeight: 700,
+		"@media (max-width: 530px)":{
+			width:"57%",
+			fontSize: 15,
+		},
 		"& .MuiButton-endIcon": {
 			position: "absolute",
 			right: 20,
+			"@media (max-width: 530px)":{
+				right: 15,
+			},
 		},
 	},
 	title: {
@@ -145,8 +155,11 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: "space-between",
 	},
 	mainStepperContainer: {
-		marginLeft: theme.spacing(12),
-		marginRight: theme.spacing(12),
+		"@media (min-width:768px)":{
+			marginLeft: theme.spacing(12),
+			marginRight: theme.spacing(12),
+		},
+		
 		"& .MuiButton-label": {
 			fontFamily: "'Aeonik', sans-serif",
 			fontWeight: "500",
@@ -164,6 +177,9 @@ const useStyles = makeStyles((theme) => ({
 		fontweight: "400px",
 		fontSize: "20px",
 		fontFamily: "'Aeonik', sans-serif",
+		"@media (max-width:450px)":{
+			fontSize:"90%"
+		}
 	},
 	editor: {
 		height: 430,
@@ -195,6 +211,7 @@ const useStyles = makeStyles((theme) => ({
 		margin: "30px 0px 20px",
 	},
 	step: {
+		justifyContent:"center",
 		"& .MuiStepIcon-root text": {
 			fontFamily: "'Aeonik', sans-serif",
 			// fontSize: "24px",
@@ -1692,7 +1709,7 @@ const MyStepper = ({
 								<div>
 									<br />
 									<Grid container spacing={2}>
-										<Grid item xs={12} sm={12} lg={4}>
+										<Grid item xs={12} sm={12} lg={12} xl={4}>
 											<Controller
 												name="country"
 												control={control}
@@ -1718,7 +1735,7 @@ const MyStepper = ({
 												}}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={12} lg={4}>
+										<Grid item xs={12} sm={12} lg={12} xl={4}>
 											<Controller
 												name="state"
 												control={control}
@@ -1744,7 +1761,7 @@ const MyStepper = ({
 												}}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={12} lg={4}>
+										<Grid item xs={12} sm={12} lg={12} xl={4}>
 											<Controller
 												name="city"
 												control={control}
@@ -2576,8 +2593,8 @@ const MyStepper = ({
 															}
 															container
 															item
-															xs={11}
-															sm={11}
+															xs={10}
+															sm={10}
 															md={11}
 															lg={11}
 															xl={11}
@@ -2641,8 +2658,8 @@ const MyStepper = ({
 														<Grid
 															item
 															container
-															xs={1}
-															sm={1}
+															xs={2}
+															sm={2}
 															md={1}
 															lg={1}
 															xl={1}
@@ -2664,7 +2681,7 @@ const MyStepper = ({
 																	)}
 																	style={{
 																		justifyContent:
-																			"flex-end",
+																			"center",
 																	}}
 																>
 																	<img
@@ -2689,7 +2706,7 @@ const MyStepper = ({
 																	)}
 																	style={{
 																		justifyContent:
-																			"flex-end",
+																			"center",
 																	}}
 																>
 																	<img

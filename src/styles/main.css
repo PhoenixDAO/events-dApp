@@ -145,7 +145,7 @@ html {
 }
 
 body {
-	background-color: #fafafa;
+	background-color: #F2F2FD !important;
 	font-family: "AeonikReg", sans-serif !important;
 	color: #333;
 	font-weight: 300;
@@ -397,7 +397,7 @@ input[type="number"] {
 	justify-content: space-between;
 	padding-bottom: 10px;
 	padding: 40px 10px 0 10px;
-	background-color: #fcfcfd;
+	background-color: #F2F2FD;
 	/* width: 101% !important; */
 	transition: 0.5s;
 }
