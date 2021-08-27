@@ -57,6 +57,7 @@ import BodyTextEditor from "../common/BodyTextEditor";
 import PublishIcon from "@material-ui/icons/Publish";
 import publishIcon from "../Images/publish.png";
 import Checkmark from "../Images/Checkmark.gif";
+import travelDone from "../Images/travelDone.svg";
 import { withRouter } from "react-router-dom";
 import SocialMedia from "../common/SocialMedia";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -107,10 +108,10 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: "white",
 		borderRadius: "12px",
 		paddingBottom: "50px",
-		"@media (min-width:400px)":{
+		"@media (min-width:400px)": {
 			paddingLeft: 25,
 			paddingRight: 25,
-		}
+		},
 	},
 	backButton: {
 		textTransform: "none",
@@ -131,14 +132,14 @@ const useStyles = makeStyles((theme) => ({
 		width: "40%",
 		fontSize: 18,
 		fontWeight: 700,
-		"@media (max-width: 530px)":{
-			width:"57%",
+		"@media (max-width: 530px)": {
+			width: "57%",
 			fontSize: 15,
 		},
 		"& .MuiButton-endIcon": {
 			position: "absolute",
 			right: 20,
-			"@media (max-width: 530px)":{
+			"@media (max-width: 530px)": {
 				right: 15,
 			},
 		},
@@ -155,11 +156,11 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: "space-between",
 	},
 	mainStepperContainer: {
-		"@media (min-width:768px)":{
+		"@media (min-width:768px)": {
 			marginLeft: theme.spacing(12),
 			marginRight: theme.spacing(12),
 		},
-		
+
 		"& .MuiButton-label": {
 			fontFamily: "'Aeonik', sans-serif",
 			fontWeight: "500",
@@ -177,9 +178,9 @@ const useStyles = makeStyles((theme) => ({
 		fontweight: "400px",
 		fontSize: "20px",
 		fontFamily: "'Aeonik', sans-serif",
-		"@media (max-width:450px)":{
-			fontSize:"90%"
-		}
+		"@media (max-width:450px)": {
+			fontSize: "90%",
+		},
 	},
 	editor: {
 		height: 430,
@@ -211,7 +212,7 @@ const useStyles = makeStyles((theme) => ({
 		margin: "30px 0px 20px",
 	},
 	step: {
-		justifyContent:"center",
+		justifyContent: "center",
 		"& .MuiStepIcon-root text": {
 			fontFamily: "'Aeonik', sans-serif",
 			// fontSize: "24px",
@@ -359,6 +360,19 @@ const useStyles = makeStyles((theme) => ({
 		color: "rgba(94, 91, 255, 1)",
 	},
 	progressDisabled: {},
+	travelImage: {
+		// position: "absolute",
+		// bottom: 0,
+		// left: 0,
+		// right: 0,
+		// padding: "0 15px",
+		width: "100%",
+		marginTop: "60px",
+		"& img": {
+			maxWidth: "100%",
+			borderRadius: "0 0 10px 10px"
+		},
+	},
 }));
 
 const today = new Date();
@@ -3607,6 +3621,9 @@ const MyStepper = ({
 								>
 									View your Event
 								</Button>
+								<div className={classes.travelImage}>
+									<img src={travelDone} alt="travel" />
+								</div>
 							</div>
 						) : (
 							publishedEventComponent()

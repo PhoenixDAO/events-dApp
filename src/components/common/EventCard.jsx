@@ -469,7 +469,7 @@ const EventCard = (props, context) => {
 											.format("hh:mma z")
 									: `${moment(eventStartTime)
 											.utcOffset(0)
-											.format("hh:mma z")} - ${moment(
+											.format("hh:mma")} - ${moment(
 											eventEndTime
 									  )
 											.utcOffset(0)
