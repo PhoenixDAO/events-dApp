@@ -344,6 +344,8 @@ const useStyles = makeStyles((theme) => ({
 	progressDisabled: {},
 }));
 
+const today = new Date();
+
 const MyStepper = ({
 	handleCreateEvent,
 	onFieldsChange,
@@ -538,6 +540,25 @@ const MyStepper = ({
 		setType(event.target.value);
 	};
 
+	function addMonths(date, months) {
+		var d = date.getDate();
+		date.setMonth(date.getMonth() + +months);
+		if (date.getDate() != d) {
+			date.setDate(0);
+		}
+		return date;
+	}
+
+	// a and b are javascript Date objects
+	function dateDiffInDays(a, b) {
+		const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+		// Discard the time and time-zone information.
+		const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+		const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+		return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+	}
+
 	//next button steeper
 	const handleNext = (fields) => {
 		console.log("fields", fields);
@@ -556,15 +577,102 @@ const MyStepper = ({
 				let eventDateOneDay = fields.eventDate;
 				let eventStartTimeOneday = fields.eventStartTime;
 				let eventEndTimeOneday = fields.eventEndTime;
-				var h = eventStartTimeOneday.getHours();
-				var m = eventStartTimeOneday.getMinutes();
-				eventDateOneDay.setHours(0, h, m, 0);
-				console.log(eventDateOneDay);
+				eventDateOneDay.setHours(
+					eventStartTimeOneday.getHours(),
+					eventStartTimeOneday.getMinutes(),
+					eventStartTimeOneday.getSeconds(),
+					0
+				);
+				eventStartTimeOneday.setFullYear(eventDateOneDay.getFullYear());
+				eventStartTimeOneday.setMonth(eventDateOneDay.getMonth());
+				eventStartTimeOneday.setDate(eventDateOneDay.getDate());
+				if (eventEndTimeOneday) {
+					eventEndTimeOneday.setFullYear(
+						eventDateOneDay.getFullYear()
+					);
+					eventEndTimeOneday.setMonth(eventDateOneDay.getMonth());
+					eventEndTimeOneday.setDate(eventDateOneDay.getDate());
+					if (eventStartTimeOneday < eventEndTimeOneday) {
+						fields.eventDate = eventDateOneDay;
+						fields.eventStartTime = eventStartTimeOneday;
+						fields.eventEndTime = eventEndTimeOneday;
+						console.log(
+							eventDateOneDay,
+							eventStartTimeOneday,
+							eventEndTimeOneday
+						);
+						onFieldsChange(fields);
+						onStepsChange("inc");
+					} else {
+						alert("End Time should greater than Start Time");
+					}
+				} else {
+					fields.eventDate = eventDateOneDay;
+					fields.eventStartTime = eventStartTimeOneday;
+					console.log(eventDateOneDay, eventStartTimeOneday);
+					onFieldsChange(fields);
+					onStepsChange("inc");
+				}
 			} else {
 				console.log("morethanaday---->");
+				let eventDateOneDay = fields.eventStartDate;
+				let eventEndDateOneDay = fields.eventEndDate;
+				let eventStartTimeOneday = fields.eventStartTime;
+				let eventEndTimeOneday = fields.eventEndTime;
+				//change date timing
+				eventDateOneDay.setHours(
+					eventStartTimeOneday.getHours(),
+					eventStartTimeOneday.getMinutes(),
+					eventStartTimeOneday.getSeconds(),
+					0
+				);
+				eventEndDateOneDay.setHours(
+					eventStartTimeOneday.getHours(),
+					eventStartTimeOneday.getMinutes(),
+					eventStartTimeOneday.getSeconds(),
+					0
+				);
+				//change timing unix date
+				eventStartTimeOneday.setFullYear(eventDateOneDay.getFullYear());
+				eventStartTimeOneday.setMonth(eventDateOneDay.getMonth());
+				eventStartTimeOneday.setDate(eventDateOneDay.getDate());
+				const diffTime = eventEndDateOneDay - eventDateOneDay;
+				const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+				console.log(diffDays + " days");
+				if (diffDays > 0) {
+					if (eventEndTimeOneday) {
+						eventEndTimeOneday.setFullYear(
+							eventDateOneDay.getFullYear()
+						);
+						eventEndTimeOneday.setMonth(eventDateOneDay.getMonth());
+						eventEndTimeOneday.setDate(eventDateOneDay.getDate());
+						if (eventStartTimeOneday < eventEndTimeOneday) {
+							fields.eventStartDate = eventDateOneDay;
+							fields.eventEndDateOneDay = eventEndDateOneDay;
+							fields.eventStartTime = eventStartTimeOneday;
+							fields.eventEndTime = eventEndTimeOneday;
+							console.log(
+								eventDateOneDay,
+								eventStartTimeOneday,
+								eventEndTimeOneday
+							);
+							onFieldsChange(fields);
+							onStepsChange("inc");
+						} else {
+							alert("End Time should greater than Start Time");
+						}
+					} else {
+						fields.eventStartDate = eventDateOneDay;
+						fields.eventStartTime = eventStartTimeOneday;
+						fields.eventEndDateOneDay = eventEndDateOneDay;
+						console.log(eventDateOneDay, eventStartTimeOneday);
+						onFieldsChange(fields);
+						onStepsChange("inc");
+					}
+				} else {
+					alert("End Date should greater than Start Date");
+				}
 			}
-			// onFieldsChange(fields);
-			// onStepsChange("inc");
 		} else if (activeStep === 1) {
 			//2nd stpper - location/link, images, topicI
 			onFieldsChange(fields);
@@ -944,6 +1052,15 @@ const MyStepper = ({
 																	InputProps={{
 																		readOnly: true,
 																	}}
+																	minDate={
+																		new Date(
+																			new Date().getTime() +
+																				24 *
+																					60 *
+																					60 *
+																					1000
+																		)
+																	}
 																	inputVariant="outlined"
 																	autoOk={
 																		true
@@ -1206,6 +1323,15 @@ const MyStepper = ({
 																		"change date",
 																}}
 																inputVariant="outlined"
+																minDate={
+																	new Date(
+																		new Date().getTime() +
+																			24 *
+																				60 *
+																				60 *
+																				1000
+																	)
+																}
 																autoOk={true}
 																disablePast
 																value={value}
@@ -1283,6 +1409,15 @@ const MyStepper = ({
 																		"change date",
 																}}
 																inputVariant="outlined"
+																minDate={
+																	new Date(
+																		new Date().getTime() +
+																			24 *
+																				60 *
+																				60 *
+																				1000
+																	)
+																}
 																placeholder="DD-MM-YYYY"
 																autoOk={true}
 																disablePast
