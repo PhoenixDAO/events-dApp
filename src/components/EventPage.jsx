@@ -564,21 +564,17 @@ class EventPage extends Component {
 		let event_data = this.state.blockChainEvent;
 		let phnx_price = event_data.prices.map((price) => {
 			return (
-				Web3.utils.fromWei(price) /
-				this.state.PhoenixDAO_market.usd
+				Web3.utils.fromWei(price) / this.state.PhoenixDAO_market.usd
 			).toFixed(2);
 		});
-		
-		let dollar_price = Web3.utils.fromWei(
-			event_data.prices[categoryIndex]
-		);
-		let priceInPhnx=event_data.token
-						? phnx_price[categoryIndex] +
-						"PHNX"
-						: "FREE"
+
+		let dollar_price = Web3.utils.fromWei(event_data.prices[categoryIndex]);
+		let priceInPhnx = event_data.token
+			? phnx_price[categoryIndex] + "PHNX"
+			: "FREE";
 		let priceInDollar = event_data.token ? "$" + dollar_price : "";
-		this.setState({ dollar_price: priceInDollar ,phnx_price:priceInPhnx});
-	}
+		this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
+	};
 	getImage = () => {
 		let image = "/images/loading_image_ipfs.png";
 		if (this.state.ipfs_problem) image = "/images/problem_ipfs.png";
@@ -598,7 +594,7 @@ class EventPage extends Component {
 				</p>
 			);
 		if (this.state.description !== null)
-			console.log("desc", this.state.eventDescription);
+			// console.log("desc", this.state.eventDescription);
 		description = (
 			<RichTextEditor
 				readOnly
@@ -634,7 +630,6 @@ class EventPage extends Component {
 	handleCategoryChange = (event) => {
 		this.setState({ selectedCategoryIndex: event.target.value });
 		this.priceCalculation(event.target.value);
-	
 	};
 
 	allowance = async () => {
@@ -784,7 +779,7 @@ class EventPage extends Component {
 	render() {
 		const { classes } = this.props;
 
-		let body = <SkeletonEvent />
+		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
 			if (!this.state.blockChainEvent) {
 				body = (
@@ -812,8 +807,6 @@ class EventPage extends Component {
 				// );
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
 				console.log("phnx prices", event_data);
-
-
 
 				let max_seats = event_data.tktLimited[
 					this.state.selectedCategoryIndex
@@ -902,6 +895,8 @@ class EventPage extends Component {
 				let ticketPrices =
 					event_data.token && event_data.categories.length > 1;
 
+				console.log("event_data.categories", event_data.categories);
+
 				if (this.props.match.params.id == event_data.eventId) {
 					body = (
 						<Grid>
@@ -918,7 +913,8 @@ class EventPage extends Component {
 								eventDate={this.state.eventDate}
 								eventEndDate={this.state.eventEndDate}
 								phnx_price={this.state.phnx_price}
-								dollar_price={this.state.dollar_price}							/>
+								dollar_price={this.state.dollar_price}
+							/>
 							<Header
 								disabled={
 									disabled ||
@@ -1048,9 +1044,14 @@ class EventPage extends Component {
 										)}
 										<div className={classes.eventinfo}>
 											<span className={classes.PhnxPrice}>
-											{this.state.phnx_price}
+												{this.state.phnx_price}
 											</span>
-											<div style={{ color: "#56555D", fontSize: "14px" }}>
+											<div
+												style={{
+													color: "#56555D",
+													fontSize: "14px",
+												}}
+											>
 												{this.state.dollar_price}
 											</div>
 										</div>
@@ -1149,11 +1150,8 @@ class EventPage extends Component {
 														// target="blank"
 														>
 															bought
-														</a>
-														{" "}
-														{" " +
-															sold.count}{" "}
-
+														</a>{" "}
+														{" " + sold.count}{" "}
 														ticket for this event{" "}
 														{/* <strong>
 														{event_data[0]}

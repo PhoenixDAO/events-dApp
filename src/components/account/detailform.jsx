@@ -91,7 +91,7 @@ const DetailForm = (props) => {
 				.catch((err) => {
 					console.log("ipfs error", err);
 				});
-			console.log("avatar ipfs image", avatar);
+			// console.log("avatar ipfs image", avatar);
 			if (ipfsImage) {
 				return <img src={ipfsImage} className="bird2" />;
 			}
