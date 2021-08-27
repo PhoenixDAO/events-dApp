@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 import {
 	API_URL,
 	REPORT_EVENT,
-	graphURL,
 	GET_USER_DETAIL,
 } from "../config/const";
 import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
+import GetGraphApi  from '../config/getGraphApi';
 
 //Material UI styles
 import { withStyles } from "@material-ui/core/styles";
@@ -131,6 +131,8 @@ class Favorites extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain() {
+		const graphURL  = await GetGraphApi();
+
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
 
@@ -409,7 +411,7 @@ class Favorites extends Component {
 							inquire={this.props.inquire}
 							key={favoriteEvents[i].eventId}
 							id={favoriteEvents[i].eventId}
-							ipfs={favoriteEvents[i].ipfs}
+							ipfs={favoriteEvents[i].ipfsHash}
 							eventData={favoriteEvents[i]}
 							myFavorites={true}
 							reloadData={this.reloadData}

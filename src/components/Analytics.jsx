@@ -28,9 +28,6 @@ import MyEvents from "./MyEvents";
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from "moment";
 import {
-	generateJSON,
-	getEventName,
-	getTimeData,
 	getTodayData,
 } from "../utils/graphApis";
 const useStyles = makeStyles((theme) => ({
@@ -803,7 +800,7 @@ const Analytics = (props, context) => {
 					graphForDays = props.todayGraphData;
 					difference = await getTodayData(
 						props.accounts,
-						Number(moment().unix() - 172800)
+						Number(moment().unix() - 172800),
 					);
 				}
 			} else if (timestamp === "custom") {

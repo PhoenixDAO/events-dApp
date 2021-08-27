@@ -11,21 +11,15 @@ import "react-toastify/dist/ReactToastify.css";
 import "../styles/main.css";
 import AnalyticsWrapper from "../components/AnalyticsWrapper";
 import Sidebar from "./Sidebar";
-import Home from "./Home";
 import Guide from "./Guide";
 import FAQ from "./FAQ";
 import FindEvents from "./FindEvents";
-import PastEvents from "./PastEvents";
 import MyTickets from "./MyTickets";
 import CreateEvent from "./CreateEvent/";
 import EditEvent from "./EditEvent";
 import MyEvents from "./MyEvents";
-import MyEventStat from "./MyEventStat";
 import EventPage from "./EventPage";
 import TopicLandingPage from "./TopicLandingPage";
-import TopicsLandingPage from "./TopicsLandingPage";
-import LocationLandingPage from "./LocationLandingPage";
-import LocationsLandingPage from "./LocationsLandingPage";
 import Calendars from "./Calendars";
 import WrapperTopicsLandingPage from "./WrapperTopicsLandingPage";
 import ConfirmPurchase from "./ConfirmPurchase";
@@ -61,10 +55,12 @@ import NetworkError from "./NetworkError";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
 import Favorites from "./Favorite.jsx";
-import { getUserDetails } from "../config/serverAPIs";
+import { getUserDetails, updateUserDetails } from "../config/serverAPIs";
 import AccountDetail from "./account/index";
-
+import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
+import IdentityForm from "./common/AvatarSelector/identityform";
+import DialogueBox from "./common/DialogueBox";
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -115,6 +111,13 @@ class App extends Component {
 			eventsContract: {},
 			userDetails: {},
 			purchased: false,
+			open: false,
+			avatar: "",
+			nextForm: false,
+			name: "Bennu",
+			avatarNumber: 0,
+			avatarCustom: false,
+			open2: false
 		};
 		this.myRef = React.createRef();
 
@@ -154,7 +157,7 @@ class App extends Component {
 			} else if (typeof web3 !== "undefined") {
 				web3 = new Web3(web3.currentProvider);
 			} else {
-				const network = await web3.eth.net.getId();;
+				const network = await web3.eth.net.getId();
 				let infura;
 				if (network === GLOBAL_NETWORK_ID) {
 					infura = INFURA_URL;
@@ -234,18 +237,22 @@ class App extends Component {
 		}
 	}
 
-	getUserInfo = async (account, networkId) => {
-		const userDetails = await getUserDetails({
-			address: account,
-			networkId: networkId,
-		});
+	// getUserInfo = async (account, networkId) => {
+	// 	const userDetails = await getUserDetails({
+	// 		address: account,
+	// 		networkId: networkId,
+	// 	});
 
-		if (!userDetails.error) {
-			this.setState({
-				userDetails: userDetails,
-			});
-		} else {
-		}
+	// 	if (!userDetails.error) {
+	// 		this.setState({
+	// 			userDetails: userDetails,
+	// 		});
+	// 	} else {
+	// 	}
+	// };
+
+	handleClose2 = () => {
+		this.setState({ open2: false, purchased: false });
 	};
 
 	//Get Account
@@ -281,7 +288,7 @@ class App extends Component {
 
 				window.web3 = new Web3(new Web3.providers.HttpProvider(infura));
 			}
-			window.ethereum.on("connect", function (accounts) {});
+			window.ethereum.on("connect", function (accounts) { });
 			window.ethereum.on("accountsChanged", function (accounts) {
 				localStorage.removeItem("account");
 				window.location.reload();
@@ -299,9 +306,11 @@ class App extends Component {
 					address: accounts[0],
 					networkId: networkId,
 				});
+				console.log("userDetals", userDetails);
 				if (!userDetails.error) {
 					this.setState({
 						userDetails: userDetails,
+						open: userDetails.result.result.firstTime,
 					});
 				}
 			}
@@ -340,10 +349,25 @@ class App extends Component {
 	};
 
 	//get value from buyer/from child components
-	async inquireBuy(id, fee, token, openEvents_address, buyticket, approve) {
+	inquireBuy = async (
+		id,
+		fee,
+		token,
+		openEvents_address,
+		buyticket,
+		approve,
+		eventTime,
+		eventDate,
+		eventEndDate,
+		image,
+		name,
+		phnx_price,
+		dollar_price
+	) => {
+		let chainId = await this.getNetworkId();
 		if (
 			this.state.account.length !== 0 &&
-			this.props.web3.networkId === await this.getNetworkId()
+			this.props.web3.networkId === (await this.getNetworkId())
 		) {
 			this.setState({ disabledStatus: true });
 			this.setState(
@@ -352,6 +376,13 @@ class App extends Component {
 					// token: token,
 					buyticket: buyticket,
 					approve: approve,
+					eventTime,
+					eventDate,
+					eventEndDate,
+					image,
+					name,
+					phnx_price,
+					dollar_price
 				},
 				() => this.buy()
 			);
@@ -365,7 +396,7 @@ class App extends Component {
 				}
 			);
 		}
-	};
+	}
 
 	//TransferFrom when buying with PhoenixDAO
 	//After Approval
@@ -496,6 +527,8 @@ class App extends Component {
 								}
 							);
 							this.afterApprove();
+							console.log("purchased", this.state.purchased);
+
 							this.setState({
 								disabledStatus: false,
 								purchased: true,
@@ -545,6 +578,8 @@ class App extends Component {
 								disabledStatus: false,
 								purchased: true,
 							});
+							console.log("purchased", this.state.purchased);
+
 							clearInterval(intervalVar);
 						}
 					}, 5000);
@@ -636,10 +671,10 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-													.returnValues
+												.returnValues
 											: txreceipt.events
-													.NewAndUpdatedEvent
-													.returnValues
+												.NewAndUpdatedEvent
+												.returnValues
 									}
 									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
@@ -762,6 +797,49 @@ class App extends Component {
 		if (this.myRef.current) this.myRef.current.scrollIntoView();
 	};
 
+	handleName = (value) => {
+		this.setState({ name: value });
+	};
+
+	handleAvatar = (value) => {
+		this.setState({ avatar: value });
+	};
+
+	handleCustomAvatar = (value) => {
+		this.setState({ avatarCustom: value });
+	};
+
+	handleClose = () => {
+		this.setState({
+			nextForm: false,
+			open: false,
+		});
+	};
+
+	handleAvatarNumber = (value) => {
+		this.setState({ avatarNumber: value });
+	};
+
+	handleNextForm = (value) => {
+		this.setState({ nextForm: value });
+	};
+
+	updateUserInfo = async (e) => {
+		console.log("Working")
+		const detail = await updateUserDetails({
+			address: this.props.accounts["0"],
+			networkId: this.props.web3.networkId,
+			name: this.state.name, //we need to change this when the design is finalised
+			avatarCustom: this.state.avatarCustom, //we need to change this when the design is finalised
+			avatarNumber: this.state.avatarNumber, //we need to change this when the design is finalised
+			avatar: this.state.avatar,
+		});
+		if (detail.error) {
+			console.log("error occured");
+		} else {
+			window.location.reload();
+		}
+	};
 	render() {
 		let body;
 		let connecting = false;
@@ -1282,6 +1360,19 @@ class App extends Component {
 		return (
 			<Router>
 				<div id="wrapper" className="toggled" ref={this.myRef}>
+					<BuyTicket
+						open={this.state.purchased}
+						handleClose={this.handleClose2}
+						image={this.state.image}
+						eventTitle={this.state.name}
+						price={this.state.priceGrid}
+						purchased={this.state.purchased}
+						eventTime={this.state.eventTime}
+						eventDate={this.state.eventDate}
+						eventEndDate={this.state.eventEndDate}
+						phnx_price={this.state.phnx_price}
+						dollar_price={this.state.dollar_price}
+					/>
 					<Sidebar
 						connection={!connecting}
 						account={this.state.account}
@@ -1339,6 +1430,35 @@ class App extends Component {
 										this.handleSnackbarClose(2)
 									}
 								/>
+								{console.log(
+									"this.state.open",
+									this.state.open
+								)}
+								<DialogueBox
+									open={this.state.open}
+									handleClose={this.handleClose}
+									maxWidth="sm"
+								>
+									<IdentityForm
+										setNextForm={this.handleNextForm}
+										// goBack={props.goBack}
+										nextForm={this.state.nextForm}
+										name={this.state.name}
+										avatarNumber={this.state.avatarNumber}
+										avatarCustom={this.state.avatarCustom}
+										handleName={this.handleName}
+										handleAvatar={this.handleAvatar}
+										handleCustomAvatar={
+											this.handleCustomAvatar
+										}
+										handleClose={this.handleClose}
+										handleAvatarNumber={
+											this.handleAvatarNumber
+										}
+										updateUserInfo={this.updateUserInfo}
+										origin={"App"}
+									/>
+								</DialogueBox>
 							</div>
 						</div>
 					</div>
