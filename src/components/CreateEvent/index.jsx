@@ -650,7 +650,10 @@ class CreateEvent extends Component {
 		}
 
 		return (
-			<div className="home-wrapper">
+			// <div className="home-wrapper">
+			// below div is created to replace upper div, for solving horizontal scrolling
+			// problem which is solved by removing home-wrapper class
+			<div> 
 				<Header
 					title="Create Event"
 					page="createevent"

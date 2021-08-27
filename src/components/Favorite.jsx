@@ -358,7 +358,7 @@ class Favorites extends Component {
 					<EmptyState
 						text="You have no favorites 😔"
 						btnText="Find events near you"
-						url="/createevent"
+						url="/upcomingevents/1"
 					/>
 				);
 			} 
@@ -517,7 +517,7 @@ class Favorites extends Component {
 						<EmptyState
 							text="You have no favorites 😔"
 							btnText="Find events near you"
-							url="/createevent"
+							url="/upcomingevents/1"
 						/>
 					);
 				} else {

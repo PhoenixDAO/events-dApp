@@ -10,34 +10,40 @@ import {
 	WhatsappShareButton,
 	InstapaperShareButton,
 } from "react-share";
-import {  Email, Twitter, LinkedIn, Telegram, WhatsApp } from "@material-ui/icons";
-import { Grid } from '@material-ui/core';
+import {
+	Email,
+	Twitter,
+	LinkedIn,
+	Telegram,
+	WhatsApp,
+} from "@material-ui/icons";
+import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
-    socialMediaIcons: {
-        display: "flex",
-        [theme.breakpoints.down("xs")]: {
-            marginTop: "40px",
-            "& .MuiSvgIcon-root": {
-                fontSize: "18px",
-                display: "content"
-            },
-            display: "inherit"
-        },
-
-    },
+	socialMediaIcons: {
+		display: "flex",
+		[theme.breakpoints.down("xs")]: {
+			marginTop: "40px",
+			"& .MuiSvgIcon-root": {
+				fontSize: "18px",
+				display: "content",
+			},
+			display: "inherit",
+		},
+	},
 }));
 
-const SocialMedia = ({ title }) => {
-    const classes = useStyles();
-    let shareUrl = window.location;
-    return (
+const SocialMedia = ({ title, disabled }) => {
+	const classes = useStyles();
+	let shareUrl = window.location;
+	return (
 		<Grid container justify="flex-end" className={classes.socialMediaIcons}>
 			<EmailShareButton
 				className="iconHolder"
 				url={shareUrl}
 				title={title}
 				resetButtonStyle={false}
+				disabled={disabled}
 			>
 				<Email />
 			</EmailShareButton>
@@ -47,6 +53,7 @@ const SocialMedia = ({ title }) => {
 				url={shareUrl}
 				title={title}
 				resetButtonStyle={false}
+				disabled={disabled}
 			>
 				<i className="fab fa-facebook-f"></i>
 			</FacebookShareButton>
@@ -56,6 +63,7 @@ const SocialMedia = ({ title }) => {
 				url={shareUrl}
 				title={title}
 				resetButtonStyle={false}
+				disabled={disabled}
 			>
 				<i className="fab fa-instagram"></i>
 			</InstapaperShareButton>
@@ -65,6 +73,7 @@ const SocialMedia = ({ title }) => {
 				url={shareUrl}
 				title={title}
 				resetButtonStyle={false}
+				disabled={disabled}
 			>
 				<Twitter />
 			</TwitterShareButton>
@@ -74,6 +83,7 @@ const SocialMedia = ({ title }) => {
 				url={shareUrl}
 				title={title}
 				resetButtonStyle={false}
+				disabled={disabled}
 			>
 				<LinkedIn />
 			</LinkedinShareButton>
@@ -82,6 +92,7 @@ const SocialMedia = ({ title }) => {
 				url={shareUrl}
 				title={title}
 				resetButtonStyle={false}
+				disabled={disabled}
 			>
 				<Telegram />
 			</TelegramShareButton>
@@ -91,6 +102,7 @@ const SocialMedia = ({ title }) => {
 				url={shareUrl}
 				title={title}
 				resetButtonStyle={false}
+				disabled={disabled}
 			>
 				<WhatsApp />
 			</WhatsappShareButton>
@@ -100,6 +112,7 @@ const SocialMedia = ({ title }) => {
 				url={shareUrl}
 				title={title}
 				resetButtonStyle={false}
+				disabled={disabled}
 			>
 				<i className="fab fa-reddit"></i>
 			</RedditShareButton>

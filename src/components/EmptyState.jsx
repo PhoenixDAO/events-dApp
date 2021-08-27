@@ -4,16 +4,25 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
+	wrapper: {
+		// background: "#fff",
+		paddingTop: "10%",
+		"@media (max-width:400px)":{
+			paddingTop:"30%"
+		}
+	},
 	imageContainer: {
-		// "& img": {
-		// 	width: "30%",
-		// },
 		textAlign: "center",
-		padding: "40px",
-		width: "100%",
+		// padding: "50px",
+		margin: "0 auto",
 		"@media (max-width: 900px)": {
 			padding: "20px",
 		},
+	},
+	image: {
+		borderRadius: "12px",
+		width: "80%",
+		// height: "364px",
 	},
 	btnGo: {
 		textTransform: "Capitalize",
@@ -21,8 +30,6 @@ const useStyles = makeStyles((theme) => ({
 		color: "#fff",
 		padding: "10px 40px",
 		marginTop: "20px",
-		fontFamily: "'Aeonik', sans-serif",
-		fontWeight: "600",
 	},
 	title: {
 		fontFamily: "'Aeonik', sans-serif",
@@ -36,6 +43,30 @@ const EmptyState = props => {
     // const [url, setUrl] = useState("/upcomingevents/1");
 
 	const { text, btnText, url } = props;
+	// return (
+	// 	<div className={classes.wrapper}>
+	// 		<Grid container className={classes.gridContainer}>
+	// 			<div className={classes.imageContainer}>
+	// 				<img
+	// 					className={classes.image}
+	// 					src={"/images/empty.svg"}
+	// 				/>
+	// 			</div>
+	// 		</Grid>
+	// 		<div className="mt-5 text-center">
+	// 			<h3 className={`mt-5 ${classes.title}`}>{text}</h3>
+	// 			<Link to={url}>
+	// 				<Button
+	// 					className={classes.btnGo}
+	// 					variant="contained"
+	// 					color="primary"
+	// 				>
+	// 					{btnText}
+	// 				</Button>
+	// 			</Link>
+	// 		</div>
+	// 	</div>
+	// );
 
 	return (
 		<div className={classes.wrapper}>
@@ -49,7 +80,7 @@ const EmptyState = props => {
 			</Grid>
 			<div className="mt-5 text-center">
 				<h3 className={`mt-5 ${classes.title}`}>{text}</h3>
-				<Link to={url}>
+				<Link to="/upcomingevents/1">
 					<Button
 						className={classes.btnGo}
 						variant="contained"

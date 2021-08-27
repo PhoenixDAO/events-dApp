@@ -594,7 +594,7 @@ class EventPage extends Component {
 				</p>
 			);
 		if (this.state.description !== null)
-			console.log("desc", this.state.eventDescription);
+			// console.log("desc", this.state.eventDescription);
 		description = (
 			<RichTextEditor
 				readOnly
@@ -779,13 +779,6 @@ class EventPage extends Component {
 	render() {
 		const { classes } = this.props;
 
-		if(this.state.eventStartTime !== null){
-			console.log(
-				"this is miliseconds",
-				this.state.eventStartTime
-			);
-		}
-
 		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
 			if (!this.state.blockChainEvent) {
@@ -814,7 +807,6 @@ class EventPage extends Component {
 				// );
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
 				console.log("phnx prices", event_data);
-				console.log("date prices", date);
 
 				let max_seats = event_data.tktLimited[
 					this.state.selectedCategoryIndex
@@ -902,6 +894,8 @@ class EventPage extends Component {
 				});
 				let ticketPrices =
 					event_data.token && event_data.categories.length > 1;
+
+				console.log("event_data.categories", event_data.categories);
 
 				if (this.props.match.params.id == event_data.eventId) {
 					body = (

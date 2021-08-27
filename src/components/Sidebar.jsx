@@ -186,7 +186,7 @@ class Sidebar extends Component {
 	renderImage = () => {
 		if (this.state.avatarCustom) {
 			// return <image
-			console.log("avatar ipfs image", this.state.avatar);
+			// console.log("avatar ipfs image", this.state.avatar);
 			return <img src={this.state.avatar} className="bird" />;
 		} else {
 			return (
@@ -215,7 +215,7 @@ class Sidebar extends Component {
 		);
 		if (this.props.connection === true && this.props.account) {
 			user = (
-				<div>
+				<div className="mt-5">
 					<div className="user-status-icon">
 						<NavLink
 							to="/accountdetails"
@@ -517,7 +517,7 @@ class Sidebar extends Component {
 						>
 							<Menu className="icon" />
 						</div>
-						<div className="user-status mt-5">{user}</div>
+						<div className="user-status">{user}</div>
 						<div className="menu mt-5">
 							<h5 className="toggleHidden header">
 								Events & Tickets
