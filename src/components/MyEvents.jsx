@@ -6,13 +6,14 @@ import { AppBar, Tabs, Tab, Typography, Box, Divider } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
-import { graphURL } from "../config/const.js";
 import Header from "./common/Header";
 import EmptyState from "./EmptyState";
+import GetGraphApi  from '../config/getGraphApi';
 
 import Event from "./Event";
 import axios from "axios";
 import { setTimeout } from "drizzle";
+
 function a11yProps(index) {
 	return {
 		id: `scrollable-auto-tab-${index}`,
@@ -102,6 +103,7 @@ class MyEvents extends Component {
 
 	//Get Blockchain State
 	async loadBlockchain() {
+		const graphURL  = await GetGraphApi();
 		if (this._isMounted) {
 			this.setState({
 				MyEvents: [],
@@ -156,7 +158,7 @@ class MyEvents extends Component {
 		}
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
-
+		const graphURL  = await GetGraphApi();
 		console.log(
 			"checking this.accounts",
 			typeof this.account,
@@ -244,7 +246,7 @@ class MyEvents extends Component {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
 		// GRAPH BLOCK //
-		// console.log("GraphQL query before call",Date.now())
+		const graphURL  = await GetGraphApi();
 
 		await axios({
 			url: graphURL,

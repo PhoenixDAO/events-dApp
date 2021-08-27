@@ -4,11 +4,6 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Ticket from "./Ticket";
-import Web3 from "web3";
-import { INFURA_WEB_URL } from "../config/const.js";
-import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
-import { Grid } from "@material-ui/core";
-import SearchBar from "./common/SearchBar";
 import Header from "./common/Header";
 import EmptyState from "./EmptyState";
 
@@ -113,6 +108,7 @@ class MyTickets extends Component {
 		for (let i = start; i < end; i++) {
 			// console.log("ticketData this.state.blockChainTickets[i]",this.state.blockChainTickets[i])
 			let ticket = parseInt(this.state.blockChainTickets[i], 10);
+			console.log("tickets",ticket);
 			tickets.push(
 				<Ticket
 					key={ticket}

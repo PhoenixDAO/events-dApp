@@ -1,8 +1,15 @@
-import { graphURL } from "../config/const";
-import Web3 from "web3";
+import GetGraphApi  from '../config/getGraphApi';
 let axios = require("axios");
 let moment = require("moment");
+let graphURL;
 //  get buyer Array of event
+GetGraphApi().then(
+	(data) => {
+        // Some task on success
+		graphURL=data;
+    },
+);
+
 async function getResult(eventId) {
 	let result = await axios({
 		url: graphURL,

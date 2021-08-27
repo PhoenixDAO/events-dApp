@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 import axios from "axios";
+import GetGraphApi  from '../config/getGraphApi';
 
 export const getEvents = (props, context) => {
     const [Deleted_Events, setDeleted_Events] = useState([]);
@@ -68,6 +69,7 @@ export const getEvents = (props, context) => {
 
             //Listen For My Newly Created Events
             console.log("account", props.revenueCategory);
+            let graphURL  = await GetGraphApi();
             await axios({
                 url: graphURL,
                 method: 'post',

@@ -39,7 +39,6 @@ import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
 import {
 	INFURA_WEB_URL,
-	graphURL,
 	explorerWithTX,
 	explorerWithAddress,
 } from "../config/const.js";
@@ -52,6 +51,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
+import GetGraphApi  from '../config/getGraphApi';
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -275,7 +275,7 @@ class EventPage extends Component {
 	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
 	async loadEventFromBlockchain() {
-		console.log("eventid", this.props.match.params.id);
+		const graphURL  = await GetGraphApi();
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -1415,12 +1415,12 @@ class EventPage extends Component {
 								/>
 							</div>
 								*/}
-							<CheckUser
+							{/* <CheckUser
 								blockChainEvent={this.state.blockChainEvent}
 								disabledStatus={disabled}
 								event_id={this.props.match.params.id}
 								history={this.props.history}
-							/>
+							/> */}
 						</Grid>
 					);
 				} else {

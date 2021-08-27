@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 import axios from "axios";
 import TopicsLandingPage from "./TopicsLandingPage";
 import topicsJson from "../config/topics.json";
+import GetGraphApi  from '../config/getGraphApi';
 
 const WrapperTopicsLandingPage = (props) => {
 	const [loading, setLoading] = useState(true);
@@ -17,6 +17,7 @@ const WrapperTopicsLandingPage = (props) => {
 	}, []);
 
 	const loadBlockchain = async () => {
+		const graphURL  =await GetGraphApi();
 		setLoading(true);
 		setTopicEvents([]);
 		setActiveLength(0);
@@ -81,6 +82,7 @@ const WrapperTopicsLandingPage = (props) => {
 		// GRAPH BLOCK //
 		const dateTime = Date.now();
 		const dateNow = Math.floor(dateTime / 1000);
+		const graphURL  = await GetGraphApi();
 		try {
 			const graphEvents = await axios({
 				url: graphURL,
@@ -154,6 +156,7 @@ const WrapperTopicsLandingPage = (props) => {
 		setActiveLength(0);
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
+		const graphURL  = await GetGraphApi();
 
 		await axios({
 			url: graphURL,
