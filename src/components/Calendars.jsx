@@ -38,6 +38,7 @@ const styles = (theme) => ({
 
 		"& .MuiSelect-select": {
 			paddingRight: "32px !important",
+			background: "#fff",
 		},
 		marginTop: "10px",
 		marginBottom: "10px",
@@ -49,6 +50,10 @@ const styles = (theme) => ({
 			width: "auto",
 			minWidth: "141px",
 		},
+	},
+	selectDropDown:{
+		maxHeight: "200px",
+		width:"150px",
 	},
 	selectDiv: {
 		position: "absolute",
@@ -340,7 +345,7 @@ class Calendars extends Component {
 											value={this.state.category}
 											onChange={this.categoryChange}
 											displayEmpty
-											className={classes.menuPaper}
+											className={classes.selectDropDown}
 											MenuProps={{
 												classes: {
 													paper: classes.menuPaper,

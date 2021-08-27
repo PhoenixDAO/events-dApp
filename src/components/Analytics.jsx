@@ -25,6 +25,7 @@ import "../styles/customCalendar.css";
 import { getPhoenixDAOMarketValue } from "../utils/graphApis";
 import Web3 from "web3";
 import MyEvents from "./MyEvents";
+import MenuItem from "@material-ui/core/MenuItem";
 import moment from "moment";
 import {
 	generateJSON,
@@ -42,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
 		[theme.breakpoints.down("xs")]: {
 			padding: "10px",
 		},
+	},
+	menuPaper: {
+		maxHeight: "200px",
 	},
 	select: {
 		width: "170px",
@@ -1055,6 +1059,52 @@ const Analytics = (props, context) => {
 								className={classes.select}
 							>
 								<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											fullWidth
+											value={timeStamp}
+											onChange={handleTimeStampChange}
+											displayEmpty
+											className={classes.menuPaper}
+											MenuProps={{
+												classes: {
+													paper: classes.menuPaper,
+												},
+												getContentAnchorEl: null,
+												anchorOrigin: {
+												vertical: "bottom",
+												horizontal: "left"}
+											}}
+										>
+											<MenuItem			
+														value="86400"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Today
+													</MenuItem>
+													<MenuItem			
+														value="604800"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Last 7 Days
+													</MenuItem>
+													<MenuItem			
+														value="2419200"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Last 28 Days
+													</MenuItem>
+										</Select>
+								{/* <Select
 									native
 									value={timeStamp}
 									onChange={handleTimeStampChange}
@@ -1066,13 +1116,13 @@ const Analytics = (props, context) => {
 									<option value="86400">Today</option>
 									{/* <option aria-label="None" value="Yesterday">
 								Yesterday
-							</option> */}
-									<option value="604800">Last 7 Days</option>
+							</option>*/} 
+									{/* <option value="604800">Last 7 Days</option>
 									<option value="2419200">
 										Last 28 Days
 									</option>
 							
-								</Select>
+								</Select> */}
 							</FormControl>
 							<DateRangePicker
 								initialSettings={{
@@ -1183,6 +1233,41 @@ const Analytics = (props, context) => {
 											variant="outlined"
 											className={classes.select}
 										>
+											{/* <Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											fullWidth
+											value={props.eventName[0].eventId}
+											onChange={props.handleEvent}
+											displayEmpty
+											className={classes.menuPaper}
+											MenuProps={{
+												classes: {
+													paper: classes.menuPaper,
+												},
+												getContentAnchorEl: null,
+												anchorOrigin: {
+												vertical: "bottom",
+												horizontal: "left"}
+											}}
+										>
+										{props.eventName.map(
+													(event) => {
+														return (
+															<MenuItem
+															style={{
+																fontFamily:
+																	"'Aeonik', sans-serif",
+															}}
+																value={
+																	event.eventId
+																}
+															>
+																{event.name}
+															</MenuItem>
+														);
+													})}
+										</Select> */}
 											<Select
 												native
 												// value={state.age}
@@ -1191,11 +1276,24 @@ const Analytics = (props, context) => {
 													name: "age",
 													id: "outlined-age-native-simple",
 												}}
+												MenuProps={{
+													classes: {
+														paper: classes.menuPaper,
+													},
+													getContentAnchorEl: null,
+													anchorOrigin: {
+													vertical: "bottom",
+													horizontal: "left"}
+												}}
 											>
 												{props.eventName.map(
 													(event) => {
 														return (
 															<option
+															style={{
+																fontFamily:
+																	"'Aeonik', sans-serif",
+															}}
 																value={
 																	event.eventId
 																}

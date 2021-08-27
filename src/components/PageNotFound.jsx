@@ -5,12 +5,15 @@ import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	wrapper: {
-		background: "#fff",
-		paddingTop: "40px",
+		// background: "#fff",
+		paddingTop: "10%",
+		"@media (max-width:400px)":{
+			paddingTop:"30%"
+		}
 	},
 	imageContainer: {
 		textAlign: "center",
-		padding: "100px",
+		// padding: "50px",
 		margin: "0 auto",
 		"@media (max-width: 900px)": {
 			padding: "20px",
@@ -18,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	image: {
 		borderRadius: "12px",
-		width: "100%",
+		width: "80%",
 		// height: "364px",
 	},
 	btnGo: {
