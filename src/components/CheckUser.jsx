@@ -128,7 +128,6 @@ class CheckUser extends Component {
 			});
 		} catch (error) {
 			// console.log("Consoleee notify report response catch",error)
-
 			if (error.response && error.response.data) {
 				// console.log("Consoleee notify report response error.response.data",error.response.data)
 				toast(

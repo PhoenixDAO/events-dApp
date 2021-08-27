@@ -5,11 +5,12 @@ import moment from "moment";
 import "../styles/calendar.css";
 // import main from '../styles/main.css'
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import MenuItem from "@material-ui/core/MenuItem";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import { Grid, FormControl, Select } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -19,6 +20,8 @@ import PropTypes from "prop-types";
 import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { getTickets } from "../utils/graphApis";
+import GetGraphApi  from '../config/getGraphApi';
+
 const styles = (theme) => ({
 	content: {
 		"@media screen and (min-width: 1200px)": {
@@ -34,10 +37,10 @@ const styles = (theme) => ({
 	},
 	categorySelect: {
 		// width: "219px",
-
 		"& .MuiSelect-select": {
-			paddingRight: "32px !important",
-		},
+            paddingRight: "32px !important",
+            background: "#fff",
+        },
 		marginTop: "10px",
 		marginBottom: "10px",
 		height: "40px",
@@ -48,10 +51,11 @@ const styles = (theme) => ({
 			width: "auto",
 			minWidth: "141px",
 		},
+
 	},
 	selectDiv: {
 		position: "absolute",
-		top: "195px",
+		top: "183px",
 		right: "50px"
 	},
 	calenderContainer: {
@@ -71,6 +75,7 @@ class Calendars extends Component {
 			events: [],
 			Deleted_Events: [],
 			event_copy: [],
+			category:"all",
 		};
 		this._isMounted = false;
 		this.account = this.props.accounts[0];
@@ -80,6 +85,7 @@ class Calendars extends Component {
 
 	async loadBlockchain() {
 		// GRAPH BLOCK //
+		const graphURL  = await GetGraphApi();
 		const ownerTickets = await getTickets(this.props.accounts[0]);
 		this.setState({ activeEvents: ownerTickets });
 		await axios({
@@ -208,6 +214,7 @@ class Calendars extends Component {
 			);
 			this.setState({
 				Events_Blockchain: userEvents,
+				category:"created"
 			});
 		} else if (category == "favourite") {
 			// console.log("props",this.account, this.props.networkId);
@@ -221,6 +228,7 @@ class Calendars extends Component {
 				);
 				this.setState({
 					Events_Blockchain: favoriteEvents,
+					category:"favourite"
 				});
 			}
 		} else if (category == "tickets") {
@@ -229,10 +237,12 @@ class Calendars extends Component {
 			);
 			this.setState({
 				Events_Blockchain: tickets,
+				category:"tickets"
 			});
 		} else {
 			this.setState({
 				Events_Blockchain: this.state.event_copy,
+				category:"all"
 			});
 		}
 	};
@@ -323,7 +333,66 @@ class Calendars extends Component {
 							allDaySlot={false}
 						/>
 						<div className={`${classes.selectDiv} calendar-select-div`}>
-							<FormControl
+						<FormControl
+									variant="outlined"
+									className={classes.categorySelect}
+								>
+									<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											fullWidth
+											value={this.state.category}
+											onChange={this.categoryChange}
+											displayEmpty
+											className={classes.menuPaper}
+											MenuProps={{
+												classes: {
+													paper: classes.menuPaper,
+												},
+												getContentAnchorEl: null,
+												anchorOrigin: {
+												vertical: "bottom",
+												horizontal: "left"}
+											}}
+										>
+											<MenuItem value="all"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														All Events
+													</MenuItem>
+													<MenuItem			
+														value="tickets"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Tickets
+													</MenuItem>
+													<MenuItem			
+														value="created"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Created Events
+													</MenuItem>
+													<MenuItem			
+														value="favourite"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Favourites
+													</MenuItem>
+										</Select>
+							</FormControl>
+							{/* <FormControl
 								variant="outlined"
 								className={classes.categorySelect}
 							>
@@ -347,7 +416,7 @@ class Calendars extends Component {
 										Favourites
 									</option>
 								</Select>
-							</FormControl>
+							</FormControl> */}
 						</div>
 					</div>
 				</div>

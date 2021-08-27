@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import roundlogo from "../Images/roundlogo.svg";
 import transakSDK from "@transak/transak-sdk";
-
+import { transakApi } from "../../config/const";
 const settings = {
-	apiKey: process.env.REACT_APP_TRANSAK_API, // Your API Key
+	apiKey: transakApi, // Your API Key
 	environment: "PRODUCTION", // STAGING/PRODUCTION
 	defaultCryptoCurrency: "ETH",
 	themeColor: "000000", // App theme color

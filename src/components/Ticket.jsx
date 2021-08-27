@@ -8,14 +8,15 @@ import ipfs from "../utils/ipfs";
 import Notify from "./Notify";
 import { API_URL, REPORT_EVENT } from "../config/const";
 import axios from "axios";
-import { INFURA_WEB_URL, graphURL } from "../config/const.js";
+import { INFURA_WEB_URL } from "../config/const.js";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { explorerWithAddress } from "../config/const";
 import EventCard from "./common/EventCard.jsx";
-
+import GetGraphApi  from '../config/getGraphApi';
 import Loading from "./Loading";
 import SkeletonLayout from "./common/SkeletonLayout";
+
 
 var QRCode = require("qrcode.react");
 
@@ -275,6 +276,9 @@ class Ticket extends Component {
 			this.state.blockChainEvent === null &&
 			this.state.eventId != ""
 		) {
+			let graphURL  = await GetGraphApi();
+console.log("graphURl.....",this.state.eventId);
+
 			// console.log("in ticket.js",this.props.eventsContract.getTicket[this.ticket])
 			// this.event = await this.props.eventsContract.methods.events(this.state.eventId).call();
 			// const openEvents = new this.web3.eth.Contract(
@@ -283,12 +287,12 @@ class Ticket extends Component {
 			// );
 			// console.log("this.props.")
 			await axios({
-				url: graphURL,
+				url:graphURL,
 				method: "post",
 				data: {
 					query: `
 					  {
-						events(where : {eventId: ${this.state.eventId}}) {
+						events(where : {eventId: "${this.state.eventId}"}) {
 							id
 							eventId
 							owner
@@ -347,7 +351,6 @@ class Ticket extends Component {
 	downloadQR = () => {
 		let ticket_data =
 			this.props.eventsContract.getTicket[this.ticket].value;
-
 		let event_data = this.state.blockChainEvent;
 		const canvas = document.getElementById(
 			event_data[0] + "-" + ticket_data[1]
@@ -537,7 +540,7 @@ class Ticket extends Component {
 		}
 
 		return (
-			<div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4 d-flex justify-content-center align-items-stretch">
+			<div className="col-xl-4 col-lg-6 col-md-6 col-sm-12 pb-4 justify-content-center align-items-stretch">
 				{body}
 			</div>
 		);

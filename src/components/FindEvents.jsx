@@ -3,7 +3,8 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import Carousel from "react-bootstrap/Carousel";
-import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
+import GetGraphApi  from '../config/getGraphApi';
 import axios from "axios";
 // Import dApp Components
 // import Loading from "./Loading";
@@ -30,10 +31,12 @@ import {
 	Grid,
 	Typography,
 } from "@material-ui/core";
+// import {MenuList, Paper, Popper, Button, ClickAwayListener} from "@material-ui/core";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import { useForm, Controller } from "react-hook-form";
 import Slider from "./common/Slider";
 import roundlogo from "./Images/roundlogo.svg";
 import ConnectWalletButton from "./common/ConnectWalletButton";
@@ -46,7 +49,7 @@ const useStyles = (theme) => ({
 		top: 0,
 		display: "flex",
 		flexDirection: "column",
-		background: `#FCFCFD !important`,
+		background: `#F2F2FD !important`,
 		opacity: `1 !important`,
 		marginLeft: -2,
 	},
@@ -86,14 +89,21 @@ const useStyles = (theme) => ({
 			fontWeight: "700",
 		},
 	},
+	menuPaper: {
+		maxHeight: "200px",
+	},
+	selectEvent: {
+		minWidth: 155
+	},
 	formControls: {
 		"@media (min-width: 1024px)": {
 			maxWidth: "20% !important",
 			flex: "0 0 20% !important",
 			marginLeft: "5%",
 		},
+		justifyContent: "space-around",
+		alignItems: "center",
 		minWidth: 120,
-		background: "#fff",
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
@@ -101,7 +111,8 @@ const useStyles = (theme) => ({
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
-			padding: "13px",
+			padding: "10px",
+			background: "#fff",
 		},
 		"& option": {
 			padding: "10px",
@@ -110,10 +121,14 @@ const useStyles = (theme) => ({
 	selectEmpty: {
 		marginTop: theme.spacing(2),
 	},
+	"& .MuiPaper-root": {
+		position: "absolute",
+		top: "390px",
+		background: "yellow"
+	},
 	sortBy: {
 		position: "absolute",
-		left: "-50px",
-		top: "15px",
+		left: "-45px",
 		color: "#73727D",
 		fontSize: "18px",
 		"@media (max-width: 575px)": {
@@ -134,12 +149,14 @@ const useStyles = (theme) => ({
 	},
 });
 
+
 function a11yProps(index) {
 	return {
 		id: `scrollable-auto-tab-${index}`,
 		"aria-controls": `scrollable-auto-tabpanel-${index}`,
 	};
 }
+
 
 const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop);
 
@@ -182,6 +199,7 @@ class FindEvents extends Component {
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
 	}
+
 
 	async categoryChange(event) {
 		if (event.target.value === "populartopics") {
@@ -289,6 +307,7 @@ class FindEvents extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain(query) {
+		
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
 
@@ -325,7 +344,7 @@ class FindEvents extends Component {
 		// 		console.error(err);
 		// 		this.setState({ Deleted_Events: [] });
 		// 	});
-
+		const graphURL  =await GetGraphApi();
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -839,6 +858,7 @@ class FindEvents extends Component {
 		// console.log("accounts---->", this.props.accounts);
 
 		const { classes } = this.props;
+
 		let body = <PhoenixDAOLoader />;
 
 		// if (
@@ -1132,60 +1152,59 @@ class FindEvents extends Component {
 										aria-label="scrollable auto tabs example"
 									>
 										<Tab
-											className={`${classes.tabBar} ${
-												classes.tabBar - 2
-											}`}
+											className={`${classes.tabBar} ${classes.tabBar - 2
+												}`}
 											label="All Events"
 											value="All Events"
-											// {...a11yProps(0)}
+										// {...a11yProps(0)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Near to you"
 											value="Near to you"
-											// {...a11yProps(1)}
+										// {...a11yProps(1)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Today"
 											value="Today"
-											// {...a11yProps(2)}
+										// {...a11yProps(2)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Week"
 											value="This Week"
-											// {...a11yProps(3)}
+										// {...a11yProps(3)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Month"
 											value="This Month"
-											// {...a11yProps(4)}
+										// {...a11yProps(4)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Paid Events"
 											value="Paid Events"
-											// {...a11yProps(5)}
+										// {...a11yProps(5)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Free Events"
 											value="Free Events"
-											// {...a11yProps(6)}
+										// {...a11yProps(6)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Online Events"
 											value="Online Events"
-											// {...a11yProps(7)}
+										// {...a11yProps(7)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Physical Events"
 											value="Physical Events"
-											// {...a11yProps(8)}
+										// {...a11yProps(8)}
 										/>
 									</Tabs>
 									<Divider light />
@@ -1256,14 +1275,75 @@ class FindEvents extends Component {
 							>
 								<Typography
 									variant="p"
-									className={classes.sortBy}
+									className={`${classes.sortBy}`}
 								>
 									Sort:
 								</Typography>
 								<Select
+									labelId="demo-simple-select-outlined-label"
+									id="demo-simple-select-outlined"
+									fullWidth
+									value={this.state.category}
+									onChange={this.categoryChange}
+									displayEmpty
+									className={classes.menuPaper}
+									MenuProps={{
+										classes: {
+											paper: classes.menuPaper,
+										},
+										getContentAnchorEl: null,
+										anchorOrigin: {
+											vertical: "bottom",
+											horizontal: "left"
+										}
+									}}
+								>
+									<MenuItem
+										value="All Events"
+										style={{
+											fontFamily:
+												"'Aeonik', sans-serif",
+										}}
+									>
+										All Events
+									</MenuItem>
+									<MenuItem
+										value="Trending Events"
+										style={{
+											fontFamily:
+												"'Aeonik', sans-serif",
+										}}
+									>
+										Trending Events
+									</MenuItem>
+									<MenuItem
+										value="populartopics"
+										style={{
+											fontFamily:
+												"'Aeonik', sans-serif",
+										}}
+									>
+										popular Topics
+									</MenuItem>
+								</Select>
+							</FormControl>
+
+							{/* <FormControl
+								variant="outlined"
+								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
+							>
+								<Typography
+									variant="p"
+									className={`${classes.sortBy}`}
+									>
+									Sort:
+								</Typography>
+
+								<Select
 									native
 									value={this.state.category}
 									onChange={this.categoryChange}
+									className={classes.selectEvent}
 								>
 									<option
 										aria-label="None"
@@ -1285,7 +1365,11 @@ class FindEvents extends Component {
 										Popular Topics
 									</option>
 								</Select>
-							</FormControl>
+							</FormControl> 
+							
+							*/}
+
+
 							{/* <button
 								className="btn sort_button btn-dark col-lg-2 col-md-3 col-sm-3"
 								value={this.state.value}
@@ -1422,6 +1506,7 @@ const mapStateToProps = (state) => {
 	return {
 		// contracts: state.contracts,
 		accounts: state.accounts,
+		networkId: state.web3.networkId,
 	};
 };
 
