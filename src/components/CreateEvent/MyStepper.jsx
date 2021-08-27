@@ -57,6 +57,7 @@ import BodyTextEditor from "../common/BodyTextEditor";
 import PublishIcon from "@material-ui/icons/Publish";
 import publishIcon from "../Images/publish.png";
 import Checkmark from "../Images/Checkmark.gif";
+import travelDone from "../Images/travelDone.svg";
 import { withRouter } from "react-router-dom";
 import SocialMedia from "../common/SocialMedia";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -359,6 +360,19 @@ const useStyles = makeStyles((theme) => ({
 		color: "rgba(94, 91, 255, 1)",
 	},
 	progressDisabled: {},
+	travelImage: {
+		// position: "absolute",
+		// bottom: 0,
+		// left: 0,
+		// right: 0,
+		// padding: "0 15px",
+		width: "100%",
+		marginTop: "60px",
+		"& img": {
+			maxWidth: "100%",
+			borderRadius: "0 0 10px 10px"
+		},
+	},
 }));
 
 const today = new Date();
@@ -3664,6 +3678,9 @@ const MyStepper = ({
 								>
 									View your Event
 								</Button>
+								<div className={classes.travelImage}>
+									<img src={travelDone} alt="travel" />
+								</div>
 							</div>
 						) : (
 							publishedEventComponent()
