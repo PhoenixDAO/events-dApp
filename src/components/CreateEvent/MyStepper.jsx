@@ -107,10 +107,10 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: "white",
 		borderRadius: "12px",
 		paddingBottom: "50px",
-		"@media (min-width:400px)":{
+		"@media (min-width:400px)": {
 			paddingLeft: 25,
 			paddingRight: 25,
-		}
+		},
 	},
 	backButton: {
 		textTransform: "none",
@@ -131,14 +131,14 @@ const useStyles = makeStyles((theme) => ({
 		width: "40%",
 		fontSize: 18,
 		fontWeight: 700,
-		"@media (max-width: 530px)":{
-			width:"57%",
+		"@media (max-width: 530px)": {
+			width: "57%",
 			fontSize: 15,
 		},
 		"& .MuiButton-endIcon": {
 			position: "absolute",
 			right: 20,
-			"@media (max-width: 530px)":{
+			"@media (max-width: 530px)": {
 				right: 15,
 			},
 		},
@@ -155,11 +155,11 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: "space-between",
 	},
 	mainStepperContainer: {
-		"@media (min-width:768px)":{
+		"@media (min-width:768px)": {
 			marginLeft: theme.spacing(12),
 			marginRight: theme.spacing(12),
 		},
-		
+
 		"& .MuiButton-label": {
 			fontFamily: "'Aeonik', sans-serif",
 			fontWeight: "500",
@@ -177,9 +177,9 @@ const useStyles = makeStyles((theme) => ({
 		fontweight: "400px",
 		fontSize: "20px",
 		fontFamily: "'Aeonik', sans-serif",
-		"@media (max-width:450px)":{
-			fontSize:"90%"
-		}
+		"@media (max-width:450px)": {
+			fontSize: "90%",
+		},
 	},
 	editor: {
 		height: 430,
@@ -211,7 +211,7 @@ const useStyles = makeStyles((theme) => ({
 		margin: "30px 0px 20px",
 	},
 	step: {
-		justifyContent:"center",
+		justifyContent: "center",
 		"& .MuiStepIcon-root text": {
 			fontFamily: "'Aeonik', sans-serif",
 			// fontSize: "24px",
@@ -432,6 +432,16 @@ const MyStepper = ({
 	const [state, setState] = useState("");
 	const [city, setCity] = useState("");
 
+	const [dateError, setDateError] = useState({
+		message: "",
+		isError: false,
+	});
+
+	const [timeError, setTimeError] = useState({
+		message: "",
+		isError: false,
+	});
+
 	let URL = "https://phoenixdao-events-dapp.herokuapp.com";
 
 	const toolbarConfig = {
@@ -576,6 +586,11 @@ const MyStepper = ({
 		return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 	}
 
+	Date.prototype.addHours = function (h) {
+		this.setHours(this.getHours() + h);
+		return this;
+	};
+
 	//next button steeper
 	const handleNext = (fields) => {
 		console.log("fields", fields);
@@ -583,6 +598,9 @@ const MyStepper = ({
 		const filter = new badWords();
 
 		if (activeStep === 0) {
+			setTimeError({ isError: false, message: "" });
+			setDateError({ isError: false, message: "" });
+
 			//first stepper conditions - eventName, eventOrg, eventdate&time
 			const badEventName = filter.clean(fields.eventName);
 			fields.eventName = badEventName;
@@ -593,7 +611,9 @@ const MyStepper = ({
 				console.log("onedayevent----->");
 				let eventDateOneDay = fields.eventDate;
 				let eventStartTimeOneday = fields.eventStartTime;
+				console.log("timestamp", eventStartTimeOneday);
 				let eventEndTimeOneday = fields.eventEndTime;
+
 				eventDateOneDay.setHours(
 					eventStartTimeOneday.getHours(),
 					eventStartTimeOneday.getMinutes(),
@@ -603,32 +623,48 @@ const MyStepper = ({
 				eventStartTimeOneday.setFullYear(eventDateOneDay.getFullYear());
 				eventStartTimeOneday.setMonth(eventDateOneDay.getMonth());
 				eventStartTimeOneday.setDate(eventDateOneDay.getDate());
-				if (eventEndTimeOneday) {
-					eventEndTimeOneday.setFullYear(
-						eventDateOneDay.getFullYear()
-					);
-					eventEndTimeOneday.setMonth(eventDateOneDay.getMonth());
-					eventEndTimeOneday.setDate(eventDateOneDay.getDate());
-					if (eventStartTimeOneday < eventEndTimeOneday) {
+
+				var today = new Date();
+				today.setHours(today.getHours() + 3);
+				if (eventStartTimeOneday <= today) {
+					console.log("im here error show");
+					setTimeError({
+						isError: true,
+						message: "Event should be after 3 Hours.",
+					});
+				} else {
+					if (eventEndTimeOneday) {
+						eventEndTimeOneday.setFullYear(
+							eventDateOneDay.getFullYear()
+						);
+						eventEndTimeOneday.setMonth(eventDateOneDay.getMonth());
+						eventEndTimeOneday.setDate(eventDateOneDay.getDate());
+						if (eventStartTimeOneday < eventEndTimeOneday) {
+							fields.eventDate = eventDateOneDay;
+							fields.eventStartTime = eventStartTimeOneday;
+							fields.eventEndTime = eventEndTimeOneday;
+							console.log(
+								eventDateOneDay,
+								eventStartTimeOneday,
+								eventEndTimeOneday
+							);
+							onFieldsChange(fields);
+							onStepsChange("inc");
+						} else {
+							// alert("End Time should greater than Start Time");
+							setTimeError({
+								isError: true,
+								message:
+									"End Time should greater than Start Time.",
+							});
+						}
+					} else {
 						fields.eventDate = eventDateOneDay;
 						fields.eventStartTime = eventStartTimeOneday;
-						fields.eventEndTime = eventEndTimeOneday;
-						console.log(
-							eventDateOneDay,
-							eventStartTimeOneday,
-							eventEndTimeOneday
-						);
+						console.log(eventDateOneDay, eventStartTimeOneday);
 						onFieldsChange(fields);
 						onStepsChange("inc");
-					} else {
-						alert("End Time should greater than Start Time");
 					}
-				} else {
-					fields.eventDate = eventDateOneDay;
-					fields.eventStartTime = eventStartTimeOneday;
-					console.log(eventDateOneDay, eventStartTimeOneday);
-					onFieldsChange(fields);
-					onStepsChange("inc");
 				}
 			} else {
 				console.log("morethanaday---->");
@@ -653,41 +689,66 @@ const MyStepper = ({
 				eventStartTimeOneday.setFullYear(eventDateOneDay.getFullYear());
 				eventStartTimeOneday.setMonth(eventDateOneDay.getMonth());
 				eventStartTimeOneday.setDate(eventDateOneDay.getDate());
-				const diffTime = eventEndDateOneDay - eventDateOneDay;
-				const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-				console.log(diffDays + " days");
-				if (diffDays > 0) {
-					if (eventEndTimeOneday) {
-						eventEndTimeOneday.setFullYear(
-							eventDateOneDay.getFullYear()
-						);
-						eventEndTimeOneday.setMonth(eventDateOneDay.getMonth());
-						eventEndTimeOneday.setDate(eventDateOneDay.getDate());
-						if (eventStartTimeOneday < eventEndTimeOneday) {
-							fields.eventStartDate = eventDateOneDay;
-							fields.eventEndDateOneDay = eventEndDateOneDay;
-							fields.eventStartTime = eventStartTimeOneday;
-							fields.eventEndTime = eventEndTimeOneday;
-							console.log(
-								eventDateOneDay,
-								eventStartTimeOneday,
-								eventEndTimeOneday
+				var today = new Date();
+				today.setHours(today.getHours() + 3);
+				if (eventStartTimeOneday <= today) {
+					console.log("im here error show");
+					setTimeError({
+						isError: true,
+						message: "Event should be after three hours from current time.",
+					});
+				} else {
+					const diffTime = eventEndDateOneDay - eventDateOneDay;
+					const diffDays = Math.ceil(
+						diffTime / (1000 * 60 * 60 * 24)
+					);
+					console.log(diffDays + " days");
+					if (diffDays > 0) {
+						if (eventEndTimeOneday) {
+							eventEndTimeOneday.setFullYear(
+								eventDateOneDay.getFullYear()
 							);
+							eventEndTimeOneday.setMonth(
+								eventDateOneDay.getMonth()
+							);
+							eventEndTimeOneday.setDate(
+								eventDateOneDay.getDate()
+							);
+							if (eventStartTimeOneday < eventEndTimeOneday) {
+								fields.eventStartDate = eventDateOneDay;
+								fields.eventEndDateOneDay = eventEndDateOneDay;
+								fields.eventStartTime = eventStartTimeOneday;
+								fields.eventEndTime = eventEndTimeOneday;
+								console.log(
+									eventDateOneDay,
+									eventStartTimeOneday,
+									eventEndTimeOneday
+								);
+								onFieldsChange(fields);
+								onStepsChange("inc");
+							} else {
+								// alert("End Time should greater than Start Time");
+								setTimeError({
+									isError: true,
+									message:
+										"End Time should greater than Start Time.",
+								});
+							}
+						} else {
+							fields.eventStartDate = eventDateOneDay;
+							fields.eventStartTime = eventStartTimeOneday;
+							fields.eventEndDateOneDay = eventEndDateOneDay;
+							console.log(eventDateOneDay, eventStartTimeOneday);
 							onFieldsChange(fields);
 							onStepsChange("inc");
-						} else {
-							alert("End Time should greater than Start Time");
 						}
 					} else {
-						fields.eventStartDate = eventDateOneDay;
-						fields.eventStartTime = eventStartTimeOneday;
-						fields.eventEndDateOneDay = eventEndDateOneDay;
-						console.log(eventDateOneDay, eventStartTimeOneday);
-						onFieldsChange(fields);
-						onStepsChange("inc");
+						// alert("End Date should greater than Start Date");
+						setDateError({
+							isError: true,
+							message: "End date should be greater than start date",
+						});
 					}
-				} else {
-					alert("End Date should greater than Start Date");
 				}
 			}
 		} else if (activeStep === 1) {
@@ -1069,15 +1130,6 @@ const MyStepper = ({
 																	InputProps={{
 																		readOnly: true,
 																	}}
-																	minDate={
-																		new Date(
-																			new Date().getTime() +
-																				24 *
-																					60 *
-																					60 *
-																					1000
-																		)
-																	}
 																	inputVariant="outlined"
 																	autoOk={
 																		true
@@ -1178,10 +1230,15 @@ const MyStepper = ({
 																onChange={
 																	onChange
 																}
-																error={!!error}
+																error={
+																	!!error ||
+																	timeError.isError
+																}
 																helperText={
 																	error
 																		? error.message
+																		: timeError.isError
+																		? timeError.message
 																		: null
 																}
 															/>
@@ -1260,11 +1317,6 @@ const MyStepper = ({
 																		root: classes.timeHelperText,
 																	},
 																}}
-																// helperText={
-																// 	error
-																// 		? error.message
-																// 		: null
-																// }
 															/>
 														</span>
 													)}
@@ -1340,15 +1392,6 @@ const MyStepper = ({
 																		"change date",
 																}}
 																inputVariant="outlined"
-																minDate={
-																	new Date(
-																		new Date().getTime() +
-																			24 *
-																				60 *
-																				60 *
-																				1000
-																	)
-																}
 																autoOk={true}
 																disablePast
 																value={value}
@@ -1426,15 +1469,6 @@ const MyStepper = ({
 																		"change date",
 																}}
 																inputVariant="outlined"
-																minDate={
-																	new Date(
-																		new Date().getTime() +
-																			24 *
-																				60 *
-																				60 *
-																				1000
-																	)
-																}
 																placeholder="DD-MM-YYYY"
 																autoOk={true}
 																disablePast
@@ -1442,10 +1476,15 @@ const MyStepper = ({
 																onChange={
 																	onChange
 																}
-																error={!!error}
+																error={
+																	!!error ||
+																	dateError.isError
+																}
 																helperText={
 																	error
 																		? error.message
+																		: dateError.isError
+																		? dateError.message
 																		: null
 																}
 															/>
@@ -1520,10 +1559,15 @@ const MyStepper = ({
 																onChange={
 																	onChange
 																}
-																error={!!error}
+																error={
+																	!!error ||
+																	timeError.isError
+																}
 																helperText={
 																	error
 																		? error.message
+																		: timeError.isError
+																		? timeError.message
 																		: null
 																}
 															/>
@@ -1602,11 +1646,6 @@ const MyStepper = ({
 																	},
 																}}
 																error={!!error}
-																// helperText={
-																// 	error
-																// 		? error.message
-																// 		: null
-																// }
 															/>
 														</span>
 													)}
@@ -1709,7 +1748,13 @@ const MyStepper = ({
 								<div>
 									<br />
 									<Grid container spacing={2}>
-										<Grid item xs={12} sm={12} lg={12} xl={4}>
+										<Grid
+											item
+											xs={12}
+											sm={12}
+											lg={12}
+											xl={4}
+										>
 											<Controller
 												name="country"
 												control={control}
@@ -1735,7 +1780,13 @@ const MyStepper = ({
 												}}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={12} lg={12} xl={4}>
+										<Grid
+											item
+											xs={12}
+											sm={12}
+											lg={12}
+											xl={4}
+										>
 											<Controller
 												name="state"
 												control={control}
@@ -1761,7 +1812,13 @@ const MyStepper = ({
 												}}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={12} lg={12} xl={4}>
+										<Grid
+											item
+											xs={12}
+											sm={12}
+											lg={12}
+											xl={4}
+										>
 											<Controller
 												name="city"
 												control={control}
