@@ -72,6 +72,9 @@ const useStyles = (theme) => ({
 			position: "absolute",
 		},
 	},
+	mobilePadding:{
+		padding: "0 20px"
+	},
 	tabBar: {
 		fontWeight: "500",
 		fontFamily: '"Aeonik" ,sans-serif',
@@ -92,8 +95,12 @@ const useStyles = (theme) => ({
 	menuPaper: {
 		maxHeight: "200px",
 	},
-	selectEvent: {
-		minWidth: 155
+	selectDropDown:{
+		maxHeight: "200px",
+		width:"85%",
+	},
+	selectEvent:{
+		minWidth:155
 	},
 	formControls: {
 		"@media (min-width: 1024px)": {
@@ -107,6 +114,7 @@ const useStyles = (theme) => ({
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
+				maxWidth:"80%"
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
@@ -128,7 +136,7 @@ const useStyles = (theme) => ({
 	},
 	sortBy: {
 		position: "absolute",
-		left: "-45px",
+		left: "-25px",
 		color: "#73727D",
 		fontSize: "18px",
 		"@media (max-width: 575px)": {
@@ -1259,7 +1267,7 @@ class FindEvents extends Component {
 					) : null}
 
 					<div>
-						<div className="row row_mobile dashboard-dropdown-row">
+						<div className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}>
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 								{this.state.pageTitle}
 							</h2>
