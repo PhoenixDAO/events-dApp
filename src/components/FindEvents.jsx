@@ -200,6 +200,7 @@ class FindEvents extends Component {
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 		this.myRef = React.createRef();
+		this.eventRef = React.createRef();
 
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
@@ -248,7 +249,12 @@ class FindEvents extends Component {
 	}
 
 	executeScroll = () => {
-		// this.myRef.current.scrollIntoView();
+		//this.myRef.current.scrollIntoView();
+	};
+	
+	executeEventScroll = () => {
+		//this.myRef.current.scrollIntoView();
+		this.eventRef.current.scrollIntoView();
 	};
 
 	//Loads Blockhain Data,
@@ -342,10 +348,10 @@ class FindEvents extends Component {
 						this.setState({ loading: false });
 					}, 1000);
 
-					// this.executeScroll({
-					// 	behavior: "smooth",
-					// 	block: "center",
-					// });
+					this.executeEventScroll({
+						behavior: "smooth",
+						block: "end",
+					});
 
 					// }
 				}
@@ -855,59 +861,60 @@ class FindEvents extends Component {
 										aria-label="scrollable auto tabs example"
 									>
 										<Tab
-											className={`${classes.tabBar} ${classes.tabBar - 2
-												}`}
+											className={`${classes.tabBar} ${
+												classes.tabBar - 2
+											}`}
 											label="All Events"
 											value="All Events"
-										// {...a11yProps(0)}
+											// {...a11yProps(0)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Near to you"
 											value="Near to you"
-										// {...a11yProps(1)}
+											// {...a11yProps(1)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Today"
 											value="Today"
-										// {...a11yProps(2)}
+											// {...a11yProps(2)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Week"
 											value="This Week"
-										// {...a11yProps(3)}
+											// {...a11yProps(3)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Month"
 											value="This Month"
-										// {...a11yProps(4)}
+											// {...a11yProps(4)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Paid Events"
 											value="Paid Events"
-										// {...a11yProps(5)}
+											// {...a11yProps(5)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Free Events"
 											value="Free Events"
-										// {...a11yProps(6)}
+											// {...a11yProps(6)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Online Events"
 											value="Online Events"
-										// {...a11yProps(7)}
+											// {...a11yProps(7)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Physical Events"
 											value="Physical Events"
-										// {...a11yProps(8)}
+											// {...a11yProps(8)}
 										/>
 									</Tabs>
 									<Divider light />
@@ -923,7 +930,7 @@ class FindEvents extends Component {
 					<div ref={this.myRef} />
 
 					{/* slider */}
-					<div>
+					<div ref={this.eventRef}>
 						<div>
 							<Slider />
 						</div>
@@ -997,15 +1004,14 @@ class FindEvents extends Component {
 										getContentAnchorEl: null,
 										anchorOrigin: {
 											vertical: "bottom",
-											horizontal: "left"
-										}
+											horizontal: "left",
+										},
 									}}
 								>
 									<MenuItem
 										value="All Events"
 										style={{
-											fontFamily:
-												"'Aeonik', sans-serif",
+											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
 										All Events
@@ -1013,8 +1019,7 @@ class FindEvents extends Component {
 									<MenuItem
 										value="Trending Events"
 										style={{
-											fontFamily:
-												"'Aeonik', sans-serif",
+											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
 										Trending Events
@@ -1022,8 +1027,7 @@ class FindEvents extends Component {
 									<MenuItem
 										value="populartopics"
 										style={{
-											fontFamily:
-												"'Aeonik', sans-serif",
+											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
 										popular Topics

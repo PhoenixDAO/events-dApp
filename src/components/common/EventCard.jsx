@@ -151,8 +151,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#fff",
 		fontSize: 17,
 		fontWeight: 500,
-	}
-
+	},
 }));
 
 const EventCard = (props, context) => {
@@ -188,6 +187,7 @@ const EventCard = (props, context) => {
 		setIcon(favoriteEvent);
 		getPhoenixDAOMarketValue();
 	}, [favoriteEvent]);
+
 	const classes = useStyles();
 	const [Icon, setIcon] = useState(false);
 	const [open, setOpen] = useState(false);
@@ -304,7 +304,14 @@ const EventCard = (props, context) => {
 							>
 								<div
 									className={classes.favouriteGrid}
-									style={event_data.tktTotalQuantity != 0 ? { justifyContent: "space-between" } : { justifyContent: "flex-end" }}
+									style={
+										event_data.tktTotalQuantity != 0
+											? {
+													justifyContent:
+														"space-between",
+											  }
+											: { justifyContent: "flex-end" }
+									}
 								>
 									{event_data.tktTotalQuantity != 0 ? (
 										<Typography
@@ -314,7 +321,6 @@ const EventCard = (props, context) => {
 											<span>&nbsp;</span>
 											{event_data.tktTotalQuantitySold}/
 											{event_data.tktTotalQuantity}
-
 										</Typography>
 									) : null}
 									{!myEvent && !ticket ? (
@@ -434,8 +440,8 @@ const EventCard = (props, context) => {
 								{!eventTime
 									? `Date`
 									: eventTime === "onedayevent"
-										? moment(eventDate).format("Do MMM, YYYY")
-										: `
+									? moment(eventDate).format("Do MMM, YYYY")
+									: `
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
@@ -457,7 +463,17 @@ const EventCard = (props, context) => {
 								})} */}
 								{!eventStartTime
 									? `Time`
-									: moment(eventStartTime).format("LT")}
+									: !eventEndTime
+									? moment(eventStartTime)
+											.utcOffset(0)
+											.format("hh:mma z")
+									: `${moment(eventStartTime)
+											.utcOffset(0)
+											.format("hh:mma z")} - ${moment(
+											eventEndTime
+									  )
+											.utcOffset(0)
+											.format("hh:mma z")}`}
 							</Typography>
 
 							<Typography
@@ -475,8 +491,8 @@ const EventCard = (props, context) => {
 								{!eventType
 									? `Location`
 									: eventType === "physical"
-										? eventLocation
-										: `Online`}
+									? eventLocation
+									: `Online`}
 							</Typography>
 
 							{/* For my events page */}
@@ -536,50 +552,50 @@ const EventCard = (props, context) => {
 									</Button>
 								</Grid>
 							) : // For my ticket page
-								ticket ? (
-									<Grid item className={classes.row}>
-										<Button
-											className={classes.shareButton}
-											onClick={handleClickOpen}
-										>
-											<LaunchSharp
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
-											/>{" "}
-											Share Event
-										</Button>
-										<Button
-											className={classes.sendTicket}
-											onClick={handleClickOpen2}
-										>
-											<Send
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
-											/>{" "}
-											Send Ticket
-										</Button>
-									</Grid>
-								) : // For my Favorite page
-									myFavorites ? (
-										<Grid item className={classes.row}>
-											<Button
-												className={classes.shareButton}
-												onClick={handleClickOpen}
-											>
-												<LaunchSharp
-													style={{
-														marginRight: "7px",
-														fontSize: "19px",
-													}}
-												/>{" "}
-												Share Event
-											</Button>
-										</Grid>
-									) : null}
+							ticket ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+									<Button
+										className={classes.sendTicket}
+										onClick={handleClickOpen2}
+									>
+										<Send
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Send Ticket
+									</Button>
+								</Grid>
+							) : // For my Favorite page
+							myFavorites ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+								</Grid>
+							) : null}
 						</CardContent>
 					</CardActionArea>
 				</Link>

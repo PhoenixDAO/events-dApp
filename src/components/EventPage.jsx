@@ -51,7 +51,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi from "../config/getGraphApi";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -275,7 +275,7 @@ class EventPage extends Component {
 	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
 	async loadEventFromBlockchain() {
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -1081,7 +1081,21 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{" "}
-											{time}
+											{!this.state.eventStartTime
+												? `Time`
+												: !this.state.eventEndTime
+												? moment(this.state.eventStartTime)
+														.utcOffset(0)
+														.format("hh:mma z")
+												: `${moment(this.state.eventStartTime)
+														.utcOffset(0)
+														.format(
+															"hh:mma"
+														)} - ${moment(
+														this.state.eventEndTime
+												  )
+														.utcOffset(0)
+														.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
