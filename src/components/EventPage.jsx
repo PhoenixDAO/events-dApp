@@ -615,7 +615,12 @@ class EventPage extends Component {
 		return description;
 	};
 	handleClickOpen2 = () => {
+		// if(this.props.web3.networkId != GLOBAL_NETWORK_ID && this.props.web3.networkId != GLOBAL_NETWORK_ID_2 )
+		// {
+
+		// }
 		this.setState({ open2: true });
+
 	};
 	handleClickOpen = () => {
 		this.setState({ open: true });
