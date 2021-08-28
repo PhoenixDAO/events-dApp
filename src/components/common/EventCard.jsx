@@ -289,6 +289,7 @@ const EventCard = (props, context) => {
 						style={{
 							backgroundColor: "transparent !important",
 							fontFamily: "'Aeonik', sans-serif",
+							height:"100%",
 						}}
 					>
 						<div style={{ position: "relative" }}>
@@ -389,6 +390,7 @@ const EventCard = (props, context) => {
 												}}
 											>
 												{pricingFormatter(phnx_price[0], "PHNX")}
+												{/* {console.log("pheonix price: ", phnx_price[0],typeof(phnx_price[0]))} */}
 											</p>
 											<p className={classes.starting} title={"$"+dollar_price}>
 												{" "}
@@ -396,7 +398,7 @@ const EventCard = (props, context) => {
 											</p>
 										</div>
 									) : (
-										<div>
+										<div className={classes.priceAlignment}>
 											<p className={classes.starting} title={phnx_price[0]}>
 												Starting from
 											</p>
@@ -407,7 +409,7 @@ const EventCard = (props, context) => {
 											</p>
 										</div>
 									)}
-									{console.log("dollar price",typeof(dollar_price))}
+									{/* {console.log("price",event_data.name, dollar_price, typeof(dollar_price))} */}
 								</Typography>
 								{/* ? `Starting from ${prices[0]} PHNX` : prices[0]} */}
 

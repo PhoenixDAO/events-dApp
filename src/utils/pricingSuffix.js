@@ -29,16 +29,24 @@
   
 
 export function pricingFormatter(num, currencyType){
-    if(typeof(num) === "string"){
+    if(typeof(num) === "string" && currencyType == "$"){
         if (num == "FREE"){
             return "FREE"
         }
-        if(num.includes("$")){
-            num = num.split("$")
-            return formatting(num[1],currencyType);
+            if(num.includes("$")){
+                num = num.split("$")
+                return formatting(num[1],currencyType);
+            }
+            
+            return formatting(num,currencyType);
+    }
+    else if (typeof(num) === "string" && currencyType == "PHNX"){
+        if (num == "FREE"){
+            return "FREE"
         }
         num = parseInt(num.split("PHNX")[0]);
-        return formatting(num,currencyType);
+        // return formatting(num,currencyType);
+        return formatting(parseFloat(num), currencyType);
     }
     else if(typeof(num) === "number"){
         return formatting(num, currencyType);
@@ -55,7 +63,7 @@ export function pricingFormatter(num, currencyType){
         }else if(num > 1000000){
             return type + (num/1000000).toFixed(4) + 'M';
         }else if(num < 900){
-            return type+num; 
+            return type+(num.toString()); 
         }
       }else{
         if(num > 999 && num < 1000000){
@@ -63,7 +71,7 @@ export function pricingFormatter(num, currencyType){
         }else if(num > 1000000){
             return (num/1000000).toFixed(4) + 'M ' + type;
         }else if(num < 900){
-            return num + type; 
+            return (num.toString()) + type; 
         }
       }
    
