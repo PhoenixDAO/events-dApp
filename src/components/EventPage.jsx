@@ -39,7 +39,6 @@ import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
 import {
 	INFURA_WEB_URL,
-	graphURL,
 	explorerWithTX,
 	explorerWithAddress,
 } from "../config/const.js";
@@ -52,6 +51,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
+import GetGraphApi from "../config/getGraphApi";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -275,7 +275,7 @@ class EventPage extends Component {
 	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
 	async loadEventFromBlockchain() {
-		console.log("eventid", this.props.match.params.id);
+		const graphURL = await GetGraphApi();
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -343,6 +343,7 @@ class EventPage extends Component {
 						});
 					}
 				}
+				this.priceCalculation(0);
 			})
 			.catch((err) => {
 				console.log("Error", err);
@@ -559,7 +560,21 @@ class EventPage extends Component {
 			);
 		}
 	};
+	priceCalculation = (categoryIndex) => {
+		let event_data = this.state.blockChainEvent;
+		let phnx_price = event_data.prices.map((price) => {
+			return (
+				Web3.utils.fromWei(price) / this.state.PhoenixDAO_market.usd
+			).toFixed(2);
+		});
 
+		let dollar_price = Web3.utils.fromWei(event_data.prices[categoryIndex]);
+		let priceInPhnx = event_data.token
+			? phnx_price[categoryIndex] + "PHNX"
+			: "FREE";
+		let priceInDollar = event_data.token ? "$" + dollar_price : "";
+		this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
+	};
 	getImage = () => {
 		let image = "/images/loading_image_ipfs.png";
 		if (this.state.ipfs_problem) image = "/images/problem_ipfs.png";
@@ -579,7 +594,7 @@ class EventPage extends Component {
 				</p>
 			);
 		if (this.state.description !== null)
-			console.log("desc", this.state.eventDescription);
+			// console.log("desc", this.state.eventDescription);
 		description = (
 			<RichTextEditor
 				readOnly
@@ -611,10 +626,10 @@ class EventPage extends Component {
 	};
 	handleClose2 = () => {
 		this.setState({ open2: false });
-		this.props.togglePurchase();
 	};
 	handleCategoryChange = (event) => {
 		this.setState({ selectedCategoryIndex: event.target.value });
+		this.priceCalculation(event.target.value);
 	};
 
 	allowance = async () => {
@@ -725,7 +740,14 @@ class EventPage extends Component {
 						this.state.token,
 						this.state.openEvents_address,
 						this.state.buyticket,
-						this.state.approve
+						this.state.approve,
+						this.state.eventTime,
+						this.state.eventDate,
+						this.state.eventEndDate,
+						this.state.image,
+						this.state.blockChainEvent.name,
+						this.state.phnx_price,
+						this.state.dollar_price
 					);
 				}
 			}
@@ -758,7 +780,6 @@ class EventPage extends Component {
 		const { classes } = this.props;
 
 		let body = <SkeletonEvent />;
-
 		if (this.state.blockChainEventLoaded) {
 			if (!this.state.blockChainEvent) {
 				body = (
@@ -786,16 +807,6 @@ class EventPage extends Component {
 				// );
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
 				console.log("phnx prices", event_data);
-				let phnx_price = event_data.prices.map((price) => {
-					return (
-						Web3.utils.fromWei(price) /
-						this.state.PhoenixDAO_market.usd
-					).toFixed(2);
-				});
-
-				let dollar_price = Web3.utils.fromWei(
-					event_data.prices[this.state.selectedCategoryIndex]
-				);
 
 				let max_seats = event_data.tktLimited[
 					this.state.selectedCategoryIndex
@@ -881,40 +892,28 @@ class EventPage extends Component {
 					hour: "2-digit",
 					minute: "2-digit",
 				});
-				let priceGrid = (
-					<div className={classes.eventinfo}>
-						<span className={classes.PhnxPrice}>
-							{event_data.token
-								? phnx_price[this.state.selectedCategoryIndex] +
-								  "PHNX"
-								: "FREE"}
-						</span>
-						<div style={{ color: "#56555D", fontSize: "14px" }}>
-							{event_data.token ? "$" + dollar_price : ""}
-						</div>
-					</div>
-				);
-
 				let ticketPrices =
 					event_data.token && event_data.categories.length > 1;
+
+				console.log("event_data.categories", event_data.categories);
 
 				if (this.props.match.params.id == event_data.eventId) {
 					body = (
 						<Grid>
 							<BuyTicket
-								open={this.state.open2 || this.props.purchased}
+								open={this.state.open2}
 								handleClose={this.handleClose2}
 								image={image}
 								eventTitle={event_data.name}
 								date={event_date}
 								time={time}
-								price={priceGrid}
 								buy={this.inquire}
 								buttonText={buttonText}
-								purchased={this.props.purchased}
 								eventTime={this.state.eventTime}
 								eventDate={this.state.eventDate}
 								eventEndDate={this.state.eventEndDate}
+								phnx_price={this.state.phnx_price}
+								dollar_price={this.state.dollar_price}
 							/>
 							<Header
 								disabled={
@@ -1043,7 +1042,20 @@ class EventPage extends Component {
 												</Select>
 											</FormControl>
 										)}
-										{priceGrid}
+										<div className={classes.eventinfo}>
+											<span className={classes.PhnxPrice}>
+												{this.state.phnx_price}
+											</span>
+											<div
+												style={{
+													color: "#56555D",
+													fontSize: "14px",
+												}}
+											>
+												{this.state.dollar_price}
+											</div>
+										</div>
+
 										<p className={classes.eventHeading}>
 											{" "}
 											<CalendarTodayOutlined /> Date
@@ -1069,7 +1081,21 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{" "}
-											{time}
+											{!this.state.eventStartTime
+												? `Time`
+												: !this.state.eventEndTime
+												? moment(this.state.eventStartTime)
+														.utcOffset(0)
+														.format("hh:mma z")
+												: `${moment(this.state.eventStartTime)
+														.utcOffset(0)
+														.format(
+															"hh:mma"
+														)} - ${moment(
+														this.state.eventEndTime
+												  )
+														.utcOffset(0)
+														.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
@@ -1401,12 +1427,12 @@ class EventPage extends Component {
 								/>
 							</div>
 								*/}
-							<CheckUser
+							{/* <CheckUser
 								blockChainEvent={this.state.blockChainEvent}
 								disabledStatus={disabled}
 								event_id={this.props.match.params.id}
 								history={this.props.history}
-							/>
+							/> */}
 						</Grid>
 					);
 				} else {

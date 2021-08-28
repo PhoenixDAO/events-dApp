@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import roundlogo from "../Images/roundlogo.svg";
 import transakSDK from "@transak/transak-sdk";
-
+import { transakApi } from "../../config/const";
 const settings = {
-	apiKey: "71ae55f1-8663-4aaf-9833-a2b15f9f7c6b", // Your API Key
+	apiKey: transakApi, // Your API Key
 	environment: "PRODUCTION", // STAGING/PRODUCTION
 	defaultCryptoCurrency: "ETH",
 	themeColor: "000000", // App theme color
 	hostURL: window.location.origin,
-	widgetHeight: "550px",
+	widgetHeight: "642px",
 	widgetWidth: "500px",
 };
 
@@ -18,8 +18,8 @@ const BuyPhoenixModal = (props) => {
 
 	useEffect(() => {
 		transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, (orderData) => {
-			console.log("closed successfully widged")
-            props.closeTransak()
+			console.log("closed successfully widged");
+			props.closeTransak();
 		});
 	}, []);
 

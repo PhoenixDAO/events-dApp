@@ -33,7 +33,7 @@ const AnalyticsWrapper = (props) => {
 		// const timeData = await getTimeData(props.accounts);
         const todayData = await getTodayData(
 			props.accounts,
-			Number(moment().unix() - 86400)
+			Number(moment().unix() - 86400),
 		);
 		console.log("time stamp--- ", moment().unix());
 		console.log("todayData", todayData);

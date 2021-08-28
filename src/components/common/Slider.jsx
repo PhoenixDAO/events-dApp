@@ -14,7 +14,10 @@ const useStyles = makeStyles((theme) => ({
 				width: "100%",
 			},
 		},
-	},
+		"& div ol li":{
+			backgroundColor:"#e4e4e7"
+		}
+		},
 	carouselCaption: {
 		"& p": {
 			"@media (max-width: 800px)": {

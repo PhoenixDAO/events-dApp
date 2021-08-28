@@ -6,13 +6,14 @@ import { AppBar, Tabs, Tab, Typography, Box, Divider } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
-import { graphURL } from "../config/const.js";
 import Header from "./common/Header";
 import EmptyState from "./EmptyState";
+import GetGraphApi  from '../config/getGraphApi';
 
 import Event from "./Event";
 import axios from "axios";
 import { setTimeout } from "drizzle";
+
 function a11yProps(index) {
 	return {
 		id: `scrollable-auto-tab-${index}`,
@@ -31,7 +32,7 @@ function TabPanel(props) {
 			{...other}
 		>
 			{value === index && (
-				<Box p={3}>
+				<Box p={0} pt={4}>
 					<Typography component={"div"}>{children}</Typography>
 				</Box>
 			)}
@@ -64,8 +65,8 @@ const styles = (theme) => ({
 		display: "flex",
 		justifyContent: "space-between",
 		paddingTop: "40px",
-		alignItems: "baseline",
-	},
+		alignItems: "baseline"
+	}
 });
 class MyEvents extends Component {
 	constructor(props, context) {
@@ -102,6 +103,7 @@ class MyEvents extends Component {
 
 	//Get Blockchain State
 	async loadBlockchain() {
+		const graphURL  = await GetGraphApi();
 		if (this._isMounted) {
 			this.setState({
 				MyEvents: [],
@@ -156,7 +158,7 @@ class MyEvents extends Component {
 		}
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
-
+		const graphURL  = await GetGraphApi();
 		console.log(
 			"checking this.accounts",
 			typeof this.account,
@@ -244,7 +246,7 @@ class MyEvents extends Component {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
 		// GRAPH BLOCK //
-		// console.log("GraphQL query before call",Date.now())
+		const graphURL  = await GetGraphApi();
 
 		await axios({
 			url: graphURL,
@@ -399,6 +401,7 @@ class MyEvents extends Component {
 	};
 	render() {
 		const { classes } = this.props;
+		console.log("class props for event card", classes.tabBar)
 		let body;
 		// if (
 		// 	// typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
@@ -557,7 +560,7 @@ class MyEvents extends Component {
 		} else if (updated_list.length === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="No events found 🤔.Be the first; haha"
+					text="No events found 🤔.Be the first;"
 					btnText="Try creating one"
 					url="/createevent"
 				/>
@@ -595,6 +598,7 @@ class MyEvents extends Component {
 					>
 						<Tab
 							className={classes.tabBar}
+							mx="0"
 							label="Upcoming Events"
 							{...a11yProps(0)}
 						/>

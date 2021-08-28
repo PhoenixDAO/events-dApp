@@ -9,7 +9,7 @@ import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
 import EmptyState from "./EmptyState";
-import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
+import { API_URL, REPORT_EVENT } from "../config/const";
 // import {INFURA_WEB_URL} from "../config/const.js";
 // import Web3 from "web3";
 // import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
@@ -35,6 +35,7 @@ import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
+import GetGraphApi  from '../config/getGraphApi';
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -182,6 +183,7 @@ class TopicLandingPage extends Component {
 
 	//Loadblockchain Data
 	async loadBlockchain() {
+		const graphURL  = await GetGraphApi();
 		if (this._isMounted) {
 			this.setState({
 				loading: true,
@@ -238,6 +240,8 @@ class TopicLandingPage extends Component {
 		}
 		const dateTime = Date.now();
 		const dateNow = Math.floor(dateTime / 1000);
+		const graphURL  = await GetGraphApi();
+
 		// GRAPH BLOCK //
 		await axios({
 			url: graphURL,
@@ -334,6 +338,7 @@ class TopicLandingPage extends Component {
 				active_length: 0,
 			});
 		}
+		const graphURL  = await GetGraphApi();
 
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
@@ -589,7 +594,7 @@ class TopicLandingPage extends Component {
 						inquire={this.props.inquire}
 						key={events_list[i].eventId}
 						id={events_list[i].eventId}
-						ipfs={events_list[i].ipfs}
+						ipfs={events_list[i].ipfsHash}
 						loading={this.state.loading}
 					/>
 				);

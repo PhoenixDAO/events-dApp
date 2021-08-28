@@ -94,7 +94,7 @@ const DetailForm = (props) => {
 				.catch((err) => {
 					console.log("ipfs error", err);
 				});
-			console.log("avatar ipfs image", avatar);
+			// console.log("avatar ipfs image", avatar);
 			if (ipfsImage) {
 				return <img src={ipfsImage} className="bird2" />;
 			}
@@ -228,7 +228,7 @@ const DetailForm = (props) => {
 							</div>
 						</div>
 					</div>
-					<div className="acc-form-prt">
+					{/* <div className="acc-form-prt">
 						<div className="frm-single">
 							<p className="acc-inpt-heading">
 								ALTERNATIVE CURRENCY
@@ -243,8 +243,8 @@ const DetailForm = (props) => {
 								{currency}
 							</select>
 						</div>
-					</div>
-					<div className="acc-form-prt" style={{ marginTop: "70px" }}>
+					</div> */}
+					<div className="acc-form-prt" style={{ marginTop: "40px" }}>
 						<div>
 							<h6 className="org-heading">Organizer details</h6>
 							<p className="org-subheading">

@@ -24,9 +24,6 @@ import Header from "../common/Header";
 import Web3 from "web3";
 import { INFURA_URL } from "../../config/const";
 
-
-
-
 const useStyles = (theme) => ({
 	sticky: {
 		position: "sticky",
@@ -122,7 +119,7 @@ class CreateEvent extends Component {
 			return {
 				activeStep: prevState.activeStep - 1,
 				activeFlamingStep: 0,
-				progressText:0
+				progressText: 0,
 			};
 		});
 	}
@@ -274,14 +271,13 @@ class CreateEvent extends Component {
 							);
 
 							const web3 = new Web3(INFURA_URL);
-					
-							let intervalVar = setInterval(async () => {
-								
 
-								console.log('web3.eth',web3.eth)
-								let receipt = await web3.eth.getTransactionReceipt(
-									txhash
-								);
+							let intervalVar = setInterval(async () => {
+								console.log("web3.eth", web3.eth);
+								let receipt =
+									await web3.eth.getTransactionReceipt(
+										txhash
+									);
 								if (receipt) {
 									toast(
 										<Notify
@@ -303,9 +299,6 @@ class CreateEvent extends Component {
 								}
 							}, 5000);
 						}
-
-					
-
 					})
 					.then((receipt) => {
 						console.log("receipt----->", receipt);
@@ -559,7 +552,7 @@ class CreateEvent extends Component {
 			if (this.state.progressText < max) {
 				this.setState({
 					// stage: this.state.stage + 1,
-					progressText:this.state.progressText+10
+					progressText: this.state.progressText + 10,
 				});
 			} else {
 				clearInterval(this.updaterInterval);
@@ -657,7 +650,10 @@ class CreateEvent extends Component {
 		}
 
 		return (
-			<div className="home-wrapper">
+			// <div className="home-wrapper">
+			// below div is created to replace upper div, for solving horizontal scrolling
+			// problem which is solved by removing home-wrapper class
+			<div>
 				<Header
 					title="Create Event"
 					page="createevent"

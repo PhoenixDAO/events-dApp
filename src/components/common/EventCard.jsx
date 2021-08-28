@@ -140,6 +140,18 @@ const useStyles = makeStyles((theme) => ({
 		},
 		minHeight: "71px",
 	},
+	favouriteGrid: {
+		display: "flex",
+		padding: 10,
+		backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5))`,
+	},
+	quantitySold: {
+		display: "flex",
+		alignItems: "center",
+		color: "#fff",
+		fontSize: 17,
+		fontWeight: 500,
+	},
 }));
 
 const EventCard = (props, context) => {
@@ -175,6 +187,7 @@ const EventCard = (props, context) => {
 		setIcon(favoriteEvent);
 		getPhoenixDAOMarketValue();
 	}, [favoriteEvent]);
+
 	const classes = useStyles();
 	const [Icon, setIcon] = useState(false);
 	const [open, setOpen] = useState(false);
@@ -290,28 +303,26 @@ const EventCard = (props, context) => {
 								}}
 							>
 								<div
-									style={{
-										display: "flex",
-										justifyContent: "space-between",
-										padding: 10,
-										backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)`,
-									}}
+									className={classes.favouriteGrid}
+									style={
+										event_data.tktTotalQuantity != 0
+											? {
+													justifyContent:
+														"space-between",
+											  }
+											: { justifyContent: "flex-end" }
+									}
 								>
-								{event_data.tktTotalQuantity != 0 ? (
-									<Typography
-										style={{
-											color: "#fff",
-											fontSize: 17,
-											fontWeight: 500,
-										}}
-									>
-										<ConfirmationNumberOutlined fontSize="medium" />
-										<span>&nbsp;</span>
-										{event_data.tktTotalQuantitySold}/
-										{event_data.tktTotalQuantity}
-										
-									</Typography>
-									):null}
+									{event_data.tktTotalQuantity != 0 ? (
+										<Typography
+											className={classes.quantitySold}
+										>
+											<ConfirmationNumberOutlined fontSize="medium" />
+											<span>&nbsp;</span>
+											{event_data.tktTotalQuantitySold}/
+											{event_data.tktTotalQuantity}
+										</Typography>
+									) : null}
 									{!myEvent && !ticket ? (
 										<Typography
 											className={classes.FavoriteIcon}
@@ -345,7 +356,7 @@ const EventCard = (props, context) => {
 									component="h2"
 									style={{
 										color: "#1E1E22",
-										fontSize: 17,
+										fontSize: 16,
 										fontWeight: 700,
 										fontFamily: "'Aeonik', sans-serif",
 										width: "60%",
@@ -452,7 +463,17 @@ const EventCard = (props, context) => {
 								})} */}
 								{!eventStartTime
 									? `Time`
-									: moment(eventStartTime).format("LT")}
+									: !eventEndTime
+									? moment(eventStartTime)
+											.utcOffset(0)
+											.format("hh:mma z")
+									: `${moment(eventStartTime)
+											.utcOffset(0)
+											.format("hh:mma")} - ${moment(
+											eventEndTime
+									  )
+											.utcOffset(0)
+											.format("hh:mma z")}`}
 							</Typography>
 
 							<Typography

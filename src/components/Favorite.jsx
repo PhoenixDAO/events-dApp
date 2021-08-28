@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 import {
 	API_URL,
 	REPORT_EVENT,
-	graphURL,
 	GET_USER_DETAIL,
 } from "../config/const";
 import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
+import GetGraphApi  from '../config/getGraphApi';
 
 //Material UI styles
 import { withStyles } from "@material-ui/core/styles";
@@ -131,6 +131,8 @@ class Favorites extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain() {
+		const graphURL  = await GetGraphApi();
+
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
 
@@ -365,7 +367,7 @@ class Favorites extends Component {
 					<EmptyState
 						text="You have no favorites 😔"
 						btnText="Find events near you"
-						url="/createevent"
+						url="/upcomingevents/1"
 					/>
 				);
 			}
@@ -393,6 +395,35 @@ class Favorites extends Component {
 				}
 				if (!skip) {
 					events_list.push(this.state.Events_Blockchain[i]);
+				//get favourite events from filtered event list array
+				let favoriteEvents = events_list.filter((item) =>
+					this.state.UserFavoriteEvents.includes(item.eventId)
+				);
+
+				favoriteEvents.reverse();
+				// console.log("events_listt",favoriteEvents)
+				let updated_list = [];
+				count = favoriteEvents.length;
+				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+				let end = currentPage * this.perPage;
+				let start = end - this.perPage;
+				if (end > count) end = count;
+				let pages = Math.ceil(count / this.perPage);
+				for (let i = start; i < end; i++) {
+					updated_list.push(
+						<Event
+							toggleBuying={this.props.toggleDisabling}
+							disabledStatus={this.props.disabledStatus}
+							inquire={this.props.inquire}
+							key={favoriteEvents[i].eventId}
+							id={favoriteEvents[i].eventId}
+							ipfs={favoriteEvents[i].ipfsHash}
+							eventData={favoriteEvents[i]}
+							myFavorites={true}
+							reloadData={this.reloadData}
+							loading={this.state.loading}
+						/>
+					);
 				}
 				skip = false;
 			}
@@ -485,6 +516,22 @@ class Favorites extends Component {
 							});
 						}
 					}
+					pagination = (
+						<nav>
+							<ul className="pagination justify-content-center">
+								{links}
+							</ul>
+						</nav>
+					);
+				}
+				if (updated_list.length == 0) {
+					body = (
+						<EmptyState
+							text="You have no favorites 😔"
+							btnText="Find events near you"
+							url="/upcomingevents/1"
+						/>
+					);
 				} else {
 					for (let i = 1; i <= pages; i++) {
 						let active = i === currentPage ? "active" : "";

@@ -620,7 +620,7 @@ class Event extends Component {
 		}
 
 		return (
-			<div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4">
+			<div className="col-xl-4 col-lg-6 col-md-6 col-sm-12 pb-4">
 				<ApprovalModal
 					open={this.state.open}
 					handleClose={this.handleClose}

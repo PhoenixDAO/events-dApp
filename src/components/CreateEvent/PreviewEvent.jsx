@@ -170,6 +170,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 		eventTime, //oneday/moreday event
 		eventType,
 		image0,
+		eventDescription,
 	} = fields;
 
 	useEffect(() => {
@@ -396,16 +397,28 @@ export default function PreviewEvent({ fields, activeStep }) {
 						description="Yayy, I’m getting Married Yáll
 								Him boisterous invitation dispatched had connection inhabiting projection. By mutual an mr danger garret edward an. Diverted as strictly exertion addition no disposal by stanhill. This call wife do so sigh no gate felt. You and abode spite order get. Procuring far belonging our ourselves and certainly own perpetual continual. It elsewhere of sometimes or my certainty. Lain no as five or at high. Everything travelling set how law literature. 
 								belonging our ourselves and certainly own perpetual continual. It elsewhere of sometimes or my certainty. Lain no as five or at high. Everything travelling set how law literature. "
-						image="./images/problem_ipfs.png"
-						category={"eventCategory"}
-						title="Moe's Wedding"
-						startDate={"startDate"}
-						startTime={"eventStartTime"}
-						endDate={"endDate"}
-						endTime={"endTime"}
-						eventOrganizer={"eventOrganizer"}
+						image0={image0}
+						eventName={eventName}
+						eventStartTime={eventStartTime}
+						eventOrganizer={
+							eventOrganizer ? eventOrganizer : "AJ&Smart"
+						}
 						availability={"availability"}
-						location="karachi"
+						location={
+							eventType === "physical" ? eventLocation : eventLink
+						}
+						eventTopic={eventTopic ? eventTopic : "music"}
+						tktQnty={tktQnty}
+						eventTime={eventTime}
+						eventDate={eventDate}
+						eventStartDate={eventStartDate}
+						eventEndDate={eventEndDate}
+						ticketCategories={
+							ticketCategories ? ticketCategories : []
+						}
+						eventDescription={
+							eventDescription ? eventDescription : "<p><br></p>"
+						}
 					/>
 					<Button
 						color="primary"

@@ -11,21 +11,15 @@ import "react-toastify/dist/ReactToastify.css";
 import "../styles/main.css";
 import AnalyticsWrapper from "../components/AnalyticsWrapper";
 import Sidebar from "./Sidebar";
-import Home from "./Home";
 import Guide from "./Guide";
 import FAQ from "./FAQ";
 import FindEvents from "./FindEvents";
-import PastEvents from "./PastEvents";
 import MyTickets from "./MyTickets";
 import CreateEvent from "./CreateEvent/";
 import EditEvent from "./EditEvent";
 import MyEvents from "./MyEvents";
-import MyEventStat from "./MyEventStat";
 import EventPage from "./EventPage";
 import TopicLandingPage from "./TopicLandingPage";
-import TopicsLandingPage from "./TopicsLandingPage";
-import LocationLandingPage from "./LocationLandingPage";
-import LocationsLandingPage from "./LocationsLandingPage";
 import Calendars from "./Calendars";
 import WrapperTopicsLandingPage from "./WrapperTopicsLandingPage";
 import ConfirmPurchase from "./ConfirmPurchase";
@@ -68,7 +62,7 @@ import {
 	loginWithMetaMask,
 } from "../config/serverAPIs";
 import AccountDetail from "./account/index";
-
+import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
 import IdentityForm from "./common/AvatarSelector/identityform";
 import DialogueBox from "./common/DialogueBox";
@@ -128,6 +122,7 @@ class App extends Component {
 			name: "Bennu",
 			avatarNumber: 0,
 			avatarCustom: false,
+			open2: false
 		};
 		this.myRef = React.createRef();
 
@@ -261,6 +256,10 @@ class App extends Component {
 	// 	}
 	// };
 
+	handleClose2 = () => {
+		this.setState({ open2: false, purchased: false });
+	};
+
 	//Get Account
 	async loadBlockchainData() {
 		try {
@@ -378,7 +377,22 @@ class App extends Component {
 	};
 
 	//get value from buyer/from child components
-	async inquireBuy(id, fee, token, openEvents_address, buyticket, approve) {
+	inquireBuy = async (
+		id,
+		fee,
+		token,
+		openEvents_address,
+		buyticket,
+		approve,
+		eventTime,
+		eventDate,
+		eventEndDate,
+		image,
+		name,
+		phnx_price,
+		dollar_price
+	) => {
+		let chainId = await this.getNetworkId();
 		if (
 			this.state.account.length !== 0 &&
 			this.props.web3.networkId === (await this.getNetworkId())
@@ -390,6 +404,13 @@ class App extends Component {
 					// token: token,
 					buyticket: buyticket,
 					approve: approve,
+					eventTime,
+					eventDate,
+					eventEndDate,
+					image,
+					name,
+					phnx_price,
+					dollar_price
 				},
 				() => this.buy()
 			);
@@ -534,6 +555,8 @@ class App extends Component {
 								}
 							);
 							this.afterApprove();
+							console.log("purchased", this.state.purchased);
+
 							this.setState({
 								disabledStatus: false,
 								purchased: true,
@@ -583,6 +606,8 @@ class App extends Component {
 								disabledStatus: false,
 								purchased: true,
 							});
+							console.log("purchased", this.state.purchased);
+
 							clearInterval(intervalVar);
 						}
 					}, 5000);
@@ -674,10 +699,10 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-													.returnValues
+												.returnValues
 											: txreceipt.events
-													.NewAndUpdatedEvent
-													.returnValues
+												.NewAndUpdatedEvent
+												.returnValues
 									}
 									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
@@ -1400,6 +1425,19 @@ class App extends Component {
 		return (
 			<Router>
 				<div id="wrapper" className="toggled" ref={this.myRef}>
+					<BuyTicket
+						open={this.state.purchased}
+						handleClose={this.handleClose2}
+						image={this.state.image}
+						eventTitle={this.state.name}
+						price={this.state.priceGrid}
+						purchased={this.state.purchased}
+						eventTime={this.state.eventTime}
+						eventDate={this.state.eventDate}
+						eventEndDate={this.state.eventEndDate}
+						phnx_price={this.state.phnx_price}
+						dollar_price={this.state.dollar_price}
+					/>
 					<Sidebar
 						connection={!connecting}
 						account={this.state.account}

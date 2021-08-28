@@ -14,6 +14,7 @@ import Header from "./common/Header";
 import { withStyles } from "@material-ui/core/styles";
 import { Divider } from "@material-ui/core";
 import Slider from "./common/Slider";
+import MenuItem from "@material-ui/core/MenuItem";
 import TopicCard from "./common/TopicCard";
 import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
@@ -77,23 +78,34 @@ const useStyles = (theme) => ({
 			marginLeft: "5%",
 		},
 		minWidth: 120,
+		justifyContent:"space-around",
+		alignItems:"flex-end",
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
-				padding: "13px",
+				maxWidth:"80%"
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
+			background: "#fff",
+			padding:"10px",
 			fontWeight: 700,
+			minWidth:130
 		},
+	},
+	mobilePadding:{
+		padding: "0 20px"
+	},
+	selectDropDown:{
+		maxHeight: "200px",
+		width:"85%",
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
 	},
 	sortBy: {
 		position: "absolute",
-		left: "-50px",
-		top: "15px",
+		left: "-25px",
 		color: "#73727D",
 		fontSize: "18px",
 		"@media (max-width: 575px)": {
@@ -363,7 +375,7 @@ class TopicsLandingPage extends Component {
 						</div> */}
 
 						<div>
-							<div className="row row_mobile dashboard-dropdown-row">
+							<div className= {`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}>
 								<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 									All Topics
 								</h2>
@@ -377,7 +389,45 @@ class TopicsLandingPage extends Component {
 									>
 										Sort:
 									</Typography>
+
 									<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											fullWidth
+											value={this.state.category}
+											onChange={this.handleChangeCategory}
+											displayEmpty
+											className={classes.selectDropDown}
+											MenuProps={{
+												classes: {
+													paper: classes.menuPaper,
+												},
+												getContentAnchorEl: null,
+												anchorOrigin: {
+												vertical: "bottom",
+												horizontal: "left"}
+											}}
+										>
+											<MenuItem			
+														value="all"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														All Topics
+													</MenuItem>
+													<MenuItem			
+														value="tickets"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Trending Topics
+													</MenuItem>
+										</Select>
+									{/* <Select
 										native
 										value={this.state.category}
 										onChange={this.handleChangeCategory}
@@ -393,7 +443,7 @@ class TopicsLandingPage extends Component {
 										<option value="tickets">
 											Trending Topics
 										</option>
-									</Select>
+									</Select> */}
 								</FormControl>
 							</div>
 

@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 		left: "0",
 	},
 	input: {
-		maxHeight: 44,
+		maxHeight: 43,
 		// maxWidth: 233,
 	},
 }));
