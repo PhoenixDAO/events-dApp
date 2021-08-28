@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
 			"@media (max-width: 800px)": {
 				fontSize: "14px",
 			},
-			textAlign: "left",
+			
 			width: "70%",
 			textShadow: "none",
 			fontSize: "19px",
@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 		background: "rgba(0,0,0,0.7)",
 	},
 	title: {
+		textAlign: "left",
 		"@media (max-width: 800px)": {
 			marginBottom: "15px",
 			fontSize: "24px !important",
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: '"AeonikReg" ,sans-serif',
 	},
 	text: {
+		textAlign:"justify",
 		fontSize: 20,
 		fontWeight: "400",
 	},

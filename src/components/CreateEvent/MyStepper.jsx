@@ -106,6 +106,8 @@ const useStyles = makeStyles((theme) => ({
 		paddingTop: theme.spacing(5),
 		backgroundColor: "white",
 		borderRadius: "12px",
+		paddingLeft:"10px",
+		paddingRight:"10px",
 		paddingBottom: "50px",
 		"@media (min-width:400px)":{
 			paddingLeft: 25,

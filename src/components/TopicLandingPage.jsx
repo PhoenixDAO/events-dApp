@@ -75,8 +75,7 @@ const useStyles = (theme) => ({
 			flex: "0 0 20% !important",
 			marginLeft: "5%",
 		},
-		minWidth: 120,
-		background: "#fff",
+		// minWidth: 120,
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
@@ -84,7 +83,7 @@ const useStyles = (theme) => ({
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
-			padding: "13px",
+			padding: "10px",
 		},
 		"& option": {
 			padding: "10px",

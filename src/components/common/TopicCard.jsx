@@ -14,6 +14,9 @@ import {
 import EventNoteIcon from "@material-ui/icons/EventNote";
 
 const useStyles = makeStyles((theme) => ({
+	root:{
+		height: "100%"
+	},
 	avatar: {
 		backgroundColor: "red",
 	},
@@ -22,7 +25,23 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 17,
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
+		position:"absolute",
+		bottom: "0px",
 	},
+	topicName:{
+		WebkitLineClamp: "2",
+		maxWidth:"100%",
+		display: "-webkit-box",
+		WebkitBoxOrient: "vertical",
+		overflow: "hidden",
+		textOverflow: "ellipsis"
+	},
+	cardHeight:{
+		height:"100%"
+	},
+	contentPosition:{
+		height:"100%"
+	}
 }));
 
 const TopicCard = ({ image, name, slug, count }) => {
@@ -36,7 +55,7 @@ const TopicCard = ({ image, name, slug, count }) => {
 			style={{ textDecoration: "none" }}
 		>
 			<Card className={classes.root}>
-				<CardActionArea>
+				<CardActionArea className={classes.cardHeight}>
 					<CardMedia
 						component="img"
 						alt={image}
@@ -44,11 +63,14 @@ const TopicCard = ({ image, name, slug, count }) => {
 						width="357"
 						image={image}
 						title={name}
+						className={classes.imagePosition}
 					/>
-					<CardContent>
+					<CardContent className={classes.contentPosition} >
 						<Typography
 							variant="h6"
 							component="h2"
+							className={`${classes.topicName} h-100`}
+							title = {name}
 							style={{
 								color: "#1E1E22",
 								fontSize: 17,

@@ -575,7 +575,7 @@ class Event extends Component {
 			let favouriteEvent =
 				this.state.UserFavoriteEvents.indexOf(this.props.id) != -1;
 			body = (
-				<div>
+				<div style={{height:"100%"}}>
 					{this.props.loading ? 
 					<SkeletonLayout/>
 				: 

@@ -110,7 +110,7 @@ const useStyles = (theme) => ({
 		},
 		justifyContent: "space-around",
 		alignItems: "center",
-		minWidth: 120,
+		// minWidth: 120,
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
@@ -136,7 +136,7 @@ const useStyles = (theme) => ({
 	},
 	sortBy: {
 		position: "absolute",
-		left: "-25px",
+		left: "-40px",
 		color: "#73727D",
 		fontSize: "18px",
 		"@media (max-width: 575px)": {
