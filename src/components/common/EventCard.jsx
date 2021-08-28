@@ -211,6 +211,7 @@ const EventCard = (props, context) => {
 	const addTofavorite = async (e) => {
 		e.preventDefault();
 		setIcon(!Icon);
+		const token = localStorage.getItem("AUTH_TOKEN");
 		try {
 			let payload = {
 				address: props.accounts,
@@ -220,13 +221,22 @@ const EventCard = (props, context) => {
 
 			//for add to favourite
 			if (!Icon) {
-				await axios.post(`${API_URL}${ADD_TO_FAVOURITES}`, payload);
+				await axios.post(`${API_URL}${ADD_TO_FAVOURITES}`, payload, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				});
 			}
 			//for remove from favourites
 			else {
 				const result = await axios.post(
 					`${API_URL}${REMOVE_FROM_FAVOURITES}`,
-					payload
+					payload,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
 				);
 				console.log("result", result);
 
