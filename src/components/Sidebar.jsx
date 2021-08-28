@@ -163,9 +163,9 @@ class Sidebar extends Component {
 			// console.log("userdetailsss", this.props.userDetails);
 			// console.log("", this.props.userDetails);
 			const avatarCustom =
-				this.props.userDetails.result.result.avatarCustom;
-			const avatarId = this.props.userDetails.result.result.avatarNumber;
-			const avatar = this.props.userDetails.result.result.avatar;
+				this.props.userDetails.result.result.userHldr.avatarCustom;
+			const avatarId = this.props.userDetails.result.result.userHldr.avatarNumber;
+			const avatar = this.props.userDetails.result.result.userHldr.avatar;
 			this.setState({
 				avatarCustom: avatarCustom,
 				avatarId: avatarId,
