@@ -136,7 +136,7 @@ const useStyles = (theme) => ({
 	},
 	sortBy: {
 		position: "absolute",
-		left: "-25px",
+		left: "-40px",
 		color: "#73727D",
 		fontSize: "18px",
 		"@media (max-width: 575px)": {

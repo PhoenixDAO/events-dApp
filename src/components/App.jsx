@@ -851,7 +851,8 @@ class App extends Component {
 		// 	this.props.web3.networkId != GLOBAL_NETWORK_ID) {
 
 		//condition when drizzle is not initialized
-		if (!this.props.drizzleStatus.initialized) {
+		if (!this.props.drizzleStatus.initialized ) {
+			console.log("Im in !this.props.drizzleStatus.initialized ")
 			body = (
 				<div>
 					<Switch>
