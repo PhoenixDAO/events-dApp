@@ -851,8 +851,9 @@ class App extends Component {
 		// 	this.props.web3.networkId != GLOBAL_NETWORK_ID) {
 
 		//condition when drizzle is not initialized
-		if (!this.props.drizzleStatus.initialized ) {
-			console.log("Im in !this.props.drizzleStatus.initialized ")
+		console.log("Im in !this.props.drizzleStatus.initialized ",(this.props.web3.networkId != GLOBAL_NETWORK_ID && this.props.web3.networkId != GLOBAL_NETWORK_ID_2))
+
+		if (!this.props.drizzleStatus.initialized || (this.props.web3.networkId != GLOBAL_NETWORK_ID && this.props.web3.networkId != GLOBAL_NETWORK_ID_2)) {
 			body = (
 				<div>
 					<Switch>
@@ -1379,6 +1380,7 @@ class App extends Component {
 						account={this.state.account}
 						connect={this.loadBlockchainData}
 						userDetails={this.state.userDetails}
+						status={this.props.drizzleStatus.initialized}
 					/>
 					<div id="page-content-wrapper" className="sidebar-open">
 						{/* <div
