@@ -132,7 +132,7 @@ const useStyles = (theme) => ({
 	"& .MuiPaper-root": {
 		position: "absolute",
 		top: "390px",
-		background: "yellow"
+    background: "yellow"
 	},
 	sortBy: {
 		position: "absolute",
@@ -157,14 +157,12 @@ const useStyles = (theme) => ({
 	},
 });
 
-
 function a11yProps(index) {
 	return {
 		id: `scrollable-auto-tab-${index}`,
 		"aria-controls": `scrollable-auto-tabpanel-${index}`,
 	};
 }
-
 
 const scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop);
 
@@ -202,6 +200,7 @@ class FindEvents extends Component {
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 		this.myRef = React.createRef();
+		this.eventRef = React.createRef();
 
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
@@ -218,64 +217,10 @@ class FindEvents extends Component {
 			});
 			let query;
 			if (event.target.value === "All Events") {
-				query = `
-				{
-				  events(orderBy:eventId orderDirection:asc) {
-					  id
-					  eventId
-					  owner
-					  name
-					  topic
-					  location
-					  city
-					  city
-					  ipfsHash
-					  tktLimited
-					  tktTotalQuantity
-					  tktTotalQuantitySold
-					  oneTimeBuy
-					  token
-					  time
-					  onsite
-					  catTktQuantity
-					  catTktQuantitySold	
-					  categories
-					  prices
-					  eventRevenueInDollar
-					  eventRevenueInPhnx
-				  }
-				}
-				`;
+				query = `orderBy:eventId orderDirection:asc`;
 			} else {
 				//trending events
-
-				query = `
-				{
-				  events(where: {tktTotalQuantitySold_gte: 5} orderBy:eventId orderDirection:asc) {
-					  id
-					  eventId
-					  owner
-					  name
-					  topic
-					  location
-					  city
-					  ipfsHash
-					  tktLimited
-					  tktTotalQuantity
-					  tktTotalQuantitySold
-					  oneTimeBuy
-					  token
-					  time
-					  onsite
-					  catTktQuantity
-					  catTktQuantitySold	
-					  categories
-					  prices
-					  eventRevenueInDollar
-					  eventRevenueInPhnx
-				  }
-				}
-				`;
+				query = `where: {tktTotalQuantitySold_gte: 5} orderBy:eventId orderDirection:asc`;
 			}
 			this.loadBlockchain(query);
 		}
@@ -304,54 +249,50 @@ class FindEvents extends Component {
 	}
 
 	executeScroll = () => {
-		// this.myRef.current.scrollIntoView();
+		//this.myRef.current.scrollIntoView();
+	};
+	
+	executeEventScroll = () => {
+		//this.myRef.current.scrollIntoView();
+		this.eventRef.current.scrollIntoView();
 	};
 
 	//Loads Blockhain Data,
-	async loadBlockchain(query) {
-		
-		// GRAPH BLOCK //
-		// console.log("GraphQL query before call",Date.now())
+	async loadBlockchain(filter) {
+		console.log("filter1", filter);
+    		const graphURL  =await GetGraphApi();
 
-		// await axios({
-		// 	url: graphURL,
-		// 	method: "post",
-		// 	data: {
-		// 		query: `
-		// 		  {
-		// 			eventsRemoveds {
-		// 			  id
-		// 			  eventId
-		// 			}
-		// 		  }
-		// 		  `,
-		// 	},
-		// })
-		// 	.then((graphDeletedEvents) => {
-		// 		// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
-		// 		if (
-		// 			!graphDeletedEvents.data ||
-		// 			!graphDeletedEvents.data.data == "undefined"
-		// 		) {
-		// 			this.setState({ Deleted_Events: [] });
-		// 		} else {
-		// 			console.log("Deleted_Events", graphDeletedEvents.data);
-		// 			this.setState({
-		// 				Deleted_Events:
-		// 					graphDeletedEvents.data.data.eventsRemoveds,
-		// 			});
-		// 		}
-		// 	})
-		// 	.catch((err) => {
-		// 		console.error(err);
-		// 		this.setState({ Deleted_Events: [] });
-		// 	});
-		const graphURL  =await GetGraphApi();
 		await axios({
 			url: graphURL,
 			method: "post",
 			data: {
-				query: query,
+				query: `
+				{	
+				  events(${filter}) {
+					  id
+					  eventId
+					  owner
+					  name
+					  topic
+					  location
+					  city
+					  ipfsHash
+					  tktLimited
+					  tktTotalQuantity
+					  tktTotalQuantitySold
+					  oneTimeBuy
+					  token
+					  time
+					  onsite
+					  catTktQuantity
+					  catTktQuantitySold	
+					  categories
+					  prices
+					  eventRevenueInDollar
+					  eventRevenueInPhnx
+				  }
+				}
+				`,
 			},
 		})
 			.then((graphEvents) => {
@@ -407,10 +348,10 @@ class FindEvents extends Component {
 						this.setState({ loading: false });
 					}, 1000);
 
-					// this.executeScroll({
-					// 	behavior: "smooth",
-					// 	block: "center",
-					// });
+					this.executeEventScroll({
+						behavior: "smooth",
+						block: "end",
+					});
 
 					// }
 				}
@@ -541,33 +482,7 @@ class FindEvents extends Component {
 		this.setState({ selectedTab: newValue, pageTitle: newValue });
 		let query;
 		if (newValue === "All Events") {
-			query = `
-			{	
-			  events(orderBy:eventId orderDirection:asc) {
-				  id
-				  eventId
-				  owner
-				  name
-				  topic
-				  location
-				  city
-				  ipfsHash
-				  tktLimited
-				  tktTotalQuantity
-				  tktTotalQuantitySold
-				  oneTimeBuy
-				  token
-				  time
-				  onsite
-				  catTktQuantity
-				  catTktQuantitySold	
-				  categories
-				  prices
-				  eventRevenueInDollar
-				  eventRevenueInPhnx
-			  }
-			}
-			`;
+			query = `orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Near to you") {
 			await this.findNearToYouEvents();
@@ -579,33 +494,7 @@ class FindEvents extends Component {
 				(new Date(todaydate).getTime() / 1000).toFixed(0)
 			);
 			console.log(todaydate);
-			query = `
-			{
-			  events(where: {time_lte: ${todaydate} } orderBy:eventId orderDirection:asc) {
-				  id
-				  eventId
-				  owner
-				  name
-				  topic
-				  location
-				  city
-				  ipfsHash
-				  tktLimited
-				  tktTotalQuantity
-				  tktTotalQuantitySold
-				  oneTimeBuy
-				  token
-				  time
-				  onsite
-				  catTktQuantity
-				  catTktQuantitySold	
-				  categories
-				  prices
-				  eventRevenueInDollar
-				  eventRevenueInPhnx
-			  }
-			}
-			`;
+			query = `where: {time_lte: ${todaydate} } orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "This Week") {
 			console.log(newValue);
@@ -615,33 +504,7 @@ class FindEvents extends Component {
 				(new Date(thisWeekdate).getTime() / 1000).toFixed(0)
 			);
 			console.log(thisWeekdate);
-			query = `
-				{
-				  events(where: {time_lte: ${thisWeekdate} } orderBy:eventId orderDirection:asc) {
-					  id
-					  eventId
-					  owner
-					  name
-					  topic
-					  location
-					  city
-					  ipfsHash
-					  tktLimited
-					  tktTotalQuantity
-					  tktTotalQuantitySold
-					  oneTimeBuy
-					  token
-					  time
-					  onsite
-					  catTktQuantity
-					  catTktQuantitySold	
-					  categories
-					  prices
-					  eventRevenueInDollar
-					  eventRevenueInPhnx
-				  }
-				}
-				`;
+			query = `where: {time_lte: ${thisWeekdate} } orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "This Month") {
 			console.log(newValue);
@@ -651,183 +514,27 @@ class FindEvents extends Component {
 				(new Date(thisMonthdate).getTime() / 1000).toFixed(0)
 			);
 			console.log(thisMonthdate);
-			query = `
-			{
-			  events(where: {time_lte: ${thisMonthdate} } orderBy:eventId orderDirection:asc) {
-				  id
-				  eventId
-				  owner
-				  name
-				  topic
-				  location
-				  city
-				  ipfsHash
-				  tktLimited
-				  tktTotalQuantity
-				  tktTotalQuantitySold
-				  oneTimeBuy
-				  token
-				  time
-				  onsite
-				  catTktQuantity
-				  catTktQuantitySold	
-				  categories
-				  prices
-				  eventRevenueInDollar
-				  eventRevenueInPhnx
-			  }
-			}
-			`;
+			query = `where: {time_lte: ${thisMonthdate} } orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Paid Events") {
 			console.log(newValue);
-			query = `
-			{	
-			  events(where: {token: true} orderBy:eventId orderDirection:asc) {
-				  id
-				  eventId
-				  owner
-				  name
-				  topic
-				  location
-				  city
-				  ipfsHash
-				  tktLimited
-				  tktTotalQuantity
-				  tktTotalQuantitySold
-				  oneTimeBuy
-				  token
-				  time
-				  onsite
-				  catTktQuantity
-				  catTktQuantitySold	
-				  categories
-				  prices
-				  eventRevenueInDollar
-				  eventRevenueInPhnx
-			  }
-			}
-			`;
+			query = `where: {token: true} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Free Events") {
 			console.log(newValue);
-			query = `
-			{	
-			  events(where: {token: false} orderBy:eventId orderDirection:asc) {
-				  id
-				  eventId
-				  owner
-				  name
-				  topic
-				  location
-				  city
-				  ipfsHash
-				  tktLimited
-				  tktTotalQuantity
-				  tktTotalQuantitySold
-				  oneTimeBuy
-				  token
-				  time
-				  onsite
-				  catTktQuantity
-				  catTktQuantitySold	
-				  categories
-				  prices
-				  eventRevenueInDollar
-				  eventRevenueInPhnx
-			  }
-			}
-			`;
+			query = `where: {token: false} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Online Events") {
 			console.log(newValue);
-			query = `
-			{	
-			  events(where: {onsite: false} orderBy:eventId orderDirection:asc) {
-				  id
-				  eventId
-				  owner
-				  name
-				  topic
-				  location
-				  city
-				  ipfsHash
-				  tktLimited
-				  tktTotalQuantity
-				  tktTotalQuantitySold
-				  oneTimeBuy
-				  token
-				  time
-				  onsite
-				  catTktQuantity
-				  catTktQuantitySold	
-				  categories
-				  prices
-				  eventRevenueInDollar
-				  eventRevenueInPhnx
-			  }
-			}
-			`;
+			query = `where: {onsite: false} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Physical Events") {
 			console.log(newValue);
-			query = `
-			{	
-			  events(where: {onsite: true} orderBy:eventId orderDirection:asc) {
-				  id
-				  eventId
-				  owner
-				  name
-				  topic
-				  location
-				  city
-				  ipfsHash
-				  tktLimited
-				  tktTotalQuantity
-				  tktTotalQuantitySold
-				  oneTimeBuy
-				  token
-				  time
-				  onsite
-				  catTktQuantity
-				  catTktQuantitySold	
-				  categories
-				  prices
-				  eventRevenueInDollar
-				  eventRevenueInPhnx
-			  }
-			}
-			`;
+			query = `where: {onsite: true} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else {
 			console.log(newValue);
-			query = `
-			{	
-			  events(orderBy:eventId orderDirection:asc) {
-				  id
-				  eventId
-				  owner
-				  name
-				  topic
-				  location
-				  city
-				  ipfsHash
-				  tktLimited
-				  tktTotalQuantity
-				  tktTotalQuantitySold
-				  oneTimeBuy
-				  token
-				  time
-				  onsite
-				  catTktQuantity
-				  catTktQuantitySold	
-				  categories
-				  prices
-				  eventRevenueInDollar
-				  eventRevenueInPhnx
-			  }
-			}
-			`;
+			query = `orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		}
 	};
@@ -1154,59 +861,60 @@ class FindEvents extends Component {
 										aria-label="scrollable auto tabs example"
 									>
 										<Tab
-											className={`${classes.tabBar} ${classes.tabBar - 2
-												}`}
+											className={`${classes.tabBar} ${
+												classes.tabBar - 2
+											}`}
 											label="All Events"
 											value="All Events"
-										// {...a11yProps(0)}
+											// {...a11yProps(0)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Near to you"
 											value="Near to you"
-										// {...a11yProps(1)}
+											// {...a11yProps(1)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Today"
 											value="Today"
-										// {...a11yProps(2)}
+											// {...a11yProps(2)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Week"
 											value="This Week"
-										// {...a11yProps(3)}
+											// {...a11yProps(3)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="This Month"
 											value="This Month"
-										// {...a11yProps(4)}
+											// {...a11yProps(4)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Paid Events"
 											value="Paid Events"
-										// {...a11yProps(5)}
+											// {...a11yProps(5)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Free Events"
 											value="Free Events"
-										// {...a11yProps(6)}
+											// {...a11yProps(6)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Online Events"
 											value="Online Events"
-										// {...a11yProps(7)}
+											// {...a11yProps(7)}
 										/>
 										<Tab
 											className={classes.tabBar}
 											label="Physical Events"
 											value="Physical Events"
-										// {...a11yProps(8)}
+											// {...a11yProps(8)}
 										/>
 									</Tabs>
 									<Divider light />
@@ -1222,7 +930,7 @@ class FindEvents extends Component {
 					<div ref={this.myRef} />
 
 					{/* slider */}
-					<div>
+					<div ref={this.eventRef}>
 						<div>
 							<Slider />
 						</div>
@@ -1296,15 +1004,14 @@ class FindEvents extends Component {
 										getContentAnchorEl: null,
 										anchorOrigin: {
 											vertical: "bottom",
-											horizontal: "left"
-										}
+											horizontal: "left",
+										},
 									}}
 								>
 									<MenuItem
 										value="All Events"
 										style={{
-											fontFamily:
-												"'Aeonik', sans-serif",
+											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
 										All Events
@@ -1312,8 +1019,7 @@ class FindEvents extends Component {
 									<MenuItem
 										value="Trending Events"
 										style={{
-											fontFamily:
-												"'Aeonik', sans-serif",
+											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
 										Trending Events
@@ -1321,8 +1027,7 @@ class FindEvents extends Component {
 									<MenuItem
 										value="populartopics"
 										style={{
-											fontFamily:
-												"'Aeonik', sans-serif",
+											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
 										popular Topics
@@ -1370,7 +1075,6 @@ class FindEvents extends Component {
 							</FormControl> 
 							
 							*/}
-
 
 							{/* <button
 								className="btn sort_button btn-dark col-lg-2 col-md-3 col-sm-3"
@@ -1459,33 +1163,7 @@ class FindEvents extends Component {
 		}
 		// this._isMounted = true;
 		//where: {tktTotalQuantitySold_gte: 0}
-		const query = `
-		{
-		  events(orderBy:eventId orderDirection:asc) {
-			  id
-			  eventId
-			  owner
-			  name
-			  topic
-			  location
-			  city
-			  ipfsHash
-			  tktLimited
-			  tktTotalQuantity
-			  tktTotalQuantitySold
-			  oneTimeBuy
-			  token
-			  time
-			  onsite
-			  catTktQuantity
-			  catTktQuantitySold	
-			  categories
-			  prices
-			  eventRevenueInDollar
-			  eventRevenueInPhnx
-		  }
-		}
-		`;
+		const query = `orderBy:eventId orderDirection:asc`;
 		this.loadBlockchain(query);
 		this.filterHideEvent();
 	}

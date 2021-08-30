@@ -94,7 +94,8 @@ class CheckUser extends Component {
 
 	reportEvent = async () => {
 		try {
-			const networkId = this.props.web3.networkId
+			const networkId = this.props.web3.networkId;
+			const token = localStorage.getItem("AUTH_TOKEN");
 			this.setState({
 				loading: true,
 			});
@@ -107,7 +108,12 @@ class CheckUser extends Component {
 			};
 			const report = await axios.post(
 				`${API_URL}${REPORT_EVENT}`,
-				payload
+				payload,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
 			);
 			// console.log("Consoleee notify report response",report)
 			toast(
@@ -363,7 +369,7 @@ const mapStateToProps = (state) => {
 	return {
 		contracts: state.contracts,
 		accounts: state.accounts,
-		web3: state.web3
+		web3: state.web3,
 	};
 };
 

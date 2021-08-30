@@ -2,15 +2,11 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import {
-	API_URL,
-	REPORT_EVENT,
-	GET_USER_DETAIL,
-} from "../config/const";
+import { API_URL, REPORT_EVENT, GET_USER_DETAIL } from "../config/const";
 import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi from "../config/getGraphApi";
 
 //Material UI styles
 import { withStyles } from "@material-ui/core/styles";
@@ -131,7 +127,7 @@ class Favorites extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain() {
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
@@ -229,10 +225,10 @@ class Favorites extends Component {
 						Events_Blockchain: newsort,
 						active_length: newsort.length,
 						event_copy: newsort,
-                    });
-                    setTimeout(() => {
-                        this.setState({ loading: false });
-                    }, 2000)
+					});
+					setTimeout(() => {
+						this.setState({ loading: false });
+					}, 2000);
 					// }
 				}
 			})
@@ -319,12 +315,23 @@ class Favorites extends Component {
 		console.log("loading2", this.state.loading);
 
 		try {
-			const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`, {
-				address: this.props.accounts[0],
-				networkId: this.props.web3.networkId,
-			});
+			const token = localStorage.getItem("AUTH_TOKEN");
+			const get = await axios.post(
+				`${API_URL}${GET_USER_DETAIL}`,
+				{
+					address: this.props.accounts[0],
+					networkId: this.props.web3.networkId,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			console.log("get data",get);
 			this.setState({
-				UserFavoriteEvents: get.data.result.favourites,
+				UserFavoriteEvents: get.data.result.userHldr.favourites,
+
 			});
 			return;
 		} catch (error) {
@@ -361,175 +368,173 @@ class Favorites extends Component {
 						url="/upcomingevents/1"
 					/>
 				);
-			} 
-				let currentPage = Number(this.props.match.params.page);
-				let events_list = [];
-				let skip = false;
-				for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
-					for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+			}
+			let currentPage = Number(this.props.match.params.page);
+			let events_list = [];
+			let skip = false;
+			for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
+				for (let j = 0; j < this.state.Deleted_Events.length; j++) {
+					if (
+						this.state.Events_Blockchain[i].eventId ==
+						this.state.Deleted_Events[j].eventId
+					) {
+						skip = true;
+					}
+				}
+				if (!skip) {
+					for (let j = 0; j < this.state.hideEvent.length; j++) {
 						if (
 							this.state.Events_Blockchain[i].eventId ==
-							this.state.Deleted_Events[j].eventId
+							this.state.hideEvent[j].id
 						) {
 							skip = true;
 						}
 					}
-					if (!skip) {
-						for (let j = 0; j < this.state.hideEvent.length; j++) {
-							if (
-								this.state.Events_Blockchain[i].eventId ==
-								this.state.hideEvent[j].id
-							) {
-								skip = true;
-							}
-						}
-					}
-					if (!skip) {
-						events_list.push(this.state.Events_Blockchain[i]);
-					}
-					skip = false;
 				}
-				//get favourite events from filtered event list array
-				let favoriteEvents = events_list.filter((item) =>
-					this.state.UserFavoriteEvents.includes(item.eventId)
+				if (!skip) {
+					events_list.push(this.state.Events_Blockchain[i]);
+				}
+				skip = false;
+			}
+			//get favourite events from filtered event list array
+			let favoriteEvents = events_list.filter((item) =>
+				this.state.UserFavoriteEvents.includes(item.eventId)
+			);
+
+			favoriteEvents.reverse();
+			// console.log("events_listt",favoriteEvents)
+			let updated_list = [];
+			count = favoriteEvents.length;
+			if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
+			let end = currentPage * this.perPage;
+			let start = end - this.perPage;
+			if (end > count) end = count;
+			let pages = Math.ceil(count / this.perPage);
+			for (let i = start; i < end; i++) {
+				updated_list.push(
+					<Event
+						toggleBuying={this.props.toggleDisabling}
+						disabledStatus={this.props.disabledStatus}
+						inquire={this.props.inquire}
+						key={favoriteEvents[i].eventId}
+						id={favoriteEvents[i].eventId}
+						ipfs={favoriteEvents[i].ipfsHash}
+						eventData={favoriteEvents[i]}
+						myFavorites={true}
+						reloadData={this.reloadData}
+						loading={this.state.loading}
+					/>
 				);
+			}
 
-				favoriteEvents.reverse();
-				// console.log("events_listt",favoriteEvents)
-				let updated_list = [];
-				count = favoriteEvents.length;
-				if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-				let end = currentPage * this.perPage;
-				let start = end - this.perPage;
-				if (end > count) end = count;
-				let pages = Math.ceil(count / this.perPage);
-				for (let i = start; i < end; i++) {
-					updated_list.push(
-						<Event
-							toggleBuying={this.props.toggleDisabling}
-							disabledStatus={this.props.disabledStatus}
-							inquire={this.props.inquire}
-							key={favoriteEvents[i].eventId}
-							id={favoriteEvents[i].eventId}
-							ipfs={favoriteEvents[i].ipfsHash}
-							eventData={favoriteEvents[i]}
-							myFavorites={true}
-							reloadData={this.reloadData}
-							loading={this.state.loading}
-						/>
-					);
-				}
+			let pagination = "";
+			if (pages > 1) {
+				let links = [];
 
-				let pagination = "";
-				if (pages > 1) {
-					let links = [];
-
-					if (pages > 5 && currentPage >= 3) {
-						for (
-							let i = currentPage - 2;
-							i <= currentPage + 2 && i <= pages;
-							i++
-						) {
-							let active = i === currentPage ? "active" : "";
-							links.push(
-								<li className={"page-item " + active} key={i}>
-									<Link
-										to={"/favorite/" + i}
-										onClick={() =>
-											this.setState({
-												prevPath: currentPage,
-											})
-										}
-										className="page-link"
-									>
-										{i}
-									</Link>
-								</li>
-							);
-							if (this.state.prevPath != -1) {
-								this.executeScroll({
-									behavior: "smooth",
-									block: "start",
-								});
-							}
-						}
-					} else if (pages > 5 && currentPage < 3) {
-						for (let i = 1; i <= 5 && i <= pages; i++) {
-							let active = i === currentPage ? "active" : "";
-							links.push(
-								<li className={"page-item " + active} key={i}>
-									<Link
-										to={"/favorite/" + i}
-										onClick={() =>
-											this.setState({
-												prevPath: currentPage,
-											})
-										}
-										className="page-link"
-									>
-										{i}
-									</Link>
-								</li>
-							);
-							if (this.state.prevPath != -1) {
-								this.executeScroll({
-									behavior: "smooth",
-									block: "start",
-								});
-							}
-						}
-					} else {
-						for (let i = 1; i <= pages; i++) {
-							let active = i === currentPage ? "active" : "";
-							links.push(
-								<li className={"page-item " + active} key={i}>
-									<Link
-										to={"/favorite/" + i}
-										onClick={() =>
-											this.setState({
-												prevPath: currentPage,
-											})
-										}
-										className="page-link"
-									>
-										{i}
-									</Link>
-								</li>
-							);
-							if (this.state.prevPath != -1) {
-								this.executeScroll({
-									behavior: "smooth",
-									block: "start",
-								});
-							}
+				if (pages > 5 && currentPage >= 3) {
+					for (
+						let i = currentPage - 2;
+						i <= currentPage + 2 && i <= pages;
+						i++
+					) {
+						let active = i === currentPage ? "active" : "";
+						links.push(
+							<li className={"page-item " + active} key={i}>
+								<Link
+									to={"/favorite/" + i}
+									onClick={() =>
+										this.setState({
+											prevPath: currentPage,
+										})
+									}
+									className="page-link"
+								>
+									{i}
+								</Link>
+							</li>
+						);
+						if (this.state.prevPath != -1) {
+							this.executeScroll({
+								behavior: "smooth",
+								block: "start",
+							});
 						}
 					}
-					pagination = (
-						<nav>
-							<ul className="pagination justify-content-center">
-								{links}
-							</ul>
-						</nav>
-					);
-				}
-				if (updated_list.length == 0) {
-					body = (
-						<EmptyState
-							text="You have no favorites 😔"
-							btnText="Find events near you"
-							url="/upcomingevents/1"
-						/>
-					);
+				} else if (pages > 5 && currentPage < 3) {
+					for (let i = 1; i <= 5 && i <= pages; i++) {
+						let active = i === currentPage ? "active" : "";
+						links.push(
+							<li className={"page-item " + active} key={i}>
+								<Link
+									to={"/favorite/" + i}
+									onClick={() =>
+										this.setState({
+											prevPath: currentPage,
+										})
+									}
+									className="page-link"
+								>
+									{i}
+								</Link>
+							</li>
+						);
+						if (this.state.prevPath != -1) {
+							this.executeScroll({
+								behavior: "smooth",
+								block: "start",
+							});
+						}
+					}
 				} else {
-					body = (
-						<div>
-							<div className="row user-list mt-4">
-								{updated_list}
-							</div>
-							{pagination}
-						</div>
-					);
+					for (let i = 1; i <= pages; i++) {
+						let active = i === currentPage ? "active" : "";
+						links.push(
+							<li className={"page-item " + active} key={i}>
+								<Link
+									to={"/favorite/" + i}
+									onClick={() =>
+										this.setState({
+											prevPath: currentPage,
+										})
+									}
+									className="page-link"
+								>
+									{i}
+								</Link>
+							</li>
+						);
+						if (this.state.prevPath != -1) {
+							this.executeScroll({
+								behavior: "smooth",
+								block: "start",
+							});
+						}
+					}
 				}
+				pagination = (
+					<nav>
+						<ul className="pagination justify-content-center">
+							{links}
+						</ul>
+					</nav>
+				);
+			}
+			if (updated_list.length == 0) {
+				body = (
+					<EmptyState
+						text="You have no favorites 😔"
+						btnText="Find events near you"
+						url="/upcomingevents/1"
+					/>
+				);
+			} else {
+				body = (
+					<div>
+						<div className="row user-list mt-4">{updated_list}</div>
+						{pagination}
+					</div>
+				);
+			}
 		}
 
 		return (
