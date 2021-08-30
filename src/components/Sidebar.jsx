@@ -33,9 +33,7 @@ class Sidebar extends Component {
 	}
 
 	componentDidMount() {
-		
 		this.toggleSidebarClass(false);
-
 	}
 
 	componentDidUpdate(prevProps) {
@@ -159,12 +157,14 @@ class Sidebar extends Component {
 	};
 
 	provideImage = () => {
+		console.log("this.props.userDetails", this.props.userDetails);
 		if (Object.keys(this.props.userDetails).length > 0) {
 			// console.log("userdetailsss", this.props.userDetails);
 			// console.log("", this.props.userDetails);
 			const avatarCustom =
 				this.props.userDetails.result.result.userHldr.avatarCustom;
-			const avatarId = this.props.userDetails.result.result.userHldr.avatarNumber;
+			const avatarId =
+				this.props.userDetails.result.result.userHldr.avatarNumber;
 			const avatar = this.props.userDetails.result.result.userHldr.avatar;
 			this.setState({
 				avatarCustom: avatarCustom,
@@ -206,10 +206,11 @@ class Sidebar extends Component {
 				</div> */}
 
 				<p className="small connection">
-					<img className="switch-img" src="/images/icons/switch.svg"/>
-					<span className="toggleHidden">
-					Connect Wallet
-					</span>
+					<img
+						className="switch-img"
+						src="/images/icons/switch.svg"
+					/>
+					<span className="toggleHidden">Connect Wallet</span>
 				</p>
 			</div>
 		);

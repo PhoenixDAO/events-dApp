@@ -2,16 +2,20 @@ import React from "react";
 import "./alreadyform.css";
 import roundlogo from "../Images/roundlogo.svg";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from "@material-ui/core/IconButton";
 
 const AlreadyForm = (props) => {
 	const closeForm = (e) => {
-		e.preventDefault()
-		props.handleClose()
-	}
+		e.preventDefault();
+		props.handleClose();
+	};
 	return (
 		<div className="idn-hldr">
-			<IconButton aria-label="delete" className="backArrow" onClick={props.toggleForm}>
+			<IconButton
+				aria-label="delete"
+				className="backArrow"
+				onClick={props.toggleForm}
+			>
 				<KeyboardBackspaceIcon
 					fontSize="40px"
 					style={{ fill: "#1E1E22" }}
@@ -43,16 +47,11 @@ const AlreadyForm = (props) => {
 					/>
 				</div>
 				<p className="already-av-text"> {props.selectImage.name}</p>
-				<p className="alread-av-desc">
-					{props.selectImage.detail}
-				</p>
+				<p className="alread-av-desc">{props.selectImage.detail}</p>
 			</div>
 			<div className="flexClass">
-				<button
-					className="already-select-btn"
-					onClick={closeForm}
-				>
-					Enter Events dApp
+				<button className="already-select-btn" onClick={closeForm}>
+					Confirm Selection
 				</button>
 			</div>
 		</div>
