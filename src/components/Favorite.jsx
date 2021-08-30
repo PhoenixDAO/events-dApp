@@ -328,8 +328,10 @@ class Favorites extends Component {
 					},
 				}
 			);
+			console.log("get data",get);
 			this.setState({
-				UserFavoriteEvents: get.data.result.favourites,
+				UserFavoriteEvents: get.data.result.userHldr.favourites,
+
 			});
 			return;
 		} catch (error) {

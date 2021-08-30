@@ -31,7 +31,10 @@ import {
 import { toast } from "react-toastify";
 import ApprovalModal from "./approvalModal";
 import { withStyles } from "@material-ui/core/styles";
-
+import {
+	GLOBAL_NETWORK_ID,
+	GLOBAL_NETWORK_ID_2,
+} from "../config/const.js";
 import Loading from "./Loading";
 import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
@@ -52,6 +55,7 @@ import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
 import GetGraphApi from "../config/getGraphApi";
+import Snackbar from "@material-ui/core/Snackbar";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -242,6 +246,8 @@ class EventPage extends Component {
 			eventDescription: null,
 			eventLocation: null,
 			organizerDetails: "",
+			open3: false
+
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -595,32 +601,36 @@ class EventPage extends Component {
 			);
 		if (this.state.description !== null)
 			// console.log("desc", this.state.eventDescription);
-		description = (
-			<RichTextEditor
-				readOnly
-				value={RichTextEditor.createValueFromString(
-					this.state.eventDescription,
-					"html"
-				)}
-				// onChange={handleChange}
-				required
-				id="body-text"
-				name="bodyText"
-				type="string"
-				multiline
-				variant="filled"
-				className="editor"
-			/>
-		);
+			description = (
+				<RichTextEditor
+					readOnly
+					value={RichTextEditor.createValueFromString(
+						this.state.eventDescription,
+						"html"
+					)}
+					// onChange={handleChange}
+					required
+					id="body-text"
+					name="bodyText"
+					type="string"
+					multiline
+					variant="filled"
+					className="editor"
+				/>
+			);
 		return description;
 	};
 	handleClickOpen2 = () => {
-		// if(this.props.web3.networkId != GLOBAL_NETWORK_ID && this.props.web3.networkId != GLOBAL_NETWORK_ID_2 )
-		// {
+		if (this.props.networkId != GLOBAL_NETWORK_ID && this.props.networkId != GLOBAL_NETWORK_ID_2) {
+			this.setState({ open3: true });
+		}
+		else {
+			this.setState({ open2: true });
 
-		// }
-		this.setState({ open2: true });
-
+		}
+	};
+	handleCloseSnackbar = () => {
+		this.setState({ open3: false });
 	};
 	handleClickOpen = () => {
 		this.setState({ open: true });
@@ -817,8 +827,8 @@ class EventPage extends Component {
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-							this.state.selectedCategoryIndex
-					  ]
+					this.state.selectedCategoryIndex
+					]
 					: "∞";
 
 				let disabled = false;
@@ -829,14 +839,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-							this.state.selectedCategoryIndex
+						this.state.selectedCategoryIndex
 						]
 					) >=
-						Number(
-							event_data.catTktQuantity[
-								this.state.selectedCategoryIndex
-							]
-						)
+					Number(
+						event_data.catTktQuantity[
+						this.state.selectedCategoryIndex
+						]
+					)
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -919,6 +929,15 @@ class EventPage extends Component {
 								eventEndDate={this.state.eventEndDate}
 								phnx_price={this.state.phnx_price}
 								dollar_price={this.state.dollar_price}
+							/>
+							<Snackbar
+								anchorOrigin={{ vertical: "top", horizontal: "center" }}
+								open={this.state.open3}
+								onClose={this.handleCloseSnackbar}
+								message={"Please connect to ethereum or matic main-net"}
+								autoHideDuration={3000}
+								key={"top" + "center"}
+								className="snackbar"
 							/>
 							<Header
 								disabled={
@@ -1015,21 +1034,21 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-																(
-																	category,
-																	i
-																) => (
-																	<option
-																		value={
-																			i
-																		}
-																	>
-																		{
-																			category
-																		}
-																	</option>
-																)
-														  )
+															(
+																category,
+																i
+															) => (
+																<option
+																	value={
+																		i
+																	}
+																>
+																	{
+																		category
+																	}
+																</option>
+															)
+														)
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1071,11 +1090,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-												  "onedayevent"
-												? moment(
+													"onedayevent"
+													? moment(
 														this.state.eventDate
-												  ).format("Do MMM, YYYY")
-												: `
+													).format("Do MMM, YYYY")
+													: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1089,18 +1108,18 @@ class EventPage extends Component {
 											{!this.state.eventStartTime
 												? `Time`
 												: !this.state.eventEndTime
-												? moment(this.state.eventStartTime)
+													? moment(this.state.eventStartTime)
 														.utcOffset(0)
 														.format("hh:mma z")
-												: `${moment(this.state.eventStartTime)
+													: `${moment(this.state.eventStartTime)
 														.utcOffset(0)
 														.format(
 															"hh:mma"
 														)} - ${moment(
-														this.state.eventEndTime
-												  )
-														.utcOffset(0)
-														.format("hh:mma z")}`}
+															this.state.eventEndTime
+														)
+															.utcOffset(0)
+															.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
