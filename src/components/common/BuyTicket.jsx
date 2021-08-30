@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import { Link } from "react-router-dom";
+import {pricingFormatter} from "../../utils/pricingSuffix"
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
@@ -161,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
 		wordBreak: "break-word",
 	},
 	PhnxPrice: {
-		fontSize: "22px",
+		fontSize: "16px",
 		fontWeight: "700",
 		color: "#413AE2",
 	},
@@ -255,11 +256,11 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
             <img src={image} alt={eventTitle} className={classes.eventImage} />
             <Grid className={classes.details}>
 
-              <div >
-                <Typography gutterBottom className={classes.eventTitle}>
+              <div style={{maxWidth:"75%"}}>
+                <Typography gutterBottom className={`${classes.eventTitle} text-truncate`}>
                   {eventTitle}
                 </Typography>
-                <Typography gutterBottom style={{ color: "#73727D", fontSize: "17px" }} >
+                <Typography gutterBottom style={{ color: "#73727D", fontSize: "17px",textAlign: "start" }} >
                   {!eventTime
                     ? `Date`
                     : eventTime === "onedayevent"
@@ -273,11 +274,13 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
               </div>
               <div style={{ textAlign: "end" }}>
                 <div className={classes.eventinfo}>
-                  <span className={classes.PhnxPrice}>
-                    {phnx_price}
+                  <span className={classes.PhnxPrice} title={phnx_price}>
+                  {console.log("pheonix value", phnx_price, typeof(phnx_price))}
+                    {pricingFormatter(phnx_price, "PHNX")}
                   </span>
-                  <div style={{ color: "#56555D", fontSize: "14px" }}>
-                    {dollar_price}
+                  <div style={{ color: "#56555D", fontSize: "14px" }} title={dollar_price}>
+                    {/* {dollar_price} */}
+                    {pricingFormatter(dollar_price, "$")}
                   </div>
                 </div>
               </div>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import SocialMedia from "./common/SocialMedia";
+import {pricingFormatter} from "../utils/pricingSuffix"
 import { makeStyles } from "@material-ui/core/styles";
 import {
 	Button,
@@ -141,7 +142,8 @@ const styles = (theme) => ({
 	},
 
 	ticketSelect: {
-		width: "219px",
+		// width: "219px",
+		width:"100%",
 		marginTop: "10px",
 		marginBottom: "10px",
 		height: "40px",
@@ -1067,16 +1069,13 @@ class EventPage extends Component {
 											</FormControl>
 										)}
 										<div className={classes.eventinfo}>
-											<span className={classes.PhnxPrice}>
-												{this.state.phnx_price}
+											<span className={classes.PhnxPrice} title={this.state.phnx_price}>
+											{pricingFormatter(this.state.phnx_price, "PHNX")}
+											{/* {this.state.phnx_price} */}
 											</span>
-											<div
-												style={{
-													color: "#56555D",
-													fontSize: "14px",
-												}}
-											>
-												{this.state.dollar_price}
+											<div style={{ color: "#56555D", fontSize: "14px" }} title={this.state.dollar_price}>
+												{pricingFormatter(this.state.dollar_price, "$")}
+												{console.log(this.state.dollar_price)}
 											</div>
 										</div>
 

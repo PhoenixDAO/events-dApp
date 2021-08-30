@@ -110,7 +110,7 @@ const useStyles = (theme) => ({
 		},
 		justifyContent: "space-around",
 		alignItems: "center",
-		minWidth: 120,
+		// minWidth: 120,
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
