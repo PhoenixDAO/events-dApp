@@ -1,7 +1,7 @@
 {
-  "main.css": "static/css/main.7d661d5e.css",
-  "main.css.map": "static/css/main.7d661d5e.css.map",
-  "main.js": "static/js/main.2e524404.js",
+  "main.css": "static/css/main.c18005dc.css",
+  "main.css.map": "static/css/main.c18005dc.css.map",
+  "main.js": "static/js/main.c32cda23.js",
   "static\\media\\Aeonik-Bold.otf": "static/media/Aeonik-Bold.3ab5a630.otf",
   "static\\media\\Aeonik-Medium.otf": "static/media/Aeonik-Medium.79b61679.otf",
   "static\\media\\Aeonik-Regular.otf": "static/media/Aeonik-Regular.844324dc.otf",
@@ -24,6 +24,7 @@
   "static\\media\\fa-solid-900.woff2": "static/media/fa-solid-900.8e1ed89b.woff2",
   "static\\media\\roundlogo.svg": "static/media/roundlogo.d5d1056b.svg",
   "static\\media\\slider1.svg": "static/media/slider1.59b267dd.svg",
-  "static\\media\\slider2.svg": "static/media/slider2.c0c38f96.svg",
-  "static\\media\\slider3.svg": "static/media/slider3.6fc4991c.svg"
+  "static\\media\\slider2.svg": "static/media/slider2.db16283d.svg",
+  "static\\media\\slider3.svg": "static/media/slider3.6fc4991c.svg",
+  "static\\media\\travelDone.svg": "static/media/travelDone.4dcb1458.svg"
 }

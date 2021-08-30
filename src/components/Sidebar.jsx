@@ -17,7 +17,10 @@ import {
 import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
 import ipfs from "../utils/ipfs";
-
+import {
+	GLOBAL_NETWORK_ID,
+	GLOBAL_NETWORK_ID_2,
+} from "../config/const.js";
 class Sidebar extends Component {
 	constructor(props, context) {
 		console.log("accounts props in sidebar", props.account);
@@ -252,9 +255,9 @@ class Sidebar extends Component {
 				</div>
 			);
 		}
-
-		if (!this.props.account || this.props.account.length === 0) {
-			console.log("I am in props.account");
+		//routes that display when user is not connected
+		if (!this.props.account || this.props.account.length === 0 || !this.props.status) {
+			console.log("I am doing that", (this.props.networkId == GLOBAL_NETWORK_ID || this.props.networkId == GLOBAL_NETWORK_ID_2))
 			return (
 				<React.Fragment>
 					<Snackbar
