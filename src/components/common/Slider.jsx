@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 			},
 		},
 		"& div ol li":{
-			backgroundColor:"#e4e4e7"
+			backgroundColor:"#aeaeae"
 		}
 		},
 	carouselCaption: {

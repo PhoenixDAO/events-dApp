@@ -2,9 +2,9 @@ import React from "react";
 import Header from "../common/Header";
 import DetailForm from "./detailform";
 const AccountDetail = (props) => {
-	const goBack =()=> {
+	const goBack = () => {
 		props.history.goBack();
-	}
+	};
 	return (
 		<div>
 			<Header
@@ -16,6 +16,7 @@ const AccountDetail = (props) => {
 			<DetailForm
 				account={props.account}
 				userDetails={props.userDetails}
+				setUserDetails={props.setUserDetails}
 			/>
 		</div>
 	);

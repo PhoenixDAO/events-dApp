@@ -430,12 +430,22 @@ class Event extends Component {
 	};
 	getUserFavoritesEvent = async () => {
 		try {
-			const get = await axios.post(`${API_URL}${GET_USER_DETAIL}`, {
-				address: this.props.accounts[0],
-				networkId: this.props.web3.networkId,
-			});
+			const token = localStorage.getItem("AUTH_TOKEN");
+			const get = await axios.post(
+				`${API_URL}${GET_USER_DETAIL}`,
+				{
+					address: this.props.accounts[0],
+					networkId: this.props.web3.networkId,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			console.log("get.data.result.favourites", get);
 			this.setState({
-				UserFavoriteEvents: get.data.result.favourites,
+				UserFavoriteEvents: get.data.result.userHldr.favourites,
 			});
 
 			return;
@@ -560,7 +570,7 @@ class Event extends Component {
 				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 				.join(" ");
 
-			let titleURL = `/event/${this.props.id}`
+			let titleURL = `/event/${this.props.id}`;
 			let myEventStatURL =
 				"/event-stat/" + pagetitle + "/" + this.props.id;
 			let myEvent = false;
@@ -605,7 +615,6 @@ class Event extends Component {
 					/>
 				}
 					{/* new card */}
-					
 				</div>
 			);
 		}

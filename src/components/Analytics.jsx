@@ -627,7 +627,7 @@ const Analytics = (props, context) => {
 			networkId: props.networkId,
 		});
 		if (!userDetails.error) {
-			setUserDetails(userDetails.result.result);
+			setUserDetails(userDetails.result.result.userHldr);
 		} else {
 		}
 	};

@@ -57,6 +57,7 @@ import BodyTextEditor from "../common/BodyTextEditor";
 import PublishIcon from "@material-ui/icons/Publish";
 import publishIcon from "../Images/publish.png";
 import Checkmark from "../Images/Checkmark.gif";
+import travelDone from "../Images/travelDone.svg";
 import { withRouter } from "react-router-dom";
 import SocialMedia from "../common/SocialMedia";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -109,10 +110,10 @@ const useStyles = makeStyles((theme) => ({
 		paddingLeft:"10px",
 		paddingRight:"10px",
 		paddingBottom: "50px",
-		"@media (min-width:400px)":{
+		"@media (min-width:400px)": {
 			paddingLeft: 25,
 			paddingRight: 25,
-		}
+		},
 	},
 	backButton: {
 		textTransform: "none",
@@ -133,14 +134,14 @@ const useStyles = makeStyles((theme) => ({
 		width: "40%",
 		fontSize: 18,
 		fontWeight: 700,
-		"@media (max-width: 530px)":{
-			width:"57%",
+		"@media (max-width: 530px)": {
+			width: "57%",
 			fontSize: 15,
 		},
 		"& .MuiButton-endIcon": {
 			position: "absolute",
 			right: 20,
-			"@media (max-width: 530px)":{
+			"@media (max-width: 530px)": {
 				right: 15,
 			},
 		},
@@ -157,11 +158,11 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: "space-between",
 	},
 	mainStepperContainer: {
-		"@media (min-width:768px)":{
+		"@media (min-width:768px)": {
 			marginLeft: theme.spacing(12),
 			marginRight: theme.spacing(12),
 		},
-		
+
 		"& .MuiButton-label": {
 			fontFamily: "'Aeonik', sans-serif",
 			fontWeight: "500",
@@ -179,9 +180,9 @@ const useStyles = makeStyles((theme) => ({
 		fontweight: "400px",
 		fontSize: "20px",
 		fontFamily: "'Aeonik', sans-serif",
-		"@media (max-width:450px)":{
-			fontSize:"90%"
-		}
+		"@media (max-width:450px)": {
+			fontSize: "90%",
+		},
 	},
 	editor: {
 		height: 430,
@@ -213,7 +214,7 @@ const useStyles = makeStyles((theme) => ({
 		margin: "30px 0px 20px",
 	},
 	step: {
-		justifyContent:"center",
+		justifyContent: "center",
 		"& .MuiStepIcon-root text": {
 			fontFamily: "'Aeonik', sans-serif",
 			// fontSize: "24px",
@@ -361,7 +362,22 @@ const useStyles = makeStyles((theme) => ({
 		color: "rgba(94, 91, 255, 1)",
 	},
 	progressDisabled: {},
+	travelImage: {
+		// position: "absolute",
+		// bottom: 0,
+		// left: 0,
+		// right: 0,
+		// padding: "0 15px",
+		width: "100%",
+		marginTop: "60px",
+		"& img": {
+			maxWidth: "100%",
+			borderRadius: "0 0 10px 10px"
+		},
+	},
 }));
+
+const today = new Date();
 
 const MyStepper = ({
 	handleCreateEvent,
@@ -431,6 +447,16 @@ const MyStepper = ({
 	const [country, setCountry] = useState("");
 	const [state, setState] = useState("");
 	const [city, setCity] = useState("");
+
+	const [dateError, setDateError] = useState({
+		message: "",
+		isError: false,
+	});
+
+	const [timeError, setTimeError] = useState({
+		message: "",
+		isError: false,
+	});
 
 	let URL = "https://phoenixdao-events-dapp.herokuapp.com";
 
@@ -557,6 +583,30 @@ const MyStepper = ({
 		setType(event.target.value);
 	};
 
+	function addMonths(date, months) {
+		var d = date.getDate();
+		date.setMonth(date.getMonth() + +months);
+		if (date.getDate() != d) {
+			date.setDate(0);
+		}
+		return date;
+	}
+
+	// a and b are javascript Date objects
+	function dateDiffInDays(a, b) {
+		const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+		// Discard the time and time-zone information.
+		const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+		const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+
+		return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+	}
+
+	Date.prototype.addHours = function (h) {
+		this.setHours(this.getHours() + h);
+		return this;
+	};
+
 	//next button steeper
 	const handleNext = (fields) => {
 		console.log("fields", fields);
@@ -564,14 +614,159 @@ const MyStepper = ({
 		const filter = new badWords();
 
 		if (activeStep === 0) {
+			setTimeError({ isError: false, message: "" });
+			setDateError({ isError: false, message: "" });
+
 			//first stepper conditions - eventName, eventOrg, eventdate&time
 			const badEventName = filter.clean(fields.eventName);
 			fields.eventName = badEventName;
 			const badEventOrg = filter.clean(fields.eventOrganizer);
 			fields.eventOrganizer = badEventOrg;
-			onFieldsChange(fields);
 			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-			onStepsChange("inc");
+			if (fields.eventTime === "onedayevent") {
+				console.log("onedayevent----->");
+				let eventDateOneDay = fields.eventDate;
+				let eventStartTimeOneday = fields.eventStartTime;
+				console.log("timestamp", eventStartTimeOneday);
+				let eventEndTimeOneday = fields.eventEndTime;
+
+				eventDateOneDay.setHours(
+					eventStartTimeOneday.getHours(),
+					eventStartTimeOneday.getMinutes(),
+					eventStartTimeOneday.getSeconds(),
+					0
+				);
+				eventStartTimeOneday.setFullYear(eventDateOneDay.getFullYear());
+				eventStartTimeOneday.setMonth(eventDateOneDay.getMonth());
+				eventStartTimeOneday.setDate(eventDateOneDay.getDate());
+
+				var today = new Date();
+				today.setHours(today.getHours() + 3);
+				if (eventStartTimeOneday <= today) {
+					console.log("im here error show");
+					setTimeError({
+						isError: true,
+						message: "Event should be after 3 Hours.",
+					});
+				} else {
+					if (eventEndTimeOneday) {
+						eventEndTimeOneday.setFullYear(
+							eventDateOneDay.getFullYear()
+						);
+						eventEndTimeOneday.setMonth(eventDateOneDay.getMonth());
+						eventEndTimeOneday.setDate(eventDateOneDay.getDate());
+						if (eventStartTimeOneday < eventEndTimeOneday) {
+							fields.eventDate = eventDateOneDay;
+							fields.eventStartTime = eventStartTimeOneday;
+							fields.eventEndTime = eventEndTimeOneday;
+							console.log(
+								eventDateOneDay,
+								eventStartTimeOneday,
+								eventEndTimeOneday
+							);
+							onFieldsChange(fields);
+							onStepsChange("inc");
+						} else {
+							// alert("End Time should greater than Start Time");
+							setTimeError({
+								isError: true,
+								message:
+									"End Time should greater than Start Time.",
+							});
+						}
+					} else {
+						fields.eventDate = eventDateOneDay;
+						fields.eventStartTime = eventStartTimeOneday;
+						console.log(eventDateOneDay, eventStartTimeOneday);
+						onFieldsChange(fields);
+						onStepsChange("inc");
+					}
+				}
+			} else {
+				console.log("morethanaday---->");
+				let eventDateOneDay = fields.eventStartDate;
+				let eventEndDateOneDay = fields.eventEndDate;
+				let eventStartTimeOneday = fields.eventStartTime;
+				let eventEndTimeOneday = fields.eventEndTime;
+				//change date timing
+				eventDateOneDay.setHours(
+					eventStartTimeOneday.getHours(),
+					eventStartTimeOneday.getMinutes(),
+					eventStartTimeOneday.getSeconds(),
+					0
+				);
+				eventEndDateOneDay.setHours(
+					eventStartTimeOneday.getHours(),
+					eventStartTimeOneday.getMinutes(),
+					eventStartTimeOneday.getSeconds(),
+					0
+				);
+				//change timing unix date
+				eventStartTimeOneday.setFullYear(eventDateOneDay.getFullYear());
+				eventStartTimeOneday.setMonth(eventDateOneDay.getMonth());
+				eventStartTimeOneday.setDate(eventDateOneDay.getDate());
+				var today = new Date();
+				today.setHours(today.getHours() + 3);
+				if (eventStartTimeOneday <= today) {
+					console.log("im here error show");
+					setTimeError({
+						isError: true,
+						message: "Event should be after three hours from current time.",
+					});
+				} else {
+					const diffTime = eventEndDateOneDay - eventDateOneDay;
+					const diffDays = Math.ceil(
+						diffTime / (1000 * 60 * 60 * 24)
+					);
+					console.log(diffDays + " days");
+					if (diffDays > 0) {
+						if (eventEndTimeOneday) {
+							eventEndTimeOneday.setFullYear(
+								eventDateOneDay.getFullYear()
+							);
+							eventEndTimeOneday.setMonth(
+								eventDateOneDay.getMonth()
+							);
+							eventEndTimeOneday.setDate(
+								eventDateOneDay.getDate()
+							);
+							if (eventStartTimeOneday < eventEndTimeOneday) {
+								fields.eventStartDate = eventDateOneDay;
+								fields.eventEndDateOneDay = eventEndDateOneDay;
+								fields.eventStartTime = eventStartTimeOneday;
+								fields.eventEndTime = eventEndTimeOneday;
+								console.log(
+									eventDateOneDay,
+									eventStartTimeOneday,
+									eventEndTimeOneday
+								);
+								onFieldsChange(fields);
+								onStepsChange("inc");
+							} else {
+								// alert("End Time should greater than Start Time");
+								setTimeError({
+									isError: true,
+									message:
+										"End Time should greater than Start Time.",
+								});
+							}
+						} else {
+							fields.eventStartDate = eventDateOneDay;
+							fields.eventStartTime = eventStartTimeOneday;
+							fields.eventEndDateOneDay = eventEndDateOneDay;
+							console.log(eventDateOneDay, eventStartTimeOneday);
+							onFieldsChange(fields);
+							onStepsChange("inc");
+						}
+					} else {
+						// alert("End Date should greater than Start Date");
+						setDateError({
+							isError: true,
+							message: "End date should be greater than start date",
+						});
+					}
+				}
+			}
 		} else if (activeStep === 1) {
 			//2nd stpper - location/link, images, topicI
 			onFieldsChange(fields);
@@ -1047,14 +1242,19 @@ const MyStepper = ({
 																fullwidth
 																inputVariant="outlined"
 																autoOk={true}
-																value={date}
+																value={value}
 																onChange={
 																	onChange
 																}
-																error={!!error}
+																error={
+																	!!error ||
+																	timeError.isError
+																}
 																helperText={
 																	error
 																		? error.message
+																		: timeError.isError
+																		? timeError.message
 																		: null
 																}
 															/>
@@ -1133,11 +1333,6 @@ const MyStepper = ({
 																		root: classes.timeHelperText,
 																	},
 																}}
-																// helperText={
-																// 	error
-																// 		? error.message
-																// 		: null
-																// }
 															/>
 														</span>
 													)}
@@ -1297,10 +1492,15 @@ const MyStepper = ({
 																onChange={
 																	onChange
 																}
-																error={!!error}
+																error={
+																	!!error ||
+																	dateError.isError
+																}
 																helperText={
 																	error
 																		? error.message
+																		: dateError.isError
+																		? dateError.message
 																		: null
 																}
 															/>
@@ -1375,10 +1575,15 @@ const MyStepper = ({
 																onChange={
 																	onChange
 																}
-																error={!!error}
+																error={
+																	!!error ||
+																	timeError.isError
+																}
 																helperText={
 																	error
 																		? error.message
+																		: timeError.isError
+																		? timeError.message
 																		: null
 																}
 															/>
@@ -1457,11 +1662,6 @@ const MyStepper = ({
 																	},
 																}}
 																error={!!error}
-																// helperText={
-																// 	error
-																// 		? error.message
-																// 		: null
-																// }
 															/>
 														</span>
 													)}
@@ -1564,7 +1764,13 @@ const MyStepper = ({
 								<div>
 									<br />
 									<Grid container spacing={2}>
-										<Grid item xs={12} sm={12} lg={12} xl={4}>
+										<Grid
+											item
+											xs={12}
+											sm={12}
+											lg={12}
+											xl={4}
+										>
 											<Controller
 												name="country"
 												control={control}
@@ -1590,7 +1796,13 @@ const MyStepper = ({
 												}}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={12} lg={12} xl={4}>
+										<Grid
+											item
+											xs={12}
+											sm={12}
+											lg={12}
+											xl={4}
+										>
 											<Controller
 												name="state"
 												control={control}
@@ -1616,7 +1828,13 @@ const MyStepper = ({
 												}}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={12} lg={12} xl={4}>
+										<Grid
+											item
+											xs={12}
+											sm={12}
+											lg={12}
+											xl={4}
+										>
 											<Controller
 												name="city"
 												control={control}
@@ -3462,6 +3680,9 @@ const MyStepper = ({
 								>
 									View your Event
 								</Button>
+								<div className={classes.travelImage}>
+									<img src={travelDone} alt="travel" />
+								</div>
 							</div>
 						) : (
 							publishedEventComponent()

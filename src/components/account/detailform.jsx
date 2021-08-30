@@ -59,11 +59,14 @@ const DetailForm = (props) => {
 	const provideImage = () => {
 		if (Object.keys(props.userDetails).length > 0) {
 			console.log("userdetailsss", props.userDetails);
-			const avaCustom = props.userDetails.result.result.avatarCustom;
-			const avatarId = props.userDetails.result.result.avatarNumber;
-			const ava = props.userDetails.result.result.avatar;
-			const name = props.userDetails.result.result.name;
-			const org = props.userDetails.result.result.organizerDetails;
+			const avaCustom =
+				props.userDetails.result.result.userHldr.avatarCustom;
+			const avatarId =
+				props.userDetails.result.result.userHldr.avatarNumber;
+			const ava = props.userDetails.result.result.userHldr.avatar;
+			const name = props.userDetails.result.result.userHldr.name;
+			const org =
+				props.userDetails.result.result.userHldr.organizerDetails;
 			console.log("avatarCustom,", avaCustom);
 			if (avaCustom) {
 				// ipfs.get(ava).then((f) => {
@@ -91,7 +94,7 @@ const DetailForm = (props) => {
 				.catch((err) => {
 					console.log("ipfs error", err);
 				});
-			console.log("avatar ipfs image", avatar);
+			// console.log("avatar ipfs image", avatar);
 			if (ipfsImage) {
 				return <img src={ipfsImage} className="bird2" />;
 			}
@@ -155,7 +158,9 @@ const DetailForm = (props) => {
 		if (detail.error) {
 			console.log("error occured");
 		} else {
-			window.location.reload();
+			console.log("details", detail);
+			props.setUserDetails(detail.result);
+			// window.location.reload();
 		}
 	};
 

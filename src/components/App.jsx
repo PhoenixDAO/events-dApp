@@ -55,7 +55,12 @@ import NetworkError from "./NetworkError";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
 import Favorites from "./Favorite.jsx";
-import { getUserDetails, updateUserDetails } from "../config/serverAPIs";
+import {
+	getUserDetails,
+	updateUserDetails,
+	getMessage,
+	loginWithMetaMask,
+} from "../config/serverAPIs";
 import AccountDetail from "./account/index";
 import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
@@ -117,7 +122,7 @@ class App extends Component {
 			name: "Bennu",
 			avatarNumber: 0,
 			avatarCustom: false,
-			open2: false
+			open2: false,
 		};
 		this.myRef = React.createRef();
 
@@ -257,63 +262,86 @@ class App extends Component {
 
 	//Get Account
 	async loadBlockchainData() {
-		if (!window.ethereum || !window.ethereum.isMetaMask) {
-			this.setState({
-				errorMessage:
-					"MetaMask is not installed. Please install MetaMask to continue !",
-				openSnackbarForNoMetaMask: true,
-				openSnackbarForPendingRequest: false,
-			});
-		} else {
-			if (typeof ethereum !== "undefined") {
-				// const a = await ethereum.enable();
-				const a = ethereum.enable();
-				web3 = new Web3(ethereum);
-				const accounts = await web3.eth.getAccounts();
-				const check = localStorage.getItem("account");
-				if (!check) {
-					// window.location.reload();
-					localStorage.setItem("account", true);
-				}
-			} else if (typeof web3 !== "undefined") {
-				window.web3 = new Web3(web3.currentProvider);
-			} else {
-				const network = this.getNetworkId();
-				let infura;
-				if (network === GLOBAL_NETWORK_ID) {
-					infura = INFURA_URL;
-				} else if (network === GLOBAL_NETWORK_ID_2) {
-					infura = INFURA_URL_2;
-				}
-
-				window.web3 = new Web3(new Web3.providers.HttpProvider(infura));
-			}
-			window.ethereum.on("connect", function (accounts) { });
-			window.ethereum.on("accountsChanged", function (accounts) {
-				localStorage.removeItem("account");
-				window.location.reload();
-			});
-
-			window.ethereum.on("networkChanged", function (netId) {
-				window.location.reload();
-			});
-			const accounts = await web3.eth.getAccounts();
-
-			this.setState({ account: accounts[0] });
-			const networkId = await this.getNetworkId();
-			if (accounts[0] && networkId) {
-				const userDetails = await getUserDetails({
-					address: accounts[0],
-					networkId: networkId,
+		try {
+			if (!window.ethereum || !window.ethereum.isMetaMask) {
+				this.setState({
+					errorMessage:
+						"MetaMask is not installed. Please install MetaMask to continue !",
+					openSnackbarForNoMetaMask: true,
+					openSnackbarForPendingRequest: false,
 				});
-				console.log("userDetals", userDetails);
-				if (!userDetails.error) {
-					this.setState({
-						userDetails: userDetails,
-						open: userDetails.result.result.firstTime,
-					});
+			} else {
+				if (typeof ethereum !== "undefined") {
+					// const a = await ethereum.enable();
+					const a = ethereum.enable();
+					web3 = new Web3(ethereum);
+					const accounts = await web3.eth.getAccounts();
+					const check = localStorage.getItem("account");
+					if (!check) {
+						// window.location.reload();
+						localStorage.setItem("account", true);
+					}
+				} else if (typeof web3 !== "undefined") {
+					window.web3 = new Web3(web3.currentProvider);
+				} else {
+					const network = this.getNetworkId();
+					let infura;
+					if (network === GLOBAL_NETWORK_ID) {
+						infura = INFURA_URL;
+					} else if (network === GLOBAL_NETWORK_ID_2) {
+						infura = INFURA_URL_2;
+					}
+
+					window.web3 = new Web3(
+						new Web3.providers.HttpProvider(infura)
+					);
+				}
+				window.ethereum.on("connect", function (accounts) {});
+				window.ethereum.on("accountsChanged", function (accounts) {
+					localStorage.removeItem("account");
+					window.location.reload();
+				});
+
+				window.ethereum.on("networkChanged", function (netId) {
+					window.location.reload();
+				});
+				const accounts = await web3.eth.getAccounts();
+
+				this.setState({ account: accounts[0] });
+				const networkId = await this.getNetworkId();
+				if (accounts[0] && networkId) {
+					const token = localStorage.getItem("AUTH_TOKEN");
+					if (token) {
+						const userChecker = await getUserDetails({
+							address: accounts[0],
+							networkId: networkId,
+						});
+						console.log("userChecker", userChecker);
+						if (!userChecker.error) {
+							this.setState({
+								userDetails: userChecker,
+								open: userChecker.result.result.userHldr
+									.firstTime,
+							});
+							return;
+						}
+					}
+					const userDetails = await this.authMetaMask();
+					if (!userDetails.error) {
+						console.log("userDetails", userDetails);
+						this.setState({
+							userDetails: userDetails,
+							open: userDetails.result.result.userHldr.firstTime,
+						});
+						localStorage.setItem(
+							"AUTH_TOKEN",
+							userDetails.result.result.token
+						);
+					}
 				}
 			}
+		} catch (err) {
+			console.log(err);
 		}
 	}
 	async connectToMetaMask() {
@@ -382,7 +410,7 @@ class App extends Component {
 					image,
 					name,
 					phnx_price,
-					dollar_price
+					dollar_price,
 				},
 				() => this.buy()
 			);
@@ -396,7 +424,7 @@ class App extends Component {
 				}
 			);
 		}
-	}
+	};
 
 	//TransferFrom when buying with PhoenixDAO
 	//After Approval
@@ -671,10 +699,10 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-												.returnValues
+													.returnValues
 											: txreceipt.events
-												.NewAndUpdatedEvent
-												.returnValues
+													.NewAndUpdatedEvent
+													.returnValues
 									}
 									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
@@ -825,7 +853,7 @@ class App extends Component {
 	};
 
 	updateUserInfo = async (e) => {
-		console.log("Working")
+		console.log("Working");
 		const detail = await updateUserDetails({
 			address: this.props.accounts["0"],
 			networkId: this.props.web3.networkId,
@@ -840,6 +868,50 @@ class App extends Component {
 			window.location.reload();
 		}
 	};
+
+	authMetaMask = async () => {
+		try {
+			const publicAddress = await web3.eth.getAccounts();
+			const networkId = await this.getNetworkId();
+			console.log("Public address", publicAddress);
+			console.log("networkId", networkId);
+			const message = await getMessage();
+			const sign = await this.handleSignMessage(
+				publicAddress[0],
+				message.result.result
+			);
+			const userData = await loginWithMetaMask({
+				publicAddress: publicAddress[0],
+				networkId: networkId,
+				signature: sign,
+				message: message.result.result,
+			});
+			return userData;
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	handleSignMessage = async (publicAddress, message) => {
+		try {
+			console.log("message", message);
+			const sign = await web3.eth.sign(
+				web3.utils.sha3(message),
+				publicAddress
+			);
+			console.log("sign", sign);
+			return sign;
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	setUserDetails = (userDetails) => {
+		console.log("userDetails", userDetails);
+		this.setState({
+			userDetails: userDetails,
+		});
+	};
 	render() {
 		let body;
 		let connecting = false;
@@ -851,7 +923,9 @@ class App extends Component {
 		// 	this.props.web3.networkId != GLOBAL_NETWORK_ID) {
 
 		//condition when drizzle is not initialized
-		if (!this.props.drizzleStatus.initialized) {
+		console.log("Im in !this.props.drizzleStatus.initialized ",(this.props.web3.networkId != GLOBAL_NETWORK_ID && this.props.web3.networkId != GLOBAL_NETWORK_ID_2))
+
+		if (!this.props.drizzleStatus.initialized || (this.props.web3.networkId != GLOBAL_NETWORK_ID && this.props.web3.networkId != GLOBAL_NETWORK_ID_2)) {
 			body = (
 				<div>
 					<Switch>
@@ -1211,6 +1285,7 @@ class App extends Component {
 								executeScroll={this.executeScroll}
 								eventsContract={this.state.eventsContract}
 								userDetails={this.state.userDetails}
+								setUserDetails={this.setUserDetails}
 							/>
 						)}
 					/>
@@ -1378,6 +1453,7 @@ class App extends Component {
 						account={this.state.account}
 						connect={this.loadBlockchainData}
 						userDetails={this.state.userDetails}
+						status={this.props.drizzleStatus.initialized}
 					/>
 					<div id="page-content-wrapper" className="sidebar-open">
 						{/* <div

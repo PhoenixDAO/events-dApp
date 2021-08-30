@@ -32,7 +32,10 @@ import {
 import { toast } from "react-toastify";
 import ApprovalModal from "./approvalModal";
 import { withStyles } from "@material-ui/core/styles";
-
+import {
+	GLOBAL_NETWORK_ID,
+	GLOBAL_NETWORK_ID_2,
+} from "../config/const.js";
 import Loading from "./Loading";
 import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
@@ -52,7 +55,8 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi from "../config/getGraphApi";
+import Snackbar from "@material-ui/core/Snackbar";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -244,6 +248,8 @@ class EventPage extends Component {
 			eventDescription: null,
 			eventLocation: null,
 			organizerDetails: "",
+			open3: false
+
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -277,7 +283,7 @@ class EventPage extends Component {
 	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
 	async loadEventFromBlockchain() {
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -566,21 +572,17 @@ class EventPage extends Component {
 		let event_data = this.state.blockChainEvent;
 		let phnx_price = event_data.prices.map((price) => {
 			return (
-				Web3.utils.fromWei(price) /
-				this.state.PhoenixDAO_market.usd
+				Web3.utils.fromWei(price) / this.state.PhoenixDAO_market.usd
 			).toFixed(2);
 		});
-		
-		let dollar_price = Web3.utils.fromWei(
-			event_data.prices[categoryIndex]
-		);
-		let priceInPhnx=event_data.token
-						? phnx_price[categoryIndex] +
-						"PHNX"
-						: "FREE"
+
+		let dollar_price = Web3.utils.fromWei(event_data.prices[categoryIndex]);
+		let priceInPhnx = event_data.token
+			? phnx_price[categoryIndex] + "PHNX"
+			: "FREE";
 		let priceInDollar = event_data.token ? "$" + dollar_price : "";
-		this.setState({ dollar_price: priceInDollar ,phnx_price:priceInPhnx});
-	}
+		this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
+	};
 	getImage = () => {
 		let image = "/images/loading_image_ipfs.png";
 		if (this.state.ipfs_problem) image = "/images/problem_ipfs.png";
@@ -600,28 +602,37 @@ class EventPage extends Component {
 				</p>
 			);
 		if (this.state.description !== null)
-			console.log("desc", this.state.eventDescription);
-		description = (
-			<RichTextEditor
-				readOnly
-				value={RichTextEditor.createValueFromString(
-					this.state.eventDescription,
-					"html"
-				)}
-				// onChange={handleChange}
-				required
-				id="body-text"
-				name="bodyText"
-				type="string"
-				multiline
-				variant="filled"
-				className="editor"
-			/>
-		);
+			// console.log("desc", this.state.eventDescription);
+			description = (
+				<RichTextEditor
+					readOnly
+					value={RichTextEditor.createValueFromString(
+						this.state.eventDescription,
+						"html"
+					)}
+					// onChange={handleChange}
+					required
+					id="body-text"
+					name="bodyText"
+					type="string"
+					multiline
+					variant="filled"
+					className="editor"
+				/>
+			);
 		return description;
 	};
 	handleClickOpen2 = () => {
-		this.setState({ open2: true });
+		if (this.props.networkId != GLOBAL_NETWORK_ID && this.props.networkId != GLOBAL_NETWORK_ID_2) {
+			this.setState({ open3: true });
+		}
+		else {
+			this.setState({ open2: true });
+
+		}
+	};
+	handleCloseSnackbar = () => {
+		this.setState({ open3: false });
 	};
 	handleClickOpen = () => {
 		this.setState({ open: true });
@@ -636,7 +647,6 @@ class EventPage extends Component {
 	handleCategoryChange = (event) => {
 		this.setState({ selectedCategoryIndex: event.target.value });
 		this.priceCalculation(event.target.value);
-	
 	};
 
 	allowance = async () => {
@@ -786,7 +796,7 @@ class EventPage extends Component {
 	render() {
 		const { classes } = this.props;
 
-		let body = <SkeletonEvent />
+		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
 			if (!this.state.blockChainEvent) {
 				body = (
@@ -815,14 +825,12 @@ class EventPage extends Component {
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
 				console.log("phnx prices", event_data);
 
-
-
 				let max_seats = event_data.tktLimited[
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-							this.state.selectedCategoryIndex
-					  ]
+					this.state.selectedCategoryIndex
+					]
 					: "∞";
 
 				let disabled = false;
@@ -833,14 +841,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-							this.state.selectedCategoryIndex
+						this.state.selectedCategoryIndex
 						]
 					) >=
-						Number(
-							event_data.catTktQuantity[
-								this.state.selectedCategoryIndex
-							]
-						)
+					Number(
+						event_data.catTktQuantity[
+						this.state.selectedCategoryIndex
+						]
+					)
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -904,6 +912,8 @@ class EventPage extends Component {
 				let ticketPrices =
 					event_data.token && event_data.categories.length > 1;
 
+				console.log("event_data.categories", event_data.categories);
+
 				if (this.props.match.params.id == event_data.eventId) {
 					body = (
 						<Grid>
@@ -920,7 +930,17 @@ class EventPage extends Component {
 								eventDate={this.state.eventDate}
 								eventEndDate={this.state.eventEndDate}
 								phnx_price={this.state.phnx_price}
-								dollar_price={this.state.dollar_price}							/>
+								dollar_price={this.state.dollar_price}
+							/>
+							<Snackbar
+								anchorOrigin={{ vertical: "top", horizontal: "center" }}
+								open={this.state.open3}
+								onClose={this.handleCloseSnackbar}
+								message={"Please connect to ethereum or matic main-net"}
+								autoHideDuration={3000}
+								key={"top" + "center"}
+								className="snackbar"
+							/>
 							<Header
 								disabled={
 									disabled ||
@@ -1016,21 +1036,21 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-																(
-																	category,
-																	i
-																) => (
-																	<option
-																		value={
-																			i
-																		}
-																	>
-																		{
-																			category
-																		}
-																	</option>
-																)
-														  )
+															(
+																category,
+																i
+															) => (
+																<option
+																	value={
+																		i
+																	}
+																>
+																	{
+																		category
+																	}
+																</option>
+															)
+														)
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1069,11 +1089,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-												  "onedayevent"
-												? moment(
+													"onedayevent"
+													? moment(
 														this.state.eventDate
-												  ).format("Do MMM, YYYY")
-												: `
+													).format("Do MMM, YYYY")
+													: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1084,7 +1104,21 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{" "}
-											{time}
+											{!this.state.eventStartTime
+												? `Time`
+												: !this.state.eventEndTime
+													? moment(this.state.eventStartTime)
+														.utcOffset(0)
+														.format("hh:mma z")
+													: `${moment(this.state.eventStartTime)
+														.utcOffset(0)
+														.format(
+															"hh:mma"
+														)} - ${moment(
+															this.state.eventEndTime
+														)
+															.utcOffset(0)
+															.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
@@ -1153,11 +1187,8 @@ class EventPage extends Component {
 														// target="blank"
 														>
 															bought
-														</a>
-														{" "}
-														{" " +
-															sold.count}{" "}
-
+														</a>{" "}
+														{" " + sold.count}{" "}
 														ticket for this event{" "}
 														{/* <strong>
 														{event_data[0]}

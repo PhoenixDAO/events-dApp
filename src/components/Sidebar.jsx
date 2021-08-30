@@ -17,7 +17,10 @@ import {
 import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
 import ipfs from "../utils/ipfs";
-
+import {
+	GLOBAL_NETWORK_ID,
+	GLOBAL_NETWORK_ID_2,
+} from "../config/const.js";
 class Sidebar extends Component {
 	constructor(props, context) {
 		console.log("accounts props in sidebar", props.account);
@@ -33,9 +36,7 @@ class Sidebar extends Component {
 	}
 
 	componentDidMount() {
-		
 		this.toggleSidebarClass(false);
-
 	}
 
 	componentDidUpdate(prevProps) {
@@ -159,13 +160,15 @@ class Sidebar extends Component {
 	};
 
 	provideImage = () => {
+		console.log("this.props.userDetails", this.props.userDetails);
 		if (Object.keys(this.props.userDetails).length > 0) {
 			// console.log("userdetailsss", this.props.userDetails);
 			// console.log("", this.props.userDetails);
 			const avatarCustom =
-				this.props.userDetails.result.result.avatarCustom;
-			const avatarId = this.props.userDetails.result.result.avatarNumber;
-			const avatar = this.props.userDetails.result.result.avatar;
+				this.props.userDetails.result.result.userHldr.avatarCustom;
+			const avatarId =
+				this.props.userDetails.result.result.userHldr.avatarNumber;
+			const avatar = this.props.userDetails.result.result.userHldr.avatar;
 			this.setState({
 				avatarCustom: avatarCustom,
 				avatarId: avatarId,
@@ -186,7 +189,7 @@ class Sidebar extends Component {
 	renderImage = () => {
 		if (this.state.avatarCustom) {
 			// return <image
-			console.log("avatar ipfs image", this.state.avatar);
+			// console.log("avatar ipfs image", this.state.avatar);
 			return <img src={this.state.avatar} className="bird" />;
 		} else {
 			return (
@@ -206,10 +209,11 @@ class Sidebar extends Component {
 				</div> */}
 
 				<p className="small connection">
-					<img className="switch-img" src="/images/icons/switch.svg"/>
-					<span className="toggleHidden">
-					Connect Wallet
-					</span>
+					<img
+						className="switch-img"
+						src="/images/icons/switch.svg"
+					/>
+					<span className="toggleHidden">Connect Wallet</span>
 				</p>
 			</div>
 		);
@@ -251,9 +255,9 @@ class Sidebar extends Component {
 				</div>
 			);
 		}
-
-		if (!this.props.account || this.props.account.length === 0) {
-			console.log("I am in props.account");
+		//routes that display when user is not connected
+		if (!this.props.account || this.props.account.length === 0 || !this.props.status) {
+			console.log("I am doing that", (this.props.networkId == GLOBAL_NETWORK_ID || this.props.networkId == GLOBAL_NETWORK_ID_2))
 			return (
 				<React.Fragment>
 					<Snackbar
