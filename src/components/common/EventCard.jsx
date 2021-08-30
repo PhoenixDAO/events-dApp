@@ -139,6 +139,7 @@ const useStyles = makeStyles((theme) => ({
 			marginBottom: "0px",
 		},
 		minHeight: "71px",
+		textAlign:"end"
 	},
 	favouriteGrid: {
 		display: "flex",
