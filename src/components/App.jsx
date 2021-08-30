@@ -122,7 +122,7 @@ class App extends Component {
 			name: "Bennu",
 			avatarNumber: 0,
 			avatarCustom: false,
-			open2: false
+			open2: false,
 		};
 		this.myRef = React.createRef();
 
@@ -410,7 +410,7 @@ class App extends Component {
 					image,
 					name,
 					phnx_price,
-					dollar_price
+					dollar_price,
 				},
 				() => this.buy()
 			);
@@ -424,7 +424,7 @@ class App extends Component {
 				}
 			);
 		}
-	}
+	};
 
 	//TransferFrom when buying with PhoenixDAO
 	//After Approval
@@ -699,10 +699,10 @@ class App extends Component {
 									createdEvent={
 										type === "create"
 											? txreceipt.events.CreatedEvent
-												.returnValues
+													.returnValues
 											: txreceipt.events
-												.NewAndUpdatedEvent
-												.returnValues
+													.NewAndUpdatedEvent
+													.returnValues
 									}
 									color="#413AE2"
 									icon="fas fa-check-circle fa-3x"
@@ -904,6 +904,13 @@ class App extends Component {
 		} catch (err) {
 			console.log(err);
 		}
+	};
+
+	setUserDetails = (userDetails) => {
+		console.log("userDetails", userDetails);
+		this.setState({
+			userDetails: userDetails,
+		});
 	};
 	render() {
 		let body;
@@ -1278,6 +1285,7 @@ class App extends Component {
 								executeScroll={this.executeScroll}
 								eventsContract={this.state.eventsContract}
 								userDetails={this.state.userDetails}
+								setUserDetails={this.setUserDetails}
 							/>
 						)}
 					/>

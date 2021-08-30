@@ -77,7 +77,7 @@ const useStyles = (theme) => ({
 			flex: "0 0 20% !important",
 			marginLeft: "5%",
 		},
-		minWidth: 120,
+		// minWidth: 120,
 		justifyContent:"space-around",
 		alignItems:"flex-end",
 		"& .MuiInputBase-formControl": {
@@ -87,10 +87,10 @@ const useStyles = (theme) => ({
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
-			background: "#fff",
 			padding:"10px",
 			fontWeight: 700,
-			minWidth:130
+			// minWidth:130,
+			background: "#fff",
 		},
 	},
 	mobilePadding:{
@@ -98,14 +98,14 @@ const useStyles = (theme) => ({
 	},
 	selectDropDown:{
 		maxHeight: "200px",
-		width:"85%",
+		width:"100%",
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
 	},
 	sortBy: {
 		position: "absolute",
-		left: "-25px",
+		left: "-40px",
 		color: "#73727D",
 		fontSize: "18px",
 		"@media (max-width: 575px)": {

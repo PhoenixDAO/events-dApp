@@ -30,6 +30,7 @@ import moment from "moment";
 import {
 	getTodayData,
 } from "../utils/graphApis";
+import { SelectAllOutlined } from "@material-ui/icons";
 const useStyles = makeStyles((theme) => ({
 	content: {
 		backgroundColor: "white",
@@ -321,6 +322,7 @@ const Analytics = (props, context) => {
 	const [labels, setLabels] = useState([]);
 	const [legend, setlegend] = useState("REVENUE ($) ");
 	const [timeLabel, settimeLabel] = useState("TIME");
+	const [eventNames, setEventNames] = useState("");
 	// const [startDate, setStartDate] = useState("");
 	// const [endDate, setEndDate] = useState("");
 	const [customDate, setCustomDate] = useState({
@@ -328,6 +330,12 @@ const Analytics = (props, context) => {
 		endDate: "",
 	});
 	const [reload, setReload] = useState(false);
+	useEffect(()=>{
+		if(props.eventName)
+		{
+			setEventNames(props.eventName[0])
+		}
+	},[props.eventName])
 	useEffect(() => {
 		// getPhnxRevenue();
 		getViewsAndFavourites();
@@ -366,6 +374,10 @@ const Analytics = (props, context) => {
 	// 	setTodayGraphData(todayData);
 	// 	handleTimeStampChange(null, todayData);
 	// };
+
+	const handleEventName = (e)=>{
+		setEventNames({eventId:e.target.value})
+	}
 	const chartOptions = {
 		// capBezierPoints: true,
 		legend: {
@@ -615,7 +627,7 @@ const Analytics = (props, context) => {
 			networkId: props.networkId,
 		});
 		if (!userDetails.error) {
-			setUserDetails(userDetails.result.result);
+			setUserDetails(userDetails.result.result.userHldr);
 		} else {
 		}
 	};
@@ -1062,7 +1074,7 @@ const Analytics = (props, context) => {
 											value={timeStamp}
 											onChange={handleTimeStampChange}
 											displayEmpty
-											className={classes.menuPaper}
+											// className={classes.menuPaper}
 											MenuProps={{
 												classes: {
 													paper: classes.menuPaper,
@@ -1265,10 +1277,13 @@ const Analytics = (props, context) => {
 														);
 													})}
 										</Select> */}
+										{/* {console.log("event name", (eventNames)&&eventNames['eventId'])} */}
+										{(eventNames)&&
 											<Select
-												native
+											fullWidth
 												// value={state.age}
-												onChange={props.handleEvent}
+												value = {(eventNames)&&eventNames['eventId']}
+												onChange={e => {props.handleEvent(e); handleEventName(e)}}
 												inputProps={{
 													name: "age",
 													id: "outlined-age-native-simple",
@@ -1301,6 +1316,7 @@ const Analytics = (props, context) => {
 													}
 												)}
 											</Select>
+											}
 										</FormControl>
 									</div>
 								) : null}

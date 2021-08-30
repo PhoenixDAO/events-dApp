@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
+import {pricingFormatter} from "../../utils/pricingSuffix"
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 import {
@@ -42,6 +43,7 @@ var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
 	root: {
+		height:"100%",
 		"& .MuiCardContent-root": {
 			padding: "16px 16px 0px",
 		},
@@ -133,12 +135,13 @@ const useStyles = makeStyles((theme) => ({
 	price: {
 		color: "#413AE2",
 		fontWeight: "700",
-		fontSize: "17px",
+		fontSize: "16px",
 		fontFamily: "'Aeonik', sans-serif",
 		"& p": {
 			marginBottom: "0px",
 		},
 		minHeight: "71px",
+		textAlign:"end"
 	},
 	favouriteGrid: {
 		display: "flex",
@@ -152,6 +155,11 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 17,
 		fontWeight: 500,
 	},
+	priceAlignment:{
+		textAlign:"end",
+	},
+
+
 }));
 
 const EventCard = (props, context) => {
@@ -268,7 +276,7 @@ const EventCard = (props, context) => {
 	let dollar_price = Web3.utils.fromWei(event_data.prices[0]);
 
 	return (
-		<div>
+		<div style={{height:"100%"}}>
 			<ShareModal
 				open={open}
 				handleClose={handleClose}
@@ -294,6 +302,7 @@ const EventCard = (props, context) => {
 						style={{
 							backgroundColor: "transparent !important",
 							fontFamily: "'Aeonik', sans-serif",
+							height:"100%",
 						}}
 					>
 						<div style={{ position: "relative" }}>
@@ -369,7 +378,7 @@ const EventCard = (props, context) => {
 										fontSize: 16,
 										fontWeight: 700,
 										fontFamily: "'Aeonik', sans-serif",
-										width: "60%",
+										// width: "60%",
 									}}
 								>
 									{event_data.tktTotalQuantitySold >= 2 ? (
@@ -391,32 +400,36 @@ const EventCard = (props, context) => {
 									{!event_data.token ? (
 										"Free"
 									) : phnx_price.length === 1 ? (
-										<div>
+										<div className={classes.priceAlignment}>
 											<p
+											title={phnx_price[0] + " PHNX"}
 												style={{
 													fontFamily:
 														'"Aeonik", sans-serif',
 												}}
 											>
-												{phnx_price[0]} PHNX
+												{console.log("pheonix value", event_data.name, phnx_price[0], typeof(phnx_price[0]))}
+												{pricingFormatter(phnx_price[0], "PHNX")}
+												{/* {console.log("pheonix price: ", phnx_price[0],typeof(phnx_price[0]))} */}
 											</p>
-											<p className={classes.starting}>
+											<p className={classes.starting} title={"$"+dollar_price}>
 												{" "}
-												${dollar_price}
+												{pricingFormatter(dollar_price, "$")}
 											</p>
 										</div>
 									) : (
-										<div>
-											<p className={classes.starting}>
+										<div className={classes.priceAlignment}>
+											<p className={classes.starting} title={phnx_price[0]}>
 												Starting from
 											</p>
-											<p>{phnx_price[0]} PHNX</p>
-											<p className={classes.starting}>
+											<p title={phnx_price[0]}>{pricingFormatter(phnx_price[0], "PHNX")}</p>
+											<p className={classes.starting} title={"$"+dollar_price} >
 												{" "}
-												${dollar_price}
+												{pricingFormatter(dollar_price, "$")}
 											</p>
 										</div>
 									)}
+									{/* {console.log("price",event_data.name, dollar_price, typeof(dollar_price))} */}
 								</Typography>
 								{/* ? `Starting from ${prices[0]} PHNX` : prices[0]} */}
 
