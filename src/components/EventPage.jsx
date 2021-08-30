@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import SocialMedia from "./common/SocialMedia";
-import {pricingFormatter} from "../utils/pricingSuffix"
+import { pricingFormatter } from "../utils/pricingSuffix";
 import { makeStyles } from "@material-ui/core/styles";
 import {
 	Button,
@@ -33,10 +33,7 @@ import {
 import { toast } from "react-toastify";
 import ApprovalModal from "./approvalModal";
 import { withStyles } from "@material-ui/core/styles";
-import {
-	GLOBAL_NETWORK_ID,
-	GLOBAL_NETWORK_ID_2,
-} from "../config/const.js";
+import { GLOBAL_NETWORK_ID, GLOBAL_NETWORK_ID_2 } from "../config/const.js";
 import Loading from "./Loading";
 import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
@@ -57,7 +54,6 @@ import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
 import GetGraphApi from "../config/getGraphApi";
-import Snackbar from "@material-ui/core/Snackbar";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -144,7 +140,7 @@ const styles = (theme) => ({
 
 	ticketSelect: {
 		// width: "219px",
-		width:"100%",
+		width: "100%",
 		marginTop: "10px",
 		marginBottom: "10px",
 		height: "40px",
@@ -252,7 +248,7 @@ class EventPage extends Component {
 			shareUrl: "",
 			oneTimeBuy: false,
 			open3: false,
-
+			open3Message: "",
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -636,32 +632,36 @@ class EventPage extends Component {
 	}
 
 	handleClickOpen2 = () => {
-		if (this.state.oneTimeBuy) {
-			let buyers = this.state.soldTicket;
-			const account = this.props.accounts[0];
-			console.log("userExists", this.userExists(buyers, account));
-			if (this.userExists(buyers, account)) {
-				// alert("One time buy");
-				this.setState({ open3: true });
+		if (
+			this.props.networkId != GLOBAL_NETWORK_ID &&
+			this.props.networkId != GLOBAL_NETWORK_ID_2
+		) {
+			this.setState({
+				open3: true,
+				open3Message: "Please connect to ethereum or matic main-net",
+			});
+		} else {
+			// this.setState({ open2: true });
+			if (this.state.oneTimeBuy) {
+				let buyers = this.state.soldTicket;
+				const account = this.props.accounts[0];
+				console.log("userExists", this.userExists(buyers, account));
+				if (this.userExists(buyers, account)) {
+					// alert("One time buy");
+					this.setState({
+						open3: true,
+						open3Message:
+							"This is One Time Buy Event. You can't buy/get more than one ticket for this event.",
+					});
+				} else {
+					this.setState({ open2: true });
+				}
 			} else {
 				this.setState({ open2: true });
 			}
-		} else {
-			this.setState({ open2: true });
-		}
-
-		if (this.props.networkId != GLOBAL_NETWORK_ID && this.props.networkId != GLOBAL_NETWORK_ID_2) {
-			this.setState({ open3: true });
-		}
-		else {
-			this.setState({ open2: true });
-
 		}
 	};
-	handleCloseSnackbar = () => {
-		this.setState({ open3: false });
 
-	};
 	handleClickOpen = () => {
 		this.setState({ open: true });
 	};
@@ -823,7 +823,7 @@ class EventPage extends Component {
 	}
 
 	handleCloseSnackbar() {
-		this.setState({ open3: false });
+		this.setState({ open3: false, open3Message: "" });
 	}
 
 	render() {
@@ -862,8 +862,8 @@ class EventPage extends Component {
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-					this.state.selectedCategoryIndex
-					]
+							this.state.selectedCategoryIndex
+					  ]
 					: "∞";
 
 				let disabled = false;
@@ -874,14 +874,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-						this.state.selectedCategoryIndex
+							this.state.selectedCategoryIndex
 						]
 					) >=
-					Number(
-						event_data.catTktQuantity[
-						this.state.selectedCategoryIndex
-						]
-					)
+						Number(
+							event_data.catTktQuantity[
+								this.state.selectedCategoryIndex
+							]
+						)
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -957,14 +957,11 @@ class EventPage extends Component {
 								}}
 								open={this.state.open3}
 								onClose={this.handleCloseSnackbar}
-								message={
-									"This is One Time Buy Event. You can't buy/get more than one ticket for this event."
-								}
+								message={this.state.open3Message}
 								autoHideDuration={3000}
 								key={"top" + "center"}
 								className="snackbar"
 							/>
-
 							<BuyTicket
 								open={this.state.open2}
 								handleClose={this.handleClose2}
@@ -979,15 +976,6 @@ class EventPage extends Component {
 								eventEndDate={this.state.eventEndDate}
 								phnx_price={this.state.phnx_price}
 								dollar_price={this.state.dollar_price}
-							/>
-							<Snackbar
-								anchorOrigin={{ vertical: "top", horizontal: "center" }}
-								open={this.state.open3}
-								onClose={this.handleCloseSnackbar}
-								message={"Please connect to ethereum or matic main-net"}
-								autoHideDuration={3000}
-								key={"top" + "center"}
-								className="snackbar"
 							/>
 							<Header
 								disabled={
@@ -1084,21 +1072,21 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-															(
-																category,
-																i
-															) => (
-																<option
-																	value={
-																		i
-																	}
-																>
-																	{
-																		category
-																	}
-																</option>
-															)
-														)
+																(
+																	category,
+																	i
+																) => (
+																	<option
+																		value={
+																			i
+																		}
+																	>
+																		{
+																			category
+																		}
+																	</option>
+																)
+														  )
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1117,13 +1105,30 @@ class EventPage extends Component {
 											</FormControl>
 										)}
 										<div className={classes.eventinfo}>
-											<span className={classes.PhnxPrice} title={this.state.phnx_price}>
-											{pricingFormatter(this.state.phnx_price, "PHNX")}
-											{/* {this.state.phnx_price} */}
+											<span
+												className={classes.PhnxPrice}
+												title={this.state.phnx_price}
+											>
+												{pricingFormatter(
+													this.state.phnx_price,
+													"PHNX"
+												)}
+												{/* {this.state.phnx_price} */}
 											</span>
-											<div style={{ color: "#56555D", fontSize: "14px" }} title={this.state.dollar_price}>
-												{pricingFormatter(this.state.dollar_price, "$")}
-												{console.log(this.state.dollar_price)}
+											<div
+												style={{
+													color: "#56555D",
+													fontSize: "14px",
+												}}
+												title={this.state.dollar_price}
+											>
+												{pricingFormatter(
+													this.state.dollar_price,
+													"$"
+												)}
+												{console.log(
+													this.state.dollar_price
+												)}
 											</div>
 										</div>
 
@@ -1137,11 +1142,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-													"onedayevent"
-													? moment(
+												  "onedayevent"
+												? moment(
 														this.state.eventDate
-													).format("Do MMM, YYYY")
-													: `
+												  ).format("Do MMM, YYYY")
+												: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1155,18 +1160,24 @@ class EventPage extends Component {
 											{!this.state.eventStartTime
 												? `Time`
 												: !this.state.eventEndTime
-													? moment(this.state.eventStartTime)
+												? moment(
+														this.state
+															.eventStartTime
+												  )
 														.utcOffset(0)
 														.format("hh:mma z")
-													: `${moment(this.state.eventStartTime)
+												: `${moment(
+														this.state
+															.eventStartTime
+												  )
 														.utcOffset(0)
 														.format(
 															"hh:mma"
 														)} - ${moment(
-															this.state.eventEndTime
-														)
-															.utcOffset(0)
-															.format("hh:mma z")}`}
+														this.state.eventEndTime
+												  )
+														.utcOffset(0)
+														.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
