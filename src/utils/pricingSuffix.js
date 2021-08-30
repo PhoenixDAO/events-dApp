@@ -44,7 +44,7 @@ export function pricingFormatter(num, currencyType){
         if (num == "FREE"){
             return "FREE"
         }
-        num = parseInt(num.split("PHNX")[0]);
+        // num = parseInt(num.split("PHNX")[0]);
         // return formatting(num,currencyType);
         return formatting(parseFloat(num), currencyType);
     }
@@ -63,15 +63,15 @@ export function pricingFormatter(num, currencyType){
         }else if(num > 1000000){
             return type + (num/1000000).toFixed(4) + 'M';
         }else if(num < 900){
-            return type+(num.toString()); 
+            return type+(num); 
         }
       }else{
         if(num > 999 && num < 1000000){
             return (num/1000).toFixed(4) + 'K ' + type;
         }else if(num > 1000000){
             return (num/1000000).toFixed(4) + 'M ' + type;
-        }else if(num < 900){
-            return (num.toString()) + type; 
+        }else if(num < 999){
+            return num +" "+ type; 
         }
       }
    

@@ -275,6 +275,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
               <div style={{ textAlign: "end" }}>
                 <div className={classes.eventinfo}>
                   <span className={classes.PhnxPrice} title={phnx_price}>
+                  {console.log("pheonix value", phnx_price, typeof(phnx_price))}
                     {pricingFormatter(phnx_price, "PHNX")}
                   </span>
                   <div style={{ color: "#56555D", fontSize: "14px" }} title={dollar_price}>

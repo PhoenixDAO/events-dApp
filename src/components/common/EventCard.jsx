@@ -389,6 +389,7 @@ const EventCard = (props, context) => {
 														'"Aeonik", sans-serif',
 												}}
 											>
+												{console.log("pheonix value", event_data.name, phnx_price[0], typeof(phnx_price[0]))}
 												{pricingFormatter(phnx_price[0], "PHNX")}
 												{/* {console.log("pheonix price: ", phnx_price[0],typeof(phnx_price[0]))} */}
 											</p>
