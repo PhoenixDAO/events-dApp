@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Header from "./common/Header";
+import MenuItem from "@material-ui/core/MenuItem"
 
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
@@ -69,36 +70,50 @@ const useStyles = (theme) => ({
 			borderBottom: "2.5px solid #413AE2",
 		},
 	},
+	menuPaper: {
+		maxHeight: "200px",
+	},
 	formControls: {
 		"@media (min-width: 1024px)": {
 			maxWidth: "20% !important",
 			flex: "0 0 20% !important",
 			marginLeft: "5%",
 		},
+		justifyContent: "space-around",
+		alignItems: "center",
 		// minWidth: 120,
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
+				maxWidth:"80%"
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
 			padding: "10px",
+			background: "#fff",
 		},
 		"& option": {
 			padding: "10px",
 		},
 	},
+	"& .MuiPaper-root": {
+		position: "absolute",
+		top: "390px",
+		background: "yellow"
+	},
 	sortBy: {
 		position: "absolute",
 		left: "-40px",
-		top: "15px",
 		color: "#73727D",
 		fontSize: "18px",
 		"@media (max-width: 575px)": {
 			left: "0",
 		},
 	},
+	mobilePadding:{
+		padding:"0px 20px"
+	}
 });
 
 class TopicLandingPage extends Component {
@@ -121,6 +136,7 @@ class TopicLandingPage extends Component {
 			disabledBuying: false,
 			eventCount: 0,
 			dateNow: "",
+			category:"All Events",
 		};
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
@@ -134,6 +150,7 @@ class TopicLandingPage extends Component {
 
 		this.scrollTo = this.scrollTo.bind(this);
 		this.goBack = this.goBack.bind(this); // i think you are missing this
+		this.categoryChange = this.categoryChange.bind(this);
 	}
 
 	scrollTo() {
@@ -228,6 +245,13 @@ class TopicLandingPage extends Component {
 		}
 	}
 
+	async categoryChange(event){
+		this.setState(
+			{
+				category:event.target.value,
+			}
+		)
+	}
 	//Get My Active Events on Blockchain
 	async loadActiveEvents() {
 		if (this._isMounted) {
@@ -656,7 +680,7 @@ class TopicLandingPage extends Component {
 					</div>
 				</div> */}
 
-				<div className="retract-page-inner-wrapper-alternative dash topicsDiv">
+				<div>
 					<Header
 						// title={this.theTopic.name}
 						title={topic}
@@ -743,7 +767,7 @@ class TopicLandingPage extends Component {
 							</button>
 						</div> */}
 
-						<div className="row row_mobile dashboard-dropdown-row">
+						<div className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding} `}>
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 								{topic}
 							</h2>
@@ -751,7 +775,7 @@ class TopicLandingPage extends Component {
 								variant="outlined"
 								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
 							>
-								<Typography
+								{/* <Typography
 									variant="p"
 									className={classes.sortBy}
 								>
@@ -765,6 +789,60 @@ class TopicLandingPage extends Component {
 									<option id="0">All Events</option>
 									<option id="1">Trending Events</option>
 									<option id="2">Near you</option>
+								</Select> */}
+
+								<Typography
+									variant="p"
+									className={`${classes.sortBy}`}
+								>
+									Sort:
+								</Typography>
+								<Select
+									labelId="demo-simple-select-outlined-label"
+									id="demo-simple-select-outlined"
+									fullWidth
+									value={this.state.category}
+									onChange={this.categoryChange}
+									displayEmpty
+									className={classes.menuPaper}
+									MenuProps={{
+										classes: {
+											paper: classes.menuPaper,
+										},
+										getContentAnchorEl: null,
+										anchorOrigin: {
+											vertical: "bottom",
+											horizontal: "left"
+										}
+									}}
+								>
+									<MenuItem
+										value="All Events"
+										style={{
+											fontFamily:
+												"'Aeonik', sans-serif",
+										}}
+									>
+										All Events
+									</MenuItem>
+									<MenuItem
+										value="Trending Events"
+										style={{
+											fontFamily:
+												"'Aeonik', sans-serif",
+										}}
+									>
+										Trending Events
+									</MenuItem>
+									<MenuItem
+										value="Near you"
+										style={{
+											fontFamily:
+												"'Aeonik', sans-serif",
+										}}
+									>
+										Near you
+									</MenuItem>
 								</Select>
 							</FormControl>
 						</div>
