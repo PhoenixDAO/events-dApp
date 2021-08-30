@@ -112,6 +112,9 @@ const useStyles = makeStyles((theme) => ({
 			paddingLeft: 25,
 			paddingRight: 25,
 		},
+		"&. MuiFormHelperText-contained": {
+			marginLeft: "0px !important",
+		},
 	},
 	backButton: {
 		textTransform: "none",
@@ -370,7 +373,7 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: "60px",
 		"& img": {
 			maxWidth: "100%",
-			borderRadius: "0 0 10px 10px"
+			borderRadius: "0 0 10px 10px",
 		},
 	},
 }));
@@ -387,6 +390,7 @@ const MyStepper = ({
 	isEventCreated,
 	history,
 	progressText,
+	shareUrl,
 }) => {
 	const classes = useStyles();
 	const {
@@ -456,7 +460,10 @@ const MyStepper = ({
 		isError: false,
 	});
 
-	let URL = "https://phoenixdao-events-dapp.herokuapp.com";
+	const [endTimeError, setEndTimeError] = useState({
+		message: "",
+		isError: false,
+	});
 
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
@@ -614,6 +621,7 @@ const MyStepper = ({
 		if (activeStep === 0) {
 			setTimeError({ isError: false, message: "" });
 			setDateError({ isError: false, message: "" });
+			setEndTimeError({ isError: false, message: "" });
 
 			//first stepper conditions - eventName, eventOrg, eventdate&time
 			const badEventName = filter.clean(fields.eventName);
@@ -666,7 +674,7 @@ const MyStepper = ({
 							onStepsChange("inc");
 						} else {
 							// alert("End Time should greater than Start Time");
-							setTimeError({
+							setEndTimeError({
 								isError: true,
 								message:
 									"End Time should greater than Start Time.",
@@ -709,7 +717,8 @@ const MyStepper = ({
 					console.log("im here error show");
 					setTimeError({
 						isError: true,
-						message: "Event should be after three hours from current time.",
+						message:
+							"Event should be after three hours from current time.",
 					});
 				} else {
 					const diffTime = eventEndDateOneDay - eventDateOneDay;
@@ -742,7 +751,7 @@ const MyStepper = ({
 								onStepsChange("inc");
 							} else {
 								// alert("End Time should greater than Start Time");
-								setTimeError({
+								setEndTimeError({
 									isError: true,
 									message:
 										"End Time should greater than Start Time.",
@@ -760,7 +769,8 @@ const MyStepper = ({
 						// alert("End Date should greater than Start Date");
 						setDateError({
 							isError: true,
-							message: "End date should be greater than start date",
+							message:
+								"End date should be greater than start date",
 						});
 					}
 				}
@@ -1324,8 +1334,19 @@ const MyStepper = ({
 																onChange={
 																	onChange
 																}
-																error={!!error}
-																helperText="Don’t have an end time? leave here blank"
+																// error={!!error}
+																// helperText="Don’t have an end time? leave here blank"
+																error={
+																	!!error ||
+																	endTimeError.isError
+																}
+																helperText={
+																	error
+																		? error.message
+																		: endTimeError.isError
+																		? endTimeError.message
+																		: "Don’t have an end time? leave here blank"
+																}
 																FormHelperTextProps={{
 																	classes: {
 																		root: classes.timeHelperText,
@@ -1653,13 +1674,24 @@ const MyStepper = ({
 																onChange={
 																	onChange
 																}
-																helperText="Don’t have an end time? leave here blank"
 																FormHelperTextProps={{
 																	classes: {
 																		root: classes.timeHelperText,
 																	},
 																}}
-																error={!!error}
+																// helperText="Don’t have an end time? leave here blank"
+																// error={!!error}
+																error={
+																	!!error ||
+																	endTimeError.isError
+																}
+																helperText={
+																	error
+																		? error.message
+																		: endTimeError.isError
+																		? endTimeError.message
+																		: "Don’t have an end time? leave here blank"
+																}
 															/>
 														</span>
 													)}
@@ -3613,14 +3645,14 @@ const MyStepper = ({
 									<TextField
 										id="outlined-helperText"
 										label=""
-										value={URL}
-										defaultValue={URL}
+										value={shareUrl}
+										defaultValue={shareUrl}
 										variant="outlined"
 										InputProps={{
 											endAdornment: (
 												<InputAdornment position="end">
 													<CopyToClipboard
-														text={URL}
+														text={shareUrl}
 														onCopy={onCopyText}
 													>
 														<IconButton
@@ -3660,7 +3692,10 @@ const MyStepper = ({
 									item
 									className={classes.SocialMediaDiv}
 								>
-									<SocialMedia />
+									<SocialMedia
+										shareUrl={shareUrl}
+										disabled={false}
+									/>
 								</Grid>
 								<h5 className={classes.share}>
 									Share on Social Media

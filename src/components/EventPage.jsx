@@ -10,6 +10,7 @@ import {
 	FormControl,
 	Select,
 	IconButton,
+	Snackbar,
 } from "@material-ui/core";
 import {
 	ShoppingCartOutlined,
@@ -242,6 +243,9 @@ class EventPage extends Component {
 			eventDescription: null,
 			eventLocation: null,
 			organizerDetails: "",
+			shareUrl: "",
+			oneTimeBuy: false,
+			open3: false,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -249,6 +253,7 @@ class EventPage extends Component {
 		this.inquire = this.inquire.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this);
 		this.goBack = this.goBack.bind(this); // i think you are missing this
+		this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
 	}
 
 	goBack() {
@@ -318,7 +323,9 @@ class EventPage extends Component {
 					blockChainEvent: graphEvents.data.data.events[0],
 					blockChainEventLoaded: true,
 					load: false,
+					oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 				});
+
 				this.updateIPFS();
 				if (this.props.networkId) {
 					console.log(
@@ -595,27 +602,46 @@ class EventPage extends Component {
 			);
 		if (this.state.description !== null)
 			// console.log("desc", this.state.eventDescription);
-		description = (
-			<RichTextEditor
-				readOnly
-				value={RichTextEditor.createValueFromString(
-					this.state.eventDescription,
-					"html"
-				)}
-				// onChange={handleChange}
-				required
-				id="body-text"
-				name="bodyText"
-				type="string"
-				multiline
-				variant="filled"
-				className="editor"
-			/>
-		);
+			description = (
+				<RichTextEditor
+					readOnly
+					value={RichTextEditor.createValueFromString(
+						this.state.eventDescription,
+						"html"
+					)}
+					// onChange={handleChange}
+					required
+					id="body-text"
+					name="bodyText"
+					type="string"
+					multiline
+					variant="filled"
+					className="editor"
+				/>
+			);
 		return description;
 	};
+
+	userExists(buyers, account) {
+		return buyers.some(function (el) {
+			return el.address.toLowerCase() == account.toLowerCase();
+		});
+	}
+
 	handleClickOpen2 = () => {
-		this.setState({ open2: true });
+		if (this.state.oneTimeBuy) {
+			let buyers = this.state.soldTicket;
+			const account = this.props.accounts[0];
+			console.log("userExists", this.userExists(buyers, account));
+			if (this.userExists(buyers, account)) {
+				// alert("One time buy");
+				this.setState({ open3: true });
+			} else {
+				this.setState({ open2: true });
+			}
+		} else {
+			this.setState({ open2: true });
+		}
 	};
 	handleClickOpen = () => {
 		this.setState({ open: true });
@@ -708,6 +734,7 @@ class EventPage extends Component {
 	}
 
 	inquire = async () => {
+		console.log("inquire callled");
 		let balance = await this.props.phnxContract.methods
 			.totalSupply()
 			.call();
@@ -774,6 +801,10 @@ class EventPage extends Component {
 
 	onChangePage(pageTransactions) {
 		this.setState({ pageTransactions });
+	}
+
+	handleCloseSnackbar() {
+		this.setState({ open3: false });
 	}
 
 	render() {
@@ -900,6 +931,21 @@ class EventPage extends Component {
 				if (this.props.match.params.id == event_data.eventId) {
 					body = (
 						<Grid>
+							<Snackbar
+								anchorOrigin={{
+									vertical: "top",
+									horizontal: "center",
+								}}
+								open={this.state.open3}
+								onClose={this.handleCloseSnackbar}
+								message={
+									"This is One Time Buy Event. You can't buy/get more than one ticket for this event."
+								}
+								autoHideDuration={3000}
+								key={"top" + "center"}
+								className="snackbar"
+							/>
+
 							<BuyTicket
 								open={this.state.open2}
 								handleClose={this.handleClose2}
@@ -1084,10 +1130,16 @@ class EventPage extends Component {
 											{!this.state.eventStartTime
 												? `Time`
 												: !this.state.eventEndTime
-												? moment(this.state.eventStartTime)
+												? moment(
+														this.state
+															.eventStartTime
+												  )
 														.utcOffset(0)
 														.format("hh:mma z")
-												: `${moment(this.state.eventStartTime)
+												: `${moment(
+														this.state
+															.eventStartTime
+												  )
 														.utcOffset(0)
 														.format(
 															"hh:mma"
@@ -1208,7 +1260,10 @@ class EventPage extends Component {
 										</div>
 									</Grid>
 									<Grid lg={10} md={9} sm={10} xs={12}>
-										<SocialMedia />
+										<SocialMedia
+											shareUrl={this.state.shareUrl}
+											disabled={false}
+										/>
 									</Grid>
 								</Grid>
 							</Grid>
@@ -1456,7 +1511,9 @@ class EventPage extends Component {
 
 	async componentDidMount() {
 		const buyers = await generateBuyerArr(this.props.match.params.id);
+
 		this.setState({ soldTicket: buyers });
+
 		this.loadEventFromBlockchain();
 		console.log("count", this.props.accounts[0]);
 		window.scroll({
@@ -1467,6 +1524,9 @@ class EventPage extends Component {
 		// this.updateIPFS();
 		// this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
+
+		const shareUrl = window.location;
+		this.setState({ shareUrl: shareUrl });
 	}
 
 	geoFindMe = async () => {

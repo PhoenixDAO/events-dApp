@@ -166,9 +166,11 @@ const useStyles = makeStyles((theme) => ({
 		color: "#413AE2",
 	},
 }));
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
 const styles = (theme) => ({
   root: {
     margin: 0,
