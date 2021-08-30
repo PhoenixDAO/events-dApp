@@ -158,7 +158,9 @@ const DetailForm = (props) => {
 		if (detail.error) {
 			console.log("error occured");
 		} else {
-			window.location.reload();
+			console.log("details", detail);
+			props.setUserDetails(detail.result);
+			// window.location.reload();
 		}
 	};
 
