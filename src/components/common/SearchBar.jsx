@@ -25,18 +25,19 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const SearchBar = ({ connect }) => {
+const SearchBar = (props) => {
 	const classes = useStyles();
 	return (
 		<TextField
 			className={clsx(
 				classes.textField,
-				connect && classes.textFieldMargin
+				props.connect && classes.textFieldMargin
 			)}
 			id="input-with-icon-textfield"
 			variant="outlined"
 			placeholder="Search for events"
 			size="medium"
+			onChange={(e) => props.handleSearch(e.target.value)}
 			InputProps={{
 				className: classes.input,
 				startAdornment: (
