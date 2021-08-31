@@ -381,7 +381,7 @@ const EventCard = (props, context) => {
 										// width: "60%",
 									}}
 								>
-									{event_data.tktTotalQuantitySold >= 2 ? (
+									{event_data.tktTotalQuantitySold >= 5 ? (
 										<img
 											src="/images/fire.png"
 											className="event_badge-hot"
