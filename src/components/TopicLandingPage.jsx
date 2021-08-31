@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Header from "./common/Header";
-import MenuItem from "@material-ui/core/MenuItem"
+import MenuItem from "@material-ui/core/MenuItem";
 
 import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
@@ -36,7 +36,7 @@ import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi from "../config/getGraphApi";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -85,7 +85,7 @@ const useStyles = (theme) => ({
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
-				maxWidth:"80%"
+				maxWidth: "80%",
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
@@ -100,7 +100,7 @@ const useStyles = (theme) => ({
 	"& .MuiPaper-root": {
 		position: "absolute",
 		top: "390px",
-		background: "yellow"
+		background: "yellow",
 	},
 	sortBy: {
 		position: "absolute",
@@ -111,9 +111,9 @@ const useStyles = (theme) => ({
 			left: "0",
 		},
 	},
-	mobilePadding:{
-		padding:"0px 20px"
-	}
+	mobilePadding: {
+		padding: "0px 20px",
+	},
 });
 
 class TopicLandingPage extends Component {
@@ -136,7 +136,7 @@ class TopicLandingPage extends Component {
 			disabledBuying: false,
 			eventCount: 0,
 			dateNow: "",
-			category:"All Events",
+			category: "All Events",
 		};
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
@@ -199,7 +199,7 @@ class TopicLandingPage extends Component {
 
 	//Loadblockchain Data
 	async loadBlockchain() {
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 		if (this._isMounted) {
 			this.setState({
 				loading: true,
@@ -245,12 +245,10 @@ class TopicLandingPage extends Component {
 		}
 	}
 
-	async categoryChange(event){
-		this.setState(
-			{
-				category:event.target.value,
-			}
-		)
+	async categoryChange(event) {
+		this.setState({
+			category: event.target.value,
+		});
 	}
 	//Get My Active Events on Blockchain
 	async loadActiveEvents() {
@@ -263,7 +261,7 @@ class TopicLandingPage extends Component {
 		}
 		const dateTime = Date.now();
 		const dateNow = Math.floor(dateTime / 1000);
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 
 		// GRAPH BLOCK //
 		await axios({
@@ -361,7 +359,7 @@ class TopicLandingPage extends Component {
 				active_length: 0,
 			});
 		}
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
@@ -540,6 +538,55 @@ class TopicLandingPage extends Component {
 		});
 	};
 
+	geoFindMe = async () => {
+		try {
+			const get = await axios.get(`http://ip-api.com/json`);
+			if (!get.data) {
+				return { cityName: "Unknown", stateName: "Unknown" };
+			}
+			return { cityName: get.data.city, stateName: get.data.regionName };
+		} catch (error) {
+			return { cityName: "Unknown", stateName: "Unknown" };
+		}
+	};
+
+	findNearToYouEvents = async (event) => {
+		try {
+			const geoFindUser = await this.geoFindMe();
+			if (geoFindUser) {
+				let cityName = geoFindUser.cityName;
+				let stateName = geoFindUser.stateName;
+				if (cityName) {
+					if (
+						event.city
+							.toLowerCase()
+							.search(cityName.toLowerCase()) !== -1
+					) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+			}
+		} catch (e) {
+			console.log("findNearToYouEvents", e);
+			return false;
+		}
+	};
+
+	filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			// console.log("hide event", this.state.hideEvent);
+			return;
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
+
 	render() {
 		if (count === 0 && !this.state.loading) {
 			body = (
@@ -549,7 +596,7 @@ class TopicLandingPage extends Component {
 					url="/createevent"
 				/>
 			);
-		} 
+		}
 		const { classes } = this.props;
 		let body = <Loading />;
 		const topic = this.theTopic;
@@ -608,19 +655,64 @@ class TopicLandingPage extends Component {
 			let pages = Math.ceil(count / this.perPage);
 
 			for (let i = start; i < end; i++) {
-				updated_list.push(
-					<Event
-						eventData={events_list[i]}
-						toggleBuying={this.toggleBuying}
-						disabledBuying={this.state.disabledBuying}
-						disabledStatus={this.props.disabledStatus}
-						inquire={this.props.inquire}
-						key={events_list[i].eventId}
-						id={events_list[i].eventId}
-						ipfs={events_list[i].ipfsHash}
-						loading={this.state.loading}
-					/>
-				);
+				console.log("EVENTS", events_list[i]);
+				if (this.state.category === "Trending Events") {
+					if (events_list[i].tktTotalQuantitySold > 5) {
+						updated_list.push(
+							<Event
+								eventData={events_list[i]}
+								toggleBuying={this.toggleBuying}
+								disabledBuying={this.state.disabledBuying}
+								disabledStatus={this.props.disabledStatus}
+								inquire={this.props.inquire}
+								key={events_list[i].eventId}
+								id={events_list[i].eventId}
+								ipfs={events_list[i].ipfsHash}
+								loading={this.state.loading}
+							/>
+						);
+					}
+				} else if (this.state.category === "Near you") {
+					this.findNearToYouEvents(events_list[i])
+						.then((eventExist) => {
+							if (eventExist) {
+								updated_list.push(
+									<Event
+										eventData={events_list[i]}
+										toggleBuying={this.toggleBuying}
+										disabledBuying={
+											this.state.disabledBuying
+										}
+										disabledStatus={
+											this.props.disabledStatus
+										}
+										inquire={this.props.inquire}
+										key={events_list[i].eventId}
+										id={events_list[i].eventId}
+										ipfs={events_list[i].ipfsHash}
+										loading={this.state.loading}
+									/>
+								);
+							}
+						})
+						.catch((err) => {
+							console.log("Err", err);
+						});
+				} else {
+					updated_list.push(
+						<Event
+							eventData={events_list[i]}
+							toggleBuying={this.toggleBuying}
+							disabledBuying={this.state.disabledBuying}
+							disabledStatus={this.props.disabledStatus}
+							inquire={this.props.inquire}
+							key={events_list[i].eventId}
+							id={events_list[i].eventId}
+							ipfs={events_list[i].ipfsHash}
+							loading={this.state.loading}
+						/>
+					);
+				}
 			}
 			// console.log("updated_list",updated_list)
 			// updated_list.reverse();
@@ -767,7 +859,9 @@ class TopicLandingPage extends Component {
 							</button>
 						</div> */}
 
-						<div className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding} `}>
+						<div
+							className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding} `}
+						>
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 								{topic}
 							</h2>
@@ -812,15 +906,14 @@ class TopicLandingPage extends Component {
 										getContentAnchorEl: null,
 										anchorOrigin: {
 											vertical: "bottom",
-											horizontal: "left"
-										}
+											horizontal: "left",
+										},
 									}}
 								>
 									<MenuItem
 										value="All Events"
 										style={{
-											fontFamily:
-												"'Aeonik', sans-serif",
+											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
 										All Events
@@ -828,8 +921,7 @@ class TopicLandingPage extends Component {
 									<MenuItem
 										value="Trending Events"
 										style={{
-											fontFamily:
-												"'Aeonik', sans-serif",
+											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
 										Trending Events
@@ -837,8 +929,7 @@ class TopicLandingPage extends Component {
 									<MenuItem
 										value="Near you"
 										style={{
-											fontFamily:
-												"'Aeonik', sans-serif",
+											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
 										Near you

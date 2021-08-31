@@ -17,6 +17,7 @@ const AccountDetail = (props) => {
 				account={props.account}
 				userDetails={props.userDetails}
 				setUserDetails={props.setUserDetails}
+				history={props.history}
 			/>
 		</div>
 	);
