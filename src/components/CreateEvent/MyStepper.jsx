@@ -115,6 +115,12 @@ const useStyles = makeStyles((theme) => ({
 			paddingRight: 25,
 		},
 	},
+	selectBoxMaxWidth:{
+		"& .MuiOutlinedInput-root .MuiSelect-outlined":{
+			paddingLeft:"0px !important",
+			paddingRight:"0px !important"
+		}
+	},
 	backButton: {
 		textTransform: "none",
 		"&:focus": {
@@ -1768,8 +1774,10 @@ const MyStepper = ({
 											item
 											xs={12}
 											sm={12}
-											lg={12}
+											md={12}
+											lg={6}
 											xl={4}
+											px={2}
 										>
 											<Controller
 												name="country"
@@ -1800,13 +1808,16 @@ const MyStepper = ({
 											item
 											xs={12}
 											sm={12}
-											lg={12}
+											md={12}
+											lg={6}
 											xl={4}
+											px={2}
 										>
 											<Controller
 												name="state"
 												control={control}
 												defaultValue=""
+												className={classes.selectBoxMaxWidth}
 												render={({
 													field: { onChange, value },
 													fieldState: { error },
@@ -1832,6 +1843,7 @@ const MyStepper = ({
 											item
 											xs={12}
 											sm={12}
+											md={12}
 											lg={12}
 											xl={4}
 										>
@@ -3680,9 +3692,11 @@ const MyStepper = ({
 								>
 									View your Event
 								</Button>
+								<a href="https://www.travala.com/?ref=phoenixdao">
 								<div className={classes.travelImage}>
 									<img src={travelDone} alt="travel" />
 								</div>
+								</a>
 							</div>
 						) : (
 							publishedEventComponent()

@@ -24,9 +24,11 @@ import GetGraphApi  from '../config/getGraphApi';
 
 const styles = (theme) => ({
 	content: {
-		"@media screen and (min-width: 1200px)": {
-			margin: "40px 0px",
-		},
+		position:"relative",
+		// "@media screen and (min-width: 1200px)": {
+		// 	margin: "40px 0px",
+		// },
+		margin: "40px 0px",
 		backgroundColor: "white",
 		padding: "50px",
 		borderRadius: "8px",
@@ -58,9 +60,15 @@ const styles = (theme) => ({
 		width:"150px",
 	},
 	selectDiv: {
-		position: "absolute",
-		top: "183px",
-		right: "50px"
+		"@media (min-width:1200px)":{
+			position: "absolute",
+			top: "43px",
+			right: "50px",
+		},
+		"@media (max-width: 1200px)":{
+			top: "14%",
+			right:"50%"
+		}
 	},
 	calenderContainer: {
 		position: "relative",
@@ -81,10 +89,12 @@ class Calendars extends Component {
 			event_copy: [],
 			category:"all",
 		};
+
 		this._isMounted = false;
 		this.account = this.props.accounts[0];
 	}
-
+	
+	selectBoxRef = React.createRef();
 	calendarComponentRef = React.createRef();
 
 	async loadBlockchain() {
@@ -294,52 +304,77 @@ class Calendars extends Component {
 					account: events_list[i].owner,
 				});
 			}
+			this.selectBox=(
+				<FormControl
+									variant="outlined"
+									className={classes.categorySelect}
+									// ref={this.selectBoxRef}
+								>
+									<Select
+											labelId="demo-simple-select-outlined-label"
+											id="demo-simple-select-outlined"
+											fullWidth
+											value={this.state.category}
+											onChange={this.categoryChange}
+											displayEmpty
+											// className={classes.selectDropDown}
+											MenuProps={{
+												classes: {
+													paper: classes.menuPaper,
+												},
+												getContentAnchorEl: null,
+												anchorOrigin: {
+												vertical: "bottom",
+												horizontal: "left"}
+											}}
+										>
+											<MenuItem value="all"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														All Events
+													</MenuItem>
+													<MenuItem			
+														value="tickets"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Tickets
+													</MenuItem>
+													<MenuItem			
+														value="created"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Created Events
+													</MenuItem>
+													<MenuItem			
+														value="favourite"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Favourites
+													</MenuItem>
+										</Select>
+							</FormControl>
+			)
 			body = (
 				<div className={classes.calenderContainer}>
 					<Header title="Calendar" phnxButton={true} />
 					<div className={classes.content}>
-						<FullCalendar
-							localizer={localizer}
-							schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
-							ref={this.calendarComponentRef}
-							defaultView="dayGridMonth"
-							dateClick={this.handleDateClick}
-							displayEventTime={true}
-							headerToolbar={{
-								left: "dayGridMonth,timeGridWeek,timeGridDay",
-								center: "prev,title,next",
-								right: "",
-							}}
-							selectable={true}
-							plugins={[
-								dayGridPlugin,
-								interactionPlugin,
-								timeGridPlugin,
-								resourceTimeGridPlugin,
-							]}
-							eventClick={(events_calendar) =>
-								this.goToEvent(events_calendar)
-							}
-							dayMaxEvents={1}
-							timeFormat="H:mm"
-							eventOverlap={false}
-							eventLimit={3}
-							events={events_calendar}
-							// select={this.handleSelectedDates}
-							slotEventOverlap={false}
-							eventTimeFormat={{
-								// like '14:30:00'
-								hour: "2-digit",
-								minute: "2-digit",
-								meridiem: true,
-							}}
-							eventMaxStack={1}
-							allDaySlot={false}
-						/>
-						<div className={`${classes.selectDiv} calendar-select-div`}>
-						<FormControl
+					<div className={`${classes.selectDiv}`}>
+						{/* <FormControl
 									variant="outlined"
 									className={classes.categorySelect}
+									ref={this.selectBoxRef}
 								>
 									<Select
 											labelId="demo-simple-select-outlined-label"
@@ -395,7 +430,7 @@ class Calendars extends Component {
 														Favourites
 													</MenuItem>
 										</Select>
-							</FormControl>
+							</FormControl> */}
 							{/* <FormControl
 								variant="outlined"
 								className={classes.categorySelect}
@@ -422,6 +457,52 @@ class Calendars extends Component {
 								</Select>
 							</FormControl> */}
 						</div>
+						<FullCalendar
+							localizer={localizer}
+							schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
+							ref={this.calendarComponentRef}
+							defaultView="dayGridMonth"
+							dateClick={this.handleDateClick}
+							displayEventTime={true}
+							headerToolbar={{
+								left: "dayGridMonth,timeGridWeek,timeGridDay",
+								center: "prev,title,next",
+								right: 'selectBox',
+							}}
+							selectable={true}
+							plugins={[
+								dayGridPlugin,
+								interactionPlugin,
+								timeGridPlugin,
+								resourceTimeGridPlugin,
+							]}
+							eventClick={(events_calendar) =>
+								this.goToEvent(events_calendar)
+							}
+							dayMaxEvents={1}
+							timeFormat="H:mm"
+							eventOverlap={false}
+							eventLimit={3}
+							events={events_calendar}
+							// select={this.handleSelectedDates}
+							slotEventOverlap={false}
+							eventTimeFormat={{
+								// like '14:30:00'
+								hour: "2-digit",
+								minute: "2-digit",
+								meridiem: true,
+							}}
+							eventMaxStack={1}
+							allDaySlot={false}
+							customButtons={{
+								selectBox: {
+									text: this.selectBox,
+									// click: this.selectBox
+								  }
+								}
+							}
+						/>
+					
 					</div>
 				</div>
 			);
