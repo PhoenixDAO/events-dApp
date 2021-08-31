@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TopicsLandingPage from "./TopicsLandingPage";
 import topicsJson from "../config/topics.json";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi from "../config/getGraphApi";
 
 const WrapperTopicsLandingPage = (props) => {
 	const [loading, setLoading] = useState(true);
@@ -11,13 +11,14 @@ const WrapperTopicsLandingPage = (props) => {
 	const [active_length, setActiveLength] = useState("");
 	const [isActive, setIsActive] = useState(true);
 	const [eventObj, setEventObj] = useState({});
+	const [eventObjCopy, setEventObjCopy] = useState({});
 
 	useEffect(() => {
 		loadBlockchain();
 	}, []);
 
 	const loadBlockchain = async () => {
-		const graphURL  =await GetGraphApi();
+		const graphURL = await GetGraphApi();
 		setLoading(true);
 		setTopicEvents([]);
 		setActiveLength(0);
@@ -66,8 +67,9 @@ const WrapperTopicsLandingPage = (props) => {
 			// delete eventObj["topic name free"];
 
 			setEventObj(eventObj);
+			setEventObjCopy(eventObj);
 			console.log("eventObj", eventObj);
-			console.log("This is object array", Object.keys(eventObj))
+			console.log("This is object array", Object.keys(eventObj));
 		} else {
 			console.log("this called", isActive);
 			loadPastEvents();
@@ -82,7 +84,7 @@ const WrapperTopicsLandingPage = (props) => {
 		// GRAPH BLOCK //
 		const dateTime = Date.now();
 		const dateNow = Math.floor(dateTime / 1000);
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 		try {
 			const graphEvents = await axios({
 				url: graphURL,
@@ -156,7 +158,7 @@ const WrapperTopicsLandingPage = (props) => {
 		setActiveLength(0);
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 
 		await axios({
 			url: graphURL,
@@ -221,13 +223,44 @@ const WrapperTopicsLandingPage = (props) => {
 				console.log(err);
 			});
 	};
-
+	const updateSearch = (value) => {
+		let filteredTopics = eventObjCopy;
+		try {
+			if (value !== "") {
+				console.log("if called in updated search");
+				filteredTopics = Object.keys(eventObjCopy).filter((event) => {
+					return (
+						eventObjCopy[event].name
+							.toLowerCase()
+							.search(value.toLowerCase()) !== -1
+					);
+				});
+				let eventObjHldr = {};
+				if (filteredTopics.length > 0) {
+					for (let i = 0; i < filteredTopics.length; i++) {
+						eventObjHldr[filteredTopics[i]] =
+						eventObjCopy[filteredTopics[i]];
+					}
+				}
+				setEventObj(eventObjHldr);
+			} else {
+				console.log("else called in update search");
+				console.log("eventObj", eventObj);
+				setEventObj(eventObjCopy);
+			}
+		} catch (e) {
+			console.log(e);
+		}
+		console.log("valuee", value);
+		console.log("filteredTopics", filteredTopics);
+	};
 	return (
 		<TopicsLandingPage
 			eventsContract={props.eventsContract}
 			eventObj={eventObj}
 			loading={loading}
 			topicEvents={Topic_Events}
+			handleSearch={updateSearch}
 		/>
 	);
 };

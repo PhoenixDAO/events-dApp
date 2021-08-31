@@ -78,27 +78,27 @@ const useStyles = (theme) => ({
 			marginLeft: "5%",
 		},
 		// minWidth: 120,
-		justifyContent:"space-around",
-		alignItems:"flex-end",
+		justifyContent: "space-around",
+		alignItems: "flex-end",
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
-				maxWidth:"80%"
+				maxWidth: "80%",
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
-			padding:"10px",
+			padding: "10px",
 			fontWeight: 700,
 			// minWidth:130,
 			background: "#fff",
 		},
 	},
-	mobilePadding:{
-		padding: "0 20px"
+	mobilePadding: {
+		padding: "0 20px",
 	},
-	selectDropDown:{
+	selectDropDown: {
 		maxHeight: "200px",
-		width:"100%",
+		width: "100%",
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
@@ -321,7 +321,11 @@ class TopicsLandingPage extends Component {
       </div> */}
 
 						{/* top sticky header */}
-						<Header title="Topics" searchBar={true} />
+						<Header
+							title="Topics"
+							searchBar={true}
+							handleSearch={this.props.handleSearch}
+						/>
 						<br />
 						<br />
 						{/* slider */}
@@ -375,7 +379,9 @@ class TopicsLandingPage extends Component {
 						</div> */}
 
 						<div>
-							<div className= {`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}>
+							<div
+								className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}
+							>
 								<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 									All Topics
 								</h2>
@@ -391,42 +397,43 @@ class TopicsLandingPage extends Component {
 									</Typography>
 
 									<Select
-											labelId="demo-simple-select-outlined-label"
-											id="demo-simple-select-outlined"
-											fullWidth
-											value={this.state.category}
-											onChange={this.handleChangeCategory}
-											displayEmpty
-											className={classes.selectDropDown}
-											MenuProps={{
-												classes: {
-													paper: classes.menuPaper,
-												},
-												getContentAnchorEl: null,
-												anchorOrigin: {
+										labelId="demo-simple-select-outlined-label"
+										id="demo-simple-select-outlined"
+										fullWidth
+										value={this.state.category}
+										onChange={this.handleChangeCategory}
+										displayEmpty
+										className={classes.selectDropDown}
+										MenuProps={{
+											classes: {
+												paper: classes.menuPaper,
+											},
+											getContentAnchorEl: null,
+											anchorOrigin: {
 												vertical: "bottom",
-												horizontal: "left"}
+												horizontal: "left",
+											},
+										}}
+									>
+										<MenuItem
+											value="all"
+											style={{
+												fontFamily:
+													"'Aeonik', sans-serif",
 											}}
 										>
-											<MenuItem			
-														value="all"
-														style={{
-															fontFamily:
-																"'Aeonik', sans-serif",
-														}}
-													>
-														All Topics
-													</MenuItem>
-													<MenuItem			
-														value="tickets"
-														style={{
-															fontFamily:
-																"'Aeonik', sans-serif",
-														}}
-													>
-														Trending Topics
-													</MenuItem>
-										</Select>
+											All Topics
+										</MenuItem>
+										<MenuItem
+											value="tickets"
+											style={{
+												fontFamily:
+													"'Aeonik', sans-serif",
+											}}
+										>
+											Trending Topics
+										</MenuItem>
+									</Select>
 									{/* <Select
 										native
 										value={this.state.category}

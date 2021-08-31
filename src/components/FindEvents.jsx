@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import Carousel from "react-bootstrap/Carousel";
 import { API_URL, REPORT_EVENT } from "../config/const";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi from "../config/getGraphApi";
 import axios from "axios";
 // Import dApp Components
 // import Loading from "./Loading";
@@ -72,8 +72,8 @@ const useStyles = (theme) => ({
 			position: "absolute",
 		},
 	},
-	mobilePadding:{
-		padding: "0 20px"
+	mobilePadding: {
+		padding: "0 20px",
 	},
 	tabBar: {
 		fontWeight: "500",
@@ -95,12 +95,12 @@ const useStyles = (theme) => ({
 	menuPaper: {
 		maxHeight: "200px",
 	},
-	selectDropDown:{
+	selectDropDown: {
 		maxHeight: "200px",
-		width:"85%",
+		width: "85%",
 	},
-	selectEvent:{
-		minWidth:155
+	selectEvent: {
+		minWidth: 155,
 	},
 	formControls: {
 		"@media (min-width: 1024px)": {
@@ -114,7 +114,7 @@ const useStyles = (theme) => ({
 		"& .MuiInputBase-formControl": {
 			"@media (max-width: 575px)": {
 				marginLeft: "50px",
-				maxWidth:"80%"
+				maxWidth: "80%",
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
@@ -132,7 +132,7 @@ const useStyles = (theme) => ({
 	"& .MuiPaper-root": {
 		position: "absolute",
 		top: "390px",
-    background: "yellow"
+		background: "yellow",
 	},
 	sortBy: {
 		position: "absolute",
@@ -192,6 +192,7 @@ class FindEvents extends Component {
 			pageTitle: "All Events",
 			cityName: "",
 			stateName: "",
+			search: "",
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -205,7 +206,6 @@ class FindEvents extends Component {
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
 	}
-
 
 	async categoryChange(event) {
 		if (event.target.value === "populartopics") {
@@ -251,16 +251,22 @@ class FindEvents extends Component {
 	executeScroll = () => {
 		//this.myRef.current.scrollIntoView();
 	};
-	
+
 	executeEventScroll = () => {
 		//this.myRef.current.scrollIntoView();
 		this.eventRef.current.scrollIntoView();
 	};
 
+	handleSearch = (value) => {
+		this.setState({
+			search: value,
+		});
+	};
+
 	//Loads Blockhain Data,
 	async loadBlockchain(filter) {
 		console.log("filter1", filter);
-    		const graphURL  =await GetGraphApi();
+		const graphURL = await GetGraphApi();
 
 		await axios({
 			url: graphURL,
@@ -360,12 +366,11 @@ class FindEvents extends Component {
 	}
 
 	//Search Active Events By Name
-	updateSearch = (e) => {
-		let { value } = e.target;
+	updateSearch = (value) => {
+		let filteredEvents = this.state.event_copy;
 		this.setState({ value }, () => {
 			try {
 				if (this.state.value !== "") {
-					var filteredEvents = this.state.event_copy;
 					filteredEvents = filteredEvents.filter((event) => {
 						return (
 							event.name
@@ -792,6 +797,8 @@ class FindEvents extends Component {
 									</h2>
 								</div>
 							}
+							handleSearch={this.updateSearch}
+							search={this.state.search}
 						/>
 						{/* <div>
 							<br />
@@ -975,7 +982,9 @@ class FindEvents extends Component {
 					) : null}
 
 					<div>
-						<div className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}>
+						<div
+							className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}
+						>
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 								{this.state.pageTitle}
 							</h2>
