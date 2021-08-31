@@ -107,8 +107,8 @@ const useStyles = makeStyles((theme) => ({
 		paddingTop: theme.spacing(5),
 		backgroundColor: "white",
 		borderRadius: "12px",
-		paddingLeft:"10px",
-		paddingRight:"10px",
+		paddingLeft: "10px",
+		paddingRight: "10px",
 		paddingBottom: "50px",
 		"@media (min-width:400px)": {
 			paddingLeft: 25,
@@ -870,6 +870,12 @@ const MyStepper = ({
 	const onChangeRichText = (value) => {
 		console.log("rich value", value);
 		setRichValue(value);
+	};
+
+	const handleImageSelect = (name, index) => {
+		const arr = [...images];
+		arr[index].name = name;
+		setImages([...arr]);
 	};
 
 	const handleSaveCatogory = (fields) => {
@@ -2026,30 +2032,59 @@ const MyStepper = ({
 																		if (
 																			event
 																				.target
+																				.files &&
+																			event
+																				.target
 																				.files[0]
-																				.size >
-																			5000000
 																		) {
-																			onChange(
-																				""
-																			);
-																		} else {
-																			const arr =
-																				[
-																					...images,
-																				];
-																			arr[
-																				index
-																			].name =
-																				event.target.files[0].name;
-																			setImages(
-																				arr
-																			);
-																			onChange(
+																			if (
 																				event
 																					.target
 																					.files[0]
-																			);
+																					.size <
+																				5000000
+																			) {
+																				handleImageSelect(
+																					event
+																						.target
+																						.files[0]
+																						.name,
+																					index
+																				);
+																				onChange(
+																					event
+																						.target
+																						.files[0]
+																				);
+																			} else {
+																				handleImageSelect(
+																					"",
+																					index
+																				);
+																				onChange(
+																					""
+																				);
+																			}
+																		} else {
+																			if (
+																				value
+																			) {
+																				handleImageSelect(
+																					value.name,
+																					index
+																				);
+																				onChange(
+																					value
+																				);
+																			} else {
+																				handleImageSelect(
+																					"",
+																					index
+																				);
+																				onChange(
+																					""
+																				);
+																			}
 																		}
 																	}}
 																/>
