@@ -3762,7 +3762,7 @@ const MyStepper = ({
 								>
 									View your Event
 								</Button>
-								<a href="https://www.travala.com/?ref=phoenixdao">
+								<a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
 								<div className={classes.travelImage}>
 									<img src={travelDone} alt="travel" />
 								</div>

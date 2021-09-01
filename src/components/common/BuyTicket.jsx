@@ -108,24 +108,30 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   eventHolder: {
-    display: "flex",
     border: "1px solid #E4E4E7",
     borderRadius: "12px",
 
   },
   eventImage: {
-    width: "86px",
-    height: "86px",
+    width: "100%",
+    height: "100%",
     objectFit: "cover",
     borderBottomLeftRadius: "12px",
-    borderTopLeftRadius: "12px"
+    borderTopLeftRadius: "12px",
+    "@media (max-width: 600px)":{
+      borderTopRightRadius:"12px",
+      borderBottomRightRadius:"12px",
+      maxHeight:"250px"
+    },
 
   },
 
   details: {
     justifyContent: "space-between",
-    padding: "9px 15px",
-    display: "flex",
+    // padding: "9px 15px",
+    "@media (min-width: 600px)":{
+      display: "flex",
+    },
     width: "100%"
   },
 
@@ -166,12 +172,18 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: "700",
 		color: "#413AE2",
 	},
+  gridPadding:{
+    paddingInline:"10px",
+  },
+  priceAlignment:{
+    "@media (min-width: 600px)":{
+      textAlign: "end",
+    },
+  }
 }));
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -255,38 +267,44 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
         </DialogTitle>
         <DialogContent>
           <div className={classes.eventHolder}>
-            <img src={image} alt={eventTitle} className={classes.eventImage} />
             <Grid className={classes.details}>
-
-              <div style={{maxWidth:"75%"}}>
-                <Typography gutterBottom className={`${classes.eventTitle} text-truncate`}>
-                  {eventTitle}
-                </Typography>
-                <Typography gutterBottom style={{ color: "#73727D", fontSize: "17px",textAlign: "start" }} >
-                  {!eventTime
-                    ? `Date`
-                    : eventTime === "onedayevent"
-                      ? moment(eventDate).format("Do MMM, YYYY")
-                      : `
-							${moment(eventStartDate).format("Do MMM")}
-							-
-							${moment(eventEndDate).format("Do MMM, YYYY")}
-							`},{" "}{time}
-                </Typography>
-              </div>
-              <div style={{ textAlign: "end" }}>
-                <div className={classes.eventinfo}>
-                  <span className={classes.PhnxPrice} title={phnx_price}>
-                  {/* {console.log("pheonix value", phnx_price, typeof(phnx_price))} */}
-                    {pricingFormatter(phnx_price, "PHNX")}
-                  </span>
-                  <div style={{ color: "#56555D", fontSize: "14px" }} title={dollar_price}>
-                    {/* {dollar_price} */}
-                    {pricingFormatter(dollar_price, "$")}
-                    {/* {console.log("pheonix value", dollar_price, typeof(dollar_price))} */}
+            
+            <Grid lg={2} xl={2} md={2} sm={2} xs={12} >
+              <img src={image} alt={eventTitle} className={classes.eventImage} />
+            </Grid>
+              <Grid xs={12} lg={8} xl={8} md={8} sm={8}  className={classes.gridPadding}>
+                <div>
+                  <Typography gutterBottom className={`${classes.eventTitle} text-truncate`}>
+                    {eventTitle}
+                  </Typography>
+                  <Typography gutterBottom style={{ color: "#73727D", fontSize: "17px",textAlign: "start" }} >
+                    {!eventTime
+                      ? `Date`
+                      : eventTime === "onedayevent"
+                        ? moment(eventDate).format("Do MMM, YYYY")
+                        : `
+                ${moment(eventStartDate).format("Do MMM")}
+                -
+                ${moment(eventEndDate).format("Do MMM, YYYY")}
+                `},{" "}{time}
+                  </Typography>
+                </div>
+                </Grid>
+                <Grid  xs={12} lg={2} xl={2} md={2} sm={2} className={classes.gridPadding}>
+                <div className={classes.priceAlignment}>
+                  <div className={classes.eventinfo}>
+                    <span className={classes.PhnxPrice} title={phnx_price}>
+                    {/* {console.log("pheonix value", phnx_price, typeof(phnx_price))} */}
+                      {pricingFormatter(phnx_price, "PHNX")}
+                    </span>
+                    <div style={{ color: "#56555D", fontSize: "14px" }} title={dollar_price}>
+                      {/* {dollar_price} */}
+                      {pricingFormatter(dollar_price, "$")}
+                    </div>
                   </div>
                 </div>
-              </div>
+                </Grid>
+
             </Grid>
 
           </div>
