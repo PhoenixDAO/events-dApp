@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	text: {
 		color: "#4E4E55",
-		marginBottom: "12px",
+		marginBottom: "18px",
 		fontSize: 17,
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 		height:"100%"
 	},
 	contentPosition:{
+		paddingBottom:"25px",
 		height:"100%"
 	}
 }));
@@ -95,7 +96,10 @@ const TopicCard = ({ image, name, slug, count }) => {
 						>
 							<EventNoteIcon fontSize="small" />{" "}
 							<span>&nbsp;</span>
-							{count} Events
+							
+							{count} {
+								count == 1 ?" Event" : " Events"
+							}
 						</Typography>
 					</CardContent>
 				</CardActionArea>

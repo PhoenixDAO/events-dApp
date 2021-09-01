@@ -123,6 +123,7 @@ class App extends Component {
 			avatarNumber: 0,
 			avatarCustom: false,
 			open2: false,
+			eventsAddress:""
 		};
 		this.myRef = React.createRef();
 
@@ -207,7 +208,7 @@ class App extends Component {
 				PhoenixDAO_Testnet_Token_ABI,
 				phoenixAddress
 			);
-			this.setState({ eventsContract: openEvents, phnxContract: PHNX });
+			this.setState({ eventsContract: openEvents, phnxContract: PHNX, eventsAddress:eventAddress });
 		} catch (err) {
 			console.log("error initializing the contract", err);
 		}
@@ -505,6 +506,8 @@ class App extends Component {
 			let a = await this.state.phnxContract.methods
 				.allowance(this.state.account, eventAddress)
 				.call();
+
+				console.log("allowance",a);
 			return a;
 		}
 	};
@@ -975,6 +978,7 @@ class App extends Component {
 									phnxContract={this.state.phnxContract}
 									purchased={this.state.purchased}
 									togglePurchase={this.togglePurchase}
+									eventsAddress={this.state.eventsAddress}
 								/>
 							)}
 						/>
@@ -1314,6 +1318,8 @@ class App extends Component {
 								phnxContract={this.state.phnxContract}
 								purchased={this.state.purchased}
 								togglePurchase={this.togglePurchase}
+								eventsAddress={this.state.eventsAddress}
+
 							/>
 						)}
 					/>
