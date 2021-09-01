@@ -1075,7 +1075,7 @@ class EventPage extends Component {
 											</span>
 											<div style={{ color: "#56555D", fontSize: "14px" }} title={this.state.dollar_price}>
 												{pricingFormatter(this.state.dollar_price, "$")}
-												{console.log(this.state.dollar_price)}
+												{/* {console.log(this.state.dollar_price)} */}
 											</div>
 										</div>
 

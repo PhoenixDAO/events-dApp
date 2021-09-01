@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 		minWidth: "100%",
 		"& .MuiSelect-outlined.MuiSelect-outlined":{
 			"@media (max-width: 1375px) and (min-width:1280px)":{
-				paddingLeft:"0px !important",
+				paddingLeft:"10px !important",
 				paddingRight:"0px !important"
 			},
 		},
