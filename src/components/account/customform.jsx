@@ -4,11 +4,17 @@ import roundlogo from "../Images/roundlogo.svg";
 import ipfs from "../../utils/ipfs";
 import { IconButton } from "@material-ui/core";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const CustomForm = React.memo((props) => {
 	const [file, setFile] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState("");
+	const [open, setOpen] = useState(false);
+	const handleClose = () => {
+		setOpen(false);
+	};
 	const handleFile = (e) => {
 		console.log(e.target.files);
 		if (
@@ -16,6 +22,9 @@ const CustomForm = React.memo((props) => {
 			e.target.files[0].size < 3 * 1024 * 1024
 		) {
 			setFile(e.target.files);
+		} else {
+			setError("File should be be less then 3mb!");
+			setOpen(true);
 		}
 	};
 	const getBase64 = (file) => {
@@ -32,6 +41,7 @@ const CustomForm = React.memo((props) => {
 		let pinit = process.env.NODE_ENV === "production";
 		const base64Img = await getBase64(file[0]);
 		setLoading(true);
+		console.log("FIle", file[0]);
 		if (file[0] !== undefined) {
 			let ipfsData = JSON.stringify({
 				image0: base64Img,
@@ -151,9 +161,28 @@ const CustomForm = React.memo((props) => {
 					onClick={uploadImage}
 					disabled={loading}
 				>
-					{loading ?      <CircularProgress style={{color:"white",width:"15px",height:"15px"}} /> : "Save"}
+					{loading ? (
+						<CircularProgress
+							style={{
+								color: "white",
+								width: "15px",
+								height: "15px",
+							}}
+						/>
+					) : (
+						"Save"
+					)}
 				</button>
 			</div>
+			<Snackbar
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+				open={open}
+				onClose={handleClose}
+				message={error}
+				autoHideDuration={3000}
+				key={"bottom" + "center"}
+				className="snackbar"
+			/>
 		</div>
 	);
 });
