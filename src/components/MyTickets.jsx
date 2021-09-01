@@ -7,6 +7,8 @@ import { withStyles } from "@material-ui/core/styles";
 import Ticket from "./Ticket";
 import Header from "./common/Header";
 import EmptyState from "./EmptyState";
+import GetGraphApi from "../config/getGraphApi";
+import axios from "axios";
 
 
 const useStyles = (theme) => ({	
@@ -41,6 +43,8 @@ class MyTickets extends Component {
 			prevPath: -1,
 			reload: false,
 			blockChainTickets: [],
+			blockChainTicketsCopy: [],
+			value: "",
 		};
 		// this.contracts = context.drizzle.contracts;
 		// this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
@@ -68,16 +72,46 @@ class MyTickets extends Component {
 		// 	Open_events_ABI,
 		// 	Open_events_Address
 		// );
+		const graphURL = await GetGraphApi();
+		await axios({
+			url: graphURL,
+			method: "post",
+			data: {
+				query: `
+				{
+					tickets(where: {buyer:"0xccb2a821eaf7526c6d8d52aaf7c34cd8d1d10f28"}){
+					  id
+					  eventId
+					  eventName
+					}
+				  }
+				`,
+			},
+		}).then((graphEvents) => {
+			console.log("GraphQL query response", Date.now(), graphEvents);
 
-		const blockChainTickets = await this.props.eventsContract.methods
-			.ticketsOf(this.props.accounts[0])
-			.call();
-		const newsort = blockChainTickets.concat().sort((a, b) => b - a);
-		this.setState({
-			blockChainTickets: newsort,
-			blockChainTicketsLoaded: false,
+			if (
+				graphEvents.data ||
+				graphEvents.data.data !== "undefined" ||
+				graphEvents.data.data.tickets.length > 0
+			) {
+				console.log("Data is here from graph");
+				this.setState({
+					blockChainTickets: graphEvents.data.data.tickets,
+					blockChainTicketsCopy: graphEvents.data.data.tickets,
+					blockChainTicketsLoaded: false,
+				});
+			}
 		});
-		console.log("blockchainTickets",blockChainTickets);
+		// const blockChainTickets = await this.props.eventsContract.methods
+		// 	.ticketsOf(this.props.accounts[0])
+		// 	.call();
+		// const newsort = blockChainTickets.concat().sort((a, b) => b - a);
+		// console.log("BLockchain ticket data", newsort);
+		// this.setState({
+		// 	blockChainTickets: newsort,
+		// 	blockChainTicketsLoaded: false,
+		// });
 		// this.setState({reload:false})
 		// this.updateIPFS();
 		// console.log("temp Event web3",newsort)
@@ -87,24 +121,24 @@ class MyTickets extends Component {
 
 	//Search Active Events By Name
 	updateSearch = (value) => {
-		let filteredTickets = this.state.blockChainTickets;
+		let filteredTickets = this.state.blockChainTicketsCopy;
 		console.log(this.state.blockChainTickets);
 		try {
-			if (this.state.value !== "") {
+			if (value !== "") {
 				filteredTickets = filteredTickets.filter((ticket) => {
-					return ticket.name.toLowerCase().search(value) !== -1;
+					return ticket.eventName.toLowerCase().search(value) !== -1;
 				});
 			} else {
-				filteredTickets = this.state.event_copy;
+				filteredTickets = this.state.blockChainTicketsCopy;
 			}
 		} catch (e) {
 			console.log(e);
 		}
 		console.log("FIltered Tickets", filteredTickets);
-		// this.setState({
-		// 	blockChainTickets: filteredTickets,
-		// 	// active_length: filteredEvents.length,
-		// });
+		this.setState({
+			blockChainTickets: filteredTickets,
+			// active_length: filteredEvents.length,
+		});
 	};
 
 	render() {
@@ -154,14 +188,14 @@ class MyTickets extends Component {
 
 		for (let i = start; i < end; i++) {
 			// console.log("ticketData this.state.blockChainTickets[i]",this.state.blockChainTickets[i])
-			let ticket = parseInt(this.state.blockChainTickets[i], 10);
+			let ticket = parseInt(this.state.blockChainTickets[i].id, 10);
 			console.log("tickets", ticket);
 			tickets.push(
 				<Ticket
 					key={ticket}
 					id={ticket}
 					reloadData={this.reloadData}
-					ticketData={this.state.blockChainTickets[i]}
+					ticketData={Number(this.state.blockChainTickets[i].id)}
 					eventsContract={this.props.eventsContract}
 				/>
 			);

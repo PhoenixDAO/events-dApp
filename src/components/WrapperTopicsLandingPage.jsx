@@ -3,6 +3,8 @@ import axios from "axios";
 import TopicsLandingPage from "./TopicsLandingPage";
 import topicsJson from "../config/topics.json";
 import GetGraphApi from "../config/getGraphApi";
+import moment from "moment";
+import { API_URL, REPORT_EVENT } from "../config/const";
 
 const WrapperTopicsLandingPage = (props) => {
 	const [loading, setLoading] = useState(true);
@@ -12,10 +14,12 @@ const WrapperTopicsLandingPage = (props) => {
 	const [isActive, setIsActive] = useState(true);
 	const [eventObj, setEventObj] = useState({});
 	const [eventObjCopy, setEventObjCopy] = useState({});
+	const [hideEvent, setHideEvent] = useState([]);
 
 	useEffect(() => {
+		filterHideEvent();
 		loadBlockchain();
-	}, []);
+	}, [hideEvent.length]);
 
 	const loadBlockchain = async () => {
 		const graphURL = await GetGraphApi();
@@ -45,10 +49,16 @@ const WrapperTopicsLandingPage = (props) => {
 				for (let i = 0; i < event.length; i++) {
 					let objHolder = eventObj[event[i].topic];
 					if (objHolder) {
-						objHolder.eventCount = objHolder.eventCount + 1;
+						if (!event[i].hide) {
+							objHolder.eventCount = objHolder.eventCount + 1;
+						}
 					} else {
 						eventObj[event[i].topic] = event[i];
-						eventObj[event[i].topic].eventCount = 1;
+						if (!event[i].hide) {
+							eventObj[event[i].topic].eventCount = 1;
+						} else {
+							eventObj[event[i].topic].eventCount = 0;
+						}
 						if (topicsJson[event[i].topic]) {
 							eventObj[event[i].topic].image =
 								topicsJson[event[i].topic].image;
@@ -62,10 +72,6 @@ const WrapperTopicsLandingPage = (props) => {
 					}
 				}
 			}
-			// delete eventObj["topic name"];
-			// delete eventObj["musfira topic name"];
-			// delete eventObj["topic name free"];
-
 			setEventObj(eventObj);
 			setEventObjCopy(eventObj);
 			console.log("eventObj", eventObj);
@@ -77,6 +83,17 @@ const WrapperTopicsLandingPage = (props) => {
 	};
 
 	//Get My Active Events on Blockchain
+
+	const filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			console.log("HIde event", get);
+			setHideEvent(get.data.result);
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
+
 	const loadActiveEvents = async () => {
 		setLoading(true);
 		setTopicEvents([]);
@@ -136,6 +153,16 @@ const WrapperTopicsLandingPage = (props) => {
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
 				console.log("GraphQL query newsort", newsort);
+				console.log("Hide events", hideEvent);
+				for (let i = 0; i < newsort.length; i++) {
+					for (let j = 0; j < hideEvent.length; j++) {
+						if (newsort[i].eventId !== hideEvent[j].id) {
+							newsort[i].hide = false;
+						} else {
+							newsort[i].hide = true;
+						}
+					}
+				}
 				setTimeout(() => {
 					setLoading(false);
 				}, 2000);
@@ -223,6 +250,7 @@ const WrapperTopicsLandingPage = (props) => {
 				console.log(err);
 			});
 	};
+
 	const updateSearch = (value) => {
 		let filteredTopics = eventObjCopy;
 		try {
@@ -239,7 +267,7 @@ const WrapperTopicsLandingPage = (props) => {
 				if (filteredTopics.length > 0) {
 					for (let i = 0; i < filteredTopics.length; i++) {
 						eventObjHldr[filteredTopics[i]] =
-						eventObjCopy[filteredTopics[i]];
+							eventObjCopy[filteredTopics[i]];
 					}
 				}
 				setEventObj(eventObjHldr);
