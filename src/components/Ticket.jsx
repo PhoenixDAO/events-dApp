@@ -78,7 +78,7 @@ class Ticket extends Component {
 			});
 			return;
 		} catch (error) {
-			// console.log("check error", error);
+			console.log("check error", error);
 		}
 	};
 	updateIPFS = () => {
@@ -92,7 +92,8 @@ class Ticket extends Component {
 					loading: true,
 				},
 				() => {
-					ipfs.get(this.state.blockChainEvent[7])
+					console.log("blockChainEvent.ipfsHash",this.state.blockChainEvent.ipfsHash);
+					ipfs.get(this.state.blockChainEvent.ipfsHash)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
 							if (!this.isCancelled) {
@@ -119,7 +120,9 @@ class Ticket extends Component {
 								});
 							}
 						})
-						.catch(() => {
+						.catch((e) => {
+							console.log("file",e);
+
 							if (!this.isCancelled) {
 								this.setState({
 									loading: false,
@@ -344,6 +347,7 @@ console.log("graphURl.....",this.state.eventId);
 			// this.setState({ blockChainEvent: blockChainEvent, blockChainEventLoaded: true })
 		}
 		if (this.event !== null) {
+			console.log("Iam here");
 			this.updateIPFS();
 		}
 	};
@@ -548,10 +552,14 @@ console.log("graphURl.....",this.state.eventId);
 
 	componentDidUpdate() {
 		this.updateEvent();
+		this.updateIPFS();
+
 	}
 
 	componentDidMount() {
 		// console.log("this.ticket in Ticket",this.ticket)
+		this.updateIPFS();
+
 		this.updateEvent();
 		this.filterHideEvent();
 	}

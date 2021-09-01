@@ -247,7 +247,7 @@ const Terms = (props) => {
 				</Grid>
 				<Grid
 					className={`${classes.hideScroll} ${classes.hideScroll2}`}
-					style={{ height: "510px" }}
+					style={{ height: "89%" }}
 					lg={4}
 					md={4}
 					sm={6}

@@ -77,6 +77,7 @@ class MyTickets extends Component {
 			blockChainTickets: newsort,
 			blockChainTicketsLoaded: false,
 		});
+		console.log("blockchainTickets",blockChainTickets);
 		// this.setState({reload:false})
 		// this.updateIPFS();
 		// console.log("temp Event web3",newsort)

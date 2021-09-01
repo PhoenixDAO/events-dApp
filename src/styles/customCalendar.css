@@ -56,3 +56,13 @@ td {
 .daterangepicker .calendar-table .prev span {
 	padding: 2px;
 }
+
+.fc-v-event .fc-event-title
+{
+	word-break: break-word;
+}
+.fc-timegrid-more-link{
+	background:#4e4e55 !important;
+	color: #fff !important;
+
+}

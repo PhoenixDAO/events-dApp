@@ -23,15 +23,19 @@ const useStyles = makeStyles((theme) => ({
 			"@media (max-width: 800px)": {
 				fontSize: "14px",
 			},
+			"@media (max-width: 1000px)": {
+				width: "70%",
+
+			},
 			
-			width: "70%",
+			width: "57%",
 			textShadow: "none",
-			fontSize: "19px",
+			fontSize: "18px",
 		},
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
-		alignItems: "center",
+		alignItems: "flex-start",
 		boxShadow: "none",
 		background: "rgba(0,0,0,0.7)",
 	},
@@ -42,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 			fontSize: "24px !important",
 		},
 		fontSize: "36px !important",
-		fontFamily: '"AeonikReg" ,sans-serif',
+		fontFamily: '"Aeonik" ,sans-serif',
 	},
 	text: {
 		textAlign:"justify",
