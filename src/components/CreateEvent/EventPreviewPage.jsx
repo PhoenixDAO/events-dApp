@@ -480,7 +480,7 @@ class EventPreviewPage extends Component {
 									</div>
 								</Grid>
 								<Grid lg={10} md={9} sm={10} xs={12}>
-									<SocialMedia disabled={true} />
+									<SocialMedia disabled={true} shareUrl="" />
 								</Grid>
 							</Grid>
 						</Grid>

@@ -84,6 +84,28 @@ class MyTickets extends Component {
 
 	executeScroll = () => this.myRef.current.scrollIntoView();
 
+	//Search Active Events By Name
+	updateSearch = (value) => {
+		let filteredTickets = this.state.blockChainTickets;
+		console.log(this.state.blockChainTickets);
+		try {
+			if (this.state.value !== "") {
+				filteredTickets = filteredTickets.filter((ticket) => {
+					return ticket.name.toLowerCase().search(value) !== -1;
+				});
+			} else {
+				filteredTickets = this.state.event_copy;
+			}
+		} catch (e) {
+			console.log(e);
+		}
+		console.log("FIltered Tickets", filteredTickets);
+		// this.setState({
+		// 	blockChainTickets: filteredTickets,
+		// 	// active_length: filteredEvents.length,
+		// });
+	};
+
 	render() {
 		// let body = <PhoenixDAOLoader />;
 		const { classes } = this.props;
@@ -100,9 +122,7 @@ class MyTickets extends Component {
 		// 		</div>
 		// }
 		//this was else if before
-		if (
-			this.state.blockChainTicketsLoaded
-		) {
+		if (this.state.blockChainTicketsLoaded) {
 			body = <PhoenixDAOLoader />;
 		} else if (
 			this.state.blockChainTickets.length === 0 &&
@@ -134,7 +154,7 @@ class MyTickets extends Component {
 		for (let i = start; i < end; i++) {
 			// console.log("ticketData this.state.blockChainTickets[i]",this.state.blockChainTickets[i])
 			let ticket = parseInt(this.state.blockChainTickets[i], 10);
-			console.log("tickets",ticket);
+			console.log("tickets", ticket);
 			tickets.push(
 				<Ticket
 					key={ticket}
@@ -259,7 +279,11 @@ class MyTickets extends Component {
 		return (
 			<div ref={this.myRef}>
 				<div className="my-tickets-page">
-					<Header title="My Tickets" searchBar={true} />
+					<Header
+						title="My Tickets"
+						searchBar={true}
+						handleSearch={this.updateSearch}
+					/>
 					{body}
 				</div>
 				{/* <div className="sticky-nav-travel">

@@ -66,6 +66,20 @@ export const getUserDetails = async ({ address, networkId }) => {
 	}
 };
 
+export const getUser = async ({ address, networkId }) => {
+	try {
+		// console.log("serverAPI address and networkId",address,networkId)
+		const result = await axios.get(
+			`${API_URL}${GET_USER_DETAIL}/${address}/${networkId}`
+		);
+		// console.log("serverAPI getUserDetails", result.data.result);
+		return { result: result.data, error: false };
+	} catch (err) {
+		console.log("serverAPI error occured in getUser", err);
+		return { error: true, message: err };
+	}
+};
+
 export const updateEventViews = async ({ address, networkId, eventId }) => {
 	try {
 		console.log(

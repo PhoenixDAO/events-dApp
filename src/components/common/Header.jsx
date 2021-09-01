@@ -47,12 +47,13 @@ const Header = ({
 	buyTicket,
 	handleClickOpen2,
 	accounts,
+	search,
+	handleSearch,
 }) => {
 	const classes = useStyles();
 	const [openWallet, setOpenWallet] = useState(false);
 	const [openBuyPhnx, setOpenBuyPhnx] = useState(false);
 	const [transak, setTransak] = useState(false);
-
 	const handleOpenWallet = () => {
 		setOpenWallet(true);
 	};
@@ -116,7 +117,13 @@ const Header = ({
 				<BuyPhnxButton />
 			) : null} */}
 
-				{searchBar ? <SearchBar connect={connect} /> : null}
+				{searchBar ? (
+					<SearchBar
+						connect={connect}
+						handleSearch={handleSearch}
+						search={search}
+					/>
+				) : null}
 
 				{Object.keys(accounts).length === 0 ? (
 					<ConnectWalletButton onClick={handleOpenWallet} />

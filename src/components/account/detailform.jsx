@@ -7,7 +7,8 @@ import PropTypes from "prop-types";
 import IdentityForm from "./identityform";
 import Tooltip from "@material-ui/core/Tooltip";
 import ipfs from "../../utils/ipfs";
-
+import { CircularProgress } from "@material-ui/core";
+// import { useHistory } from "react-router-dom";
 const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
 	const [organizer, setOrganizer] = useState("");
@@ -20,6 +21,8 @@ const DetailForm = (props) => {
 	const [name, setName] = useState("Bennu");
 	const [avatarNumber, setAvatarNumber] = useState(0);
 	const [ipfsImage, setIpfsImage] = useState("");
+	const [loading, setLoading] = useState(false);
+	// const history = useHistory();
 	useEffect(() => {
 		// console.log("this.props.userDetails", props.userDetails);
 		provideImage();
@@ -135,16 +138,7 @@ const DetailForm = (props) => {
 
 	const updateUserInfo = async (e) => {
 		e.preventDefault();
-		console.log({
-			address: props.account,
-			networkId: props.networkId,
-			name: name, //we need to change this when the design is finalised
-			organizerDetails: organizer,
-			avatarCustom: avatarCustom, //we need to change this when the design is finalised
-			avatarNumber: avatarNumber, //we need to change this when the design is finalised
-			avatar: avatar,
-			alternateCurrency: alternateCurrency,
-		});
+		setLoading(true);
 		const detail = await updateUserDetails({
 			address: props.account,
 			networkId: props.networkId,
@@ -155,11 +149,13 @@ const DetailForm = (props) => {
 			avatar: avatar,
 			alternateCurrency: alternateCurrency,
 		});
+		setLoading(false);
 		if (detail.error) {
 			console.log("error occured");
 		} else {
 			console.log("details", detail);
 			props.setUserDetails(detail.result);
+			props.history.push("/");
 			// window.location.reload();
 		}
 	};
@@ -277,8 +273,19 @@ const DetailForm = (props) => {
 						<button
 							className="acc-frm-btn"
 							onClick={updateUserInfo}
+							disabled={loading}
 						>
-							Save
+							{loading ? (
+								<CircularProgress
+									style={{
+										color: "white",
+										width: "15px",
+										height: "15px",
+									}}
+								/>
+							) : (
+								"Save"
+							)}
 						</button>
 					</div>
 				</form>

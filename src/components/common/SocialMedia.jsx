@@ -33,15 +33,14 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const SocialMedia = ({ title, disabled }) => {
+const SocialMedia = ({ disabled, shareUrl }) => {
 	const classes = useStyles();
-	let shareUrl = window.location;
+
 	return (
 		<Grid container justify="flex-end" className={classes.socialMediaIcons}>
 			<EmailShareButton
 				className="iconHolder"
 				url={shareUrl}
-				title={title}
 				resetButtonStyle={false}
 				disabled={disabled}
 			>
@@ -51,7 +50,6 @@ const SocialMedia = ({ title, disabled }) => {
 			<FacebookShareButton
 				className="iconHolder"
 				url={shareUrl}
-				title={title}
 				resetButtonStyle={false}
 				disabled={disabled}
 			>
@@ -61,7 +59,6 @@ const SocialMedia = ({ title, disabled }) => {
 			<InstapaperShareButton
 				className="iconHolder"
 				url={shareUrl}
-				title={title}
 				resetButtonStyle={false}
 				disabled={disabled}
 			>
@@ -71,7 +68,6 @@ const SocialMedia = ({ title, disabled }) => {
 			<TwitterShareButton
 				className="iconHolder"
 				url={shareUrl}
-				title={title}
 				resetButtonStyle={false}
 				disabled={disabled}
 			>
@@ -81,7 +77,6 @@ const SocialMedia = ({ title, disabled }) => {
 			<LinkedinShareButton
 				className="iconHolder"
 				url={shareUrl}
-				title={title}
 				resetButtonStyle={false}
 				disabled={disabled}
 			>
@@ -90,7 +85,6 @@ const SocialMedia = ({ title, disabled }) => {
 			<TelegramShareButton
 				className="iconHolder"
 				url={shareUrl}
-				title={title}
 				resetButtonStyle={false}
 				disabled={disabled}
 			>
@@ -100,7 +94,6 @@ const SocialMedia = ({ title, disabled }) => {
 			<WhatsappShareButton
 				className="iconHolder"
 				url={shareUrl}
-				title={title}
 				resetButtonStyle={false}
 				disabled={disabled}
 			>
@@ -110,7 +103,6 @@ const SocialMedia = ({ title, disabled }) => {
 			<RedditShareButton
 				className="iconHolder"
 				url={shareUrl}
-				title={title}
 				resetButtonStyle={false}
 				disabled={disabled}
 			>

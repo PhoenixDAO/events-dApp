@@ -82,6 +82,7 @@ class CreateEvent extends Component {
 			activeFlamingStep: 0,
 			isEventCreated: false,
 			progressText: 0,
+			shareUrl: "",
 		};
 		this.contracts = context.drizzle.contracts;
 		this.onHandleTxReject = this.onHandleTxReject.bind(this);
@@ -122,6 +123,17 @@ class CreateEvent extends Component {
 				progressText: 0,
 			};
 		});
+	}
+
+	async getEventURL() {
+		let eventCount = await await this.props.eventsContract.methods
+			.getEventsCount()
+			.call();
+		console.log("eventCount", eventCount);
+		eventCount = Number(eventCount) + 1;
+		var base_url = window.location.origin;
+		const shareUrl = `${base_url}/event/${eventCount}`;
+		this.setState({ shareUrl: shareUrl });
 	}
 
 	handleCreateEvent = async () => {
@@ -295,6 +307,7 @@ class CreateEvent extends Component {
 										}
 									);
 									this.onFlamingStepsChange();
+									await this.getEventURL();
 									clearInterval(intervalVar);
 								}
 							}, 5000);
@@ -605,6 +618,7 @@ class CreateEvent extends Component {
 								activeFlamingStep={this.state.activeFlamingStep}
 								isEventCreated={this.state.isEventCreated}
 								progressText={this.state.progressText}
+								shareUrl={this.state.shareUrl}
 							/>
 						</div>
 						<div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 create-event">
@@ -634,6 +648,7 @@ class CreateEvent extends Component {
 							activeFlamingStep={this.state.activeFlamingStep}
 							isEventCreated={this.state.isEventCreated}
 							progressText={this.state.progressText}
+							shareUrl={this.state.shareUrl}
 						/>
 					</div>
 					<div className="col-xl-4 col-lg-12 col-md-12 col-sm-12 col-xs-12 create-event">
