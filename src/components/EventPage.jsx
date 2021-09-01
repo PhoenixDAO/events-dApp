@@ -354,7 +354,7 @@ class EventPage extends Component {
 							organizerDetails:
 								userDetails.result.result.userHldr.organizerDetails,
 						});
-						this.provideImage(userDetails.result.result);
+						this.provideImage(userDetails.result.result.userHldr);
 					}
 				}
 				this.priceCalculation(0);
@@ -629,17 +629,38 @@ class EventPage extends Component {
 		return description;
 	};
 	handleClickOpen2 = () => {
-		if (this.props.networkId != GLOBAL_NETWORK_ID && this.props.networkId != GLOBAL_NETWORK_ID_2) {
-			this.setState({ open3: true });
-		}
-		else {
-			this.setState({ open2: true });
-
+		if (
+			this.props.networkId != GLOBAL_NETWORK_ID &&
+			this.props.networkId != GLOBAL_NETWORK_ID_2
+		) {
+			this.setState({
+				open3: true,
+				open3Message: "Please connect to ethereum or matic main-net",
+			});
+		} else {
+			// this.setState({ open2: true });
+			if (this.state.oneTimeBuy) {
+				let buyers = this.state.soldTicket;
+				const account = this.props.accounts[0];
+				console.log("userExists", this.userExists(buyers, account));
+				if (this.userExists(buyers, account)) {
+					// alert("One time buy");
+					this.setState({
+						open3: true,
+						open3Message:
+							"This is One Time Buy Event. You can't buy/get more than one ticket for this event.",
+					});
+				} else {
+					this.setState({ open2: true });
+				}
+			} else {
+				this.setState({ open2: true });
+			}
 		}
 	};
-	handleCloseSnackbar = () => {
-		this.setState({ open3: false });
-	};
+	handleCloseSnackbar() {
+		this.setState({ open3: false, open3Message: "" });
+	}
 	handleClickOpen = () => {
 		this.setState({ open: true });
 	};
@@ -836,6 +857,7 @@ class EventPage extends Component {
 				onclick: true,
 			},
 		];
+		console.log("myArray",myArray);
 		return myArray[index].img;
 	};
 
@@ -1026,10 +1048,13 @@ class EventPage extends Component {
 								dollar_price={this.state.dollar_price}
 							/>
 							<Snackbar
-								anchorOrigin={{ vertical: "top", horizontal: "center" }}
+								anchorOrigin={{
+									vertical: "top",
+									horizontal: "center",
+								}}
 								open={this.state.open3}
 								onClose={this.handleCloseSnackbar}
-								message={"Please connect to ethereum or matic main-net"}
+								message={this.state.open3Message}
 								autoHideDuration={3000}
 								key={"top" + "center"}
 								className="snackbar"
