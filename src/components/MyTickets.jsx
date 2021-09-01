@@ -3,10 +3,35 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
+import { withStyles } from "@material-ui/core/styles";
 import Ticket from "./Ticket";
 import Header from "./common/Header";
 import EmptyState from "./EmptyState";
 
+
+const useStyles = (theme) => ({	
+lgScreenFooterBanner:{
+	position: 'absolute',
+	marginLeft: '-100px',
+	marginRight: '0%',
+	marginTop:"8%",
+	"@media (max-width: 800px)":{
+		marginLeft:"-90px",
+		"& img":{
+			// transform:"scale(1.4)"
+		}
+	},
+	"@media (min-width: 1540px)":{
+		marginLeft:"-150px",
+		width: "100%",
+	},
+	"@media (min-width: 1590px)":{
+		marginLeft:"-330px",
+	}
+	// "@media (max-width: 1540px)":{
+	// 	marginLeft:"13%"
+	// }
+}})
 class MyTickets extends Component {
 	constructor(props, context) {
 		super(props);
@@ -83,6 +108,7 @@ class MyTickets extends Component {
 
 	render() {
 		// let body = <PhoenixDAOLoader />;
+		const { classes } = this.props;
 		let body;
 
 		// if (
@@ -263,6 +289,11 @@ class MyTickets extends Component {
 				{/* <div className="sticky-nav-travel">
 					<img src={"/images/travel.svg"} />
 				</div> */}
+					<a href="https://www.travala.com/?ref=phoenixdao">
+					<div className={classes.lgScreenFooterBanner}>
+						<img src={"/images/footer.jpg"} className="img-fluid w-100"/>
+					</div>
+					</a>
 			</div>
 		);
 	}
@@ -296,4 +327,4 @@ const mapStateToProps = (state) => {
 };
 
 const AppContainer = drizzleConnect(MyTickets, mapStateToProps);
-export default AppContainer;
+export default withStyles(useStyles)(AppContainer);

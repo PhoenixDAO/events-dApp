@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	text: {
 		color: "#4E4E55",
+		marginBottom: "12px",
 		fontSize: 17,
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
@@ -34,7 +35,11 @@ const useStyles = makeStyles((theme) => ({
 		display: "-webkit-box",
 		WebkitBoxOrient: "vertical",
 		overflow: "hidden",
-		textOverflow: "ellipsis"
+		textOverflow: "ellipsis",
+		"@media (min-width: 990px) and (max-width: 1024px)": {
+			/* For landscape layouts only */
+			WebkitLineClamp: "3",
+		  }
 	},
 	cardHeight:{
 		height:"100%"

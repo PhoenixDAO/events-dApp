@@ -30,8 +30,8 @@
 
 export function pricingFormatter(num, currencyType){
     if(typeof(num) === "string" && currencyType == "$"){
-        if (num == "FREE"){
-            return "FREE"
+        if (num == ""){
+            return null
         }
             if(num.includes("$")){
                 num = num.split("$")

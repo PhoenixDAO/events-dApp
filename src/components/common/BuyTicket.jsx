@@ -277,12 +277,13 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
               <div style={{ textAlign: "end" }}>
                 <div className={classes.eventinfo}>
                   <span className={classes.PhnxPrice} title={phnx_price}>
-                  {console.log("pheonix value", phnx_price, typeof(phnx_price))}
+                  {/* {console.log("pheonix value", phnx_price, typeof(phnx_price))} */}
                     {pricingFormatter(phnx_price, "PHNX")}
                   </span>
                   <div style={{ color: "#56555D", fontSize: "14px" }} title={dollar_price}>
                     {/* {dollar_price} */}
                     {pricingFormatter(dollar_price, "$")}
+                    {/* {console.log("pheonix value", dollar_price, typeof(dollar_price))} */}
                   </div>
                 </div>
               </div>
@@ -327,7 +328,9 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
         </DialogActions>
         {
           purchased ?
+          <a href="https://www.travala.com/?ref=phoenixdao">
             <img src="/images/travala.svg" className={classes.image} />
+            </a>
             : null
         }
       </Dialog>

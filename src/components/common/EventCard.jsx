@@ -378,6 +378,7 @@ const EventCard = (props, context) => {
 										fontSize: 16,
 										fontWeight: 700,
 										fontFamily: "'Aeonik', sans-serif",
+										wordBreak:"break-word"
 										// width: "60%",
 									}}
 								>

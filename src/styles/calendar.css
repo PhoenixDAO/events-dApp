@@ -105,9 +105,6 @@ table {
     border: 1px solid transparent !important;
 }
 
-.fc .fc-button-primary:hover {
-    border: 1px solid transparent !important;
-}
 
 .fc-button-primary {
     text-transform: capitalize !important;
@@ -129,9 +126,27 @@ table {
 }
 
 .fc-toolbar-chunk:nth-child(2) {
-    padding-left: 147px;
-}
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}  
+@media (max-width:1170px) {
+    .fc-toolbar-chunk:nth-child(2) {
+        margin-top:3%;
+        padding-left: 0px !important;
+        align-self: center !important;
+        padding-right: 0px !important;
+    }  
+    .fc-toolbar-chunk:nth-child(3){
+        padding-left: 0px !important;
+        align-self: center !important;
+        padding-right: 0px !important;
+    }  
+  
+.fc .fc-toolbar {
+        display: contents !important;
 
+    }
+}
 .fc-scroller {
     overflow: auto !important;
     scrollbar-height: none;
@@ -150,6 +165,19 @@ table {
     background-color: white !important;
 }
 
+.fc .fc-button-primary {
+    /* color:#fff !important; */
+    background-color: var(--fc-button-bg-color, #fff) !important;
+    background-color: var(--fc-button-border-color, #fff) !important;
+    border: 0px solid !important;
+    -webkit-box-shadow: 0 0 0 0.2rem #fff !important;
+    box-shadow: 0 0 0 0.2rem #fff !important;
+}
+
+/* 
+.fc .fc-button-primary:hover {
+    color:#fff !important
+} */
 .fc-timegrid-slots tr {
     border: 1px solid transparent !important;
 }
@@ -200,6 +228,7 @@ table {
 
 .fc .fc-toolbar-title {
     align-items: center;
+    text-align: center;
     display: flex;
     justify-content: center;
 }
@@ -214,12 +243,8 @@ table {
     .fc .fc-daygrid-day-frame {
         min-height: 90px !important;
     }
-    .fc .fc-toolbar {
-        display: block !important;
-    }
     .fc-toolbar-chunk:nth-child(3) {
         display: block !important;
-        padding-top: 19px;
     }
     .fc .fc-daygrid-day,
     .fc-col-header-cell {
@@ -238,13 +263,32 @@ table {
 }
 
 .fc .fc-button-primary:focus {
-    border: 0px solid transparent !important;
-    outline: 0 !important;
+    /* color:#fff !important; */
+    background-color: var(--fc-button-bg-color, #fff) !important;
+    background-color: var(--fc-button-border-color, #fff) !important;
+    border: 0px solid !important;
+    -webkit-box-shadow: 0 0 0 0.2rem #fff !important;
+    box-shadow: 0 0 0 0.2rem #fff !important;
+}
+
+.fc-next-button{
+    /* color:rgb(29, 27, 27) !important; */
+    background-color: var(--fc-button-bg-color, #fff) !important;
+    background-color: var(--fc-button-border-color, #fff) !important;
+}
+.fc .fc-button-primary:active {
+    /* color:#fff !important; */
+    background-color: var(--fc-button-bg-color, #fff) !important;
+    background-color: var(--fc-button-border-color, #fff) !important;
+    border: 0px solid !important;
+    -webkit-box-shadow: 0 0 0 0.2rem #fff !important;
+    box-shadow: 0 0 0 0.2rem #fff !important;
 }
 
 @media screen and (max-width:500px) {
     .fc-toolbar-chunk:nth-child(2) {
-        display: inline !important;
+        /* display: inline !important; */
+        margin-top: -6%;
     }
     .fc-toolbar-chunk:nth-child(2) div {
         margin-top: 40px !important;
