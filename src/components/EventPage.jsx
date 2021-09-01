@@ -248,8 +248,13 @@ class EventPage extends Component {
 			eventDescription: null,
 			eventLocation: null,
 			organizerDetails: "",
-			open3: false
-
+			shareUrl: "",
+			oneTimeBuy: false,
+			open3: false,
+			open3Message: "",
+			avatarCustom: "",
+			avatarId: 1,
+			avatar: 0,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -349,6 +354,7 @@ class EventPage extends Component {
 							organizerDetails:
 								userDetails.result.result.userHldr.organizerDetails,
 						});
+						this.provideImage(userDetails.result.result);
 					}
 				}
 				this.priceCalculation(0);
@@ -796,6 +802,90 @@ class EventPage extends Component {
 		this.setState({ pageTransactions });
 	}
 
+
+	handleCloseSnackbar() {
+		this.setState({ open3: false, open3Message: "" });
+	}
+
+	imageData = (index) => {
+		let myArray = [
+			{ img: "/images/avatars/bennu.svg", name: "Bennu", onclick: false },
+			{
+				img: "/images/avatars/milcham.svg",
+				name: "Milcham",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/thunderbird.svg",
+				name: "Thunderbird",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/garuda.svg",
+				name: "Garuda",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/firebird.svg",
+				name: "Firebird",
+				onclick: false,
+			},
+			{
+				img: "/images/avatars/metamask.svg",
+				name: "Custom",
+				onclick: true,
+			},
+		];
+		return myArray[index].img;
+	};
+
+	provideImage = (userDetails) => {
+		console.log("this.props.userDetails", userDetails);
+		if (Object.keys(userDetails).length > 0) {
+			// console.log("userdetailsss", this.props.userDetails);
+			// console.log("", this.props.userDetails);
+			const avatarCustom = userDetails.avatarCustom;
+			const avatarId = userDetails.avatarNumber;
+			const avatar = userDetails.avatar;
+			this.setState({
+				avatarCustom: avatarCustom,
+				avatarId: avatarId,
+			});
+			if (avatarCustom) {
+				ipfs.get(avatar).then((file) => {
+					// console.log("ipfs file,", file);
+					let data = JSON.parse(file[0].content.toString());
+					// console.log("dataaaa", data.image0);
+					this.setState({
+						avatar: data.image0,
+					});
+				});
+			}
+		}
+	};
+
+	renderImage = () => {
+		if (this.state.avatarCustom) {
+			// return <image
+			// console.log("avatar ipfs image", this.state.avatar);
+			return (
+				<img
+					src={this.state.avatar}
+					className="bird"
+					style={{ width: "50px" }}
+				/>
+			);
+		} else {
+			return (
+				<img
+					src={this.imageData(this.state.avatarId)}
+					className="bird"
+					style={{ width: "50px" }}
+				/>
+			);
+		}
+	};
+
 	render() {
 		const { classes } = this.props;
 
@@ -1242,13 +1332,14 @@ class EventPage extends Component {
 								alignItems="center"
 								className={classes.organizerDetails}
 							>
-								<Avatar
+								{/* <Avatar
 									src="/images/icons/user.svg"
 									style={{
 										display: "inline-block",
 										marginBottom: "10px",
 									}}
-								/>
+								/> */}
+								{this.renderImage()}
 								<h3 style={{ fontWeight: "bold" }}>
 									{this.state.organizer}
 								</h3>
