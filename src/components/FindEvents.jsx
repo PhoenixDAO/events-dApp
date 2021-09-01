@@ -144,17 +144,39 @@ const useStyles = (theme) => ({
 		},
 	},
 	nearStyleBlack: {
-		fontSize: 32,
+		fontSize: 27,
 		fontWeight: "400px",
-		fontFamily: '"Aeonik" ,sans-serif',
+		fontFamily: '"AeonikReg" ,sans-serif',
 		color: "#4E4E55",
 	},
 	nearStyleBlue: {
-		fontSize: 32,
+		fontSize: 27,
 		fontWeight: "500px",
 		fontFamily: '"Aeonik" ,sans-serif',
 		color: "#413AE2",
 	},
+	lgScreenFooterBanner:{
+		position: 'absolute',
+		marginLeft: '-100px',
+		marginRight: '0%',
+		marginTop:"8%",
+		"@media (max-width: 800px)":{
+			marginLeft:"-90px",
+			"& img":{
+				// transform:"scale(1.4)"
+			}
+		},
+		"@media (min-width: 1540px)":{
+			marginLeft:"-150px",
+			width: "100%",
+		},
+		"@media (min-width: 1590px)":{
+			marginLeft:"-330px",
+		}
+		// "@media (max-width: 1540px)":{
+		// 	marginLeft:"13%"
+		// }
+	}
 });
 
 function a11yProps(index) {
@@ -950,7 +972,7 @@ class FindEvents extends Component {
 						<span>
 							<div
 								style={{
-									height: 94,
+									height: 68,
 									display: "flex",
 									alignItems: "center",
 									justifyContent: "flex-start",
@@ -1101,6 +1123,11 @@ class FindEvents extends Component {
 						<br />
 
 						{body}
+						<a href="https://www.travala.com/?ref=phoenixdao">
+						<div className={classes.lgScreenFooterBanner}>
+						<img src={"/images/footer.jpg"} className="img-fluid w-100"/>
+					</div>
+					</a>
 					</div>
 
 					{/* <div className="topics-wrapper">

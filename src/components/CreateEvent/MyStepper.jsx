@@ -107,8 +107,8 @@ const useStyles = makeStyles((theme) => ({
 		paddingTop: theme.spacing(5),
 		backgroundColor: "white",
 		borderRadius: "12px",
-		paddingLeft:"10px",
-		paddingRight:"10px",
+		paddingLeft: "10px",
+		paddingRight: "10px",
 		paddingBottom: "50px",
 		"@media (min-width:400px)": {
 			paddingLeft: 25,
@@ -117,6 +117,12 @@ const useStyles = makeStyles((theme) => ({
 		"&. MuiFormHelperText-contained": {
 			marginLeft: "0px !important",
 		},
+	},
+	selectBoxMaxWidth:{
+		"& .MuiOutlinedInput-root .MuiSelect-outlined":{
+			paddingLeft:"0px !important",
+			paddingRight:"0px !important"
+		}
 	},
 	backButton: {
 		textTransform: "none",
@@ -870,6 +876,12 @@ const MyStepper = ({
 	const onChangeRichText = (value) => {
 		console.log("rich value", value);
 		setRichValue(value);
+	};
+
+	const handleImageSelect = (name, index) => {
+		const arr = [...images];
+		arr[index].name = name;
+		setImages([...arr]);
 	};
 
 	const handleSaveCatogory = (fields) => {
@@ -1800,8 +1812,10 @@ const MyStepper = ({
 											item
 											xs={12}
 											sm={12}
-											lg={12}
+											md={12}
+											lg={6}
 											xl={4}
+											px={2}
 										>
 											<Controller
 												name="country"
@@ -1812,7 +1826,7 @@ const MyStepper = ({
 													fieldState: { error },
 												}) => (
 													<GeoLocation
-														locationTitle="COUNTRY"
+														locationTitle="country"
 														isCountry
 														onChange={(v) => {
 															onChange(v);
@@ -1832,19 +1846,22 @@ const MyStepper = ({
 											item
 											xs={12}
 											sm={12}
-											lg={12}
+											md={12}
+											lg={6}
 											xl={4}
+											px={2}
 										>
 											<Controller
 												name="state"
 												control={control}
 												defaultValue=""
+												className={classes.selectBoxMaxWidth}
 												render={({
 													field: { onChange, value },
 													fieldState: { error },
 												}) => (
 													<GeoLocation
-														locationTitle="STATE"
+														locationTitle="state"
 														onChange={(v) => {
 															onChange(v);
 															setState(v.id);
@@ -1864,6 +1881,7 @@ const MyStepper = ({
 											item
 											xs={12}
 											sm={12}
+											md={12}
 											lg={12}
 											xl={4}
 										>
@@ -1876,7 +1894,7 @@ const MyStepper = ({
 													fieldState: { error },
 												}) => (
 													<GeoLocation
-														locationTitle="CITY"
+														locationTitle="city"
 														onChange={(v) => {
 															onChange(v);
 															setCity(v.id);
@@ -2026,30 +2044,59 @@ const MyStepper = ({
 																		if (
 																			event
 																				.target
+																				.files &&
+																			event
+																				.target
 																				.files[0]
-																				.size >
-																			5000000
 																		) {
-																			onChange(
-																				""
-																			);
-																		} else {
-																			const arr =
-																				[
-																					...images,
-																				];
-																			arr[
-																				index
-																			].name =
-																				event.target.files[0].name;
-																			setImages(
-																				arr
-																			);
-																			onChange(
+																			if (
 																				event
 																					.target
 																					.files[0]
-																			);
+																					.size <
+																				5000000
+																			) {
+																				handleImageSelect(
+																					event
+																						.target
+																						.files[0]
+																						.name,
+																					index
+																				);
+																				onChange(
+																					event
+																						.target
+																						.files[0]
+																				);
+																			} else {
+																				handleImageSelect(
+																					"",
+																					index
+																				);
+																				onChange(
+																					""
+																				);
+																			}
+																		} else {
+																			if (
+																				value
+																			) {
+																				handleImageSelect(
+																					value.name,
+																					index
+																				);
+																				onChange(
+																					value
+																				);
+																			} else {
+																				handleImageSelect(
+																					"",
+																					index
+																				);
+																				onChange(
+																					""
+																				);
+																			}
 																		}
 																	}}
 																/>
@@ -3365,7 +3412,7 @@ const MyStepper = ({
 					<React.Fragment>
 						<div>
 							<h3 className={classes.title}>
-								Event Descriptions
+								Event Description
 							</h3>
 							<Divider light />
 							<br />
@@ -3715,9 +3762,11 @@ const MyStepper = ({
 								>
 									View your Event
 								</Button>
+								<a href="https://www.travala.com/?ref=phoenixdao">
 								<div className={classes.travelImage}>
 									<img src={travelDone} alt="travel" />
 								</div>
+								</a>
 							</div>
 						) : (
 							publishedEventComponent()

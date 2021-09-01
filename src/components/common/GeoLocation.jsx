@@ -19,6 +19,15 @@ const geonames = new Geonames({
 const useStyles = makeStyles((theme) => ({
 	formControl: {
 		minWidth: "100%",
+		"& .MuiSelect-outlined.MuiSelect-outlined":{
+			"@media (max-width: 1375px) and (min-width:1280px)":{
+				paddingLeft:"10px !important",
+				paddingRight:"0px !important"
+			},
+		},
+		// "@media (max-width: 1375px) and (min-width:1280px)":{
+		// 	minWidth:"80%"
+		// },
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
@@ -29,6 +38,10 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
 	},
+	selectLocationPadding:{
+		paddingLeft:"0px !important",
+		paddingRight:"0px !important"
+	}
 }));
 
 export default function GeoLocation(props) {
@@ -95,6 +108,7 @@ export default function GeoLocation(props) {
 				// labelWidth={labelWidth}
 				displayEmpty
 				defaultValue=""
+				className={classes.selectLocationPadding}
 			>
 				<MenuItem
 					disabled
@@ -104,7 +118,7 @@ export default function GeoLocation(props) {
 						color: "#73727D",
 					}}
 				>
-					<em>{`SELECT ${locationTitle}`}</em>
+					<em>{`Select ${locationTitle}`}</em>
 				</MenuItem>
 				{options.map((v, index) => (
 					<MenuItem
