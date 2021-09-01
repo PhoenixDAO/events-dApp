@@ -2,13 +2,13 @@ import GetGraphApi  from '../config/getGraphApi';
 let axios = require("axios");
 let moment = require("moment");
 let graphURL;
-//  get buyer Array of event
 GetGraphApi().then(
 	(data) => {
         // Some task on success
 		graphURL=data;
     },
 );
+//  get buyer Array of event
 
 async function getResult(eventId) {
 	let result = await axios({
