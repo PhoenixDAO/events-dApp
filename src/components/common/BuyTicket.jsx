@@ -328,7 +328,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
         </DialogActions>
         {
           purchased ?
-          <a href="https://www.travala.com/?ref=phoenixdao">
+          <a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
             <img src="/images/travala.svg" className={classes.image} />
             </a>
             : null

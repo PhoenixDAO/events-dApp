@@ -1123,7 +1123,7 @@ class FindEvents extends Component {
 						<br />
 
 						{body}
-						<a href="https://www.travala.com/?ref=phoenixdao">
+						<a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
 						<div className={classes.lgScreenFooterBanner}>
 						<img src={"/images/footer.jpg"} className="img-fluid w-100"/>
 					</div>
