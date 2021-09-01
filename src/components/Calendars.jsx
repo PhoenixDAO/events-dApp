@@ -226,10 +226,11 @@ class Calendars extends Component {
 				address: this.account,
 				networkId: this.props.networkId,
 			});
-			if (data.result.result.favourites != "undefined") {
+			if (data.result.result.userHldr.favourites != "undefined") {
 				let favoriteEvents = this.state.event_copy.filter((item) =>
-					data.result.result.favourites.includes(item.eventId)
+					data.result.result.userHldr.favourites.includes(item.eventId)
 				);
+				console.log("favorite",favoriteEvents)
 				this.setState({
 					Events_Blockchain: favoriteEvents,
 					category:"favourite"

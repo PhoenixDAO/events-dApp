@@ -32,7 +32,7 @@ const BuyPhoenixModal = (props) => {
 	const buyPhnxManager = [
 		{
 			img: "/images/metawallet.svg",
-			name: "Transact",
+			name: "Transak",
 			coming: false,
 			onclick: true,
 		},

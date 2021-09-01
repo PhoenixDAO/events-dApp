@@ -1780,7 +1780,7 @@ const MyStepper = ({
 													fieldState: { error },
 												}) => (
 													<GeoLocation
-														locationTitle="COUNTRY"
+														locationTitle="country"
 														isCountry
 														onChange={(v) => {
 															onChange(v);
@@ -1812,7 +1812,7 @@ const MyStepper = ({
 													fieldState: { error },
 												}) => (
 													<GeoLocation
-														locationTitle="STATE"
+														locationTitle="state"
 														onChange={(v) => {
 															onChange(v);
 															setState(v.id);
@@ -1844,7 +1844,7 @@ const MyStepper = ({
 													fieldState: { error },
 												}) => (
 													<GeoLocation
-														locationTitle="CITY"
+														locationTitle="city"
 														onChange={(v) => {
 															onChange(v);
 															setCity(v.id);
@@ -3333,7 +3333,7 @@ const MyStepper = ({
 					<React.Fragment>
 						<div>
 							<h3 className={classes.title}>
-								Event Descriptions
+								Event Description
 							</h3>
 							<Divider light />
 							<br />

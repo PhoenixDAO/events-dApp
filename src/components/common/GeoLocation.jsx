@@ -104,7 +104,7 @@ export default function GeoLocation(props) {
 						color: "#73727D",
 					}}
 				>
-					<em>{`SELECT ${locationTitle}`}</em>
+					<em>{`Select ${locationTitle}`}</em>
 				</MenuItem>
 				{options.map((v, index) => (
 					<MenuItem

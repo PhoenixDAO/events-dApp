@@ -555,7 +555,7 @@ div[class|="r-sticky"] .header3 {
 .carousel-caption {
 	position: absolute;
 	right: 0 !important;
-	top: 0;
+	top: -27px;
 	bottom: 0 !important;
 	left: 0 !important;
 	z-index: 10;
@@ -567,7 +567,6 @@ div[class|="r-sticky"] .header3 {
 	padding-bottom: 45px;
 	min-height: 415px;
 }
-
 .carousel-caption p {
 	position: absolute;
 	left: 5%;
