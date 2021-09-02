@@ -167,6 +167,7 @@ const Header = ({
 						openTransak={openTransak}
 						closeTransak={closeTransak}
 						transak={transak}
+						accounts={accounts}
 					/>
 				</DialogueBox>
 			</Grid>

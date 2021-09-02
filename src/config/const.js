@@ -60,16 +60,17 @@ export const UPDATE_USER_DETAIL = "user/updateDetails";
 export const REMOVE_FROM_FAVOURITES = "user/removeFromFavourites";
 export const ADD_TO_FAVOURITES = "user/addToFavourites";
 export const UPDATE_EVENT_VIEWS = "user/updateViews";
-export const GET_MESSAGE = "user/getMessage"
-export const LOGIN_METAMASK = "user/loginUserWithMetamask"
+export const GET_MESSAGE = "user/getMessage";
+export const LOGIN_METAMASK = "user/loginUserWithMetamask";
 export const explorerWithTX = "https://rinkeby.etherscan.io/tx/";
 export const explorerWithAddress = "https://rinkeby.etherscan.io/address/";
 // export const graphURL =
 // 	"https://api.thegraph.com/subgraphs/name/nashaibakbar/eventcheck";
-	//for rinkeby
+//for rinkeby
 export const graphURLV1 =
 	"https://api.thegraph.com/subgraphs/name/musfirazia/event-subgraph";
-	//for goerli
-export const graphURLV2 = "https://api.thegraph.com/subgraphs/name/musfirazia/event-subgraphv2";
+//for goerli
+export const graphURLV2 =
+	"https://api.thegraph.com/subgraphs/name/musfirazia/event-subgraphv2";
 
 export const transakApi = process.env.REACT_APP_TRANSAK_API;
