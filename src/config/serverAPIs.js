@@ -95,11 +95,6 @@ export const updateEventViews = async ({ address, networkId, eventId }) => {
 				address,
 				networkId,
 				eventId,
-			},
-			{
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
 			}
 		);
 		console.log("serverAPI updateEventViews", result);
