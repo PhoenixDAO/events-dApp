@@ -85,7 +85,7 @@ const Header = ({
 			className={clsx(
 				"header-top",
 				(page === "dashboard" || page === "myEvent") &&
-					"header-top-dashboard"
+				"header-top-dashboard"
 			)}
 			style={
 				page === "dashboard" || page === "myEvent"
@@ -100,8 +100,8 @@ const Header = ({
 					style={{ display: "flex", alignItems: "center" }}
 				>
 					{page === "event" ||
-					page === "topic" ||
-					page === "accountdetails" ? (
+						page === "topic" ||
+						page === "accountdetails" ? (
 						<IconButton aria-label="delete" onClick={goBack}>
 							<KeyboardBackspaceIcon
 								fontSize="large"
@@ -144,9 +144,9 @@ const Header = ({
 						</Button>
 					</div>
 				) : page === "analytics" ||
-				  page === "create" ||
-				  page === "confirm-purchase" ||
-				  phnxButton ? (
+					page === "create" ||
+					page === "confirm-purchase" ||
+					phnxButton ? (
 					<BuyPhnxButton onClick={handleOpenBuyPhnx} />
 				) : null}
 				<DialogueBox
