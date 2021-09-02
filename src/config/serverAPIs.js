@@ -12,8 +12,6 @@ import {
 } from "../config/const";
 import axios from "axios";
 
-const token = localStorage.getItem("AUTH_TOKEN");
-
 export const getMessage = async () => {
 	try {
 		const result = await axios.get(`${API_URL}${GET_MESSAGE}`);
@@ -47,6 +45,7 @@ export const loginWithMetaMask = async ({
 export const getUserDetails = async ({ address, networkId }) => {
 	try {
 		// console.log("serverAPI address and networkId",address,networkId)
+		const token = localStorage.getItem("AUTH_TOKEN");
 		const result = await axios.post(
 			`${API_URL}${GET_USER_DETAIL}`,
 			{
@@ -83,6 +82,7 @@ export const getUser = async ({ address, networkId }) => {
 
 export const updateEventViews = async ({ address, networkId, eventId }) => {
 	try {
+		const token = localStorage.getItem("AUTH_TOKEN");
 		console.log(
 			"updateEvent in API call function",
 			address,
@@ -112,6 +112,7 @@ export const updateEventViews = async ({ address, networkId, eventId }) => {
 
 export const addToFavourites = async ({ address, networkId, eventId }) => {
 	try {
+		const token = localStorage.getItem("AUTH_TOKEN");
 		const result = await axios.post(
 			`${API_URL}${ADD_TO_FAVOURITES}`,
 			{
@@ -134,6 +135,7 @@ export const addToFavourites = async ({ address, networkId, eventId }) => {
 };
 export const removeFromFavourites = async ({ address, networkId, eventId }) => {
 	try {
+		const token = localStorage.getItem("AUTH_TOKEN");
 		const result = await axios.post(
 			`${API_URL}${REMOVE_FROM_FAVOURITES}`,
 			{
@@ -166,6 +168,8 @@ export const updateUserDetails = async ({
 	alternateCurrency,
 }) => {
 	try {
+		const token = localStorage.getItem("AUTH_TOKEN");
+		console.log("update user token", token);
 		const result = await axios.post(
 			`${API_URL}${UPDATE_USER_DETAIL}`,
 			{

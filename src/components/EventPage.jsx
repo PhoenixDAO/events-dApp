@@ -354,7 +354,7 @@ class EventPage extends Component {
 					if (!userDetails.error) {
 						this.setState({
 							organizerDetails:
-								userDetails.result.result.organizerDetails,
+								userDetails.result.result.userHldr.organizerDetails,
 						});
 						this.provideImage(userDetails.result.result);
 					}
