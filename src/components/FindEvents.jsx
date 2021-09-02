@@ -584,7 +584,7 @@ class FindEvents extends Component {
 		if (this.state.Events_Blockchain.length === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="No events found 🤔.Be the first;"
+					text="No event available 😔. Be the first;"
 					btnText="Try creating one"
 					url="/createevent"
 				/>
@@ -759,7 +759,7 @@ class FindEvents extends Component {
 		if (updated_list.length == 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="No events found 🤔.Be the first;"
+					text="No event available 😔. Be the first;"
 					btnText="Try creating one"
 					url="/createevent"
 				/>

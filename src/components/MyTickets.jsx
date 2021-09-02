@@ -165,7 +165,7 @@ class MyTickets extends Component {
 		) {
 			body = (
 				<EmptyState
-					text="You have not purchased any tickets yet 🤔"
+					text="You have no Tickets 😔"
 					btnText="Find an event"
 					url="/upcomingevents/1"
 				/>
@@ -297,7 +297,7 @@ class MyTickets extends Component {
 		if (tickets.length === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="You have not purchased any tickets yet 🤔"
+					text="You have no Tickets 😔"
 					btnText="Find an event"
 					url="/upcomingevents/1"
 				/>

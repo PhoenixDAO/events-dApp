@@ -895,7 +895,7 @@ class FindEventsTest extends Component {
 			if (updated_list.length == 0) {
 				body = (
 					<EmptyState
-					text="No events found 🤔.Be the first;"
+					text="No events found 🤔. Be the first;"
 					btnText="Try creating one"
 					url="/createevent"
 				/>

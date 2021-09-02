@@ -591,7 +591,7 @@ class TopicLandingPage extends Component {
 		if (count === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="No events found 🤔.Be the first;"
+					text="No events found 🤔. Be the first;"
 					btnText="Try creating one"
 					url="/createevent"
 				/>
@@ -637,7 +637,7 @@ class TopicLandingPage extends Component {
 		if (events_list.length == 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="No events found 🤔.Be the first;"
+					text="No events found 🤔. Be the first;"
 					btnText="Try creating one"
 					url="/createevent"
 				/>

@@ -57,7 +57,7 @@ import BodyTextEditor from "../common/BodyTextEditor";
 import PublishIcon from "@material-ui/icons/Publish";
 import publishIcon from "../Images/publish.png";
 import Checkmark from "../Images/Checkmark.gif";
-import travelDone from "../Images/travelDone.svg";
+// import createEvent from "../Images/createEvent.jpg";
 import { withRouter } from "react-router-dom";
 import SocialMedia from "../common/SocialMedia";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -118,6 +118,21 @@ const useStyles = makeStyles((theme) => ({
 			marginLeft: "0px !important",
 		},
 	},
+	publishedRoot:{
+		width: "100%",
+		paddingTop: theme.spacing(5),
+		backgroundColor: "white",
+		borderRadius: "12px",
+		paddingLeft: "10px",
+		paddingRight: "10px",
+		"@media (min-width:400px)": {
+			paddingLeft: 25,
+			paddingRight: 25,
+		},
+		"&. MuiFormHelperText-contained": {
+			marginLeft: "0px !important",
+		},
+	},
 	selectBoxMaxWidth:{
 		"& .MuiOutlinedInput-root .MuiSelect-outlined":{
 			paddingLeft:"0px !important",
@@ -166,10 +181,24 @@ const useStyles = makeStyles((theme) => ({
 		display: "flex",
 		justifyContent: "space-between",
 	},
+	mainStepperContainerForPublishPage:{
+		"@media (min-width:768px)": {
+			marginLeft: theme.spacing(4),
+			marginRight: theme.spacing(4),
+		},
+
+		"& .MuiButton-label": {
+			fontFamily: "'Aeonik', sans-serif",
+			fontWeight: "500",
+		},
+		"& .MuiFormControl-root .MuiMenuItem-root": {
+			fontFamily: "'Aeonik', sans-serif",
+		},
+	},
 	mainStepperContainer: {
 		"@media (min-width:768px)": {
-			marginLeft: theme.spacing(12),
-			marginRight: theme.spacing(12),
+			marginLeft: theme.spacing(8),
+			marginRight: theme.spacing(8),
 		},
 
 		"& .MuiButton-label": {
@@ -220,7 +249,10 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	SocialMediaDiv: {
-		margin: "30px 0px 20px",
+		margin: "30px 0px 20px 6px",
+		"@media (min-width: 425px)":{
+			margin:"30px 0px 20px -11px"
+		},
 	},
 	step: {
 		justifyContent: "center",
@@ -372,13 +404,14 @@ const useStyles = makeStyles((theme) => ({
 	},
 	progressDisabled: {},
 	travelImage: {
-		// position: "absolute",
-		// bottom: 0,
-		// left: 0,
-		// right: 0,
-		// padding: "0 15px",
-		width: "100%",
+		marginLeft:"-10px",
+		marginRight:"-10px",
+		// width: "100%",
 		marginTop: "60px",
+		"@media (min-width:400px)": {
+			marginLeft:"-25px",
+			marginRight:"-25px",
+		},
 		"& img": {
 			maxWidth: "100%",
 			borderRadius: "0 0 10px 10px",
@@ -3627,7 +3660,7 @@ const MyStepper = ({
 	};
 
 	return (
-		<div className={classes.root}>
+		<div className={(activeFlamingStep == 3 )?classes.publishedRoot:classes.root} >
 			{activeStep === steps.length ? null : (
 				<Stepper
 					activeStep={activeStep}
@@ -3650,7 +3683,7 @@ const MyStepper = ({
 				</Stepper>
 			)}
 
-			<div className={classes.mainStepperContainer}>
+			<div className={(activeFlamingStep == 3 )?classes.mainStepperContainerForPublishPage:classes.mainStepperContainer}>
 				<br />
 
 				{activeStep === steps.length ? (
@@ -3762,11 +3795,6 @@ const MyStepper = ({
 								>
 									View your Event
 								</Button>
-								<a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
-								<div className={classes.travelImage}>
-									<img src={travelDone} alt="travel" />
-								</div>
-								</a>
 							</div>
 						) : (
 							publishedEventComponent()
@@ -3829,7 +3857,14 @@ const MyStepper = ({
 						</div>
 					</div>
 				)}
+
+
 			</div>
+			{(activeFlamingStep == 3)&&<a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
+								<div className={classes.travelImage}>
+									<img src={"/images/createEvent.jpg"} alt="travel" />
+								</div>
+								</a>}
 		</div>
 	);
 };
