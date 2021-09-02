@@ -8,7 +8,7 @@ import {
 	graphURLV1,
 } from "./const";
 
-const getNetworkId = async () => {
+export const getNetworkId = async () => {
 	try {
 		let web3 = window.web3;
 		let ethereum = window.ethereum;
