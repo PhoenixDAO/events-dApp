@@ -37,7 +37,7 @@ const SocialMedia = ({ disabled, shareUrl }) => {
 	const classes = useStyles();
 
 	return (
-		<Grid container justify="center" className={classes.socialMediaIcons}>
+		<Grid container justify="flex-end" className={classes.socialMediaIcons}>
 			<EmailShareButton
 				className="iconHolder"
 				url={shareUrl}

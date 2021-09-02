@@ -17,7 +17,6 @@ export default function BodyTextEditor({ value, setValue, readOnly }) {
 		setEditorValue(value);
 		setValue(value.toString("html"));
 	};
-
 	return (
 		<div className="editor-demo">
 			<RichTextEditor
