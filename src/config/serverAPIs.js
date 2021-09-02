@@ -8,6 +8,7 @@ import {
 	REMOVE_FROM_FAVOURITES,
 	GET_MESSAGE,
 	LOGIN_METAMASK,
+	GET_USER_EXIST_DETAIL,
 } from "../config/const";
 import axios from "axios";
 
@@ -70,7 +71,7 @@ export const getUser = async ({ address, networkId }) => {
 	try {
 		// console.log("serverAPI address and networkId",address,networkId)
 		const result = await axios.get(
-			`${API_URL}${GET_USER_DETAIL}/${address}/${networkId}`
+			`${API_URL}${GET_USER_EXIST_DETAIL}/${address}/${networkId}`
 		);
 		// console.log("serverAPI getUserDetails", result.data.result);
 		return { result: result.data, error: false };
