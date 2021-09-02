@@ -171,6 +171,7 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "16px",
 		fontWeight: "700",
 		color: "#413AE2",
+    fontFamily:"Aeonik"
 	},
   gridPadding:{
     paddingInline:"10px",
