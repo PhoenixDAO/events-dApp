@@ -348,8 +348,8 @@ class EventPage extends Component {
 						address: graphEvents.data.data.events[0].owner,
 						networkId: this.props.networkId,
 					});
-					
-					console.log("networkID", userDetails);
+
+					console.log("userDEtails in event page", userDetails);
 					if (!userDetails.error) {
 						this.setState({
 							organizerDetails:
