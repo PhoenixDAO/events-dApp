@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import roundlogo from "../Images/roundlogo.svg";
 import transakSDK from "@transak/transak-sdk";
 import { transakApi } from "../../config/const";
-
-
 const BuyPhoenixModal = (props) => {
 	const [error, setError] = useState("");
 	const settings = {
@@ -16,11 +14,11 @@ const BuyPhoenixModal = (props) => {
 		widgetHeight: "642px",
 		widgetWidth: "500px",
 		networks:"ethereum,polygon"
-
-	};
+  };
 	const transak = new transakSDK(settings);
 
 	useEffect(() => {
+		console.log("setttings", props.accounts[0]);
 		transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, (orderData) => {
 			console.log("closed successfully widged");
 			props.closeTransak();

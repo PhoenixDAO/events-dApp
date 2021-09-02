@@ -49,7 +49,7 @@ import {
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import BuyTicket from "./common/BuyTicket";
-import { updateEventViews, getUserDetails } from "../config/serverAPIs";
+import { updateEventViews, getUserDetails, getUser } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
@@ -345,10 +345,11 @@ class EventPage extends Component {
 						networkId: this.props.networkId,
 					});
 
-					const userDetails = await getUserDetails({
+					const userDetails = await getUser({
 						address: graphEvents.data.data.events[0].owner,
 						networkId: this.props.networkId,
 					});
+					
 					console.log("networkID", userDetails);
 					if (!userDetails.error) {
 						this.setState({
