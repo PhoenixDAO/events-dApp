@@ -264,6 +264,7 @@ class EventPage extends Component {
 		this.inquire = this.inquire.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this);
 		this.goBack = this.goBack.bind(this); // i think you are missing this
+		this.handleCloseSnackbar=this.handleCloseSnackbar.bind(this)
 	}
 
 	goBack() {
@@ -289,6 +290,14 @@ class EventPage extends Component {
 	// 	this.updateIPFS();
 	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
+
+	userExists(buyers, account) {
+		return buyers.some(function (el) {
+			return el.address.toLowerCase() == account.toLowerCase();
+		});
+	}
+
+
 	async loadEventFromBlockchain() {
 		const graphURL = await GetGraphApi();
 		await axios({
@@ -333,6 +342,7 @@ class EventPage extends Component {
 					blockChainEvent: graphEvents.data.data.events[0],
 					blockChainEventLoaded: true,
 					load: false,
+					oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 				});
 				this.updateIPFS();
 				if (this.props.networkId) {
@@ -358,7 +368,7 @@ class EventPage extends Component {
 								userDetails.result.result.userHldr
 									.organizerDetails,
 						});
-						this.provideImage(userDetails.result.result);
+						this.provideImage(userDetails.result.result.userHldr);
 					}
 				}
 				this.priceCalculation(0);
@@ -643,6 +653,7 @@ class EventPage extends Component {
 			});
 		} else {
 			// this.setState({ open2: true });
+			console.log(this.state.oneTimeBuy)
 			if (this.state.oneTimeBuy) {
 				let buyers = this.state.soldTicket;
 				const account = this.props.accounts[0];
