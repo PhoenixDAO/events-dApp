@@ -255,6 +255,7 @@ class EventPage extends Component {
 			avatarCustom: "",
 			avatarId: 1,
 			avatar: 0,
+			shareUrl: window.location,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -352,9 +353,9 @@ class EventPage extends Component {
 					if (!userDetails.error) {
 						this.setState({
 							organizerDetails:
-								userDetails.result.result.userHldr.organizerDetails,
+								userDetails.result.result.organizerDetails,
 						});
-						this.provideImage(userDetails.result.result.userHldr);
+						this.provideImage(userDetails.result.result);
 					}
 				}
 				this.priceCalculation(0);
@@ -894,7 +895,7 @@ class EventPage extends Component {
 				<img
 					src={this.state.avatar}
 					className="bird"
-					style={{ width: "50px" }}
+					style={{ width: "60px",borderRadius:"50%" }}
 				/>
 			);
 		} else {
@@ -902,7 +903,7 @@ class EventPage extends Component {
 				<img
 					src={this.imageData(this.state.avatarId)}
 					className="bird"
-					style={{ width: "50px" }}
+					style={{ width: "60px",borderRadius:"50%" }}
 				/>
 			);
 		}
@@ -1349,7 +1350,8 @@ class EventPage extends Component {
 										</div>
 									</Grid>
 									<Grid lg={10} md={9} sm={10} xs={12}>
-										<SocialMedia />
+										<SocialMedia shareUrl={this.state.shareUrl}
+											disabled={false}/>
 									</Grid>
 								</Grid>
 							</Grid>
@@ -1609,6 +1611,7 @@ class EventPage extends Component {
 		// this.updateIPFS();
 		// this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
+
 	}
 
 	geoFindMe = async () => {
