@@ -1384,7 +1384,6 @@ class EventPage extends Component {
 									>
 										<EmailIcon size={32} round />
 									</EmailShareButton>
-
 									<FacebookShareButton
 										url={shareUrl}
 										title={title}
@@ -1392,7 +1391,6 @@ class EventPage extends Component {
 									>
 										<FacebookIcon size={32} round />
 									</FacebookShareButton>
-
 									<LinkedinShareButton
 										url={shareUrl}
 										title={title}
@@ -1400,7 +1398,6 @@ class EventPage extends Component {
 									>
 										<LinkedinIcon size={32} round />
 									</LinkedinShareButton>
-
 									<RedditShareButton
 										url={shareUrl}
 										title={title}
@@ -1408,7 +1405,6 @@ class EventPage extends Component {
 									>
 										<RedditIcon size={32} round />
 									</RedditShareButton>
-
 									<TelegramShareButton
 										url={shareUrl}
 										title={title}
@@ -1416,7 +1412,6 @@ class EventPage extends Component {
 									>
 										<TelegramIcon size={32} round />
 									</TelegramShareButton>
-
 									<TwitterShareButton
 										url={shareUrl}
 										title={title}
@@ -1424,7 +1419,6 @@ class EventPage extends Component {
 									>
 										<TwitterIcon size={32} round />
 									</TwitterShareButton>
-
 									<WhatsappShareButton
 										url={shareUrl}
 										title={title}
@@ -1452,14 +1446,12 @@ class EventPage extends Component {
 											alt="User Identicon"
 										/>
 									</div>
-
 									<div className="card-body">
 										<h5 className="card-title event-title">
 											{event_data.name}
 										</h5>
 										{description}
 									</div>
-
 									<ul className="list-group list-group-flush">
 										<li className="list-group-item ">
 											{locations}
@@ -1511,7 +1503,6 @@ class EventPage extends Component {
 										<li className="list-group-item">
 											Tickets: {event_data[6]}/{max_seats}
 										</li>
-
 									</ul>
 								</div> 
 								{/* {this._isMounted && (
@@ -1550,7 +1541,6 @@ class EventPage extends Component {
 										</p>
 									)}
 								</div>
-
 								<div className="pagination">
 									<JwPagination
 										items={this.state.soldTicket}
