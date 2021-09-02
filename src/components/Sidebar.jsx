@@ -235,7 +235,9 @@ class Sidebar extends Component {
 							)} */}
 							{/* {this.provideImage(this.props.userDetails)} */}
 							{/* <img src="./images/metamask.svg" className="bird" /> */}
+							
 							{this.renderImage()}
+							
 							<span
 								style={{
 									marginLeft: "20px",

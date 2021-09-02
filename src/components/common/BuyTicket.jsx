@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
       textTransform: "capitalize",
     }
   },
+  bannerImage:{
+    padding: "0px 40px",
+  },
   header: {
     justifyContent: "center",
     alignItems: "center",
@@ -154,8 +157,9 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: "13px"
   },
   image: {
-    margin: "15px 43px 50px",
+    margin: "15px 43px 50px 0px",
     borderRadius: "10px",
+    width:"100%"
   },
   TicketPurchase: {
     fontWeight: "900",
@@ -346,9 +350,11 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
         </DialogActions>
         {
           purchased ?
+          <div className={classes.bannerImage}>
           <a href="https://www.travala.com/?ref=phoenixdao">
             <img src="/images/travala.svg" className={classes.image} />
             </a>
+          </div>
             : null
         }
       </Dialog>
