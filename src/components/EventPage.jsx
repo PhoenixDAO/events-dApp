@@ -122,7 +122,6 @@ const styles = (theme) => ({
 	eventinfo: {
 		fontSize: "22px",
 		fontWeight: "700",
-		wordBreak: "break-word",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
@@ -152,6 +151,7 @@ const styles = (theme) => ({
 		height: "40px",
 		"& .MuiSelect-outlined": {
 			padding: "10px",
+			paddingRight:"25px",
 		},
 		[theme.breakpoints.down("xs")]: {
 			width: "auto",
@@ -259,6 +259,7 @@ class EventPage extends Component {
 			avatarId: 1,
 			avatar: 0,
 			blockChainEvent: {},
+			shareUrl: window.location,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -266,6 +267,7 @@ class EventPage extends Component {
 		this.inquire = this.inquire.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this);
 		this.goBack = this.goBack.bind(this); // i think you are missing this
+		this.handleCloseSnackbar=this.handleCloseSnackbar.bind(this)
 	}
 
 	goBack() {
@@ -291,6 +293,14 @@ class EventPage extends Component {
 	// 	this.updateIPFS();
 	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
+
+	userExists(buyers, account) {
+		return buyers.some(function (el) {
+			return el.address.toLowerCase() == account.toLowerCase();
+		});
+	}
+
+
 	async loadEventFromBlockchain() {
 		const graphURL = await GetGraphApi();
 		await axios({
@@ -335,6 +345,7 @@ class EventPage extends Component {
 					blockChainEvent: graphEvents.data.data.events[0],
 					blockChainEventLoaded: true,
 					load: false,
+					oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 				});
 				this.updateIPFS();
 				if (this.props.networkId) {
@@ -645,6 +656,7 @@ class EventPage extends Component {
 			});
 		} else {
 			// this.setState({ open2: true });
+			console.log(this.state.oneTimeBuy)
 			if (this.state.oneTimeBuy) {
 				let buyers = this.state.soldTicket;
 				const account = this.props.accounts[0];
@@ -654,7 +666,7 @@ class EventPage extends Component {
 					this.setState({
 						open3: true,
 						open3Message:
-							"This is One Time Buy Event. You can't buy/get more than one ticket for this event.",
+							"This event is restricted to one wallet address, you can't buy it again.",
 					});
 				} else {
 					this.setState({ open2: true });
@@ -898,7 +910,7 @@ class EventPage extends Component {
 				<img
 					src={this.state.avatar}
 					className="bird"
-					style={{ width: "50px" }}
+					style={{ width: "60px",borderRadius:"50%" }}
 				/>
 			);
 		} else {
@@ -906,7 +918,7 @@ class EventPage extends Component {
 				<img
 					src={this.imageData(this.state.avatarId)}
 					className="bird"
-					style={{ width: "50px" }}
+					style={{ width: "60px",borderRadius:"50%" }}
 				/>
 			);
 		}
@@ -1342,11 +1354,10 @@ class EventPage extends Component {
 															bought
 														</a>{" "}
 														{" " + sold.count}{" "}
-														ticket for this event{" "}
-														{/* <strong>
+														ticket for this event.														{/* <strong>
 														{event_data[0]}
 													</strong> */}
-														.
+														
 													</p>
 												)
 											)}
@@ -1384,7 +1395,8 @@ class EventPage extends Component {
 										</div>
 									</Grid>
 									<Grid lg={10} md={9} sm={10} xs={12}>
-										<SocialMedia />
+										<SocialMedia shareUrl={this.state.shareUrl}
+											disabled={false}/>
 									</Grid>
 								</Grid>
 							</Grid>
@@ -1416,7 +1428,6 @@ class EventPage extends Component {
 									>
 										<EmailIcon size={32} round />
 									</EmailShareButton>
-
 									<FacebookShareButton
 										url={shareUrl}
 										title={title}
@@ -1424,7 +1435,6 @@ class EventPage extends Component {
 									>
 										<FacebookIcon size={32} round />
 									</FacebookShareButton>
-
 									<LinkedinShareButton
 										url={shareUrl}
 										title={title}
@@ -1432,7 +1442,6 @@ class EventPage extends Component {
 									>
 										<LinkedinIcon size={32} round />
 									</LinkedinShareButton>
-
 									<RedditShareButton
 										url={shareUrl}
 										title={title}
@@ -1440,7 +1449,6 @@ class EventPage extends Component {
 									>
 										<RedditIcon size={32} round />
 									</RedditShareButton>
-
 									<TelegramShareButton
 										url={shareUrl}
 										title={title}
@@ -1448,7 +1456,6 @@ class EventPage extends Component {
 									>
 										<TelegramIcon size={32} round />
 									</TelegramShareButton>
-
 									<TwitterShareButton
 										url={shareUrl}
 										title={title}
@@ -1456,7 +1463,6 @@ class EventPage extends Component {
 									>
 										<TwitterIcon size={32} round />
 									</TwitterShareButton>
-
 									<WhatsappShareButton
 										url={shareUrl}
 										title={title}
@@ -1484,14 +1490,12 @@ class EventPage extends Component {
 											alt="User Identicon"
 										/>
 									</div>
-
 									<div className="card-body">
 										<h5 className="card-title event-title">
 											{event_data.name}
 										</h5>
 										{description}
 									</div>
-
 									<ul className="list-group list-group-flush">
 										<li className="list-group-item ">
 											{locations}
@@ -1543,7 +1547,6 @@ class EventPage extends Component {
 										<li className="list-group-item">
 											Tickets: {event_data[6]}/{max_seats}
 										</li>
-
 									</ul>
 								</div> 
 								{/* {this._isMounted && (
@@ -1582,7 +1585,6 @@ class EventPage extends Component {
 										</p>
 									)}
 								</div>
-
 								<div className="pagination">
 									<JwPagination
 										items={this.state.soldTicket}
@@ -1644,6 +1646,7 @@ class EventPage extends Component {
 		// this.updateIPFS();
 		// this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
+
 	}
 
 	geoFindMe = async () => {

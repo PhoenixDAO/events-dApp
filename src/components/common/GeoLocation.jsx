@@ -19,10 +19,11 @@ const geonames = new Geonames({
 const useStyles = makeStyles((theme) => ({
 	formControl: {
 		minWidth: "100%",
+		maxWidth: "100%",
 		"& .MuiSelect-outlined.MuiSelect-outlined":{
 			"@media (max-width: 1375px) and (min-width:1280px)":{
 				paddingLeft:"10px !important",
-				paddingRight:"0px !important"
+				paddingRight:"20px !important"
 			},
 		},
 		// "@media (max-width: 1375px) and (min-width:1280px)":{

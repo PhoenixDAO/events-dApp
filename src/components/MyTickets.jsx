@@ -79,7 +79,7 @@ class MyTickets extends Component {
 			data: {
 				query: `
 				{
-					tickets(where: {buyer:"0xccb2a821eaf7526c6d8d52aaf7c34cd8d1d10f28"}){
+					tickets(where: {buyer:"${this.props.accounts}"}){
 					  id
 					  eventId
 					  eventName
@@ -165,7 +165,7 @@ class MyTickets extends Component {
 		) {
 			body = (
 				<EmptyState
-					text="You have not purchased any tickets yet 🤔"
+					text="You have no Tickets 😔"
 					btnText="Find an event"
 					url="/upcomingevents/1"
 				/>
@@ -297,7 +297,7 @@ class MyTickets extends Component {
 		if (tickets.length === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="You have not purchased any tickets yet 🤔"
+					text="You have no Tickets 😔"
 					btnText="Find an event"
 					url="/upcomingevents/1"
 				/>
@@ -357,7 +357,7 @@ MyTickets.contextTypes = {
 const mapStateToProps = (state) => {
 	return {
 		contracts: state.contracts,
-		accounts: state.accounts,
+		accounts: state.accounts[0],
 	};
 };
 

@@ -20,10 +20,14 @@ import { Divider } from "@material-ui/core";
 import BuyPhnxButton from "../common/BuyPhnxButton";
 
 import Header from "../common/Header";
-
+import {getNetworkId} from "../../config/getGraphApi";
 import Web3 from "web3";
-import { INFURA_URL } from "../../config/const";
-
+import {
+	INFURA_URL,
+	INFURA_URL_2,
+	GLOBAL_NETWORK_ID,
+	GLOBAL_NETWORK_ID_2,
+} from "../../config/const.js";
 const useStyles = (theme) => ({
 	sticky: {
 		position: "sticky",
@@ -265,7 +269,7 @@ class CreateEvent extends Component {
 					.send({
 						from: this.props.accounts[0],
 					})
-					.on("transactionHash", (txhash) => {
+					.on("transactionHash",async (txhash) => {
 						// hash of tx
 						if (txhash !== null) {
 							console.log("txhash", txhash);
@@ -273,16 +277,24 @@ class CreateEvent extends Component {
 							toast(
 								<Notify
 									hash={txhash}
+									icon="fas fa-edit fa-2x"
 									text={"Preparing your event...🚀"}
-								/>,
+									color="#413AE2"
+									/>,
 								{
 									position: "bottom-right",
-									autoClose: true,
+									autoClose: false,
 									pauseOnHover: true,
 								}
 							);
-
-							const web3 = new Web3(INFURA_URL);
+							let infura;
+							const network = await getNetworkId();
+							if (network === GLOBAL_NETWORK_ID) {
+								infura = INFURA_URL;
+							} else if (network === GLOBAL_NETWORK_ID_2) {
+								infura = INFURA_URL_2;
+							}
+							const web3 = new Web3(infura);
 
 							let intervalVar = setInterval(async () => {
 								console.log("web3.eth", web3.eth);
@@ -294,7 +306,7 @@ class CreateEvent extends Component {
 									toast(
 										<Notify
 											text={
-												"Transaction successfull!\nYou can check event now."
+												"Transaction successful!\nYou can check event now."
 											}
 											icon="fas fa-check-circle fa-3x"
 											color="#413AE2"

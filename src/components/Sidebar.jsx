@@ -17,10 +17,7 @@ import {
 import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
 import ipfs from "../utils/ipfs";
-import {
-	GLOBAL_NETWORK_ID,
-	GLOBAL_NETWORK_ID_2,
-} from "../config/const.js";
+import { GLOBAL_NETWORK_ID, GLOBAL_NETWORK_ID_2 } from "../config/const.js";
 class Sidebar extends Component {
 	constructor(props, context) {
 		console.log("accounts props in sidebar", props.account);
@@ -190,11 +187,18 @@ class Sidebar extends Component {
 		if (this.state.avatarCustom) {
 			// return <image
 			// console.log("avatar ipfs image", this.state.avatar);
-			return <img src={this.state.avatar} className="bird" />;
+			return (
+				<img
+					src={this.state.avatar}
+					style={{ width: "40px", height: "40px" }}
+					className="bird"
+				/>
+			);
 		} else {
 			return (
 				<img
 					src={this.imageData(this.state.avatarId)}
+					style={{ display: "block", margin: "5px" }}
 					className="bird"
 				/>
 			);
@@ -223,7 +227,7 @@ class Sidebar extends Component {
 					<div className="user-status-icon">
 						<NavLink
 							to="/accountdetails"
-							style={{ display: "flex" }}
+							style={{ display: "flex", alignItems: "center" }}
 						>
 							{/* <img
 								src={makeBlockie(this.props.account)}
@@ -235,7 +239,9 @@ class Sidebar extends Component {
 							)} */}
 							{/* {this.provideImage(this.props.userDetails)} */}
 							{/* <img src="./images/metamask.svg" className="bird" /> */}
+
 							{this.renderImage()}
+
 							<span
 								style={{
 									marginLeft: "20px",
@@ -256,8 +262,16 @@ class Sidebar extends Component {
 			);
 		}
 		//routes that display when user is not connected
-		if (!this.props.account || this.props.account.length === 0 || !this.props.status) {
-			console.log("I am doing that", (this.props.networkId == GLOBAL_NETWORK_ID || this.props.networkId == GLOBAL_NETWORK_ID_2))
+		if (
+			!this.props.account ||
+			this.props.account.length === 0 ||
+			!this.props.status
+		) {
+			console.log(
+				"I am doing that",
+				this.props.networkId == GLOBAL_NETWORK_ID ||
+					this.props.networkId == GLOBAL_NETWORK_ID_2
+			);
 			return (
 				<React.Fragment>
 					<Snackbar
@@ -287,7 +301,7 @@ class Sidebar extends Component {
 						<div className="user-status">{user}</div>
 						<div className="menu mt-5">
 							<h5 className="toggleHidden header">
-								Events & Tickets
+								Events and Tickets
 							</h5>
 							<ul className="nav flex-column">
 								<li>

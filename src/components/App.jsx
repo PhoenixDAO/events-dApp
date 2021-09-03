@@ -124,6 +124,7 @@ class App extends Component {
 			avatarCustom: false,
 			open2: false,
 			eventsAddress: "",
+			openWalletConnected: false,
 		};
 		this.myRef = React.createRef();
 
@@ -133,6 +134,12 @@ class App extends Component {
 		this.executeScroll = this.executeScroll.bind(this);
 		this.initializeContract = this.initializeContract.bind(this);
 	}
+
+	handleOpenWalletConnected = () => {
+		this.setState({
+			openWalletConnected: false,
+		});
+	};
 
 	async contractAddressProviders() {
 		let eventAddress = "";
@@ -367,7 +374,10 @@ class App extends Component {
 			console.log("error occured");
 		} else {
 			console.log("DOne");
-			window.location.reload();
+			this.setUserDetails(detail.result);
+			this.setState({
+				openWalletConnected: true,
+			});
 		}
 	};
 

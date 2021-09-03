@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import roundlogo from "../Images/roundlogo.svg";
 import Snackbar from "@material-ui/core/Snackbar";
 import Web3 from "web3";
+import { Link } from "react-router-dom";
 
 const Wallet = () => {
 	const [error, setError] = useState("");
@@ -9,6 +10,21 @@ const Wallet = () => {
 	const handleClose = () => {
 		setOpen(false);
 	};
+
+	// const openWalletConnect = async () => {
+	// 	const provider = new WalletConnectProvider({
+	// 		rpc: {
+	// 			1: "https://mainnet.mycustomnode.com",
+	// 			3: "https://ropsten.mycustomnode.com",
+	// 			100: "https://dai.poa.network",
+	// 			// ...
+	// 		},
+	// 	});
+
+	// 	//  Enable session (triggers QR Code modal)
+	// 	await provider.enable();
+	// };
+
 	const openMetaMask = async () => {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			let web3 = new Web3(window.ethereum);
@@ -110,7 +126,7 @@ const Wallet = () => {
 			<div>
 				<p className="wallets-footer">
 					By connecting, I accept PhoenixDAO’s{" "}
-					<span style={{ color: "#413AE2" }}>Terms of service</span>{" "}
+					<Link to="/terms-and-conditions" ><span style={{ color: "#413AE2" }}>Terms of service</span>{" "}</Link>
 				</p>
 			</div>
 			<Snackbar
