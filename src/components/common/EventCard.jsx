@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
-import { pricingFormatter } from "../../utils/pricingSuffix"
+import { pricingFormatter } from "../../utils/pricingSuffix";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 import {
@@ -141,7 +141,7 @@ const useStyles = makeStyles((theme) => ({
 			marginBottom: "0px",
 		},
 		minHeight: "71px",
-		textAlign: "end"
+		textAlign: "end",
 	},
 	favouriteGrid: {
 		display: "flex",
@@ -158,8 +158,6 @@ const useStyles = makeStyles((theme) => ({
 	priceAlignment: {
 		textAlign: "end",
 	},
-
-
 }));
 
 const EventCard = (props, context) => {
@@ -218,7 +216,6 @@ const EventCard = (props, context) => {
 	};
 	const addTofavorite = async (e) => {
 		e.preventDefault();
-		setIcon(!Icon);
 		const token = localStorage.getItem("AUTH_TOKEN");
 		try {
 			let payload = {
@@ -229,14 +226,19 @@ const EventCard = (props, context) => {
 
 			//for add to favourite
 			if (!Icon) {
-				const result = await axios.post(`${API_URL}${ADD_TO_FAVOURITES}`, payload, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				});
+				const result = await axios.post(
+					`${API_URL}${ADD_TO_FAVOURITES}`,
+					payload,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				);
 				console.log("result", result);
-
-              
+				if (result.status === 200 || result.status === 400) {
+					setIcon(!Icon);
+				}
 			}
 			//for remove from favourites
 			else {
@@ -250,7 +252,9 @@ const EventCard = (props, context) => {
 					}
 				);
 				console.log("result", result);
-
+				if (result.status === 200 || result.status === 400) {
+					setIcon(!Icon);
+				}
 				props.reloadData();
 			}
 		} catch (error) {
@@ -329,9 +333,9 @@ const EventCard = (props, context) => {
 									style={
 										event_data.tktTotalQuantity != 0
 											? {
-												justifyContent:
-													"space-between",
-											}
+													justifyContent:
+														"space-between",
+											  }
 											: { justifyContent: "flex-end" }
 									}
 								>
@@ -381,7 +385,7 @@ const EventCard = (props, context) => {
 										fontSize: 16,
 										fontWeight: 700,
 										fontFamily: "'Aeonik', sans-serif",
-										wordBreak:"break-word"
+										wordBreak: "break-word",
 										// width: "60%",
 									}}
 								>
@@ -412,27 +416,58 @@ const EventCard = (props, context) => {
 														'"Aeonik", sans-serif',
 												}}
 											>
-												{console.log("pheonix value", event_data.name, phnx_price[0], typeof (phnx_price[0]))}
-												{pricingFormatter(phnx_price[0], "PHNX")}
+												{console.log(
+													"pheonix value",
+													event_data.name,
+													phnx_price[0],
+													typeof phnx_price[0]
+												)}
+												{pricingFormatter(
+													phnx_price[0],
+													"PHNX"
+												)}
 												{/* {console.log("pheonix price: ", phnx_price[0],typeof(phnx_price[0]))} */}
 											</p>
-											<p className={classes.starting} title={"$" + dollar_price}>
+											<p
+												className={classes.starting}
+												title={"$" + dollar_price}
+											>
 												{" "}
-												{pricingFormatter(dollar_price, "$")}
+												{pricingFormatter(
+													dollar_price,
+													"$"
+												)}
 											</p>
 										</div>
 									) : (
 										<div className={classes.priceAlignment}>
-											<p className={classes.starting} title={phnx_price[0]}>
+											<p
+												className={classes.starting}
+												title={phnx_price[0]}
+											>
 												Starting from
 											</p>
-											<p title={phnx_price[0]} style={{
-												fontFamily:
-													'"Aeonik", sans-serif',
-											}}>{pricingFormatter(phnx_price[0], "PHNX")}</p>
-											<p className={classes.starting} title={"$" + dollar_price} >
+											<p
+												title={phnx_price[0]}
+												style={{
+													fontFamily:
+														'"Aeonik", sans-serif',
+												}}
+											>
+												{pricingFormatter(
+													phnx_price[0],
+													"PHNX"
+												)}
+											</p>
+											<p
+												className={classes.starting}
+												title={"$" + dollar_price}
+											>
 												{" "}
-												{pricingFormatter(dollar_price, "$")}
+												{pricingFormatter(
+													dollar_price,
+													"$"
+												)}
 											</p>
 										</div>
 									)}
@@ -470,8 +505,8 @@ const EventCard = (props, context) => {
 								{!eventTime
 									? `Date`
 									: eventTime === "onedayevent"
-										? moment(eventDate).format("Do MMM, YYYY")
-										: `
+									? moment(eventDate).format("Do MMM, YYYY")
+									: `
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
@@ -494,16 +529,16 @@ const EventCard = (props, context) => {
 								{!eventStartTime
 									? `Time`
 									: !eventEndTime
-										? moment(eventStartTime)
+									? moment(eventStartTime)
 											.utcOffset(0)
 											.format("hh:mma z")
-										: `${moment(eventStartTime)
+									: `${moment(eventStartTime)
 											.utcOffset(0)
 											.format("hh:mma")} - ${moment(
-												eventEndTime
-											)
-												.utcOffset(0)
-												.format("hh:mma z")}`}
+											eventEndTime
+									  )
+											.utcOffset(0)
+											.format("hh:mma z")}`}
 							</Typography>
 
 							<Typography
@@ -521,8 +556,8 @@ const EventCard = (props, context) => {
 								{!eventType
 									? `Location`
 									: eventType === "physical"
-										? eventLocation
-										: `Online`}
+									? eventLocation
+									: `Online`}
 							</Typography>
 
 							{/* For my events page */}
@@ -582,50 +617,50 @@ const EventCard = (props, context) => {
 									</Button>
 								</Grid>
 							) : // For my ticket page
-								ticket ? (
-									<Grid item className={classes.row}>
-										<Button
-											className={classes.shareButton}
-											onClick={handleClickOpen}
-										>
-											<LaunchSharp
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
-											/>{" "}
-											Share Event
-										</Button>
-										<Button
-											className={classes.sendTicket}
-											onClick={handleClickOpen2}
-										>
-											<Send
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
-											/>{" "}
-											Send Ticket
-										</Button>
-									</Grid>
-								) : // For my Favorite page
-									myFavorites ? (
-										<Grid item className={classes.row}>
-											<Button
-												className={classes.shareButton}
-												onClick={handleClickOpen}
-											>
-												<LaunchSharp
-													style={{
-														marginRight: "7px",
-														fontSize: "19px",
-													}}
-												/>{" "}
-												Share Event
-											</Button>
-										</Grid>
-									) : null}
+							ticket ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+									<Button
+										className={classes.sendTicket}
+										onClick={handleClickOpen2}
+									>
+										<Send
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Send Ticket
+									</Button>
+								</Grid>
+							) : // For my Favorite page
+							myFavorites ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+								</Grid>
+							) : null}
 						</CardContent>
 					</CardActionArea>
 				</Link>

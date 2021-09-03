@@ -1,16 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import "./alreadyform.css";
 import roundlogo from "../../Images/roundlogo.svg";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import IconButton from "@material-ui/core/IconButton";
+import { Snackbar } from "@material-ui/core";
 
 const AlreadyForm = (props) => {
+	const [open, setOpen] = useState(false);
+	const handleClose = () => {
+		setOpen(false);
+	};
 	const closeForm = (e) => {
 		e.preventDefault();
 		props.handleClose();
 		if (props.origin === "App") {
 			props.updateUserInfo();
 		}
+		setOpen(true);
 	};
 	return (
 		<div className="idn-hldr">
@@ -57,6 +63,15 @@ const AlreadyForm = (props) => {
 					Enter Events dApp
 				</button>
 			</div>
+			<Snackbar
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+				open={open}
+				onClose={handleClose}
+				message="Wallet connected"
+				autoHideDuration={3000}
+				key={"bottom" + "center"}
+				className="snackbar"
+			/>
 		</div>
 	);
 };
