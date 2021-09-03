@@ -58,7 +58,9 @@
 
 #sidebar-wrapper.my-sidebar .user-status .user-status-icon img {
     border-radius: 100%;
-    width: 100%;
+    /* width: 100%; */
+	width: 28px;
+	height: 28px;
     vertical-align: top;
     background-color: #FCFCFD;
     margin: 0;

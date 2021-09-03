@@ -149,6 +149,7 @@ const styles = (theme) => ({
 		height: "40px",
 		"& .MuiSelect-outlined": {
 			padding: "10px",
+			paddingRight:"25px",
 		},
 		[theme.breakpoints.down("xs")]: {
 			width: "auto",
