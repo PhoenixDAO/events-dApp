@@ -240,7 +240,12 @@ const useStyles = makeStyles((theme) => ({
 		color: "#4E4E55",
 	},
 	UrlField: {
-		width: "100%",
+		"@media (min-width:800px)":{
+			minWidth:"360px",
+			maxWidth:"410px",
+			width: "81%"
+		},
+		width: "80%",
 		margin: "0px auto",
 	},
 	copyButton: {
@@ -294,6 +299,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	formControlDesc: {
 		maxWidth: "100%",
+		width:"100%",
 	},
 	dropdownMenu: {
 		fontFamily: "'Aeonik', sans-serif",

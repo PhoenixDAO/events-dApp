@@ -120,6 +120,7 @@ const useStyles = (theme) => ({
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
 			padding: "10px",
+			paddingRight:"20px",
 			background: "#fff",
 		},
 		"& option": {

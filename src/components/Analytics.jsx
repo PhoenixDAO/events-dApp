@@ -52,6 +52,10 @@ const useStyles = makeStyles((theme) => ({
 		height: "40px",
 		"& .MuiSelect-outlined": {
 			padding: "10px",
+			paddingRight: "25px !important",
+			"@media (max-width: 600px)":{
+				maxWidth:"150px"
+			},
 		},
 		[theme.breakpoints.down("xs")]: {
 			width: "auto",
