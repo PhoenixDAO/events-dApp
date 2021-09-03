@@ -25,7 +25,10 @@ jobs:
             ${{ runner.os }}-node-${{ env.cache-name }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-      
+      - name: ⛏ Building
+        run: npm install && npm run build
+        env:
+          CI: false
       - name: Deploy to S3
         uses: reggionick/s3-deploy@v3
         with:
