@@ -60,6 +60,7 @@ import {
 	updateUserDetails,
 	getMessage,
 	loginWithMetaMask,
+	getUser,
 } from "../config/serverAPIs";
 import AccountDetail from "./account/index";
 import BuyTicket from "./common/BuyTicket";
@@ -123,7 +124,7 @@ class App extends Component {
 			avatarNumber: 0,
 			avatarCustom: false,
 			open2: false,
-			eventsAddress:""
+			eventsAddress: "",
 		};
 		this.myRef = React.createRef();
 
@@ -208,7 +209,11 @@ class App extends Component {
 				PhoenixDAO_Testnet_Token_ABI,
 				phoenixAddress
 			);
-			this.setState({ eventsContract: openEvents, phnxContract: PHNX, eventsAddress:eventAddress });
+			this.setState({
+				eventsContract: openEvents,
+				phnxContract: PHNX,
+				eventsAddress: eventAddress,
+			});
 		} catch (err) {
 			console.log("error initializing the contract", err);
 		}
@@ -334,6 +339,7 @@ class App extends Component {
 							userDetails: userDetails,
 							open: userDetails.result.result.userHldr.firstTime,
 						});
+						localStorage.removeItem("AUTH_TOKEN");
 						localStorage.setItem(
 							"AUTH_TOKEN",
 							userDetails.result.result.token
@@ -345,6 +351,27 @@ class App extends Component {
 			console.log(err);
 		}
 	}
+
+	updateUserInfo = async (e) => {
+		console.log("Working");
+		const detail = await updateUserDetails({
+			address: this.props.accounts[0],
+			networkId: this.props.web3.networkId,
+			name: this.state.name, //we need to change this when the design is finalised
+			organizerDetails: "",
+			avatarCustom: this.state.avatarCustom, //we need to change this when the design is finalised
+			avatarNumber: this.state.avatarNumber, //we need to change this when the design is finalised
+			avatar: this.state.avatar,
+			alternateCurrency: "",
+		});
+		if (detail.error) {
+			console.log("error occured");
+		} else {
+			console.log("DOne");
+			window.location.reload();
+		}
+	};
+
 	async connectToMetaMask() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			let web3 = new Web3(window.ethereum);
@@ -507,7 +534,7 @@ class App extends Component {
 				.allowance(this.state.account, eventAddress)
 				.call();
 
-				console.log("allowance",a);
+			console.log("allowance", a);
 			return a;
 		}
 	};
@@ -855,23 +882,6 @@ class App extends Component {
 		this.setState({ nextForm: value });
 	};
 
-	updateUserInfo = async (e) => {
-		console.log("Working");
-		const detail = await updateUserDetails({
-			address: this.props.accounts["0"],
-			networkId: this.props.web3.networkId,
-			name: this.state.name, //we need to change this when the design is finalised
-			avatarCustom: this.state.avatarCustom, //we need to change this when the design is finalised
-			avatarNumber: this.state.avatarNumber, //we need to change this when the design is finalised
-			avatar: this.state.avatar,
-		});
-		if (detail.error) {
-			console.log("error occured");
-		} else {
-			window.location.reload();
-		}
-	};
-
 	authMetaMask = async () => {
 		try {
 			const publicAddress = await web3.eth.getAccounts();
@@ -926,9 +936,17 @@ class App extends Component {
 		// 	this.props.web3.networkId != GLOBAL_NETWORK_ID) {
 
 		//condition when drizzle is not initialized
-		console.log("Im in !this.props.drizzleStatus.initialized ",(this.props.web3.networkId != GLOBAL_NETWORK_ID && this.props.web3.networkId != GLOBAL_NETWORK_ID_2))
+		console.log(
+			"Im in !this.props.drizzleStatus.initialized ",
+			this.props.web3.networkId != GLOBAL_NETWORK_ID &&
+				this.props.web3.networkId != GLOBAL_NETWORK_ID_2
+		);
 
-		if (!this.props.drizzleStatus.initialized || (this.props.web3.networkId != GLOBAL_NETWORK_ID && this.props.web3.networkId != GLOBAL_NETWORK_ID_2)) {
+		if (
+			!this.props.drizzleStatus.initialized ||
+			(this.props.web3.networkId != GLOBAL_NETWORK_ID &&
+				this.props.web3.networkId != GLOBAL_NETWORK_ID_2)
+		) {
 			body = (
 				<div>
 					<Switch>
@@ -1319,7 +1337,6 @@ class App extends Component {
 								purchased={this.state.purchased}
 								togglePurchase={this.togglePurchase}
 								eventsAddress={this.state.eventsAddress}
-
 							/>
 						)}
 					/>

@@ -417,6 +417,10 @@ const useStyles = makeStyles((theme) => ({
 			borderRadius: "0 0 10px 10px",
 		},
 	},
+	viewButton:{
+		backgroundColor:"#413AE2",
+		textTransform:"Capitalize"
+	}
 }));
 
 const today = new Date();
@@ -3791,6 +3795,7 @@ const MyStepper = ({
 									startIcon={
 										<VisibilityOutlinedIcon fontSize="large" />
 									}
+									className={classes.viewButton}
 									onClick={() => history.push("/myevents/1")}
 								>
 									View your Event
