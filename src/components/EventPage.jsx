@@ -120,7 +120,6 @@ const styles = (theme) => ({
 	eventinfo: {
 		fontSize: "22px",
 		fontWeight: "700",
-		wordBreak: "break-word",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
@@ -663,7 +662,7 @@ class EventPage extends Component {
 					this.setState({
 						open3: true,
 						open3Message:
-							"This is One Time Buy Event. You can't buy/get more than one ticket for this event.",
+							"This event is restricted to one wallet address, you can't buy it again.",
 					});
 				} else {
 					this.setState({ open2: true });
@@ -1343,11 +1342,10 @@ class EventPage extends Component {
 															bought
 														</a>{" "}
 														{" " + sold.count}{" "}
-														ticket for this event{" "}
-														{/* <strong>
+														ticket for this event.														{/* <strong>
 														{event_data[0]}
 													</strong> */}
-														.
+														
 													</p>
 												)
 											)}

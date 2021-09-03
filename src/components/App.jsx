@@ -269,6 +269,7 @@ class App extends Component {
 	//Get Account
 	async loadBlockchainData() {
 		try {
+			
 			if (!window.ethereum || !window.ethereum.isMetaMask) {
 				this.setState({
 					errorMessage:
