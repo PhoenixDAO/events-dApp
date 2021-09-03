@@ -8,7 +8,6 @@ import {
 	TelegramShareButton,
 	TwitterShareButton,
 	WhatsappShareButton,
-	InstapaperShareButton,
 } from "react-share";
 import {
 	Email,
@@ -55,16 +54,6 @@ const SocialMedia = ({ disabled, shareUrl }) => {
 			>
 				<i className="fab fa-facebook-f"></i>
 			</FacebookShareButton>
-
-			<InstapaperShareButton
-				className="iconHolder"
-				url={shareUrl}
-				resetButtonStyle={false}
-				disabled={disabled}
-			>
-				<i className="fab fa-instagram"></i>
-			</InstapaperShareButton>
-
 			<TwitterShareButton
 				className="iconHolder"
 				url={shareUrl}

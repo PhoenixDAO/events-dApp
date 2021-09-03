@@ -277,11 +277,13 @@ class CreateEvent extends Component {
 							toast(
 								<Notify
 									hash={txhash}
+									icon="fas fa-edit fa-2x"
 									text={"Preparing your event...🚀"}
-								/>,
+									color="#413AE2"
+									/>,
 								{
 									position: "bottom-right",
-									autoClose: true,
+									autoClose: false,
 									pauseOnHover: true,
 								}
 							);
@@ -304,7 +306,7 @@ class CreateEvent extends Component {
 									toast(
 										<Notify
 											text={
-												"Transaction successfull!\nYou can check event now."
+												"Transaction successful!\nYou can check event now."
 											}
 											icon="fas fa-check-circle fa-3x"
 											color="#413AE2"

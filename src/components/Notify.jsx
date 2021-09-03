@@ -40,11 +40,14 @@ function Notify({ text, icon, error, link, color, createdEvent, url, hash }) {
 					<i className={icon} style={{ color: color }}></i>
 				</div>
 				<a href={explorerWithTX + hash} title={hash} target="blank">
-					<div style={{ whiteSpace: "break-spaces" }}>{text}</div>
+					<div style={{ whiteSpace: "break-spaces", justifyContent: "center", alignItems: "center" }}>{text}</div>
 				</a>
-				<Link to={url ? url : titleURL}>
-					<p> {link}</p>
-				</Link>
+				{url ?
+					<Link to={url ? url : titleURL}>
+						<p> {link}</p>
+					</Link> : null
+				}
+
 			</div>
 		);
 	}
