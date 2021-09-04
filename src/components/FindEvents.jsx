@@ -221,7 +221,7 @@ class FindEvents extends Component {
 		// this.contracts = context.drizzle.contracts;
 		// this.eventCount = this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
 
-		this.perPage = 6;
+		this.perPage = 18;
 		this.topicClick = this.topicClick.bind(this);
 		this.myRef = React.createRef();
 		this.eventRef = React.createRef();

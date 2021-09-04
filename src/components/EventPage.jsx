@@ -151,7 +151,7 @@ const styles = (theme) => ({
 		height: "40px",
 		"& .MuiSelect-outlined": {
 			padding: "10px",
-			paddingRight:"25px",
+			paddingRight: "25px",
 		},
 		[theme.breakpoints.down("xs")]: {
 			width: "auto",
@@ -260,6 +260,7 @@ class EventPage extends Component {
 			avatar: 0,
 			blockChainEvent: {},
 			shareUrl: window.location,
+			allowBuySnackbar: false,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -267,12 +268,18 @@ class EventPage extends Component {
 		this.inquire = this.inquire.bind(this);
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this);
 		this.goBack = this.goBack.bind(this); // i think you are missing this
-		this.handleCloseSnackbar=this.handleCloseSnackbar.bind(this)
+		this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
 	}
 
 	goBack() {
 		this.props.history.goBack();
 	}
+
+	handleCloseAllowBuySnackbar = () => {
+		this.setState({
+			allowBuySnackbar: false,
+		});
+	};
 
 	// async loadEventFromBlockchain() {
 	// 	const web3 = new Web3(
@@ -299,7 +306,6 @@ class EventPage extends Component {
 			return el.address.toLowerCase() == account.toLowerCase();
 		});
 	}
-
 
 	async loadEventFromBlockchain() {
 		const graphURL = await GetGraphApi();
@@ -656,7 +662,7 @@ class EventPage extends Component {
 			});
 		} else {
 			// this.setState({ open2: true });
-			console.log(this.state.oneTimeBuy)
+			console.log(this.state.oneTimeBuy);
 			if (this.state.oneTimeBuy) {
 				let buyers = this.state.soldTicket;
 				const account = this.props.accounts[0];
@@ -910,7 +916,7 @@ class EventPage extends Component {
 				<img
 					src={this.state.avatar}
 					className="bird"
-					style={{ width: "60px",borderRadius:"50%" }}
+					style={{ width: "60px", borderRadius: "50%" }}
 				/>
 			);
 		} else {
@@ -918,9 +924,40 @@ class EventPage extends Component {
 				<img
 					src={this.imageData(this.state.avatarId)}
 					className="bird"
-					style={{ width: "60px",borderRadius:"50%" }}
+					style={{ width: "60px", borderRadius: "50%" }}
 				/>
 			);
+		}
+	};
+
+	allowBuy = () => {
+		if (Object.keys(this.state.blockChainEvent).length > 0) {
+			if (
+				Number(this.state.blockChainEvent.time) < moment().unix() ||
+				this.state.blockChainEvent.tktTotalQuantitySold >=
+					this.state.blockChainEvent.tktTotalQuantity
+			) {
+				this.setState({
+					allowBuySnackbar: true,
+				});
+				console.log(
+					"allow buy in if",
+					Number(this.state.blockChainEvent.time),
+					moment().unix(),
+					this.state.blockChainEvent.tktTotalQuantitySold,
+					this.state.blockChainEvent.tktTotalQuantity
+				);
+				return false;
+			} else {
+				console.log(
+					"allow buy in else",
+					Number(this.state.blockChainEvent.time),
+					moment().unix(),
+					this.state.blockChainEvent.tktTotalQuantitySold,
+					this.state.blockChainEvent.tktTotalQuantity
+				);
+				return true;
+			}
 		}
 	};
 
@@ -1095,6 +1132,7 @@ class EventPage extends Component {
 								page="event"
 								buyTicket={true}
 								handleClickOpen2={this.handleClickOpen2}
+								allowBuy={this.allowBuy}
 							/>
 							<Grid
 								style={{
@@ -1354,10 +1392,10 @@ class EventPage extends Component {
 															bought
 														</a>{" "}
 														{" " + sold.count}{" "}
-														ticket for this event.														{/* <strong>
+														ticket for this event.{" "}
+														{/* <strong>
 														{event_data[0]}
 													</strong> */}
-														
 													</p>
 												)
 											)}
@@ -1395,8 +1433,10 @@ class EventPage extends Component {
 										</div>
 									</Grid>
 									<Grid lg={10} md={9} sm={10} xs={12}>
-										<SocialMedia shareUrl={this.state.shareUrl}
-											disabled={false}/>
+										<SocialMedia
+											shareUrl={this.state.shareUrl}
+											disabled={false}
+										/>
 									</Grid>
 								</Grid>
 							</Grid>
@@ -1612,6 +1652,19 @@ class EventPage extends Component {
 								event_id={this.props.match.params.id}
 								history={this.props.history}
 							/> */}
+
+							<Snackbar
+								anchorOrigin={{
+									vertical: "bottom",
+									horizontal: "center",
+								}}
+								open={this.state.allowBuySnackbar}
+								onClose={this.handleCloseAllowBuySnackbar}
+								message="Event time has passed or all the tickets have been showed"
+								autoHideDuration={3000}
+								key={"bottom" + "center"}
+								className="snackbar"
+							/>
 						</Grid>
 					);
 				} else {
@@ -1646,7 +1699,6 @@ class EventPage extends Component {
 		// this.updateIPFS();
 		// this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
-
 	}
 
 	geoFindMe = async () => {

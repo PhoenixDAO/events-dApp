@@ -13,10 +13,9 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { explorerWithAddress } from "../config/const";
 import EventCard from "./common/EventCard.jsx";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi from "../config/getGraphApi";
 import Loading from "./Loading";
 import SkeletonLayout from "./common/SkeletonLayout";
-
 
 var QRCode = require("qrcode.react");
 
@@ -92,7 +91,10 @@ class Ticket extends Component {
 					loading: true,
 				},
 				() => {
-					console.log("blockChainEvent.ipfsHash",this.state.blockChainEvent.ipfsHash);
+					console.log(
+						"blockChainEvent.ipfsHash",
+						this.state.blockChainEvent.ipfsHash
+					);
 					ipfs.get(this.state.blockChainEvent.ipfsHash)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
@@ -121,7 +123,7 @@ class Ticket extends Component {
 							}
 						})
 						.catch((e) => {
-							console.log("file",e);
+							console.log("file", e);
 
 							if (!this.isCancelled) {
 								this.setState({
@@ -190,7 +192,6 @@ class Ticket extends Component {
 	};
 
 	sendTicket = (address, eventId) => {
-		// console.log("addres123",address,!this.context.drizzle.web3.utils.isAddress(address))
 		this.setState({ disabledStatus: true });
 		if (!address || !this.context.drizzle.web3.utils.isAddress(address)) {
 			this.setState({ wrong_address: true });
@@ -199,7 +200,13 @@ class Ticket extends Component {
 			let txreceiptApproved = "";
 			let txconfirmedApproved = "";
 			let txerror = "";
-
+			console.log(
+				"sender",
+				this.props.accounts[0],
+				"receiver",
+				address,
+				this.props.id
+			);
 			this.setState({ wrong_address: false });
 			this.props.eventsContract.methods
 				.safeTransferFrom(
@@ -279,8 +286,8 @@ class Ticket extends Component {
 			this.state.blockChainEvent === null &&
 			this.state.eventId != ""
 		) {
-			let graphURL  = await GetGraphApi();
-console.log("graphURl.....",this.state.eventId);
+			let graphURL = await GetGraphApi();
+			console.log("graphURl.....", this.state.eventId);
 
 			// console.log("in ticket.js",this.props.eventsContract.getTicket[this.ticket])
 			// this.event = await this.props.eventsContract.methods.events(this.state.eventId).call();
@@ -290,7 +297,7 @@ console.log("graphURl.....",this.state.eventId);
 			// );
 			// console.log("this.props.")
 			await axios({
-				url:graphURL,
+				url: graphURL,
 				method: "post",
 				data: {
 					query: `
@@ -374,7 +381,7 @@ console.log("graphURl.....",this.state.eventId);
 		let body = (
 			<div className="card">
 				<div className="card-body">
-					<SkeletonLayout/>
+					<SkeletonLayout />
 				</div>
 			</div>
 		);
@@ -553,7 +560,6 @@ console.log("graphURl.....",this.state.eventId);
 	componentDidUpdate() {
 		this.updateEvent();
 		this.updateIPFS();
-
 	}
 
 	componentDidMount() {
