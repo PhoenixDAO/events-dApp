@@ -70,6 +70,7 @@ import arrowbackicon from "../Images/arrowbackicon.png";
 import { CodeSharp, CompassCalibrationOutlined } from "@material-ui/icons";
 import GeoLocation from "../common/GeoLocation";
 import { setDate } from "date-fns/esm";
+import { pricingFormatter } from "../../utils/pricingSuffix";
 
 var badWords = require("bad-words");
 
@@ -992,7 +993,10 @@ const MyStepper = ({
 		let value = parseFloat(d);
 		value = value > 0 ? value : 0;
 		let usd = PhoenixDAO_market.usd;
+		console.log("dollar",PhoenixDAO_market);
 		let phoenixValue = value / usd;
+		console.log("phnx",phoenixValue);
+
 		phoenixValue = phoenixValue.toFixed(5);
 		return phoenixValue;
 	};
@@ -2801,6 +2805,11 @@ const MyStepper = ({
 															<Grid
 																item
 																direction="column"
+																xs={12}
+																sm={12}
+																md={9}
+																lg={9}
+																xl={9}
 															>
 																<p
 																	className={
@@ -2823,6 +2832,11 @@ const MyStepper = ({
 																</p>
 															</Grid>
 															<Grid
+															xs={12}
+															sm={12}
+															md={3}
+															lg={3}
+															xl={3}
 																item
 																direction="column"
 																style={{
@@ -2834,21 +2848,24 @@ const MyStepper = ({
 																	className={
 																		classes.dollarPriceCat
 																	}
+																	title={"$" + cat.dollarPrice}
 																>
-																	$
+																	
 																	{
-																		cat.dollarPrice
+																		// cat.dollarPrice
+																		pricingFormatter(cat.dollarPrice,"$")
 																	}
 																</p>
 																<p
 																	className={
 																		classes.phnxPriceCat
 																	}
+																	title={cat.phnxPrice + " PHNX"}
 																>
 																	{
-																		cat.phnxPrice
+																		// cat.phnxPrice
+																		pricingFormatter(cat.phnxPrice,"PHNX")
 																	}
-																	PHNX
 																</p>
 															</Grid>
 														</Grid>

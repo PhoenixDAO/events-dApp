@@ -158,6 +158,22 @@ const useStyles = makeStyles((theme) => ({
 	priceAlignment: {
 		textAlign: "end",
 	},
+	eventTitle:{
+		color: "#1E1E22",
+		fontSize: 16,
+		fontWeight: 700,
+		fontFamily: "'Aeonik', sans-serif",
+		wordBreak:"break-word",
+		display: "-webkit-box",
+		WebkitBoxOrient: "vertical",
+		WebkitLineClamp: "2",
+		overflow: "hidden",
+textOverflow: "ellipsis",
+// "@media (min-width: 990px) and (max-width: 1024px)": {
+// /* For landscape layouts only */
+// WebkitLineClamp: "3",
+// 	}
+}
 }));
 
 const EventCard = (props, context) => {
@@ -380,14 +396,8 @@ const EventCard = (props, context) => {
 								<Typography
 									variant="h6"
 									component="h2"
-									style={{
-										color: "#1E1E22",
-										fontSize: 16,
-										fontWeight: 700,
-										fontFamily: "'Aeonik', sans-serif",
-										wordBreak: "break-word",
-										// width: "60%",
-									}}
+									className={`${classes.eventTitle} h-100`}
+									title={event_data.name}
 								>
 									{event_data.tktTotalQuantitySold >= 5 ? (
 										<img

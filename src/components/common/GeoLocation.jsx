@@ -34,10 +34,11 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: theme.spacing(2),
 	},
 	label: {
-		color: "#999999",
+		color: "#73727D",
 		fontSize: 15,
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
+		textTransform: "uppercase"
 	},
 	selectLocationPadding:{
 		paddingLeft:"0px !important",

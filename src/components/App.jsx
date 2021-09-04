@@ -976,7 +976,11 @@ class App extends Component {
 						<Route
 							path="/confirm-purchase"
 							exact
-							component={ConfirmPurchase}
+							component={(props) => (
+								<ConfirmPurchase
+									eventsContract={this.state.eventsContract}
+								/>
+							)}
 						/>
 						<Route
 							exact
@@ -1456,7 +1460,11 @@ class App extends Component {
 					<Route
 						path="/confirm-purchase"
 						exact
-						component={ConfirmPurchase}
+						component={(props) => (
+							<ConfirmPurchase
+								eventsContract={this.state.eventsContract}
+							/>
+						)}
 					/>
 					<Route path="/skull" exact component={SkeletonEvent} />
 					<Route path="*" exact component={PageNotFound} />

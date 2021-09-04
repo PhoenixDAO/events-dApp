@@ -44,6 +44,38 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         alignItems: "center"
 
+    },
+    "@media (min-width:960px)":{
+        cardPadding1:{
+            paddingRight:"7px",
+            paddingBottom: "7px"
+        },
+        cardPadding2:{
+            paddingLeft:"7px",
+            paddingBottom:"7px"
+        },
+        cardPadding3:{
+            paddingTop:"7px",
+            paddingRight:"7px"
+        },
+        cardPadding4:{
+            paddingTop:"7px",
+            paddingLeft:"7px"
+        }
+    },
+    "@media (max-width:960px)":{
+        cardPadding1:{
+            paddingBottom:"7px"
+        },
+        cardPadding2:{
+            paddingBottom:"7px"
+        },
+        cardPadding3:{
+            paddingBottom:"7px",
+        },
+        cardPadding4:{
+            paddingBottom:"7px",
+        }
     }
 }));
 
@@ -73,8 +105,8 @@ const EventsAnalytics = (props) => {
             <h3 className={classes.heading}>
                 Events
             </h3>
-            <Grid container style={{ marginTop: "30px" }} item xs={12} spacing={3}>
-                <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
+            <Grid container style={{ marginTop: "30px" }} item xs={12}  >
+                <Grid item lg={6} xl={6} md={6} xs={12} sm={12} className={`${classes.cardPadding1} `} >
                     <Paper className={classes.box2}>
                         <span className={classes.imageDiv}>
                             <img
@@ -86,7 +118,7 @@ const EventsAnalytics = (props) => {
                         <Typography className={classes.text1}>{props.createdEvents}</Typography>
                     </Paper>
                 </Grid>
-                <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
+                <Grid item lg={6} xl={6} md={6} xs={12} sm={12}  className={`${classes.cardPadding2} `} >
                     <Paper className={classes.box2}>
                         <span className={classes.imageDiv}>
                             <img
@@ -99,7 +131,7 @@ const EventsAnalytics = (props) => {
 
                     </Paper>
                 </Grid>
-                <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
+                <Grid item lg={6} xl={6} md={6} xs={12} sm={12} className={`${classes.cardPadding3} `}>
                     <Paper className={classes.box2}>
                         <span className={classes.imageDiv}>
                             <img
@@ -111,7 +143,7 @@ const EventsAnalytics = (props) => {
                         <Typography className={classes.text1}>{props.ticketBought}</Typography>
                     </Paper>
                 </Grid>
-                <Grid item lg={6} xl={6} md={6} xs={12} sm={12}>
+                <Grid item lg={6} xl={6} md={6} xs={12} sm={12}  className={`${classes.cardPadding4} `} >
                     <Paper className={classes.box2}>
                         <span className={classes.imageDiv}>
                             <img

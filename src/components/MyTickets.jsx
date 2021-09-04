@@ -324,11 +324,13 @@ class MyTickets extends Component {
 				{/* <div className="sticky-nav-travel">
 					<img src={"/images/travel.svg"} />
 				</div> */}
+				{(tickets.length !== 0 && !this.state.loading)&&
 					<a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
 					<div className={classes.lgScreenFooterBanner}>
 						<img src={"/images/footer.jpg"} className="img-fluid w-100"/>
 					</div>
 					</a>
+				}
 			</div>
 		);
 	}
