@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import {
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	message2: {
 		fontFamily: "Aeonik",
-		color: "red",
+		color: "#f44336",
 		marginTop: "10px",
 	},
 	textDiv: {
@@ -87,20 +87,30 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-const ConfirmPurchase = () => {
+const ConfirmPurchase = (props) => {
 	const classes = useStyles();
 	const { handleSubmit, control, register } = useForm();
-	const [eventId, setEventId] = useState();
+	const [eventId, setEventId] = useState(0);
 	const [address, setAddress] = useState("");
 	const [text, setText] = useState("");
 	const [errorAddress, setErrorAddress] = useState(false);
+	const [errorId, seterrorId] = useState(false);
+
 
 	const checkTickets = async () => {
+		const eventLength = await props.eventsContract.methods.getEventsCount().call();
+
+		// console.log("length", length, eventId);
 		const buyers = await generateBuyerArr(eventId);
 		const isaddress = Web3.utils.isAddress(address);
-		if (!isaddress) {
+		if (parseInt(eventId) > parseInt(eventLength)) {
+			seterrorId(true);
+			console.log("error", errorId);
+		}
+		else if (!isaddress) {
 			setErrorAddress(true);
 		}
+
 		else {
 			const isowner = buyers.find(element => {
 				return element.address.toLowerCase() == address.toLowerCase()
@@ -158,12 +168,18 @@ const ConfirmPurchase = () => {
 								fullWidth
 								type="number"
 								variant="outlined"
-								value={eventId}
-								error={!!error}
-								helperText={error ? error.message : null}
+								value={value}
+								error={errorId || error}
+
+								helperText={errorId
+									? "This event doesn't exist"
+									: error ? error.message : null
+								}
+								// helperText={error ? error.message : null}
 								onChange={(e) => {
 									onChange(e);
 									setText("");
+									seterrorId(false);
 									setEventId(e.target.value);
 								}}
 							// inputProps={{ pattern: "[0-9]{1,15}" }}
@@ -197,14 +213,15 @@ const ConfirmPurchase = () => {
 								value={value}
 								onChange={(e) => {
 									onChange(e);
+									setErrorAddress(false);
 									setText("");
 									setAddress(e.target.value);
 								}}
 								error={errorAddress || error}
 								helperText={
 									errorAddress
-										? "Invalid account address" 
-										: error? error.message :null
+										? "Invalid account address"
+										: error ? error.message : null
 								}
 							/>
 						)}
