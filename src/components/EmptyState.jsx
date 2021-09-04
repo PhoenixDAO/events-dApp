@@ -80,7 +80,7 @@ const EmptyState = props => {
 			</Grid>
 			<div className="mt-5 text-center">
 				<h3 className={`mt-5 ${classes.title}`}>{text}</h3>
-				<Link to="/upcomingevents/1">
+				<Link to={props.url}>
 					<Button
 						className={classes.btnGo}
 						variant="contained"

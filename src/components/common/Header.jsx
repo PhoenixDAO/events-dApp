@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
 			width: "160px",
 		},
 	},
+	SearchAndBuyPheonixButtonMargin:{
+		margin: theme.spacing(1)
+	}
 }));
 
 const Header = ({
@@ -117,15 +120,16 @@ const Header = ({
 				{/* {page == "analytics" || page == "create" || phnxButton ? (
 				<BuyPhnxButton />
 			) : null} */}
-
+				{/* {console.log("title page for dashboard", title.props.children[2].props.children)} */}
 				{searchBar ? (
+					<div className={(page=="dashboard")&&classes.SearchAndBuyPheonixButtonMargin}>
 					<SearchBar
 						connect={connect}
 						handleSearch={handleSearch}
 						search={search}
 					/>
+					</div>
 				) : null}
-
 				{Object.keys(accounts).length === 0 ? (
 					<ConnectWalletButton onClick={handleOpenWallet} />
 				) : buyTicket ? (
@@ -147,10 +151,12 @@ const Header = ({
 						</Button>
 					</div>
 				) : page === "analytics" ||
-				  page === "create" ||
-				  page === "confirm-purchase" ||
-				  phnxButton ? (
+					page === "create" ||
+					page === "confirm-purchase" ||
+					phnxButton ? (
+						<div className={(page=="dashboard")&&classes.SearchAndBuyPheonixButtonMargin}>
 					<BuyPhnxButton onClick={handleOpenBuyPhnx} />
+					</div>
 				) : null}
 				<DialogueBox
 					open={openWallet}

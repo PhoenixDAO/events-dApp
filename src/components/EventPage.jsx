@@ -190,9 +190,9 @@ const styles = (theme) => ({
 		marginTop: "-4px",
 	},
 	clockTime: {
-		"@media (min-width: 700px)": {
-			width: "55%	!important",
-		},
+		// "@media (min-width: 700px)": {
+		// 	width: "55%	!important",
+		// },
 	},
 });
 class EventPage extends Component {
