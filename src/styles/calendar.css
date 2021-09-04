@@ -120,9 +120,9 @@ table {
     border: 1px solid #e4e4e7 !important;
 }
 
-.fc-direction-ltr .fc-button-group>.fc-button:not(:last-child) {
-    border-top-right-radius: 0.25em !important;
-    border-bottom-right-radius: 0.25em !important;
+.fc-direction-ltr .fc-button-group>.fc-button {
+    border-radius: 0.25em !important;
+    border-radius: 0.25em !important;
 }
 
 .fc-toolbar-chunk:nth-child(2) {
@@ -170,8 +170,8 @@ table {
     background-color: var(--fc-button-bg-color, #fff) !important;
     background-color: var(--fc-button-border-color, #fff) !important;
     border: 0px solid !important;
-    -webkit-box-shadow: 0 0 0 0.2rem #fff !important;
-    box-shadow: 0 0 0 0.2rem #fff !important;
+    /* -webkit-box-shadow: 0 0 0 0.2rem #fff !important; */
+    /* box-shadow: 0 0 0 0.2rem #fff !important; */
 }
 
 /* 
@@ -267,9 +267,9 @@ table {
     background-color: var(--fc-button-bg-color, #fff) !important;
     background-color: var(--fc-button-border-color, #fff) !important;
     border: 0px solid !important;
-    -webkit-box-shadow: 0 0 0 0.2rem #fff !important;
-    box-shadow: 0 0 0 0.2rem #fff !important;
-}
+    -webkit-box-shadow: 0 0 0 0.1rem rgb(204, 204, 204) !important;
+    /* box-shadow: 0 0 0 0.2rem #fff !important; */
+} 
 
 .fc-next-button{
     /* color:rgb(29, 27, 27) !important; */
@@ -281,8 +281,8 @@ table {
     background-color: var(--fc-button-bg-color, #fff) !important;
     background-color: var(--fc-button-border-color, #fff) !important;
     border: 0px solid !important;
-    -webkit-box-shadow: 0 0 0 0.2rem #fff !important;
-    box-shadow: 0 0 0 0.2rem #fff !important;
+    /* -webkit-box-shadow: 0 0 0 0.2rem #fff !important; */
+    /* box-shadow: 0 0 0 0.2rem  !important; */
 }
 
 @media screen and (max-width:500px) {
