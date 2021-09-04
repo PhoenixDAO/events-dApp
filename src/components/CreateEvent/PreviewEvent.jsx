@@ -30,15 +30,15 @@ var moment = require("moment");
 const useStyles = makeStyles((theme) => ({
 	main: {
 		display: "flex",
-		justifyContent: "flex-end",
-		marginRight: 3,
+		justifyContent: "center",
+		// marginRight: 0,
 		[theme.breakpoints.down("md")]: {
 			justifyContent: "center",
 			marginRight: 0,
 		},
 	},
 	root: {
-		maxWidth: 345,
+		maxWidth: 365,
 		"& .MuiCardContent-root": {
 			padding: "16px 16px 0px",
 		},

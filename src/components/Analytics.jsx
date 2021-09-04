@@ -122,6 +122,11 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "18px",
 		fontWeight: "600",
 		letterSpacing: "0.5px",
+		wordBreak:"break-word",
+		display: "-webkit-box",
+		WebkitBoxOrient: "vertical",
+		WebkitLineClamp: "2",
+		overflow: "hidden",
 		display: "flex",
 		alignItems: "baseline",
 		[theme.breakpoints.down("xs")]: {
@@ -650,7 +655,7 @@ const Analytics = (props, context) => {
 		} else {
 			return events.map((event, index) => (
 				<Grid container className={classes.row3}>
-					<Grid lg={3} className={classes.ticketSold}>
+					<Grid lg={3} sm={3} className={classes.ticketSold}>
 						<i
 							className="fa fa-ticket-alt"
 							title="My Tickets"
@@ -658,11 +663,12 @@ const Analytics = (props, context) => {
 						></i>
 						{event.tktTotalQuantitySold}
 					</Grid>
-					<Grid lg={6} className={classes.city}>
+					<Grid lg={6} sm={6} className={`${classes.city} h-100`}>
 						{event.name}
 					</Grid>
 					<Grid
 						lg={3}
+						sm={3} 
 						className={classes.ticketSold}
 						style={{ textAlign: "end" }}
 					>

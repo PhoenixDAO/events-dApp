@@ -7,7 +7,8 @@ import roundlogo from "../Images/roundlogo.svg";
 const useStyles = makeStyles((theme) => ({
 	button: {
 		fontFamily: "'Aeonik', sans-serif",
-		margin: theme.spacing(1),
+		marginBottom: theme.spacing(1),
+		marginTop: theme.spacing(1),
 		textTransform: "initial",
 		fontWeight: "600",
 		background: "#413AE2",
