@@ -992,7 +992,10 @@ const MyStepper = ({
 		let value = parseFloat(d);
 		value = value > 0 ? value : 0;
 		let usd = PhoenixDAO_market.usd;
+		console.log("dollar",PhoenixDAO_market);
 		let phoenixValue = value / usd;
+		console.log("phnx",phoenixValue);
+
 		phoenixValue = phoenixValue.toFixed(5);
 		return phoenixValue;
 	};
