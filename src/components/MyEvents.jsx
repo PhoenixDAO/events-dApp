@@ -8,7 +8,7 @@ import { withStyles } from "@material-ui/core/styles";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Header from "./common/Header";
 import EmptyState from "./EmptyState";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi from "../config/getGraphApi";
 
 import Event from "./Event";
 import axios from "axios";
@@ -65,8 +65,8 @@ const styles = (theme) => ({
 		display: "flex",
 		justifyContent: "space-between",
 		paddingTop: "40px",
-		alignItems: "baseline"
-	}
+		alignItems: "baseline",
+	},
 });
 class MyEvents extends Component {
 	constructor(props, context) {
@@ -87,6 +87,7 @@ class MyEvents extends Component {
 			Deleted_Events: [],
 			disabledBuying: false,
 			selectedTab: 0,
+			value:""
 		};
 		console.log("qwe", this.props.accounts[0]);
 		// this.contracts = context.drizzle.contracts;
@@ -103,7 +104,7 @@ class MyEvents extends Component {
 
 	//Get Blockchain State
 	async loadBlockchain() {
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 		if (this._isMounted) {
 			this.setState({
 				MyEvents: [],
@@ -158,7 +159,7 @@ class MyEvents extends Component {
 		}
 		// GRAPH BLOCK //
 		// console.log("GraphQL query before call",Date.now())
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 		console.log(
 			"checking this.accounts",
 			typeof this.account,
@@ -246,7 +247,7 @@ class MyEvents extends Component {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
 		// GRAPH BLOCK //
-		const graphURL  = await GetGraphApi();
+		const graphURL = await GetGraphApi();
 
 		await axios({
 			url: graphURL,
@@ -365,8 +366,7 @@ class MyEvents extends Component {
 	};
 
 	//Search for My Events By Name
-	updateSearch = (e) => {
-		let { value } = e.target;
+	updateSearch = (value) => {
 		this.setState({ value }, () => {
 			try {
 				if (this.state.value !== "" && this.state.check.length !== 0) {
@@ -401,7 +401,7 @@ class MyEvents extends Component {
 	};
 	render() {
 		const { classes } = this.props;
-		console.log("class props for event card", classes.tabBar)
+		console.log("class props for event card", classes.tabBar);
 		let body;
 		// if (
 		// 	// typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
@@ -579,6 +579,7 @@ class MyEvents extends Component {
 					title="Created Events"
 					page="myEvent"
 					searchBar={true}
+					handleSearch={this.updateSearch}
 				/>
 
 				<AppBar

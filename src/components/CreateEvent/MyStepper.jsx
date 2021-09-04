@@ -1029,6 +1029,7 @@ const MyStepper = ({
 										helperText={
 											error ? error.message : null
 										}
+										inputProps={{maxLength:100}}
 									/>
 								)}
 								rules={{
@@ -1068,6 +1069,7 @@ const MyStepper = ({
 										helperText={
 											error ? error.message : null
 										}
+										inputProps={{maxLength:100}}
 									/>
 								)}
 								rules={{
@@ -2978,6 +2980,7 @@ const MyStepper = ({
 																		? error.message
 																		: null
 																}
+																inputProps={{maxLength:100}}
 															/>
 														)}
 														rules={{

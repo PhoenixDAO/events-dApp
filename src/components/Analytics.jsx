@@ -27,9 +27,7 @@ import Web3 from "web3";
 import MyEvents from "./MyEvents";
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from "moment";
-import {
-	getTodayData,
-} from "../utils/graphApis";
+import { getTodayData } from "../utils/graphApis";
 import { SelectAllOutlined } from "@material-ui/icons";
 const useStyles = makeStyles((theme) => ({
 	content: {
@@ -334,12 +332,11 @@ const Analytics = (props, context) => {
 		endDate: "",
 	});
 	const [reload, setReload] = useState(false);
-	useEffect(()=>{
-		if(props.eventName)
-		{
-			setEventNames(props.eventName[0])
+	useEffect(() => {
+		if (props.eventName) {
+			setEventNames(props.eventName[0]);
 		}
-	},[props.eventName])
+	}, [props.eventName]);
 	useEffect(() => {
 		// getPhnxRevenue();
 		getViewsAndFavourites();
@@ -379,9 +376,9 @@ const Analytics = (props, context) => {
 	// 	handleTimeStampChange(null, todayData);
 	// };
 
-	const handleEventName = (e)=>{
-		setEventNames({eventId:e.target.value})
-	}
+	const handleEventName = (e) => {
+		setEventNames({ eventId: e.target.value });
+	};
 	const chartOptions = {
 		// capBezierPoints: true,
 		legend: {
@@ -816,7 +813,7 @@ const Analytics = (props, context) => {
 					graphForDays = props.todayGraphData;
 					difference = await getTodayData(
 						props.accounts,
-						Number(moment().unix() - 172800),
+						Number(moment().unix() - 172800)
 					);
 				}
 			} else if (timestamp === "custom") {
@@ -1072,51 +1069,49 @@ const Analytics = (props, context) => {
 								className={classes.select}
 							>
 								<Select
-											labelId="demo-simple-select-outlined-label"
-											id="demo-simple-select-outlined"
-											fullWidth
-											value={timeStamp}
-											onChange={handleTimeStampChange}
-											displayEmpty
-											// className={classes.menuPaper}
-											MenuProps={{
-												classes: {
-													paper: classes.menuPaper,
-												},
-												getContentAnchorEl: null,
-												anchorOrigin: {
-												vertical: "bottom",
-												horizontal: "left"}
-											}}
-										>
-											<MenuItem			
-														value="86400"
-														style={{
-															fontFamily:
-																"'Aeonik', sans-serif",
-														}}
-													>
-														Today
-													</MenuItem>
-													<MenuItem			
-														value="604800"
-														style={{
-															fontFamily:
-																"'Aeonik', sans-serif",
-														}}
-													>
-														Last 7 Days
-													</MenuItem>
-													<MenuItem			
-														value="2419200"
-														style={{
-															fontFamily:
-																"'Aeonik', sans-serif",
-														}}
-													>
-														Last 28 Days
-													</MenuItem>
-										</Select>
+									labelId="demo-simple-select-outlined-label"
+									id="demo-simple-select-outlined"
+									fullWidth
+									value={timeStamp}
+									onChange={handleTimeStampChange}
+									displayEmpty
+									// className={classes.menuPaper}
+									MenuProps={{
+										classes: {
+											paper: classes.menuPaper,
+										},
+										getContentAnchorEl: null,
+										anchorOrigin: {
+											vertical: "bottom",
+											horizontal: "left",
+										},
+									}}
+								>
+									<MenuItem
+										value="86400"
+										style={{
+											fontFamily: "'Aeonik', sans-serif",
+										}}
+									>
+										Today
+									</MenuItem>
+									<MenuItem
+										value="604800"
+										style={{
+											fontFamily: "'Aeonik', sans-serif",
+										}}
+									>
+										Last 7 Days
+									</MenuItem>
+									<MenuItem
+										value="2419200"
+										style={{
+											fontFamily: "'Aeonik', sans-serif",
+										}}
+									>
+										Last 28 Days
+									</MenuItem>
+								</Select>
 								{/* <Select
 									native
 									value={timeStamp}
@@ -1129,8 +1124,8 @@ const Analytics = (props, context) => {
 									<option value="86400">Today</option>
 									{/* <option aria-label="None" value="Yesterday">
 								Yesterday
-							</option>*/} 
-									{/* <option value="604800">Last 7 Days</option>
+							</option>*/}
+								{/* <option value="604800">Last 7 Days</option>
 									<option value="2419200">
 										Last 28 Days
 									</option>
@@ -1176,7 +1171,7 @@ const Analytics = (props, context) => {
 							header="Dollar Revenue"
 							value={"$" + dollarRevenue}
 							profit={dollarChange}
-							diffrence={dollarDifference}
+							diffrence={Math.abs(dollarDifference).toFixed(3)}
 							entity="$"
 							days={timeStamp}
 							startDate={customDate.startDate}
@@ -1190,7 +1185,7 @@ const Analytics = (props, context) => {
 							header="Phnx Revenue"
 							value={phnxRevenue + "PHNX"}
 							profit={phnxChange}
-							diffrence={phnxDifference}
+							diffrence={Math.abs(phnxDifference).toFixed(3)}
 							entity="PHNX"
 							days={timeStamp}
 							startDate={customDate.startDate}
@@ -1281,46 +1276,54 @@ const Analytics = (props, context) => {
 														);
 													})}
 										</Select> */}
-										{/* {console.log("event name", (eventNames)&&eventNames['eventId'])} */}
-										{(eventNames)&&
-											<Select
-											fullWidth
-												// value={state.age}
-												value = {(eventNames)&&eventNames['eventId']}
-												onChange={e => {props.handleEvent(e); handleEventName(e)}}
-												inputProps={{
-													name: "age",
-													id: "outlined-age-native-simple",
-												}}
-												MenuProps={{
-													classes: {
-														paper: classes.menuPaper,
-													},
-													getContentAnchorEl: null,
-													anchorOrigin: {
-													vertical: "bottom",
-													horizontal: "left"}
-												}}
-											>
-												{props.eventName.map(
-													(event) => {
-														return (
-															<option
-															style={{
-																fontFamily:
-																	"'Aeonik', sans-serif",
-															}}
-																value={
-																	event.eventId
-																}
-															>
-																{event.name}
-															</option>
-														);
+											{/* {console.log("event name", (eventNames)&&eventNames['eventId'])} */}
+											{eventNames && (
+												<Select
+													fullWidth
+													// value={state.age}
+													value={
+														eventNames &&
+														eventNames["eventId"]
 													}
-												)}
-											</Select>
-											}
+													onChange={(e) => {
+														props.handleEvent(e);
+														handleEventName(e);
+													}}
+													inputProps={{
+														name: "age",
+														id: "outlined-age-native-simple",
+													}}
+													MenuProps={{
+														classes: {
+															paper: classes.menuPaper,
+														},
+														getContentAnchorEl:
+															null,
+														anchorOrigin: {
+															vertical: "bottom",
+															horizontal: "left",
+														},
+													}}
+												>
+													{props.eventName.map(
+														(event) => {
+															return (
+																<option
+																	style={{
+																		fontFamily:
+																			"'Aeonik', sans-serif",
+																	}}
+																	value={
+																		event.eventId
+																	}
+																>
+																	{event.name}
+																</option>
+															);
+														}
+													)}
+												</Select>
+											)}
 										</FormControl>
 									</div>
 								) : null}
@@ -1409,7 +1412,7 @@ const Analytics = (props, context) => {
 					className={`${classes.emptyContent} ${classes.content}`}
 				>
 					<Grid className={classes.EmptyRow}>
-						<EmptyStateAnalytics/>
+						<EmptyStateAnalytics />
 					</Grid>
 				</Grid>
 			)}

@@ -58,6 +58,8 @@ import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
 import GetGraphApi from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
+import PageNotFound from "./PageNotFound";
+import EmptyState from "./EmptyState";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -256,6 +258,7 @@ class EventPage extends Component {
 			avatarCustom: "",
 			avatarId: 1,
 			avatar: 0,
+			blockChainEvent: {},
 			shareUrl: window.location,
 		};
 		this.isCancelled = false;
@@ -926,14 +929,22 @@ class EventPage extends Component {
 
 		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
-			if (!this.state.blockChainEvent) {
+			console.log("render blockchain event", this.state.blockChainEvent);
+			if (
+				this.state.blockChainEvent === undefined ||
+				Object.keys(this.state.blockChainEvent).length === 0
+			) {
 				body = (
-					<div className="text-center mt-5">
-						<span role="img" aria-label="unicorn">
-							🦄
-						</span>{" "}
-						PhoenixDAO Event not found
-					</div>
+					// <div className="text-center mt-5">
+					// 	<span role="img" aria-label="unicorn">
+					// 		🦄
+					// 	</span>{" "}
+					// 	PhoenixDAO Event not found
+					// </div>
+					<EmptyState
+						text="Event doesnot exist"
+						btnText="Go to Dashboard"
+					/>
 				);
 			} else {
 				let event_data = this.state.blockChainEvent;
