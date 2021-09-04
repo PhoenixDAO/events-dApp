@@ -1623,7 +1623,7 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
-		const buyers = await generateBuyerArr(this.props.match.params.id);
+		let buyers = await generateBuyerArr(this.props.match.params.id);
 		this.setState({ soldTicket: buyers });
 		this.loadEventFromBlockchain();
 		console.log("count", this.props.accounts[0]);
@@ -1654,12 +1654,25 @@ class EventPage extends Component {
 	};
 
 	componentDidUpdate() {
+
 		this.updateIPFS();
 	}
 
 	componentWillUnmount() {
 		this.isCancelled = true;
 		this._isMounted = false;
+	}
+	async componentDidUpdate(prevProps) {
+		// console.log("this.props.userDetails", this.props.userDetails);
+		// console.log("prevProps.userDetails", prevProps.userDetails);
+		if (
+			this.props.purchased !== prevProps.purchased)
+		{
+			console.log("thisprops",this.props.purchased,"",prevProps.purchased)
+			let buyers = await generateBuyerArr(this.props.match.params.id);
+			this.setState({ soldTicket: buyers });
+
+		}
 	}
 }
 

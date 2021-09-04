@@ -63,15 +63,13 @@ class MyTickets extends Component {
 		this.setState({ reload: !this.state.reload });
 	};
 	async loadTicketsFromBlockchain() {
-		// const web3 = new Web3(
-		// 	new Web3.providers.WebsocketProvider(
-		// 		INFURA_WEB_URL
-		// 	)
-		// );
-		// const openEvents = new web3.eth.Contract(
-		// 	Open_events_ABI,
-		// 	Open_events_Address
-		// );
+	
+		const blockChainTickets = await this.props.eventsContract.methods
+			.ticketsOf(this.props.accounts
+			)
+			.call();
+		// const newsort = blockChainTickets.concat().sort((a, b) => b - a);
+console.log("blockchainTickets0",blockChainTickets.length);
 		const graphURL = await GetGraphApi();
 		await axios({
 			url: graphURL,
@@ -88,13 +86,14 @@ class MyTickets extends Component {
 				`,
 			},
 		}).then((graphEvents) => {
-			console.log("GraphQL query response", Date.now(), graphEvents);
+			console.log("TicketData", Date.now(), graphEvents);
 
 			if (
 				graphEvents.data ||
 				graphEvents.data.data !== "undefined" ||
 				graphEvents.data.data.tickets.length > 0
 			) {
+
 				console.log("Data is here from graph");
 				this.setState({
 					blockChainTickets: graphEvents.data.data.tickets,
