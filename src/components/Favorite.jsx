@@ -2,7 +2,15 @@ import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { API_URL, REPORT_EVENT, GET_USER_DETAIL } from "../config/const";
+import {
+	API_URL,
+	REPORT_EVENT,
+	GET_USER_DETAIL,
+	GLOBAL_NETWORK_ID,
+	GLOBAL_NETWORK_ID_2,
+	INFURA_URL,
+	INFURA_URL_2,
+} from "../config/const";
 import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
@@ -16,7 +24,15 @@ import SearchBar from "./common/SearchBar";
 import { ThumbsUpDownOutlined } from "@material-ui/icons";
 import Header from "./common/Header";
 import EmptyState from "./EmptyState";
+import {
+	getMessage,
+	getUserDetails,
+	loginWithMetaMask,
+} from "../config/serverAPIs";
+import Web3 from "web3";
 
+let ethereum = window.ethereum;
+let web3 = window.web3;
 const useStyles = (theme) => ({
 	sticky: {
 		position: "sticky",
@@ -236,8 +252,7 @@ class Favorites extends Component {
 	}
 
 	//Search Active Events By Name
-	updateSearch = (e) => {
-		let { value } = e.target;
+	updateSearch = (value) => {
 		this.setState({ value }, () => {
 			try {
 				if (this.state.value !== "") {
@@ -313,7 +328,6 @@ class Favorites extends Component {
 	// };
 	getUserFavoritesEvent = async () => {
 		console.log("loading2", this.state.loading);
-
 		try {
 			const token = localStorage.getItem("AUTH_TOKEN");
 			const get = await axios.post(
@@ -328,17 +342,71 @@ class Favorites extends Component {
 					},
 				}
 			);
-			console.log("get data",get);
+			console.log("get data", get);
 			this.setState({
 				UserFavoriteEvents: get.data.result.userHldr.favourites,
-
 			});
 			return;
 		} catch (error) {
-			console.log("check error", error);
+			console.log("check error", error.response);
+			if (error.response.status === 403) {
+				const userDetails = await this.authMetaMask();
+				if (!userDetails.error) {
+					console.log("userDetails", userDetails);
+					this.setState({
+						userDetails: userDetails,
+						open: userDetails.result.result.userHldr.firstTime,
+					});
+					localStorage.removeItem("AUTH_TOKEN");
+					localStorage.setItem(
+						"AUTH_TOKEN",
+						userDetails.result.result.token
+					);
+					console.log("successfully signed in favourites");
+					this.getUserFavoritesEvent()
+				}
+			}
 		}
 		// this.setState({reload:false});
 	};
+
+	authMetaMask = async () => {
+		try {
+			const publicAddress = await web3.eth.getAccounts();
+			const networkId = await this.getNetworkId();
+			console.log("Public address", publicAddress);
+			console.log("networkId", networkId);
+			const message = await getMessage();
+			const sign = await this.handleSignMessage(
+				publicAddress[0],
+				message.result.result
+			);
+			const userData = await loginWithMetaMask({
+				publicAddress: publicAddress[0],
+				networkId: networkId,
+				signature: sign,
+				message: message.result.result,
+			});
+			return userData;
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	handleSignMessage = async (publicAddress, message) => {
+		try {
+			console.log("message", message);
+			const sign = await web3.eth.sign(
+				web3.utils.sha3(message),
+				publicAddress
+			);
+			console.log("sign", sign);
+			return sign;
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	reloadData = () => {
 		this.setState({ reload: !this.state.reload });
 	};
@@ -540,7 +608,11 @@ class Favorites extends Component {
 		return (
 			<React.Fragment>
 				<div>
-					<Header title="Favourites" searchBar={true} />
+					<Header
+						title="Favourites"
+						searchBar={true}
+						handleSearch={this.updateSearch}
+					/>
 					<div ref={this.myRef} />
 
 					{body}
@@ -549,15 +621,60 @@ class Favorites extends Component {
 		);
 	}
 
-	componentDidMount() {
-		// if (this.state.prevPath == -1) {
-		//     this.props.executeScroll({ behavior: "smooth", block: "start" });
-		// }
-		// this._isMounted = true;
+	async getNetworkId() {
+		try {
+			if (window.ethereum && window.ethereum.isMetaMask) {
+				web3 = new Web3(ethereum);
+			} else if (typeof web3 !== "undefined") {
+				web3 = new Web3(web3.currentProvider);
+			} else {
+				const network = await web3.eth.net.getId();
+				let infura;
+				if (network === GLOBAL_NETWORK_ID) {
+					infura = INFURA_URL;
+				} else if (network === GLOBAL_NETWORK_ID_2) {
+					infura = INFURA_URL_2;
+				}
+				web3 = new Web3(new Web3.providers.HttpProvider(infura));
+			}
+			const networkId = await web3.eth.net.getId();
+			console.log("This called getNetworkId", networkId);
+			if (networkId === GLOBAL_NETWORK_ID) {
+				return networkId;
+			} else if (networkId === GLOBAL_NETWORK_ID_2) {
+				return networkId;
+			} else {
+				console.log("network id not suported");
+			}
+			return null;
+		} catch (err) {
+			console.log("err", err);
+		}
+	}
+
+	async componentDidMount() {
+		if (typeof ethereum !== "undefined") {
+			const a = ethereum.enable();
+			web3 = new Web3(ethereum);
+			const accounts = await web3.eth.getAccounts();
+		} else if (typeof web3 !== "undefined") {
+			window.web3 = new Web3(web3.currentProvider);
+		} else {
+			const network = this.getNetworkId();
+			let infura;
+			if (network === GLOBAL_NETWORK_ID) {
+				infura = INFURA_URL;
+			} else if (network === GLOBAL_NETWORK_ID_2) {
+				infura = INFURA_URL_2;
+			}
+			window.web3 = new Web3(new Web3.providers.HttpProvider(infura));
+		}
+
 		this.loadBlockchain();
 		this.filterHideEvent();
 		this.getUserFavoritesEvent();
 	}
+
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.reload !== this.state.reload) {
 			console.log("prev", prevState, this.state.reload);
