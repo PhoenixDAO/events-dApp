@@ -49,6 +49,7 @@ const Header = ({
 	accounts,
 	search,
 	handleSearch,
+	allowBuy,
 }) => {
 	const classes = useStyles();
 	const [openWallet, setOpenWallet] = useState(false);
@@ -85,7 +86,7 @@ const Header = ({
 			className={clsx(
 				"header-top",
 				(page === "dashboard" || page === "myEvent") &&
-				"header-top-dashboard"
+					"header-top-dashboard"
 			)}
 			style={
 				page === "dashboard" || page === "myEvent"
@@ -100,8 +101,8 @@ const Header = ({
 					style={{ display: "flex", alignItems: "center" }}
 				>
 					{page === "event" ||
-						page === "topic" ||
-						page === "accountdetails" ? (
+					page === "topic" ||
+					page === "accountdetails" ? (
 						<IconButton aria-label="delete" onClick={goBack}>
 							<KeyboardBackspaceIcon
 								fontSize="large"
@@ -134,7 +135,9 @@ const Header = ({
 							color="primary"
 							style={{ marginRight: "10px" }}
 							className={classes.buy}
-							onClick={handleClickOpen2}
+							onClick={() =>
+								allowBuy() ? handleClickOpen2() : null
+							}
 							disabled={disabled}
 						>
 							<ShoppingCartOutlined
@@ -144,9 +147,9 @@ const Header = ({
 						</Button>
 					</div>
 				) : page === "analytics" ||
-					page === "create" ||
-					page === "confirm-purchase" ||
-					phnxButton ? (
+				  page === "create" ||
+				  page === "confirm-purchase" ||
+				  phnxButton ? (
 					<BuyPhnxButton onClick={handleOpenBuyPhnx} />
 				) : null}
 				<DialogueBox

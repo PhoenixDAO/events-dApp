@@ -236,8 +236,7 @@ class Favorites extends Component {
 	}
 
 	//Search Active Events By Name
-	updateSearch = (e) => {
-		let { value } = e.target;
+	updateSearch = (value) => {
 		this.setState({ value }, () => {
 			try {
 				if (this.state.value !== "") {
@@ -328,10 +327,9 @@ class Favorites extends Component {
 					},
 				}
 			);
-			console.log("get data",get);
+			console.log("get data", get);
 			this.setState({
 				UserFavoriteEvents: get.data.result.userHldr.favourites,
-
 			});
 			return;
 		} catch (error) {
@@ -540,7 +538,11 @@ class Favorites extends Component {
 		return (
 			<React.Fragment>
 				<div>
-					<Header title="Favourites" searchBar={true} />
+					<Header
+						title="Favourites"
+						searchBar={true}
+						handleSearch={this.updateSearch}
+					/>
 					<div ref={this.myRef} />
 
 					{body}
