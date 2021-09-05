@@ -101,6 +101,7 @@ class CheckUser extends Component {
 			});
 			let payload = {
 				reportAccounts: this.account,
+				address: this.account,
 				eventName: this.state.blockChainEvent.name,
 				id: this.props.event_id,
 				count: 1,
