@@ -156,16 +156,24 @@ const WrapperTopicsLandingPage = (props) => {
 				console.log("Hide events", hideEvent);
 				for (let i = 0; i < newsort.length; i++) {
 					for (let j = 0; j < hideEvent.length; j++) {
-						if (newsort[i].eventId !== hideEvent[j].id) {
-							newsort[i].hide = false;
-						} else {
+						console.log(
+							newsort[i].eventId,
+							hideEvent[j].id,
+							newsort[i].eventId === hideEvent[j].id
+						);
+						if (newsort[i].eventId === hideEvent[j].id) {
 							newsort[i].hide = true;
+							break;
+						} else {
+							newsort[i].hide = false;
 						}
 					}
 				}
 				setTimeout(() => {
 					setLoading(false);
 				}, 2000);
+
+				console.log("newsort in wrapper", newsort);
 				setTopicEvents(newsort);
 				setTopicCopy(newsort);
 				setActiveLength(newsort.length);

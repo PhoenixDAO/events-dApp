@@ -123,14 +123,12 @@ const styles = (theme) => ({
 		fontSize: "22px",
 		fontWeight: "700",
 		wordBreak: "break-word",
-
 	},
 	PhnxPrice: {
 		fontSize: "22px",
 		fontWeight: "700",
 		color: "#413AE2",
 		wordBreak: "break-word",
-
 	},
 	categoryGrid: {
 		backgroundColor: "white",
@@ -265,6 +263,7 @@ class EventPage extends Component {
 			blockChainEvent: {},
 			shareUrl: window.location,
 			allowBuySnackbar: false,
+			errorMessage: "",
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -938,8 +937,9 @@ class EventPage extends Component {
 		if (Object.keys(this.state.blockChainEvent).length > 0) {
 			if (
 				Number(this.state.blockChainEvent.time) < moment().unix() ||
-				this.state.blockChainEvent.tktTotalQuantitySold >=
-					this.state.blockChainEvent.tktTotalQuantity
+				(this.state.blockChainEvent.tktTotalQuantitySold >=
+					this.state.blockChainEvent.tktTotalQuantity &&
+					this.state.blockChainEvent.tktTotalQuantity != 0)
 			) {
 				this.setState({
 					allowBuySnackbar: true,
@@ -1183,9 +1183,12 @@ class EventPage extends Component {
 												deadline={date}
 												event_unix={event_data.time}
 											/>
-											{
-												console.log("deadline date is: ",date,"eventData time is: ", event_data.time)
-											}
+											{console.log(
+												"deadline date is: ",
+												date,
+												"eventData time is: ",
+												event_data.time
+											)}
 										</Grid>
 									</Grid>
 									<Grid
@@ -1668,7 +1671,7 @@ class EventPage extends Component {
 								}}
 								open={this.state.allowBuySnackbar}
 								onClose={this.handleCloseAllowBuySnackbar}
-								message="Event time has passed or all the tickets have been showed"
+								message="Event time has passed or all the tickets have been sold"
 								autoHideDuration={3000}
 								key={"bottom" + "center"}
 								className="snackbar"
@@ -1725,7 +1728,6 @@ class EventPage extends Component {
 	};
 
 	componentDidUpdate() {
-
 		this.updateIPFS();
 	}
 
@@ -1736,13 +1738,15 @@ class EventPage extends Component {
 	async componentDidUpdate(prevProps) {
 		// console.log("this.props.userDetails", this.props.userDetails);
 		// console.log("prevProps.userDetails", prevProps.userDetails);
-		if (
-			this.props.purchased !== prevProps.purchased)
-		{
-			console.log("thisprops",this.props.purchased,"",prevProps.purchased)
+		if (this.props.purchased !== prevProps.purchased) {
+			console.log(
+				"thisprops",
+				this.props.purchased,
+				"",
+				prevProps.purchased
+			);
 			let buyers = await generateBuyerArr(this.props.match.params.id);
 			this.setState({ soldTicket: buyers });
-
 		}
 	}
 }

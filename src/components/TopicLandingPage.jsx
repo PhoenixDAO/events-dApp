@@ -506,6 +506,7 @@ class TopicLandingPage extends Component {
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			console.log("topic landing page filtered events", get);
 			this.setState({
 				hideEvent: get.data.result,
 			});
@@ -577,6 +578,7 @@ class TopicLandingPage extends Component {
 	filterHideEvent = async () => {
 		try {
 			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			console.log("topic landing page filtered events", get);
 			this.setState({
 				hideEvent: get.data.result,
 			});
@@ -625,6 +627,7 @@ class TopicLandingPage extends Component {
 						this.state.Topic_Events[i].eventId ==
 						this.state.hideEvent[j].id
 					) {
+						console.log("skipped", this.state.hideEvent[j].id);
 						skip = true;
 					}
 				}
