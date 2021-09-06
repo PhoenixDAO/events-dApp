@@ -1468,12 +1468,12 @@ class EventPage extends Component {
 								<Grid className={classes.organizerDescription}>
 									{this.state.organizerDetails}
 								</Grid>
-								<CheckUser
+								{/* <CheckUser
 									blockChainEvent={this.state.blockChainEvent}
 									disabledStatus={disabled}
 									event_id={this.props.match.params.id}
 									history={this.props.history}
-								/>
+								/> */}
 							</Grid>
 
 							{/* <div className="event-social-share-btns-div">
