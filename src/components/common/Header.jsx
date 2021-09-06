@@ -137,7 +137,7 @@ const Header = ({
 						<Button
 							variant="contained"
 							color="primary"
-							style={{ marginRight: "10px" }}
+							style={{ marginRight: "10px", marginBottom: "10px" }}
 							className={classes.buy}
 							onClick={() =>
 								allowBuy() ? handleClickOpen2() : null

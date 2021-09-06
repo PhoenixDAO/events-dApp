@@ -223,6 +223,12 @@ const useStyles = makeStyles((theme) => ({
 			fontSize: "90%",
 		},
 	},
+	menuPaper:{
+		position: "absolute !important",
+		left: "50% !important",
+		webkitTransform: "translateX(-50%) !important",
+		transform: "translateX(-50%) !important",
+	},
 	editor: {
 		height: 430,
 		overflow: "auto",
@@ -1208,7 +1214,7 @@ useEffect(()=>{
 																	</label>
 																</InputLabel>
 																<KeyboardDatePicker
-																	fullWidth
+																	fullWidth																	
 																	disableToolbar
 																	variant="inline"
 																	format="dd-MM-yyyy"

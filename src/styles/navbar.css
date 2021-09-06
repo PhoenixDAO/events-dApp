@@ -48,6 +48,12 @@
     background-color: #FCFCFD;
 }
 
+
+	@media (max-width:650px){
+		#wrapper.toggled #sidebar-wrapper.sidebar-open {		
+			width: 100% !important;
+		}
+	}
 #sidebar-wrapper.my-sidebar .user-status .user-status-icon > a {
     width: 100%;
 	height:100%;
