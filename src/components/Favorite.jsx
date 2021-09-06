@@ -363,7 +363,7 @@ class Favorites extends Component {
 						userDetails.result.result.token
 					);
 					console.log("successfully signed in favourites");
-					this.getUserFavoritesEvent()
+					this.getUserFavoritesEvent();
 				}
 			}
 		}
@@ -660,7 +660,7 @@ class Favorites extends Component {
 		} else if (typeof web3 !== "undefined") {
 			window.web3 = new Web3(web3.currentProvider);
 		} else {
-			const network = this.getNetworkId();
+			const network = await this.getNetworkId();
 			let infura;
 			if (network === GLOBAL_NETWORK_ID) {
 				infura = INFURA_URL;

@@ -188,7 +188,7 @@ const CustomForm = React.memo((props) => {
 							}}
 						/>
 					) : (
-						"Save"
+						"Confirm selection"
 					)}
 				</button>
 			</div>
