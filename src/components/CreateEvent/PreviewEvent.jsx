@@ -24,6 +24,7 @@ import {
 import eventpreviewplaceholder from "../Images/eventpreviewplaceholder.png";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import EventPreviewPage from "./EventPreviewPage";
+import { pricingFormatter } from "../../utils/pricingSuffix";
 
 var moment = require("moment");
 
@@ -281,15 +282,14 @@ export default function PreviewEvent({ fields, activeStep }) {
 														'"Aeonik", sans-serif',
 												}}
 											>
-												{ticketCategories[0].phnxPrice}{" "}
-												PHNX
+												{pricingFormatter(ticketCategories[0].phnxPrice, "PHNX")}{" "}
+												{/* PHNX */}
 											</p>
 											<p className={classes.starting}>
 												{" "}
-												$
+												{/* $ */}
 												{
-													ticketCategories[0]
-														.dollarPrice
+													pricingFormatter(ticketCategories[0].dollarPrice, "$")
 												}
 											</p>
 										</div>
@@ -299,15 +299,15 @@ export default function PreviewEvent({ fields, activeStep }) {
 												Starting from
 											</p>
 											<p>
-												{ticketCategories[0].phnxPrice}{" "}
-												PHNX
+												{pricingFormatter(ticketCategories[0].phnxPrice, "PHNX")}{" "}
+												{/* PHNX */}
 											</p>
 											<p className={classes.starting}>
 												{" "}
-												$
+												{/* $ */}
 												{
-													ticketCategories[0]
-														.dollarPrice
+													pricingFormatter(ticketCategories[0]
+														.dollarPrice, "$")
 												}
 											</p>
 										</div>
@@ -417,7 +417,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 							ticketCategories ? ticketCategories : []
 						}
 						eventDescription={
-							eventDescription ? eventDescription : "<p>This is the fake event description	<br></p>"
+							eventDescription ? eventDescription : "<p><br></p>"
 						}
 					/>
 					{console.log("fields values", fields)}

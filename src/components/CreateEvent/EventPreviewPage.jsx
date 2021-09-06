@@ -30,6 +30,7 @@ import {
 } from "@material-ui/core";
 import { getUserDetails } from "../../config/serverAPIs";
 import RichTextEditor from "react-rte";
+import { pricingFormatter } from "../../utils/pricingSuffix";
 
 var moment = require("moment");
 
@@ -386,11 +387,11 @@ class EventPreviewPage extends Component {
 										<span className={classes.PhnxPrice}>
 											{this.props.ticketCategories
 												.length > 0
-												? this.props.ticketCategories[
+												? pricingFormatter(this.props.ticketCategories[
 														this.state.ticketIndex
-												  ]["phnxPrice"]
+												  ]["phnxPrice"],"PHNX")
 												: ""}
-											PHNX
+											{/* PHNX */}
 										</span>
 										<div
 											style={{
@@ -398,12 +399,12 @@ class EventPreviewPage extends Component {
 												fontSize: "14px",
 											}}
 										>
-											$
+											{/* $ */}
 											{this.props.ticketCategories
 												.length > 0
-												? this.props.ticketCategories[
+												? pricingFormatter(this.props.ticketCategories[
 														this.state.ticketIndex
-												  ]["dollarPrice"]
+												  ]["dollarPrice"],"$")
 												: ""}
 										</div>
 									</div>

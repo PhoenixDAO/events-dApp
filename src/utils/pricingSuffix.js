@@ -59,17 +59,38 @@ export function pricingFormatter(num, currencyType){
   function formatting(num, type){
       if(type =="$"){
         if(num > 999 && num < 1000000){
-            return type + (num/1000).toFixed(4) + 'K';
-        }else if(num > 1000000){
-            return type + (num/1000000).toFixed(4) + 'M';
-        }else if(num < 900){
+            return type + (Math.round(((num/1000)+ Number.EPSILON)* 10000)/10000) + 'K';
+        }else if(num > 999999 && num < 1000000000){
+            return type + (Math.round(((num/1000000)+ Number.EPSILON)* 10000)/10000) + 'M';
+        }
+        else if(num > 999999999&& num < 1000000000000){
+            return type + (Math.round(((num/1000000000)+ Number.EPSILON)* 10000)/10000) + 'B';
+        }
+        else if(num > 999999999999 && num < 1000000000000000){
+            return type + (Math.round(((num/1000000000000)+ Number.EPSILON)* 10000)/10000) + 'T';
+        }
+        else if(num > 999999999999999){
+            return type + (Math.round(((num / 1000000000000000)+ Number.EPSILON)* 10000)/10000) + 'P'
+
+        }
+        else if(num < 999){
             return type+(num); 
         }
       }else{
         if(num > 999 && num < 1000000){
-            return (num/1000).toFixed(4) + 'K ' + type;
-        }else if(num > 1000000){
-            return (num/1000000).toFixed(4) + 'M ' + type;
+            return (Math.round(((num/1000)+ Number.EPSILON)* 10000)/10000) + 'K ' + type;
+        }else if(num > 1000000 && num < 1000000000){
+            return (Math.round(((num/1000000)+ Number.EPSILON)* 10000)/10000) + 'M ' + type;
+        }
+        else if(num > 1000000000 && num < 1000000000000){
+            return (Math.round(((num/1000000000)+ Number.EPSILON)* 10000)/10000) + 'B ' + type;
+        }
+        else if(num > 1000000000000 && num < 1000000000000000){
+            return (Math.round(((num/1000000000000)+ Number.EPSILON)* 10000)/10000) + 'T ' + type;
+        }
+        else if(num > 1000000000000000){
+            return (Math.round(((num / 1000000000000000)+ Number.EPSILON)* 10000)/10000)+'P '+ type;
+
         }
         else if(num < 999){
             return num +" "+ type; 
