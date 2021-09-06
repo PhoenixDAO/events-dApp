@@ -2,12 +2,24 @@ import React, { useState, useRef, useEffect } from "react";
 import "./detailform.css";
 import DialogueBox from "../common/DialogueBox";
 import { drizzleConnect } from "drizzle-react";
-import { updateUserDetails } from "../../config/serverAPIs";
+import {
+	getMessage,
+	loginWithMetaMask,
+	updateUserDetails,
+} from "../../config/serverAPIs";
 import PropTypes from "prop-types";
 import IdentityForm from "./identityform";
 import Tooltip from "@material-ui/core/Tooltip";
 import ipfs from "../../utils/ipfs";
 import { CircularProgress } from "@material-ui/core";
+import Web3 from "web3";
+import {
+	GLOBAL_NETWORK_ID,
+	GLOBAL_NETWORK_ID_2,
+	INFURA_URL,
+	INFURA_URL_2,
+} from "../../config/const";
+
 // import { useHistory } from "react-router-dom";
 const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
@@ -57,6 +69,100 @@ const DetailForm = (props) => {
 			},
 		];
 		return myArray[index].img;
+	};
+
+	const web3Provider = async () => {
+		let web3;
+		try {
+			if (window.ethereum && window.ethereum.isMetaMask) {
+				web3 = new Web3(window.ethereum);
+			} else if (typeof web3 !== "undefined") {
+				web3 = new Web3(web3.currentProvider);
+			} else {
+				const network = await web3.eth.net.getId();
+				let infura;
+				if (network === GLOBAL_NETWORK_ID) {
+					infura = INFURA_URL;
+				} else if (network === GLOBAL_NETWORK_ID_2) {
+					infura = INFURA_URL_2;
+				}
+				web3 = new Web3(new Web3.providers.HttpProvider(infura));
+			}
+			return web3;
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	const getNetworkId = async () => {
+		let web3;
+		try {
+			if (window.ethereum && window.ethereum.isMetaMask) {
+				web3 = new Web3(window.ethereum);
+			} else if (typeof web3 !== "undefined") {
+				web3 = new Web3(web3.currentProvider);
+			} else {
+				const network = await web3.eth.net.getId();
+				let infura;
+				if (network === GLOBAL_NETWORK_ID) {
+					infura = INFURA_URL;
+				} else if (network === GLOBAL_NETWORK_ID_2) {
+					infura = INFURA_URL_2;
+				}
+				web3 = new Web3(new Web3.providers.HttpProvider(infura));
+			}
+			const networkId = await web3.eth.net.getId();
+			console.log("This called getNetworkId", networkId);
+			if (networkId === GLOBAL_NETWORK_ID) {
+				return networkId;
+			} else if (networkId === GLOBAL_NETWORK_ID_2) {
+				return networkId;
+			} else {
+				console.log("network id not suported");
+			}
+			return null;
+		} catch (err) {
+			console.log("err", err);
+		}
+	};
+
+	const authMetaMask = async () => {
+		try {
+			const web3 = await web3Provider();
+			const publicAddress = await web3.eth.getAccounts();
+			const networkId = await getNetworkId();
+			console.log("Public address", publicAddress);
+			console.log("networkId", networkId);
+			const message = await getMessage();
+			const sign = await handleSignMessage(
+				publicAddress[0],
+				message.result.result
+			);
+			const userData = await loginWithMetaMask({
+				publicAddress: publicAddress[0],
+				networkId: networkId,
+				signature: sign,
+				message: message.result.result,
+			});
+			return userData;
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	const handleSignMessage = async (publicAddress, message) => {
+		try {
+			const web3 = await web3Provider();
+			console.log("message", message);
+			const sign = await web3.eth.sign(
+				web3.utils.sha3(message),
+				publicAddress
+			);
+			console.log("sign", sign);
+			return sign;
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	const provideImage = () => {
@@ -151,7 +257,20 @@ const DetailForm = (props) => {
 		});
 		setLoading(false);
 		if (detail.error) {
-			console.log("error occured");
+			console.log("error occured", detail);
+			if (detail.message.response.status === 403) {
+				const userDetails = await authMetaMask();
+				if (!userDetails.error) {
+					console.log("userDetails", userDetails);
+					localStorage.removeItem("AUTH_TOKEN");
+					localStorage.setItem(
+						"AUTH_TOKEN",
+						userDetails.result.result.token
+					);
+					console.log("successfully signed in favourites");
+					updateUserInfo(e);
+				}
+			}
 		} else {
 			console.log("details", detail);
 			props.setUserDetails(detail.result);
