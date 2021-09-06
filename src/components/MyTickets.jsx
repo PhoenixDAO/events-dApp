@@ -49,7 +49,7 @@ class MyTickets extends Component {
 		// this.contracts = context.drizzle.contracts;
 		// this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
 		// console.log("checking",this.props.contracts['DaoEvents'].ticketsOf[this.tickets])
-		this.perPage = 6;
+		this.perPage = 18;
 		this.myRef = React.createRef();
 		this.loadTicketsFromBlockchain =
 			this.loadTicketsFromBlockchain.bind(this);

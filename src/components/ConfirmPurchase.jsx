@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 import {
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 		background: "#fff",
 		paddingBottom: "100px",
 		margin: "40px 0px",
-		borderRadius: "8px"
+		borderRadius: "8px",
 	},
 	imageContainer: {
 		textAlign: "center",
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	image: {
 		borderRadius: "12px",
-		width: "100%"
+		width: "100%",
 	},
 	formWrapper: {
 		width: "45%",
@@ -59,8 +59,8 @@ const useStyles = makeStyles((theme) => ({
 		background: "#413AE2",
 		fontFamily: "'Aeonik', sans-serif",
 		"& :focus": {
-			outline: "none"
-		}
+			outline: "none",
+		},
 	},
 	title: {
 		color: "#413AE2",
@@ -80,11 +80,11 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: "10px",
 	},
 	textDiv: {
-		height: "20px"
+		height: "20px",
 	},
 	label: {
 		color: "#73727D",
-	}
+	},
 }));
 
 const ConfirmPurchase = (props) => {
@@ -95,10 +95,18 @@ const ConfirmPurchase = (props) => {
 	const [text, setText] = useState("");
 	const [errorAddress, setErrorAddress] = useState(false);
 	const [errorId, seterrorId] = useState(false);
+	const [prevPath, setPrevPath] = useState(-1);
 
+	useEffect(() => {
+		if (prevPath == -1) {
+			props.executeScroll();
+		}
+	}, []);
 
 	const checkTickets = async () => {
-		const eventLength = await props.eventsContract.methods.getEventsCount().call();
+		const eventLength = await props.eventsContract.methods
+			.getEventsCount()
+			.call();
 
 		// console.log("length", length, eventId);
 		const buyers = await generateBuyerArr(eventId);
@@ -106,29 +114,28 @@ const ConfirmPurchase = (props) => {
 		if (parseInt(eventId) > parseInt(eventLength)) {
 			seterrorId(true);
 			console.log("error", errorId);
-		}
-		else if (!isaddress) {
+		} else if (!isaddress) {
 			setErrorAddress(true);
-		}
-
-		else {
-			const isowner = buyers.find(element => {
-				return element.address.toLowerCase() == address.toLowerCase()
+		} else {
+			const isowner = buyers.find((element) => {
+				return element.address.toLowerCase() == address.toLowerCase();
 			});
 
 			if (isowner) {
-				setText(<p className={classes.message}>
-					This address has a ticket to the event		</p>)
-			}
-			else {
-				setText(<p className={classes.message2}>
-					This address has no ticket to the event.		</p>)
+				setText(
+					<p className={classes.message}>
+						This address has a ticket to the event{" "}
+					</p>
+				);
+			} else {
+				setText(
+					<p className={classes.message2}>
+						This address has no ticket to the event.{" "}
+					</p>
+				);
 			}
 		}
-
 	};
-
-
 
 	return (
 		<div>
@@ -170,10 +177,12 @@ const ConfirmPurchase = (props) => {
 								variant="outlined"
 								value={value}
 								error={errorId || error}
-
-								helperText={errorId
-									? "This event doesn't exist"
-									: error ? error.message : null
+								helperText={
+									errorId
+										? "This event doesn't exist"
+										: error
+										? error.message
+										: null
 								}
 								// helperText={error ? error.message : null}
 								onChange={(e) => {
@@ -182,7 +191,7 @@ const ConfirmPurchase = (props) => {
 									seterrorId(false);
 									setEventId(e.target.value);
 								}}
-							// inputProps={{ pattern: "[0-9]{1,15}" }}
+								// inputProps={{ pattern: "[0-9]{1,15}" }}
 							/>
 						)}
 						rules={{
@@ -221,7 +230,9 @@ const ConfirmPurchase = (props) => {
 								helperText={
 									errorAddress
 										? "Invalid account address"
-										: error ? error.message : null
+										: error
+										? error.message
+										: null
 								}
 							/>
 						)}
@@ -253,6 +264,6 @@ const ConfirmPurchase = (props) => {
 			</div>
 		</div>
 	);
-}
+};
 
 export default ConfirmPurchase;

@@ -94,7 +94,7 @@ class MyEvents extends Component {
 		// this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
 		// 	this.props.accounts[0]
 		// );
-		this.perPage = 6;
+		this.perPage = 18;
 		this.account = this.props.accounts[0];
 		this.myRef = React.createRef();
 		this.ActiveEvent = this.ActiveEvent.bind(this);
