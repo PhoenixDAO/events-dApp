@@ -586,7 +586,7 @@ class FindEvents extends Component {
 			body = (
 				<EmptyState
 					text="No event available 😔. Be the first;"
-					btnText="Try creating one"
+					btnText="Create an Event"
 					url="/createevent"
 				/>
 			);
@@ -761,7 +761,7 @@ class FindEvents extends Component {
 			body = (
 				<EmptyState
 					text="No event available 😔. Be the first;"
-					btnText="Try creating one"
+					btnText="Create an Event"
 					url="/createevent"
 				/>
 			);

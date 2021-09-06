@@ -649,7 +649,7 @@ const Analytics = (props, context) => {
 						🤔
 					</span>
 					&nbsp;No events found.{" "}
-					<a href="/createevent">Try creating one.</a>
+					<a href="/createevent">Create an Event</a>
 				</p>
 			);
 		} else {
