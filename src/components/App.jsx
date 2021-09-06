@@ -28,8 +28,10 @@ import Token from "./Token";
 import Terms from "./Terms";
 import Notify from "./Notify";
 import PropTypes from "prop-types";
-import Snackbar from "./Snackbar";
+import Snackbar1 from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
+import Snackbar from "@material-ui/core/Snackbar";
+
 import {
 	INFURA_URL,
 	INFURA_WEB_URL,
@@ -934,6 +936,7 @@ class App extends Component {
 			userDetails: userDetails,
 		});
 	};
+
 	render() {
 		let body;
 		let connecting = false;
@@ -979,6 +982,7 @@ class App extends Component {
 							component={(props) => (
 								<ConfirmPurchase
 									eventsContract={this.state.eventsContract}
+									executeScroll={this.executeScroll}
 								/>
 							)}
 						/>
@@ -1463,6 +1467,7 @@ class App extends Component {
 						component={(props) => (
 							<ConfirmPurchase
 								eventsContract={this.state.eventsContract}
+								executeScroll={this.executeScroll}
 							/>
 						)}
 					/>
@@ -1529,7 +1534,7 @@ class App extends Component {
 									}
 									handleClose={this.handleSnackbarClose}
 								/> */}
-								<Snackbar
+								<Snackbar1
 									open={this.state.openSnackbarForNoMetaMask}
 									message={this.state.errorMessage}
 									handleClose={() =>
@@ -1577,6 +1582,18 @@ class App extends Component {
 								</DialogueBox>
 							</div>
 						</div>
+						<Snackbar
+							anchorOrigin={{
+								vertical: "top",
+								horizontal: "center",
+							}}
+							open={this.state.openWalletConnected}
+							onClose={this.handleOpenWalletConnected}
+							message="Wallet connected"
+							autoHideDuration={3000}
+							key={"top" + "center"}
+							className="snackbar"
+						/>
 					</div>
 					<ToastContainer />
 				</div>
