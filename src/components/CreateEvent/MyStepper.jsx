@@ -501,6 +501,7 @@ const MyStepper = ({
 	const [country, setCountry] = useState("");
 	const [state, setState] = useState("");
 	const [city, setCity] = useState("");
+	const [eventDesc, setEventDesc] = useState("");
 
 	const [dateError, setDateError] = useState({
 		message: "",
@@ -516,7 +517,10 @@ const MyStepper = ({
 		message: "",
 		isError: false,
 	});
-
+useEffect(()=>{
+	onFieldsChange({eventDescription: eventDesc});
+	console.log("event desc from useeffect ", eventDesc)
+},[eventDesc]);
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
 		display: [
@@ -3501,6 +3505,7 @@ const MyStepper = ({
 											value={value}
 											setValue={(bodyText) => {
 												onChange(bodyText);
+												setEventDesc(bodyText);
 											}}
 											readOnly={false}
 										/>

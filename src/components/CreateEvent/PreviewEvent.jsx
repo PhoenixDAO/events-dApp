@@ -30,7 +30,7 @@ var moment = require("moment");
 const useStyles = makeStyles((theme) => ({
 	main: {
 		display: "flex",
-		justifyContent: "center",
+		justifyContent: "end",
 		// marginRight: 0,
 		[theme.breakpoints.down("md")]: {
 			justifyContent: "center",
@@ -174,7 +174,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 	} = fields;
 
 	useEffect(() => {
-		const { categories: ticketCategories } = fields;
+		const { categories: ticketCategories} = fields;
 		let totalTktQnty = 0;
 		if (ticketCategories) {
 			for (var i = 0; i < ticketCategories.length; i++) {
@@ -417,9 +417,10 @@ export default function PreviewEvent({ fields, activeStep }) {
 							ticketCategories ? ticketCategories : []
 						}
 						eventDescription={
-							eventDescription ? eventDescription : "<p><br></p>"
+							eventDescription ? eventDescription : "<p>This is the fake event description	<br></p>"
 						}
 					/>
+					{console.log("fields values", fields)}
 					<Button
 						color="primary"
 						size="large"

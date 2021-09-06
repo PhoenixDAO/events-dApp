@@ -70,7 +70,8 @@ export function pricingFormatter(num, currencyType){
             return (num/1000).toFixed(4) + 'K ' + type;
         }else if(num > 1000000){
             return (num/1000000).toFixed(4) + 'M ' + type;
-        }else if(num < 999){
+        }
+        else if(num < 999){
             return num +" "+ type; 
         }
       }

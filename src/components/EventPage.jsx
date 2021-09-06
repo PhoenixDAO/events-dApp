@@ -1179,6 +1179,9 @@ class EventPage extends Component {
 												deadline={date}
 												event_unix={event_data.time}
 											/>
+											{
+												console.log("deadline date is: ",date,"eventData time is: ", event_data.time)
+											}
 										</Grid>
 									</Grid>
 									<Grid

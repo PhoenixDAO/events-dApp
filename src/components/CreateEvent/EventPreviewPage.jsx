@@ -4,6 +4,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Clock from "../Clock";
 import SocialMedia from "../common/SocialMedia";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
@@ -91,7 +92,7 @@ const styles = (theme) => ({
 		borderRadius: "5px",
 		marginTop: "35px",
 		padding: "30px",
-		border: "1.23218px solid #E4E4E7",
+		// border: "1.23218px solid #E4E4E7",
 	},
 	eventinfo: {
 		fontSize: "22px",
@@ -120,8 +121,8 @@ const styles = (theme) => ({
 		display: "flex",
 		justifyContent: "space-between",
 		// borderBottom: "1px solid #E4E4E7",
-		paddingBottom: "19px",
-		paddinTop: "25px",
+		// paddingBottom: "19px",
+		// paddinTop: "25px",
 	},
 	ticketSelect: {
 		marginTop: "10px",
@@ -169,6 +170,18 @@ const styles = (theme) => ({
 		marginRight: "7px",
 		marginTop: "-4px",
 	},
+	eventDetailsNoBorder:{
+		border: "0px solid !important"
+	},
+	previewPadding:{
+		paddingRight:"50px",
+		paddingLeft: "50px",
+		"@media (max-width: 500px)":{
+			paddingLeft: "20px",
+			paddingRight: "20px"
+		}
+	}
+	
 });
 class EventPreviewPage extends Component {
 	constructor(props) {
@@ -229,7 +242,7 @@ class EventPreviewPage extends Component {
 				aria-labelledby="alert-dialog-slide-title"
 				aria-describedby="alert-dialog-slide-description"
 			>
-				<DialogContent style={{ paddingLeft: 50, paddingRight: 50 }}>
+				<DialogContent className={classes.previewPadding}>
 					<Grid>
 						<Grid
 							style={{
@@ -278,11 +291,9 @@ class EventPreviewPage extends Component {
 									xs={12}
 									className={classes.description}
 								>
-									<span>
-										<h2>About this Event</h2>
-									</span>
 									<Grid container>
-										<br />
+										{/* <h2>About this Event</h2> */}
+										{(this.props.eventDescription)&&
 										<RichTextEditor
 											readOnly
 											value={RichTextEditor.createValueFromString(
@@ -295,9 +306,40 @@ class EventPreviewPage extends Component {
 											type="string"
 											multiline
 											variant="filled"
-											className="editor"
+											className={`editor ${classes.eventDetailsNoBorder}`}
 										/>
+											}
+											</Grid>
+									
+									
+										{/* <br /> */}
+										<Grid container>{
+											<RichTextEditor
+													readOnly
+													value={RichTextEditor.createValueFromString(
+														this.props.eventDescription,
+														"html"
+													)}
+													// onChange={handleChange}
+													required
+													id="body-text"
+													name="bodyText"
+													type="string"
+													multiline
+													variant="filled"
+													className={`editor`}
+												/>}
+										
 									</Grid>
+									<Grid
+											container
+											className={classes.clockTime}
+										>
+											<Clock
+												deadline={this.props.eventDate}
+												event_unix={this.props.eventTime}
+											/>
+										</Grid>
 								</Grid>
 								<Grid
 									lg={3}
