@@ -122,11 +122,15 @@ const styles = (theme) => ({
 	eventinfo: {
 		fontSize: "22px",
 		fontWeight: "700",
+		wordBreak: "break-word",
+
 	},
 	PhnxPrice: {
 		fontSize: "22px",
 		fontWeight: "700",
 		color: "#413AE2",
+		wordBreak: "break-word",
+
 	},
 	categoryGrid: {
 		backgroundColor: "white",
@@ -1458,6 +1462,12 @@ class EventPage extends Component {
 								<Grid className={classes.organizerDescription}>
 									{this.state.organizerDetails}
 								</Grid>
+								<CheckUser
+									blockChainEvent={this.state.blockChainEvent}
+									disabledStatus={disabled}
+									event_id={this.props.match.params.id}
+									history={this.props.history}
+								/>
 							</Grid>
 
 							{/* <div className="event-social-share-btns-div">
@@ -1638,12 +1648,7 @@ class EventPage extends Component {
 							 
 							<div className="col-12">
 								<div className="mt-5"></div>
-								<CheckUser
-									blockChainEvent={this.state.blockChainEvent}
-									disabledStatus={disabled}
-									event_id={this.props.match.params.id}
-									history={this.props.history}
-								/>
+							
 							</div>
 								*/}
 							{/* <CheckUser
