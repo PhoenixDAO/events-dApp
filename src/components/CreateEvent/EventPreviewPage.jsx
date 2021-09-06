@@ -313,7 +313,7 @@ class EventPreviewPage extends Component {
 									
 									
 										{/* <br /> */}
-										<Grid container>{
+										{/* <Grid container>{
 											<RichTextEditor
 													readOnly
 													value={RichTextEditor.createValueFromString(
@@ -330,7 +330,7 @@ class EventPreviewPage extends Component {
 													className={`editor`}
 												/>}
 										
-									</Grid>
+									</Grid> */}
 									<Grid
 											container
 											className={classes.clockTime}
