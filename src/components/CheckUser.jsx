@@ -103,7 +103,7 @@ class CheckUser extends Component {
 				reportAccounts: this.account,
 				address: this.account,
 				eventName: this.state.blockChainEvent.name,
-				id: this.props.event_id,
+				id: 98,
 				count: 1,
 				networkId: networkId,
 			};
