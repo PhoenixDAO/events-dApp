@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import roundlogo from "../Images/roundlogo.svg";
 import transakSDK from "@transak/transak-sdk";
 import { transakApi } from "../../config/const";
+import { Link } from "react-router-dom";
+
 const BuyPhoenixModal = (props) => {
 	const [error, setError] = useState("");
 	const settings = {
@@ -33,7 +35,7 @@ const BuyPhoenixModal = (props) => {
 
 	const buyPhnxManager = [
 		{
-			img: "/images/metawallet.svg",
+			img: "/images/transak.svg",
 			name: "Transak",
 			coming: false,
 			onclick: true,
@@ -106,7 +108,8 @@ const BuyPhoenixModal = (props) => {
 			<div>
 				<p className="wallets-footer">
 					By connecting, I accept PhoenixDAO’s{" "}
-					<span style={{ color: "#413AE2" }}>Terms of service</span>{" "}
+					<Link to="/terms-and-conditions" ><span style={{ color: "#413AE2" }}>Terms of service</span>{" "}</Link>
+
 				</p>
 			</div>
 		</div>
