@@ -251,7 +251,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
-									height: "100px"
+									height: "72px"
 								}}
 							>
 								<Typography
