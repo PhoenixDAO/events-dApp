@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Header from "./common/Header";
 import { Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -61,12 +61,18 @@ const useStyles = makeStyles((theme) => ({
 	},
 	gridContainer: {
 		marginTop: "20px",
-	}
+	},
 }));
 const Terms = (props) => {
 	const classes = useStyles();
 	const pageRefs = useRef({});
+	const [prevPath, setPrevPath] = useState(-1);
 
+	useEffect(() => {
+		if (prevPath == -1) {
+			props.executeScroll();
+		}
+	}, []);
 	function scrollIntoView(type) {
 		pageRefs.current[type].scrollIntoView({
 			behavior: "smooth",

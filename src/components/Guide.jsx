@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BuyPhnxButton from "./common/BuyPhnxButton";
 import { Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -94,6 +94,12 @@ const useStyles = makeStyles((theme) => ({
 const Terms = (props) => {
 	const classes = useStyles();
 	const pageRefs = useRef({});
+	const [prevPath, setPrevPath] = useState(-1);
+	useEffect(() => {
+		if (prevPath == -1) {
+			props.executeScroll();
+		}
+	}, []);
 
 	function scrollIntoView(type) {
 		pageRefs.current[type].scrollIntoView({
