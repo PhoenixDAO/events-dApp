@@ -20,7 +20,7 @@ import { Divider } from "@material-ui/core";
 import BuyPhnxButton from "../common/BuyPhnxButton";
 
 import Header from "../common/Header";
-import {getNetworkId} from "../../config/getGraphApi";
+import { getNetworkId } from "../../config/getGraphApi";
 import Web3 from "web3";
 import {
 	INFURA_URL,
@@ -28,6 +28,8 @@ import {
 	GLOBAL_NETWORK_ID,
 	GLOBAL_NETWORK_ID_2,
 } from "../../config/const.js";
+import { userTweet } from "../../config/serverAPIs";
+
 const useStyles = (theme) => ({
 	sticky: {
 		position: "sticky",
@@ -269,7 +271,7 @@ class CreateEvent extends Component {
 					.send({
 						from: this.props.accounts[0],
 					})
-					.on("transactionHash",async (txhash) => {
+					.on("transactionHash", async (txhash) => {
 						// hash of tx
 						if (txhash !== null) {
 							console.log("txhash", txhash);
@@ -280,7 +282,7 @@ class CreateEvent extends Component {
 									icon="fas fa-edit fa-2x"
 									text={"Preparing your event...🚀"}
 									color="#413AE2"
-									/>,
+								/>,
 								{
 									position: "bottom-right",
 									autoClose: true,
@@ -325,7 +327,7 @@ class CreateEvent extends Component {
 							}, 5000);
 						}
 					})
-					.then((receipt) => {
+					.then(async (receipt) => {
 						console.log("receipt----->", receipt);
 						// toast(
 						// 	<Notify
@@ -343,6 +345,12 @@ class CreateEvent extends Component {
 						// 	}
 						// );
 						// this.onFlamingStepsChange();
+						// await userTweet({
+						// 	address: this.props.accounts[0],
+						// 	networkId: this.props.web3.networkId,
+						// 	base64Image: image0Base64,
+						// 	message: eventName,
+						// });
 					})
 					.catch((error) => {
 						console.log("tx error", error);
@@ -731,6 +739,7 @@ const mapStateToProps = (state) => {
 		contracts: state.contracts,
 		transactionStack: state.transactionStack,
 		accounts: state.accounts,
+		web3: state.web3,
 	};
 };
 
