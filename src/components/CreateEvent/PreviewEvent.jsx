@@ -171,10 +171,11 @@ export default function PreviewEvent({ fields, activeStep }) {
 		eventType,
 		image0,
 		eventDescription,
+		city,
 	} = fields;
 
 	useEffect(() => {
-		const { categories: ticketCategories} = fields;
+		// const { categories: ticketCategories } = fields;
 		let totalTktQnty = 0;
 		if (ticketCategories) {
 			for (var i = 0; i < ticketCategories.length; i++) {
@@ -184,7 +185,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 			}
 			setTktQnty(totalTktQnty);
 		}
-	}, [fields]);
+	}, [fields, ticketCategories]);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -324,7 +325,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 							>
 								<DateRange fontSize="small" />{" "}
 								<span>&nbsp;</span>
-								{!eventTime
+								{/* {!eventTime
 									? `Date`
 									: eventTime === "onedayevent"
 									? moment(eventDate).format("Do MMM, YYYY")
@@ -332,8 +333,26 @@ export default function PreviewEvent({ fields, activeStep }) {
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
-
-							`}
+							`} */}
+								{eventTime === "onedayevent"
+									? eventDate
+										? moment(eventDate).format(
+												"Do MMM, YYYY"
+										  )
+										: "Date"
+									: eventStartDate || eventEndDate
+									? eventEndDate
+										? moment(eventStartDate).format(
+												"Do MMM"
+										  ) +
+										  "-" +
+										  moment(eventEndDate).format(
+												"Do MMM, YYYY"
+										  )
+										: moment(eventStartDate).format(
+												"Do MMM"
+										  )
+									: "Date"}
 							</Typography>
 
 							<Typography
@@ -345,9 +364,16 @@ export default function PreviewEvent({ fields, activeStep }) {
 							>
 								<AccessTime fontSize="small" />{" "}
 								<span>&nbsp;</span>
-								{!eventStartTime
+								{/* {!eventStartTime
 									? `Time`
-									: moment(eventStartTime).format("LT")}
+									: moment(eventStartTime).format("LT")} */}
+								{eventStartTime || eventEndTime
+									? eventEndTime
+										? moment(eventStartTime).format("LT") +
+										  " - " +
+										  moment(eventEndTime).format("LT")
+										: moment(eventStartTime).format("LT")
+									: "Time"}
 							</Typography>
 
 							<Typography
@@ -360,10 +386,15 @@ export default function PreviewEvent({ fields, activeStep }) {
 							>
 								<LocationOnOutlined fontSize="small" />{" "}
 								<span>&nbsp;</span>
-								{!eventType
+								{/* {!eventType
 									? `Location`
 									: eventType === "physical"
 									? eventLocation
+									: `Online`} */}
+								{eventType === "physical"
+									? eventLocation
+										? eventLocation
+										: "Location"
 									: `Online`}
 							</Typography>
 
@@ -378,11 +409,16 @@ export default function PreviewEvent({ fields, activeStep }) {
 							>
 								<ConfirmationNumberOutlined fontSize="small" />{" "}
 								<span>&nbsp;</span>
-								{!eventCategory
+								{/* {!eventCategory
 									? `Number of Tickets`
 									: tktQnty === 0
 									? `Unlimited Tickets`
-									: tktQnty}
+									: tktQnty} */}
+								{tktQnty === 0
+									? `Unlimited Tickets`
+									: tktQnty
+									? tktQnty
+									: "0"}
 							</Typography>
 						</CardContent>
 					</CardActionArea>
@@ -417,10 +453,11 @@ export default function PreviewEvent({ fields, activeStep }) {
 							ticketCategories ? ticketCategories : []
 						}
 						eventDescription={
-							eventDescription ? eventDescription : "<p>This is the fake event description	<br></p>"
+							eventDescription
+								? eventDescription
+								: "<p>This is the fake event description	<br></p>"
 						}
 					/>
-					{console.log("fields values", fields)}
 					<Button
 						color="primary"
 						size="large"

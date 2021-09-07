@@ -20,7 +20,7 @@ import { Divider } from "@material-ui/core";
 import BuyPhnxButton from "../common/BuyPhnxButton";
 
 import Header from "../common/Header";
-import {getNetworkId} from "../../config/getGraphApi";
+import { getNetworkId } from "../../config/getGraphApi";
 import Web3 from "web3";
 import {
 	INFURA_URL,
@@ -81,8 +81,13 @@ class CreateEvent extends Component {
 				type: null,
 				file_name: null,
 			},
-			fields: {},
-			activeStep: 0,
+			fields: {
+				eventTime: "onedayevent",
+				eventType: "physical",
+				eventCategory: "free",
+				ticketAvailability: "unlimited",
+			},
+			activeStep: 2,
 			activeFlamingStep: 0,
 			isEventCreated: false,
 			progressText: 0,
@@ -94,6 +99,41 @@ class CreateEvent extends Component {
 
 	onFieldsChange = (f) => {
 		this.setState({ fields: { ...this.state.fields, ...f } });
+	};
+
+	onGetRealTimeFields = (f) => {
+		let fields = this.state.fields;
+		let cat = [];
+		let obj = {
+			ticketName: "free",
+			dollarPrice: "0",
+			phnxPrice: "0",
+			ticketAvailability: false,
+			noOfTickets: "0",
+		};
+		if (
+			f.name === "dollarPricePreview" ||
+			f.name === "phnxPricePreview" ||
+			f.name === "ticketAvailabilityPreview" ||
+			f.name === "noOfTicketsPreview"
+		) {
+			if (f.name === "dollarPricePreview") {
+				obj.dollarPrice = f.value;
+				fields.token = true;
+			} else if (f.name === "phnxPricePreview") {
+				console.log("fff", f);
+				obj.phnxPrice = f.value;
+				fields.token = true;
+			} else if (f.name === "ticketAvailabilityPreview") {
+				obj.ticketAvailability = f.value;
+			} else if (f.name === "noOfTicketsPreview") {
+				obj.noOfTickets = f.value;
+			}
+		}
+		cat.push(obj);
+		fields.categories = cat;
+		fields[f.name] = f.value;
+		this.setState(fields);
 	};
 
 	onStepsChange = (type) => {
@@ -269,7 +309,7 @@ class CreateEvent extends Component {
 					.send({
 						from: this.props.accounts[0],
 					})
-					.on("transactionHash",async (txhash) => {
+					.on("transactionHash", async (txhash) => {
 						// hash of tx
 						if (txhash !== null) {
 							console.log("txhash", txhash);
@@ -280,7 +320,7 @@ class CreateEvent extends Component {
 									icon="fas fa-edit fa-2x"
 									text={"Preparing your event...🚀"}
 									color="#413AE2"
-									/>,
+								/>,
 								{
 									position: "bottom-right",
 									autoClose: true,
@@ -306,7 +346,7 @@ class CreateEvent extends Component {
 									toast(
 										<Notify
 											text={
-												"Transaction successfull!\nYou can check event now."
+												"Transaction successful!\nYou can check event now."
 											}
 											icon="fas fa-check-circle fa-3x"
 											color="#413AE2"
@@ -624,6 +664,7 @@ class CreateEvent extends Component {
 							<MyStepper
 								handleCreateEvent={this.handleCreateEvent}
 								onFieldsChange={this.onFieldsChange}
+								onGetRealTimeFields={this.onGetRealTimeFields}
 								onStepsChange={this.onStepsChange}
 								activeStep={this.state.activeStep}
 								onFlamingStepsChange={this.onFlamingStepsChange}
@@ -655,6 +696,7 @@ class CreateEvent extends Component {
 						<MyStepper
 							handleCreateEvent={this.handleCreateEvent}
 							onFieldsChange={this.onFieldsChange}
+							onGetRealTimeFields={this.onGetRealTimeFields}
 							onStepsChange={this.onStepsChange}
 							onFlamingStepsChange={this.onFlamingStepsChange}
 							activeFlamingStep={this.state.activeFlamingStep}
