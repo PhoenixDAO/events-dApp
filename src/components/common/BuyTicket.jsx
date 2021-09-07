@@ -291,7 +291,12 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
                 ${moment(eventStartDate).format("Do MMM")}
                 -
                 ${moment(eventEndDate).format("Do MMM, YYYY")}
-                `},{" "}{time}
+                `},{" "}
+                
+               {moment(time,"hh:mm A", false).utcOffset(0).format("hh:mma z")}
+                {
+								console.log("Time in buy modal", time)
+							}
                   </Typography>
                 </div>
                 </Grid>
