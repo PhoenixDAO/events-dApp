@@ -822,7 +822,7 @@ const Analytics = (props, context) => {
 					);
 					graphForDays = props.todayGraphData;
 					difference = await getTodayData(
-						"0x6A337d4D54e181E7704C3D2171652a1E846EAb73",
+						props.accounts,
 						Number(moment().unix() - 172800)
 					);
 				}
