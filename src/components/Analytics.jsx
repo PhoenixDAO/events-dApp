@@ -8,7 +8,7 @@ import React, {
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import { Grid, FormControl, Select, Button } from "@material-ui/core";
+import { Grid, FormControl, Select, Button, Typography } from "@material-ui/core";
 // import {Graph} from "../utils/graph";
 import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
@@ -43,6 +43,33 @@ const useStyles = makeStyles((theme) => ({
 	menuPaper: {
 		maxHeight: "200px",
 	},
+	formControls: {
+		"@media (max-width: 600px)": {
+			width: "120px",
+		},
+		"@media (min-width: 1024px)": {
+			flex: "0 0 20% !important",
+			marginLeft: "5%",
+		},
+		justifyContent: "space-around",
+		// alignItems: "center",
+		// minWidth: 120,
+		"& .MuiInputBase-formControl": {
+			"@media (max-width: 575px)": {
+				marginLeft: "50px",
+				maxWidth: "100%",
+			},
+		},
+		"& .MuiSelect-root.MuiSelect-select": {
+			fontWeight: 700,
+			padding: "10px",
+			paddingRight:"20px",
+			background: "#fff",
+		},
+		"& option": {
+			padding: "10px",
+		},
+	},
 	select: {
 		width: "170px",
 		marginTop: "10px",
@@ -52,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 			padding: "10px",
 			paddingRight: "25px !important",
 			"@media (max-width: 600px)": {
-				maxWidth: "150px",
+				width: "120px",
 			},
 		},
 		[theme.breakpoints.down("xs")]: {
@@ -226,6 +253,18 @@ const useStyles = makeStyles((theme) => ({
 			outline: "none",
 		},
 	},
+	sortBy: {
+		position: "absolute",
+		left: "-50px",
+		color: "#73727D",
+		fontSize: "18px",
+		"@media (max-width: 575px)": {
+			left: "0",
+		},
+	},
+	selectWidth:{
+		width: "170px",
+	}
 }));
 
 //for doughnut chart
@@ -1258,18 +1297,24 @@ const Analytics = (props, context) => {
 							>
 								{props.eventName.length > 0 ? (
 									<div>
-										<span
+										{/* <span
 											style={{
 												color: "#73727D",
 												marginRight: "10px",
 											}}
 										>
 											Event
-										</span>
+										</span> */}
 										<FormControl
 											variant="outlined"
-											className={classes.select}
+											className={classes.formControls}
 										>
+											<Typography
+									variant="p"
+									className={`${classes.sortBy}`}
+								>
+									Event
+								</Typography>
 											{/* <Select
 											labelId="demo-simple-select-outlined-label"
 											id="demo-simple-select-outlined"
@@ -1333,21 +1378,23 @@ const Analytics = (props, context) => {
 															horizontal: "left",
 														},
 													}}
+													className={classes.selectWidth}
 												>
 													{props.eventName.map(
 														(event) => {
 															return (
-																<option
+																<MenuItem
 																	style={{
 																		fontFamily:
 																			"'Aeonik', sans-serif",
+																		width: "350px"
 																	}}
 																	value={
 																		event.eventId
 																	}
 																>
 																	{event.name}
-																</option>
+																</MenuItem>
 															);
 														}
 													)}
@@ -1393,21 +1440,37 @@ const Analytics = (props, context) => {
 								variant="outlined"
 								className={classes.select}
 							>
+								
 								<Select
-									native
-									// value={state.age}
+									labelId="demo-simple-select-outlined-label"
+									id="demo-simple-select-outlined"
+									fullWidth
+									value={timeStamp}
+									value={revenueCategory}
 									onChange={handleRevenue}
-									inputProps={{
-										name: "age",
-										id: "outlined-age-native-simple",
+									displayEmpty
+									// className={classes.menuPaper}
+									MenuProps={{
+										classes: {
+											paper: classes.menuPaper,
+										},
+										getContentAnchorEl: null,
+										anchorOrigin: {
+											vertical: "bottom",
+											horizontal: "left",
+										},
 									}}
 								>
-									<option value="eventRevenueInPhnx">
+									<MenuItem value="eventRevenueInPhnx" style={{
+											fontFamily: "'Aeonik', sans-serif",
+										}}>
 										PHNX
-									</option>
-									<option value="eventRevenueInDollar">
+									</MenuItem>
+									<MenuItem value="eventRevenueInDollar" style={{
+											fontFamily: "'Aeonik', sans-serif",
+										}}>
 										Dollar
-									</option>
+									</MenuItem>
 								</Select>
 							</FormControl>
 						</Grid>
