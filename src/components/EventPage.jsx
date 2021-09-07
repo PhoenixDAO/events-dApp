@@ -1693,7 +1693,7 @@ class EventPage extends Component {
 								open={this.state.allowBuySnackbar}
 								onClose={this.handleCloseAllowBuySnackbar}
 								message={this.state.SnackbarMessage}
-								// autoHideDuration={3000}
+								autoHideDuration={3000}
 								key={"bottom" + "center"}
 								className="snackbar"
 							/>
