@@ -416,7 +416,7 @@ class MyEvents extends Component {
 			body = (
 				<EmptyState
 					text="You have no created events 😔"
-					btnText="Try creating one"
+					btnText="Create an Event"
 					url="/createevent"
 				/>
 			);
@@ -561,7 +561,7 @@ class MyEvents extends Component {
 			body = (
 				<EmptyState
 					text="You have no created events 😔"
-					btnText="Try creating one"
+					btnText="Create an Event"
 					url="/createevent"
 				/>
 			);

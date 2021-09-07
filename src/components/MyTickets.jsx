@@ -176,7 +176,7 @@ class MyTickets extends Component {
 			body = (
 				<EmptyState
 					text="You have no Tickets 😔"
-					btnText="Find an event"
+					btnText="Buy a Ticket"
 					url="/upcomingevents/1"
 				/>
 			);
@@ -324,7 +324,7 @@ class MyTickets extends Component {
 			body = (
 				<EmptyState
 					text="You have no Tickets 😔"
-					btnText="Find an event"
+					btnText="Buy a Ticket"
 					url="/upcomingevents/1"
 				/>
 			);

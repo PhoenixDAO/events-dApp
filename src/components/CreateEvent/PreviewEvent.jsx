@@ -131,6 +131,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	price: {
 		color: "#413AE2",
+		maxWidth:"34.333%",
+		textAlign: "end",
 		fontWeight: "700",
 		fontSize: "17px",
 		fontFamily: "'Aeonik', sans-serif",
@@ -145,7 +147,23 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "18px",
 		fontFamily: "'Aeonik', sans-serif",
 		textTransform: "capitalize",
-	},
+	},eventTitle:{
+		color: "#1E1E22",
+		maxWidth: "65.66%",
+		fontSize: 16,
+		fontWeight: 700,
+		fontFamily: "'Aeonik', sans-serif",
+		wordBreak:"break-word",
+		display: "-webkit-box",
+		WebkitBoxOrient: "vertical",
+		WebkitLineClamp: "2",
+		overflow: "hidden",
+textOverflow: "ellipsis",
+// "@media (min-width: 990px) and (max-width: 1024px)": {
+// /* For landscape layouts only */
+// WebkitLineClamp: "3",
+// 	}
+}
 }));
 
 export default function PreviewEvent({ fields, activeStep }) {
@@ -233,17 +251,19 @@ export default function PreviewEvent({ fields, activeStep }) {
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
+									height: "72px"
 								}}
 							>
 								<Typography
 									variant="h6"
 									component="h2"
-									style={{
-										color: "#1E1E22",
-										fontSize: 17,
-										fontWeight: 700,
-										fontFamily: "'Aeonik', sans-serif",
-									}}
+									// style={{
+									// 	color: "#1E1E22",
+									// 	fontSize: 17,
+									// 	fontWeight: 700,
+									// 	fontFamily: "'Aeonik', sans-serif",
+									// }}
+									className={classes.eventTitle}
 									noWrap
 								>
 									{eventName ? eventName : `Event Title`}
