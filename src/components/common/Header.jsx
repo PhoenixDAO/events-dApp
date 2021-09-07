@@ -120,9 +120,8 @@ const Header = ({
 				{/* {page == "analytics" || page == "create" || phnxButton ? (
 				<BuyPhnxButton />
 			) : null} */}
-				{/* {console.log("title page for dashboard", title.props.children[2].props.children)} */}
 				{searchBar ? (
-					<div className={(page=="dashboard")&&classes.SearchAndBuyPheonixButtonMargin}>
+					<div>
 					<SearchBar
 						connect={connect}
 						handleSearch={handleSearch}
@@ -137,7 +136,7 @@ const Header = ({
 						<Button
 							variant="contained"
 							color="primary"
-							style={{ marginRight: "10px", marginBottom: "10px" }}
+							style={{ marginBottom: "10px" }}
 							className={classes.buy}
 							onClick={() =>
 								allowBuy() ? handleClickOpen2() : null
@@ -154,10 +153,12 @@ const Header = ({
 					page === "create" ||
 					page === "confirm-purchase" ||
 					phnxButton ? (
-						<div className={(page=="dashboard")&&classes.SearchAndBuyPheonixButtonMargin}>
+						<div className={(page=="dashboard")&& classes.SearchAndBuyPheonixButtonMargin}>
 					<BuyPhnxButton onClick={handleOpenBuyPhnx} />
 					</div>
-				) : null}
+				) : <div style={{marginLeft:"10px"}} >
+				<BuyPhnxButton onClick={handleOpenBuyPhnx} />
+				</div>}
 				<DialogueBox
 					open={openWallet}
 					handleClose={handleCloseWallet}

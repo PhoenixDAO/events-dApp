@@ -9,13 +9,14 @@ const useStyles = makeStyles((theme) => ({
 		"@media screen and (max-width: 1100px)": {
 			display: "inline-block"
 		},
+		margin: "10px 0px 0px 10px",
+
 	},
 	button: {
 		"@media screen and (max-width: 1200px)": {
 			height: "45px",
 			lineHeight: "1"
 		},
-		margin: theme.spacing(1),
 		fontFamily: "'Aeonik', sans-serif",
 		background: "#413AE2",
 		color: "white",
@@ -23,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 		"&:focus": {
 			outline: "none",
 		},
+
 	},
 }));
 

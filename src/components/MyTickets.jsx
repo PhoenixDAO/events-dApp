@@ -46,6 +46,7 @@ class MyTickets extends Component {
 			blockChainTickets: [],
 			blockChainTicketsCopy: [],
 			value: "",
+			hideEvent:[]
 		};
 		// this.contracts = context.drizzle.contracts;
 		// this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);

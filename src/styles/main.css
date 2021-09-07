@@ -407,7 +407,7 @@ div[class|="r-sticky"] {
 }
 
 div[class|="r-sticky"] .header3 {
-	margin: 0;
+	margin: 0px 10px;
 }
 
 /* .r-sticky-4 .header-heading {
@@ -2952,6 +2952,8 @@ canvas#doughnut {
 	color: #f43c3c;
 	font-family: "Aeonik";
 	padding: 10px 20px;
+	display: flex;
+	justify-content: center;
 }
 .snackbar {
 	border-radius: 8px;
