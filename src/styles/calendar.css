@@ -194,7 +194,10 @@ table {
 .fc-event-main {
     padding: 0px !important;
 }
+.fc-timegrid-event{
+    border: 0px solid transparent !important;
 
+}
 .fc-event-title,
 .fc-event-time {
     font-weight: 700;
