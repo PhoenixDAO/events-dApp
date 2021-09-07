@@ -1065,7 +1065,7 @@ class FindEvents extends Component {
 											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
-										popular Topics
+										Popular Topics
 									</MenuItem>
 								</Select>
 							</FormControl>
