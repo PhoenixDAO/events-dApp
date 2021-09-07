@@ -165,7 +165,7 @@ console.log("blockchainTickets0",blockChainTickets.length);
 			body = (
 				<EmptyState
 					text="You have no Tickets 😔"
-					btnText="Find an event"
+					btnText="Buy a Ticket"
 					url="/upcomingevents/1"
 				/>
 			);
@@ -297,7 +297,7 @@ console.log("blockchainTickets0",blockChainTickets.length);
 			body = (
 				<EmptyState
 					text="You have no Tickets 😔"
-					btnText="Find an event"
+					btnText="Buy a Ticket"
 					url="/upcomingevents/1"
 				/>
 			);

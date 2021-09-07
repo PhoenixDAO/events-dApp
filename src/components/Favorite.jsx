@@ -432,7 +432,7 @@ class Favorites extends Component {
 				body = (
 					<EmptyState
 						text="You have no Favourites 😔"
-						btnText="Find events near you"
+						btnText="Find Events"
 						url="/upcomingevents/1"
 					/>
 				);
@@ -591,7 +591,7 @@ class Favorites extends Component {
 				body = (
 					<EmptyState
 						text="You have no Favourites 😔"
-						btnText="Find events near you"
+						btnText="Find Events"
 						url="/upcomingevents/1"
 					/>
 				);

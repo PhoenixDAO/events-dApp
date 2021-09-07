@@ -135,6 +135,7 @@ const useStyles = makeStyles((theme) => ({
 	price: {
 		color: "#413AE2",
 		fontWeight: "700",
+		maxWidth: "34.33%",
 		fontSize: "16px",
 		fontFamily: "'Aeonik', sans-serif !important",
 		"& p": {
@@ -160,6 +161,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	eventTitle:{
 		color: "#1E1E22",
+		maxWidth: "65.66%",
 		fontSize: 16,
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
@@ -391,6 +393,7 @@ const EventCard = (props, context) => {
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
+									height: "100px"
 								}}
 							>
 								<Typography
@@ -588,10 +591,10 @@ const EventCard = (props, context) => {
 										className={classes.text}
 									>
 										PHNX Revenue:{" "}
-										{Web3.utils.fromWei(
+										{pricingFormatter(Web3.utils.fromWei(
 											event_data.eventRevenueInPhnx
-										)}{" "}
-										PHNX
+										),"PHNX")}{" "}
+										{/* PHNX */}
 									</Typography>
 									<Typography
 										variant="body2"
@@ -601,10 +604,10 @@ const EventCard = (props, context) => {
 										className={classes.text}
 										style={{ marginBottom: "20px" }}
 									>
-										Dollar Revenue: ${" "}
-										{Web3.utils.fromWei(
+										Dollar Revenue: {" "}
+										{pricingFormatter(Web3.utils.fromWei(
 											event_data.eventRevenueInDollar
-										)}
+										),"$")}
 									</Typography>
 									<Divider />
 									<Button

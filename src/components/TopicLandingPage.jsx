@@ -594,7 +594,7 @@ class TopicLandingPage extends Component {
 			body = (
 				<EmptyState
 					text="No events found 🤔. Be the first;"
-					btnText="Try creating one"
+					btnText="Create an Event"
 					url="/createevent"
 				/>
 			);
@@ -641,7 +641,6 @@ class TopicLandingPage extends Component {
 			body = (
 				<EmptyState
 					text="No events found 🤔. Be the first;"
-					btnText="Try creating one"
 					url="/createevent"
 				/>
 			);
