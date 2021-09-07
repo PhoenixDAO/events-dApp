@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	SearchAndBuyPheonixButtonMargin:{
-		margin: theme.spacing(1)
+		marginRight: theme.spacing(1)
 	}
 }));
 
