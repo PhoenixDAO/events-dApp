@@ -920,7 +920,7 @@ class EventPage extends Component {
 				<img
 					src={this.state.avatar}
 					className="bird"
-					style={{ width: "60px", borderRadius: "50%" }}
+					style={{ width: "60px", borderRadius: "50%", height:"60px" }}
 				/>
 			);
 		} else {
@@ -928,7 +928,7 @@ class EventPage extends Component {
 				<img
 					src={this.imageData(this.state.avatarId)}
 					className="bird"
-					style={{ width: "60px", borderRadius: "50%" }}
+					style={{ width: "60px", borderRadius: "50%", height: "60px" }}
 				/>
 			);
 		}

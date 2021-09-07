@@ -163,6 +163,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#1E1E22",
 		maxWidth: "65.66%",
 		fontSize: 16,
+		maxHeight:"52px",
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
 		wordBreak:"break-word",
