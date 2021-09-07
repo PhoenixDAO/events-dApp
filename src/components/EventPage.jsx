@@ -264,6 +264,7 @@ class EventPage extends Component {
 			shareUrl: window.location,
 			allowBuySnackbar: false,
 			errorMessage: "",
+			SnackbarMessage: ""
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -935,24 +936,33 @@ class EventPage extends Component {
 
 	allowBuy = () => {
 		if (Object.keys(this.state.blockChainEvent).length > 0) {
+			let index = this.state.selectedCategoryIndex;
+
 			if (
-				Number(this.state.blockChainEvent.time) < moment().unix() ||
-				(this.state.blockChainEvent.tktTotalQuantitySold >=
-					this.state.blockChainEvent.tktTotalQuantity &&
-					this.state.blockChainEvent.tktTotalQuantity != 0)
+				Number(this.state.blockChainEvent.time) < new Date().getTime() / 1000
 			) {
 				this.setState({
 					allowBuySnackbar: true,
+					SnackbarMessage: "This event is already ended"
 				});
 				console.log(
 					"allow buy in if",
-					Number(this.state.blockChainEvent.time),
-					moment().unix(),
+					Number(this.state.blockChainEvent.time), moment().unix(),
+					parseInt(this.state.blockChainEvent.tktTotalQuantitySold) >= parseInt(this.state.blockChainEvent.tktTotalQuantity),
 					this.state.blockChainEvent.tktTotalQuantitySold,
-					this.state.blockChainEvent.tktTotalQuantity
+					this.state.blockChainEvent.tktTotalQuantity,
+
 				);
 				return false;
-			} else {
+			}
+			else if (this.state.blockChainEvent.catTktQuantity[index] != 0 && (parseInt(this.state.blockChainEvent.catTktQuantitySold[index]) >= parseInt(this.state.blockChainEvent.catTktQuantity[index]))) {
+				this.setState({
+					allowBuySnackbar: true,
+					SnackbarMessage: "All tickets have been sold for this category"
+				});
+			}
+			else {
+
 				console.log(
 					"allow buy in else",
 					Number(this.state.blockChainEvent.time),
@@ -1009,8 +1019,8 @@ class EventPage extends Component {
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-							this.state.selectedCategoryIndex
-					  ]
+					this.state.selectedCategoryIndex
+					]
 					: "∞";
 
 				let disabled = false;
@@ -1021,14 +1031,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-							this.state.selectedCategoryIndex
+						this.state.selectedCategoryIndex
 						]
 					) >=
-						Number(
-							event_data.catTktQuantity[
-								this.state.selectedCategoryIndex
-							]
-						)
+					Number(
+						event_data.catTktQuantity[
+						this.state.selectedCategoryIndex
+						]
+					)
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -1226,21 +1236,21 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-																(
-																	category,
-																	i
-																) => (
-																	<option
-																		value={
-																			i
-																		}
-																	>
-																		{
-																			category
-																		}
-																	</option>
-																)
-														  )
+															(
+																category,
+																i
+															) => (
+																<option
+																	value={
+																		i
+																	}
+																>
+																	{
+																		category
+																	}
+																</option>
+															)
+														)
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1296,11 +1306,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-												  "onedayevent"
-												? moment(
+													"onedayevent"
+													? moment(
 														this.state.eventDate
-												  ).format("Do MMM, YYYY")
-												: `
+													).format("Do MMM, YYYY")
+													: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1314,24 +1324,24 @@ class EventPage extends Component {
 											{!this.state.eventStartTime
 												? `Time`
 												: !this.state.eventEndTime
-												? moment(
+													? moment(
 														this.state
 															.eventStartTime
-												  )
+													)
 														.utcOffset(0)
 														.format("hh:mma z")
-												: `${moment(
+													: `${moment(
 														this.state
 															.eventStartTime
-												  )
+													)
 														.utcOffset(0)
 														.format(
 															"hh:mma"
 														)} - ${moment(
-														this.state.eventEndTime
-												  )
-														.utcOffset(0)
-														.format("hh:mma z")}`}
+															this.state.eventEndTime
+														)
+															.utcOffset(0)
+															.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
@@ -1430,10 +1440,10 @@ class EventPage extends Component {
 
 								<Grid container className={classes.socialDiv}>
 									<Grid
-										lg={2}
-										md={3}
-										sm={2}
-										xs={6}
+										lg={3}
+										md={4}
+										sm={3}
+										xs={7}
 										className={classes.categoryGrid}
 									>
 										<ModeCommentOutlined />
@@ -1442,7 +1452,7 @@ class EventPage extends Component {
 											{topic}
 										</div>
 									</Grid>
-									<Grid lg={10} md={9} sm={10} xs={12}>
+									<Grid lg={9} md={8} sm={9} xs={11}>
 										<SocialMedia
 											shareUrl={this.state.shareUrl}
 											disabled={false}
@@ -1671,8 +1681,8 @@ class EventPage extends Component {
 								}}
 								open={this.state.allowBuySnackbar}
 								onClose={this.handleCloseAllowBuySnackbar}
-								message="Event time has passed or all the tickets have been sold"
-								autoHideDuration={3000}
+								message={this.state.SnackbarMessage}
+								// autoHideDuration={3000}
 								key={"bottom" + "center"}
 								className="snackbar"
 							/>

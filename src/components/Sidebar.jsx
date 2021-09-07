@@ -270,7 +270,7 @@ class Sidebar extends Component {
 			console.log(
 				"I am doing that",
 				this.props.networkId == GLOBAL_NETWORK_ID ||
-					this.props.networkId == GLOBAL_NETWORK_ID_2
+				this.props.networkId == GLOBAL_NETWORK_ID_2
 			);
 			return (
 				<React.Fragment>
@@ -538,7 +538,7 @@ class Sidebar extends Component {
 						<div className="user-status">{user}</div>
 						<div className="menu mt-5">
 							<h5 className="toggleHidden header">
-								Events & Tickets
+								Events and Tickets
 							</h5>
 							<ul className="nav flex-column">
 								<li>
