@@ -11,6 +11,7 @@ import {
 	FormControl,
 	Select,
 	IconButton,
+	MenuItem,
 } from "@material-ui/core";
 import {
 	ShoppingCartOutlined,
@@ -1222,8 +1223,8 @@ class EventPage extends Component {
 												className={classes.ticketSelect}
 											>
 												<Select
-													native
-													// value={state.age}
+													// native
+													value={this.state.selectedCategoryIndex}
 													onChange={
 														this
 															.handleCategoryChange
@@ -1231,6 +1232,16 @@ class EventPage extends Component {
 													inputProps={{
 														name: "age",
 														id: "outlined-age-native-simple",
+													}}
+													MenuProps={{
+														classes: {
+															paper: classes.menuPaper,
+														},
+														getContentAnchorEl: null,
+														anchorOrigin: {
+															vertical: "bottom",
+															horizontal: "left",
+														},
 													}}
 												>
 													{event_data.categories
@@ -1240,7 +1251,7 @@ class EventPage extends Component {
 																category,
 																i
 															) => (
-																<option
+																<MenuItem
 																	value={
 																		i
 																	}
@@ -1248,7 +1259,7 @@ class EventPage extends Component {
 																	{
 																		category
 																	}
-																</option>
+																</MenuItem>
 															)
 														)
 														: ""}

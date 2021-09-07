@@ -290,15 +290,14 @@ class FindEvents extends Component {
 	async loadBlockchain(filter) {
 		console.log("filter1", filter);
 		const graphURL = await GetGraphApi();
-		const dateTime = Date.now();
-		const dateNow = Math.floor(dateTime / 1000);
+
 		await axios({
 			url: graphURL,
 			method: "post",
 			data: {
 				query: `
 				{	
-				  events( where: {time_gte :${dateNow}} ${filter}) {
+				  events(${filter}) {
 					  id
 					  eventId
 					  owner
@@ -352,25 +351,25 @@ class FindEvents extends Component {
 					}, 1000);
 				} else {
 					// if (this._isMounted) {
-					// const dateTime = Date.now();
-					// const dateNow = Math.floor(dateTime / 1000);
+					const dateTime = Date.now();
+					const dateNow = Math.floor(dateTime / 1000);
 					this.setState({ loading: true });
-					// // console.log("events", graphEvents.data.data.events);
-					// let newsort = graphEvents.data.data.events
-					// 	.concat()
-					// 	.sort((a, b) => b.blockNumber - a.blockNumber)
-					// 	.filter((activeEvents) => activeEvents.time >= dateNow);
+					// console.log("events", graphEvents.data.data.events);
+					let newsort = graphEvents.data.data.events
+						.concat()
+						.sort((a, b) => b.blockNumber - a.blockNumber)
+						.filter((activeEvents) => activeEvents.time >= dateNow);
 					// console.log("GraphQL query newsort",newsort)
 
 					this.setState({
-						Events_Blockchain: graphEvents.data.data.events,
+						Events_Blockchain: newsort,
 						// active_length: newsort.length,
 						// event_copy: newsort,
 					});
 
 					if (this.state.pageTitle === "All Events") {
 						this.setState({
-							event_copy: graphEvents.data.data.events,
+							event_copy: newsort,
 						});
 					}
 
@@ -1065,7 +1064,7 @@ class FindEvents extends Component {
 											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
-										Popular Topics
+										popular Topics
 									</MenuItem>
 								</Select>
 							</FormControl>
