@@ -341,6 +341,8 @@ const useStyles = makeStyles((theme) => ({
 		maxHeight: "200px",
 	},
 	ticketNameCat: {
+		overflow: "hidden",
+		wordBreak:"break-word",
 		fontSize: 20,
 		fontWeight: 400,
 		color: "#1E1E22",
@@ -1890,6 +1892,8 @@ useEffect(()=>{
 														onChange={(v) => {
 															onChange(v);
 															setCountry(v.id);
+															setState("");
+															setCity("");
 														}}
 														error={error}
 														value={value}
@@ -1924,6 +1928,7 @@ useEffect(()=>{
 														onChange={(v) => {
 															onChange(v);
 															setState(v.id);
+															setCity("");
 														}}
 														error={error}
 														geoId={country}
@@ -2531,6 +2536,7 @@ useEffect(()=>{
 																			</Button>
 																		</InputAdornment>
 																	),
+																	inputProps:{min:0},
 																classes: {},
 															}}
 															value={value}
@@ -3082,6 +3088,7 @@ useEffect(()=>{
 																						</Button>
 																					</InputAdornment>
 																				),
+																				inputProps: { min: 0, max: 10 }
 																		}}
 																		value={
 																			value

@@ -106,7 +106,14 @@
 	color: #413AE2 !important;
 }
 
-.nav-link-active {
+.nav-link:hover svg path {
+	fill: #413AE2;
+}
+
+.nav-link-active svg path {
+	fill: #413AE2;
+}
+.nav-link-active{
 	display: block;
 	color: #413AE2 !important;
 	font-weight: bold;
