@@ -159,6 +159,7 @@ const Header = ({
 					<BuyPhnxButton onClick={handleOpenBuyPhnx} />
 					</div>
 				) : <div style={{marginLeft:"10px"}} >
+					
 				<BuyPhnxButton onClick={handleOpenBuyPhnx} />
 				</div>}
 				<DialogueBox

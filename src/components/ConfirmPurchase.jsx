@@ -117,12 +117,15 @@ const ConfirmPurchase = (props) => {
 		// console.log("length", length, eventId);
 		const buyers = await generateBuyerArr(eventId);
 		const isaddress = Web3.utils.isAddress(address);
-		if (parseInt(eventId) > parseInt(eventLength)) {
+		let error=parseInt(eventId) > parseInt(eventLength)
+		if (error) {
 			seterrorId(true);
 			console.log("error", errorId);
-		} else if (!isaddress) {
+		} 
+		 if (!isaddress) {
 			setErrorAddress(true);
-		} else {
+		} 
+		if(isaddress  && !error ) {
 			const isowner = buyers.find((element) => {
 				return element.address.toLowerCase() == address.toLowerCase();
 			});

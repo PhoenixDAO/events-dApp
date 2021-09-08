@@ -275,9 +275,9 @@ class FindEvents extends Component {
 		//this.myRef.current.scrollIntoView();
 	};
 
-	executeEventScroll = () => {
+	executeEventScroll = (view) => {
 		//this.myRef.current.scrollIntoView();
-		this.eventRef.current.scrollIntoView();
+		this.eventRef.current.scrollIntoView(view);
 	};
 
 	handleSearch = (value) => {
@@ -377,10 +377,7 @@ class FindEvents extends Component {
 						this.setState({ loading: false });
 					}, 1000);
 
-					this.executeEventScroll({
-						behavior: "smooth",
-						block: "end",
-					});
+			
 
 					// }
 				}
@@ -507,6 +504,10 @@ class FindEvents extends Component {
 	};
 
 	onTabChange = async (event, newValue) => {
+		this.executeEventScroll({
+			behavior: "smooth",
+			block: "center",
+		});
 		this.setState({ selectedTab: newValue, pageTitle: newValue });
 		let query;
 		if (newValue === "All Events") {
@@ -960,18 +961,19 @@ class FindEvents extends Component {
 					<div ref={this.myRef} />
 
 					{/* slider */}
-					<div ref={this.eventRef}>
-						<div>
+					<div >
+						<div 
+>
 							<Slider />
 						</div>
 					</div>
-					<br />
+					<br  />
 					<br />
 					<br />
 
 					{this.state.pageTitle === "Near to you" ? (
 						<span>
-							<div
+							<div 
 								style={{
 									paddingTop:"13px",
 									paddingBottom: "13px",
@@ -1006,9 +1008,9 @@ class FindEvents extends Component {
 						</span>
 					) : null}
 
-					<div>
-						<div
-							className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}
+					<div  >
+						<div  
+							className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`} 
 						>
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 								{this.state.pageTitle}
@@ -1017,7 +1019,7 @@ class FindEvents extends Component {
 								variant="outlined"
 								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
 							>
-								<Typography
+								<Typography ref={this.eventRef}
 									variant="p"
 									className={`${classes.sortBy}`}
 								>
@@ -1064,7 +1066,7 @@ class FindEvents extends Component {
 											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
-										popular Topics
+										Popular Topics
 									</MenuItem>
 								</Select>
 							</FormControl>
@@ -1197,9 +1199,8 @@ class FindEvents extends Component {
 		// if (eventCount) {
 		// 	this.setState({ eventCount });
 		// }
-		if (this.state.prevPath == -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
-		}
+		
 		// this._isMounted = true;
 		//where: {tktTotalQuantitySold_gte: 0}
 		const query = `orderBy:eventId orderDirection:asc`;
