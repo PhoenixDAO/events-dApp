@@ -28,6 +28,7 @@ import {
 	GLOBAL_NETWORK_ID,
 	GLOBAL_NETWORK_ID_2,
 } from "../../config/const.js";
+
 const useStyles = (theme) => ({
 	sticky: {
 		position: "sticky",
@@ -87,15 +88,36 @@ class CreateEvent extends Component {
 				eventCategory: "free",
 				ticketAvailability: "unlimited",
 			},
-			activeStep: 2,
+			activeStep: 0,
 			activeFlamingStep: 0,
 			isEventCreated: false,
 			progressText: 0,
 			shareUrl: "",
+			PhoenixDAO_market: {},
 		};
 		this.contracts = context.drizzle.contracts;
 		this.onHandleTxReject = this.onHandleTxReject.bind(this);
 	}
+
+	convertDollarToPhnx = (d) => {
+		let value = parseFloat(d);
+		value = value > 0 ? value : 0;
+		let usd = this.state.PhoenixDAO_market.usd;
+		let phoenixValue = value / usd;
+		phoenixValue = phoenixValue.toFixed(5);
+		return phoenixValue;
+	};
+
+	getPhoenixdaoMarket = async () => {
+		fetch(
+			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
+		)
+			.then((res) => res.json())
+			.then((data) => {
+				this.setState({ PhoenixDAO_market: data.phoenixdao });
+			})
+			.catch(console.log);
+	};
 
 	onFieldsChange = (f) => {
 		this.setState({ fields: { ...this.state.fields, ...f } });
@@ -119,10 +141,7 @@ class CreateEvent extends Component {
 		) {
 			if (f.name === "dollarPricePreview") {
 				obj.dollarPrice = f.value;
-				fields.token = true;
-			} else if (f.name === "phnxPricePreview") {
-				console.log("fff", f);
-				obj.phnxPrice = f.value;
+				obj.phnxPrice = this.convertDollarToPhnx(f.value);
 				fields.token = true;
 			} else if (f.name === "ticketAvailabilityPreview") {
 				obj.ticketAvailability = f.value;
@@ -130,6 +149,7 @@ class CreateEvent extends Component {
 				obj.noOfTickets = f.value;
 			}
 		}
+
 		cat.push(obj);
 		fields.categories = cat;
 		fields[f.name] = f.value;
@@ -214,18 +234,21 @@ class CreateEvent extends Component {
 		let image1Base64 = image1 ? await this.getBase64(image1) : "";
 		let image2Base64 = image2 ? await this.getBase64(image2) : "";
 
+		let countryName = eventType === "physical" ? country.name : "";
+		let stateName = eventType === "physical" ? state.name : "";
+		let cityName = eventType === "physical" ? city.name : "";
+
 		let ticketLimited = [];
 		let tktQnty = [];
 		let prices = [];
 		let tktQntySold = [];
 		let categories = [];
 		let totalQuantity = 0;
-		let location = eventType === "physical" ? eventLocation : eventLink;
+		let location =
+			eventType === "physical"
+				? eventLocation + " " + cityName + ", " + countryName
+				: eventLink;
 		let onsite = eventType === "physical" ? true : false;
-
-		let countryName = eventType === "physical" ? country.name : "";
-		let stateName = eventType === "physical" ? state.name : "";
-		let cityName = eventType === "physical" ? city.name : "";
 
 		let time =
 			Date.parse(
@@ -632,6 +655,8 @@ class CreateEvent extends Component {
 
 	componentDidMount() {
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
+
+		this.getPhoenixdaoMarket();
 	}
 
 	render() {

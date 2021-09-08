@@ -172,6 +172,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 		image0,
 		eventDescription,
 		city,
+		country,
 	} = fields;
 
 	useEffect(() => {
@@ -393,7 +394,13 @@ export default function PreviewEvent({ fields, activeStep }) {
 									: `Online`} */}
 								{eventType === "physical"
 									? eventLocation
-										? eventLocation
+										? city
+											? eventLocation +
+											  " " +
+											  city.name +
+											  ", " +
+											  country.name
+											: eventLocation
 										: "Location"
 									: `Online`}
 							</Typography>
@@ -457,6 +464,8 @@ export default function PreviewEvent({ fields, activeStep }) {
 								? eventDescription
 								: "<p>This is the fake event description	<br></p>"
 						}
+						city={city ? city.name : ""}
+						country={country ? country.name : ""}
 					/>
 					<Button
 						color="primary"

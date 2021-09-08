@@ -796,7 +796,8 @@ const MyStepper = ({
 							eventEndTimeOneday.setDate(
 								eventDateOneDay.getDate()
 							);
-							if (eventStartTimeOneday < eventEndTimeOneday) {
+							//eventStartTimeOneday < eventEndTimeOneday
+							if (true) {
 								fields.eventStartDate = eventDateOneDay;
 								fields.eventEndDateOneDay = eventEndDateOneDay;
 								fields.eventStartTime = eventStartTimeOneday;
@@ -911,6 +912,12 @@ const MyStepper = ({
 			//publish event
 			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 		}
+	};
+
+	const maxLengthCheckNumber = (e) => {
+		e.target.value = Math.max(0, parseInt(e.target.value))
+			.toString()
+			.slice(0, 12);
 	};
 
 	//back button stepper
@@ -1043,7 +1050,7 @@ const MyStepper = ({
 										helperText={
 											error ? error.message : null
 										}
-										inputProps={{ maxLength: 100 }}
+										inputProps={{ maxLength: 50 }}
 									/>
 								)}
 								rules={{
@@ -1054,7 +1061,7 @@ const MyStepper = ({
 											"Event name should contain at least 3 characters.",
 									},
 									maxLength: {
-										value: 100,
+										value: 50,
 										message: "Event name too long.",
 									},
 								}}
@@ -1090,7 +1097,7 @@ const MyStepper = ({
 										helperText={
 											error ? error.message : null
 										}
-										inputProps={{ maxLength: 100 }}
+										inputProps={{ maxLength: 50 }}
 									/>
 								)}
 								rules={{
@@ -1102,7 +1109,7 @@ const MyStepper = ({
 											"Event organizer name should contain at least 3 characters.",
 									},
 									maxLength: {
-										value: 100,
+										value: 50,
 										message:
 											"Event organizer name too long.",
 									},
@@ -2126,6 +2133,7 @@ const MyStepper = ({
 												helperText={
 													error ? error.message : null
 												}
+												inputProps={{ maxLength: 300 }}
 											/>
 										)}
 										rules={{
@@ -2632,6 +2640,9 @@ const MyStepper = ({
 															onKeyDown={
 																formatInputNoOfTickets
 															}
+															onInput={
+																maxLengthCheckNumber
+															}
 															type="number"
 															id="no-of-tickets"
 															name={name}
@@ -2741,6 +2752,9 @@ const MyStepper = ({
 																			</Button>
 																		</InputAdornment>
 																	),
+																inputProps: {
+																	min: 0,
+																},
 																classes: {},
 															}}
 															value={value}
@@ -2753,22 +2767,12 @@ const MyStepper = ({
 																			.value
 																	)
 																);
-																// onGetRealTimeFields(
-																// 	{
-																// 		name: "dollarPricePreview",
-																// 		value: e
-																// 			.target
-																// 			.value,
-																// 	}
-																// );
 																onGetRealTimeFields(
 																	{
-																		name: "phnxPricePreview",
-																		value: convertDollarToPhnx(
-																			e
-																				.target
-																				.value
-																		),
+																		name: "dollarPricePreview",
+																		value: e
+																			.target
+																			.value,
 																	}
 																);
 															}}
@@ -2785,7 +2789,7 @@ const MyStepper = ({
 													required:
 														"Enter price in dollars.",
 													maxLength: {
-														value: 16,
+														value: 12,
 														message:
 															"Ticket price is too large.",
 													},
@@ -2862,14 +2866,6 @@ const MyStepper = ({
 															value={value}
 															onChange={(e) => {
 																onChange(e);
-																// onGetRealTimeFields(
-																// 	{
-																// 		name: "phnxPricePreview",
-																// 		value: e
-																// 			.target
-																// 			.value,
-																// 	}
-																// );
 															}}
 															error={!!error}
 															helperText={
@@ -3004,6 +3000,9 @@ const MyStepper = ({
 														<TextField
 															onKeyDown={
 																formatInputNoOfTickets
+															}
+															onInput={
+																maxLengthCheckNumber
 															}
 															type="number"
 															id="no-of-tickets"
@@ -3277,7 +3276,7 @@ const MyStepper = ({
 																		: null
 																}
 																inputProps={{
-																	maxLength: 100,
+																	maxLength: 50,
 																}}
 															/>
 														)}
@@ -3290,7 +3289,7 @@ const MyStepper = ({
 																	"Ticket name should contain at least 3 characters.",
 															},
 															maxLength: {
-																value: 100,
+																value: 50,
 																message:
 																	"Ticket name too long.",
 															},
@@ -3372,6 +3371,10 @@ const MyStepper = ({
 																						</Button>
 																					</InputAdornment>
 																				),
+																			inputProps:
+																				{
+																					min: 0,
+																				},
 																		}}
 																		value={
 																			value
@@ -3398,16 +3401,6 @@ const MyStepper = ({
 																						.value,
 																				}
 																			);
-																			onGetRealTimeFields(
-																				{
-																					name: "phnxPricePreview",
-																					value: convertDollarToPhnx(
-																						e
-																							.target
-																							.value
-																					),
-																				}
-																			);
 																		}}
 																		error={
 																			!!error
@@ -3424,7 +3417,7 @@ const MyStepper = ({
 																required:
 																	"Enter price in dollars.",
 																maxLength: {
-																	value: 16,
+																	value: 12,
 																	message:
 																		"Ticket price is too large.",
 																},
@@ -3508,6 +3501,10 @@ const MyStepper = ({
 																						</Button>
 																					</InputAdornment>
 																				),
+																			inputProps:
+																				{
+																					min: 0,
+																				},
 																		}}
 																		value={
 																			value
@@ -3518,14 +3515,6 @@ const MyStepper = ({
 																			onChange(
 																				e
 																			);
-																			// onGetRealTimeFields(
-																			// 	{
-																			// 		name: "phnxPricePreview",
-																			// 		value: e
-																			// 			.target
-																			// 			.value,
-																			// 	}
-																			// );
 																		}}
 																		error={
 																			!!error
@@ -3694,6 +3683,9 @@ const MyStepper = ({
 																		// label="Event Organizer"
 																		onKeyDown={
 																			formatInputNoOfTickets
+																		}
+																		onInput={
+																			maxLengthCheckNumber
 																		}
 																		type="number"
 																		fullWidth
