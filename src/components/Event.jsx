@@ -585,35 +585,36 @@ class Event extends Component {
 			let favouriteEvent =
 				this.state.UserFavoriteEvents.indexOf(this.props.id) != -1;
 			body = (
-				<div style={{height:"100%"}}>
-					{this.props.loading ? 
-					<SkeletonLayout/>
-				: 
-				<EventCard
-						event_data={event_data}
-						date={date}
-						image={image}
-						myEvent={this.props.myEvents}
-						myEventStatURL={myEventStatURL}
-						titleURL={titleURL}
-						max_seats={max_seats}
-						myFavorites={this.props.myFavorites}
-						favoriteEvent={favouriteEvent}
-						eventId={this.props.id}
-						reloadData={this.props.reloadData}
-						reload={this.props.reload}
-						eventOrganizer={this.state.eventOrganizer}
-						eventDate={this.state.eventDate}
-						eventStartDate={this.state.eventStartDate}
-						eventEndDate={this.state.eventEndDate}
-						eventStartTime={this.state.eventStartTime}
-						eventEndTime={this.state.eventEndTime}
-						eventTime={this.state.eventTime}
-						eventType={this.state.eventType}
-						eventDescription={this.state.eventDescription}
-						eventLocation={this.state.eventLocation}
-					/>
-				}
+				<div style={{ height: "100%" }}>
+					{this.props.loading ? (
+						<SkeletonLayout />
+					) : (
+						<EventCard
+							event_data={event_data}
+							date={date}
+							image={image}
+							myEvent={this.props.myEvents}
+							checkExpiry={this.props.checkExpiry}
+							myEventStatURL={myEventStatURL}
+							titleURL={titleURL}
+							max_seats={max_seats}
+							myFavorites={this.props.myFavorites}
+							favoriteEvent={favouriteEvent}
+							eventId={this.props.id}
+							reloadData={this.props.reloadData}
+							reload={this.props.reload}
+							eventOrganizer={this.state.eventOrganizer}
+							eventDate={this.state.eventDate}
+							eventStartDate={this.state.eventStartDate}
+							eventEndDate={this.state.eventEndDate}
+							eventStartTime={this.state.eventStartTime}
+							eventEndTime={this.state.eventEndTime}
+							eventTime={this.state.eventTime}
+							eventType={this.state.eventType}
+							eventDescription={this.state.eventDescription}
+							eventLocation={this.state.eventLocation}
+						/>
+					)}
 					{/* new card */}
 				</div>
 			);
