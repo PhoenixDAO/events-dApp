@@ -28,6 +28,7 @@ import {
 	GLOBAL_NETWORK_ID,
 	GLOBAL_NETWORK_ID_2,
 } from "../../config/const.js";
+import { userTweet } from "../../config/serverAPIs";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -388,7 +389,7 @@ class CreateEvent extends Component {
 							}, 5000);
 						}
 					})
-					.then((receipt) => {
+					.then(async (receipt) => {
 						console.log("receipt----->", receipt);
 						// toast(
 						// 	<Notify
@@ -406,6 +407,12 @@ class CreateEvent extends Component {
 						// 	}
 						// );
 						// this.onFlamingStepsChange();
+						// await userTweet({
+						// 	address: this.props.accounts[0],
+						// 	networkId: this.props.web3.networkId,
+						// 	base64Image: image0Base64,
+						// 	message: eventName,
+						// });
 					})
 					.catch((error) => {
 						console.log("tx error", error);
@@ -798,6 +805,7 @@ const mapStateToProps = (state) => {
 		contracts: state.contracts,
 		transactionStack: state.transactionStack,
 		accounts: state.accounts,
+		web3: state.web3,
 	};
 };
 

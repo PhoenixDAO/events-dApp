@@ -48,6 +48,12 @@
     background-color: #FCFCFD;
 }
 
+
+	@media (max-width:650px){
+		#wrapper.toggled #sidebar-wrapper.sidebar-open {		
+			width: 100% !important;
+		}
+	}
 #sidebar-wrapper.my-sidebar .user-status .user-status-icon > a {
     width: 100%;
 	height:100%;
@@ -100,7 +106,14 @@
 	color: #413AE2 !important;
 }
 
-.nav-link-active {
+.nav-link:hover svg path {
+	fill: #413AE2;
+}
+
+.nav-link-active svg path {
+	fill: #413AE2;
+}
+.nav-link-active{
 	display: block;
 	color: #413AE2 !important;
 	font-weight: bold;

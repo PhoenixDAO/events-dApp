@@ -45,6 +45,21 @@ const styles = (theme) => ({
 			boxShadow: "none",
 		},
 	},
+	appBar: {
+		"&.MuiPaper-elevation4": {
+			boxShadow: "none",
+		},
+		"& .MuiTabScrollButton-root": {
+			"& .MuiSvgIcon-root": {
+				background: "#413AE2",
+				borderRadius: "10px",
+				color: "#fff",
+			},
+		},
+		"& .MuiTabScrollButton-root.Mui-disabled": {
+			position: "absolute",
+		},
+	},
 	tabBar: {
 		"&:hover, &:focus ": {
 			outline: "none",
@@ -68,6 +83,7 @@ const styles = (theme) => ({
 		alignItems: "baseline",
 	},
 });
+
 class MyEvents extends Component {
 	constructor(props, context) {
 		super(props);
@@ -87,14 +103,14 @@ class MyEvents extends Component {
 			Deleted_Events: [],
 			disabledBuying: false,
 			selectedTab: 0,
-			value:""
+			value: "",
 		};
 		console.log("qwe", this.props.accounts[0]);
 		// this.contracts = context.drizzle.contracts;
 		// this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
 		// 	this.props.accounts[0]
 		// );
-		this.perPage = 18;
+		this.perPage = 6;
 		this.account = this.props.accounts[0];
 		this.myRef = React.createRef();
 		this.ActiveEvent = this.ActiveEvent.bind(this);
@@ -416,7 +432,7 @@ class MyEvents extends Component {
 			body = (
 				<EmptyState
 					text="You have no created events 😔"
-					btnText="Try creating one"
+					btnText="Create an Event"
 					url="/createevent"
 				/>
 			);
@@ -561,7 +577,7 @@ class MyEvents extends Component {
 			body = (
 				<EmptyState
 					text="You have no created events 😔"
-					btnText="Try creating one"
+					btnText="Create an Event"
 					url="/createevent"
 				/>
 			);
@@ -574,52 +590,63 @@ class MyEvents extends Component {
 			);
 		}
 		return (
-			<div className="event-page-wrapper" ref={this.myRef}>
-				<Header
-					title="Created Events"
-					page="myEvent"
-					searchBar={true}
-					handleSearch={this.updateSearch}
-				/>
-
-				<AppBar
-					position="static"
-					className={classes.AppBar}
-					color="transparent"
-				>
-					<Tabs
-						value={this.state.selectedTab}
-						onChange={this.onTabChange.bind(this)}
-						indicatorColor="primary"
-						textColor="primary"
-						variant="scrollable"
-						scrollButtons="auto"
-						aria-label="scrollable auto tabs example"
-						style={{ height: "40px" }}
+			<div>
+				<div ref={this.myRef}>
+					<Header
+						title="Created Events"
+						page="myEvent"
+						searchBar={true}
+						handleSearch={this.updateSearch}
+					/>
+					<div
+						style={{
+							position: "sticky",
+							zIndex: "10000",
+							width: "100%",
+							backgroundColor: "#F2F2FD",
+						}}
 					>
-						<Tab
-							className={classes.tabBar}
-							mx="0"
-							label="Upcoming Events"
-							{...a11yProps(0)}
-						/>
-						<Tab
-							className={classes.tabBar}
-							label="Past Events"
-							{...a11yProps(1)}
-						/>
-					</Tabs>
-					<Divider light />
-				</AppBar>
-				<TabPanel value={this.state.selectedTab} index={0}>
-					<div>{body}</div>
-				</TabPanel>
-				<TabPanel value={this.state.selectedTab} index={1}>
-					{body}
-					{/* <FindEvents {...this.props}/> */}
-				</TabPanel>
+						<div className={classes.root}>
+							<AppBar
+								position="sticky"
+								className={classes.appBar}
+								color="transparent"
+							>
+								<Tabs
+									value={this.state.selectedTab}
+									onChange={this.onTabChange.bind(this)}
+									indicatorColor="primary"
+									textColor="primary"
+									variant="scrollable"
+									scrollButtons="auto"
+									aria-label="scrollable auto tabs example"
+									style={{ height: "40px" }}
+								>
+									<Tab
+										className={classes.tabBar}
+										mx="0"
+										label="Upcoming Events"
+										{...a11yProps(0)}
+									/>
+									<Tab
+										className={classes.tabBar}
+										label="Past Events"
+										{...a11yProps(1)}
+									/>
+								</Tabs>
+								<Divider light />
+							</AppBar>
+						</div>
+					</div>
+					<TabPanel value={this.state.selectedTab} index={0}>
+						<div>{body}</div>
+					</TabPanel>
+					<TabPanel value={this.state.selectedTab} index={1}>
+						{body}
+						{/* <FindEvents {...this.props}/> */}
+					</TabPanel>
 
-				{/* <h2 className="col-md-10" ref={this.myRef}>
+					{/* <h2 className="col-md-10" ref={this.myRef}>
 					{this.state.isActive ? (
 						<i className="fa fa-calendar-alt "></i>
 					) : (
@@ -660,6 +687,7 @@ class MyEvents extends Component {
 
 				<hr />
 				{body} */}
+				</div>
 			</div>
 		);
 	}

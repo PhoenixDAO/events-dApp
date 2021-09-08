@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import BuyPhnxButton from "./common/BuyPhnxButton";
 import { Grid, Divider } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddIcon from "@material-ui/icons/Add";
 import AccordianCard from "./common/AccordianCard";
-import  Header  from "./common/Header";
+import Header from "./common/Header";
 
 const useStyles = makeStyles((theme) => ({
 	termsHeader: {
@@ -158,10 +158,15 @@ const AllQuestionsOnAccordianCards = () => {
 };
 const FAQ = (props) => {
 	const classes = useStyles();
-
+	const [prevPath, setPrevPath] = useState(-1);
+	useEffect(() => {
+		if (prevPath == -1) {
+			props.executeScroll();
+		}
+	}, []);
 	return (
 		<div className="event-page-wrapper">
-							<Header title="Frequently Asked Questions" phnxButton={true}/>
+			<Header title="Frequently Asked Questions" phnxButton={true} />
 			<Grid container className={classes.gridContainer}>
 				<div className={classes.imageContainer}>
 					<img

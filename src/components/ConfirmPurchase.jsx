@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
 		"@media (max-width: 900px)": {
 			padding: "20px",
 		},
+		"@media (max-width: 650px)":{
+			padding: "10px",
+		},
 	},
 	image: {
 		borderRadius: "12px",
@@ -46,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	formWrapper: {
 		width: "45%",
+		"@media (max-width: 650px)":{
+			width: "90%",
+		},
 		margin: "0 auto",
 		"& .MuiOutlinedInput-input": {
 			padding: "12px",

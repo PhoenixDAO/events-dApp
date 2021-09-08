@@ -277,7 +277,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
             <Grid lg={2} xl={2} md={2} sm={2} xs={12} >
               <img src={image} alt={eventTitle} className={classes.eventImage} />
             </Grid>
-              <Grid xs={12} lg={8} xl={8} md={8} sm={8}  className={classes.gridPadding}>
+              <Grid xs={12} lg={7} xl={7} md={7} sm={7}  className={classes.gridPadding}>
                 <div>
                   <Typography gutterBottom className={`${classes.eventTitle} text-truncate`}>
                     {eventTitle}
@@ -291,11 +291,16 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
                 ${moment(eventStartDate).format("Do MMM")}
                 -
                 ${moment(eventEndDate).format("Do MMM, YYYY")}
-                `},{" "}{time}
+                `},{" "}
+                
+               {moment(time,"hh:mm A", false).utcOffset(0).format("hh:mma z")}
+                {
+								console.log("Time in buy modal", time)
+							}
                   </Typography>
                 </div>
                 </Grid>
-                <Grid  xs={12} lg={2} xl={2} md={2} sm={2} className={classes.gridPadding}>
+                <Grid  xs={12} lg={3} xl={3} md={3} sm={3} className={classes.gridPadding}>
                 <div className={classes.priceAlignment}>
                   <div className={classes.eventinfo}>
                     <span className={classes.PhnxPrice} title={phnx_price}>

@@ -973,7 +973,9 @@ class FindEvents extends Component {
 						<span>
 							<div
 								style={{
-									height: 68,
+									paddingTop:"13px",
+									paddingBottom: "13px",
+									// height: 68,
 									display: "flex",
 									alignItems: "center",
 									justifyContent: "flex-start",

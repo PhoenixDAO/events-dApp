@@ -114,7 +114,7 @@ export const Card = (props) => {
                 <Typography className={(profit > 0 ? classes.green : classes.red)}>{profit.toFixed(0)}%</Typography>
             </div>
             <Typography className={classes.liveRevenue}> {liveDollarRevenue ? "$" + liveDollarRevenue + " (Current price)" : null} </Typography>
-            <Typography className={classes.status}>You made {diffrence > 0 ? "an extra" : diffrence < 0 ? "a less" : null} <span style={diffrence > 0 ? { color: "#07A287" } : { color: "#F43C3C" }}>{diffrence} </span>{entity} in the last {" "}
+            <Typography className={classes.status}>You made {diffrence > 0 ? "an extra" : diffrence < 0 ? "a less" : null} <span style={diffrence > 0 ? { color: "#07A287" } : { color: "#F43C3C" }}>{Math.abs(diffrence)} </span>{entity} in the last {" "}
                 {timestamp}  {timestamp > 1 ? "days" : "day"} </Typography>
         </Grid>
     );

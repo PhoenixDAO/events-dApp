@@ -8,7 +8,7 @@ import React, {
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import { Grid, FormControl, Select, Button } from "@material-ui/core";
+import { Grid, FormControl, Select, Button, Typography } from "@material-ui/core";
 // import {Graph} from "../utils/graph";
 import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
@@ -43,6 +43,33 @@ const useStyles = makeStyles((theme) => ({
 	menuPaper: {
 		maxHeight: "200px",
 	},
+	formControls: {
+		"@media (max-width: 600px)": {
+			width: "120px",
+		},
+		"@media (min-width: 1024px)": {
+			flex: "0 0 20% !important",
+			marginLeft: "5%",
+		},
+		justifyContent: "space-around",
+		// alignItems: "center",
+		// minWidth: 120,
+		"& .MuiInputBase-formControl": {
+			"@media (max-width: 575px)": {
+				marginLeft: "50px",
+				maxWidth: "100%",
+			},
+		},
+		"& .MuiSelect-root.MuiSelect-select": {
+			fontWeight: 700,
+			padding: "10px",
+			paddingRight:"20px",
+			background: "#fff",
+		},
+		"& option": {
+			padding: "10px",
+		},
+	},
 	select: {
 		width: "170px",
 		marginTop: "10px",
@@ -51,8 +78,8 @@ const useStyles = makeStyles((theme) => ({
 		"& .MuiSelect-outlined": {
 			padding: "10px",
 			paddingRight: "25px !important",
-			"@media (max-width: 600px)":{
-				maxWidth:"150px"
+			"@media (max-width: 600px)": {
+				width: "120px",
 			},
 		},
 		[theme.breakpoints.down("xs")]: {
@@ -122,7 +149,7 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "18px",
 		fontWeight: "600",
 		letterSpacing: "0.5px",
-		wordBreak:"break-word",
+		wordBreak: "break-word",
 		display: "-webkit-box",
 		WebkitBoxOrient: "vertical",
 		WebkitLineClamp: "2",
@@ -226,6 +253,18 @@ const useStyles = makeStyles((theme) => ({
 			outline: "none",
 		},
 	},
+	sortBy: {
+		position: "absolute",
+		left: "-50px",
+		color: "#73727D",
+		fontSize: "18px",
+		"@media (max-width: 575px)": {
+			left: "0",
+		},
+	},
+	selectWidth:{
+		width: "170px",
+	}
 }));
 
 //for doughnut chart
@@ -668,7 +707,7 @@ const Analytics = (props, context) => {
 					</Grid>
 					<Grid
 						lg={3}
-						sm={3} 
+						sm={3}
 						className={classes.ticketSold}
 						style={{ textAlign: "end" }}
 					>
@@ -738,7 +777,7 @@ const Analytics = (props, context) => {
 		d1.setDate(d1.getDate() - (day + day));
 		d1.setHours(0, 0, 0, 0);
 		d1.setUTCHours(0, 0, 0, 0);
-		const calculatedTimestamp1 = moment(d).unix() + 172800;
+		const calculatedTimestamp1 = moment(d1).unix() + 172800;
 		console.log("calculatedTimestamp1", calculatedTimestamp1);
 
 		let dataArr = [];
@@ -758,7 +797,11 @@ const Analytics = (props, context) => {
 		}
 
 		let dataArr1 = [];
-		for (let i = calculatedTimestamp1; i <= todayTimeStamp; i = i + 86400) {
+		for (
+			let i = calculatedTimestamp1;
+			i <= calculatedTimestamp - 86400;
+			i = i + 86400
+		) {
 			console.log("newDataObj[i]", newDataObj[i]);
 			if (newDataObj[i]) {
 				dataArr1.push(newDataObj[i]);
@@ -822,6 +865,7 @@ const Analytics = (props, context) => {
 						Number(moment().unix() - 172800)
 					);
 				}
+				console.log("moment", moment().unix(), Date.now() / 1000);
 			} else if (timestamp === "custom") {
 				console.log(
 					"graphData",
@@ -871,10 +915,12 @@ const Analytics = (props, context) => {
 				console.log("difference", difference);
 			} else if (timestamp === "604800") {
 				const { dataArr, dataArr1 } = dayHelper(7, props.graphData);
+				console.log("DIfference in 7days", dataArr1, dataArr);
 				graphForDays = dataArr;
 				difference = dataArr1;
 			} else if (timestamp === "2419200") {
 				const { dataArr, dataArr1 } = dayHelper(28, props.graphData);
+				console.log("DIfference in 28days", dataArr1, dataArr);
 				graphForDays = dataArr;
 				difference = dataArr1;
 			} else if (timestamp === "7776000") {
@@ -907,6 +953,7 @@ const Analytics = (props, context) => {
 					Web3.utils.fromWei(event.totalPhnxRevenue.toString())
 				);
 			});
+			console.log("totalSoldTicketsPrev", totalSoldTicketsPrev);
 			if (graphForDays.length > 0) {
 				graphForDays.forEach((event) => {
 					totalDollarRevenue += Number(
@@ -973,24 +1020,39 @@ const Analytics = (props, context) => {
 				// newNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenue);
 				let dollartDifference =
 					totalDollarRevenue - (totalDollarRevenue - totalDollarPrev);
+				console.log(
+					"totalDollarPrev",
+					totalDollarPrev,
+					"totalDollarRevenue",
+					totalDollarRevenue,
+					"dollartDifference"
+				);
 				setdollarDifference(
 					totalDollarPrev > totalDollarRevenue
-						? -dollartDifference
-						: totalDollarRevenue
+						? -(totalDollarPrev - totalDollarRevenue)
+						: totalDollarRevenue - totalDollarPrev
 				);
 				let revenueDifference =
 					totalPhnxRevenue - (totalPhnxRevenue - totalPhnxPrev);
 				setRevenueDifference(
 					totalPhnxPrev > totalPhnxRevenue
-						? -revenueDifference
-						: totalPhnxRevenue
+						? -(totalPhnxPrev - totalPhnxRevenue)
+						: totalPhnxRevenue - totalPhnxPrev
 				);
 				let ticketsDifference =
 					soldTicket - (soldTicket - totalSoldTicketsPrev);
+				console.log(
+					"totalSoldTicketsPrev",
+					totalSoldTicketsPrev,
+					"soldTicket",
+					soldTicket,
+					"ticketsDifference",
+					ticketsDifference
+				);
 				setTicketDifference(
 					totalSoldTicketsPrev > soldTicket
-						? -ticketsDifference
-						: soldTicket
+						? -(totalSoldTicketsPrev - soldTicket)
+						: soldTicket - totalSoldTicketsPrev
 				);
 			} else {
 				console.log(
@@ -1177,7 +1239,7 @@ const Analytics = (props, context) => {
 							header="Dollar Revenue"
 							value={"$" + dollarRevenue}
 							profit={dollarChange}
-							diffrence={Math.abs(dollarDifference).toFixed(3)}
+							diffrence={dollarDifference.toFixed(3)}
 							entity="$"
 							days={timeStamp}
 							startDate={customDate.startDate}
@@ -1191,7 +1253,7 @@ const Analytics = (props, context) => {
 							header="Phnx Revenue"
 							value={phnxRevenue + "PHNX"}
 							profit={phnxChange}
-							diffrence={Math.abs(phnxDifference).toFixed(3)}
+							diffrence={phnxDifference.toFixed(3)}
 							entity="PHNX"
 							days={timeStamp}
 							startDate={customDate.startDate}
@@ -1204,7 +1266,7 @@ const Analytics = (props, context) => {
 							header="Tickets Sold"
 							value={soldTicket}
 							profit={ticketSoldChange}
-							diffrence={ticketDifference}
+							diffrence={ticketDifference.toFixed(3)}
 							entity="Tickets"
 							days={timeStamp}
 							startDate={customDate.startDate}
@@ -1235,18 +1297,24 @@ const Analytics = (props, context) => {
 							>
 								{props.eventName.length > 0 ? (
 									<div>
-										<span
+										{/* <span
 											style={{
 												color: "#73727D",
 												marginRight: "10px",
 											}}
 										>
 											Event
-										</span>
+										</span> */}
 										<FormControl
 											variant="outlined"
-											className={classes.select}
+											className={classes.formControls}
 										>
+											<Typography
+									variant="p"
+									className={`${classes.sortBy}`}
+								>
+									Event
+								</Typography>
 											{/* <Select
 											labelId="demo-simple-select-outlined-label"
 											id="demo-simple-select-outlined"
@@ -1310,21 +1378,23 @@ const Analytics = (props, context) => {
 															horizontal: "left",
 														},
 													}}
+													className={classes.selectWidth}
 												>
 													{props.eventName.map(
 														(event) => {
 															return (
-																<option
+																<MenuItem
 																	style={{
 																		fontFamily:
 																			"'Aeonik', sans-serif",
+																		width: "350px"
 																	}}
 																	value={
 																		event.eventId
 																	}
 																>
 																	{event.name}
-																</option>
+																</MenuItem>
 															);
 														}
 													)}
@@ -1370,21 +1440,37 @@ const Analytics = (props, context) => {
 								variant="outlined"
 								className={classes.select}
 							>
+								
 								<Select
-									native
-									// value={state.age}
+									labelId="demo-simple-select-outlined-label"
+									id="demo-simple-select-outlined"
+									fullWidth
+									value={timeStamp}
+									value={revenueCategory}
 									onChange={handleRevenue}
-									inputProps={{
-										name: "age",
-										id: "outlined-age-native-simple",
+									displayEmpty
+									// className={classes.menuPaper}
+									MenuProps={{
+										classes: {
+											paper: classes.menuPaper,
+										},
+										getContentAnchorEl: null,
+										anchorOrigin: {
+											vertical: "bottom",
+											horizontal: "left",
+										},
 									}}
 								>
-									<option value="eventRevenueInPhnx">
+									<MenuItem value="eventRevenueInPhnx" style={{
+											fontFamily: "'Aeonik', sans-serif",
+										}}>
 										PHNX
-									</option>
-									<option value="eventRevenueInDollar">
+									</MenuItem>
+									<MenuItem value="eventRevenueInDollar" style={{
+											fontFamily: "'Aeonik', sans-serif",
+										}}>
 										Dollar
-									</option>
+									</MenuItem>
 								</Select>
 							</FormControl>
 						</Grid>

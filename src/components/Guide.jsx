@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BuyPhnxButton from "./common/BuyPhnxButton";
 import { Divider } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -89,11 +89,36 @@ const useStyles = makeStyles((theme) => ({
 	},
 	gridContainer: {
 		marginTop: "20px",
+		padding:"12px",
+		"@media (min-width:600px)":{
+			padding:"20px"
+			},
 	},
+	mainGrid:{
+		background: "#fff",
+		padding:"10px",
+		borderRadius:"5px"
+	},
+	leftColumn:{
+		"@media (min-width: 600px)":{
+			marginRight: "15px",
+			marginLeft: "-15px",
+		}	
+	},
+	rightColumn:{
+		marginLeft:"0px",
+		marginRight:"0px",
+	}
 }));
 const Terms = (props) => {
 	const classes = useStyles();
 	const pageRefs = useRef({});
+	const [prevPath, setPrevPath] = useState(-1);
+	useEffect(() => {
+		if (prevPath == -1) {
+			props.executeScroll();
+		}
+	}, []);
 
 	function scrollIntoView(type) {
 		pageRefs.current[type].scrollIntoView({
@@ -104,30 +129,21 @@ const Terms = (props) => {
 	return (
 		<div className="event-page-wrapper">
 			<Header title="How it Works" phnxButton={true} />
-			<Grid container className={classes.gridContainer}>
+			<Grid container spacing={2} className={classes.gridContainer} >
 				<Grid
-					className={`${classes.hideScroll} ${classes.hideScroll1}`}
-					style={{ height: "88vh" }}
+				item
+					// className={`${classes.hideScroll} ${classes.hideScroll1}`}
+					className={`${classes.mainGrid} ${classes.leftColumn}`}
+					// style={{ height: "100vh" }}
 					lg={8}
 					md={8}
-					sm={6}
+					sm={8}
 					xs={12}
 				>
+					<div>
 					<div className={classes.centerItems}>
 						<div className={classes.videoResponsive}>
-							<iframe
-								className={classes.videoResponsiveIframe}
-								id="video"
-								width="230"
-								heigh="154"
-								src={
-									"https://www.youtube.com/embed/" +
-									"cB-ZRijjIMY"
-								}
-								frameBorder="0"
-								allow="accelerometer, autoplay; encrypted-media; gyroscope; picture-in-picture"
-								allowFullScreen
-							/>
+						<iframe width="560" height="315" src="https://www.youtube.com/embed/Pj63VX1Jdxo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 						</div>
 						<strong className={classes.walkThroughHeading}>
 							Walk through video
@@ -244,14 +260,17 @@ const Terms = (props) => {
 
 						<p>[ IMAGE TO BE ENTERED ]</p>
 					</div>
+					</div>
 				</Grid>
 				<Grid
-					className={`${classes.hideScroll} ${classes.hideScroll2}`}
-					style={{ height: "89%" }}
+				item
+					// className={`${classes.hideScroll} ${classes.hideScroll2}`}
+					style={{ height: "89%", position: "sticky", top:"0px" }}
 					lg={4}
 					md={4}
-					sm={6}
+					sm={4}
 					xs={12}
+					className={classes.mainGrid}
 				>
 					<div className={classes.menu}>
 						<h5 className={classes.menuMainHeading}>Menu</h5>

@@ -9,6 +9,7 @@ import {
 	GET_MESSAGE,
 	LOGIN_METAMASK,
 	GET_USER_EXIST_DETAIL,
+	TWEET,
 } from "../config/const";
 import axios from "axios";
 
@@ -89,14 +90,11 @@ export const updateEventViews = async ({ address, networkId, eventId }) => {
 			networkId,
 			eventId
 		);
-		const result = await axios.post(
-			`${API_URL}${UPDATE_EVENT_VIEWS}`,
-			{
-				address,
-				networkId,
-				eventId,
-			}
-		);
+		const result = await axios.post(`${API_URL}${UPDATE_EVENT_VIEWS}`, {
+			address,
+			networkId,
+			eventId,
+		});
 		console.log("serverAPI updateEventViews", result);
 		return { result: result.data.result, error: false };
 	} catch (err) {
@@ -187,6 +185,36 @@ export const updateUserDetails = async ({
 		return { result: result.data.result, error: false };
 	} catch (err) {
 		console.log("error occured in updateUserDetails", err);
+		return { error: true, message: err };
+	}
+};
+
+export const userTweet = async ({
+	address,
+	networkId,
+	base64Image,
+	message,
+}) => {
+	try {
+		const token = localStorage.getItem("AUTH_TOKEN");
+		const result = await axios.post(
+			`${API_URL}${TWEET}`,
+			{
+				address,
+				networkId,
+				base64Image,
+				message,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+		// console.log("serverAPI removeFromFavourites", result);
+		return { result: result.data.result, error: false };
+	} catch (err) {
+		console.log("error occured in removeFromFavourites", err);
 		return { error: true, message: err };
 	}
 };

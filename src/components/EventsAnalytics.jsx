@@ -127,7 +127,7 @@ const EventsAnalytics = (props) => {
                             />
                             <Typography className={classes.text}>Events Page Views</Typography>
                         </span>
-                        <Typography className={classes.text1}>{userDetails ? userDetails.totalViewsOnCreatedEvents : "N/A"}</Typography>
+                        <Typography className={classes.text1}>{userDetails && userDetails.totalViewsOnCreatedEvents ? userDetails.totalViewsOnCreatedEvents : "-"}</Typography>
 
                     </Paper>
                 </Grid>
@@ -152,7 +152,7 @@ const EventsAnalytics = (props) => {
                             />
                             <Typography className={classes.text}>No. of Favourites</Typography>
                         </span>
-                        <Typography className={classes.text1}>{userDetails && userDetails.favourites ? userDetails.favourites.length : "N/A"}</Typography>
+                        <Typography className={classes.text1}>{userDetails && userDetails.favourites ? userDetails.favourites.length : "-"}</Typography>
 
                     </Paper>
                 </Grid>

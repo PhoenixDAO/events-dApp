@@ -53,21 +53,22 @@ const WrapperTopicsLandingPage = (props) => {
 							objHolder.eventCount = objHolder.eventCount + 1;
 						}
 					} else {
-						eventObj[event[i].topic] = event[i];
 						if (!event[i].hide) {
-							eventObj[event[i].topic].eventCount = 1;
-						} else {
-							eventObj[event[i].topic].eventCount = 0;
-						}
-						if (topicsJson[event[i].topic]) {
-							eventObj[event[i].topic].image =
-								topicsJson[event[i].topic].image;
-							eventObj[event[i].topic].name =
-								topicsJson[event[i].topic].name;
-						} else {
-							eventObj[event[i].topic].image =
-								"/images/PhoenixDAO.png";
-							eventObj[event[i].topic].name = "Some topic name";
+							if (topicsJson[event[i].topic]) {
+								eventObj[event[i].topic] = event[i];
+								eventObj[event[i].topic].eventCount = 1;
+								eventObj[event[i].topic].image =
+									topicsJson[event[i].topic].image;
+								eventObj[event[i].topic].name =
+									topicsJson[event[i].topic].name;
+							} else {
+								eventObj[event[i].topic] = event[i];
+								eventObj[event[i].topic].eventCount = 1;
+								eventObj[event[i].topic].image =
+									"/images/PhoenixDAO.png";
+								eventObj[event[i].topic].name =
+									"Some topic name";
+							}
 						}
 					}
 				}
@@ -156,16 +157,24 @@ const WrapperTopicsLandingPage = (props) => {
 				console.log("Hide events", hideEvent);
 				for (let i = 0; i < newsort.length; i++) {
 					for (let j = 0; j < hideEvent.length; j++) {
-						if (newsort[i].eventId !== hideEvent[j].id) {
-							newsort[i].hide = false;
-						} else {
+						console.log(
+							newsort[i].eventId,
+							hideEvent[j].id,
+							newsort[i].eventId === hideEvent[j].id
+						);
+						if (newsort[i].eventId === hideEvent[j].id) {
 							newsort[i].hide = true;
+							break;
+						} else {
+							newsort[i].hide = false;
 						}
 					}
 				}
 				setTimeout(() => {
 					setLoading(false);
 				}, 2000);
+
+				console.log("newsort in wrapper", newsort);
 				setTopicEvents(newsort);
 				setTopicCopy(newsort);
 				setActiveLength(newsort.length);
@@ -193,7 +202,7 @@ const WrapperTopicsLandingPage = (props) => {
 			data: {
 				query: `
 				{
-					events(orderBy:eventId orderDirection:asc) {
+					events(first: 1000 orderBy:eventId orderDirection:asc) {
 						id
 						eventId
 						owner

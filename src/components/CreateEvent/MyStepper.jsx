@@ -223,6 +223,12 @@ const useStyles = makeStyles((theme) => ({
 			fontSize: "90%",
 		},
 	},
+	menuPaper:{
+		position: "absolute !important",
+		left: "50% !important",
+		webkitTransform: "translateX(-50%) !important",
+		transform: "translateX(-50%) !important",
+	},
 	editor: {
 		height: 430,
 		overflow: "auto",
@@ -335,6 +341,8 @@ const useStyles = makeStyles((theme) => ({
 		maxHeight: "200px",
 	},
 	ticketNameCat: {
+		overflow: "hidden",
+		wordBreak:"break-word",
 		fontSize: 20,
 		fontWeight: 400,
 		color: "#1E1E22",
@@ -1238,7 +1246,7 @@ const MyStepper = ({
 																	</label>
 																</InputLabel>
 																<KeyboardDatePicker
-																	fullWidth
+																	fullWidth																	
 																	disableToolbar
 																	variant="inline"
 																	format="dd-MM-yyyy"
@@ -1998,6 +2006,7 @@ const MyStepper = ({
 																	value: v,
 																}
 															);
+
 														}}
 														error={error}
 														value={value}
@@ -2046,6 +2055,7 @@ const MyStepper = ({
 																	value: v,
 																}
 															);
+
 														}}
 														error={error}
 														geoId={country}
@@ -2752,9 +2762,7 @@ const MyStepper = ({
 																			</Button>
 																		</InputAdornment>
 																	),
-																inputProps: {
-																	min: 0,
-																},
+																	inputProps:{min:0},
 																classes: {},
 															}}
 															value={value}
@@ -3371,10 +3379,12 @@ const MyStepper = ({
 																						</Button>
 																					</InputAdornment>
 																				),
+
 																			inputProps:
 																				{
 																					min: 0,
 																				},
+
 																		}}
 																		value={
 																			value

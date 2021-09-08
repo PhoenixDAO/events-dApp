@@ -73,6 +73,15 @@ const styles = (theme) => ({
 	calenderContainer: {
 		position: "relative",
 	},
+	menuPaper: {
+		maxHeight: "200px",
+		"& .MuiInputBase-fullWidth": {
+			width: "150px",
+		},
+	},
+	fullWidth:{
+		width:"150px",
+	},
 });
 class Calendars extends Component {
 	constructor(props) {
@@ -142,7 +151,7 @@ class Calendars extends Component {
 			data: {
 				query: `
 			  {
-				events {
+				events(first: 1000) {
                     id
 					eventId
 					owner
@@ -312,23 +321,24 @@ class Calendars extends Component {
 									// ref={this.selectBoxRef}
 								>
 									<Select
-											labelId="demo-simple-select-outlined-label"
-											id="demo-simple-select-outlined"
-											fullWidth
-											value={this.state.category}
-											onChange={this.categoryChange}
-											displayEmpty
-											// className={classes.selectDropDown}
-											MenuProps={{
-												classes: {
-													paper: classes.menuPaper,
-												},
-												getContentAnchorEl: null,
-												anchorOrigin: {
-												vertical: "bottom",
-												horizontal: "left"}
-											}}
-										>
+									labelId="demo-simple-select-outlined-label"
+									id="demo-simple-select-outlined"
+									fullWidth
+									value={this.state.category}
+									onChange={this.categoryChange}
+									displayEmpty
+									className={classes.fullWidth}
+									MenuProps={{
+										classes: {
+											paper: classes.menuPaper,
+										},
+										getContentAnchorEl: null,
+										anchorOrigin: {
+											vertical: "bottom",
+											horizontal: "left",
+										},
+									}}
+								>
 											<MenuItem value="all"
 														style={{
 															fontFamily:

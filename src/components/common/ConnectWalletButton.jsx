@@ -3,19 +3,18 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
-
 const useStyles = makeStyles((theme) => ({
 	btnDiv: {
 		"@media screen and (max-width: 1100px)": {
-			display: "inline-block"
+			display: "inline-block",
 		},
+		margin: "10px 0px 0px 10px",
 	},
 	button: {
 		"@media screen and (max-width: 1200px)": {
 			height: "45px",
-			lineHeight: "1"
+			lineHeight: "1",
 		},
-		margin: theme.spacing(1),
 		fontFamily: "'Aeonik', sans-serif",
 		background: "#413AE2",
 		color: "white",
@@ -28,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
 
 const ConnectWalletButton = (props) => {
 	const classes = useStyles();
-
 	return (
 		<div className={classes.btnDiv}>
 			<Button

@@ -194,7 +194,10 @@ table {
 .fc-event-main {
     padding: 0px !important;
 }
+.fc-timegrid-event{
+    border: 0px solid transparent !important;
 
+}
 .fc-event-title,
 .fc-event-time {
     font-weight: 700;
@@ -267,7 +270,7 @@ table {
     background-color: var(--fc-button-bg-color, #fff) !important;
     background-color: var(--fc-button-border-color, #fff) !important;
     border: 0px solid !important;
-    -webkit-box-shadow: 0 0 0 0.1rem rgb(204, 204, 204) !important;
+    -webkit-box-shadow: 0 0 0 0.0rem rgb(204, 204, 204) !important;
     /* box-shadow: 0 0 0 0.2rem #fff !important; */
 } 
 

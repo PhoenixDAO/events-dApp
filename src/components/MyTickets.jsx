@@ -9,31 +9,32 @@ import Header from "./common/Header";
 import EmptyState from "./EmptyState";
 import GetGraphApi from "../config/getGraphApi";
 import axios from "axios";
+import { API_URL, REPORT_EVENT } from "../config/const";
 
-
-const useStyles = (theme) => ({	
-lgScreenFooterBanner:{
-	position: 'absolute',
-	marginLeft: '-100px',
-	marginRight: '0%',
-	marginTop:"8%",
-	"@media (max-width: 800px)":{
-		marginLeft:"-90px",
-		"& img":{
-			// transform:"scale(1.4)"
-		}
+const useStyles = (theme) => ({
+	lgScreenFooterBanner: {
+		position: "absolute",
+		marginLeft: "-100px",
+		marginRight: "0%",
+		marginTop: "8%",
+		"@media (max-width: 800px)": {
+			marginLeft: "-90px",
+			"& img": {
+				// transform:"scale(1.4)"
+			},
+		},
+		"@media (min-width: 1540px)": {
+			marginLeft: "-150px",
+			width: "100%",
+		},
+		"@media (min-width: 1590px)": {
+			marginLeft: "-330px",
+		},
+		// "@media (max-width: 1540px)":{
+		// 	marginLeft:"13%"
+		// }
 	},
-	"@media (min-width: 1540px)":{
-		marginLeft:"-150px",
-		width: "100%",
-	},
-	"@media (min-width: 1590px)":{
-		marginLeft:"-330px",
-	}
-	// "@media (max-width: 1540px)":{
-	// 	marginLeft:"13%"
-	// }
-}})
+});
 class MyTickets extends Component {
 	constructor(props, context) {
 		super(props);
@@ -45,11 +46,12 @@ class MyTickets extends Component {
 			blockChainTickets: [],
 			blockChainTicketsCopy: [],
 			value: "",
+			hideEvent:[]
 		};
 		// this.contracts = context.drizzle.contracts;
 		// this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
 		// console.log("checking",this.props.contracts['DaoEvents'].ticketsOf[this.tickets])
-		this.perPage = 18;
+		this.perPage = 6;
 		this.myRef = React.createRef();
 		this.loadTicketsFromBlockchain =
 			this.loadTicketsFromBlockchain.bind(this);
@@ -63,13 +65,11 @@ class MyTickets extends Component {
 		this.setState({ reload: !this.state.reload });
 	};
 	async loadTicketsFromBlockchain() {
-	
 		const blockChainTickets = await this.props.eventsContract.methods
-			.ticketsOf(this.props.accounts
-			)
+			.ticketsOf(this.props.accounts)
 			.call();
 		// const newsort = blockChainTickets.concat().sort((a, b) => b - a);
-console.log("blockchainTickets0",blockChainTickets.length);
+		console.log("blockchainTickets0", blockChainTickets.length);
 		const graphURL = await GetGraphApi();
 		await axios({
 			url: graphURL,
@@ -93,7 +93,6 @@ console.log("blockchainTickets0",blockChainTickets.length);
 				graphEvents.data.data !== "undefined" ||
 				graphEvents.data.data.tickets.length > 0
 			) {
-
 				console.log("Data is here from graph");
 				this.setState({
 					blockChainTickets: graphEvents.data.data.tickets,
@@ -115,6 +114,19 @@ console.log("blockchainTickets0",blockChainTickets.length);
 		// this.updateIPFS();
 		// console.log("temp Event web3",newsort)
 	}
+
+	filterHideEvent = async () => {
+		try {
+			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			// console.log("hide event", this.state.hideEvent);
+			return;
+		} catch (error) {
+			console.log("check error", error);
+		}
+	};
 
 	executeScroll = () => this.myRef.current.scrollIntoView();
 
@@ -165,7 +177,7 @@ console.log("blockchainTickets0",blockChainTickets.length);
 			body = (
 				<EmptyState
 					text="You have no Tickets 😔"
-					btnText="Find an event"
+					btnText="Buy a Ticket"
 					url="/upcomingevents/1"
 				/>
 			);
@@ -173,9 +185,27 @@ console.log("blockchainTickets0",blockChainTickets.length);
 		// else condition removed from here
 		// console.log('MyTickets blockChainTickets',this.state.blockChainTickets)
 		let count = this.state.blockChainTickets.length;
-
 		let currentPage = Number(this.props.match.params.page);
 
+		let tickets = [];
+		let ticket_list=[];
+		let skip = false;
+		for (let i = 0; i < this.state.blockChainTickets.length; i++) {
+			for (let j = 0; j < this.state.hideEvent.length; j++) {
+				if (
+					this.state.blockChainTickets[i].eventId ==
+					this.state.hideEvent[j].id
+				) {
+					skip = true;
+				}
+			}
+			if (!skip) {
+				ticket_list.push(this.state.blockChainTickets[i]);
+			}
+			skip = false;
+		}
+
+		count = ticket_list.length;
 		if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 
 		let end = currentPage * this.perPage;
@@ -183,18 +213,16 @@ console.log("blockchainTickets0",blockChainTickets.length);
 		if (end > count) end = count;
 		let pages = Math.ceil(count / this.perPage);
 
-		let tickets = [];
-
 		for (let i = start; i < end; i++) {
 			// console.log("ticketData this.state.blockChainTickets[i]",this.state.blockChainTickets[i])
-			let ticket = parseInt(this.state.blockChainTickets[i].id, 10);
+			let ticket = parseInt(ticket_list[i].id, 10);
 			console.log("tickets", ticket);
 			tickets.push(
 				<Ticket
 					key={ticket}
 					id={ticket}
 					reloadData={this.reloadData}
-					ticketData={Number(this.state.blockChainTickets[i].id)}
+					ticketData={Number(ticket_list[i].id)}
 					eventsContract={this.props.eventsContract}
 				/>
 			);
@@ -297,7 +325,7 @@ console.log("blockchainTickets0",blockChainTickets.length);
 			body = (
 				<EmptyState
 					text="You have no Tickets 😔"
-					btnText="Find an event"
+					btnText="Buy a Ticket"
 					url="/upcomingevents/1"
 				/>
 			);
@@ -323,18 +351,25 @@ console.log("blockchainTickets0",blockChainTickets.length);
 				{/* <div className="sticky-nav-travel">
 					<img src={"/images/travel.svg"} />
 				</div> */}
-				{(tickets.length !== 0 && !this.state.loading)&&
-					<a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
-					<div className={classes.lgScreenFooterBanner}>
-						<img src={"/images/footer.jpg"} className="img-fluid w-100"/>
-					</div>
+				{tickets.length !== 0 && !this.state.loading && (
+					<a
+						href="https://www.travala.com/?ref=phoenixdao"
+						target="_blank"
+					>
+						<div className={classes.lgScreenFooterBanner}>
+							<img
+								src={"/images/footer.jpg"}
+								className="img-fluid w-100"
+							/>
+						</div>
 					</a>
-				}
+				)}
 			</div>
 		);
 	}
 	componentDidMount() {
 		this.loadTicketsFromBlockchain();
+		this.filterHideEvent();
 
 		if (this.state.prevPath === -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
