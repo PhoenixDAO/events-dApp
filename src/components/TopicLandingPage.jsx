@@ -370,7 +370,7 @@ class TopicLandingPage extends Component {
 			data: {
 				query: `
 				{
-					events(orderBy:eventId orderDirection:asc) {
+					events(first: 1000 orderBy:eventId orderDirection:asc) {
 						id
 						eventId
 						owner

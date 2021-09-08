@@ -156,7 +156,7 @@ class Home extends Component {
 			data: {
 				query: `
 			  {
-				events {
+				events(first: 1000) {
 				  id
 				  eventId
 				  name

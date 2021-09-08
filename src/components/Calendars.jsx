@@ -142,7 +142,7 @@ class Calendars extends Component {
 			data: {
 				query: `
 			  {
-				events {
+				events(first: 1000) {
                     id
 					eventId
 					owner

@@ -159,23 +159,23 @@ const useStyles = makeStyles((theme) => ({
 	priceAlignment: {
 		textAlign: "end",
 	},
-	eventTitle:{
+	eventTitle: {
 		color: "#1E1E22",
 		maxWidth: "65.66%",
 		fontSize: 16,
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
-		wordBreak:"break-word",
+		wordBreak: "break-word",
 		display: "-webkit-box",
 		WebkitBoxOrient: "vertical",
 		WebkitLineClamp: "2",
 		overflow: "hidden",
-textOverflow: "ellipsis",
-// "@media (min-width: 990px) and (max-width: 1024px)": {
-// /* For landscape layouts only */
-// WebkitLineClamp: "3",
-// 	}
-}
+		textOverflow: "ellipsis",
+		// "@media (min-width: 990px) and (max-width: 1024px)": {
+		// /* For landscape layouts only */
+		// WebkitLineClamp: "3",
+		// 	}
+	},
 }));
 
 const EventCard = (props, context) => {
@@ -232,6 +232,7 @@ const EventCard = (props, context) => {
 	const handleClose2 = () => {
 		setOpen2(false);
 	};
+
 	const addTofavorite = async (e) => {
 		e.preventDefault();
 		const token = localStorage.getItem("AUTH_TOKEN");
@@ -300,6 +301,15 @@ const EventCard = (props, context) => {
 	});
 	let dollar_price = Web3.utils.fromWei(event_data.prices[0]);
 
+	const checkExpiry = () => {
+		if (props.checkExpiry) {
+			if (Number(event_data.time) < new Date().getTime() / 1000) {
+				return true;
+			}
+		}
+		return false;
+	};
+
 	return (
 		<div style={{ height: "100%" }}>
 			<ShareModal
@@ -331,6 +341,24 @@ const EventCard = (props, context) => {
 						}}
 					>
 						<div style={{ position: "relative" }}>
+							{checkExpiry() ? (
+								<div
+									style={{
+										padding: "3px 5px",
+										backgroundColor: "#ffffff",
+										color: "red",
+										borderRadius: "4px",
+										fontSize: "0.8rem",
+										position: "absolute",
+										right: "5%",
+										top: "5%",
+										width: "fit-content",
+									}}
+								>
+									{" "}
+									Event ended{" "}
+								</div>
+							) : null}
 							<CardMedia
 								component="img"
 								alt={event_data.name}
@@ -393,7 +421,7 @@ const EventCard = (props, context) => {
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
-									height: "72px"
+									height: "72px",
 								}}
 							>
 								<Typography
@@ -591,9 +619,12 @@ const EventCard = (props, context) => {
 										className={classes.text}
 									>
 										PHNX Revenue:{" "}
-										{pricingFormatter(Web3.utils.fromWei(
-											event_data.eventRevenueInPhnx
-										),"PHNX")}{" "}
+										{pricingFormatter(
+											Web3.utils.fromWei(
+												event_data.eventRevenueInPhnx
+											),
+											"PHNX"
+										)}{" "}
 										{/* PHNX */}
 									</Typography>
 									<Typography
@@ -604,15 +635,19 @@ const EventCard = (props, context) => {
 										className={classes.text}
 										style={{ marginBottom: "20px" }}
 									>
-										Dollar Revenue: {" "}
-										{pricingFormatter(Web3.utils.fromWei(
-											event_data.eventRevenueInDollar
-										),"$")}
+										Dollar Revenue:{" "}
+										{pricingFormatter(
+											Web3.utils.fromWei(
+												event_data.eventRevenueInDollar
+											),
+											"$"
+										)}
 									</Typography>
 									<Divider />
 									<Button
 										className={classes.shareButton}
 										onClick={handleClickOpen}
+										disabled={checkExpiry()}
 									>
 										<LaunchSharp
 											style={{
@@ -629,6 +664,7 @@ const EventCard = (props, context) => {
 									<Button
 										className={classes.shareButton}
 										onClick={handleClickOpen}
+										disabled={checkExpiry()}
 									>
 										<LaunchSharp
 											style={{
@@ -641,6 +677,7 @@ const EventCard = (props, context) => {
 									<Button
 										className={classes.sendTicket}
 										onClick={handleClickOpen2}
+										disabled={checkExpiry()}
 									>
 										<Send
 											style={{
@@ -657,6 +694,8 @@ const EventCard = (props, context) => {
 									<Button
 										className={classes.shareButton}
 										onClick={handleClickOpen}
+										disabled={checkExpiry()}
+
 									>
 										<LaunchSharp
 											style={{
