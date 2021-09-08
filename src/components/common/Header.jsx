@@ -114,7 +114,9 @@ const Header = ({
 						</IconButton>
 					) : null}
 					{/* Header Title */}
-					<h2>{title}</h2>
+					<h2>
+						{title}
+					</h2>
 				</div>
 
 				{/* {page == "analytics" || page == "create" || phnxButton ? (
