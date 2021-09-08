@@ -170,7 +170,7 @@ class MyEvents extends Component {
 			method: "post",
 			data: {
 				query: `{
-                        events(where : {owner:"${this.account.toLowerCase()}"}) {
+                        events(where : {owner:"${this.account.toLowerCase()}"} orderBy:eventId orderDirection:desc) {
                             id
                             token
                             eventId
@@ -254,7 +254,7 @@ class MyEvents extends Component {
 			method: "post",
 			data: {
 				query: `{
-						events(where : {owner: "${this.account.toLowerCase()}"}) {
+						events(where : {owner: "${this.account.toLowerCase()}"} orderBy:eventId orderDirection:desc) {
 							id
 							token
 							eventId

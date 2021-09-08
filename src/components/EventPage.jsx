@@ -313,6 +313,20 @@ class EventPage extends Component {
 	}
 
 	async loadEventFromBlockchain() {
+		// const web3 = new Web3(
+		// 	new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+		// );
+		// const openEvents = new web3.eth.Contract(
+		// 	Open_events_ABI,
+		// 	Open_events_Address
+		// );
+	
+		// const blockChainEvent = await this.props.eventsContract.methods
+		// 	.events("126")
+		// 	.call();
+		// 	console.log("events")
+		
+		// 	console.log("blockChain Events in eventPage",blockChainEvent)
 		const graphURL = await GetGraphApi();
 		await axios({
 			url: graphURL,
@@ -786,7 +800,12 @@ class EventPage extends Component {
 		let balance = await this.props.phnxContract.methods
 			.totalSupply()
 			.call();
+			let date = new Date(parseInt(this.state.blockChainEvent.time, 10) * 1000);
 
+			let time =date.toLocaleTimeString([], {
+				hour: "2-digit",
+				minute: "2-digit",
+			});
 		const geoFindUser = await this.geoFindMe();
 
 		this.setState(
@@ -822,7 +841,8 @@ class EventPage extends Component {
 						this.state.image,
 						this.state.blockChainEvent.name,
 						this.state.phnx_price,
-						this.state.dollar_price
+						this.state.dollar_price,
+						time
 					);
 				}
 			}
@@ -884,12 +904,10 @@ class EventPage extends Component {
 				onclick: true,
 			},
 		];
-		console.log("myArray", myArray);
 		return myArray[index].img;
 	};
 
 	provideImage = (userDetails) => {
-		console.log("this.props.userDetails", userDetails);
 		if (Object.keys(userDetails).length > 0) {
 			// console.log("userdetailsss", this.props.userDetails);
 			// console.log("", this.props.userDetails);
@@ -938,6 +956,7 @@ class EventPage extends Component {
 	allowBuy = () => {
 		if (Object.keys(this.state.blockChainEvent).length > 0) {
 			let index = this.state.selectedCategoryIndex;
+			console.log("test",this.state.blockChainEvent.catTktQuantity[index] != 0 , parseInt(this.state.blockChainEvent.catTktQuantitySold[index]) ,parseInt(this.state.blockChainEvent.catTktQuantity[index]))
 
 			if (
 				Number(this.state.blockChainEvent.time) < new Date().getTime() / 1000
@@ -956,6 +975,7 @@ class EventPage extends Component {
 				);
 				return false;
 			}
+			
 			else if (this.state.blockChainEvent.catTktQuantity[index] != 0 && (parseInt(this.state.blockChainEvent.catTktQuantitySold[index]) >= parseInt(this.state.blockChainEvent.catTktQuantity[index]))) {
 				this.setState({
 					allowBuySnackbar: true,
@@ -1373,11 +1393,11 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{
-												// event_data.catTktQuantitySold[
-												// this.state
-												// 	.selectedCategoryIndex
-												// ]
-												event_data.tktTotalQuantitySold
+												event_data.catTktQuantitySold[
+												this.state
+													.selectedCategoryIndex
+												]
+												// event_data.tktTotalQuantitySold
 											}
 											/{max_seats}
 										</p>
@@ -1687,14 +1707,14 @@ class EventPage extends Component {
 
 							<Snackbar
 								anchorOrigin={{
-									vertical: "bottom",
+									vertical: "top",
 									horizontal: "center",
 								}}
 								open={this.state.allowBuySnackbar}
 								onClose={this.handleCloseAllowBuySnackbar}
 								message={this.state.SnackbarMessage}
 								autoHideDuration={3000}
-								key={"bottom" + "center"}
+								key={"top" + "center"}
 								className="snackbar"
 							/>
 						</Grid>

@@ -429,13 +429,15 @@ class App extends Component {
 		image,
 		name,
 		phnx_price,
-		dollar_price
+		dollar_price,
+		time 
 	) => {
 		let chainId = await this.getNetworkId();
 		if (
 			this.state.account.length !== 0 &&
 			this.props.web3.networkId === (await this.getNetworkId())
 		) {
+			console.log("event time in app",time);
 			this.setState({ disabledStatus: true });
 			this.setState(
 				{
@@ -450,6 +452,7 @@ class App extends Component {
 					name,
 					phnx_price,
 					dollar_price,
+					time
 				},
 				() => this.buy()
 			);
@@ -1488,6 +1491,8 @@ class App extends Component {
 						price={this.state.priceGrid}
 						purchased={this.state.purchased}
 						eventTime={this.state.eventTime}
+						time={this.state.time}
+
 						eventDate={this.state.eventDate}
 						eventEndDate={this.state.eventEndDate}
 						phnx_price={this.state.phnx_price}
