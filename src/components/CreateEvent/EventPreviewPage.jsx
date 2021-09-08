@@ -171,18 +171,17 @@ const styles = (theme) => ({
 		marginRight: "7px",
 		marginTop: "-4px",
 	},
-	eventDetailsNoBorder:{
-		border: "0px solid !important"
+	eventDetailsNoBorder: {
+		border: "0px solid !important",
 	},
-	previewPadding:{
-		paddingRight:"50px",
+	previewPadding: {
+		paddingRight: "50px",
 		paddingLeft: "50px",
-		"@media (max-width: 500px)":{
+		"@media (max-width: 500px)": {
 			paddingLeft: "20px",
-			paddingRight: "20px"
-		}
-	}
-	
+			paddingRight: "20px",
+		},
+	},
 });
 class EventPreviewPage extends Component {
 	constructor(props) {
@@ -294,53 +293,33 @@ class EventPreviewPage extends Component {
 								>
 									<Grid container>
 										{/* <h2>About this Event</h2> */}
-										{(this.props.eventDescription)&&
-										<RichTextEditor
-											readOnly
-											value={RichTextEditor.createValueFromString(
-												this.props.eventDescription,
-												"html"
-											)}
-											required
-											id="body-text"
-											name="bodyText"
-											type="string"
-											multiline
-											variant="filled"
-											className={`editor ${classes.eventDetailsNoBorder}`}
-										/>
-											}
-											</Grid>
-									
-									
-										{/* <br /> */}
-										{/* <Grid container>{
+										{this.props.eventDescription && (
 											<RichTextEditor
-													readOnly
-													value={RichTextEditor.createValueFromString(
-														this.props.eventDescription,
-														"html"
-													)}
-													// onChange={handleChange}
-													required
-													id="body-text"
-													name="bodyText"
-													type="string"
-													multiline
-													variant="filled"
-													className={`editor`}
-												/>}
-										
-									</Grid> */}
-									<Grid
-											container
-											className={classes.clockTime}
-										>
-											<Clock
-												deadline={this.props.eventDate}
-												event_unix={this.props.eventTime}
+												readOnly
+												value={RichTextEditor.createValueFromString(
+													this.props.eventDescription,
+													"html"
+												)}
+												required
+												id="body-text"
+												name="bodyText"
+												type="string"
+												multiline
+												variant="filled"
+												className={`editor ${classes.eventDetailsNoBorder}`}
 											/>
-										</Grid>
+										)}
+									</Grid>
+                  
+									<Grid
+										container
+										className={classes.clockTime}
+									>
+										<Clock
+											deadline={this.props.eventDate}
+											event_unix={this.props.eventTime}
+										/>
+									</Grid>
 								</Grid>
 								<Grid
 									lg={3}
@@ -437,7 +416,9 @@ class EventPreviewPage extends Component {
 										<LocationOnOutlined /> Location
 									</p>
 									<p className={classes.eventinfo}>
-										{this.props.location}
+										{this.props.location} {` `}
+										{this.props.city}
+										{`, `} {this.props.country}
 									</p>
 									<p className={classes.eventHeading}>
 										<PersonOutlined />
