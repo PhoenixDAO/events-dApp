@@ -119,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
 			marginLeft: "0px !important",
 		},
 	},
-	publishedRoot:{
+	publishedRoot: {
 		width: "100%",
 		paddingTop: theme.spacing(5),
 		backgroundColor: "white",
@@ -134,11 +134,11 @@ const useStyles = makeStyles((theme) => ({
 			marginLeft: "0px !important",
 		},
 	},
-	selectBoxMaxWidth:{
-		"& .MuiOutlinedInput-root .MuiSelect-outlined":{
-			paddingLeft:"0px !important",
-			paddingRight:"0px !important"
-		}
+	selectBoxMaxWidth: {
+		"& .MuiOutlinedInput-root .MuiSelect-outlined": {
+			paddingLeft: "0px !important",
+			paddingRight: "0px !important",
+		},
 	},
 	backButton: {
 		textTransform: "none",
@@ -182,7 +182,7 @@ const useStyles = makeStyles((theme) => ({
 		display: "flex",
 		justifyContent: "space-between",
 	},
-	mainStepperContainerForPublishPage:{
+	mainStepperContainerForPublishPage: {
 		"@media (min-width:768px)": {
 			marginLeft: theme.spacing(4),
 			marginRight: theme.spacing(4),
@@ -247,10 +247,10 @@ const useStyles = makeStyles((theme) => ({
 		color: "#4E4E55",
 	},
 	UrlField: {
-		"@media (min-width:800px)":{
-			minWidth:"360px",
-			maxWidth:"410px",
-			width: "81%"
+		"@media (min-width:800px)": {
+			minWidth: "360px",
+			maxWidth: "410px",
+			width: "81%",
 		},
 		width: "80%",
 		margin: "0px auto",
@@ -262,8 +262,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	SocialMediaDiv: {
 		margin: "30px 0px 20px 6px",
-		"@media (min-width: 425px)":{
-			margin:"30px 0px 20px -11px"
+		"@media (min-width: 425px)": {
+			margin: "30px 0px 20px -11px",
 		},
 	},
 	step: {
@@ -306,7 +306,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	formControlDesc: {
 		maxWidth: "100%",
-		width:"100%",
+		width: "100%",
 	},
 	dropdownMenu: {
 		fontFamily: "'Aeonik', sans-serif",
@@ -341,6 +341,8 @@ const useStyles = makeStyles((theme) => ({
 		maxHeight: "200px",
 	},
 	ticketNameCat: {
+		overflow: "hidden",
+		wordBreak:"break-word",
 		fontSize: 20,
 		fontWeight: 400,
 		color: "#1E1E22",
@@ -417,23 +419,23 @@ const useStyles = makeStyles((theme) => ({
 	},
 	progressDisabled: {},
 	travelImage: {
-		marginLeft:"-10px",
-		marginRight:"-10px",
+		marginLeft: "-10px",
+		marginRight: "-10px",
 		// width: "100%",
 		marginTop: "60px",
 		"@media (min-width:400px)": {
-			marginLeft:"-25px",
-			marginRight:"-25px",
+			marginLeft: "-25px",
+			marginRight: "-25px",
 		},
 		"& img": {
 			maxWidth: "100%",
 			borderRadius: "0 0 10px 10px",
 		},
 	},
-	viewButton:{
-		backgroundColor:"#413AE2",
-		textTransform:"Capitalize"
-	}
+	viewButton: {
+		backgroundColor: "#413AE2",
+		textTransform: "Capitalize",
+	},
 }));
 
 const today = new Date();
@@ -441,6 +443,7 @@ const today = new Date();
 const MyStepper = ({
 	handleCreateEvent,
 	onFieldsChange,
+	onGetRealTimeFields,
 	onStepsChange,
 	activeStep,
 	onFlamingStepsChange,
@@ -523,10 +526,12 @@ const MyStepper = ({
 		message: "",
 		isError: false,
 	});
-useEffect(()=>{
-	onFieldsChange({eventDescription: eventDesc});
-	console.log("event desc from useeffect ", eventDesc)
-},[eventDesc]);
+
+	// useEffect(() => {
+	// 	onFieldsChange({ eventDescription: eventDesc });
+	// 	console.log("event desc from useeffect ", eventDesc);
+	// }, [eventDesc]);
+
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
 		display: [
@@ -679,17 +684,17 @@ useEffect(()=>{
 		console.log("fields", fields);
 		// console.log("categories", categories);
 		const filter = new badWords();
+		let badEventName = filter.clean(fields.eventName);
+		fields.eventName = badEventName;
+		let badEventOrg = filter.clean(fields.eventOrganizer);
+		fields.eventOrganizer = badEventOrg;
 
 		if (activeStep === 0) {
+			//first stepper conditions - eventName, eventOrg, eventdate&time
 			setTimeError({ isError: false, message: "" });
 			setDateError({ isError: false, message: "" });
 			setEndTimeError({ isError: false, message: "" });
 
-			//first stepper conditions - eventName, eventOrg, eventdate&time
-			const badEventName = filter.clean(fields.eventName);
-			fields.eventName = badEventName;
-			const badEventOrg = filter.clean(fields.eventOrganizer);
-			fields.eventOrganizer = badEventOrg;
 			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			if (fields.eventTime === "onedayevent") {
 				console.log("onedayevent----->");
@@ -799,7 +804,8 @@ useEffect(()=>{
 							eventEndTimeOneday.setDate(
 								eventDateOneDay.getDate()
 							);
-							if (eventStartTimeOneday < eventEndTimeOneday) {
+							//eventStartTimeOneday < eventEndTimeOneday
+							if (true) {
 								fields.eventStartDate = eventDateOneDay;
 								fields.eventEndDateOneDay = eventEndDateOneDay;
 								fields.eventStartTime = eventStartTimeOneday;
@@ -916,6 +922,12 @@ useEffect(()=>{
 		}
 	};
 
+	const maxLengthCheckNumber = (e) => {
+		e.target.value = Math.max(0, parseInt(e.target.value))
+			.toString()
+			.slice(0, 12);
+	};
+
 	//back button stepper
 	const handleBack = () => {
 		// setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -1003,9 +1015,9 @@ useEffect(()=>{
 		let value = parseFloat(d);
 		value = value > 0 ? value : 0;
 		let usd = PhoenixDAO_market.usd;
-		console.log("dollar",PhoenixDAO_market);
+		console.log("dollar", PhoenixDAO_market);
 		let phoenixValue = value / usd;
-		console.log("phnx",phoenixValue);
+		console.log("phnx", phoenixValue);
 
 		phoenixValue = phoenixValue.toFixed(5);
 		return phoenixValue;
@@ -1026,20 +1038,27 @@ useEffect(()=>{
 								control={control}
 								defaultValue=""
 								render={({
-									field: { onChange, value },
+									field: { onChange, value, name },
 									fieldState: { error },
 								}) => (
 									<TextField
 										id="event-name"
+										name={name}
 										fullWidth
 										variant="outlined"
 										value={value}
-										onChange={onChange}
+										onChange={(e) => {
+											onChange(e);
+											onGetRealTimeFields({
+												name,
+												value: e.target.value,
+											});
+										}}
 										error={!!error}
 										helperText={
 											error ? error.message : null
 										}
-										inputProps={{maxLength:100}}
+										inputProps={{ maxLength: 50 }}
 									/>
 								)}
 								rules={{
@@ -1050,7 +1069,7 @@ useEffect(()=>{
 											"Event name should contain at least 3 characters.",
 									},
 									maxLength: {
-										value: 100,
+										value: 50,
 										message: "Event name too long.",
 									},
 								}}
@@ -1066,20 +1085,27 @@ useEffect(()=>{
 								control={control}
 								defaultValue=""
 								render={({
-									field: { onChange, value },
+									field: { onChange, value, name },
 									fieldState: { error },
 								}) => (
 									<TextField
 										id="event-organizer"
+										name={name}
 										fullWidth
 										variant="outlined"
 										value={value}
-										onChange={onChange}
+										onChange={(e) => {
+											onChange(e);
+											onGetRealTimeFields({
+												name,
+												value: e.target.value,
+											});
+										}}
 										error={!!error}
 										helperText={
 											error ? error.message : null
 										}
-										inputProps={{maxLength:100}}
+										inputProps={{ maxLength: 50 }}
 									/>
 								)}
 								rules={{
@@ -1091,7 +1117,7 @@ useEffect(()=>{
 											"Event organizer name should contain at least 3 characters.",
 									},
 									maxLength: {
-										value: 100,
+										value: 50,
 										message:
 											"Event organizer name too long.",
 									},
@@ -1107,18 +1133,23 @@ useEffect(()=>{
 									control={control}
 									defaultValue={eventTime}
 									render={({
-										field: { onChange, value },
+										field: { onChange, value, name },
 										fieldState: { error },
 									}) => (
 										<RadioGroup
 											row
 											aria-label="eventTime"
-											name="eventTime"
+											id="event-time-radio-btn"
+											name={name}
 											value={value}
 											className={classes.radioGroup}
 											onChange={(e) => {
 												onChange(e);
 												setEventTime(e.target.value);
+												onGetRealTimeFields({
+													name,
+													value: e.target.value,
+												});
 											}}
 										>
 											<FormControlLabel
@@ -1193,6 +1224,7 @@ useEffect(()=>{
 														field: {
 															onChange,
 															value,
+															name,
 														},
 														fieldState: { error },
 													}) => {
@@ -1220,6 +1252,7 @@ useEffect(()=>{
 																	format="dd-MM-yyyy"
 																	margin="normal"
 																	id="event-date"
+																	name={name}
 																	KeyboardButtonProps={{
 																		"aria-label":
 																			"change date",
@@ -1244,6 +1277,12 @@ useEffect(()=>{
 																		);
 																		handleDate(
 																			e
+																		);
+																		onGetRealTimeFields(
+																			{
+																				name,
+																				value: e,
+																			}
 																		);
 																	}}
 																	error={
@@ -1284,6 +1323,7 @@ useEffect(()=>{
 														field: {
 															onChange,
 															value,
+															name,
 														},
 														fieldState: { error },
 													}) => (
@@ -1312,6 +1352,7 @@ useEffect(()=>{
 																}
 																margin="normal"
 																id="start-time-picker"
+																name={name}
 																placeholder="00:00 AM"
 																KeyboardButtonProps={{
 																	"aria-label":
@@ -1324,9 +1365,17 @@ useEffect(()=>{
 																inputVariant="outlined"
 																autoOk={true}
 																value={value}
-																onChange={
-																	onChange
-																}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
 																error={
 																	!!error ||
 																	timeError.isError
@@ -1363,6 +1412,7 @@ useEffect(()=>{
 														field: {
 															onChange,
 															value,
+															name,
 														},
 														fieldState: { error },
 													}) => (
@@ -1392,6 +1442,7 @@ useEffect(()=>{
 																required={false}
 																margin="normal"
 																id="end-time-picker"
+																name={name}
 																placeholder="00:00 AM"
 																KeyboardButtonProps={{
 																	"aria-label":
@@ -1404,9 +1455,17 @@ useEffect(()=>{
 																inputVariant="outlined"
 																autoOk={true}
 																value={value}
-																onChange={
-																	onChange
-																}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
 																// error={!!error}
 																// helperText="Don’t have an end time? leave here blank"
 																error={
@@ -1458,6 +1517,7 @@ useEffect(()=>{
 														field: {
 															onChange,
 															value,
+															name,
 														},
 														fieldState: { error },
 													}) => (
@@ -1485,7 +1545,8 @@ useEffect(()=>{
 																variant="inline"
 																format="dd-MM-yyyy"
 																margin="normal"
-																id="date-picker-inline"
+																id="event-start-date-picker-inline"
+																name={name}
 																placeholder="DD-MM-YYYY"
 																InputProps={{
 																	readOnly: true,
@@ -1503,9 +1564,17 @@ useEffect(()=>{
 																autoOk={true}
 																disablePast
 																value={value}
-																onChange={
-																	onChange
-																}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
 																error={!!error}
 																helperText={
 																	error
@@ -1538,6 +1607,7 @@ useEffect(()=>{
 														field: {
 															onChange,
 															value,
+															name,
 														},
 														fieldState: { error },
 													}) => (
@@ -1565,7 +1635,8 @@ useEffect(()=>{
 																variant="inline"
 																format="dd-MM-yyyy"
 																margin="normal"
-																id="date-picker-inline"
+																name={name}
+																id="event-end-date-picker-inline"
 																// label="END DATE"
 																// value={endDate}
 																// onChange={(d) => setEndDate(d)}
@@ -1581,9 +1652,17 @@ useEffect(()=>{
 																autoOk={true}
 																disablePast
 																value={value}
-																onChange={
-																	onChange
-																}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
 																error={
 																	!!error ||
 																	dateError.isError
@@ -1624,6 +1703,7 @@ useEffect(()=>{
 														field: {
 															onChange,
 															value,
+															name,
 														},
 														fieldState: { error },
 													}) => (
@@ -1651,7 +1731,8 @@ useEffect(()=>{
 																	<AccessTime />
 																}
 																margin="normal"
-																id="time-picker"
+																id="event-start-time-picker"
+																name={name}
 																// label="TO"
 																placeholder="00:00 AM"
 																KeyboardButtonProps={{
@@ -1664,9 +1745,17 @@ useEffect(()=>{
 																inputVariant="outlined"
 																autoOk={true}
 																value={value}
-																onChange={
-																	onChange
-																}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
 																error={
 																	!!error ||
 																	timeError.isError
@@ -1704,6 +1793,7 @@ useEffect(()=>{
 														field: {
 															onChange,
 															value,
+															name,
 														},
 														fieldState: { error },
 													}) => (
@@ -1731,7 +1821,8 @@ useEffect(()=>{
 																	<AccessTime />
 																}
 																margin="normal"
-																id="time-picker"
+																id="event-end-time-picker"
+																name={name}
 																// label="FROM"
 																placeholder="00:00 AM"
 																KeyboardButtonProps={{
@@ -1744,9 +1835,17 @@ useEffect(()=>{
 																inputVariant="outlined"
 																autoOk={true}
 																value={value}
-																onChange={
-																	onChange
-																}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
 																FormHelperTextProps={{
 																	classes: {
 																		root: classes.timeHelperText,
@@ -1794,18 +1893,23 @@ useEffect(()=>{
 									control={control}
 									defaultValue={type}
 									render={({
-										field: { onChange, value },
+										field: { onChange, value, name },
 										fieldState: { error },
 									}) => (
 										<RadioGroup
 											row
 											aria-label="eventType"
 											className={classes.radioGroup}
-											name="eventType"
+											name={name}
+											id="event-Type"
 											value={value}
 											onChange={(e) => {
 												onChange(e);
 												setType(e.target.value);
+												onGetRealTimeFields({
+													name,
+													value: e.target.value,
+												});
 											}}
 										>
 											<FormControlLabel
@@ -1881,15 +1985,28 @@ useEffect(()=>{
 												control={control}
 												defaultValue=""
 												render={({
-													field: { onChange, value },
+													field: {
+														onChange,
+														value,
+														name,
+													},
 													fieldState: { error },
 												}) => (
 													<GeoLocation
 														locationTitle="country"
+														name={name}
+														id="country"
 														isCountry
 														onChange={(v) => {
 															onChange(v);
 															setCountry(v.id);
+															onGetRealTimeFields(
+																{
+																	name,
+																	value: v,
+																}
+															);
+
 														}}
 														error={error}
 														value={value}
@@ -1914,16 +2031,31 @@ useEffect(()=>{
 												name="state"
 												control={control}
 												defaultValue=""
-												className={classes.selectBoxMaxWidth}
+												className={
+													classes.selectBoxMaxWidth
+												}
 												render={({
-													field: { onChange, value },
+													field: {
+														onChange,
+														value,
+														name,
+													},
 													fieldState: { error },
 												}) => (
 													<GeoLocation
 														locationTitle="state"
+														name={name}
+														id="state"
 														onChange={(v) => {
 															onChange(v);
 															setState(v.id);
+															onGetRealTimeFields(
+																{
+																	name,
+																	value: v,
+																}
+															);
+
 														}}
 														error={error}
 														geoId={country}
@@ -1949,14 +2081,26 @@ useEffect(()=>{
 												control={control}
 												defaultValue=""
 												render={({
-													field: { onChange, value },
+													field: {
+														onChange,
+														value,
+														name,
+													},
 													fieldState: { error },
 												}) => (
 													<GeoLocation
 														locationTitle="city"
+														name={name}
+														id="city"
 														onChange={(v) => {
 															onChange(v);
 															setCity(v.id);
+															onGetRealTimeFields(
+																{
+																	name,
+																	value: v,
+																}
+															);
 														}}
 														error={error}
 														geoId={state}
@@ -1979,19 +2123,27 @@ useEffect(()=>{
 										control={control}
 										defaultValue=""
 										render={({
-											field: { onChange, value },
+											field: { onChange, value, name },
 											fieldState: { error },
 										}) => (
 											<TextField
 												id="event-location"
+												name={name}
 												fullWidth
 												variant="outlined"
 												value={value}
-												onChange={onChange}
+												onChange={(e) => {
+													onChange(e);
+													onGetRealTimeFields({
+														name,
+														value: e.target.value,
+													});
+												}}
 												error={!!error}
 												helperText={
 													error ? error.message : null
 												}
+												inputProps={{ maxLength: 300 }}
 											/>
 										)}
 										rules={{
@@ -2020,15 +2172,22 @@ useEffect(()=>{
 										control={control}
 										defaultValue=""
 										render={({
-											field: { onChange, value },
+											field: { onChange, value, name },
 											fieldState: { error },
 										}) => (
 											<TextField
 												id="event-link"
+												name={name}
 												fullWidth
 												variant="outlined"
 												value={value}
-												onChange={onChange}
+												onChange={(e) => {
+													onChange(e);
+													onGetRealTimeFields({
+														name,
+														value: e.target.value,
+													});
+												}}
 												error={!!error}
 												helperText={
 													error ? error.message : null
@@ -2060,11 +2219,17 @@ useEffect(()=>{
 											control={control}
 											defaultValue=""
 											render={({
-												field: { onChange, value },
+												field: {
+													onChange,
+													value,
+													name,
+												},
 												fieldState: { error },
 											}) => (
 												<TextField
 													variant="outlined"
+													id={name}
+													name={name}
 													fullWidth
 													disabled
 													value={img.name}
@@ -2127,6 +2292,14 @@ useEffect(()=>{
 																						.target
 																						.files[0]
 																				);
+																				onGetRealTimeFields(
+																					{
+																						name,
+																						value: event
+																							.target
+																							.files[0],
+																					}
+																				);
 																			} else {
 																				handleImageSelect(
 																					"",
@@ -2134,6 +2307,12 @@ useEffect(()=>{
 																				);
 																				onChange(
 																					""
+																				);
+																				onGetRealTimeFields(
+																					{
+																						name,
+																						value: "",
+																					}
 																				);
 																			}
 																		} else {
@@ -2147,6 +2326,12 @@ useEffect(()=>{
 																				onChange(
 																					value
 																				);
+																				onGetRealTimeFields(
+																					{
+																						name,
+																						value: value,
+																					}
+																				);
 																			} else {
 																				handleImageSelect(
 																					"",
@@ -2154,6 +2339,12 @@ useEffect(()=>{
 																				);
 																				onChange(
 																					""
+																				);
+																				onGetRealTimeFields(
+																					{
+																						name,
+																						value: "",
+																					}
 																				);
 																			}
 																		}
@@ -2216,7 +2407,7 @@ useEffect(()=>{
 								control={control}
 								defaultValue=""
 								render={({
-									field: { onChange, value },
+									field: { onChange, value, name },
 									fieldState: { error },
 								}) => (
 									<FormControl
@@ -2227,10 +2418,17 @@ useEffect(()=>{
 									>
 										<Select
 											labelId="demo-simple-select-outlined-label"
-											id="demo-simple-select-outlined"
+											id="event-topic"
+											name={name}
 											fullWidth
 											value={value}
-											onChange={onChange}
+											onChange={(e) => {
+												onChange(e);
+												onGetRealTimeFields({
+													name,
+													value: e.target.value,
+												});
+											}}
 											displayEmpty
 											className={classes.menuPaper}
 											MenuProps={{
@@ -2289,7 +2487,7 @@ useEffect(()=>{
 								control={control}
 								defaultValue={category}
 								render={({
-									field: { onChange, value },
+									field: { onChange, value, name },
 									fieldState: { error },
 								}) => (
 									<FormControl
@@ -2299,11 +2497,16 @@ useEffect(()=>{
 									>
 										<Select
 											labelId="demo-simple-select-outlined-label"
-											id="demo-simple-select-outlined"
+											id="event-category"
+											name={name}
 											value={value}
 											onChange={(e) => {
 												onChange(e);
 												setCategory(e.target.value);
+												onGetRealTimeFields({
+													name,
+													value: e.target.value,
+												});
 											}}
 											fullWidth
 											className={classes.dropdownMenu}
@@ -2339,13 +2542,18 @@ useEffect(()=>{
 												control={control}
 												defaultValue={availability}
 												render={({
-													field: { onChange, value },
+													field: {
+														onChange,
+														value,
+														name,
+													},
 													fieldState: { error },
 												}) => (
 													<RadioGroup
 														row
 														aria-label="ticketAvailability"
-														name="ticketAvailability"
+														name={name}
+														id="ticket-availability"
 														value={value}
 														className={
 															classes.radioGroup
@@ -2354,6 +2562,14 @@ useEffect(()=>{
 															onChange(e);
 															setAvailability(
 																e.target.value
+															);
+															onGetRealTimeFields(
+																{
+																	name: "ticketAvailabilityPreview",
+																	value: e
+																		.target
+																		.value,
+																}
 															);
 														}}
 													>
@@ -2426,6 +2642,7 @@ useEffect(()=>{
 														field: {
 															onChange,
 															value,
+															name,
 														},
 														fieldState: { error },
 													}) => (
@@ -2433,12 +2650,26 @@ useEffect(()=>{
 															onKeyDown={
 																formatInputNoOfTickets
 															}
+															onInput={
+																maxLengthCheckNumber
+															}
 															type="number"
-															id="outlined-basic"
+															id="no-of-tickets"
+															name={name}
 															fullWidth
 															variant="outlined"
 															value={value}
-															onChange={onChange}
+															onChange={(e) => {
+																onChange(e);
+																onGetRealTimeFields(
+																	{
+																		name: "noOfTicketsPreview",
+																		value: e
+																			.target
+																			.value,
+																	}
+																);
+															}}
 															error={!!error}
 															helperText={
 																error
@@ -2504,10 +2735,10 @@ useEffect(()=>{
 															onKeyDown={
 																formatInputDollarPrice
 															}
-															id="input-with-icon-textfield"
+															id="dollar-price"
+															name={name}
 															type="number"
 															variant="outlined"
-															name={name}
 															InputProps={{
 																startAdornment:
 																	(
@@ -2531,6 +2762,7 @@ useEffect(()=>{
 																			</Button>
 																		</InputAdornment>
 																	),
+																	inputProps:{min:0},
 																classes: {},
 															}}
 															value={value}
@@ -2542,6 +2774,14 @@ useEffect(()=>{
 																		e.target
 																			.value
 																	)
+																);
+																onGetRealTimeFields(
+																	{
+																		name: "dollarPricePreview",
+																		value: e
+																			.target
+																			.value,
+																	}
 																);
 															}}
 															error={!!error}
@@ -2557,7 +2797,7 @@ useEffect(()=>{
 													required:
 														"Enter price in dollars.",
 													maxLength: {
-														value: 16,
+														value: 12,
 														message:
 															"Ticket price is too large.",
 													},
@@ -2600,12 +2840,12 @@ useEffect(()=>{
 																classes.margin
 															}
 															disabled
-															id="input-with-icon-textfield"
+															id="phnx-price"
+															name={name}
 															onKeyDown={
 																formatInputDollarPrice
 															}
 															type="number"
-															name={name}
 															variant="outlined"
 															InputProps={{
 																startAdornment:
@@ -2632,7 +2872,9 @@ useEffect(()=>{
 																	),
 															}}
 															value={value}
-															onChange={onChange}
+															onChange={(e) => {
+																onChange(e);
+															}}
 															error={!!error}
 															helperText={
 																error
@@ -2659,13 +2901,18 @@ useEffect(()=>{
 												control={control}
 												defaultValue={availability}
 												render={({
-													field: { onChange, value },
+													field: {
+														onChange,
+														value,
+														name,
+													},
 													fieldState: { error },
 												}) => (
 													<RadioGroup
 														row
 														aria-label="ticketAvailability"
-														name="ticketAvailability"
+														name={name}
+														id="ticket-availability"
 														className={
 															classes.radioGroup
 														}
@@ -2674,6 +2921,14 @@ useEffect(()=>{
 															onChange(e);
 															setAvailability(
 																e.target.value
+															);
+															onGetRealTimeFields(
+																{
+																	name: "ticketAvailabilityPreview",
+																	value: e
+																		.target
+																		.value,
+																}
 															);
 														}}
 													>
@@ -2746,6 +3001,7 @@ useEffect(()=>{
 														field: {
 															onChange,
 															value,
+															name,
 														},
 														fieldState: { error },
 													}) => (
@@ -2753,13 +3009,27 @@ useEffect(()=>{
 															onKeyDown={
 																formatInputNoOfTickets
 															}
+															onInput={
+																maxLengthCheckNumber
+															}
 															type="number"
-															id="outlined-basic"
+															id="no-of-tickets"
+															name={name}
 															// label="Event Organizer"
 															fullWidth
 															variant="outlined"
 															value={value}
-															onChange={onChange}
+															onChange={(e) => {
+																onChange(e);
+																onGetRealTimeFields(
+																	{
+																		name: "noOfTicketsPreview",
+																		value: e
+																			.target
+																			.value,
+																	}
+																);
+															}}
 															error={!!error}
 															helperText={
 																error
@@ -2842,11 +3112,11 @@ useEffect(()=>{
 																</p>
 															</Grid>
 															<Grid
-															xs={12}
-															sm={12}
-															md={3}
-															lg={3}
-															xl={3}
+																xs={12}
+																sm={12}
+																md={3}
+																lg={3}
+																xl={3}
 																item
 																direction="column"
 																style={{
@@ -2858,23 +3128,34 @@ useEffect(()=>{
 																	className={
 																		classes.dollarPriceCat
 																	}
-																	title={"$" + cat.dollarPrice}
+																	title={
+																		"$" +
+																		cat.dollarPrice
+																	}
 																>
-																	
 																	{
 																		// cat.dollarPrice
-																		pricingFormatter(cat.dollarPrice,"$")
+																		pricingFormatter(
+																			cat.dollarPrice,
+																			"$"
+																		)
 																	}
 																</p>
 																<p
 																	className={
 																		classes.phnxPriceCat
 																	}
-																	title={cat.phnxPrice + " PHNX"}
+																	title={
+																		cat.phnxPrice +
+																		" PHNX"
+																	}
 																>
 																	{
 																		// cat.phnxPrice
-																		pricingFormatter(cat.phnxPrice,"PHNX")
+																		pricingFormatter(
+																			cat.phnxPrice,
+																			"PHNX"
+																		)
 																	}
 																</p>
 															</Grid>
@@ -2971,26 +3252,40 @@ useEffect(()=>{
 															field: {
 																onChange,
 																value,
+																name,
 															},
 															fieldState: {
 																error,
 															},
 														}) => (
 															<TextField
-																id="ticket-name"
+																id={name}
+																name={name}
 																fullWidth
 																variant="outlined"
 																value={value}
-																onChange={
-																	onChange
-																}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e
+																				.target
+																				.value,
+																		}
+																	);
+																}}
 																error={!!error}
 																helperText={
 																	error
 																		? error.message
 																		: null
 																}
-																inputProps={{maxLength:100}}
+																inputProps={{
+																	maxLength: 50,
+																}}
 															/>
 														)}
 														rules={{
@@ -3002,7 +3297,7 @@ useEffect(()=>{
 																	"Ticket name should contain at least 3 characters.",
 															},
 															maxLength: {
-																value: 100,
+																value: 50,
 																message:
 																	"Ticket name too long.",
 															},
@@ -3050,15 +3345,17 @@ useEffect(()=>{
 																		className={
 																			classes.margin
 																		}
-																		id="input-with-icon-textfield"
+																		id={
+																			name
+																		}
+																		name={
+																			name
+																		}
 																		onKeyDown={
 																			formatInputDollarPrice
 																		}
 																		type="number"
 																		variant="outlined"
-																		name={
-																			name
-																		}
 																		InputProps={{
 																			startAdornment:
 																				(
@@ -3082,6 +3379,12 @@ useEffect(()=>{
 																						</Button>
 																					</InputAdornment>
 																				),
+
+																			inputProps:
+																				{
+																					min: 0,
+																				},
+
 																		}}
 																		value={
 																			value
@@ -3100,6 +3403,14 @@ useEffect(()=>{
 																						.value
 																				)
 																			);
+																			onGetRealTimeFields(
+																				{
+																					name: "dollarPricePreview",
+																					value: e
+																						.target
+																						.value,
+																				}
+																			);
 																		}}
 																		error={
 																			!!error
@@ -3116,7 +3427,7 @@ useEffect(()=>{
 																required:
 																	"Enter price in dollars.",
 																maxLength: {
-																	value: 16,
+																	value: 12,
 																	message:
 																		"Ticket price is too large.",
 																},
@@ -3166,11 +3477,13 @@ useEffect(()=>{
 																			classes.margin
 																		}
 																		disabled
-																		id="input-with-icon-textfield"
 																		onKeyDown={
 																			formatInputDollarPrice
 																		}
 																		type="number"
+																		id={
+																			name
+																		}
 																		name={
 																			name
 																		}
@@ -3198,13 +3511,21 @@ useEffect(()=>{
 																						</Button>
 																					</InputAdornment>
 																				),
+																			inputProps:
+																				{
+																					min: 0,
+																				},
 																		}}
 																		value={
 																			value
 																		}
-																		onChange={
-																			onChange
-																		}
+																		onChange={(
+																			e
+																		) => {
+																			onChange(
+																				e
+																			);
+																		}}
 																		error={
 																			!!error
 																		}
@@ -3242,6 +3563,7 @@ useEffect(()=>{
 																field: {
 																	onChange,
 																	value,
+																	name,
 																},
 																fieldState: {
 																	error,
@@ -3250,7 +3572,8 @@ useEffect(()=>{
 																<RadioGroup
 																	row
 																	aria-label="ticketAvailability"
-																	name="ticketAvailability"
+																	name={name}
+																	id={name}
 																	className={
 																		classes.radioGroup
 																	}
@@ -3267,6 +3590,14 @@ useEffect(()=>{
 																			e
 																				.target
 																				.value
+																		);
+																		onGetRealTimeFields(
+																			{
+																				name: "ticketAvailabilityPreview",
+																				value: e
+																					.target
+																					.value,
+																			}
 																		);
 																	}}
 																>
@@ -3345,6 +3676,7 @@ useEffect(()=>{
 																	field: {
 																		onChange,
 																		value,
+																		name,
 																	},
 																	fieldState:
 																		{
@@ -3352,10 +3684,18 @@ useEffect(()=>{
 																		},
 																}) => (
 																	<TextField
-																		id="outlined-basic"
+																		id={
+																			name
+																		}
+																		name={
+																			name
+																		}
 																		// label="Event Organizer"
 																		onKeyDown={
 																			formatInputNoOfTickets
+																		}
+																		onInput={
+																			maxLengthCheckNumber
 																		}
 																		type="number"
 																		fullWidth
@@ -3363,9 +3703,21 @@ useEffect(()=>{
 																		value={
 																			value
 																		}
-																		onChange={
-																			onChange
-																		}
+																		onChange={(
+																			e
+																		) => {
+																			onChange(
+																				e
+																			);
+																			onGetRealTimeFields(
+																				{
+																					name: "noOfTicketsPreview",
+																					value: e
+																						.target
+																						.value,
+																				}
+																			);
+																		}}
 																		error={
 																			!!error
 																		}
@@ -3439,7 +3791,7 @@ useEffect(()=>{
 								control={control}
 								defaultValue={false}
 								render={({
-									field: { onChange, value },
+									field: { onChange, value, name },
 									fieldState: { error },
 								}) => (
 									<FormControlLabel
@@ -3452,8 +3804,15 @@ useEffect(()=>{
 													<img src={checkedIcon} />
 												}
 												checked={value}
-												onChange={onChange}
-												name="checkedB"
+												onChange={(e) => {
+													onChange(e);
+													onGetRealTimeFields({
+														name,
+														value: e.target.value,
+													});
+												}}
+												name={name}
+												id="restrict-wallet"
 												color="primary"
 											/>
 										}
@@ -3484,9 +3843,7 @@ useEffect(()=>{
 				return (
 					<React.Fragment>
 						<div>
-							<h3 className={classes.title}>
-								Event Description
-							</h3>
+							<h3 className={classes.title}>Event Description</h3>
 							<Divider light />
 							<br />
 							<label className={classes.label}>
@@ -3499,7 +3856,7 @@ useEffect(()=>{
 								control={control}
 								defaultValue="<p><br></p>"
 								render={({
-									field: { onChange, value },
+									field: { onChange, value, name },
 									fieldState: { error },
 								}) => (
 									<FormControl
@@ -3511,9 +3868,15 @@ useEffect(()=>{
 											value={value}
 											setValue={(bodyText) => {
 												onChange(bodyText);
-												setEventDesc(bodyText);
+												// setEventDesc(bodyText);
+												onGetRealTimeFields({
+													name,
+													value: bodyText,
+												});
 											}}
 											readOnly={false}
+											name={name}
+											id="event-description"
 										/>
 										<FormHelperText>
 											{error ? error.message : null}
@@ -3535,7 +3898,7 @@ useEffect(()=>{
 								control={control}
 								defaultValue={false}
 								render={({
-									field: { onChange, value },
+									field: { onChange, value, name },
 									fieldState: { error },
 								}) => (
 									<FormControl
@@ -3557,8 +3920,16 @@ useEffect(()=>{
 														/>
 													}
 													checked={value}
-													onChange={onChange}
-													name="checkedB"
+													onChange={(e) => {
+														onChange(e);
+														onGetRealTimeFields({
+															name,
+															value: e.target
+																.value,
+														});
+													}}
+													name={name}
+													id="terms-and-conditions"
 													color="primary"
 												/>
 											}
@@ -3701,7 +4072,11 @@ useEffect(()=>{
 	};
 
 	return (
-		<div className={(activeFlamingStep == 3 )?classes.publishedRoot:classes.root} >
+		<div
+			className={
+				activeFlamingStep == 3 ? classes.publishedRoot : classes.root
+			}
+		>
 			{activeStep === steps.length ? null : (
 				<Stepper
 					activeStep={activeStep}
@@ -3724,7 +4099,13 @@ useEffect(()=>{
 				</Stepper>
 			)}
 
-			<div className={(activeFlamingStep == 3 )?classes.mainStepperContainerForPublishPage:classes.mainStepperContainer}>
+			<div
+				className={
+					activeFlamingStep == 3
+						? classes.mainStepperContainerForPublishPage
+						: classes.mainStepperContainer
+				}
+			>
 				<br />
 
 				{activeStep === steps.length ? (
@@ -3899,14 +4280,17 @@ useEffect(()=>{
 						</div>
 					</div>
 				)}
-
-
 			</div>
-			{(activeFlamingStep == 3)&&<a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
-								<div className={classes.travelImage}>
-									<img src={"/images/createEvent.jpg"} alt="travel" />
-								</div>
-								</a>}
+			{activeFlamingStep == 3 && (
+				<a
+					href="https://www.travala.com/?ref=phoenixdao"
+					target="_blank"
+				>
+					<div className={classes.travelImage}>
+						<img src={"/images/createEvent.jpg"} alt="travel" />
+					</div>
+				</a>
+			)}
 		</div>
 	);
 };

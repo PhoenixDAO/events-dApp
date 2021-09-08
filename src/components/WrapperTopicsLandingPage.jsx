@@ -53,21 +53,22 @@ const WrapperTopicsLandingPage = (props) => {
 							objHolder.eventCount = objHolder.eventCount + 1;
 						}
 					} else {
-						eventObj[event[i].topic] = event[i];
 						if (!event[i].hide) {
-							eventObj[event[i].topic].eventCount = 1;
-						} else {
-							eventObj[event[i].topic].eventCount = 0;
-						}
-						if (topicsJson[event[i].topic]) {
-							eventObj[event[i].topic].image =
-								topicsJson[event[i].topic].image;
-							eventObj[event[i].topic].name =
-								topicsJson[event[i].topic].name;
-						} else {
-							eventObj[event[i].topic].image =
-								"/images/PhoenixDAO.png";
-							eventObj[event[i].topic].name = "Some topic name";
+							if (topicsJson[event[i].topic]) {
+								eventObj[event[i].topic] = event[i];
+								eventObj[event[i].topic].eventCount = 1;
+								eventObj[event[i].topic].image =
+									topicsJson[event[i].topic].image;
+								eventObj[event[i].topic].name =
+									topicsJson[event[i].topic].name;
+							} else {
+								eventObj[event[i].topic] = event[i];
+								eventObj[event[i].topic].eventCount = 1;
+								eventObj[event[i].topic].image =
+									"/images/PhoenixDAO.png";
+								eventObj[event[i].topic].name =
+									"Some topic name";
+							}
 						}
 					}
 				}
@@ -201,7 +202,7 @@ const WrapperTopicsLandingPage = (props) => {
 			data: {
 				query: `
 				{
-					events(orderBy:eventId orderDirection:asc) {
+					events(first: 1000 orderBy:eventId orderDirection:asc) {
 						id
 						eventId
 						owner

@@ -20,7 +20,7 @@ import { Divider } from "@material-ui/core";
 import BuyPhnxButton from "../common/BuyPhnxButton";
 
 import Header from "../common/Header";
-import {getNetworkId} from "../../config/getGraphApi";
+import { getNetworkId } from "../../config/getGraphApi";
 import Web3 from "web3";
 import {
 	INFURA_URL,
@@ -28,6 +28,8 @@ import {
 	GLOBAL_NETWORK_ID,
 	GLOBAL_NETWORK_ID_2,
 } from "../../config/const.js";
+import { userTweet } from "../../config/serverAPIs";
+
 const useStyles = (theme) => ({
 	sticky: {
 		position: "sticky",
@@ -81,19 +83,78 @@ class CreateEvent extends Component {
 				type: null,
 				file_name: null,
 			},
-			fields: {},
+			fields: {
+				eventTime: "onedayevent",
+				eventType: "physical",
+				eventCategory: "free",
+				ticketAvailability: "unlimited",
+			},
 			activeStep: 0,
 			activeFlamingStep: 0,
 			isEventCreated: false,
 			progressText: 0,
 			shareUrl: "",
+			PhoenixDAO_market: {},
 		};
 		this.contracts = context.drizzle.contracts;
 		this.onHandleTxReject = this.onHandleTxReject.bind(this);
 	}
 
+	convertDollarToPhnx = (d) => {
+		let value = parseFloat(d);
+		value = value > 0 ? value : 0;
+		let usd = this.state.PhoenixDAO_market.usd;
+		let phoenixValue = value / usd;
+		phoenixValue = phoenixValue.toFixed(5);
+		return phoenixValue;
+	};
+
+	getPhoenixdaoMarket = async () => {
+		fetch(
+			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
+		)
+			.then((res) => res.json())
+			.then((data) => {
+				this.setState({ PhoenixDAO_market: data.phoenixdao });
+			})
+			.catch(console.log);
+	};
+
 	onFieldsChange = (f) => {
 		this.setState({ fields: { ...this.state.fields, ...f } });
+	};
+
+	onGetRealTimeFields = (f) => {
+		let fields = this.state.fields;
+		let cat = [];
+		let obj = {
+			ticketName: "free",
+			dollarPrice: "0",
+			phnxPrice: "0",
+			ticketAvailability: false,
+			noOfTickets: "0",
+		};
+		if (
+			f.name === "dollarPricePreview" ||
+			f.name === "phnxPricePreview" ||
+			f.name === "ticketAvailabilityPreview" ||
+			f.name === "noOfTicketsPreview"
+		) {
+			if (f.name === "dollarPricePreview") {
+				obj.dollarPrice = f.value;
+				obj.phnxPrice = this.convertDollarToPhnx(f.value);
+				fields.token = true;
+			} else if (f.name === "ticketAvailabilityPreview") {
+				obj.ticketAvailability = f.value;
+			} else if (f.name === "noOfTicketsPreview") {
+				obj.noOfTickets = f.value;
+			}
+		}
+
+		cat.push(obj);
+		fields.categories = cat;
+		fields[f.name] = f.value;
+		this.setState(fields);
 	};
 
 	onStepsChange = (type) => {
@@ -174,18 +235,21 @@ class CreateEvent extends Component {
 		let image1Base64 = image1 ? await this.getBase64(image1) : "";
 		let image2Base64 = image2 ? await this.getBase64(image2) : "";
 
+		let countryName = eventType === "physical" ? country.name : "";
+		let stateName = eventType === "physical" ? state.name : "";
+		let cityName = eventType === "physical" ? city.name : "";
+
 		let ticketLimited = [];
 		let tktQnty = [];
 		let prices = [];
 		let tktQntySold = [];
 		let categories = [];
 		let totalQuantity = 0;
-		let location = eventType === "physical" ? eventLocation : eventLink;
+		let location =
+			eventType === "physical"
+				? eventLocation + " " + cityName + ", " + countryName
+				: eventLink;
 		let onsite = eventType === "physical" ? true : false;
-
-		let countryName = eventType === "physical" ? country.name : "";
-		let stateName = eventType === "physical" ? state.name : "";
-		let cityName = eventType === "physical" ? city.name : "";
 
 		let time =
 			Date.parse(
@@ -269,7 +333,7 @@ class CreateEvent extends Component {
 					.send({
 						from: this.props.accounts[0],
 					})
-					.on("transactionHash",async (txhash) => {
+					.on("transactionHash", async (txhash) => {
 						// hash of tx
 						if (txhash !== null) {
 							console.log("txhash", txhash);
@@ -280,7 +344,7 @@ class CreateEvent extends Component {
 									icon="fas fa-edit fa-2x"
 									text={"Preparing your event...🚀"}
 									color="#413AE2"
-									/>,
+								/>,
 								{
 									position: "bottom-right",
 									autoClose: true,
@@ -306,7 +370,7 @@ class CreateEvent extends Component {
 									toast(
 										<Notify
 											text={
-												"Transaction successfull!\nYou can check event now."
+												"Transaction successful!\nYou can check event now."
 											}
 											icon="fas fa-check-circle fa-3x"
 											color="#413AE2"
@@ -325,7 +389,7 @@ class CreateEvent extends Component {
 							}, 5000);
 						}
 					})
-					.then((receipt) => {
+					.then(async (receipt) => {
 						console.log("receipt----->", receipt);
 						// toast(
 						// 	<Notify
@@ -343,6 +407,12 @@ class CreateEvent extends Component {
 						// 	}
 						// );
 						// this.onFlamingStepsChange();
+						// await userTweet({
+						// 	address: this.props.accounts[0],
+						// 	networkId: this.props.web3.networkId,
+						// 	base64Image: image0Base64,
+						// 	message: eventName,
+						// });
 					})
 					.catch((error) => {
 						console.log("tx error", error);
@@ -592,6 +662,8 @@ class CreateEvent extends Component {
 
 	componentDidMount() {
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
+
+		this.getPhoenixdaoMarket();
 	}
 
 	render() {
@@ -624,6 +696,7 @@ class CreateEvent extends Component {
 							<MyStepper
 								handleCreateEvent={this.handleCreateEvent}
 								onFieldsChange={this.onFieldsChange}
+								onGetRealTimeFields={this.onGetRealTimeFields}
 								onStepsChange={this.onStepsChange}
 								activeStep={this.state.activeStep}
 								onFlamingStepsChange={this.onFlamingStepsChange}
@@ -655,6 +728,7 @@ class CreateEvent extends Component {
 						<MyStepper
 							handleCreateEvent={this.handleCreateEvent}
 							onFieldsChange={this.onFieldsChange}
+							onGetRealTimeFields={this.onGetRealTimeFields}
 							onStepsChange={this.onStepsChange}
 							onFlamingStepsChange={this.onFlamingStepsChange}
 							activeFlamingStep={this.state.activeFlamingStep}
@@ -731,6 +805,7 @@ const mapStateToProps = (state) => {
 		contracts: state.contracts,
 		transactionStack: state.transactionStack,
 		accounts: state.accounts,
+		web3: state.web3,
 	};
 };
 

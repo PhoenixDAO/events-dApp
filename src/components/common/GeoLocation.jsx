@@ -20,10 +20,10 @@ const useStyles = makeStyles((theme) => ({
 	formControl: {
 		minWidth: "100%",
 		maxWidth: "100%",
-		"& .MuiSelect-outlined.MuiSelect-outlined":{
-			"@media (max-width: 1375px) and (min-width:1280px)":{
-				paddingLeft:"10px !important",
-				paddingRight:"20px !important"
+		"& .MuiSelect-outlined.MuiSelect-outlined": {
+			"@media (max-width: 1375px) and (min-width:1280px)": {
+				paddingLeft: "10px !important",
+				paddingRight: "20px !important",
 			},
 		},
 		// "@media (max-width: 1375px) and (min-width:1280px)":{
@@ -38,17 +38,26 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 15,
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
-		textTransform: "uppercase"
+		textTransform: "uppercase",
 	},
-	selectLocationPadding:{
-		paddingLeft:"0px !important",
-		paddingRight:"0px !important"
-	}
+	selectLocationPadding: {
+		paddingLeft: "0px !important",
+		paddingRight: "0px !important",
+	},
 }));
 
 export default function GeoLocation(props) {
 	const classes = useStyles();
-	const { locationTitle, geoId, onChange, isCountry, error, value } = props;
+	const {
+		locationTitle,
+		geoId,
+		onChange,
+		isCountry,
+		error,
+		value,
+		id,
+		name,
+	} = props;
 	const [options, setOptions] = useState([]);
 	const [currentItem, setCurrentItem] = useState("");
 	const [labelWidth, setLabelWidth] = useState(0);
@@ -103,7 +112,8 @@ export default function GeoLocation(props) {
 
 			<Select
 				// labelId="demo-simple-select-outlined-label"
-				id="demo-simple-select-outlined"
+				id={id}
+				name={name}
 				// value={currentItem}
 				value={value.id ? value.id : ""}
 				onChange={handleChange}

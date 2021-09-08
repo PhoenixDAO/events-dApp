@@ -108,7 +108,7 @@ class Favorites extends Component {
 		// this.contracts = context.drizzle.contracts;
 		// this.eventCount =
 		//     this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
-		this.perPage = 18;
+		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 		this.myRef = React.createRef();
 		this.toggleSortDate = this.toggleSortDate.bind(this);
@@ -188,7 +188,7 @@ class Favorites extends Component {
 			data: {
 				query: `
 			  {
-				events(first:1000) {
+				events(first: 1000) {
                     id
 					eventId
 					owner
@@ -440,6 +440,8 @@ class Favorites extends Component {
 			let currentPage = Number(this.props.match.params.page);
 			let events_list = [];
 			let skip = false;
+			console.log("Favourites", favoriteEvents);
+
 			for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
 				for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 					if (
@@ -464,11 +466,12 @@ class Favorites extends Component {
 				}
 				skip = false;
 			}
+
 			//get favourite events from filtered event list array
 			let favoriteEvents = events_list.filter((item) =>
 				this.state.UserFavoriteEvents.includes(item.eventId)
 			);
-
+			console.log("Favourites", favoriteEvents);
 			favoriteEvents.reverse();
 			// console.log("events_listt",favoriteEvents)
 			let updated_list = [];
@@ -483,6 +486,7 @@ class Favorites extends Component {
 					<Event
 						toggleBuying={this.props.toggleDisabling}
 						disabledStatus={this.props.disabledStatus}
+						checkExpiry={true}
 						inquire={this.props.inquire}
 						key={favoriteEvents[i].eventId}
 						id={favoriteEvents[i].eventId}

@@ -495,6 +495,7 @@ class Ticket extends Component {
 					date={date}
 					image={image}
 					ticket={true}
+					checkExpiry={true}
 					// myEventStatURL={myEventStatURL}
 					titleURL={titleURL}
 					max_seats={max_seats}
