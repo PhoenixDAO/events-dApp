@@ -17,7 +17,12 @@ import {
 import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
 import ipfs from "../utils/ipfs";
-import { GLOBAL_NETWORK_ID, GLOBAL_NETWORK_ID_2 } from "../config/const.js";
+import {
+	GLOBAL_NETWORK_ID,
+	GLOBAL_NETWORK_ID_2,
+	INFURA_URL,
+	INFURA_URL_2,
+} from "../config/const.js";
 class Sidebar extends Component {
 	constructor(props, context) {
 		console.log("accounts props in sidebar", props.account);
@@ -28,12 +33,15 @@ class Sidebar extends Component {
 			avatarCustom: false,
 			avatar: "",
 			avatarId: 0,
+			loading: false,
+			networkId: false,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
 
 	componentDidMount() {
 		this.toggleSidebarClass(false);
+		this.getNetworkId();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -205,6 +213,54 @@ class Sidebar extends Component {
 		}
 	};
 
+	getNetworkId = async () => {
+		try {
+			this.setState({
+				loading: true,
+			});
+			let web3;
+			if (window.ethereum && window.ethereum.isMetaMask) {
+				web3 = new Web3(window.ethereum);
+			} else if (typeof web3 !== "undefined") {
+				web3 = new Web3(web3.currentProvider);
+			} else {
+				const network = await web3.eth.net.getId();
+				let infura;
+				if (network === GLOBAL_NETWORK_ID) {
+					infura = INFURA_URL;
+				} else if (network === GLOBAL_NETWORK_ID_2) {
+					infura = INFURA_URL_2;
+				}
+				web3 = new Web3(new Web3.providers.HttpProvider(infura));
+			}
+			const networkId = await web3.eth.net.getId();
+
+			console.log("This called getNetworkId", networkId);
+			if (networkId === GLOBAL_NETWORK_ID) {
+				this.setState({
+					networkId: true,
+					loading: false,
+				});
+				return;
+			} else if (networkId === GLOBAL_NETWORK_ID_2) {
+				this.setState({
+					networkId: true,
+					loading: false,
+				});
+				return;
+			} else {
+				console.log("network id not suported");
+			}
+			this.setState({
+				loading: false,
+				networkId: false,
+			});
+			return;
+		} catch (err) {
+			console.log("err", err);
+		}
+	};
+
 	render() {
 		let user = (
 			<div>
@@ -217,7 +273,13 @@ class Sidebar extends Component {
 						className="switch-img"
 						src="/images/icons/switch.svg"
 					/>
-					<span className="toggleHidden">Connect Wallet</span>
+					<span className="toggleHidden">
+						{this.state.loading
+							? null
+							: this.state.networkId
+							? "Connect Wallet"
+							: "Switch to Matic or Main net"}
+					</span>
 				</p>
 			</div>
 		);
@@ -270,7 +332,7 @@ class Sidebar extends Component {
 			console.log(
 				"I am doing that",
 				this.props.networkId == GLOBAL_NETWORK_ID ||
-				this.props.networkId == GLOBAL_NETWORK_ID_2
+					this.props.networkId == GLOBAL_NETWORK_ID_2
 			);
 			return (
 				<React.Fragment>
