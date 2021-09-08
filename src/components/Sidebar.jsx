@@ -393,7 +393,10 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
-										<DashboardOutlined />{" "}
+										<span className="iconMargin">
+										<Dashboard />
+										</span>
+										{" "}
 										<span className="toggleHidden">
 											Dashboard
 										</span>
@@ -437,7 +440,9 @@ class Sidebar extends Component {
 										}}
 									>
 										{/* <ModeCommentOutlined /> */}
+										<span className="iconMargin">
 										{Topics}
+										</span>
 										{" "}
 										<span className="toggleHidden">
 											Topics
@@ -454,8 +459,10 @@ class Sidebar extends Component {
 										}}
 									>
 										{/* <i className="far fa-check-square fontAwesomeIcon"></i>{" "} */}
+										<span className="iconMargin">
 										{ConfirmPurchase}
-										<span className="toggleHidden">
+										</span>
+										<span className="toggleHidden  ml-1">
 											Confirm Purchase
 										</span>
 									</NavLink>
@@ -492,7 +499,8 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
-										<InfoOutlined />{" "}
+										<span className="iconMargin">
+										<InfoOutlined /></span>{" "}
 										<span className="toggleHidden">
 											How It Works
 										</span>
@@ -508,7 +516,10 @@ class Sidebar extends Component {
 										}}
 									>
 										{/* <ForumOutlined /> */}
-										<Forum/>
+										<span className="iconMargin">
+											<Forum/>
+										</span>
+										
 										{" "}
 										<span className="toggleHidden">
 											FAQ's
@@ -528,7 +539,9 @@ class Sidebar extends Component {
 											className="fa fa-file-alt fontAwesomeIcon"
 											title="Terms and Conditions"
 										></i> */}
+										<span className="iconMargin">
 										{Terms}
+										</span>
 										{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
@@ -637,7 +650,9 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
+										<span className="iconMargin">
 										<Dashboard />
+										</span>
 										
 										{" "}
 										<span className="toggleHidden">
@@ -687,7 +702,9 @@ class Sidebar extends Component {
 										}}
 									>
 										{/* <ModeCommentOutlined /> */}
+										<span className="iconMargin">
 										{Topics}
+										</span>
 										{" "}
 										<span className="toggleHidden">
 											Topics
@@ -704,7 +721,9 @@ class Sidebar extends Component {
 										}}
 									>
 										{/* <TodayOutlined /> */}
+										<span className="iconMargin">
 										{Calendar}
+										</span>
 										{" "}
 										<span className="toggleHidden">
 											Calendar
@@ -721,8 +740,10 @@ class Sidebar extends Component {
 										}}
 									>
 										{/* <i className="far fa-check-square fontAwesomeIcon"></i> */}
+										<span className="iconMargin">
 										{ConfirmPurchase}
-										<span className="toggleHidden">
+										</span>
+										<span className="toggleHidden ml-1">
 											Confirm Purchase
 										</span>
 									</NavLink>
@@ -747,7 +768,9 @@ class Sidebar extends Component {
 											// class="fas fa-pen-square"
 											title="Create Event"
 										></i> */}
+										<span className="iconMargin">
 										{CreateEvent}
+										</span>
 										{" "}
 										<span className="toggleHidden">
 											Create Event
@@ -769,7 +792,9 @@ class Sidebar extends Component {
 										}}
 									>
 										{/* <ListAltOutlined /> */}
+										<span className="iconMargin">
 										{CreatedEvents}
+										</span>
 										{" "}
 										<span className="toggleHidden">
 											My Created Events
@@ -794,7 +819,9 @@ class Sidebar extends Component {
 											className="fa fa-ticket-alt fontAwesomeIcon"
 											title="My Tickets"
 										></i> */}
+										<span className="iconMargin">
 										{MyTickets}
+										</span>
 										{" "}
 										<span className="toggleHidden">
 											My Tickets
@@ -810,7 +837,9 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
+										<span className="iconMargin">
 										<Favorite />
+										</span>
 										{"  "}
 										<span className="toggleHidden">
 											Favourites
@@ -826,7 +855,9 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
+										<span className="iconMargin">
 										{AnalyticsIcon}
+										</span>
 										{"  "}
 										<span className="toggleHidden">
 											Analytics
@@ -847,7 +878,9 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
+										<span className="iconMargin">
 										{Guide}
+										</span>
 										{/* <InfoOutlined /> */}
 										{" "}
 										<span className="toggleHidden">
@@ -864,7 +897,9 @@ class Sidebar extends Component {
 											this.sidebarClick(this);
 										}}
 									>
+										<span className="iconMargin">
 										<Forum/>
+										</span>
 										{" "}
 										<span className="toggleHidden">
 											FAQ's
@@ -884,7 +919,9 @@ class Sidebar extends Component {
 											className="fa fa-file-alt fontAwesomeIcon"
 											title="How It Works"
 										></i> */}
+											<span className="iconMargin">
 										{Guide}
+										</span>
 										{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
