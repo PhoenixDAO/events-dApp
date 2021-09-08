@@ -197,6 +197,13 @@ const styles = (theme) => ({
 		// 	width: "55%	!important",
 		// },
 	},
+	selectWidth:{
+		maxWidth: "350px",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  textOverflow: "ellipsis",
+	}
+
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -1255,10 +1262,13 @@ class EventPage extends Component {
 																	value={
 																		i
 																	}
+																	style={{
+																		fontFamily:
+																			"'Aeonik', sans-serif",
+																	
+																	}}
 																>
-																	{
-																		category
-																	}
+																	<span className={classes.selectWidth}>{category}</span>
 																</MenuItem>
 															)
 														)
