@@ -223,7 +223,7 @@ const useStyles = makeStyles((theme) => ({
 			fontSize: "90%",
 		},
 	},
-	menuPaper:{
+	menuPaper: {
 		position: "absolute !important",
 		left: "50% !important",
 		webkitTransform: "translateX(-50%) !important",
@@ -342,7 +342,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	ticketNameCat: {
 		overflow: "hidden",
-		wordBreak:"break-word",
+		wordBreak: "break-word",
 		fontSize: 20,
 		fontWeight: 400,
 		color: "#1E1E22",
@@ -527,6 +527,9 @@ const MyStepper = ({
 		isError: false,
 	});
 
+	const [categoriesOfTicket, setCategoriesOfTicket] = useState([]);
+	const [categoriesOfToken, setCategoriesOfToken] = useState(false);
+
 	// useEffect(() => {
 	// 	onFieldsChange({ eventDescription: eventDesc });
 	// 	console.log("event desc from useeffect ", eventDesc);
@@ -565,9 +568,9 @@ const MyStepper = ({
 		}, 1000);
 	};
 
-	useEffect(()=>{
-		console.log("country ",country,", state", state,", city ", city)
-	},[state, country, city])
+	useEffect(() => {
+		console.log("country ", country, ", state", state, ", city ", city);
+	}, [state, country, city]);
 
 	const formatInputNoOfTickets = (e) => {
 		// Prevent characters that are not numbers ("e", ".", "+" & "-") ✨
@@ -855,7 +858,11 @@ const MyStepper = ({
 		} else if (activeStep === 2) {
 			// 3rd stepper -  event categories (free, single paid, multiple paid)
 			// bool token; // false means free
+
+			console.log("fields.eventCategory ", fields.eventCategory);
+
 			if (fields.eventCategory === "free") {
+				console.log("free--------->");
 				let cat = [];
 				let obj = {
 					ticketName: "free",
@@ -873,6 +880,8 @@ const MyStepper = ({
 				cat.push(obj);
 				fields.categories = cat;
 				fields.token = false; // false means free
+				setCategoriesOfTicket(cat);
+				setCategoriesOfToken(false);
 				onFieldsChange(fields);
 				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				onStepsChange("inc");
@@ -895,10 +904,13 @@ const MyStepper = ({
 				cat.push(obj);
 				fields.categories = cat;
 				fields.token = true; // false means free
+				setCategoriesOfTicket(cat);
+				setCategoriesOfToken(false);
 				onFieldsChange(fields);
 				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				onStepsChange("inc");
 			} else {
+				console.log("multiple fields");
 				if (categories.length > 0) {
 					let sortedCategories = categories.sort(
 						(a, b) =>
@@ -907,6 +919,8 @@ const MyStepper = ({
 					);
 					fields.categories = sortedCategories;
 					fields.token = true; // false means free
+					setCategoriesOfTicket(sortedCategories);
+					setCategoriesOfToken(false);
 					onFieldsChange(fields);
 					// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 					onStepsChange("inc");
@@ -916,6 +930,9 @@ const MyStepper = ({
 			}
 		} else if (activeStep === 3) {
 			// 4th stepper
+			console.log("fields", fields.categories);
+			fields.categories = categoriesOfTicket;
+			fields.token = categoriesOfToken;
 			onFieldsChange(fields);
 			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			onStepsChange("inc");
@@ -1250,7 +1267,7 @@ const MyStepper = ({
 																	</label>
 																</InputLabel>
 																<KeyboardDatePicker
-																	fullWidth																	
+																	fullWidth
 																	disableToolbar
 																	variant="inline"
 																	format="dd-MM-yyyy"
@@ -2004,16 +2021,16 @@ const MyStepper = ({
 														isCountry
 														onChange={(v) => {
 															onChange(v);
-															setState('')
-															setCity('')
+															setState("");
+															setCity("");
 															setCountry(v.id);
 															setFormValue(
 																"city",
-																''
+																""
 															);
 															setFormValue(
 																"state",
-																''
+																""
 															);
 															onGetRealTimeFields(
 																{
@@ -2021,7 +2038,6 @@ const MyStepper = ({
 																	value: v,
 																}
 															);
-
 														}}
 														error={error}
 														value={value}
@@ -2065,10 +2081,10 @@ const MyStepper = ({
 														onChange={(v) => {
 															onChange(v);
 															setState(v.id);
-															setCity('')
+															setCity("");
 															setFormValue(
 																"city",
-																''
+																""
 															);
 															onGetRealTimeFields(
 																{
@@ -2076,7 +2092,6 @@ const MyStepper = ({
 																	value: v,
 																}
 															);
-
 														}}
 														error={error}
 														geoId={country}
@@ -2784,7 +2799,9 @@ const MyStepper = ({
 																			</Button>
 																		</InputAdornment>
 																	),
-																	inputProps:{min:0},
+																inputProps: {
+																	min: 0,
+																},
 																classes: {},
 															}}
 															value={value}
@@ -3406,7 +3423,6 @@ const MyStepper = ({
 																				{
 																					min: 0,
 																				},
-
 																		}}
 																		value={
 																			value

@@ -255,8 +255,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
     handleClose();
 
   }
-  purchased = true;
-  console.log("purchased", purchased);
+  console.log("purchased", purchased, "event time",time);
   return (
     <div >
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" TransitionComponent={Transition} open={open} className={classes.root} >

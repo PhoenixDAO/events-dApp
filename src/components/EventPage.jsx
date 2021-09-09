@@ -198,13 +198,12 @@ const styles = (theme) => ({
 		// 	width: "55%	!important",
 		// },
 	},
-	selectWidth:{
+	selectWidth: {
 		maxWidth: "350px",
-  overflow: "hidden",
-  whiteSpace: "nowrap",
-  textOverflow: "ellipsis",
-	}
-
+		overflow: "hidden",
+		whiteSpace: "nowrap",
+		textOverflow: "ellipsis",
+	},
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -273,7 +272,7 @@ class EventPage extends Component {
 			shareUrl: window.location,
 			allowBuySnackbar: false,
 			errorMessage: "",
-			SnackbarMessage: ""
+			SnackbarMessage: "",
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -321,6 +320,20 @@ class EventPage extends Component {
 	}
 
 	async loadEventFromBlockchain() {
+		// const web3 = new Web3(
+		// 	new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+		// );
+		// const openEvents = new web3.eth.Contract(
+		// 	Open_events_ABI,
+		// 	Open_events_Address
+		// );
+
+		// const blockChainEvent = await this.props.eventsContract.methods
+		// 	.events("126")
+		// 	.call();
+		// 	console.log("events")
+
+		// 	console.log("blockChain Events in eventPage",blockChainEvent)
 		const graphURL = await GetGraphApi();
 		await axios({
 			url: graphURL,
@@ -358,42 +371,48 @@ class EventPage extends Component {
 			.then(async (graphEvents) => {
 				console.log(
 					"GraphQL query response of events in eventPage",
-					graphEvents.data.data.events[0]
+					graphEvents.data
 				);
-				this.setState({
-					blockChainEvent: graphEvents.data.data.events[0],
-					blockChainEventLoaded: true,
-					load: false,
-					oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
-				});
-				this.updateIPFS();
-				if (this.props.networkId) {
-					console.log(
-						"graphData",
-						graphEvents.data.data.events[0].owner
-					);
-					await updateEventViews({
-						eventId: graphEvents.data.data.events[0].eventId,
-						address: graphEvents.data.data.events[0].owner,
-						networkId: this.props.networkId,
+				if (graphEvents.data.data.events.length > 0) {
+					this.setState({
+						blockChainEvent: graphEvents.data.data.events[0],
+						blockChainEventLoaded: true,
+						load: false,
+						oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 					});
-
-					const userDetails = await getUser({
-						address: graphEvents.data.data.events[0].owner,
-						networkId: this.props.networkId,
-					});
-
-					console.log("userDEtails in event page", userDetails);
-					if (!userDetails.error) {
-						this.setState({
-							organizerDetails:
-								userDetails.result.result.userHldr
-									.organizerDetails,
+					this.updateIPFS();
+					if (this.props.networkId) {
+						console.log(
+							"graphData",
+							graphEvents.data.data.events[0].owner
+						);
+						await updateEventViews({
+							eventId: graphEvents.data.data.events[0].eventId,
+							address: graphEvents.data.data.events[0].owner,
+							networkId: this.props.networkId,
 						});
-						this.provideImage(userDetails.result.result.userHldr);
+
+						const userDetails = await getUser({
+							address: graphEvents.data.data.events[0].owner,
+							networkId: this.props.networkId,
+						});
+
+						console.log("userDEtails in event page", userDetails);
+						if (!userDetails.error) {
+							this.setState({
+								organizerDetails:
+									userDetails.result.result.userHldr
+										.organizerDetails,
+							});
+							this.provideImage(
+								userDetails.result.result.userHldr
+							);
+						}
 					}
+					this.priceCalculation(0);
+				} else {
+					throw "event not found";
 				}
-				this.priceCalculation(0);
 			})
 			.catch((err) => {
 				console.log("Error", err);
@@ -671,7 +690,7 @@ class EventPage extends Component {
 		) {
 			this.setState({
 				open3: true,
-				open3Message: "Please connect to ethereum or matic main-net",
+				open3Message: "Please connect to Rinkbey or Goerli network",
 			});
 		} else {
 			// this.setState({ open2: true });
@@ -794,7 +813,14 @@ class EventPage extends Component {
 		let balance = await this.props.phnxContract.methods
 			.totalSupply()
 			.call();
+		let date = new Date(
+			parseInt(this.state.blockChainEvent.time, 10) * 1000
+		);
 
+		let time = date.toLocaleTimeString([], {
+			hour: "2-digit",
+			minute: "2-digit",
+		});
 		const geoFindUser = await this.geoFindMe();
 
 		this.setState(
@@ -830,7 +856,8 @@ class EventPage extends Component {
 						this.state.image,
 						this.state.blockChainEvent.name,
 						this.state.phnx_price,
-						this.state.dollar_price
+						this.state.dollar_price,
+						time
 					);
 				}
 			}
@@ -892,12 +919,10 @@ class EventPage extends Component {
 				onclick: true,
 			},
 		];
-		console.log("myArray", myArray);
 		return myArray[index].img;
 	};
 
 	provideImage = (userDetails) => {
-		console.log("this.props.userDetails", userDetails);
 		if (Object.keys(userDetails).length > 0) {
 			// console.log("userdetailsss", this.props.userDetails);
 			// console.log("", this.props.userDetails);
@@ -929,7 +954,11 @@ class EventPage extends Component {
 				<img
 					src={this.state.avatar}
 					className="bird"
-					style={{ width: "60px", borderRadius: "50%", height:"60px" }}
+					style={{
+						width: "60px",
+						borderRadius: "50%",
+						height: "60px",
+					}}
 				/>
 			);
 		} else {
@@ -937,7 +966,11 @@ class EventPage extends Component {
 				<img
 					src={this.imageData(this.state.avatarId)}
 					className="bird"
-					style={{ width: "60px", borderRadius: "50%", height: "60px" }}
+					style={{
+						width: "60px",
+						borderRadius: "50%",
+						height: "60px",
+					}}
 				/>
 			);
 		}
@@ -946,32 +979,43 @@ class EventPage extends Component {
 	allowBuy = () => {
 		if (Object.keys(this.state.blockChainEvent).length > 0) {
 			let index = this.state.selectedCategoryIndex;
+			console.log(
+				"test",
+				this.state.blockChainEvent.catTktQuantity[index] != 0,
+				parseInt(this.state.blockChainEvent.catTktQuantitySold[index]),
+				parseInt(this.state.blockChainEvent.catTktQuantity[index])
+			);
 
 			if (
-				Number(this.state.blockChainEvent.time) < new Date().getTime() / 1000
+				Number(this.state.blockChainEvent.time) <
+				new Date().getTime() / 1000
 			) {
 				this.setState({
 					allowBuySnackbar: true,
-					SnackbarMessage: "This event is already ended"
+					SnackbarMessage: "This event is already ended",
 				});
 				console.log(
 					"allow buy in if",
-					Number(this.state.blockChainEvent.time), moment().unix(),
-					parseInt(this.state.blockChainEvent.tktTotalQuantitySold) >= parseInt(this.state.blockChainEvent.tktTotalQuantity),
+					Number(this.state.blockChainEvent.time),
+					moment().unix(),
+					parseInt(this.state.blockChainEvent.tktTotalQuantitySold) >=
+						parseInt(this.state.blockChainEvent.tktTotalQuantity),
 					this.state.blockChainEvent.tktTotalQuantitySold,
-					this.state.blockChainEvent.tktTotalQuantity,
-
+					this.state.blockChainEvent.tktTotalQuantity
 				);
 				return false;
-			}
-			else if (this.state.blockChainEvent.catTktQuantity[index] != 0 && (parseInt(this.state.blockChainEvent.catTktQuantitySold[index]) >= parseInt(this.state.blockChainEvent.catTktQuantity[index]))) {
+			} else if (
+				this.state.blockChainEvent.catTktQuantity[index] != 0 &&
+				parseInt(
+					this.state.blockChainEvent.catTktQuantitySold[index]
+				) >= parseInt(this.state.blockChainEvent.catTktQuantity[index])
+			) {
 				this.setState({
 					allowBuySnackbar: true,
-					SnackbarMessage: "All tickets have been sold for this category"
+					SnackbarMessage:
+						"All tickets have been sold for this category",
 				});
-			}
-			else {
-
+			} else {
 				console.log(
 					"allow buy in else",
 					Number(this.state.blockChainEvent.time),
@@ -989,11 +1033,15 @@ class EventPage extends Component {
 
 		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
-			console.log("render blockchain event", this.state.blockChainEvent);
+			console.log(
+				"render blockchain event",
+				Object.keys(this.state.blockChainEvent).length
+			);
 			if (
 				this.state.blockChainEvent === undefined ||
 				Object.keys(this.state.blockChainEvent).length === 0
 			) {
+				console.log("hg");
 				body = (
 					// <div className="text-center mt-5">
 					// 	<span role="img" aria-label="unicorn">
@@ -1004,6 +1052,7 @@ class EventPage extends Component {
 					<EmptyState
 						text="Event doesnot exist"
 						btnText="Go to Dashboard"
+						url="/upcomingevents/1"
 					/>
 				);
 			} else {
@@ -1028,8 +1077,8 @@ class EventPage extends Component {
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-					this.state.selectedCategoryIndex
-					]
+							this.state.selectedCategoryIndex
+					  ]
 					: "∞";
 
 				let disabled = false;
@@ -1040,14 +1089,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-						this.state.selectedCategoryIndex
+							this.state.selectedCategoryIndex
 						]
 					) >=
-					Number(
-						event_data.catTktQuantity[
-						this.state.selectedCategoryIndex
-						]
-					)
+						Number(
+							event_data.catTktQuantity[
+								this.state.selectedCategoryIndex
+							]
+						)
 				) {
 					disabled = true;
 					disabledStatus = (
@@ -1232,7 +1281,10 @@ class EventPage extends Component {
 											>
 												<Select
 													// native
-													value={this.state.selectedCategoryIndex}
+													value={
+														this.state
+															.selectedCategoryIndex
+													}
 													onChange={
 														this
 															.handleCategoryChange
@@ -1245,7 +1297,8 @@ class EventPage extends Component {
 														classes: {
 															paper: classes.menuPaper,
 														},
-														getContentAnchorEl: null,
+														getContentAnchorEl:
+															null,
 														anchorOrigin: {
 															vertical: "bottom",
 															horizontal: "left",
@@ -1255,24 +1308,31 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-															(
-																category,
-																i
-															) => (
-																<MenuItem
-																	value={
-																		i
-																	}
-																	style={{
-																		fontFamily:
-																			"'Aeonik', sans-serif",
-																	
-																	}}
-																>
-																	<span className={classes.selectWidth}>{category}</span>
-																</MenuItem>
-															)
-														)
+																(
+																	category,
+																	i
+																) => (
+																	<MenuItem
+																		value={
+																			i
+																		}
+																		style={{
+																			fontFamily:
+																				"'Aeonik', sans-serif",
+																		}}
+																	>
+																		<span
+																			className={
+																				classes.selectWidth
+																			}
+																		>
+																			{
+																				category
+																			}
+																		</span>
+																	</MenuItem>
+																)
+														  )
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1328,11 +1388,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-													"onedayevent"
-													? moment(
+												  "onedayevent"
+												? moment(
 														this.state.eventDate
-													).format("Do MMM, YYYY")
-													: `
+												  ).format("Do MMM, YYYY")
+												: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1346,24 +1406,24 @@ class EventPage extends Component {
 											{!this.state.eventStartTime
 												? `Time`
 												: !this.state.eventEndTime
-													? moment(
+												? moment(
 														this.state
 															.eventStartTime
-													)
+												  )
 														.utcOffset(0)
 														.format("hh:mma z")
-													: `${moment(
+												: `${moment(
 														this.state
 															.eventStartTime
-													)
+												  )
 														.utcOffset(0)
 														.format(
 															"hh:mma"
 														)} - ${moment(
-															this.state.eventEndTime
-														)
-															.utcOffset(0)
-															.format("hh:mma z")}`}
+														this.state.eventEndTime
+												  )
+														.utcOffset(0)
+														.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
@@ -1384,11 +1444,11 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{
-												// event_data.catTktQuantitySold[
-												// this.state
-												// 	.selectedCategoryIndex
-												// ]
-												event_data.tktTotalQuantitySold
+												event_data.catTktQuantitySold[
+													this.state
+														.selectedCategoryIndex
+												]
+												// event_data.tktTotalQuantitySold
 											}
 											/{max_seats}
 										</p>
@@ -1434,7 +1494,10 @@ class EventPage extends Component {
 															bought
 														</a>{" "}
 														{" " + sold.count}{" "}
-														ticket for this event.{" "}
+														{sold.count > 1
+															? "tickets"
+															: "ticket"}{" "}
+														for this event.{" "}
 														{/* <strong>
 														{event_data[0]}
 													</strong> */}
@@ -1698,14 +1761,14 @@ class EventPage extends Component {
 
 							<Snackbar
 								anchorOrigin={{
-									vertical: "bottom",
+									vertical: "top",
 									horizontal: "center",
 								}}
 								open={this.state.allowBuySnackbar}
 								onClose={this.handleCloseAllowBuySnackbar}
 								message={this.state.SnackbarMessage}
 								autoHideDuration={3000}
-								key={"bottom" + "center"}
+								key={"top" + "center"}
 								className="snackbar"
 							/>
 						</Grid>

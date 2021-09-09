@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	button: {
 		"@media screen and (max-width: 1200px)": {
-			height: "45px",
-			lineHeight: "1",
+			height: "46px",
+			lineHeight: "1"
 		},
 		fontFamily: "'Aeonik', sans-serif",
 		background: "#413AE2",
@@ -22,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
 		"&:focus": {
 			outline: "none",
 		},
+		padding: "9px 22px !important"
+
 	},
 }));
 

@@ -30,8 +30,10 @@ import {
 	CreatedEvents,
 	MyTickets,
 	Guide,
+	Terms,
+	Works,
+	Faq,
 } from "./Images/Icon.js";
-import Terms from "./Guide";
 import {
 	GLOBAL_NETWORK_ID,
 	GLOBAL_NETWORK_ID_2,
@@ -315,6 +317,17 @@ class Sidebar extends Component {
 								Switch to Matic or Main net
 							</span>
 						)}
+				<p className="small connection" style={{display:"flex", alignItems:"start"}}>
+					<img
+						className="switch-img"
+						src="/images/icons/switch.svg"
+					/>
+					<span className="toggleHidden" style={{padding: "5px 0px"}}>
+						{this.state.loading
+							? null
+							: this.state.networkId
+							? "Connect Wallet"
+							: "Switch to Rinkbey or Goerli network"}
 					</span>
 				</p>
 			</div>
@@ -423,7 +436,9 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-											<Dashboard />
+											<Dashboard
+												style={{ color: "#73727D" }}
+											/>
 										</span>{" "}
 										<span className="toggleHidden">
 											Dashboard
@@ -527,7 +542,12 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-											<InfoOutlined />
+											<InfoOutlined
+												style={{
+													color: "#73727D",
+													fill: "#73727D",
+												}}
+											/>
 										</span>{" "}
 										<span className="toggleHidden">
 											How It Works
@@ -545,7 +565,7 @@ class Sidebar extends Component {
 									>
 										{/* <ForumOutlined /> */}
 										<span className="iconMargin">
-											<Forum />
+											{Faq}
 										</span>{" "}
 										<span className="toggleHidden">
 											FAQ's
@@ -596,7 +616,7 @@ class Sidebar extends Component {
 										title="Telegram"
 										href="https://t.me/PHNXDAO"
 									>
-										<img src="/images/navbar/telegram.svg" />
+										<img src="/images/icons/telegram.svg" alt="telegram"/>
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -606,7 +626,7 @@ class Sidebar extends Component {
 										title="Twitter"
 										href="https://twitter.com/phnxdao"
 									>
-										<img src="/images/navbar/twitter.svg" />
+										<img src="/images/icons/twitter.svg" alt="twitter"/>
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -614,9 +634,9 @@ class Sidebar extends Component {
 										aria-label="Homepage"
 										target="blank"
 										title="GitHub"
-										href="https://github.com/PhoenixDAO/events-dApp/tree/heroku-deployment"
+										href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
 									>
-										<img src="/images/navbar/github.svg" />
+										<img src="/images/icons/github.svg" alt="github" />
 									</a>
 								</div>
 							</ul>
@@ -684,7 +704,9 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-											<Dashboard />
+											<Dashboard
+												style={{ color: "#73727D" }}
+											/>
 										</span>{" "}
 										<span className="toggleHidden">
 											Dashboard
@@ -864,7 +886,9 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-											<Favorite />
+											<Favorite
+												style={{ color: "#73727D" }}
+											/>
 										</span>
 										{"  "}
 										<span className="toggleHidden">
@@ -905,7 +929,7 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-											{Guide}
+											{Works}
 										</span>
 										{/* <InfoOutlined /> */}{" "}
 										<span className="toggleHidden">
@@ -923,7 +947,7 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-											<Forum />
+											{Faq}
 										</span>{" "}
 										<span className="toggleHidden">
 											FAQ's
@@ -944,7 +968,7 @@ class Sidebar extends Component {
 											title="How It Works"
 										></i> */}
 										<span className="iconMargin">
-											{Guide}
+											{Terms}
 										</span>{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
@@ -964,7 +988,7 @@ class Sidebar extends Component {
 										title="Telegram"
 										href="https://t.me/PHNXDAO"
 									>
-										<img src="/images/navbar/telegram.svg" />
+										<img src="/images/icons/telegram.svg" />
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -974,7 +998,7 @@ class Sidebar extends Component {
 										title="Twitter"
 										href="https://twitter.com/phnxdao"
 									>
-										<img src="/images/navbar/twitter.svg" />
+										<img src="/images/icons/twitter.svg" />
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -982,9 +1006,9 @@ class Sidebar extends Component {
 										aria-label="Homepage"
 										target="blank"
 										title="GitHub"
-										href="https://github.com/PhoenixDAO/events-dApp/tree/heroku-deployment"
+										href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
 									>
-										<img src="/images/navbar/github.svg" />
+										<img src="/images/icons/github.svg" />
 									</a>
 								</div>
 							</ul>

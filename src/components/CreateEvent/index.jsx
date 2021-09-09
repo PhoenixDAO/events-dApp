@@ -195,14 +195,14 @@ class CreateEvent extends Component {
 			.getEventsCount()
 			.call();
 		console.log("eventCount", eventCount);
-		eventCount = Number(eventCount) + 1;
+		// eventCount = Number(eventCount) + 1;
 		var base_url = window.location.origin;
 		const shareUrl = `${base_url}/event/${eventCount}`;
 		this.setState({ shareUrl: shareUrl });
 	}
 
 	handleCreateEvent = async () => {
-		console.log("handleCreateEvent", this.state.fields);
+		console.log("handleCreateEvent111", this.state.fields);
 		this.stageUpdater(90);
 
 		let {
@@ -259,12 +259,15 @@ class CreateEvent extends Component {
 		for (var i = 0; i < ticketCategories.length; i++) {
 			ticketLimited.push(ticketCategories[i].ticketAvailability);
 			tktQnty.push(ticketCategories[i].noOfTickets);
-			prices.push(Web3.utils.toWei(ticketCategories[i].dollarPrice));
+			prices.push(ticketCategories[i].dollarPrice * 1000000);
 			tktQntySold.push("0");
 			categories.push(ticketCategories[i].ticketName);
 			totalQuantity =
 				totalQuantity + parseInt(ticketCategories[i].noOfTickets);
 		}
+
+		console.log("token", token);
+		console.log(ticketLimited, tktQnty, prices, tktQntySold, categories);
 
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({

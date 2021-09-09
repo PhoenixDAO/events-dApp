@@ -15,8 +15,8 @@ const BuyPhoenixModal = (props) => {
 		hostURL: window.location.origin,
 		widgetHeight: "642px",
 		widgetWidth: "500px",
-		networks:"ethereum,polygon"
-  };
+		networks: "ethereum,polygon",
+	};
 	const transak = new transakSDK(settings);
 
 	useEffect(() => {
@@ -41,26 +41,30 @@ const BuyPhoenixModal = (props) => {
 			onclick: true,
 		},
 		{
-			img: "/images/ledgerwallet.svg",
+			img: "/images/QuickSwap.svg",
 			name: "Quickswap",
 			coming: true,
 			onclick: false,
 		},
 		{
-			img: "/images/connectwallet.svg",
+			img: "/images/Uniswap.svg",
 			name: "Uniswap",
 			coming: true,
 			onclick: false,
 		},
 		{
-			img: "/images/coinbasewallet.svg",
+			img: "/images/coinbase.svg",
 			name: "Coinbase Wallet",
 			coming: true,
 			onclick: false,
 		},
 	].map((data) => {
 		return (
-			<div className="wallets-single">
+			<div
+				className="wallets-single"
+				onClick={data.onclick ? openTransak : null}
+				style={data.onclick ? { cursor: "pointer" } : null}
+			>
 				<div className="wallets-first">
 					<div className="wallets-img-hldr">
 						<img className="wallets-img" src={data.img} />
@@ -73,10 +77,7 @@ const BuyPhoenixModal = (props) => {
 					{data.coming ? (
 						<div className="coming-hldr"> COMING SOON</div>
 					) : (
-						<div
-							className="right-arrow-img-hldr"
-							onClick={data.onclick ? openTransak : null}
-						>
+						<div className="right-arrow-img-hldr">
 							<img
 								className="right-arrow-img"
 								src="/images/arrowright.svg"
@@ -108,8 +109,11 @@ const BuyPhoenixModal = (props) => {
 			<div>
 				<p className="wallets-footer">
 					By connecting, I accept PhoenixDAO’s{" "}
-					<Link to="/terms-and-conditions" ><span style={{ color: "#413AE2" }}>Terms of service</span>{" "}</Link>
-
+					<Link to="/terms-and-conditions">
+						<span style={{ color: "#413AE2" }}>
+							Terms of service
+						</span>{" "}
+					</Link>
 				</p>
 			</div>
 		</div>

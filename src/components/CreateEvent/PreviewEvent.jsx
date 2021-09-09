@@ -131,7 +131,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	price: {
 		color: "#413AE2",
-		maxWidth:"34.333%",
+		maxWidth: "34.333%",
 		textAlign: "end",
 		fontWeight: "700",
 		fontSize: "17px",
@@ -147,24 +147,25 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "18px",
 		fontFamily: "'Aeonik', sans-serif",
 		textTransform: "capitalize",
-	},eventTitle:{
+	},
+	eventTitle: {
 		color: "#1E1E22",
 		maxWidth: "65.66%",
 		fontSize: 16,
-		maxHeight:"52px",
+		maxHeight: "52px",
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
-		wordBreak:"break-word",
+		wordBreak: "break-word",
 		display: "-webkit-box",
 		WebkitBoxOrient: "vertical",
 		WebkitLineClamp: "2",
 		overflow: "hidden",
-textOverflow: "ellipsis",
-// "@media (min-width: 990px) and (max-width: 1024px)": {
-// /* For landscape layouts only */
-// WebkitLineClamp: "3",
-// 	}
-}
+		textOverflow: "ellipsis",
+		// "@media (min-width: 990px) and (max-width: 1024px)": {
+		// /* For landscape layouts only */
+		// WebkitLineClamp: "3",
+		// 	}
+	},
 }));
 
 export default function PreviewEvent({ fields, activeStep }) {
@@ -241,6 +242,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 							component="img"
 							alt={eventpreviewplaceholder}
 							height="200"
+							width="400"
 							image={
 								!image0
 									? eventpreviewplaceholder
@@ -254,7 +256,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
-									height: "72px"
+									height: "72px",
 								}}
 							>
 								<Typography
@@ -305,15 +307,21 @@ export default function PreviewEvent({ fields, activeStep }) {
 														'"Aeonik", sans-serif',
 												}}
 											>
-												{pricingFormatter(ticketCategories[0].phnxPrice, "PHNX")}{" "}
+												{pricingFormatter(
+													ticketCategories[0]
+														.phnxPrice,
+													"PHNX"
+												)}{" "}
 												{/* PHNX */}
 											</p>
 											<p className={classes.starting}>
 												{" "}
 												{/* $ */}
-												{
-													pricingFormatter(ticketCategories[0].dollarPrice, "$")
-												}
+												{pricingFormatter(
+													ticketCategories[0]
+														.dollarPrice,
+													"$"
+												)}
 											</p>
 										</div>
 									) : (
@@ -322,16 +330,21 @@ export default function PreviewEvent({ fields, activeStep }) {
 												Starting from
 											</p>
 											<p>
-												{pricingFormatter(ticketCategories[0].phnxPrice, "PHNX")}{" "}
+												{pricingFormatter(
+													ticketCategories[0]
+														.phnxPrice,
+													"PHNX"
+												)}{" "}
 												{/* PHNX */}
 											</p>
 											<p className={classes.starting}>
 												{" "}
 												{/* $ */}
-												{
-													pricingFormatter(ticketCategories[0]
-														.dollarPrice, "$")
-												}
+												{pricingFormatter(
+													ticketCategories[0]
+														.dollarPrice,
+													"$"
+												)}
 											</p>
 										</div>
 									)}

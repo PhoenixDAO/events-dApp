@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
+                
       - name: Cache node_modules
         uses: actions/cache@v2.0.0
         with:
@@ -26,6 +27,23 @@ jobs:
             ${{ runner.os }}-node-
             ${{ runner.os }}-
       
+      - name: Copy a file from s3
+        uses: prewk/s3-cp-action@v2
+        with:
+         aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+         source: 's3://events-dapp-modules/node_modules.zip'
+         dest: '.'
+        
+      - name: Unzip modules
+        run: unzip node_modules.zip
+      - name: building new build
+        run: npm build
+      - name: give execution permission
+        run: chmod +x changes.sh
+      - name: Run script
+        run: ./changes.sh
+        
       - name: Deploy to S3
         uses: reggionick/s3-deploy@v3
         with:
