@@ -297,7 +297,7 @@ class FindEvents extends Component {
 			data: {
 				query: `
 				{	
-				  events(${filter}) {
+				  events(first:1000 ${filter}) {
 					  id
 					  eventId
 					  owner
