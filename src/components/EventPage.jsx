@@ -370,42 +370,48 @@ class EventPage extends Component {
 			.then(async (graphEvents) => {
 				console.log(
 					"GraphQL query response of events in eventPage",
-					graphEvents.data.data.events[0]
+					graphEvents.data
 				);
-				this.setState({
-					blockChainEvent: graphEvents.data.data.events[0],
-					blockChainEventLoaded: true,
-					load: false,
-					oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
-				});
-				this.updateIPFS();
-				if (this.props.networkId) {
-					console.log(
-						"graphData",
-						graphEvents.data.data.events[0].owner
-					);
-					await updateEventViews({
-						eventId: graphEvents.data.data.events[0].eventId,
-						address: graphEvents.data.data.events[0].owner,
-						networkId: this.props.networkId,
+				if (graphEvents.data.data.events.length > 0) {
+					this.setState({
+						blockChainEvent: graphEvents.data.data.events[0],
+						blockChainEventLoaded: true,
+						load: false,
+						oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 					});
-
-					const userDetails = await getUser({
-						address: graphEvents.data.data.events[0].owner,
-						networkId: this.props.networkId,
-					});
-
-					console.log("userDEtails in event page", userDetails);
-					if (!userDetails.error) {
-						this.setState({
-							organizerDetails:
-								userDetails.result.result.userHldr
-									.organizerDetails,
+					this.updateIPFS();
+					if (this.props.networkId) {
+						console.log(
+							"graphData",
+							graphEvents.data.data.events[0].owner
+						);
+						await updateEventViews({
+							eventId: graphEvents.data.data.events[0].eventId,
+							address: graphEvents.data.data.events[0].owner,
+							networkId: this.props.networkId,
 						});
-						this.provideImage(userDetails.result.result.userHldr);
+
+						const userDetails = await getUser({
+							address: graphEvents.data.data.events[0].owner,
+							networkId: this.props.networkId,
+						});
+
+						console.log("userDEtails in event page", userDetails);
+						if (!userDetails.error) {
+							this.setState({
+								organizerDetails:
+									userDetails.result.result.userHldr
+										.organizerDetails,
+							});
+							this.provideImage(
+								userDetails.result.result.userHldr
+							);
+						}
 					}
+					this.priceCalculation(0);
+				} else {
+					throw "event not found";
 				}
-				this.priceCalculation(0);
 			})
 			.catch((err) => {
 				console.log("Error", err);
@@ -1026,11 +1032,15 @@ class EventPage extends Component {
 
 		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
-			console.log("render blockchain event", this.state.blockChainEvent);
+			console.log(
+				"render blockchain event",
+				Object.keys(this.state.blockChainEvent).length
+			);
 			if (
 				this.state.blockChainEvent === undefined ||
 				Object.keys(this.state.blockChainEvent).length === 0
 			) {
+				console.log("hg");
 				body = (
 					// <div className="text-center mt-5">
 					// 	<span role="img" aria-label="unicorn">
@@ -1041,6 +1051,7 @@ class EventPage extends Component {
 					<EmptyState
 						text="Event doesnot exist"
 						btnText="Go to Dashboard"
+						url="/upcomingevents/1"
 					/>
 				);
 			} else {
@@ -1800,11 +1811,11 @@ class EventPage extends Component {
 		//https://ipinfo.io/
 		//https://geoip-db.com/
 		try {
-			const get = await axios.get(`http://www.geoplugin.net/json.gp`);
+			const get = await axios.get(`http://ip-api.com/json`);
 			if (!get.data) {
 				return "Unknown";
 			}
-			return get.data.geoplugin_city;
+			return get.data.city;
 		} catch (error) {
 			return "Unknown";
 		}
