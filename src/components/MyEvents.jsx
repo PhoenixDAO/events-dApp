@@ -45,21 +45,6 @@ const styles = (theme) => ({
 			boxShadow: "none",
 		},
 	},
-	appBar: {
-		"&.MuiPaper-elevation4": {
-			boxShadow: "none",
-		},
-		"& .MuiTabScrollButton-root": {
-			"& .MuiSvgIcon-root": {
-				background: "#413AE2",
-				borderRadius: "10px",
-				color: "#fff",
-			},
-		},
-		"& .MuiTabScrollButton-root.Mui-disabled": {
-			position: "absolute",
-		},
-	},
 	tabBar: {
 		"&:hover, &:focus ": {
 			outline: "none",
@@ -590,63 +575,52 @@ class MyEvents extends Component {
 			);
 		}
 		return (
-			<div>
-				<div ref={this.myRef}>
-					<Header
-						title="Created Events"
-						page="myEvent"
-						searchBar={true}
-						handleSearch={this.updateSearch}
-					/>
-					<div
-						style={{
-							position: "sticky",
-							zIndex: "10000",
-							width: "100%",
-							backgroundColor: "#F2F2FD",
-						}}
-					>
-						<div className={classes.root}>
-							<AppBar
-								position="sticky"
-								className={classes.appBar}
-								color="transparent"
-							>
-								<Tabs
-									value={this.state.selectedTab}
-									onChange={this.onTabChange.bind(this)}
-									indicatorColor="primary"
-									textColor="primary"
-									variant="scrollable"
-									scrollButtons="auto"
-									aria-label="scrollable auto tabs example"
-									style={{ height: "40px" }}
-								>
-									<Tab
-										className={classes.tabBar}
-										mx="0"
-										label="Upcoming Events"
-										{...a11yProps(0)}
-									/>
-									<Tab
-										className={classes.tabBar}
-										label="Past Events"
-										{...a11yProps(1)}
-									/>
-								</Tabs>
-								<Divider light />
-							</AppBar>
-						</div>
-					</div>
-					<TabPanel value={this.state.selectedTab} index={0}>
-						<div>{body}</div>
-					</TabPanel>
-					<TabPanel value={this.state.selectedTab} index={1}>
-						{body}
-						{/* <FindEvents {...this.props}/> */}
-					</TabPanel>
+			<div className="event-page-wrapper" ref={this.myRef}>
+				<Header
+					title="Created Events"
+					page="myEvent"
+					searchBar={true}
+					handleSearch={this.updateSearch}
+				/>
 
-					{/* <h2 className="col-md-10" ref={this.myRef}>
+				<AppBar
+					position="static"
+					className={classes.AppBar}
+					color="transparent"
+				>
+					<Tabs
+						value={this.state.selectedTab}
+						onChange={this.onTabChange.bind(this)}
+						indicatorColor="primary"
+						textColor="primary"
+						variant="scrollable"
+						scrollButtons="auto"
+						aria-label="scrollable auto tabs example"
+						style={{ height: "40px" }}
+					>
+						<Tab
+							className={classes.tabBar}
+							mx="0"
+							label="Upcoming Events"
+							{...a11yProps(0)}
+						/>
+						<Tab
+							className={classes.tabBar}
+							label="Past Events"
+							{...a11yProps(1)}
+						/>
+					</Tabs>
+					<Divider light />
+				</AppBar>
+				<TabPanel value={this.state.selectedTab} index={0}>
+					<div>{body}</div>
+				</TabPanel>
+				<TabPanel value={this.state.selectedTab} index={1}>
+					{body}
+					{/* <FindEvents {...this.props}/> */}
+				</TabPanel>
+
+				{/* <h2 className="col-md-10" ref={this.myRef}>
 					{this.state.isActive ? (
 						<i className="fa fa-calendar-alt "></i>
 					) : (
@@ -684,10 +658,8 @@ class MyEvents extends Component {
 						aria-describedby="inputGroup-sizing-sm"
 					/>
 				</div>
-
 				<hr />
 				{body} */}
-				</div>
 			</div>
 		);
 	}

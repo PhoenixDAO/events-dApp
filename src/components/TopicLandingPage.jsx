@@ -114,6 +114,9 @@ const useStyles = (theme) => ({
 	mobilePadding: {
 		padding: "0px 20px",
 	},
+	justifyEmptyState: {
+		justifyContent: "center",
+	},
 });
 
 class TopicLandingPage extends Component {
@@ -541,11 +544,11 @@ class TopicLandingPage extends Component {
 
 	geoFindMe = async () => {
 		try {
-			const get = await axios.get(`http://www.geoplugin.net/json.gp`);
+			const get = await axios.get(`http://ip-api.com/json`);
 			if (!get.data) {
 				return { cityName: "Unknown", stateName: "Unknown" };
 			}
-			return { cityName: get.data.geoplugin_city, stateName: get.data.geoplugin_region };
+			return { cityName: get.data.city, stateName: get.data.regionName };
 		} catch (error) {
 			return { cityName: "Unknown", stateName: "Unknown" };
 		}
@@ -593,7 +596,7 @@ class TopicLandingPage extends Component {
 		if (count === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="No events found 🤔. Be the first;"
+					text="No events found 🤔. Want to be the first?"
 					btnText="Create an Event"
 					url="/createevent"
 				/>
@@ -640,7 +643,7 @@ class TopicLandingPage extends Component {
 		if (events_list.length == 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="No events found 🤔. Be the first;"
+					text="No events found 🤔. Want to be the first?"
 					url="/createevent"
 				/>
 			);
@@ -754,10 +757,30 @@ class TopicLandingPage extends Component {
 					</nav>
 				);
 			}
-
+let btnTextMessage = "No events are available 😔. Want to be the first?";
+			if(this.state.category === "Near you"){
+				btnTextMessage = "No events are available near you 😔. Want to be the first?"
+			}
+			else{
+				btnTextMessage = "No events are available 😔. Want to be the first?";
+			}
 			body = (
 				<div>
-					<div className="row user-list mt-4">{updated_list}</div>
+					<div
+						className={`row user-list mt-4 ${
+							!updated_list.length && classes.justifyEmptyState
+						}`}
+					>
+						{updated_list.length ? (
+							updated_list
+						) : (
+							<EmptyState
+								text={btnTextMessage}
+								btnText="Create an Event"
+								url="/createevent"
+							/>
+						)}
+					</div>
 					{pagination}
 				</div>
 			);

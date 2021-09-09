@@ -437,12 +437,12 @@ class FindEvents extends Component {
 
 	geoFindMe = async () => {
 		try {
-			const get = await axios.get(`http://www.geoplugin.net/json.gp`);
-			console.log("get location", get);
+			const get = await axios.get(`http://json.geoiplookup.io/?callback=?`);
+			console.log("Get location", get);
 			if (!get.data) {
 				return { cityName: "Unknown", stateName: "Unknown" };
 			}
-			return { cityName: get.data.geoplugin_city, stateName: get.data.geoplugin_region };
+			return { cityName: get.data.city, stateName: get.data.regionName };
 		} catch (error) {
 			return { cityName: "Unknown", stateName: "Unknown" };
 		}
@@ -585,7 +585,7 @@ class FindEvents extends Component {
 		if (this.state.Events_Blockchain.length === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="No event available 😔. Be the first;"
+					text="No event available 😔. Want to be the first?"
 					btnText="Create an Event"
 					url="/createevent"
 				/>
@@ -761,6 +761,7 @@ class FindEvents extends Component {
 			body = (
 				<EmptyState
 					text="No events are available😔. Want to be the first?"
+
 					btnText="Create an Event"
 					url="/createevent"
 				/>

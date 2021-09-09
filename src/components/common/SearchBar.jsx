@@ -9,7 +9,8 @@ const useStyles = makeStyles((theme) => ({
 	textField: {
 		// margin: theme.spacing(1),
 		marginBottom: theme.spacing(1),
-		marginTop: theme.spacing(1),
+		marginTop: "8px",
+		marginRight: theme.spacing(1),
 		color: "#C1C1C1",
 		// "@media screen and (max-width: 1500px) and (min-width: 1300px)": {
 		// 	left: "7%",

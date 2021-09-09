@@ -40,6 +40,9 @@ import {
 	INFURA_URL,
 	INFURA_URL_2,
 } from "../config/const.js";
+import DialogueBox from "./common/DialogueBox";
+import Wallet from "./common/Wallet";
+import { Button } from "@material-ui/core";
 
 class Sidebar extends Component {
 	constructor(props, context) {
@@ -53,6 +56,7 @@ class Sidebar extends Component {
 			avatarId: 0,
 			loading: false,
 			networkId: false,
+			openWallet: false,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
@@ -85,6 +89,14 @@ class Sidebar extends Component {
 			activeClassName = "nav-item";
 		}
 	}
+
+	handleOpenWallet = () => {
+		this.setState({ openWallet: true });
+	};
+
+	handleCloseWallet = () => {
+		this.setState({ openWallet: false });
+	};
 
 	toggleSidebarClass = (closeOnly) => {
 		if (!closeOnly) {
@@ -287,16 +299,35 @@ class Sidebar extends Component {
 				</div> */}
 
 				<p className="small connection">
+					<span className="toggleHidden">
+						{this.state.loading ? null : this.state.networkId ? (
+							<span className="sidebarOpenWallet" onClick={this.handleOpenWallet}>
+								<img
+									className="switch-img"
+									src="/images/icons/switch.svg"
+								/>
+								Connect Wallet
+							</span>
+						) : (
+							<span>
+								<img
+									className="switch-img"
+									src="/images/icons/switch.svg"
+								/>
+								Switch to Matic or Main net
+							</span>
+						)}
+				<p className="small connection" style={{display:"flex", alignItems:"start"}}>
 					<img
 						className="switch-img"
 						src="/images/icons/switch.svg"
 					/>
-					<span className="toggleHidden">
+					<span className="toggleHidden" style={{padding: "5px 0px"}}>
 						{this.state.loading
 							? null
 							: this.state.networkId
 							? "Connect Wallet"
-							: "Switch to Matic or Main net"}
+							: "Switch to Rinkbey or Goerli network"}
 					</span>
 				</p>
 			</div>
@@ -611,6 +642,14 @@ class Sidebar extends Component {
 							</ul>
 						</div>
 					</div>
+					<DialogueBox
+						open={this.state.openWallet}
+						handleClose={this.handleCloseWallet}
+						maxWidth="xs"
+					>
+						{/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}
+						<Wallet />
+					</DialogueBox>
 				</React.Fragment>
 			);
 		} else

@@ -158,8 +158,7 @@ const Header = ({
 						<div className={(page=="dashboard")&& classes.SearchAndBuyPheonixButtonMargin}>
 					<BuyPhnxButton onClick={handleOpenBuyPhnx} />
 					</div>
-				) : <div style={{marginLeft:"10px"}} >
-					
+				) : <div >
 				<BuyPhnxButton onClick={handleOpenBuyPhnx} />
 				</div>}
 				<DialogueBox

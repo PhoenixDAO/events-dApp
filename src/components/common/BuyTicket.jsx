@@ -184,6 +184,9 @@ const useStyles = makeStyles((theme) => ({
     "@media (min-width: 600px)":{
       textAlign: "end",
     },
+  },
+  contentOverflow:{
+    overflow: "visible"
   }
 }));
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -270,7 +273,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
           </Typography>
 
         </DialogTitle>
-        <DialogContent>
+        <DialogContent className={classes.contentOverflow}>
           <div className={classes.eventHolder}>
             <Grid className={classes.details}>
             
