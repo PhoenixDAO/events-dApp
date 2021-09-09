@@ -16,6 +16,14 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
+          
+      - name: Installing dependancies
+        run: https://events-dapp-modules.s3.amazonaws.com/node_modules.zip
+      - name: Unzip modules
+        run: unzip node_modules.zip
+      - name: building new build
+        run: npm build
+      
       - name: Cache node_modules
         uses: actions/cache@v2.0.0
         with:
