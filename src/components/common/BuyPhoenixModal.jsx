@@ -41,19 +41,19 @@ const BuyPhoenixModal = (props) => {
 			onclick: true,
 		},
 		{
-			img: "/images/ledgerwallet.svg",
+			img: "/images/QuickSwap.svg",
 			name: "Quickswap",
 			coming: true,
 			onclick: false,
 		},
 		{
-			img: "/images/connectwallet.svg",
+			img: "/images/Uniswap.svg",
 			name: "Uniswap",
 			coming: true,
 			onclick: false,
 		},
 		{
-			img: "/images/coinbasewallet.svg",
+			img: "/images/coinbase.svg",
 			name: "Coinbase Wallet",
 			coming: true,
 			onclick: false,
