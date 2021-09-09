@@ -1800,11 +1800,11 @@ class EventPage extends Component {
 		//https://ipinfo.io/
 		//https://geoip-db.com/
 		try {
-			const get = await axios.get(`http://ip-api.com/json`);
+			const get = await axios.get(`http://www.geoplugin.net/json.gp`);
 			if (!get.data) {
 				return "Unknown";
 			}
-			return get.data.city;
+			return get.data.geoplugin_city;
 		} catch (error) {
 			return "Unknown";
 		}
