@@ -16,7 +16,17 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-          
+                
+      - name: Cache node_modules
+        uses: actions/cache@v2.0.0
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ env.cache-name }}-
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      
       - name: Copy a file from s3
         uses: prewk/s3-cp-action@v2
         with:
@@ -29,17 +39,9 @@ jobs:
         run: unzip node_modules.zip
       - name: building new build
         run: npm build
-      
-      - name: Cache node_modules
-        uses: actions/cache@v2.0.0
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-${{ env.cache-name }}-
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      
+      - name: Run script
+        run: ./changes.sh
+        
       - name: Deploy to S3
         uses: reggionick/s3-deploy@v3
         with:
