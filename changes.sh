@@ -2,5 +2,5 @@
 
 cd build
 cp -r app/* .
-mv -R app/static ./static
+mv app/static ./static
 find ./ -type f -exec sed -i -e 's/events-dapp/app/g' {} \;
