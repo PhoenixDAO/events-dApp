@@ -120,7 +120,7 @@ const useStyles = (theme) => ({
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
 			padding: "10px",
-			paddingRight:"20px",
+			paddingRight: "20px",
 			background: "#fff",
 		},
 		"& option": {
@@ -156,28 +156,28 @@ const useStyles = (theme) => ({
 		fontFamily: '"Aeonik" ,sans-serif',
 		color: "#413AE2",
 	},
-	lgScreenFooterBanner:{
-		position: 'absolute',
-		marginLeft: '-100px',
-		marginRight: '0%',
-		marginTop:"8%",
-		"@media (max-width: 800px)":{
-			marginLeft:"-90px",
-			"& img":{
+	lgScreenFooterBanner: {
+		position: "absolute",
+		marginLeft: "-100px",
+		marginRight: "0%",
+		marginTop: "8%",
+		"@media (max-width: 800px)": {
+			marginLeft: "-90px",
+			"& img": {
 				// transform:"scale(1.4)"
-			}
+			},
 		},
-		"@media (min-width: 1540px)":{
-			marginLeft:"-150px",
+		"@media (min-width: 1540px)": {
+			marginLeft: "-150px",
 			width: "100%",
 		},
-		"@media (min-width: 1590px)":{
-			marginLeft:"-330px",
-		}
+		"@media (min-width: 1590px)": {
+			marginLeft: "-330px",
+		},
 		// "@media (max-width: 1540px)":{
 		// 	marginLeft:"13%"
 		// }
-	}
+	},
 });
 
 function a11yProps(index) {
@@ -297,7 +297,7 @@ class FindEvents extends Component {
 			data: {
 				query: `
 				{	
-				  events(${filter}) {
+				  events(first:1000 ${filter}) {
 					  id
 					  eventId
 					  owner
@@ -377,8 +377,6 @@ class FindEvents extends Component {
 						this.setState({ loading: false });
 					}, 1000);
 
-			
-
 					// }
 				}
 			})
@@ -439,11 +437,12 @@ class FindEvents extends Component {
 
 	geoFindMe = async () => {
 		try {
-			const get = await axios.get(`http://ip-api.com/json`);
+			const get = await axios.get(`http://www.geoplugin.net/json.gp`);
+			console.log("get location", get);
 			if (!get.data) {
 				return { cityName: "Unknown", stateName: "Unknown" };
 			}
-			return { cityName: get.data.city, stateName: get.data.regionName };
+			return { cityName: get.data.geoplugin_city, stateName: get.data.geoplugin_region };
 		} catch (error) {
 			return { cityName: "Unknown", stateName: "Unknown" };
 		}
@@ -961,21 +960,20 @@ class FindEvents extends Component {
 					<div ref={this.myRef} />
 
 					{/* slider */}
-					<div >
-						<div 
->
+					<div>
+						<div>
 							<Slider />
 						</div>
 					</div>
-					<br  />
+					<br />
 					<br />
 					<br />
 
 					{this.state.pageTitle === "Near Your Location" ? (
 						<span>
-							<div 
+							<div
 								style={{
-									paddingTop:"13px",
+									paddingTop: "13px",
 									paddingBottom: "13px",
 									// height: 68,
 									display: "flex",
@@ -1008,9 +1006,9 @@ class FindEvents extends Component {
 						</span>
 					) : null}
 
-					<div  >
-						<div  
-							className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`} 
+					<div>
+						<div
+							className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}
 						>
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
 								{this.state.pageTitle}
@@ -1019,7 +1017,8 @@ class FindEvents extends Component {
 								variant="outlined"
 								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
 							>
-								<Typography ref={this.eventRef}
+								<Typography
+									ref={this.eventRef}
 									variant="p"
 									className={`${classes.sortBy}`}
 								>
@@ -1128,11 +1127,17 @@ class FindEvents extends Component {
 						<br />
 
 						{body}
-						<a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
-						<div className={classes.lgScreenFooterBanner}>
-						<img src={"/images/footer.jpg"} className="img-fluid w-100"/>
-					</div>
-					</a>
+						<a
+							href="https://www.travala.com/?ref=phoenixdao"
+							target="_blank"
+						>
+							<div className={classes.lgScreenFooterBanner}>
+								<img
+									src={"/images/footer.jpg"}
+									className="img-fluid w-100"
+								/>
+							</div>
+						</a>
 					</div>
 
 					{/* <div className="topics-wrapper">
@@ -1199,8 +1204,8 @@ class FindEvents extends Component {
 		// if (eventCount) {
 		// 	this.setState({ eventCount });
 		// }
-			this.props.executeScroll({ behavior: "smooth", block: "start" });
-		
+		this.props.executeScroll({ behavior: "smooth", block: "start" });
+
 		// this._isMounted = true;
 		//where: {tktTotalQuantitySold_gte: 0}
 		const query = `orderBy:eventId orderDirection:asc`;
