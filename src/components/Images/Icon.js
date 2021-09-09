@@ -1,8 +1,8 @@
 import React from "react";
 export const AnalyticsIcon = (
 	<svg
-		width="22"
-		height="22"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -16,8 +16,8 @@ export const AnalyticsIcon = (
 
 export const Topics = (
 	<svg
-		width="22"
-		height="22"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -31,8 +31,8 @@ export const Topics = (
 
 export const ConfirmPurchase = (
 	<svg
-		width="22"
-		height="22"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -46,8 +46,8 @@ export const ConfirmPurchase = (
 
 export const Calendar = (
 	<svg
-		width="22"
-		height="22"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -61,8 +61,8 @@ export const Calendar = (
 
 export const CreateEvent = (
 	<svg
-		width="22"
-		height="22"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -76,8 +76,8 @@ export const CreateEvent = (
 
 export const CreatedEvents = (
 	<svg
-		width="22"
-		height="22"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -91,8 +91,8 @@ export const CreatedEvents = (
 
 export const MyTickets = (
 	<svg
-		width="22"
-		height="22"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -106,8 +106,8 @@ export const MyTickets = (
 
 export const Guide = (
 	<svg
-		width="22"
-		height="22"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -121,8 +121,8 @@ export const Guide = (
 
 export const Terms = (
 	<svg
-		width="22"
-		height="22"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -136,8 +136,8 @@ export const Terms = (
 
 export const Works = (
 	<svg
-		width="24"
-		height="24"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
@@ -151,8 +151,8 @@ export const Works = (
 
 export const Faq = (
 	<svg
-		width="24"
-		height="24"
+		width="20"
+		height="20"
 		viewBox="0 0 24 24"
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"

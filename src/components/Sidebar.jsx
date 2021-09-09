@@ -406,7 +406,7 @@ class Sidebar extends Component {
 									>
 										<span className="iconMargin">
 											<Dashboard
-												style={{ color: "#73727D" }}
+												style={{ color: "#73727D" ,fontSize:"20px"}}
 											/>
 										</span>{" "}
 										<span className="toggleHidden">
@@ -666,8 +666,8 @@ class Sidebar extends Component {
 									>
 										<span className="iconMargin">
 											<Dashboard
-												style={{ color: "#73727D" }}
-											/>
+												style={{ color: "#73727D" ,fontSize:"20px"}}
+												/>
 										</span>{" "}
 										<span className="toggleHidden">
 											Dashboard
@@ -848,8 +848,8 @@ class Sidebar extends Component {
 									>
 										<span className="iconMargin">
 											<Favorite
-												style={{ color: "#73727D" }}
-											/>
+												style={{ color: "#73727D" ,fontSize:"20px"}}
+												/>
 										</span>
 										{"  "}
 										<span className="toggleHidden">
