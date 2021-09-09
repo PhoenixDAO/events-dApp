@@ -39,7 +39,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: building new build
-        run: npm build
+        run: npm i && npm build
         
       - name: give execution permission
         run: chmod +x changes.sh
