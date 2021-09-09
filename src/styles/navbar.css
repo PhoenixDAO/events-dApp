@@ -12,6 +12,10 @@
 	cursor: pointer;
 }
 
+.sidebarOpenWallet {
+	cursor: pointer;
+}
+
 #sidebar-wrapper.my-sidebar a:hover {
 	text-decoration: underline;
 }

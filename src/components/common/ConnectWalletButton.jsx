@@ -8,8 +8,7 @@ const useStyles = makeStyles((theme) => ({
 		"@media screen and (max-width: 1100px)": {
 			display: "inline-block",
 		},
-		margin: "7px 0px 0px 10px",
-
+		margin: "7px 0px 7px 0px",
 	},
 	button: {
 		"@media screen and (max-width: 1200px)": {
