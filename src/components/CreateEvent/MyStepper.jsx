@@ -565,6 +565,10 @@ const MyStepper = ({
 		}, 1000);
 	};
 
+	useEffect(()=>{
+		console.log("country ",country,", state", state,", city ", city)
+	},[state, country, city])
+
 	const formatInputNoOfTickets = (e) => {
 		// Prevent characters that are not numbers ("e", ".", "+" & "-") ✨
 		let checkIfNum;
@@ -1984,7 +1988,7 @@ const MyStepper = ({
 												name="country"
 												control={control}
 												defaultValue={country}
-												value={country}
+												// value={country}
 												render={({
 													field: {
 														onChange,
@@ -2000,9 +2004,17 @@ const MyStepper = ({
 														isCountry
 														onChange={(v) => {
 															onChange(v);
+															setState('')
+															setCity('')
 															setCountry(v.id);
-															setState("");
-															setCity("");
+															setFormValue(
+																"city",
+																''
+															);
+															setFormValue(
+																"state",
+																''
+															);
 															onGetRealTimeFields(
 																{
 																	name,
@@ -2034,7 +2046,7 @@ const MyStepper = ({
 												name="state"
 												control={control}
 												defaultValue={state}
-												value={state}
+												// value={state}
 												className={
 													classes.selectBoxMaxWidth
 												}
@@ -2053,7 +2065,11 @@ const MyStepper = ({
 														onChange={(v) => {
 															onChange(v);
 															setState(v.id);
-															setCity("");
+															setCity('')
+															setFormValue(
+																"city",
+																''
+															);
 															onGetRealTimeFields(
 																{
 																	name,
@@ -2085,7 +2101,7 @@ const MyStepper = ({
 												name="city"
 												control={control}
 												defaultValue={city}
-												value={city}
+												// value={city}
 												render={({
 													field: {
 														onChange,
