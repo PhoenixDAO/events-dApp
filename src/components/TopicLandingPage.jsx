@@ -541,11 +541,11 @@ class TopicLandingPage extends Component {
 
 	geoFindMe = async () => {
 		try {
-			const get = await axios.get(`http://ip-api.com/json`);
+			const get = await axios.get(`http://www.geoplugin.net/json.gp`);
 			if (!get.data) {
 				return { cityName: "Unknown", stateName: "Unknown" };
 			}
-			return { cityName: get.data.city, stateName: get.data.regionName };
+			return { cityName: get.data.geoplugin_city, stateName: get.data.geoplugin_region };
 		} catch (error) {
 			return { cityName: "Unknown", stateName: "Unknown" };
 		}
