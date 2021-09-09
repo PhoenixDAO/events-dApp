@@ -31,7 +31,8 @@ import {
 	MyTickets,
 	Guide,
 	Terms,
-	Works
+	Works,
+	Faq,
 } from "./Images/Icon.js";
 import {
 	GLOBAL_NETWORK_ID,
@@ -511,7 +512,10 @@ class Sidebar extends Component {
 									>
 										<span className="iconMargin">
 											<InfoOutlined
-												style={{ color: "#73727D", fill:"#73727D" }}
+												style={{
+													color: "#73727D",
+													fill: "#73727D",
+												}}
 											/>
 										</span>{" "}
 										<span className="toggleHidden">
@@ -530,9 +534,7 @@ class Sidebar extends Component {
 									>
 										{/* <ForumOutlined /> */}
 										<span className="iconMargin">
-											<Forum
-												style={{ color: "#73727D" }}
-											/>
+											{Faq}
 										</span>{" "}
 										<span className="toggleHidden">
 											FAQ's
@@ -906,7 +908,7 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-											<Forum />
+											{Faq}
 										</span>{" "}
 										<span className="toggleHidden">
 											FAQ's
