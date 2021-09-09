@@ -424,7 +424,7 @@ div[class|="r-sticky"] .header3 {
 .header3 h2 {
 	font-weight: 700;
 	color: black;
-	word-break: break-word;
+	/* word-break: break-word; */
 }
 
 @media screen and (min-width: 1200px) {

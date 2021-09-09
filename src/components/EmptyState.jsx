@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#fff",
 		padding: "10px 40px",
 		marginTop: "20px",
+		fontFamily:"'Aeonik', sans-serif",
 	},
 	title: {
 		fontFamily: "'Aeonik', sans-serif",

@@ -21,7 +21,16 @@ import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
 import ipfs from "../utils/ipfs";
 
-import {AnalyticsIcon, Topics, ConfirmPurchase, Calendar, CreateEvent, CreatedEvents, MyTickets, Guide} from './Images/Icon.js';
+import {
+	AnalyticsIcon,
+	Topics,
+	ConfirmPurchase,
+	Calendar,
+	CreateEvent,
+	CreatedEvents,
+	MyTickets,
+	Guide,
+} from "./Images/Icon.js";
 import Terms from "./Guide";
 import {
 	GLOBAL_NETWORK_ID,
@@ -29,6 +38,9 @@ import {
 	INFURA_URL,
 	INFURA_URL_2,
 } from "../config/const.js";
+import DialogueBox from "./common/DialogueBox";
+import Wallet from "./common/Wallet";
+import { Button } from "@material-ui/core";
 
 class Sidebar extends Component {
 	constructor(props, context) {
@@ -42,6 +54,7 @@ class Sidebar extends Component {
 			avatarId: 0,
 			loading: false,
 			networkId: false,
+			openWallet: false,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
@@ -74,6 +87,14 @@ class Sidebar extends Component {
 			activeClassName = "nav-item";
 		}
 	}
+
+	handleOpenWallet = () => {
+		this.setState({ openWallet: true });
+	};
+
+	handleCloseWallet = () => {
+		this.setState({ openWallet: false });
+	};
 
 	toggleSidebarClass = (closeOnly) => {
 		if (!closeOnly) {
@@ -276,16 +297,24 @@ class Sidebar extends Component {
 				</div> */}
 
 				<p className="small connection">
-					<img
-						className="switch-img"
-						src="/images/icons/switch.svg"
-					/>
 					<span className="toggleHidden">
-						{this.state.loading
-							? null
-							: this.state.networkId
-							? "Connect Wallet"
-							: "Switch to Matic or Main net"}
+						{this.state.loading ? null : this.state.networkId ? (
+							<span className="sidebarOpenWallet" onClick={this.handleOpenWallet}>
+								<img
+									className="switch-img"
+									src="/images/icons/switch.svg"
+								/>
+								Connect Wallet
+							</span>
+						) : (
+							<span>
+								<img
+									className="switch-img"
+									src="/images/icons/switch.svg"
+								/>
+								Switch to Matic or Main net
+							</span>
+						)}
 					</span>
 				</p>
 			</div>
@@ -394,9 +423,8 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										<Dashboard />
-										</span>
-										{" "}
+											<Dashboard />
+										</span>{" "}
 										<span className="toggleHidden">
 											Dashboard
 										</span>
@@ -441,9 +469,8 @@ class Sidebar extends Component {
 									>
 										{/* <ModeCommentOutlined /> */}
 										<span className="iconMargin">
-										{Topics}
-										</span>
-										{" "}
+											{Topics}
+										</span>{" "}
 										<span className="toggleHidden">
 											Topics
 										</span>
@@ -460,7 +487,7 @@ class Sidebar extends Component {
 									>
 										{/* <i className="far fa-check-square fontAwesomeIcon"></i>{" "} */}
 										<span className="iconMargin">
-										{ConfirmPurchase}
+											{ConfirmPurchase}
 										</span>
 										<span className="toggleHidden  ml-1">
 											Confirm Purchase
@@ -500,7 +527,8 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										<InfoOutlined /></span>{" "}
+											<InfoOutlined />
+										</span>{" "}
 										<span className="toggleHidden">
 											How It Works
 										</span>
@@ -517,10 +545,8 @@ class Sidebar extends Component {
 									>
 										{/* <ForumOutlined /> */}
 										<span className="iconMargin">
-											<Forum/>
-										</span>
-										
-										{" "}
+											<Forum />
+										</span>{" "}
 										<span className="toggleHidden">
 											FAQ's
 										</span>
@@ -540,9 +566,8 @@ class Sidebar extends Component {
 											title="Terms and Conditions"
 										></i> */}
 										<span className="iconMargin">
-										{Terms}
-										</span>
-										{" "}
+											{Terms}
+										</span>{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
 										</span>
@@ -597,6 +622,14 @@ class Sidebar extends Component {
 							</ul>
 						</div>
 					</div>
+					<DialogueBox
+						open={this.state.openWallet}
+						handleClose={this.handleCloseWallet}
+						maxWidth="xs"
+					>
+						{/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}
+						<Wallet />
+					</DialogueBox>
 				</React.Fragment>
 			);
 		} else
@@ -651,10 +684,8 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										<Dashboard />
-										</span>
-										
-										{" "}
+											<Dashboard />
+										</span>{" "}
 										<span className="toggleHidden">
 											Dashboard
 										</span>
@@ -703,9 +734,8 @@ class Sidebar extends Component {
 									>
 										{/* <ModeCommentOutlined /> */}
 										<span className="iconMargin">
-										{Topics}
-										</span>
-										{" "}
+											{Topics}
+										</span>{" "}
 										<span className="toggleHidden">
 											Topics
 										</span>
@@ -722,9 +752,8 @@ class Sidebar extends Component {
 									>
 										{/* <TodayOutlined /> */}
 										<span className="iconMargin">
-										{Calendar}
-										</span>
-										{" "}
+											{Calendar}
+										</span>{" "}
 										<span className="toggleHidden">
 											Calendar
 										</span>
@@ -741,7 +770,7 @@ class Sidebar extends Component {
 									>
 										{/* <i className="far fa-check-square fontAwesomeIcon"></i> */}
 										<span className="iconMargin">
-										{ConfirmPurchase}
+											{ConfirmPurchase}
 										</span>
 										<span className="toggleHidden ml-1">
 											Confirm Purchase
@@ -769,9 +798,8 @@ class Sidebar extends Component {
 											title="Create Event"
 										></i> */}
 										<span className="iconMargin">
-										{CreateEvent}
-										</span>
-										{" "}
+											{CreateEvent}
+										</span>{" "}
 										<span className="toggleHidden">
 											Create Event
 										</span>
@@ -793,9 +821,8 @@ class Sidebar extends Component {
 									>
 										{/* <ListAltOutlined /> */}
 										<span className="iconMargin">
-										{CreatedEvents}
-										</span>
-										{" "}
+											{CreatedEvents}
+										</span>{" "}
 										<span className="toggleHidden">
 											My Created Events
 										</span>
@@ -820,9 +847,8 @@ class Sidebar extends Component {
 											title="My Tickets"
 										></i> */}
 										<span className="iconMargin">
-										{MyTickets}
-										</span>
-										{" "}
+											{MyTickets}
+										</span>{" "}
 										<span className="toggleHidden">
 											My Tickets
 										</span>
@@ -838,7 +864,7 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										<Favorite />
+											<Favorite />
 										</span>
 										{"  "}
 										<span className="toggleHidden">
@@ -856,7 +882,7 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										{AnalyticsIcon}
+											{AnalyticsIcon}
 										</span>
 										{"  "}
 										<span className="toggleHidden">
@@ -879,10 +905,9 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										{Guide}
+											{Guide}
 										</span>
-										{/* <InfoOutlined /> */}
-										{" "}
+										{/* <InfoOutlined /> */}{" "}
 										<span className="toggleHidden">
 											How It Works
 										</span>
@@ -898,9 +923,8 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										<Forum/>
-										</span>
-										{" "}
+											<Forum />
+										</span>{" "}
 										<span className="toggleHidden">
 											FAQ's
 										</span>
@@ -919,10 +943,9 @@ class Sidebar extends Component {
 											className="fa fa-file-alt fontAwesomeIcon"
 											title="How It Works"
 										></i> */}
-											<span className="iconMargin">
-										{Guide}
-										</span>
-										{" "}
+										<span className="iconMargin">
+											{Guide}
+										</span>{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
 										</span>
