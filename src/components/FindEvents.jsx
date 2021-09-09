@@ -342,6 +342,9 @@ class FindEvents extends Component {
 					// 	// active_length: 0,
 					// 	event_copy: [],
 					// });
+
+					this.props.history.push("/upcomingevents/" + 1);
+
 					setTimeout(() => {
 						this.setState({
 							loading: false,
@@ -372,6 +375,8 @@ class FindEvents extends Component {
 							event_copy: newsort,
 						});
 					}
+
+					this.props.history.push("/upcomingevents/" + 1);
 
 					setTimeout(() => {
 						this.setState({ loading: false });
@@ -437,7 +442,9 @@ class FindEvents extends Component {
 
 	geoFindMe = async () => {
 		try {
-			const get = await axios.get(`http://json.geoiplookup.io/?callback=?`);
+			const get = await axios.get(
+				`http://json.geoiplookup.io/?callback=?`
+			);
 			console.log("Get location", get);
 			if (!get.data) {
 				return { cityName: "Unknown", stateName: "Unknown" };
@@ -458,6 +465,9 @@ class FindEvents extends Component {
 				cityName: cityName,
 				stateName: stateName,
 			});
+
+			this.props.history.push("/upcomingevents/" + 1);
+
 			try {
 				if (cityName) {
 					var filteredEvents = this.state.event_copy;
@@ -1213,6 +1223,11 @@ class FindEvents extends Component {
 		this.loadBlockchain(query);
 		this.filterHideEvent();
 	}
+
+	// comment out the below to re-render on every click
+	// shouldComponentUpdate(nextProps, nextState) {
+	// 	return this.state.Events_Blockchain != nextState.Events_Blockchain;
+	// }
 
 	componentWillUnmount() {
 		// this._isMounted = false;
