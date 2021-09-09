@@ -513,7 +513,7 @@ class FindEvents extends Component {
 		if (newValue === "All Events") {
 			query = `orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
-		} else if (newValue === "Near to you") {
+		} else if (newValue === "Near Your Location") {
 			await this.findNearToYouEvents();
 		} else if (newValue === "Today") {
 			console.log(newValue);
@@ -761,7 +761,7 @@ class FindEvents extends Component {
 		if (updated_list.length == 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="No event available 😔. Be the first;"
+					text="No events are available😔. Want to be the first?"
 					btnText="Create an Event"
 					url="/createevent"
 				/>
@@ -901,8 +901,8 @@ class FindEvents extends Component {
 										/>
 										<Tab
 											className={classes.tabBar}
-											label="Near to you"
-											value="Near to you"
+											label="Near Your Location"
+											value="Near Your Location"
 											// {...a11yProps(1)}
 										/>
 										<Tab
@@ -971,7 +971,7 @@ class FindEvents extends Component {
 					<br />
 					<br />
 
-					{this.state.pageTitle === "Near to you" ? (
+					{this.state.pageTitle === "Near Your Location" ? (
 						<span>
 							<div 
 								style={{
