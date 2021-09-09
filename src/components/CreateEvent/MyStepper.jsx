@@ -1983,7 +1983,8 @@ const MyStepper = ({
 											<Controller
 												name="country"
 												control={control}
-												defaultValue=""
+												defaultValue={country}
+												value={country}
 												render={({
 													field: {
 														onChange,
@@ -2000,6 +2001,8 @@ const MyStepper = ({
 														onChange={(v) => {
 															onChange(v);
 															setCountry(v.id);
+															setState("");
+															setCity("");
 															onGetRealTimeFields(
 																{
 																	name,
@@ -2030,7 +2033,8 @@ const MyStepper = ({
 											<Controller
 												name="state"
 												control={control}
-												defaultValue=""
+												defaultValue={state}
+												value={state}
 												className={
 													classes.selectBoxMaxWidth
 												}
@@ -2049,6 +2053,7 @@ const MyStepper = ({
 														onChange={(v) => {
 															onChange(v);
 															setState(v.id);
+															setCity("");
 															onGetRealTimeFields(
 																{
 																	name,
@@ -2079,7 +2084,8 @@ const MyStepper = ({
 											<Controller
 												name="city"
 												control={control}
-												defaultValue=""
+												defaultValue={city}
+												value={city}
 												render={({
 													field: {
 														onChange,

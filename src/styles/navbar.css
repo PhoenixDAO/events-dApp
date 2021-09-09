@@ -101,6 +101,11 @@
 	font-weight: 300;
 	padding-bottom: 10px;
 }
+
+.iconMargin svg {
+	margin-top: -5px;
+}
+
 .nav-link:hover {
 	text-decoration: none !important;
 	color: #413AE2 !important;
