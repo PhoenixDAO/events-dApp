@@ -78,7 +78,11 @@ const Wallet = () => {
 		},
 	].map((data) => {
 		return (
-			<div className="wallets-single">
+			<div
+				className="wallets-single"
+				onClick={data.onclick ? openMetaMask : null}
+				style={data.onclick ? { cursor: "pointer" } : null}
+			>
 				<div className="wallets-first">
 					<div className="wallets-img-hldr">
 						<img className="wallets-img" src={data.img} />
@@ -91,10 +95,7 @@ const Wallet = () => {
 					{data.coming ? (
 						<div className="coming-hldr"> COMING SOON</div>
 					) : (
-						<div
-							className="right-arrow-img-hldr"
-							onClick={data.onclick ? openMetaMask : null}
-						>
+						<div className="right-arrow-img-hldr">
 							<img
 								className="right-arrow-img"
 								src="/images/arrowright.svg"
@@ -126,7 +127,11 @@ const Wallet = () => {
 			<div>
 				<p className="wallets-footer">
 					By connecting, I accept PhoenixDAO’s{" "}
-					<Link to="/terms-and-conditions" ><span style={{ color: "#413AE2" }}>Terms of service</span>{" "}</Link>
+					<Link to="/terms-and-conditions">
+						<span style={{ color: "#413AE2" }}>
+							Terms of service
+						</span>{" "}
+					</Link>
 				</p>
 			</div>
 			<Snackbar

@@ -286,17 +286,17 @@ class Sidebar extends Component {
 					<i className="fas fa-plug"></i>
 				</div> */}
 
-				<p className="small connection">
+				<p className="small connection" style={{display:"flex", alignItems:"start"}}>
 					<img
 						className="switch-img"
 						src="/images/icons/switch.svg"
 					/>
-					<span className="toggleHidden">
+					<span className="toggleHidden" style={{padding: "5px 0px"}}>
 						{this.state.loading
 							? null
 							: this.state.networkId
 							? "Connect Wallet"
-							: "Switch to Matic or Main net"}
+							: "Switch to Rinkbey or Goerli network"}
 					</span>
 				</p>
 			</div>
