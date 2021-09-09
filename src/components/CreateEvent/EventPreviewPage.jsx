@@ -310,7 +310,7 @@ class EventPreviewPage extends Component {
 											/>
 										)}
 									</Grid>
-                  
+
 									<Grid
 										container
 										className={classes.clockTime}
@@ -366,9 +366,14 @@ class EventPreviewPage extends Component {
 										<span className={classes.PhnxPrice}>
 											{this.props.ticketCategories
 												.length > 0
-												? pricingFormatter(this.props.ticketCategories[
-														this.state.ticketIndex
-												  ]["phnxPrice"],"PHNX")
+												? pricingFormatter(
+														this.props
+															.ticketCategories[
+															this.state
+																.ticketIndex
+														]["phnxPrice"],
+														"PHNX"
+												  )
 												: ""}
 											{/* PHNX */}
 										</span>
@@ -381,9 +386,14 @@ class EventPreviewPage extends Component {
 											{/* $ */}
 											{this.props.ticketCategories
 												.length > 0
-												? pricingFormatter(this.props.ticketCategories[
-														this.state.ticketIndex
-												  ]["dollarPrice"],"$")
+												? pricingFormatter(
+														this.props
+															.ticketCategories[
+															this.state
+																.ticketIndex
+														]["dollarPrice"],
+														"$"
+												  )
 												: ""}
 										</div>
 									</div>
@@ -535,8 +545,6 @@ class EventPreviewPage extends Component {
 	async componentDidMount() {
 		this.getOrganizerDetails();
 		this._topicRemovedDashes();
-
-		console.log("ticketCategories", this.props.ticketCategories);
 	}
 }
 
