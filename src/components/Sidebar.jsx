@@ -21,8 +21,18 @@ import "../styles/navbar.css";
 import ThemeSwitch from "./common/Switch";
 import ipfs from "../utils/ipfs";
 
-import {AnalyticsIcon, Topics, ConfirmPurchase, Calendar, CreateEvent, CreatedEvents, MyTickets, Guide} from './Images/Icon.js';
-import Terms from "./Guide";
+import {
+	AnalyticsIcon,
+	Topics,
+	ConfirmPurchase,
+	Calendar,
+	CreateEvent,
+	CreatedEvents,
+	MyTickets,
+	Guide,
+	Terms,
+	Works
+} from "./Images/Icon.js";
 import {
 	GLOBAL_NETWORK_ID,
 	GLOBAL_NETWORK_ID_2,
@@ -394,9 +404,10 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										<Dashboard />
-										</span>
-										{" "}
+											<Dashboard
+												style={{ color: "#73727D" }}
+											/>
+										</span>{" "}
 										<span className="toggleHidden">
 											Dashboard
 										</span>
@@ -441,9 +452,8 @@ class Sidebar extends Component {
 									>
 										{/* <ModeCommentOutlined /> */}
 										<span className="iconMargin">
-										{Topics}
-										</span>
-										{" "}
+											{Topics}
+										</span>{" "}
 										<span className="toggleHidden">
 											Topics
 										</span>
@@ -460,7 +470,7 @@ class Sidebar extends Component {
 									>
 										{/* <i className="far fa-check-square fontAwesomeIcon"></i>{" "} */}
 										<span className="iconMargin">
-										{ConfirmPurchase}
+											{ConfirmPurchase}
 										</span>
 										<span className="toggleHidden  ml-1">
 											Confirm Purchase
@@ -500,7 +510,10 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										<InfoOutlined /></span>{" "}
+											<InfoOutlined
+												style={{ color: "#73727D", fill:"#73727D" }}
+											/>
+										</span>{" "}
 										<span className="toggleHidden">
 											How It Works
 										</span>
@@ -517,10 +530,10 @@ class Sidebar extends Component {
 									>
 										{/* <ForumOutlined /> */}
 										<span className="iconMargin">
-											<Forum/>
-										</span>
-										
-										{" "}
+											<Forum
+												style={{ color: "#73727D" }}
+											/>
+										</span>{" "}
 										<span className="toggleHidden">
 											FAQ's
 										</span>
@@ -540,9 +553,8 @@ class Sidebar extends Component {
 											title="Terms and Conditions"
 										></i> */}
 										<span className="iconMargin">
-										{Terms}
-										</span>
-										{" "}
+											{Terms}
+										</span>{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
 										</span>
@@ -651,10 +663,10 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										<Dashboard />
-										</span>
-										
-										{" "}
+											<Dashboard
+												style={{ color: "#73727D" }}
+											/>
+										</span>{" "}
 										<span className="toggleHidden">
 											Dashboard
 										</span>
@@ -703,9 +715,8 @@ class Sidebar extends Component {
 									>
 										{/* <ModeCommentOutlined /> */}
 										<span className="iconMargin">
-										{Topics}
-										</span>
-										{" "}
+											{Topics}
+										</span>{" "}
 										<span className="toggleHidden">
 											Topics
 										</span>
@@ -722,9 +733,8 @@ class Sidebar extends Component {
 									>
 										{/* <TodayOutlined /> */}
 										<span className="iconMargin">
-										{Calendar}
-										</span>
-										{" "}
+											{Calendar}
+										</span>{" "}
 										<span className="toggleHidden">
 											Calendar
 										</span>
@@ -741,7 +751,7 @@ class Sidebar extends Component {
 									>
 										{/* <i className="far fa-check-square fontAwesomeIcon"></i> */}
 										<span className="iconMargin">
-										{ConfirmPurchase}
+											{ConfirmPurchase}
 										</span>
 										<span className="toggleHidden ml-1">
 											Confirm Purchase
@@ -769,9 +779,8 @@ class Sidebar extends Component {
 											title="Create Event"
 										></i> */}
 										<span className="iconMargin">
-										{CreateEvent}
-										</span>
-										{" "}
+											{CreateEvent}
+										</span>{" "}
 										<span className="toggleHidden">
 											Create Event
 										</span>
@@ -793,9 +802,8 @@ class Sidebar extends Component {
 									>
 										{/* <ListAltOutlined /> */}
 										<span className="iconMargin">
-										{CreatedEvents}
-										</span>
-										{" "}
+											{CreatedEvents}
+										</span>{" "}
 										<span className="toggleHidden">
 											My Created Events
 										</span>
@@ -820,9 +828,8 @@ class Sidebar extends Component {
 											title="My Tickets"
 										></i> */}
 										<span className="iconMargin">
-										{MyTickets}
-										</span>
-										{" "}
+											{MyTickets}
+										</span>{" "}
 										<span className="toggleHidden">
 											My Tickets
 										</span>
@@ -838,7 +845,9 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										<Favorite />
+											<Favorite
+												style={{ color: "#73727D" }}
+											/>
 										</span>
 										{"  "}
 										<span className="toggleHidden">
@@ -856,7 +865,7 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										{AnalyticsIcon}
+											{AnalyticsIcon}
 										</span>
 										{"  "}
 										<span className="toggleHidden">
@@ -879,10 +888,9 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										{Guide}
+											{Works}
 										</span>
-										{/* <InfoOutlined /> */}
-										{" "}
+										{/* <InfoOutlined /> */}{" "}
 										<span className="toggleHidden">
 											How It Works
 										</span>
@@ -898,9 +906,8 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-										<Forum/>
-										</span>
-										{" "}
+											<Forum />
+										</span>{" "}
 										<span className="toggleHidden">
 											FAQ's
 										</span>
@@ -919,10 +926,9 @@ class Sidebar extends Component {
 											className="fa fa-file-alt fontAwesomeIcon"
 											title="How It Works"
 										></i> */}
-											<span className="iconMargin">
-										{Guide}
-										</span>
-										{" "}
+										<span className="iconMargin">
+											{Terms}
+										</span>{" "}
 										<span className="toggleHidden">
 											Terms and Conditions
 										</span>
