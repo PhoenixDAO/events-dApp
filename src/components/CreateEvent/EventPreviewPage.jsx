@@ -27,6 +27,7 @@ import {
 	FormControl,
 	Select,
 	IconButton,
+	MenuItem,
 } from "@material-ui/core";
 import { getUserDetails } from "../../config/serverAPIs";
 import RichTextEditor from "react-rte";
@@ -98,6 +99,7 @@ const styles = (theme) => ({
 	eventinfo: {
 		fontSize: "22px",
 		fontWeight: "700",
+		wordBreak:"break-word",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
@@ -172,6 +174,7 @@ const styles = (theme) => ({
 		marginTop: "-4px",
 	},
 	eventDetailsNoBorder: {
+		wordBreak:"break-word",
 		border: "0px solid !important",
 	},
 	previewPadding: {
@@ -336,12 +339,14 @@ class EventPreviewPage extends Component {
 										/>
 										TICKET PRICE
 									</p>
-									<FormControl
+									{(this.props.ticketCategories.length>1)&&<FormControl
 										variant="outlined"
 										className={classes.ticketSelect}
 									>
+										{console.log(this.props.ticketCategories)}
 										<Select
 											native
+											// value={this.props.ticketCategories[0].category.ticketName}
 											onChange={this.handleCategoryChange}
 											inputProps={{
 												name: "age",
@@ -360,7 +365,7 @@ class EventPreviewPage extends Component {
 													)
 												)}
 										</Select>
-									</FormControl>
+									</FormControl>}
 
 									<div className={classes.eventinfo}>
 										<span className={classes.PhnxPrice}>

@@ -155,9 +155,10 @@ const useStyles = makeStyles((theme) => ({
 		},
 		background: "#413AE2",
 		color: "white",
-		height: "54px",
+		height: "45px",
 		width: "40%",
-		fontSize: 18,
+		fontSize: 16,
+		maxWidth:"175px",
 		fontWeight: 700,
 		"@media (max-width: 530px)": {
 			width: "57%",

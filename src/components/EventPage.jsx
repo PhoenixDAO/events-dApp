@@ -958,6 +958,7 @@ class EventPage extends Component {
 						width: "60px",
 						borderRadius: "50%",
 						height: "60px",
+						objectFit:"cover",
 					}}
 				/>
 			);
