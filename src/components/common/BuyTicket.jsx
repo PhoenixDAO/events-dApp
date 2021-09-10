@@ -117,11 +117,12 @@ const useStyles = makeStyles((theme) => ({
   },
   eventImage: {
     width: "100%",
-    height: "100%",
+    height: "85px",
     objectFit: "cover",
     borderBottomLeftRadius: "12px",
     borderTopLeftRadius: "12px",
     "@media (max-width: 600px)":{
+      height: "100%",
       borderTopRightRadius:"12px",
       borderBottomRightRadius:"12px",
       maxHeight:"250px"
@@ -206,6 +207,9 @@ const styles = (theme) => ({
       outline: "none"
     }
   },
+  eventImageHeight:{
+    height:"85px !important",
+  }
 
 
 
@@ -277,7 +281,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
           <div className={classes.eventHolder}>
             <Grid className={classes.details}>
             
-            <Grid lg={2} xl={2} md={2} sm={2} xs={12} >
+            <Grid lg={2} xl={2} md={2} sm={2} xs={12}>
               <img src={image} alt={eventTitle} className={classes.eventImage} />
             </Grid>
               <Grid xs={12} lg={7} xl={7} md={7} sm={7}  className={classes.gridPadding}>
