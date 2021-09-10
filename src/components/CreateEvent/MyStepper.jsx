@@ -500,6 +500,7 @@ const MyStepper = ({
 	const [addAnotherCat, setaddAnotherCat] = useState(false);
 	const [ticketCategory, setTicketCategory] = useState(0);
 	const [date, setDate] = useState(new Date());
+
 	useEffect(() => {
 		setTicketCategory(Math.floor(100000 + Math.random() * 900000));
 	}, []);
@@ -530,6 +531,8 @@ const MyStepper = ({
 
 	const [categoriesOfTicket, setCategoriesOfTicket] = useState([]);
 	const [categoriesOfToken, setCategoriesOfToken] = useState(false);
+
+	const [openKeyboardPicker, setOpenKeyboardPicker] = useState(false);
 
 	// useEffect(() => {
 	// 	onFieldsChange({ eventDescription: eventDesc });
@@ -906,7 +909,7 @@ const MyStepper = ({
 				fields.categories = cat;
 				fields.token = true; // false means free
 				setCategoriesOfTicket(cat);
-				setCategoriesOfToken(false);
+				setCategoriesOfToken(true);
 				onFieldsChange(fields);
 				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				onStepsChange("inc");
@@ -921,7 +924,7 @@ const MyStepper = ({
 					fields.categories = sortedCategories;
 					fields.token = true; // false means free
 					setCategoriesOfTicket(sortedCategories);
-					setCategoriesOfToken(false);
+					setCategoriesOfToken(true);
 					onFieldsChange(fields);
 					// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 					onStepsChange("inc");
@@ -1268,6 +1271,19 @@ const MyStepper = ({
 																	</label>
 																</InputLabel>
 																<KeyboardDatePicker
+																	onClick={() =>
+																		setOpenKeyboardPicker(
+																			true
+																		)
+																	}
+																	onClose={() =>
+																		setOpenKeyboardPicker(
+																			false
+																		)
+																	}
+																	open={
+																		openKeyboardPicker
+																	}
 																	fullWidth
 																	disableToolbar
 																	variant="inline"
@@ -4058,16 +4074,19 @@ const MyStepper = ({
 					alt="flaming..."
 				/>
 				<br />
-				<p
-					style={{
-						fontSize: 24,
-						fontWeight: 700,
-						color: "#413AE2",
-						fontFamily: "'Aeonik', sans-serif",
-					}}
-				>
-					{progressText}%
-				</p>
+				{!!progressText && (
+					<p
+						style={{
+							fontSize: 24,
+							fontWeight: 700,
+							color: "#413AE2",
+							fontFamily: "'Aeonik', sans-serif",
+						}}
+					>
+						{progressText}%
+					</p>
+				)}
+
 				<br />
 				<div>
 					<p
