@@ -8,8 +8,7 @@
 
 // Rinkeby Testnet
 
-export const PhoenixDAO_Mainnet_Token_Address =
-	"0x521855aa99a80cb467a12b1881f05cf9440c7023";
+export const PhoenixDAO_Mainnet_Token_Address = '0x521855AA99a80Cb467A12b1881f05CF9440c7023';
 export const PhoenixDAO_Testnet_Token_ABI = [
 	{ inputs: [], stateMutability: "nonpayable", type: "constructor" },
 	{

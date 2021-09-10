@@ -130,6 +130,7 @@ const styles = (theme) => ({
 		fontWeight: "700",
 		color: "#413AE2",
 		wordBreak: "break-word",
+		textTransform:"uppercase"
 	},
 	categoryGrid: {
 		backgroundColor: "white",
@@ -689,7 +690,7 @@ class EventPage extends Component {
 		) {
 			this.setState({
 				open3: true,
-				open3Message: "Please connect to ethereum or matic main-net",
+				open3Message: "Please connect to Rinkbey or Goerli network",
 			});
 		} else {
 			// this.setState({ open2: true });
@@ -1372,7 +1373,7 @@ class EventPage extends Component {
 													"$"
 												)}
 												{console.log(
-													this.state.dollar_price
+													"dollar price ",this.state.dollar_price, " pheonix",this.state.phnx_price
 												)}
 											</div>
 										</div>
