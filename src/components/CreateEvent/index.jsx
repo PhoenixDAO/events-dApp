@@ -126,20 +126,21 @@ class CreateEvent extends Component {
 
 	onGetRealTimeFields = (f) => {
 		let fields = this.state.fields;
-		let cat = [];
-		let obj = {
-			ticketName: "free",
-			dollarPrice: "0",
-			phnxPrice: "0",
-			ticketAvailability: false,
-			noOfTickets: "0",
-		};
+
 		if (
 			f.name === "dollarPricePreview" ||
 			f.name === "phnxPricePreview" ||
 			f.name === "ticketAvailabilityPreview" ||
 			f.name === "noOfTicketsPreview"
 		) {
+			let cat = [];
+			let obj = {
+				ticketName: "free",
+				dollarPrice: "0",
+				phnxPrice: "0",
+				ticketAvailability: false,
+				noOfTickets: "0",
+			};
 			if (f.name === "dollarPricePreview") {
 				obj.dollarPrice = f.value;
 				obj.phnxPrice = this.convertDollarToPhnx(f.value);
@@ -149,12 +150,15 @@ class CreateEvent extends Component {
 			} else if (f.name === "noOfTicketsPreview") {
 				obj.noOfTickets = f.value;
 			}
-		}
 
-		cat.push(obj);
-		fields.categories = cat;
-		fields[f.name] = f.value;
-		this.setState(fields);
+			cat.push(obj);
+			fields.categories = cat;
+			fields[f.name] = f.value;
+			this.setState(fields);
+		} else {
+			fields[f.name] = f.value;
+			this.setState(fields);
+		}
 	};
 
 	onStepsChange = (type) => {
@@ -302,6 +306,7 @@ class CreateEvent extends Component {
 				this.setState({
 					progressText: 100,
 				});
+
 				this.onFlamingStepsChange();
 
 				// ipfs.get(hash[0].hash).then((file) => {
@@ -341,6 +346,9 @@ class CreateEvent extends Component {
 						if (txhash !== null) {
 							console.log("txhash", txhash);
 							this.onFlamingStepsChange();
+							this.setState({
+								progressText: 0,
+							});
 							toast(
 								<Notify
 									// hash={txhash}

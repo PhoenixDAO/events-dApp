@@ -222,7 +222,7 @@ class Sidebar extends Component {
 			return (
 				<img
 					src={this.state.avatar}
-					style={{ width: "40px", height: "40px" }}
+					style={{ width: "40px", height: "40px", objectFit:"cover" }}
 					className="bird"
 				/>
 			);

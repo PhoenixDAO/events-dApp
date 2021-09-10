@@ -163,7 +163,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#1E1E22",
 		maxWidth: "65.66%",
 		fontSize: 16,
-		maxHeight:"52px",
+		maxHeight: "52px",
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
 		wordBreak: "break-word",
@@ -297,10 +297,11 @@ const EventCard = (props, context) => {
 			})
 			.catch(console.log);
 	};
+
 	let phnx_price = event_data.prices.map((price) => {
-		return (Web3.utils.fromWei(price) / PhoenixDAO_market.usd).toFixed(2);
+		return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(2);
 	});
-	let dollar_price = Web3.utils.fromWei(event_data.prices[0]);
+	let dollar_price = event_data.prices[0] / 1000000;
 
 	const checkExpiry = () => {
 		if (props.checkExpiry) {
@@ -380,9 +381,9 @@ const EventCard = (props, context) => {
 									style={
 										event_data.tktTotalQuantity != 0
 											? {
-													justifyContent:
-														"space-between",
-											  }
+												justifyContent:
+													"space-between",
+											}
 											: { justifyContent: "flex-end" }
 									}
 								>
@@ -462,7 +463,6 @@ const EventCard = (props, context) => {
 													phnx_price[0],
 													"PHNX"
 												)}
-												{/* {console.log("pheonix price: ", phnx_price[0],typeof(phnx_price[0]))} */}
 											</p>
 											<p
 												className={classes.starting}
@@ -490,10 +490,11 @@ const EventCard = (props, context) => {
 														'"Aeonik", sans-serif',
 												}}
 											>
-												{pricingFormatter(
+												{phnx_price[0]}
+												{/* {pricingFormatter(
 													phnx_price[0],
 													"PHNX"
-												)}
+												)} */}
 											</p>
 											<p
 												className={classes.starting}
@@ -541,8 +542,8 @@ const EventCard = (props, context) => {
 								{!eventTime
 									? `Date`
 									: eventTime === "onedayevent"
-									? moment(eventDate).format("Do MMM, YYYY")
-									: `
+										? moment(eventDate).format("Do MMM, YYYY")
+										: `
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
@@ -565,16 +566,16 @@ const EventCard = (props, context) => {
 								{!eventStartTime
 									? `Time`
 									: !eventEndTime
-									? moment(eventStartTime)
+										? moment(eventStartTime)
 											.utcOffset(0)
 											.format("hh:mma z")
-									: `${moment(eventStartTime)
+										: `${moment(eventStartTime)
 											.utcOffset(0)
 											.format("hh:mma")} - ${moment(
-											eventEndTime
-									  )
-											.utcOffset(0)
-											.format("hh:mma z")}`}
+												eventEndTime
+											)
+												.utcOffset(0)
+												.format("hh:mma z")}`}
 							</Typography>
 
 							<Typography
@@ -592,8 +593,8 @@ const EventCard = (props, context) => {
 								{!eventType
 									? `Location`
 									: eventType === "physical"
-									? eventLocation
-									: `Online`}
+										? eventLocation
+										: `Online`}
 							</Typography>
 
 							{/* For my events page */}
@@ -660,54 +661,54 @@ const EventCard = (props, context) => {
 									</Button>
 								</Grid>
 							) : // For my ticket page
-							ticket ? (
-								<Grid item className={classes.row}>
-									<Button
-										className={classes.shareButton}
-										onClick={handleClickOpen}
-										disabled={checkExpiry()}
-									>
-										<LaunchSharp
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Share Event
-									</Button>
-									<Button
-										className={classes.sendTicket}
-										onClick={handleClickOpen2}
-										disabled={checkExpiry()}
-									>
-										<Send
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Send Ticket
-									</Button>
-								</Grid>
-							) : // For my Favorite page
-							myFavorites ? (
-								<Grid item className={classes.row}>
-									<Button
-										className={classes.shareButton}
-										onClick={handleClickOpen}
-										disabled={checkExpiry()}
+								ticket ? (
+									<Grid item className={classes.row}>
+										<Button
+											className={classes.shareButton}
+											onClick={handleClickOpen}
+											disabled={checkExpiry()}
+										>
+											<LaunchSharp
+												style={{
+													marginRight: "7px",
+													fontSize: "19px",
+												}}
+											/>{" "}
+											Share Event
+										</Button>
+										<Button
+											className={classes.sendTicket}
+											onClick={handleClickOpen2}
+											disabled={checkExpiry()}
+										>
+											<Send
+												style={{
+													marginRight: "7px",
+													fontSize: "19px",
+												}}
+											/>{" "}
+											Send Ticket
+										</Button>
+									</Grid>
+								) : // For my Favorite page
+									myFavorites ? (
+										<Grid item className={classes.row}>
+											<Button
+												className={classes.shareButton}
+												onClick={handleClickOpen}
+												disabled={checkExpiry()}
 
-									>
-										<LaunchSharp
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Share Event
-									</Button>
-								</Grid>
-							) : null}
+											>
+												<LaunchSharp
+													style={{
+														marginRight: "7px",
+														fontSize: "19px",
+													}}
+												/>{" "}
+												Share Event
+											</Button>
+										</Grid>
+									) : null}
 						</CardContent>
 					</CardActionArea>
 				</Link>

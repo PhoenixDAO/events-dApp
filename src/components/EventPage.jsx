@@ -329,7 +329,7 @@ class EventPage extends Component {
 		// );
 
 		// const blockChainEvent = await this.props.eventsContract.methods
-		// 	.events("126")
+		// 	.getTkt("2")
 		// 	.call();
 		// 	console.log("events")
 
@@ -633,11 +633,11 @@ class EventPage extends Component {
 		let event_data = this.state.blockChainEvent;
 		let phnx_price = event_data.prices.map((price) => {
 			return (
-				Web3.utils.fromWei(price) / this.state.PhoenixDAO_market.usd
+				(price/1000000) / this.state.PhoenixDAO_market.usd
 			).toFixed(2);
 		});
 
-		let dollar_price = Web3.utils.fromWei(event_data.prices[categoryIndex]);
+		let dollar_price = event_data.prices[categoryIndex] /1000000;
 		let priceInPhnx = event_data.token
 			? phnx_price[categoryIndex] + "PHNX"
 			: "FREE";
@@ -958,6 +958,7 @@ class EventPage extends Component {
 						width: "60px",
 						borderRadius: "50%",
 						height: "60px",
+						objectFit:"cover",
 					}}
 				/>
 			);
@@ -1157,6 +1158,7 @@ class EventPage extends Component {
 					hour: "2-digit",
 					minute: "2-digit",
 				});
+				// event_data.categories
 				let ticketPrices =
 					event_data.token && event_data.categories.length > 1;
 
@@ -1359,7 +1361,6 @@ class EventPage extends Component {
 													this.state.phnx_price,
 													"PHNX"
 												)}
-												{/* {this.state.phnx_price} */}
 											</span>
 											<div
 												style={{
@@ -1840,6 +1841,7 @@ class EventPage extends Component {
 				"",
 				prevProps.purchased
 			);
+			this.loadEventFromBlockchain();
 			let buyers = await generateBuyerArr(this.props.match.params.id);
 			this.setState({ soldTicket: buyers });
 		}

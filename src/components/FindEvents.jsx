@@ -442,9 +442,7 @@ class FindEvents extends Component {
 
 	geoFindMe = async () => {
 		try {
-			const get = await axios.get(
-				`http://json.geoiplookup.io/?callback=?`
-			);
+			const get = await axios.get(`http://ip-api.com/json`);
 			console.log("Get location", get);
 			if (!get.data) {
 				return { cityName: "Unknown", stateName: "Unknown" };
