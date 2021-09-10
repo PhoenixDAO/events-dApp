@@ -343,8 +343,10 @@ class EventPreviewPage extends Component {
 										variant="outlined"
 										className={classes.ticketSelect}
 									>
+										{console.log(this.props.ticketCategories)}
 										<Select
-											native
+											// native
+											// value={this.props.ticketCategories[0].category.ticketName}
 											onChange={this.handleCategoryChange}
 											inputProps={{
 												name: "age",
@@ -355,11 +357,11 @@ class EventPreviewPage extends Component {
 												.length > 0 &&
 												this.props.ticketCategories.map(
 													(category, i) => (
-														<option value={i}>
+														<MenuItem value={i}>
 															{
 																category.ticketName
 															}
-														</option>
+														</MenuItem>
 													)
 												)}
 										</Select>
