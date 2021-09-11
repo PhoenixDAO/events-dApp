@@ -1,5 +1,6 @@
 import "date-fns";
 import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import {
 	Stepper,
 	Step,
@@ -25,9 +26,16 @@ import {
 	IconButton,
 	Box,
 } from "@material-ui/core";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+	MuiPickersUtilsProvider,
+	KeyboardTimePicker,
+	KeyboardDatePicker,
+} from "@material-ui/pickers";
 import {
 	Add as AddIcon,
 	VisibilityOutlined as VisibilityOutlinedIcon,
+	AccessTime,
 } from "@material-ui/icons";
 import GoldonBlue from "../Images/GoldonBlue.gif";
 import { useForm, Controller } from "react-hook-form";
@@ -53,9 +61,6 @@ import { pricingFormatter } from "../../utils/pricingSuffix";
 import { useFormControls } from "./StepperFormControls";
 
 import useStyles from "./StepperFormStyling";
-import DatePicker from "../common/DatePicker";
-import TimePicker from "../common/TimePicker";
-import CustomTextField from "../common/CustomTextField";
 
 var badWords = require("bad-words");
 
@@ -72,49 +77,18 @@ const MyStepper = ({
 }) => {
 	const classes = useStyles();
 
-	const {
-		values,
-		errors,
-		handleInputValue,
-		handlePickerValue,
-		handleGeoValues,
-		handleImageInput,
-		handleFormSubmit,
-		formIsValid,
-		stepperIsValid,
-		addAnotherImage,
-	} = useFormControls();
+	const { handleInputValue, handleFormSubmit, formIsValid, errors, values } =
+		useFormControls();
 
-	const {
-		//1st_stepper
-		eventName,
-		eventOrganizer,
-		eventTime,
-		eventDate,
-		eventStartTime,
-		eventEndTime,
-		eventStartDate,
-		eventEndDate,
-		//2nd_stepper
-		eventType,
-		eventTopic,
-		eventLocation,
-		eventLink,
-		country,
-		state,
-		city,
-		images,
-	} = values;
-
-	console.log(values);
+	console.log("value", values);
 
 	const { handleSubmit, control, setValue: setFormValue } = useForm();
 	const steps = ["", "", "", ""];
-	// const [eventTime, setEventTime] = useState("onedayevent");
-	// const [type, setType] = useState("physical");
+	const [eventTime, setEventTime] = useState("onedayevent");
+	const [type, setType] = useState("physical");
 	const [category, setCategory] = useState("free");
 	const [availability, setAvailability] = useState("unlimited");
-	// const [images, setImages] = useState([{ name: "" }]);
+	const [images, setImages] = useState([{ name: "" }]);
 
 	const flamingSteps = getFlamingSteps();
 
@@ -129,9 +103,9 @@ const MyStepper = ({
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState({});
 	const [isCopied, setIsCopied] = useState(false);
 
-	// const [country, setCountry] = useState("");
-	// const [state, setState] = useState("");
-	// const [city, setCity] = useState("");
+	const [country, setCountry] = useState("");
+	const [state, setState] = useState("");
+	const [city, setCity] = useState("");
 
 	const [dateError, setDateError] = useState({
 		message: "",
@@ -218,13 +192,7 @@ const MyStepper = ({
 			.catch(console.log);
 	};
 
-	const handleNextStep = () => {
-		stepperIsValid(activeStep, () => {
-			onStepsChange("inc");
-		});
-	};
-
-	//next button steper
+	//next button steeper
 	const handleNext = (fields) => {
 		console.log("fields", fields);
 		// console.log("categories", categories);
@@ -489,14 +457,14 @@ const MyStepper = ({
 
 	//back button stepper
 	const handleBack = () => {
+		// setActiveStep((prevActiveStep) => prevActiveStep - 1);
 		onStepsChange("dec");
 	};
 
-	const handleImageSelect = (evt) => {
-		console.log("evt", evt);
-		// const arr = [...images];
-		// arr[index].name = name;
-		// setImages([...arr]);
+	const handleImageSelect = (name, index) => {
+		const arr = [...images];
+		arr[index].name = name;
+		setImages([...arr]);
 	};
 
 	const handleSaveCatogory = (fields) => {
@@ -572,6 +540,10 @@ const MyStepper = ({
 		return phoenixValue;
 	};
 
+	function isValidDate(d) {
+		return d instanceof Date && !isNaN(d);
+	}
+
 	function getStepContent(stepIndex) {
 		switch (stepIndex) {
 			case 0:
@@ -581,75 +553,186 @@ const MyStepper = ({
 							<h3 className={classes.title}>Event Details</h3>
 							<Divider light />
 							<br />
-							<CustomTextField
-								id="event-name"
+
+							<label className={classes.label}>EVENT NAME</label>
+							<Controller
 								name="eventName"
-								fullWidth={true}
-								label="EVENT NAME"
-								value={eventName}
-								handleInputValue={handleInputValue}
-								errors={errors}
+								control={control}
+								defaultValue=""
+								render={({
+									field: { onChange, value, name },
+									fieldState: { error },
+								}) => (
+									<TextField
+										id="event-name"
+										name={name}
+										fullWidth
+										variant="outlined"
+										value={value}
+										onBlur={(e) => {
+											onChange(e);
+											onGetRealTimeFields({
+												name,
+												value: e.target.value,
+											});
+										}}
+										onChange={(e) => {
+											onChange(e);
+											onGetRealTimeFields({
+												name,
+												value: e.target.value,
+											});
+										}}
+										error={!!error}
+										helperText={
+											error ? error.message : null
+										}
+										inputProps={{ maxLength: 50 }}
+									/>
+								)}
+								rules={{
+									required: "Please enter event name.",
+									minLength: {
+										value: 3,
+										message:
+											"Event name should contain at least 3 characters.",
+									},
+									maxLength: {
+										value: 50,
+										message: "Event name too long.",
+									},
+								}}
 							/>
+
 							<br />
 							<br />
-							<CustomTextField
-								id="event-organizer"
+							<label className={classes.label}>
+								EVENT ORGANIZER
+							</label>
+							<Controller
 								name="eventOrganizer"
-								fullWidth={true}
-								label="EVENT ORGANIZER"
-								value={eventOrganizer}
-								handleInputValue={handleInputValue}
-								errors={errors}
+								control={control}
+								defaultValue=""
+								render={({
+									field: { onChange, value, name },
+									fieldState: { error },
+								}) => (
+									<TextField
+										id="event-organizer"
+										name={name}
+										fullWidth
+										variant="outlined"
+										value={value}
+										onChange={(e) => {
+											onChange(e);
+											onGetRealTimeFields({
+												name,
+												value: e.target.value,
+											});
+										}}
+										error={!!error}
+										helperText={
+											error ? error.message : null
+										}
+										inputProps={{ maxLength: 50 }}
+									/>
+								)}
+								rules={{
+									required:
+										"Please enter event organizer name.",
+									minLength: {
+										value: 3,
+										message:
+											"Event organizer name should contain at least 3 characters.",
+									},
+									maxLength: {
+										value: 50,
+										message:
+											"Event organizer name too long.",
+									},
+								}}
 							/>
+
 							<br />
 							<br />
+
 							<FormControl component="fieldset">
-								<RadioGroup
-									row
-									aria-label="eventTime"
-									id="event-time-radio-btn"
+								<Controller
 									name="eventTime"
-									className={classes.radioGroup}
-									value={eventTime}
-									onBlur={handleInputValue}
-									onChange={handleInputValue}
-									autoComplete="none"
-									{...(errors["eventTime"] && {
-										error: true,
-										helperText: errors["eventTime"],
-									})}
-								>
-									<FormControlLabel
-										value="onedayevent"
-										control={
-											<Radio
-												color="primary"
-												icon={
-													<img src={uncheckedIcon} />
+									control={control}
+									defaultValue={eventTime}
+									render={({
+										field: { onChange, value, name },
+										fieldState: { error },
+									}) => (
+										<RadioGroup
+											row
+											aria-label="eventTime"
+											id="event-time-radio-btn"
+											name={name}
+											value={value}
+											className={classes.radioGroup}
+											onChange={(e) => {
+												onChange(e);
+												setEventTime(e.target.value);
+												onGetRealTimeFields({
+													name,
+													value: e.target.value,
+												});
+											}}
+										>
+											<FormControlLabel
+												value="onedayevent"
+												control={
+													<Radio
+														color="primary"
+														icon={
+															<img
+																src={
+																	uncheckedIcon
+																}
+															/>
+														}
+														checkedIcon={
+															<img
+																src={
+																	checkedIcon
+																}
+															/>
+														}
+													/>
 												}
-												checkedIcon={
-													<img src={checkedIcon} />
-												}
+												label="One day Event"
 											/>
-										}
-										label="One day Event"
-									/>
-									<FormControlLabel
-										value="morethanaday"
-										control={
-											<Radio
-												color="primary"
-												icon={
-													<img src={uncheckedIcon} />
+											<FormControlLabel
+												value="morethanaday"
+												control={
+													<Radio
+														color="primary"
+														icon={
+															<img
+																src={
+																	uncheckedIcon
+																}
+															/>
+														}
+														checkedIcon={
+															<img
+																src={
+																	checkedIcon
+																}
+															/>
+														}
+													/>
 												}
-												checkedIcon={
-													<img src={checkedIcon} />
-												}
+												label="More than a day"
 											/>
-										}
-										label="More than a day"
-									/>
-								</RadioGroup>
+										</RadioGroup>
+									)}
+									rules={{
+										required: "Please select event time.",
+									}}
+								/>
 							</FormControl>
 
 							<br />
@@ -657,153 +740,792 @@ const MyStepper = ({
 
 							{eventTime === "onedayevent" ? (
 								<div>
-									<div>
-										<DatePicker
-											label="DATE"
-											id="event-date"
-											name="eventDate"
-											value={eventDate}
-											errors={errors}
-											handlePickerValue={
-												handlePickerValue
-											}
-											fullWidth={true}
-										/>
-									</div>
+									<MuiPickersUtilsProvider
+										utils={DateFnsUtils}
+									>
+										<div>
+											<div>
+												<Controller
+													name="eventDate"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+															name,
+														},
+														fieldState: { error },
+													}) => {
+														return (
+															<span>
+																<InputLabel
+																	style={{
+																		marginBottom:
+																			"-7px",
+																	}}
+																	htmlFor="input-with-icon-adornment"
+																>
+																	<label
+																		className={
+																			classes.label
+																		}
+																	>
+																		DATE
+																	</label>
+																</InputLabel>
+																<KeyboardDatePicker
+																	fullWidth
+																	disableToolbar
+																	variant="inline"
+																	format="dd-MM-yyyy"
+																	margin="normal"
+																	id="event-date"
+																	name={name}
+																	KeyboardButtonProps={{
+																		"aria-label":
+																			"change date",
+																	}}
+																	// InputProps={{
+																	// 	readOnly: true,
+																	// }}
+																	inputVariant="outlined"
+																	autoOk={
+																		true
+																	}
+																	disablePast
+																	placeholder="DD-MM-YYYY"
+																	value={
+																		value
+																	}
+																	onChange={(
+																		e
+																	) => {
+																		onChange(
+																			e
+																		);
+																		onGetRealTimeFields(
+																			{
+																				name,
+																				value: e,
+																			}
+																		);
+																	}}
+																	error={
+																		!!error
+																	}
+																	helperText={
+																		error
+																			? error.message
+																			: null
+																	}
+																/>
+															</span>
+														);
+													}}
+													rules={{
+														required:
+															"Please select event date.",
+													}}
+												/>
+											</div>
+										</div>
 
-									<br />
+										<br />
 
-									<Grid container spacing={6}>
-										<Grid
-											item
-											xs={12}
-											sm={12}
-											md={12}
-											lg={6}
-										>
-											<TimePicker
-												label="START TIME"
-												id="start-time-picker"
-												name="eventStartTime"
-												value={eventStartTime}
-												errors={errors}
-												handlePickerValue={
-													handlePickerValue
-												}
-												fullWidth={true}
-											/>
+										<Grid container spacing={6}>
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+											>
+												<Controller
+													name="eventStartTime"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+															name,
+														},
+														fieldState: { error },
+													}) => (
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	START TIME
+																</label>
+															</InputLabel>
+															<KeyboardTimePicker
+																className={
+																	classes.timeAndDate
+																}
+																keyboardIcon={
+																	<AccessTime />
+																}
+																margin="normal"
+																id="start-time-picker"
+																name={name}
+																placeholder="00:00 AM"
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change time",
+																}}
+																// InputProps={{
+																// 	readOnly: true,
+																// }}
+																fullwidth
+																inputVariant="outlined"
+																autoOk={true}
+																value={value}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
+																error={
+																	!!error ||
+																	timeError.isError
+																}
+																helperText={
+																	error
+																		? error.message
+																		: timeError.isError
+																		? timeError.message
+																		: null
+																}
+															/>
+														</span>
+													)}
+													rules={{
+														required:
+															"Please select event time.",
+													}}
+												/>
+											</Grid>
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+												className={classes.secondField}
+											>
+												<Controller
+													name="eventEndTime"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+															name,
+														},
+														fieldState: { error },
+													}) => (
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	END TIME
+																</label>
+															</InputLabel>
+															<KeyboardTimePicker
+																className={
+																	classes.timeAndDate
+																}
+																keyboardIcon={
+																	<AccessTime />
+																}
+																required={false}
+																margin="normal"
+																id="end-time-picker"
+																name={name}
+																placeholder="00:00 AM"
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change time",
+																}}
+																// InputProps={{
+																// 	readOnly: true,
+																// }}
+																fullwidth
+																inputVariant="outlined"
+																autoOk={true}
+																value={value}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
+																// error={!!error}
+																// helperText="Don’t have an end time? leave here blank"
+																error={
+																	!!error ||
+																	endTimeError.isError
+																}
+																helperText={
+																	error
+																		? error.message
+																		: endTimeError.isError
+																		? endTimeError.message
+																		: "Don’t have an end time? leave here blank"
+																}
+																FormHelperTextProps={{
+																	classes: {
+																		root: classes.timeHelperText,
+																	},
+																}}
+															/>
+														</span>
+													)}
+													rules={{
+														required: false,
+														// "Please select event end time.",
+													}}
+												/>
+											</Grid>
 										</Grid>
-										<Grid
-											item
-											xs={12}
-											sm={12}
-											md={12}
-											lg={6}
-											className={classes.secondField}
-										>
-											<TimePicker
-												label="END TIME"
-												id="end-time-picker"
-												name="eventEndTime"
-												value={eventEndTime}
-												errors={errors}
-												handlePickerValue={
-													handlePickerValue
-												}
-												fullWidth={true}
-											/>
-										</Grid>
-									</Grid>
+									</MuiPickersUtilsProvider>
 								</div>
 							) : (
 								<div>
-									<Grid container spacing={6}>
-										<Grid
-											item
-											xs={12}
-											sm={12}
-											md={12}
-											lg={6}
-										>
-											<DatePicker
-												label="START DATE"
-												id="event-start-date-picker-inline"
-												name="eventStartDate"
-												value={eventStartDate}
-												errors={errors}
-												handlePickerValue={
-													handlePickerValue
-												}
-												fullWidth={true}
-											/>
+									<MuiPickersUtilsProvider
+										utils={DateFnsUtils}
+									>
+										<Grid container spacing={6}>
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+											>
+												<Controller
+													name="eventStartDate"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+															name,
+														},
+														fieldState: { error },
+													}) => (
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	START DATE
+																</label>
+															</InputLabel>
+															<KeyboardDatePicker
+																className={
+																	classes.timeAndDate
+																}
+																disableToolbar
+																variant="inline"
+																format="dd-MM-yyyy"
+																margin="normal"
+																id="event-start-date-picker-inline"
+																name={name}
+																placeholder="DD-MM-YYYY"
+																// InputProps={{
+																// 	readOnly: true,
+																// }}
+																// label="START DATE"
+																// value={startDate}
+																// onChange={(d) =>
+																// 	setStartDate(d)
+																// }
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change date",
+																}}
+																inputVariant="outlined"
+																autoOk={true}
+																disablePast
+																value={value}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
+																error={!!error}
+																helperText={
+																	error
+																		? error.message
+																		: null
+																}
+															/>
+														</span>
+													)}
+													rules={{
+														required:
+															"Please select event start date.",
+													}}
+												/>
+											</Grid>
+
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+												className={classes.secondField}
+											>
+												<Controller
+													name="eventEndDate"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+															name,
+														},
+														fieldState: { error },
+													}) => (
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	END DATE
+																</label>
+															</InputLabel>
+															<KeyboardDatePicker
+																className={
+																	classes.timeAndDate
+																}
+																disableToolbar
+																variant="inline"
+																format="dd-MM-yyyy"
+																margin="normal"
+																name={name}
+																id="event-end-date-picker-inline"
+																// label="END DATE"
+																// value={endDate}
+																// onChange={(d) => setEndDate(d)}
+																// InputProps={{
+																// 	readOnly: true,
+																// }}
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change date",
+																}}
+																inputVariant="outlined"
+																placeholder="DD-MM-YYYY"
+																autoOk={true}
+																disablePast
+																value={value}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
+																error={
+																	!!error ||
+																	dateError.isError
+																}
+																helperText={
+																	error
+																		? error.message
+																		: dateError.isError
+																		? dateError.message
+																		: null
+																}
+															/>
+														</span>
+													)}
+													rules={{
+														required:
+															"Please select event end date.",
+													}}
+												/>
+											</Grid>
 										</Grid>
 
-										<Grid
-											item
-											xs={12}
-											sm={12}
-											md={12}
-											lg={6}
-											className={classes.secondField}
-										>
-											<DatePicker
-												label="END DATE"
-												name="eventEndDate"
-												id="event-end-date-picker-inline"
-												value={eventEndDate}
-												errors={errors}
-												handlePickerValue={
-													handlePickerValue
-												}
-												fullWidth={true}
-											/>
-										</Grid>
-									</Grid>
+										<br />
 
-									<br />
+										<Grid container spacing={6}>
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+											>
+												<Controller
+													name="eventStartTime"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+															name,
+														},
+														fieldState: { error },
+													}) => (
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	FROM
+																</label>
+															</InputLabel>
+															<KeyboardTimePicker
+																className={
+																	classes.timeAndDate
+																}
+																keyboardIcon={
+																	<AccessTime />
+																}
+																margin="normal"
+																id="event-start-time-picker"
+																name={name}
+																// label="TO"
+																placeholder="00:00 AM"
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change time",
+																}}
+																// InputProps={{
+																// 	readOnly: true,
+																// }}
+																inputVariant="outlined"
+																autoOk={true}
+																value={value}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
+																error={
+																	!!error ||
+																	timeError.isError
+																}
+																helperText={
+																	error
+																		? error.message
+																		: timeError.isError
+																		? timeError.message
+																		: null
+																}
+															/>
+														</span>
+													)}
+													rules={{
+														required:
+															"Please select event start time.",
+													}}
+												/>
+											</Grid>
 
-									<Grid container spacing={6}>
-										<Grid
-											item
-											xs={12}
-											sm={12}
-											md={12}
-											lg={6}
-										>
-											<TimePicker
-												label="FROM"
-												id="event-start-time-picker"
-												name="eventStartTime"
-												value={eventStartTime}
-												errors={errors}
-												handlePickerValue={
-													handlePickerValue
-												}
-												fullWidth={true}
-											/>
-										</Grid>
+											<span>
+												<InputLabel
+													style={{
+														marginBottom: "-7px",
+													}}
+													htmlFor="input-with-icon-adornment"
+												>
+													<label
+														className={
+															classes.label
+														}
+													>
+														DATE
+													</label>
+												</InputLabel>
+												<KeyboardDatePicker
+													fullWidth
+													disableToolbar
+													variant="inline"
+													format="dd-MM-yyyy"
+													margin="normal"
+													id="event-date"
+													name="eventDate"
+													KeyboardButtonProps={{
+														"aria-label":
+															"change date",
+													}}
+													// InputProps={{
+													// 	readOnly: true,
+													// }}
+													inputVariant="outlined"
+													// autoOk={true}
+													// disablePast
+													placeholder="DD-MM-YYYY"
+													value={eventDate}
+													onBlur={(e) => {
+														handlePickerValue({
+															name: "eventDate",
+															value: e,
+														});
+													}}
+													onChange={(e) => {
+														handlePickerValue({
+															name: "eventDate",
+															value: e,
+														});
+													}}
+													{...(errors[
+														"eventDate"
+													] && {
+														error: true,
+														helperText: errors[
+															"eventDate"
+														]
+															? errors[
+																	"eventDate"
+															  ]
+															: "",
+													})}
+												/>
+											</span>
 
-										<Grid
-											item
-											xs={12}
-											sm={12}
-											md={12}
-											lg={6}
-											className={classes.secondField}
-										>
-											<TimePicker
-												label="TO"
-												id="event-end-time-picker"
-												name="eventEndTime"
-												value={eventEndTime}
-												errors={errors}
-												handlePickerValue={
-													handlePickerValue
-												}
-												fullWidth={true}
-											/>
+
+											<span>
+													<InputLabel
+														style={{
+															marginBottom:
+																"-7px",
+														}}
+														htmlFor="input-with-icon-adornment"
+													>
+														<label
+															className={
+																classes.label
+															}
+														>
+															START TIME
+														</label>
+													</InputLabel>
+													<KeyboardTimePicker
+														className={
+															classes.timeAndDate
+														}
+														keyboardIcon={
+															<AccessTime />
+														}
+														margin="normal"
+														id="start-time-picker"
+														name="eventStartTime"
+														placeholder="00:00 AM"
+														KeyboardButtonProps={{
+															"aria-label":
+																"change time",
+														}}
+														// InputProps={{
+														// 	readOnly: true,
+														// }}
+														fullwidth
+														inputVariant="outlined"
+														// autoOk={true}
+														clearable
+														value={eventStartTime}
+														onBlur={(e) => {
+															handlePickerValue({
+																name: "eventStartTime",
+																value: e,
+															});
+														}}
+														onChange={(e) => {
+															handlePickerValue({
+																name: "eventStartTime",
+																value: e,
+															});
+														}}
+														{...(errors[
+															"eventStartTime"
+														] && {
+															error: true,
+															helperText:
+																errors[
+																	"eventStartTime"
+																],
+														})}
+													/>
+												</span>
+											<Grid
+												item
+												xs={12}
+												sm={12}
+												md={12}
+												lg={6}
+												className={classes.secondField}
+											>
+												<Controller
+													name="eventEndTime"
+													control={control}
+													defaultValue={null}
+													render={({
+														field: {
+															onChange,
+															value,
+															name,
+														},
+														fieldState: { error },
+													}) => (
+														<span>
+															<InputLabel
+																style={{
+																	marginBottom:
+																		"-7px",
+																}}
+																htmlFor="input-with-icon-adornment"
+															>
+																<label
+																	className={
+																		classes.label
+																	}
+																>
+																	TO
+																</label>
+															</InputLabel>
+															<KeyboardTimePicker
+																className={
+																	classes.timeAndDate
+																}
+																keyboardIcon={
+																	<AccessTime />
+																}
+																margin="normal"
+																id="event-end-time-picker"
+																name={name}
+																// label="FROM"
+																placeholder="00:00 AM"
+																KeyboardButtonProps={{
+																	"aria-label":
+																		"change time",
+																}}
+																// InputProps={{
+																// 	readOnly: true,
+																// }}
+																inputVariant="outlined"
+																autoOk={true}
+																value={value}
+																onChange={(
+																	e
+																) => {
+																	onChange(e);
+																	onGetRealTimeFields(
+																		{
+																			name,
+																			value: e,
+																		}
+																	);
+																}}
+																FormHelperTextProps={{
+																	classes: {
+																		root: classes.timeHelperText,
+																	},
+																}}
+																// helperText="Don’t have an end time? leave here blank"
+																// error={!!error}
+																error={
+																	!!error ||
+																	endTimeError.isError
+																}
+																helperText={
+																	error
+																		? error.message
+																		: endTimeError.isError
+																		? endTimeError.message
+																		: "Don’t have an end time? leave here blank"
+																}
+															/>
+														</span>
+													)}
+													rules={{
+														required: false,
+														// "Please select event end time.",
+													}}
+												/>
+											</Grid>
 										</Grid>
-									</Grid>
+									</MuiPickersUtilsProvider>
 								</div>
 							)}
 						</div>
@@ -817,55 +1539,86 @@ const MyStepper = ({
 							<Divider light />
 							<br />
 							<FormControl component="fieldset">
-								<RadioGroup
-									row
-									aria-label="eventType"
-									className={classes.radioGroup}
+								<Controller
 									name="eventType"
-									id="event-Type"
-									value={eventType}
-									onBlur={handleInputValue}
-									onChange={handleInputValue}
-									{...(errors["eventType"] && {
-										error: true,
-										helperText: errors["eventType"],
-									})}
-								>
-									<FormControlLabel
-										value="physical"
-										control={
-											<Radio
-												color="primary"
-												icon={
-													<img src={uncheckedIcon} />
+									control={control}
+									defaultValue={type}
+									render={({
+										field: { onChange, value, name },
+										fieldState: { error },
+									}) => (
+										<RadioGroup
+											row
+											aria-label="eventType"
+											className={classes.radioGroup}
+											name={name}
+											id="event-Type"
+											value={value}
+											onChange={(e) => {
+												onChange(e);
+												setType(e.target.value);
+												onGetRealTimeFields({
+													name,
+													value: e.target.value,
+												});
+											}}
+										>
+											<FormControlLabel
+												value="physical"
+												control={
+													<Radio
+														color="primary"
+														icon={
+															<img
+																src={
+																	uncheckedIcon
+																}
+															/>
+														}
+														checkedIcon={
+															<img
+																src={
+																	checkedIcon
+																}
+															/>
+														}
+													/>
 												}
-												checkedIcon={
-													<img src={checkedIcon} />
-												}
+												label="Physical Event"
 											/>
-										}
-										label="Physical Event"
-									/>
-									<FormControlLabel
-										value="online"
-										control={
-											<Radio
-												color="primary"
-												icon={
-													<img src={uncheckedIcon} />
+											<FormControlLabel
+												value="online"
+												control={
+													<Radio
+														color="primary"
+														icon={
+															<img
+																src={
+																	uncheckedIcon
+																}
+															/>
+														}
+														checkedIcon={
+															<img
+																src={
+																	checkedIcon
+																}
+															/>
+														}
+													/>
 												}
-												checkedIcon={
-													<img src={checkedIcon} />
-												}
+												label="Online Event"
 											/>
-										}
-										label="Online Event"
-									/>
-								</RadioGroup>
+										</RadioGroup>
+									)}
+									rules={{
+										required: "Please select event type.",
+									}}
+								/>
 							</FormControl>
-							<br />
 
-							{eventType === "physical" ? (
+							<br />
+							{type === "physical" ? (
 								<div>
 									<br />
 									<Grid container spacing={2}>
@@ -878,18 +1631,52 @@ const MyStepper = ({
 											xl={4}
 											px={2}
 										>
-											<GeoLocation
-												locationTitle="country"
+											<Controller
 												name="country"
-												id="country"
-												isCountry
-												value={country}
-												onChange={handleGeoValues}
-												{...(errors["country"] && {
-													error: true,
-													helperText:
-														errors["country"],
-												})}
+												control={control}
+												defaultValue={country}
+												// value={country}
+												render={({
+													field: {
+														onChange,
+														value,
+														name,
+													},
+													fieldState: { error },
+												}) => (
+													<GeoLocation
+														locationTitle="country"
+														name={name}
+														id="country"
+														isCountry
+														onChange={(v) => {
+															onChange(v);
+															setState("");
+															setCity("");
+															setCountry(v.id);
+															setFormValue(
+																"city",
+																""
+															);
+															setFormValue(
+																"state",
+																""
+															);
+															onGetRealTimeFields(
+																{
+																	name,
+																	value: v,
+																}
+															);
+														}}
+														error={error}
+														value={value}
+													/>
+												)}
+												rules={{
+													required:
+														"Please select country.",
+												}}
 											/>
 										</Grid>
 										<Grid
@@ -901,17 +1688,50 @@ const MyStepper = ({
 											xl={4}
 											px={2}
 										>
-											<GeoLocation
-												locationTitle="state"
+											<Controller
 												name="state"
-												id="state"
-												geoId={country.id}
-												value={state}
-												onChange={handleGeoValues}
-												{...(errors["state"] && {
-													error: true,
-													helperText: errors["state"],
-												})}
+												control={control}
+												defaultValue={state}
+												// value={state}
+												className={
+													classes.selectBoxMaxWidth
+												}
+												render={({
+													field: {
+														onChange,
+														value,
+														name,
+													},
+													fieldState: { error },
+												}) => (
+													<GeoLocation
+														locationTitle="state"
+														name={name}
+														id="state"
+														onChange={(v) => {
+															onChange(v);
+															setState(v.id);
+															setCity("");
+															setFormValue(
+																"city",
+																""
+															);
+															onGetRealTimeFields(
+																{
+																	name,
+																	value: v,
+																}
+															);
+														}}
+														error={error}
+														geoId={country}
+														value={value}
+													/>
+												)}
+												rules={{
+													required:
+														"Please select state.",
+												}}
 											/>
 										</Grid>
 										<Grid
@@ -922,48 +1742,137 @@ const MyStepper = ({
 											lg={12}
 											xl={4}
 										>
-											<GeoLocation
-												locationTitle="city"
+											<Controller
 												name="city"
-												id="city"
-												geoId={state.id}
-												value={city}
-												onChange={handleGeoValues}
-												{...(errors["city"] && {
-													error: true,
-													helperText: errors["city"],
-												})}
+												control={control}
+												defaultValue={city}
+												// value={city}
+												render={({
+													field: {
+														onChange,
+														value,
+														name,
+													},
+													fieldState: { error },
+												}) => (
+													<GeoLocation
+														locationTitle="city"
+														name={name}
+														id="city"
+														onChange={(v) => {
+															onChange(v);
+															setCity(v.id);
+															onGetRealTimeFields(
+																{
+																	name,
+																	value: v,
+																}
+															);
+														}}
+														error={error}
+														geoId={state}
+														value={value}
+													/>
+												)}
+												rules={{
+													required:
+														"Please select city.",
+												}}
 											/>
 										</Grid>
 									</Grid>
 									<br />
-
-									<CustomTextField
-										id="event-location"
+									<label className={classes.label}>
+										EVENT LOCATION
+									</label>
+									<Controller
 										name="eventLocation"
-										fullWidth={true}
-										label="EVENT LOCATION"
-										value={eventLocation}
-										handleInputValue={handleInputValue}
-										errors={errors}
+										control={control}
+										defaultValue=""
+										render={({
+											field: { onChange, value, name },
+											fieldState: { error },
+										}) => (
+											<TextField
+												id="event-location"
+												name={name}
+												fullWidth
+												variant="outlined"
+												value={value}
+												onChange={(e) => {
+													onChange(e);
+													onGetRealTimeFields({
+														name,
+														value: e.target.value,
+													});
+												}}
+												error={!!error}
+												helperText={
+													error ? error.message : null
+												}
+												inputProps={{ maxLength: 300 }}
+											/>
+										)}
+										rules={{
+											required:
+												"Please enter event location.",
+											minLength: {
+												value: 3,
+												message:
+													"Event location should contain at least 3 characters.",
+											},
+											maxLength: {
+												value: 300,
+												message:
+													"Event location too long.",
+											},
+										}}
 									/>
 								</div>
 							) : (
 								<div>
-									<CustomTextField
-										id="event-link"
+									<label className={classes.label}>
+										EVENT LINK
+									</label>
+									<Controller
 										name="eventLink"
-										fullWidth={true}
-										label="EVENT LINK"
-										value={eventLink}
-										handleInputValue={handleInputValue}
-										errors={errors}
+										control={control}
+										defaultValue=""
+										render={({
+											field: { onChange, value, name },
+											fieldState: { error },
+										}) => (
+											<TextField
+												id="event-link"
+												name={name}
+												fullWidth
+												variant="outlined"
+												value={value}
+												onChange={(e) => {
+													onChange(e);
+													onGetRealTimeFields({
+														name,
+														value: e.target.value,
+													});
+												}}
+												error={!!error}
+												helperText={
+													error ? error.message : null
+												}
+											/>
+										)}
+										rules={{
+											required:
+												"Please enter event link.",
+											pattern: {
+												value: /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/,
+												message: "Is Not Valid URL",
+											},
+										}}
 									/>
 								</div>
 							)}
-
-							{/* images selection */}
-							{images.slice(0, 3).map((image, index) => {
+							{images.slice(0, 3).map((img, index) => {
 								return (
 									<div key={index}>
 										<br />
@@ -972,50 +1881,162 @@ const MyStepper = ({
 											COVER IMAGE {index + 1}
 										</label>
 
-										<TextField
-											variant="outlined"
-											id={`image${index}`}
+										<Controller
 											name={`image${index}`}
-											fullWidth
-											disabled
-											value={image.name}
-											placeholder="Select Image"
-											{...(errors[`image${index}`] && {
-												error: true,
-												helperText:
-													errors[`image${index}`],
-											})}
-											InputProps={{
-												endAdornment: (
-													<Button
-														component="label"
-														className={
-															classes.imageSelectBtnStyle
-														}
-													>
-														Browse
-														<input
-															type="file"
-															hidden
-															multiple={false}
-															accept="image/*"
-															onChange={(e) => {
-																handleImageInput(
-																	e,
-																	index
-																);
-															}}
-														/>
-													</Button>
-												),
+											control={control}
+											defaultValue=""
+											render={({
+												field: {
+													onChange,
+													value,
+													name,
+												},
+												fieldState: { error },
+											}) => (
+												<TextField
+													variant="outlined"
+													id={name}
+													name={name}
+													fullWidth
+													disabled
+													value={img.name}
+													error={!!error}
+													placeholder="Select Image"
+													helperText={
+														error
+															? error.message
+															: null
+													}
+													InputProps={{
+														endAdornment: (
+															<Button
+																component="label"
+																style={{
+																	padding:
+																		"15px 25px",
+																	background:
+																		"#FFF9E5",
+																	left: "13px",
+																	textTransform:
+																		"capitalize",
+																}}
+															>
+																Browse
+																<input
+																	type="file"
+																	hidden
+																	multiple={
+																		false
+																	}
+																	accept="image/*"
+																	onChange={(
+																		event
+																	) => {
+																		if (
+																			event
+																				.target
+																				.files &&
+																			event
+																				.target
+																				.files[0]
+																		) {
+																			if (
+																				event
+																					.target
+																					.files[0]
+																					.size <
+																				5000000
+																			) {
+																				handleImageSelect(
+																					event
+																						.target
+																						.files[0]
+																						.name,
+																					index
+																				);
+																				onChange(
+																					event
+																						.target
+																						.files[0]
+																				);
+																				onGetRealTimeFields(
+																					{
+																						name,
+																						value: event
+																							.target
+																							.files[0],
+																					}
+																				);
+																			} else {
+																				handleImageSelect(
+																					"",
+																					index
+																				);
+																				onChange(
+																					""
+																				);
+																				onGetRealTimeFields(
+																					{
+																						name,
+																						value: "",
+																					}
+																				);
+																			}
+																		} else {
+																			if (
+																				value
+																			) {
+																				handleImageSelect(
+																					value.name,
+																					index
+																				);
+																				onChange(
+																					value
+																				);
+																				onGetRealTimeFields(
+																					{
+																						name,
+																						value: value,
+																					}
+																				);
+																			} else {
+																				handleImageSelect(
+																					"",
+																					index
+																				);
+																				onChange(
+																					""
+																				);
+																				onGetRealTimeFields(
+																					{
+																						name,
+																						value: "",
+																					}
+																				);
+																			}
+																		}
+																	}}
+																/>
+															</Button>
+														),
+													}}
+												/>
+											)}
+											rules={{
+												required:
+													"Please select an image less than 5MB.",
 											}}
 										/>
 
 										{index === 0 ? (
 											<p
-												className={
-													classes.imageMaxStyle
-												}
+												style={{
+													color: "#73727D",
+													fontSize: 14,
+													fontWeight: 400,
+													paddingTop: "10px",
+													marginBottom: 0,
+												}}
 											>
 												Max: 3 Pictures. Not greater
 												than 5MB (Recommended 1000px *
@@ -1029,12 +2050,17 @@ const MyStepper = ({
 							<br />
 
 							<Button
-								disabled={images.length >= 3 ? true : false}
+								disabled={images.length > 3 ? true : false}
 								variant="outlined"
 								fullWidth
 								className={classes.addAnotherImageBtn}
 								startIcon={<AddIcon fontSize="large" />}
-								onClick={() => addAnotherImage()}
+								onClick={() => {
+									setImages([
+										...images.slice(0, 6),
+										{ name: "" },
+									]);
+								}}
 							>
 								Add another Image
 							</Button>
@@ -1043,53 +2069,75 @@ const MyStepper = ({
 							<br />
 
 							<label className={classes.label}>TOPIC</label>
-							<FormControl
-								variant="outlined"
-								fullWidth
-								className={classes.formControl}
-								error={!!errors["eventTopic"]}
-							>
-								<Select
-									labelId="demo-simple-select-outlined-label"
-									id="event-topic"
-									name="eventTopic"
-									fullWidth
-									displayEmpty
-									className={classes.menuPaper}
-									MenuProps={{
-										classes: {
-											paper: classes.menuPaper,
-										},
-									}}
-									value={eventTopic}
-									onBlur={handleInputValue}
-									onChange={handleInputValue}
-								>
-									<MenuItem
-										disabled
-										value=""
-										className={classes.menuItemStyle}
+							<Controller
+								name="eventTopic"
+								control={control}
+								defaultValue=""
+								render={({
+									field: { onChange, value, name },
+									fieldState: { error },
+								}) => (
+									<FormControl
+										variant="outlined"
+										fullWidth
+										className={classes.formControl}
+										error={!!error}
 									>
-										<em>Topic</em>
-									</MenuItem>
-									{Object.entries(eventTopics).map(
-										(topic) => (
+										<Select
+											labelId="demo-simple-select-outlined-label"
+											id="event-topic"
+											name={name}
+											fullWidth
+											value={value}
+											onChange={(e) => {
+												onChange(e);
+												onGetRealTimeFields({
+													name,
+													value: e.target.value,
+												});
+											}}
+											displayEmpty
+											className={classes.menuPaper}
+											MenuProps={{
+												classes: {
+													paper: classes.menuPaper,
+												},
+											}}
+										>
 											<MenuItem
-												key={topic[1].name}
-												value={topic[1].slug}
-												className={
-													classes.menuItemStyle
-												}
+												disabled
+												value=""
+												style={{
+													fontFamily:
+														"'Aeonik', sans-serif",
+												}}
 											>
-												{topic[1].name}
+												<em>Topic</em>
 											</MenuItem>
-										)
-									)}
-								</Select>
-								<FormHelperText>
-									{errors["eventTopic"]}
-								</FormHelperText>
-							</FormControl>
+											{Object.entries(eventTopics).map(
+												(topic) => (
+													<MenuItem
+														key={topic[1].name}
+														value={topic[1].slug}
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														{topic[1].name}
+													</MenuItem>
+												)
+											)}
+										</Select>
+										<FormHelperText>
+											{error ? error.message : null}
+										</FormHelperText>
+									</FormControl>
+								)}
+								rules={{
+									required: "Please select event topic.",
+								}}
+							/>
 						</div>
 					</React.Fragment>
 				);
@@ -2817,8 +3865,7 @@ const MyStepper = ({
 								size="large"
 								variant="contained"
 								color="primary"
-								onClick={handleNextStep}
-								disabled={!formIsValid(activeStep)}
+								onClick={handleSubmit(handleNext)}
 								className={classes.nextButton}
 								endIcon={
 									activeStep === steps.length - 1 ? null : (

@@ -89,9 +89,8 @@ class CreateEvent extends Component {
 				eventCategory: "free",
 				ticketAvailability: "unlimited",
 			},
-			activeStep: 0,
+			activeStep: 1,
 			activeFlamingStep: 0,
-			isEventCreated: false,
 			progressText: 0,
 			shareUrl: "",
 			PhoenixDAO_market: {},
@@ -162,7 +161,6 @@ class CreateEvent extends Component {
 	};
 
 	onStepsChange = (type) => {
-		console.log("type", type);
 		this.setState((prevState) => {
 			return {
 				activeStep:
@@ -710,9 +708,7 @@ class CreateEvent extends Component {
 								onGetRealTimeFields={this.onGetRealTimeFields}
 								onStepsChange={this.onStepsChange}
 								activeStep={this.state.activeStep}
-								onFlamingStepsChange={this.onFlamingStepsChange}
 								activeFlamingStep={this.state.activeFlamingStep}
-								isEventCreated={this.state.isEventCreated}
 								progressText={this.state.progressText}
 								shareUrl={this.state.shareUrl}
 							/>
@@ -741,9 +737,7 @@ class CreateEvent extends Component {
 							onFieldsChange={this.onFieldsChange}
 							onGetRealTimeFields={this.onGetRealTimeFields}
 							onStepsChange={this.onStepsChange}
-							onFlamingStepsChange={this.onFlamingStepsChange}
 							activeFlamingStep={this.state.activeFlamingStep}
-							isEventCreated={this.state.isEventCreated}
 							progressText={this.state.progressText}
 							shareUrl={this.state.shareUrl}
 						/>

@@ -90,7 +90,7 @@ export default function GeoLocation(props) {
 		const { myValue, value } = e.currentTarget.dataset;
 		console.log(myValue, value);
 		// setCurrentItem(value);
-		onChange({ name: myValue, id: value });
+		onChange({ name: name, value: { name: myValue, id: value } });
 	};
 
 	const handleClick = (event) => {
