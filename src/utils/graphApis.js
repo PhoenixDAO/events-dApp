@@ -118,7 +118,7 @@ export async function getTimeData(owner) {
 		},
 	});
 	let totalDollarRevenue = 0;
-	console.log(result);
+	console.log(result,"graph data in analytics");
 	const timeDataArr = result.data.data.ownerDayDatas;
 	// if (timeDataArr.length === 0) {
 	// 	timeDataArr.push({
