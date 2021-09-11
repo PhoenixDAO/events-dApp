@@ -16,7 +16,14 @@ const useStyles = makeStyles((theme) => ({
 function Loading() {
 	const classes = useStyles();
 	return (
-		<div className="text-center"><span role="img" aria-label="dino">🦖</span> We are loading data...</div>
+		// <div className="text-center"><span role="img" aria-label="dino">🦖</span> We are loading data...</div>
+		<div style={{width:"100%"}}>
+				<Skeleton width="90%" />
+				<Skeleton width="90%" />
+				<Skeleton width="90%" />
+				<Skeleton width="90%" />
+				<Skeleton width="70%" />
+		</div>
 	);
 }
 
