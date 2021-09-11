@@ -57,7 +57,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
@@ -130,7 +130,7 @@ const styles = (theme) => ({
 		fontWeight: "700",
 		color: "#413AE2",
 		wordBreak: "break-word",
-		textTransform:"uppercase"
+		textTransform: "uppercase",
 	},
 	categoryGrid: {
 		backgroundColor: "white",
@@ -381,7 +381,9 @@ class EventPage extends Component {
 						oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 					});
 					this.updateIPFS();
-					if (this.props.networkId) {
+					const networkId = await getNetworkId();
+					console.log("network id", networkId);
+					if (networkId) {
 						console.log(
 							"graphData",
 							graphEvents.data.data.events[0].owner
@@ -389,12 +391,12 @@ class EventPage extends Component {
 						await updateEventViews({
 							eventId: graphEvents.data.data.events[0].eventId,
 							address: graphEvents.data.data.events[0].owner,
-							networkId: this.props.networkId,
+							networkId: networkId,
 						});
 
 						const userDetails = await getUser({
 							address: graphEvents.data.data.events[0].owner,
-							networkId: this.props.networkId,
+							networkId: networkId,
 						});
 
 						console.log("userDEtails in event page", userDetails);
@@ -632,12 +634,12 @@ class EventPage extends Component {
 	priceCalculation = (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
 		let phnx_price = event_data.prices.map((price) => {
-			return (
-				(price/1000000) / this.state.PhoenixDAO_market.usd
-			).toFixed(2);
+			return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
+				2
+			);
 		});
 
-		let dollar_price = event_data.prices[categoryIndex] /1000000;
+		let dollar_price = event_data.prices[categoryIndex] / 1000000;
 		let priceInPhnx = event_data.token
 			? phnx_price[categoryIndex] + "PHNX"
 			: "FREE";
@@ -958,7 +960,7 @@ class EventPage extends Component {
 						width: "60px",
 						borderRadius: "50%",
 						height: "60px",
-						objectFit:"cover",
+						objectFit: "cover",
 					}}
 				/>
 			);
@@ -1374,7 +1376,10 @@ class EventPage extends Component {
 													"$"
 												)}
 												{console.log(
-													"dollar price ",this.state.dollar_price, " pheonix",this.state.phnx_price
+													"dollar price ",
+													this.state.dollar_price,
+													" pheonix",
+													this.state.phnx_price
 												)}
 											</div>
 										</div>
