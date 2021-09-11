@@ -130,7 +130,7 @@ const styles = (theme) => ({
 		fontWeight: "700",
 		color: "#413AE2",
 		wordBreak: "break-word",
-		textTransform:"uppercase"
+		// textTransform:"uppercase"
 	},
 	categoryGrid: {
 		backgroundColor: "white",
@@ -166,9 +166,27 @@ const styles = (theme) => ({
 			minWidth: "141px",
 		},
 	},
+	selectInput: {
+		width: "170px",
+		marginTop: "10px",
+		marginBottom: "10px",
+		height: "40px",
+		"& .MuiSelect-outlined": {
+			padding: "10px",
+			paddingRight: "25px !important",
+			"@media (max-width: 600px)": {
+				width: "120px",
+			},
+		},
+		[theme.breakpoints.down("xs")]: {
+			width: "auto",
+		},
+	},
 	organizerDetails: {
 		justifyContent: "center",
 		textAlign: "center",
+		overflow: "hidden",
+		wordBreak:"break-word"
 	},
 	organizerDescription: {
 		justifyContent: "center",
@@ -1310,6 +1328,7 @@ class EventPage extends Component {
 															horizontal: "left",
 														},
 													}}
+													className={classes.selectInput}
 												>
 													{event_data.categories
 														.length > 1

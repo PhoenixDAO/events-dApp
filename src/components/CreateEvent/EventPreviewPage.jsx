@@ -17,6 +17,7 @@ import {
 	ShoppingCartOutlined,
 	ModeCommentOutlined,
 	Close as CloseIcon,
+	ThreeSixtyTwoTone,
 } from "@material-ui/icons";
 import { withStyles } from "@material-ui/core/styles";
 import eventpreviewplaceholder from "../Images/eventpreviewplaceholder.png";
@@ -99,7 +100,7 @@ const styles = (theme) => ({
 	eventinfo: {
 		fontSize: "22px",
 		fontWeight: "700",
-		wordBreak:"break-word",
+		wordBreak: "break-word",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
@@ -174,7 +175,7 @@ const styles = (theme) => ({
 		marginTop: "-4px",
 	},
 	eventDetailsNoBorder: {
-		wordBreak:"break-word",
+		wordBreak: "break-word",
 		border: "0px solid !important",
 	},
 	previewPadding: {
@@ -183,6 +184,29 @@ const styles = (theme) => ({
 		"@media (max-width: 500px)": {
 			paddingLeft: "20px",
 			paddingRight: "20px",
+		},
+	},
+	selectWidth: {
+		minWidth: "100px",
+		maxWidth: "350px",
+		overflow: "hidden",
+		whiteSpace: "nowrap",
+		textOverflow: "ellipsis",
+	},
+	selectInput: {
+		width: "170px",
+		marginTop: "10px",
+		marginBottom: "10px",
+		height: "40px",
+		"& .MuiSelect-outlined": {
+			padding: "10px",
+			paddingRight: "25px !important",
+			"@media (max-width: 600px)": {
+				width: "120px",
+			},
+		},
+		[theme.breakpoints.down("xs")]: {
+			width: "auto",
 		},
 	},
 });
@@ -339,37 +363,71 @@ class EventPreviewPage extends Component {
 										/>
 										TICKET PRICE
 									</p>
-									{(this.props.ticketCategories.length>1)&&<FormControl
-										variant="outlined"
-										className={classes.ticketSelect}
-									>
-										{console.log(this.props.ticketCategories)}
-										<Select
-											native
-											// value={this.props.ticketCategories[0].category.ticketName}
-											onChange={this.handleCategoryChange}
-											inputProps={{
-												name: "age",
-												id: "outlined-age-native-simple",
-											}}
+									{this.props.ticketCategories.length > 1 && (
+										<FormControl
+											variant="outlined"
+											className={classes.ticketSelect}
 										>
-											{this.props.ticketCategories
-												.length > 0 &&
-												this.props.ticketCategories.map(
-													(category, i) => (
-														<option value={i}>
-															{
-																category.ticketName
-															}
-														</option>
-													)
-												)}
-										</Select>
-									</FormControl>}
+											{console.log(
+												"ticket name",
+												this.state.ticketPrices
+											)}
+											<Select
+												// native
+												value={this.state.ticketIndex}
+												onChange={
+													this.handleCategoryChange
+												}
+												inputProps={{
+													name: "age",
+													id: "outlined-age-native-simple",
+												}}
+												MenuProps={{
+													classes: {
+														paper: classes.menuPaper,
+													},
+													getContentAnchorEl: null,
+													anchorOrigin: {
+														vertical: "bottom",
+														horizontal: "left",
+													},
+												}}
+												className={classes.selectInput}
+											>
+												{this.props.ticketCategories
+													.length > 0 &&
+													this.props.ticketCategories.map(
+														(category, i) => (
+															<MenuItem
+																value={i}
+																style={{
+																	fontFamily:
+																		"'Aeonik', sans-serif",
+																	maxWidth:"170px"
+																}}
+															>
+																<span
+																	className={
+																		classes.selectWidth
+																	}
+																>
+																	{
+																		category.ticketName
+																	}
+																</span>
+															</MenuItem>
+														)
+													)}
+											</Select>
+										</FormControl>
+									)}
 
 									<div className={classes.eventinfo}>
 										<span className={classes.PhnxPrice}>
-											{this.props.ticketCategories
+										{console.log("token in event preview:", this.props.token)}
+										{!(this.props.token) ? (
+										"Free"
+									) : this.props.ticketCategories
 												.length > 0
 												? pricingFormatter(
 														this.props

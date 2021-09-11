@@ -959,12 +959,12 @@ class Sidebar extends Component {
 										</span>
 									</NavLink>
 								</li>
-								<li>
+								<li style={{display:"none"}}>
 									<ThemeSwitch />
 								</li>
 							</ul>
 
-							<ul className="grid toggleHidden">
+							<ul className="grid toggleHidden" style={{maxWidth:"250px"}}>
 								<div className="imageHolder">
 									<a
 										aria-label="Homepage"
