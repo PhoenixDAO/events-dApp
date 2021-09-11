@@ -77,7 +77,7 @@ class MyTickets extends Component {
 			data: {
 				query: `
 				{
-					tickets(where: {buyer:"${this.props.accounts}"}){
+					tickets(where: {buyer:"${this.props.accounts}"} orderBy:boughtTimeStamp orderDirection:desc){
 					  id
 					  eventId
 					  eventName
