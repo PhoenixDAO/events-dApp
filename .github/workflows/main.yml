@@ -40,6 +40,8 @@ jobs:
             
       - name: building new build
         run: npm run build
+        env:
+          REACT_APP_TRANSAK_API: ${{ secrets.REACT_APP_TRANSAK_API }}
       
       - name: give execution permission
         run: chmod +x changes.sh
