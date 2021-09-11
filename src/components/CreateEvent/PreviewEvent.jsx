@@ -181,7 +181,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 		eventLocation,
 		eventLink,
 		restrictWallet: oneTimeBuy,
-		categories: ticketCategories,
+		ticketCategories, //	categories: ticketCategories,
 		token, //false means free
 		eventDate, //onedayevent
 		eventStartDate, //morethanadayevent

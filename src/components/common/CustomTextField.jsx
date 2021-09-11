@@ -19,6 +19,9 @@ const CustomTextField = ({
 	handleInputValue,
 	errors,
 	label,
+	type,
+	onKeyDown,
+	onInput,
 }) => {
 	const classes = useStyles();
 
@@ -26,6 +29,7 @@ const CustomTextField = ({
 		<span>
 			<label className={classes.label}>{label}</label>
 			<TextField
+				type={type}
 				id={id}
 				name={name}
 				fullWidth={fullWidth}
@@ -38,6 +42,8 @@ const CustomTextField = ({
 					error: true,
 					helperText: errors[name],
 				})}
+				onKeyDown={onKeyDown}
+				onInput={onInput}
 			/>
 		</span>
 	);

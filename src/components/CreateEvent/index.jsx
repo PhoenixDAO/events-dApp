@@ -89,7 +89,7 @@ class CreateEvent extends Component {
 				eventCategory: "free",
 				ticketAvailability: "unlimited",
 			},
-			activeStep: 1,
+			activeStep: 2,
 			activeFlamingStep: 0,
 			progressText: 0,
 			shareUrl: "",
@@ -99,65 +99,8 @@ class CreateEvent extends Component {
 		this.onHandleTxReject = this.onHandleTxReject.bind(this);
 	}
 
-	convertDollarToPhnx = (d) => {
-		let value = parseFloat(d);
-		value = value > 0 ? value : 0;
-		let usd = this.state.PhoenixDAO_market.usd;
-		let phoenixValue = value / usd;
-		phoenixValue = phoenixValue.toFixed(5);
-		return phoenixValue;
-	};
-
-	getPhoenixdaoMarket = async () => {
-		fetch(
-			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
-		)
-			.then((res) => res.json())
-			.then((data) => {
-				this.setState({ PhoenixDAO_market: data.phoenixdao });
-			})
-			.catch(console.log);
-	};
-
 	onFieldsChange = (f) => {
 		this.setState({ fields: { ...this.state.fields, ...f } });
-	};
-
-	onGetRealTimeFields = (f) => {
-		let fields = this.state.fields;
-
-		if (
-			f.name === "dollarPricePreview" ||
-			f.name === "phnxPricePreview" ||
-			f.name === "ticketAvailabilityPreview" ||
-			f.name === "noOfTicketsPreview"
-		) {
-			let cat = [];
-			let obj = {
-				ticketName: "free",
-				dollarPrice: "0",
-				phnxPrice: "0",
-				ticketAvailability: false,
-				noOfTickets: "0",
-			};
-			if (f.name === "dollarPricePreview") {
-				obj.dollarPrice = f.value;
-				obj.phnxPrice = this.convertDollarToPhnx(f.value);
-				fields.token = true;
-			} else if (f.name === "ticketAvailabilityPreview") {
-				obj.ticketAvailability = f.value;
-			} else if (f.name === "noOfTicketsPreview") {
-				obj.noOfTickets = f.value;
-			}
-
-			cat.push(obj);
-			fields.categories = cat;
-			fields[f.name] = f.value;
-			this.setState(fields);
-		} else {
-			fields[f.name] = f.value;
-			this.setState(fields);
-		}
 	};
 
 	onStepsChange = (type) => {
@@ -215,7 +158,7 @@ class CreateEvent extends Component {
 			eventLocation,
 			eventLink,
 			restrictWallet: oneTimeBuy,
-			categories: ticketCategories,
+			ticketCategories, // categories: ticketCategories,
 			token, //false means free
 			eventDate, //onedayevent date format
 			eventStartDate, //morethanadayevent
@@ -671,8 +614,6 @@ class CreateEvent extends Component {
 
 	componentDidMount() {
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
-
-		this.getPhoenixdaoMarket();
 	}
 
 	render() {
@@ -705,7 +646,6 @@ class CreateEvent extends Component {
 							<MyStepper
 								handleCreateEvent={this.handleCreateEvent}
 								onFieldsChange={this.onFieldsChange}
-								onGetRealTimeFields={this.onGetRealTimeFields}
 								onStepsChange={this.onStepsChange}
 								activeStep={this.state.activeStep}
 								activeFlamingStep={this.state.activeFlamingStep}
@@ -735,7 +675,6 @@ class CreateEvent extends Component {
 						<MyStepper
 							handleCreateEvent={this.handleCreateEvent}
 							onFieldsChange={this.onFieldsChange}
-							onGetRealTimeFields={this.onGetRealTimeFields}
 							onStepsChange={this.onStepsChange}
 							activeFlamingStep={this.state.activeFlamingStep}
 							progressText={this.state.progressText}

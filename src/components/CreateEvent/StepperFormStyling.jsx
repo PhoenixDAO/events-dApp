@@ -375,6 +375,33 @@ const useStyles = makeStyles((theme) => ({
 		left: "13px",
 		textTransform: "capitalize",
 	},
+	restrictWalletLabel: {
+		// fontSize: 20,
+		fontWeight: 400,
+		color: "#1E1E22",
+		fontFamily: "'Aeonik', sans-serif",
+	},
+	termsLabel: {
+		// fontSize: 20,
+		fontWeight: 400,
+		color: "#1E1E22",
+		fontFamily: "'Aeonik', sans-serif",
+	},
+	dollarIconBtnStyle: {
+		padding: "15px 15px",
+		background: "#F2F2FD",
+		left: "-13px",
+	},
+	phnxLogoBtnStyle: {
+		padding: "15px 15px",
+		background: "#F2F2FD",
+		left: "-13px",
+	},
+	altIconStyle: {
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+	},
 }));
 
 export default useStyles;

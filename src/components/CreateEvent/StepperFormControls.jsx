@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { pricingFormatter } from "../../utils/pricingSuffix";
 
 const PostContactForm = async (values, successCallback, errorCallback) => {
 	// do stuff
@@ -31,11 +32,46 @@ const initialFormValues = {
 	state: { id: "", name: "" },
 	city: { id: "", name: "" },
 	images: [{ name: "" }],
+	//3rd_stepper
+	eventCategory: "free",
+	restrictWallet: false,
+	ticketName: "",
+	dollarPrice: "",
+	phnxPrice: "",
+	ticketAvailability: "unlimited",
+	noOfTickets: "",
+	ticketCategories: [
+		{
+			ticketName: "",
+			dollarPrice: "",
+			phnxPrice: "",
+			ticketAvailability: "unlimited",
+			noOfTickets: "",
+		},
+	],
+	token: false, // false means free
+	PhoenixDAO_market: {},
 };
 
 export const useFormControls = () => {
 	const [values, setValues] = useState(initialFormValues);
 	const [errors, setErrors] = useState({});
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const response = await fetch(
+				`https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`
+			);
+			const data = await response.json();
+			if (data)
+				setValues({
+					...values,
+					PhoenixDAO_market: data.phoenixdao,
+				});
+		};
+
+		fetchData();
+	}, []);
 
 	const isValidDate = (d) => {
 		return d instanceof Date && !isNaN(d);
@@ -137,6 +173,27 @@ export const useFormControls = () => {
 						? ""
 						: "Is Not Valid URL.";
 		}
+
+		//3rd_stepper
+		if ("ticketName" in fieldValues)
+			temp.ticketName = fieldValues.ticketName
+				? ""
+				: "This field is required.";
+
+		if ("dollarPrice" in fieldValues)
+			temp.dollarPrice = fieldValues.dollarPrice
+				? ""
+				: "This field is required.";
+
+		if ("phnxPrice" in fieldValues)
+			temp.phnxPrice = fieldValues.phnxPrice
+				? ""
+				: "This field is required.";
+
+		if ("noOfTickets" in fieldValues)
+			temp.noOfTickets = fieldValues.noOfTickets
+				? ""
+				: "This field is required.";
 
 		//tutotials
 		if ("fullName" in fieldValues)
@@ -268,6 +325,62 @@ export const useFormControls = () => {
 		});
 	};
 
+	const handleTicketCatogory = (event, index, fieldValues = values) => {
+		const { ticketCategories } = fieldValues;
+		const value = event.target.value;
+		const name = event.target.name;
+		if (name === "dollarPrice") {
+			let USD = value;
+			let PHNX = dollarToPhnx(value);
+			ticketCategories[index]["dollarPrice"] = USD;
+			ticketCategories[index]["phnxPrice"] = PHNX;
+			setValues({
+				...values,
+				ticketCategories: [...ticketCategories],
+				dollarPrice: USD,
+				phnxPrice: PHNX,
+			});
+		} else if (name === "phnxPrice") {
+			let USD = phnxToDollar(value);
+			let PHNX = value;
+			ticketCategories[index]["dollarPrice"] = USD;
+			ticketCategories[index]["phnxPrice"] = PHNX;
+			setValues({
+				...values,
+				ticketCategories: [...ticketCategories],
+				dollarPrice: USD,
+				phnxPrice: PHNX,
+			});
+		} else {
+			ticketCategories[index][name] = value;
+			setValues({
+				...values,
+				ticketCategories: [...ticketCategories],
+				[name]: value,
+			});
+		}
+
+		validate({ [name]: value });
+	};
+
+	const dollarToPhnx = (d, fieldValues = values) => {
+		let value = d; //parseFloat(d);
+		// value = value > 0 ? value : "";
+		let usd = fieldValues.PhoenixDAO_market.usd;
+		let phoenixValue = value / usd;
+		// phoenixValue = phoenixValue.toFixed(5);
+		return phoenixValue;
+	};
+
+	const phnxToDollar = (d, fieldValues = values) => {
+		let value = d; //parseFloat(d);
+		// value = value > 0 ? value : "";
+		let usd = fieldValues.PhoenixDAO_market.usd;
+		let dollarValue = value * usd;
+		// dollarValue = dollarValue.toFixed(5);
+		return dollarValue;
+	};
+
 	const handleSuccess = () => {
 		setValues({
 			...initialFormValues,
@@ -284,15 +397,6 @@ export const useFormControls = () => {
 		});
 	};
 
-	// const formIsValid = (fieldValues = values) => {
-	// 	const isValid =
-	// 		fieldValues.fullName &&
-	// 		fieldValues.email &&
-	// 		fieldValues.message &&
-	// 		Object.values(errors).every((x) => x === "");
-	// 	return isValid;
-	// };
-
 	const formIsValid = (activeStep, fieldValues = values) => {
 		const {
 			eventName,
@@ -303,24 +407,55 @@ export const useFormControls = () => {
 			eventEndTime,
 			eventStartDate,
 			eventEndDate,
+			//2nd_stepper
+			eventType,
+			eventTopic,
+			eventLocation,
+			eventLink,
+			country,
+			state,
+			city,
+			images,
+			image0,
 		} = fieldValues;
-		if (eventTime === "onedayevent") {
-			const isValid =
-				eventName &&
-				eventOrganizer &&
-				eventDate &&
-				eventStartTime &&
-				Object.values(errors).every((x) => x === "");
-			return isValid;
-		} else {
-			const isValid =
-				eventName &&
-				eventOrganizer &&
-				eventStartDate &&
-				eventEndDate &&
-				eventStartTime &&
-				Object.values(errors).every((x) => x === "");
-			return isValid;
+
+		if (activeStep === 0) {
+			if (eventTime === "onedayevent") {
+				const isValid =
+					eventName &&
+					eventOrganizer &&
+					eventDate &&
+					eventStartTime &&
+					Object.values(errors).every((x) => x === "");
+				return isValid;
+			} else {
+				const isValid =
+					eventName &&
+					eventOrganizer &&
+					eventStartDate &&
+					eventEndDate &&
+					eventStartTime &&
+					Object.values(errors).every((x) => x === "");
+				return isValid;
+			}
+		} else if (activeStep === 1) {
+			if (eventType === "physical") {
+				const isValid =
+					country.name &&
+					eventLocation &&
+					image0 &&
+					eventTopic &&
+					Object.values(errors).every((x) => x === "");
+				return isValid;
+			} else {
+				console.log("images.length", images.length);
+				const isValid =
+					eventLink &&
+					image0 &&
+					eventTopic &&
+					Object.values(errors).every((x) => x === "");
+				return isValid;
+			}
 		}
 	};
 
@@ -328,8 +463,8 @@ export const useFormControls = () => {
 		if (activeStep === 0) {
 			stepperOneIsValid(callback);
 		} else if (activeStep === 1) {
-			//
-		} else {
+			callback();
+		} else if (activeStep === 2) {
 			//
 		}
 	};
@@ -501,5 +636,6 @@ export const useFormControls = () => {
 		stepperIsValid,
 		addAnotherImage,
 		handelRemoveImage,
+		handleTicketCatogory,
 	};
 };
