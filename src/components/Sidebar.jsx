@@ -959,7 +959,7 @@ class Sidebar extends Component {
 										</span>
 									</NavLink>
 								</li>
-								<li>
+								<li style={{display:"none"}}>
 									<ThemeSwitch />
 								</li>
 							</ul>

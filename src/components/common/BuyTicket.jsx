@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme) => ({
   },
   eventImage: {
     width: "100%",
-    height: "85px",
+    height: "88px",
     objectFit: "cover",
     borderBottomLeftRadius: "12px",
     borderTopLeftRadius: "12px",
@@ -130,6 +130,9 @@ const useStyles = makeStyles((theme) => ({
 
   },
 
+dateMarginBottom:{
+  marginBottom:"0px !important"
+}  ,
   details: {
     justifyContent: "space-between",
     // padding: "9px 15px",
@@ -208,7 +211,7 @@ const styles = (theme) => ({
     }
   },
   eventImageHeight:{
-    height:"85px !important",
+    height:"88px !important",
   }
 
 
@@ -289,7 +292,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
                   <Typography gutterBottom className={`${classes.eventTitle} text-truncate`}>
                     {eventTitle}
                   </Typography>
-                  <Typography gutterBottom style={{ color: "#73727D", fontSize: "17px",textAlign: "start" }} >
+                  <Typography style={{ color: "#73727D", fontSize: "17px",textAlign: "start"}} >
                     {!eventTime
                       ? `Date`
                       : eventTime === "onedayevent"

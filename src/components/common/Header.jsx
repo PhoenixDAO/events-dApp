@@ -101,7 +101,7 @@ const Header = ({
 				{/* Back button Arrow */}
 				<div
 					className="header-heading"
-					style={{ display: "flex", alignItems: "center" }}
+					style={{ display: "flex", alignItems: "center", overflow:"hidden", wordBreak:"break-word" }}
 				>
 					{page === "event" ||
 					page === "topic" ||
