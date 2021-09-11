@@ -130,7 +130,7 @@ const styles = (theme) => ({
 		fontWeight: "700",
 		color: "#413AE2",
 		wordBreak: "break-word",
-		textTransform:"uppercase"
+		// textTransform:"uppercase"
 	},
 	categoryGrid: {
 		backgroundColor: "white",

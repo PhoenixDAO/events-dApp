@@ -424,7 +424,10 @@ class EventPreviewPage extends Component {
 
 									<div className={classes.eventinfo}>
 										<span className={classes.PhnxPrice}>
-											{this.props.ticketCategories
+										{console.log("token in event preview:", this.props.token)}
+										{!(this.props.token) ? (
+										"Free"
+									) : this.props.ticketCategories
 												.length > 0
 												? pricingFormatter(
 														this.props

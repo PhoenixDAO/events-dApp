@@ -964,7 +964,7 @@ class Sidebar extends Component {
 								</li>
 							</ul>
 
-							<ul className="grid toggleHidden">
+							<ul className="grid toggleHidden" style={{maxWidth:"250px"}}>
 								<div className="imageHolder">
 									<a
 										aria-label="Homepage"

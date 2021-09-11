@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   bannerImage:{
-    padding: "0px 40px",
+    paddingInline:"50px",
   },
   header: {
     justifyContent: "center",
@@ -71,8 +71,25 @@ const useStyles = makeStyles((theme) => ({
 
   },
 
+  // send: {
+  //   marginLeft: "13px",
+  //   fontWeight: 700,
+  //   width: "100%",
+  //   height: "45px",
+  //   backgroundColor: "#413AE2",
+  //   [theme.breakpoints.down("xs")]: {
+  //     marginLeft: "0px",
+  //     marginTop: "20px",
+  //     width: "160px",
+  //     "&:focus": {
+  //       outline: "none"
+  //     }
+  //   }
+
+  // },
+  
   send: {
-    marginLeft: "13px",
+    // marginLeft: "13px",
     fontWeight: 700,
     width: "100%",
     height: "45px",
@@ -87,8 +104,34 @@ const useStyles = makeStyles((theme) => ({
     }
 
   },
+  // cancel: {
+  //   marginLeft: "13px",
+  //   fontWeight: 700,
+  //   width: "100%",
+  //   height: "45px",
+  //   color: "#F43C3C",
+  //   backgroundColor: "white",
+  //   border: "1px solid #F43C3C",
+  //   boxShadow: "none",
+  //   outline: "#F43C3C",
+  //   [theme.breakpoints.down("xs")]: {
+  //     marginLeft: "0px",
+  //     marginTop: "20px",
+  //     width: "160px",
+
+  //   },
+  //   "&:focus": {
+  //     outline: "none"
+  //   },
+  //   "&:hover": {
+  //     backgroundColor: "white"
+  //   }
+  // },
+  bottomPadding:{
+    paddingBottom:"60px !important",
+  },
   cancel: {
-    marginLeft: "13px",
+    // marginLeft: "13px",
     fontWeight: 700,
     width: "100%",
     height: "45px",
@@ -143,7 +186,7 @@ dateMarginBottom:{
   },
 
   seeTicket: {
-    margin: theme.spacing(1),
+    // margin: theme.spacing(1),
     textTransform: "initial",
     fontWeight: "600",
     background: "#413AE2",
@@ -156,9 +199,9 @@ dateMarginBottom:{
     border: "1px solid #413AE2",
   },
   link: {
-    width: "97%",
+    width: "100%",
     display: "flex",
-    paddingRight: "13px"
+    // paddingRight: "13px"
   },
   image: {
     margin: "15px 43px 50px 0px",
@@ -172,6 +215,7 @@ dateMarginBottom:{
   },
   eventinfo: {
 		fontSize: "22px",
+    marginTop:"-10px",
 		fontWeight: "700",
 		wordBreak: "break-word",
 	},
@@ -182,7 +226,8 @@ dateMarginBottom:{
     fontFamily:"Aeonik"
 	},
   gridPadding:{
-    paddingInline:"10px",
+    paddingInline:"15px",
+    alignSelf:"center",
   },
   priceAlignment:{
     "@media (min-width: 600px)":{
@@ -197,10 +242,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 const styles = (theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
+  // root: {
+  //   margin: 0,
+  //   padding: theme.spacing(2),
+  // },
   closeButton: {
     position: 'absolute',
     right: theme.spacing(1),
@@ -238,7 +283,8 @@ const DialogTitle = withStyles(styles)((props) => {
 
 const DialogContent = withStyles((theme) => ({
   root: {
-    padding: "20px 40px",
+    // padding: "20px 40px",
+    padding:"20px 50px",
   },
 
 
@@ -247,8 +293,9 @@ const DialogContent = withStyles((theme) => ({
 const DialogActions = withStyles((theme) => ({
   root: {
     margin: 0,
-    padding: theme.spacing(1),
-    padding: "18px"
+    // padding: theme.spacing(1),
+    // padding: "18px"
+    padding:"20px 50px 20px 50px",
   },
 
 }))(MuiDialogActions);
@@ -330,17 +377,18 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
           </div>
 
         </DialogContent>
-        <DialogActions>
+        <DialogActions className={(purchased)?"":classes.bottomPadding}>
           {purchased ?
             <Link to="/mytickets/1" className={classes.link}>
               <Button
                 variant="contained"
                 color="primary"
-                style={{ marginRight: "10px" }}
+                // style={{ marginRight: "10px" }}
                 className={classes.seeTicket}
                 onClick={handleClose}
               > See Ticket</Button></Link> :
-            (<Grid item style={{ display: "contents" }}>
+            (<Grid item style={{ display: "contents", paddingBottom:
+            '60px' }}>
               <Button
                 variant="contained"
                 color="primary"
@@ -354,7 +402,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
               <Button
                 variant="contained"
                 color="primary"
-                style={{ marginRight: "10px" }}
+                style={{ marginLeft: "10px" }}
                 className={classes.send}
 
                 onClick={buyTicket}
