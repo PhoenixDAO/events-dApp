@@ -32,11 +32,9 @@ const AnalyticsWrapper = (props) => {
 		setTicketBought(blockChainTickets.length);
 		console.log("ticket bought", blockChainTickets);
 		// const timeData = await getTimeData(props.accounts);
-		const createdDate = moment().minutes(0).seconds(0).unix();
-		console.log("created date", createdDate);
 		const todayData = await getTodayData(
 			props.accounts,
-			Number(createdDate - 86400)
+			Number(moment().unix() - 86400)
 		);
 		console.log("time stamp--- ", moment().unix());
 		console.log("todayData", todayData);

@@ -1,11 +1,13 @@
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi  from '../config/getGraphApi';
 let axios = require("axios");
 let moment = require("moment");
 let graphURL;
-GetGraphApi().then((data) => {
-	// Some task on success
-	graphURL = data;
-});
+GetGraphApi().then(
+	(data) => {
+        // Some task on success
+		graphURL=data;
+    },
+);
 //  get buyer Array of event
 
 async function getResult(eventId) {
@@ -305,7 +307,6 @@ export async function getTodayData(owner, timestamp) {
 		// 		newTimeDataArr[i].startTimeStamp
 		// 	);
 		// }
-		console.log("newtimeDara arr in graph api 1", newTimeDataArr);
 		for (let i = 0; i < newTimeDataArr.length; i++) {
 			if (newTimeDataArr[i].startTimeStamp == temp) {
 				temp += 3600;
@@ -325,7 +326,7 @@ export async function getTodayData(owner, timestamp) {
 			}
 		}
 	}
-	console.log("newtimeDara arr in graph api 2", newTimeDataArr);
+	console.log(newTimeDataArr);
 	return newTimeDataArr;
 }
 // getTimeData("0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b")
@@ -456,8 +457,8 @@ export async function getTickets(owner) {
         `,
 		},
 	});
-	let array = result.data.data.tickets.map((e) => {
+	let array =result.data.data.tickets.map((e)=>{
 		return e.eventId;
-	});
+	})
 	return array;
 }

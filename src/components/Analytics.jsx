@@ -8,13 +8,7 @@ import React, {
 import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
-import {
-	Grid,
-	FormControl,
-	Select,
-	Button,
-	Typography,
-} from "@material-ui/core";
+import { Grid, FormControl, Select, Button, Typography } from "@material-ui/core";
 // import {Graph} from "../utils/graph";
 import { Doughnut, Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
@@ -69,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
 			padding: "10px",
-			paddingRight: "20px",
+			paddingRight:"20px",
 			background: "#fff",
 		},
 		"& option": {
@@ -268,9 +262,9 @@ const useStyles = makeStyles((theme) => ({
 			left: "0",
 		},
 	},
-	selectWidth: {
+	selectWidth:{
 		width: "170px",
-	},
+	}
 }));
 
 //for doughnut chart
@@ -632,7 +626,9 @@ const Analytics = (props, context) => {
 		const dollarKey = Object.keys(dollarData);
 		for (let i = 0; i < dollarKey.length; i++) {
 			const obj = dollarData[dollarKey[i]];
-			dollarRev.push(obj.totalDollarRevenue / 1000000);
+			dollarRev.push(
+				Web3.utils.fromWei(obj.totalDollarRevenue.toString())
+			);
 			if (timeStamp == 86400) {
 				dollarLabel.push(
 					moment.unix(obj.startTimeStamp).format("HH:mm")
@@ -719,9 +715,12 @@ const Analytics = (props, context) => {
 							? (
 									event.eventRevenueInPhnx /
 									1000000000000000000
-							  ).toFixed(3) + " PHNX"
+							  ).toFixed(2) + " PHNX"
 							: "$ " +
-							  (event.eventRevenueInDollar / 1000000).toFixed(3)}
+							  (
+									event.eventRevenueInDollar /
+									1000000000000000000
+							  ).toFixed(2)}
 					</Grid>
 				</Grid>
 			));
@@ -855,8 +854,6 @@ const Analytics = (props, context) => {
 				settimeLabel("TIME");
 				console.log("graphData", "called here");
 				if (props.todayGraphData.length > 0) {
-					const minutes = moment().minutes();
-					const createdDate = moment().minutes(0).seconds(0).unix();
 					console.log(
 						"graphData",
 						"else if called here",
@@ -865,7 +862,7 @@ const Analytics = (props, context) => {
 					graphForDays = props.todayGraphData;
 					difference = await getTodayData(
 						props.accounts,
-						Number(createdDate - 172800)
+						Number(moment().unix() - 172800)
 					);
 				}
 				console.log("moment", moment().unix(), Date.now() / 1000);
@@ -939,7 +936,7 @@ const Analytics = (props, context) => {
 			// 	);
 			// }
 			setGraphDays(graphForDays);
-			console.log("graph data in analytics", graphForDays);
+			console.log("graph", graphForDays);
 			let totalDollarRevenue = 0;
 			let totalPhnxRevenue = 0;
 			let soldTicket = 0;
@@ -947,39 +944,21 @@ const Analytics = (props, context) => {
 			let totalPhnxPrev = 0;
 			let totalSoldTicketsPrev = 0;
 			difference.forEach((event) => {
-				if (timestamp === "86400") {
-					const createdDate = moment().minutes(0).seconds(0).unix();
-					if (event.startTimeStamp <= createdDate - 86400) {
-						totalDollarPrev +=
-							Number(event.totalDollarRevenue.toString()) /
-							1000000;
-						console.log("totalDollarPrev", totalDollarPrev);
-						totalSoldTicketsPrev += Number(
-							event.soldTickets.toString()
-						);
-						totalPhnxPrev += Number(
-							Web3.utils.fromWei(
-								event.totalPhnxRevenue.toString()
-							)
-						);
-					}
-				} else {
-					totalDollarPrev +=
-						Number(event.totalDollarRevenue.toString()) / 1000000;
-					console.log("totalDollarPrev", totalDollarPrev);
-					totalSoldTicketsPrev += Number(
-						event.soldTickets.toString()
-					);
-					totalPhnxPrev += Number(
-						Web3.utils.fromWei(event.totalPhnxRevenue.toString())
-					);
-				}
+				totalDollarPrev += Number(
+					Web3.utils.fromWei(event.totalDollarRevenue.toString())
+				);
+				console.log("totalDollarPrev", totalDollarPrev);
+				totalSoldTicketsPrev += Number(event.soldTickets.toString());
+				totalPhnxPrev += Number(
+					Web3.utils.fromWei(event.totalPhnxRevenue.toString())
+				);
 			});
 			console.log("totalSoldTicketsPrev", totalSoldTicketsPrev);
 			if (graphForDays.length > 0) {
 				graphForDays.forEach((event) => {
-					totalDollarRevenue +=
-						Number(event.totalDollarRevenue.toString()) / 1000000;
+					totalDollarRevenue += Number(
+						Web3.utils.fromWei(event.totalDollarRevenue.toString())
+					);
 					console.log("totalDollarRevenue", totalDollarRevenue);
 					soldTicket += Number(event.soldTickets.toString());
 					totalPhnxRevenue += Number(
@@ -996,14 +975,16 @@ const Analytics = (props, context) => {
 				);
 				setLiveDollarRevenue(liveDollarRevenue);
 				setDollarRevenue(totalDollarRevenue.toFixed(3));
-				setPhnxRevenue(totalPhnxRevenue.toFixed(3));
+				setPhnxRevenue(totalPhnxRevenue.toFixed(6));
 				setSoldTicket(soldTicket);
 				//calculate data for change and difference of cards
 				let lastIndex = graphForDays.length - 1;
-				let originalNumber =
-					graphForDays[0].totalDollarRevenue / 1000000;
-				let newNumber =
-					graphForDays[lastIndex].totalDollarRevenue / 1000000;
+				let originalNumber = Web3.utils.fromWei(
+					graphForDays[0].totalDollarRevenue.toString()
+				);
+				let newNumber = Web3.utils.fromWei(
+					graphForDays[lastIndex].totalDollarRevenue.toString()
+				);
 				console.log("phnx", originalNumber, newNumber);
 				let PHNXoriginalNumber = Web3.utils.fromWei(
 					graphForDays[0].totalPhnxRevenue.toString()
@@ -1329,11 +1310,11 @@ const Analytics = (props, context) => {
 											className={classes.formControls}
 										>
 											<Typography
-												variant="p"
-												className={`${classes.sortBy}`}
-											>
-												Event
-											</Typography>
+									variant="p"
+									className={`${classes.sortBy}`}
+								>
+									Event
+								</Typography>
 											{/* <Select
 											labelId="demo-simple-select-outlined-label"
 											id="demo-simple-select-outlined"
@@ -1397,9 +1378,7 @@ const Analytics = (props, context) => {
 															horizontal: "left",
 														},
 													}}
-													className={
-														classes.selectWidth
-													}
+													className={classes.selectWidth}
 												>
 													{props.eventName.map(
 														(event) => {
@@ -1408,7 +1387,7 @@ const Analytics = (props, context) => {
 																	style={{
 																		fontFamily:
 																			"'Aeonik', sans-serif",
-																		width: "350px",
+																		width: "350px"
 																	}}
 																	value={
 																		event.eventId
@@ -1461,6 +1440,7 @@ const Analytics = (props, context) => {
 								variant="outlined"
 								className={classes.select}
 							>
+								
 								<Select
 									labelId="demo-simple-select-outlined-label"
 									id="demo-simple-select-outlined"
@@ -1481,20 +1461,14 @@ const Analytics = (props, context) => {
 										},
 									}}
 								>
-									<MenuItem
-										value="eventRevenueInPhnx"
-										style={{
+									<MenuItem value="eventRevenueInPhnx" style={{
 											fontFamily: "'Aeonik', sans-serif",
-										}}
-									>
+										}}>
 										PHNX
 									</MenuItem>
-									<MenuItem
-										value="eventRevenueInDollar"
-										style={{
+									<MenuItem value="eventRevenueInDollar" style={{
 											fontFamily: "'Aeonik', sans-serif",
-										}}
-									>
+										}}>
 										Dollar
 									</MenuItem>
 								</Select>
