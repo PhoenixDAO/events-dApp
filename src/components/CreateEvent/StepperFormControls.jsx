@@ -209,28 +209,62 @@ export const useFormControls = () => {
 	};
 
 	const handleImageInput = (event, index, fieldValues = values) => {
+		let temp = { ...errors };
 		const file = event.target.files[0];
-		console.log("file", file, "index", index);
 		let images = fieldValues.images;
-		images[index] = file;
-		setValues({
-			...values,
-			images: [...images],
+
+		if (file) {
+			if (file.size > 5000000) {
+				images[index] = { name: "" };
+				setValues({
+					...values,
+					images: [...images],
+					[`image${index}`]: { name: "" },
+				});
+				temp[`image${index}`] =
+					"Image size cannot exceed more than 5MB.";
+			} else {
+				images[index] = file;
+				setValues({
+					...values,
+					images: [...images],
+					[`image${index}`]: file,
+				});
+				temp[`image${index}`] = "";
+			}
+		}
+
+		setErrors({
+			...temp,
 		});
-		// if (file.size > 1024)
-		//   onFileSelectError({ error: "File size cannot exceed more than 1MB" });
-		// else onFileSelectSuccess(file);
 	};
 
 	const addAnotherImage = (fieldValues = values) => {
-		console.log("fieldValues", fieldValues);
 		let images = fieldValues.images;
-		console.log("images", images);
+		const len = images.length;
 		const newImage = { name: "" };
 		images.push(newImage);
 		setValues({
 			...values,
 			images: [...images],
+			[`image${len}`]: { name: "" },
+		});
+	};
+
+	const handelRemoveImage = (index, fieldValues = values) => {
+		let temp = { ...errors };
+
+		let images = fieldValues.images;
+		images.splice(index, 1);
+		setValues({
+			...values,
+			images: [...images],
+			[`image${index}`]: { name: "" },
+		});
+		temp[`image${index}`] = "";
+
+		setErrors({
+			...temp,
 		});
 	};
 
@@ -466,5 +500,6 @@ export const useFormControls = () => {
 		formIsValid,
 		stepperIsValid,
 		addAnotherImage,
+		handelRemoveImage,
 	};
 };

@@ -83,6 +83,7 @@ const MyStepper = ({
 		formIsValid,
 		stepperIsValid,
 		addAnotherImage,
+		handelRemoveImage,
 	} = useFormControls();
 
 	const {
@@ -1021,7 +1022,16 @@ const MyStepper = ({
 												than 5MB (Recommended 1000px *
 												1000px)
 											</p>
-										) : null}
+										) : (
+											<button
+												disabled={index === 0}
+												onClick={() => {
+													handelRemoveImage(index);
+												}}
+											>
+												Remove Image
+											</button>
+										)}
 									</div>
 								);
 							})}
