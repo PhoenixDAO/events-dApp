@@ -158,7 +158,11 @@ const styles = (theme) => ({
 			paddingRight: "25px",
 		},
 		[theme.breakpoints.down("xs")]: {
-			width: "auto",
+			"&. MuiOutlinedInput-root":{
+				minWidth: "116px",
+				width: "100%",
+			},
+			width: "100%",
 			minWidth: "141px",
 		},
 	},
@@ -1051,7 +1055,7 @@ class EventPage extends Component {
 					// 	PhoenixDAO Event not found
 					// </div>
 					<EmptyState
-						text="Event doesnot exist"
+						text="Event doesn't exist...😔"
 						btnText="Go to Dashboard"
 						url="/upcomingevents/1"
 					/>
@@ -1099,16 +1103,16 @@ class EventPage extends Component {
 							]
 						)
 				) {
-					disabled = true;
-					disabledStatus = (
-						<span>
-							<span role="img" aria-label="alert">
-								⚠️
-							</span>{" "}
-							No more tickets
-						</span>
-					);
-					buttonText = " Sold Out";
+					// disabled = true;
+					// disabledStatus = (
+					// 	<span>
+					// 		<span role="img" aria-label="alert">
+					// 			⚠️
+					// 		</span>{" "}
+					// 		No more tickets
+					// 	</span>
+					// );
+					// buttonText = " Sold Out";
 				}
 
 				// if (date.getTime() < new Date().getTime()) {
