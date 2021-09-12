@@ -89,7 +89,7 @@ class CreateEvent extends Component {
 				eventCategory: "free",
 				ticketAvailability: "unlimited",
 			},
-			activeStep: 2,
+			activeStep: 0,
 			activeFlamingStep: 0,
 			progressText: 0,
 			shareUrl: "",
@@ -202,17 +202,30 @@ class CreateEvent extends Component {
 			) / 1000;
 
 		for (var i = 0; i < ticketCategories.length; i++) {
-			ticketLimited.push(ticketCategories[i].ticketAvailability);
-			tktQnty.push(ticketCategories[i].noOfTickets);
+			categories.push(ticketCategories[i].ticketName);
 			prices.push(ticketCategories[i].dollarPrice * 1000000);
 			tktQntySold.push("0");
-			categories.push(ticketCategories[i].ticketName);
-			totalQuantity =
-				totalQuantity + parseInt(ticketCategories[i].noOfTickets);
-		}
 
-		console.log("token", token);
-		console.log(ticketLimited, tktQnty, prices, tktQntySold, categories);
+			ticketLimited.push(
+				ticketCategories[i].ticketAvailability === "unlimited"
+					? false
+					: true
+			);
+
+			tktQnty.push(
+				ticketCategories[i].ticketAvailability === "unlimited"
+					? "0"
+					: ticketCategories[i].noOfTickets
+			);
+
+			totalQuantity =
+				totalQuantity +
+				parseInt(
+					ticketCategories[i].ticketAvailability === "unlimited"
+						? "0"
+						: ticketCategories[i].noOfTickets
+				);
+		}
 
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({

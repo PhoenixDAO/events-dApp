@@ -79,7 +79,12 @@ const MyStepper = ({
 		addAnotherImage,
 		handelRemoveImage,
 		handleTicketCatogory,
-		getPhoenixdaoMarket,
+		handleSaveTicketCatogory,
+		handleRickTextValue,
+		handleEventCategory,
+		handleAddAnotherCategory,
+		handleDeleteTicketCategory,
+		handleEditTicketCategory,
 	} = useFormControls();
 
 	const {
@@ -103,49 +108,23 @@ const MyStepper = ({
 		images,
 		//3rd_stepper
 		eventCategory,
+		ticketIndex,
 		restrictWallet,
 		ticketCategories,
+		isCompleted,
+		//4th_stepper
+		eventDescription,
+		termsAndConditions,
 	} = values;
 
-	console.log(values);
+	// console.log(values);
 
-	const { handleSubmit, control, setValue: setFormValue } = useForm();
 	const steps = ["", "", "", ""];
-	// const [eventTime, setEventTime] = useState("onedayevent");
-	// const [type, setType] = useState("physical");
-	// const [category, setCategory] = useState("free");
-	// const [availability, setAvailability] = useState("unlimited");
-	// const [images, setImages] = useState([{ name: "" }]);
-
+	function getFlamingSteps() {
+		return ["Upload Data", "Confirm Transaction", "Publish Event"];
+	}
 	const flamingSteps = getFlamingSteps();
-
-	const [categories, setCategories] = useState([]);
-	const [addAnotherCat, setaddAnotherCat] = useState(false);
-	const [ticketCategory, setTicketCategory] = useState(0);
-
-	const [categoriesOfTicket, setCategoriesOfTicket] = useState([]);
-	const [categoriesOfToken, setCategoriesOfToken] = useState(false);
-
-	useEffect(() => {
-		setTicketCategory(Math.floor(100000 + Math.random() * 900000));
-	}, []);
-
 	const [isCopied, setIsCopied] = useState(false);
-
-	const [dateError, setDateError] = useState({
-		message: "",
-		isError: false,
-	});
-
-	const [timeError, setTimeError] = useState({
-		message: "",
-		isError: false,
-	});
-
-	const [endTimeError, setEndTimeError] = useState({
-		message: "",
-		isError: false,
-	});
 
 	useEffect(() => {
 		onFieldsChange(values);
@@ -202,351 +181,26 @@ const MyStepper = ({
 		return checkIfNum && e.preventDefault();
 	};
 
-	const handleNextStep = () => {
-		stepperIsValid(activeStep, () => {
-			onStepsChange("inc");
-		});
-	};
-
-	//next button steper
-	const handleNext = (fields) => {
-		console.log("fields", fields);
-		// console.log("categories", categories);
-		const filter = new badWords();
-		let badEventName = filter.clean(fields.eventName);
-		fields.eventName = badEventName;
-		let badEventOrg = filter.clean(fields.eventOrganizer);
-		fields.eventOrganizer = badEventOrg;
-
-		if (activeStep === 0) {
-			//first stepper conditions - eventName, eventOrg, eventdate&time
-			setTimeError({ isError: false, message: "" });
-			setDateError({ isError: false, message: "" });
-			setEndTimeError({ isError: false, message: "" });
-
-			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-			if (fields.eventTime === "onedayevent") {
-				console.log("onedayevent----->");
-				let eventDateOneDay = fields.eventDate;
-				let eventStartTimeOneday = fields.eventStartTime;
-				console.log("timestamp", eventStartTimeOneday);
-				let eventEndTimeOneday = fields.eventEndTime;
-
-				eventDateOneDay.setHours(
-					eventStartTimeOneday.getHours(),
-					eventStartTimeOneday.getMinutes(),
-					eventStartTimeOneday.getSeconds(),
-					0
-				);
-				eventStartTimeOneday.setFullYear(eventDateOneDay.getFullYear());
-				eventStartTimeOneday.setMonth(eventDateOneDay.getMonth());
-				eventStartTimeOneday.setDate(eventDateOneDay.getDate());
-
-				var today = new Date();
-				today.setHours(today.getHours() + 3);
-				if (eventStartTimeOneday <= today) {
-					console.log("im here error show");
-					setTimeError({
-						isError: true,
-						message: "Event should be after 3 Hours.",
-					});
-				} else {
-					if (eventEndTimeOneday) {
-						eventEndTimeOneday.setFullYear(
-							eventDateOneDay.getFullYear()
-						);
-						eventEndTimeOneday.setMonth(eventDateOneDay.getMonth());
-						eventEndTimeOneday.setDate(eventDateOneDay.getDate());
-						if (eventStartTimeOneday < eventEndTimeOneday) {
-							fields.eventDate = eventDateOneDay;
-							fields.eventStartTime = eventStartTimeOneday;
-							fields.eventEndTime = eventEndTimeOneday;
-							console.log(
-								eventDateOneDay,
-								eventStartTimeOneday,
-								eventEndTimeOneday
-							);
-							onFieldsChange(fields);
-							onStepsChange("inc");
-						} else {
-							// alert("End Time should greater than Start Time");
-							setEndTimeError({
-								isError: true,
-								message:
-									"End Time should greater than Start Time.",
-							});
-						}
-					} else {
-						fields.eventDate = eventDateOneDay;
-						fields.eventStartTime = eventStartTimeOneday;
-						console.log(eventDateOneDay, eventStartTimeOneday);
-						onFieldsChange(fields);
-						onStepsChange("inc");
-					}
-				}
-			} else {
-				console.log("morethanaday---->");
-				let eventDateOneDay = fields.eventStartDate;
-				let eventEndDateOneDay = fields.eventEndDate;
-				let eventStartTimeOneday = fields.eventStartTime;
-				let eventEndTimeOneday = fields.eventEndTime;
-				//change date timing
-				eventDateOneDay.setHours(
-					eventStartTimeOneday.getHours(),
-					eventStartTimeOneday.getMinutes(),
-					eventStartTimeOneday.getSeconds(),
-					0
-				);
-				eventEndDateOneDay.setHours(
-					eventStartTimeOneday.getHours(),
-					eventStartTimeOneday.getMinutes(),
-					eventStartTimeOneday.getSeconds(),
-					0
-				);
-				//change timing unix date
-				eventStartTimeOneday.setFullYear(eventDateOneDay.getFullYear());
-				eventStartTimeOneday.setMonth(eventDateOneDay.getMonth());
-				eventStartTimeOneday.setDate(eventDateOneDay.getDate());
-				var today = new Date();
-				today.setHours(today.getHours() + 3);
-				if (eventStartTimeOneday <= today) {
-					console.log("im here error show");
-					setTimeError({
-						isError: true,
-						message:
-							"Event should be after three hours from current time.",
-					});
-				} else {
-					const diffTime = eventEndDateOneDay - eventDateOneDay;
-					const diffDays = Math.ceil(
-						diffTime / (1000 * 60 * 60 * 24)
-					);
-					console.log(diffDays + " days");
-					if (diffDays > 0) {
-						if (eventEndTimeOneday) {
-							eventEndTimeOneday.setFullYear(
-								eventDateOneDay.getFullYear()
-							);
-							eventEndTimeOneday.setMonth(
-								eventDateOneDay.getMonth()
-							);
-							eventEndTimeOneday.setDate(
-								eventDateOneDay.getDate()
-							);
-							//eventStartTimeOneday < eventEndTimeOneday
-							if (true) {
-								fields.eventStartDate = eventDateOneDay;
-								fields.eventEndDateOneDay = eventEndDateOneDay;
-								fields.eventStartTime = eventStartTimeOneday;
-								fields.eventEndTime = eventEndTimeOneday;
-								console.log(
-									eventDateOneDay,
-									eventStartTimeOneday,
-									eventEndTimeOneday
-								);
-								onFieldsChange(fields);
-								onStepsChange("inc");
-							} else {
-								// alert("End Time should greater than Start Time");
-								setEndTimeError({
-									isError: true,
-									message:
-										"End Time should greater than Start Time.",
-								});
-							}
-						} else {
-							fields.eventStartDate = eventDateOneDay;
-							fields.eventStartTime = eventStartTimeOneday;
-							fields.eventEndDateOneDay = eventEndDateOneDay;
-							console.log(eventDateOneDay, eventStartTimeOneday);
-							onFieldsChange(fields);
-							onStepsChange("inc");
-						}
-					} else {
-						// alert("End Date should greater than Start Date");
-						setDateError({
-							isError: true,
-							message:
-								"End date should be greater than start date",
-						});
-					}
-				}
-			}
-		} else if (activeStep === 1) {
-			//2nd stpper - location/link, images, topicI
-			onFieldsChange(fields);
-			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-			onStepsChange("inc");
-		} else if (activeStep === 2) {
-			// 3rd stepper -  event categories (free, single paid, multiple paid)
-			// bool token; // false means free
-
-			console.log("fields.eventCategory ", fields.eventCategory);
-
-			if (fields.eventCategory === "free") {
-				console.log("free--------->");
-				let cat = [];
-				let obj = {
-					ticketName: "free",
-					dollarPrice: "0",
-					phnxPrice: "0",
-					ticketAvailability:
-						fields.ticketAvailability === "unlimited"
-							? false
-							: true,
-					noOfTickets:
-						fields.ticketAvailability === "unlimited"
-							? "0"
-							: fields.noOfTickets,
-				};
-				cat.push(obj);
-				fields.categories = cat;
-				fields.token = false; // false means free
-				setCategoriesOfTicket(cat);
-				setCategoriesOfToken(false);
-				onFieldsChange(fields);
-				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-				onStepsChange("inc");
-			} else if (fields.eventCategory === "single") {
-				console.log("single fields", fields);
-				let cat = [];
-				let obj = {
-					ticketName: "single",
-					dollarPrice: fields.dollarPrice,
-					phnxPrice: fields.phnxPrice,
-					ticketAvailability:
-						fields.ticketAvailability === "unlimited"
-							? false
-							: true,
-					noOfTickets:
-						fields.ticketAvailability === "unlimited"
-							? "0"
-							: fields.noOfTickets,
-				};
-				cat.push(obj);
-				fields.categories = cat;
-				fields.token = true; // false means free
-				setCategoriesOfTicket(cat);
-				setCategoriesOfToken(true);
-				onFieldsChange(fields);
-				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-				onStepsChange("inc");
-			} else {
-				console.log("multiple fields");
-				if (categories.length > 0) {
-					let sortedCategories = categories.sort(
-						(a, b) =>
-							parseFloat(a.dollarPrice) -
-							parseFloat(b.dollarPrice)
-					);
-					fields.categories = sortedCategories;
-					fields.token = true; // false means free
-					setCategoriesOfTicket(sortedCategories);
-					setCategoriesOfToken(true);
-					onFieldsChange(fields);
-					// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-					onStepsChange("inc");
-				} else {
-					console.log("Please add ticket category");
-				}
-			}
-		} else if (activeStep === 3) {
-			// 4th stepper
-			console.log("fields", fields.categories);
-			fields.categories = categoriesOfTicket;
-			fields.token = categoriesOfToken;
-			onFieldsChange(fields);
-			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-			onStepsChange("inc");
-			handleCreateEvent();
-		} else {
-			//publish event
-			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
-		}
-	};
-
 	const maxLengthCheckNumber = (e) => {
 		e.target.value = Math.max(0, parseInt(e.target.value))
 			.toString()
 			.slice(0, 16);
 	};
 
+	const handleNextStep = () => {
+		stepperIsValid(
+			activeStep,
+			() => {
+				onStepsChange("inc");
+			},
+			() => handleCreateEvent()
+		);
+	};
+
 	//back button stepper
 	const handleBack = () => {
 		onStepsChange("dec");
 	};
-
-	const handleSaveCatogory = (fields) => {
-		console.log(fields);
-		console.log("ticketCategory", ticketCategory);
-
-		let obj = {
-			id: ticketCategory,
-			ticketName: fields[`ticketName${ticketCategory}`],
-			dollarPrice: fields[`dollarPrice${ticketCategory}`],
-			phnxPrice: fields[`phnxPrice${ticketCategory}`],
-			ticketAvailability:
-				fields[`ticketAvailability${ticketCategory}`] === "unlimited"
-					? false
-					: true,
-			noOfTickets:
-				fields[`ticketAvailability${ticketCategory}`] === "unlimited"
-					? "0"
-					: fields[`noOfTickets${ticketCategory}`],
-		};
-
-		// let arr = categories;
-		// arr.push(obj);
-		// console.log("arr", arr);
-		upsert(categories, obj);
-		// console.log("arr", arr);
-		// setCategories([...arr]);
-		setaddAnotherCat(!addAnotherCat);
-	};
-
-	function upsert(array, item) {
-		const i = array.findIndex((_item) => _item.id === item.id);
-		if (i > -1) {
-			array[i] = item;
-			setCategories([...array]);
-		} else {
-			array.push(item);
-			setCategories([...array]);
-		}
-	}
-
-	const handleAddAnotherCategory = () => {
-		setaddAnotherCat(!addAnotherCat);
-		// setTicketCategory(ticketCategory + 10);
-		setTicketCategory(Math.floor(100000 + Math.random() * 900000));
-	};
-
-	const handleDeleteTicketCategory = (data, index, cat) => {
-		console.log("delete clicked", data, index, cat);
-		let arr = categories;
-		arr = arr.filter((obj) => obj.id !== cat.id);
-		// arr.splice(index, 1);
-		console.log(arr);
-		setCategories([...arr]);
-	};
-
-	const handleEditTicketCategory = (data, index, cat) => {
-		setTicketCategory(Math.floor(100000 + Math.random() * 900000));
-		console.log("edit index", cat.id);
-		setaddAnotherCat(!addAnotherCat);
-		setTicketCategory(cat.id);
-	};
-
-	// const convertDollarToPhnx = (d) => {
-	// 	let value = parseFloat(d);
-	// 	value = value > 0 ? value : 0;
-	// 	let usd = PhoenixDAO_market.usd;
-	// 	console.log("dollar", PhoenixDAO_market);
-	// 	let phoenixValue = value / usd;
-	// 	console.log("phnx", phoenixValue);
-	// 	phoenixValue = phoenixValue.toFixed(5);
-	// 	return phoenixValue;
-	// };
 
 	function getStepContent(stepIndex) {
 		switch (stepIndex) {
@@ -667,6 +321,7 @@ const MyStepper = ({
 													handlePickerValue
 												}
 												fullWidth={true}
+												clearable={false}
 											/>
 										</Grid>
 										<Grid
@@ -687,6 +342,8 @@ const MyStepper = ({
 													handlePickerValue
 												}
 												fullWidth={true}
+												clearable={true}
+												helperText="Don’t have an end time? leave here blank"
 											/>
 										</Grid>
 									</Grid>
@@ -756,6 +413,7 @@ const MyStepper = ({
 													handlePickerValue
 												}
 												fullWidth={true}
+												clearable={false}
 											/>
 										</Grid>
 
@@ -777,6 +435,8 @@ const MyStepper = ({
 													handlePickerValue
 												}
 												fullWidth={true}
+												clearable={true}
+												helperText="Don’t have an end time? leave here blank"
 											/>
 										</Grid>
 									</Grid>
@@ -1096,7 +756,7 @@ const MyStepper = ({
 									id="event-category"
 									name="eventCategory"
 									value={eventCategory}
-									onChange={handleInputValue}
+									onChange={handleEventCategory}
 									fullWidth
 									className={classes.dropdownMenu}
 								>
@@ -1125,14 +785,15 @@ const MyStepper = ({
 												name="ticketAvailability"
 												id="ticket-availability"
 												value={
-													ticketCategories[0]
-														.ticketAvailability
+													ticketCategories[
+														ticketIndex
+													].ticketAvailability
 												}
 												className={classes.radioGroup}
 												onChange={(event) => {
 													handleTicketCatogory(
 														event,
-														0
+														ticketIndex
 													);
 												}}
 											>
@@ -1184,7 +845,7 @@ const MyStepper = ({
 												/>
 											</RadioGroup>
 										</FormControl>
-										{ticketCategories[0]
+										{ticketCategories[ticketIndex]
 											.ticketAvailability ===
 										"unlimited" ? null : (
 											<div>
@@ -1195,15 +856,16 @@ const MyStepper = ({
 													fullWidth={true}
 													label="NUMBER OF TICKETS"
 													value={
-														ticketCategories[0]
-															.noOfTickets
+														ticketCategories[
+															ticketIndex
+														].noOfTickets
 													}
 													handleInputValue={(
 														event
 													) => {
 														handleTicketCatogory(
 															event,
-															0
+															ticketIndex
 														);
 													}}
 													errors={errors}
@@ -1267,13 +929,20 @@ const MyStepper = ({
 														},
 													}}
 													value={
-														ticketCategories[0]
-															.dollarPrice
+														ticketCategories[
+															ticketIndex
+														].dollarPrice
 													}
 													onChange={(event) => {
 														handleTicketCatogory(
 															event,
-															0
+															ticketIndex
+														);
+													}}
+													onBlur={(event) => {
+														handleTicketCatogory(
+															event,
+															ticketIndex
 														);
 													}}
 													{...(errors[
@@ -1331,13 +1000,20 @@ const MyStepper = ({
 														),
 													}}
 													value={
-														ticketCategories[0]
-															.phnxPrice
+														ticketCategories[
+															ticketIndex
+														].phnxPrice
 													}
 													onChange={(event) => {
 														handleTicketCatogory(
 															event,
-															0
+															ticketIndex
+														);
+													}}
+													onBlur={(event) => {
+														handleTicketCatogory(
+															event,
+															ticketIndex
 														);
 													}}
 													{...(errors[
@@ -1363,14 +1039,15 @@ const MyStepper = ({
 												name="ticketAvailability"
 												id="ticket-availability"
 												value={
-													ticketCategories[0]
-														.ticketAvailability
+													ticketCategories[
+														ticketIndex
+													].ticketAvailability
 												}
 												className={classes.radioGroup}
 												onChange={(event) => {
 													handleTicketCatogory(
 														event,
-														0
+														ticketIndex
 													);
 												}}
 											>
@@ -1422,7 +1099,7 @@ const MyStepper = ({
 												/>
 											</RadioGroup>
 										</FormControl>
-										{ticketCategories[0]
+										{ticketCategories[ticketIndex]
 											.ticketAvailability ===
 										"unlimited" ? null : (
 											<div>
@@ -1433,15 +1110,16 @@ const MyStepper = ({
 													fullWidth={true}
 													label="NUMBER OF TICKETS"
 													value={
-														ticketCategories[0]
-															.noOfTickets
+														ticketCategories[
+															ticketIndex
+														].noOfTickets
 													}
 													handleInputValue={(
 														event
 													) => {
 														handleTicketCatogory(
 															event,
-															0
+															ticketIndex
 														);
 													}}
 													errors={errors}
@@ -1458,323 +1136,349 @@ const MyStepper = ({
 								) : (
 									<div>
 										{/*paid multiple - ticket category box*/}
-										{ticketCategories.map((cat, index) => {
-											console.log("cat", cat);
-											return (
-												<TicketCategory
-													key={index}
-													cat={cat}
-													index={index}
-												/>
-											);
-										})}
+										{ticketCategories &&
+											ticketCategories.length &&
+											ticketCategories.map(
+												(cat, index) => {
+													if (!cat.isShown)
+														return null;
+													return (
+														<TicketCategory
+															key={index}
+															cat={cat}
+															index={index}
+															handleDeleteTicketCategory={
+																handleDeleteTicketCategory
+															}
+															handleEditTicketCategory={
+																handleEditTicketCategory
+															}
+														/>
+													);
+												}
+											)}
 
 										{/* for adding new category */}
-										{!addAnotherCat ? (
+										{!isCompleted &&
+										ticketCategories[ticketIndex] ? (
 											<div>
-												<form>
-													<CustomTextField
-														id="ticket-name"
-														name="ticketName"
-														fullWidth
-														label="TICKET NAME"
-														value={
-															ticketCategories[0]
-																.ticketName
-														}
-														handleInputValue={(
-															event
-														) => {
-															handleTicketCatogory(
-																event,
-																0
-															);
-														}}
-														errors={errors}
-													/>
+												<CustomTextField
+													id="ticket-name"
+													name="ticketName"
+													fullWidth
+													label="TICKET NAME"
+													value={
+														ticketCategories[
+															ticketIndex
+														].ticketName
+													}
+													handleInputValue={(
+														event
+													) => {
+														handleTicketCatogory(
+															event,
+															ticketIndex
+														);
+													}}
+													errors={errors}
+												/>
 
-													<br />
-													<br />
-													<br />
+												<br />
+												<br />
+												<br />
 
-													<div
-														className={
-															classes.ticketPriceContainer
-														}
-													>
-														<span>
-															<InputLabel htmlFor="input-with-icon-adornment">
-																<label
-																	className={
-																		classes.label
-																	}
-																>
-																	TICKET PRICE
-																</label>
-															</InputLabel>
-															<TextField
+												<div
+													className={
+														classes.ticketPriceContainer
+													}
+												>
+													<span>
+														<InputLabel htmlFor="input-with-icon-adornment">
+															<label
 																className={
-																	classes.margin
+																	classes.label
 																}
-																onKeyDown={
-																	formatInputDollarPrice
-																}
-																id="dollar-price"
-																name="dollarPrice"
-																type="number"
-																variant="outlined"
-																InputProps={{
-																	startAdornment:
-																		(
-																			<InputAdornment position="start">
-																				<Button
-																					component="label"
-																					className={
-																						classes.dollarIconBtnStyle
-																					}
-																				>
-																					<img
-																						src={
-																							dollarIcon
-																						}
-																						alt="dollar sign"
-																					/>
-																				</Button>
-																			</InputAdornment>
-																		),
-																	inputProps:
-																		{
-																			min: 0,
-																		},
-																}}
-																value={
-																	ticketCategories[0]
-																		.dollarPrice
-																}
-																onChange={(
-																	event
-																) => {
-																	handleTicketCatogory(
-																		event,
-																		0
-																	);
-																}}
-																{...(errors[
-																	"dollarPrice"
-																] && {
-																	error: true,
-																	helperText:
-																		errors[
-																			"dollarPrice"
-																		],
-																})}
-															/>
-														</span>
-
-														<div
+															>
+																TICKET PRICE
+															</label>
+														</InputLabel>
+														<TextField
 															className={
-																classes.altIconStyle
+																classes.margin
 															}
-														>
-															<img
-																src={altIcon}
-																alt="alt icon"
-																className={
-																	classes.altImage
-																}
-															/>
-														</div>
-
-														<span>
-															<InputLabel htmlFor="input-with-icon-adornment">
-																<span>
-																	&nbsp;
-																</span>
-															</InputLabel>
-															<TextField
-																className={
-																	classes.margin
-																}
-																id="phnx-price"
-																name="phnxPrice"
-																onKeyDown={
-																	formatInputDollarPrice
-																}
-																type="number"
-																variant="outlined"
-																InputProps={{
-																	startAdornment:
-																		(
-																			<InputAdornment position="start">
-																				<Button
-																					component="label"
-																					className={
-																						classes.phnxLogoBtnStyle
+															onKeyDown={
+																formatInputDollarPrice
+															}
+															id="dollar-price"
+															name="dollarPrice"
+															type="number"
+															variant="outlined"
+															InputProps={{
+																startAdornment:
+																	(
+																		<InputAdornment position="start">
+																			<Button
+																				component="label"
+																				className={
+																					classes.dollarIconBtnStyle
+																				}
+																			>
+																				<img
+																					src={
+																						dollarIcon
 																					}
-																				>
-																					<img
-																						src={
-																							phnxLogo
-																						}
-																						alt="phnx logo"
-																					/>
-																				</Button>
-																			</InputAdornment>
-																		),
-																}}
-																value={
-																	ticketCategories[0]
-																		.phnxPrice
-																}
-																onChange={(
-																	event
-																) => {
-																	handleTicketCatogory(
-																		event,
-																		0
-																	);
-																}}
-																{...(errors[
-																	"phnxPrice"
-																] && {
-																	error: true,
-																	helperText:
-																		errors[
-																			"phnxPrice"
-																		],
-																})}
-															/>
-														</span>
-													</div>
-
-													<br />
-
-													<FormControl component="fieldset">
-														<label
-															className={
-																classes.label
-															}
-														>
-															TICKET AVAILABILITY
-														</label>
-														<RadioGroup
-															row
-															aria-label="ticketAvailability"
-															name="ticketAvailability"
-															id="ticket-availability"
+																					alt="dollar sign"
+																				/>
+																			</Button>
+																		</InputAdornment>
+																	),
+																inputProps: {
+																	min: 0,
+																},
+															}}
 															value={
-																ticketCategories[0]
-																	.ticketAvailability
-															}
-															className={
-																classes.radioGroup
+																ticketCategories[
+																	ticketIndex
+																].dollarPrice
 															}
 															onChange={(
 																event
 															) => {
 																handleTicketCatogory(
 																	event,
-																	0
+																	ticketIndex
 																);
 															}}
-														>
-															<FormControlLabel
-																value="unlimited"
-																control={
-																	<Radio
-																		color="primary"
-																		icon={
-																			<img
-																				src={
-																					uncheckedIcon
-																				}
-																			/>
-																		}
-																		checkedIcon={
-																			<img
-																				src={
-																					checkedIcon
-																				}
-																			/>
-																		}
-																	/>
-																}
-																label="Unlimited Tickets"
-															/>
-															<FormControlLabel
-																value="limited"
-																control={
-																	<Radio
-																		color="primary"
-																		icon={
-																			<img
-																				src={
-																					uncheckedIcon
-																				}
-																			/>
-																		}
-																		checkedIcon={
-																			<img
-																				src={
-																					checkedIcon
-																				}
-																			/>
-																		}
-																	/>
-																}
-																label="Limited Tickets"
-															/>
-														</RadioGroup>
-													</FormControl>
+															onBlur={(event) => {
+																handleTicketCatogory(
+																	event,
+																	ticketIndex
+																);
+															}}
+															{...(errors[
+																"dollarPrice"
+															] && {
+																error: true,
+																helperText:
+																	errors[
+																		"dollarPrice"
+																	],
+															})}
+														/>
+													</span>
 
-													{ticketCategories[0]
-														.ticketAvailability ===
-													"unlimited" ? null : (
-														<div>
-															<CustomTextField
-																type="number"
-																id="no-of-tickets"
-																name="noOfTickets"
-																fullWidth={true}
-																label="NUMBER OF TICKETS"
-																value={
-																	ticketCategories[0]
-																		.noOfTickets
-																}
-																handleInputValue={(
-																	event
-																) => {
-																	handleTicketCatogory(
-																		event,
-																		0
-																	);
-																}}
-																errors={errors}
-																onKeyDown={
-																	formatInputNoOfTickets
-																}
-																onInput={
-																	maxLengthCheckNumber
-																}
-															/>
-														</div>
-													)}
-
-													<br />
-
-													{/* save button */}
-													<Button
-														color="primary"
-														variant="outlined"
-														fullWidth
+													<div
 														className={
-															classes.addAnotherImageBtn
+															classes.altIconStyle
 														}
-														type="submit"
 													>
-														Save
-													</Button>
-												</form>
+														<img
+															src={altIcon}
+															alt="alt icon"
+															className={
+																classes.altImage
+															}
+														/>
+													</div>
+
+													<span>
+														<InputLabel htmlFor="input-with-icon-adornment">
+															<span>&nbsp;</span>
+														</InputLabel>
+														<TextField
+															className={
+																classes.margin
+															}
+															id="phnx-price"
+															name="phnxPrice"
+															onKeyDown={
+																formatInputDollarPrice
+															}
+															type="number"
+															variant="outlined"
+															InputProps={{
+																startAdornment:
+																	(
+																		<InputAdornment position="start">
+																			<Button
+																				component="label"
+																				className={
+																					classes.phnxLogoBtnStyle
+																				}
+																			>
+																				<img
+																					src={
+																						phnxLogo
+																					}
+																					alt="phnx logo"
+																				/>
+																			</Button>
+																		</InputAdornment>
+																	),
+															}}
+															value={
+																ticketCategories[
+																	ticketIndex
+																].phnxPrice
+															}
+															onChange={(
+																event
+															) => {
+																handleTicketCatogory(
+																	event,
+																	ticketIndex
+																);
+															}}
+															onBlur={(event) => {
+																handleTicketCatogory(
+																	event,
+																	ticketIndex
+																);
+															}}
+															{...(errors[
+																"phnxPrice"
+															] && {
+																error: true,
+																helperText:
+																	errors[
+																		"phnxPrice"
+																	],
+															})}
+														/>
+													</span>
+												</div>
+
+												<br />
+
+												<FormControl component="fieldset">
+													<label
+														className={
+															classes.label
+														}
+													>
+														TICKET AVAILABILITY
+													</label>
+													<RadioGroup
+														row
+														aria-label="ticketAvailability"
+														name="ticketAvailability"
+														id="ticket-availability"
+														value={
+															ticketCategories[
+																ticketIndex
+															].ticketAvailability
+														}
+														className={
+															classes.radioGroup
+														}
+														onChange={(event) => {
+															handleTicketCatogory(
+																event,
+																ticketIndex
+															);
+														}}
+													>
+														<FormControlLabel
+															value="unlimited"
+															control={
+																<Radio
+																	color="primary"
+																	icon={
+																		<img
+																			src={
+																				uncheckedIcon
+																			}
+																		/>
+																	}
+																	checkedIcon={
+																		<img
+																			src={
+																				checkedIcon
+																			}
+																		/>
+																	}
+																/>
+															}
+															label="Unlimited Tickets"
+														/>
+														<FormControlLabel
+															value="limited"
+															control={
+																<Radio
+																	color="primary"
+																	icon={
+																		<img
+																			src={
+																				uncheckedIcon
+																			}
+																		/>
+																	}
+																	checkedIcon={
+																		<img
+																			src={
+																				checkedIcon
+																			}
+																		/>
+																	}
+																/>
+															}
+															label="Limited Tickets"
+														/>
+													</RadioGroup>
+												</FormControl>
+
+												{ticketCategories[ticketIndex]
+													.ticketAvailability ===
+												"unlimited" ? null : (
+													<div>
+														<CustomTextField
+															type="number"
+															id="no-of-tickets"
+															name="noOfTickets"
+															fullWidth={true}
+															label="NUMBER OF TICKETS"
+															value={
+																ticketCategories[
+																	ticketIndex
+																].noOfTickets
+															}
+															handleInputValue={(
+																event
+															) => {
+																handleTicketCatogory(
+																	event,
+																	ticketIndex
+																);
+															}}
+															errors={errors}
+															onKeyDown={
+																formatInputNoOfTickets
+															}
+															onInput={
+																maxLengthCheckNumber
+															}
+														/>
+													</div>
+												)}
+
+												<br />
+
+												{/* save button */}
+												<Button
+													color="primary"
+													variant="outlined"
+													fullWidth
+													className={
+														classes.addAnotherImageBtn
+													}
+													onClick={() => {
+														handleSaveTicketCatogory(
+															ticketIndex
+														);
+													}}
+												>
+													Save
+												</Button>
 												<br />
 											</div>
 										) : (
@@ -1788,9 +1492,9 @@ const MyStepper = ({
 													startIcon={
 														<AddIcon fontSize="large" />
 													}
-													onClick={
-														handleAddAnotherCategory
-													}
+													onClick={() => {
+														handleAddAnotherCategory();
+													}}
 												>
 													Add another Ticket Category
 												</Button>
@@ -1839,107 +1543,70 @@ const MyStepper = ({
 								EVENT DESCRIPTION
 							</label>
 							<br />
-							<Controller
-								name="eventDescription"
-								control={control}
-								defaultValue="<p><br></p>"
-								render={({
-									field: { onChange, value, name },
-									fieldState: { error },
-								}) => (
-									<FormControl
-										error={!!error}
-										component="fieldset"
-										className={classes.formControlDesc}
-									>
-										<BodyTextEditor
-											value={value}
-											setValue={(bodyText) => {
-												onChange(bodyText);
-											}}
-											readOnly={false}
-											name={name}
-											id="event-description"
-										/>
-										<FormHelperText>
-											{error ? error.message : null}
-										</FormHelperText>
-									</FormControl>
-								)}
-								rules={{
-									required: "Please enter event details.",
-									minLength: {
-										value: 500,
-										message:
-											"Event description is too short.",
-									},
-								}}
-							/>
+							<FormControl
+								error={
+									errors["eventDescription"] ? true : false
+								}
+								component="fieldset"
+								className={classes.formControlDesc}
+							>
+								<BodyTextEditor
+									value={eventDescription}
+									setValue={handleRickTextValue}
+									readOnly={false}
+									name="eventDescription"
+									id="event-description"
+								/>
+								<FormHelperText>
+									{errors["eventDescription"]}
+								</FormHelperText>
+							</FormControl>
+
 							<br />
-							<Controller
-								name="termsAndConditions"
-								control={control}
-								defaultValue={false}
-								render={({
-									field: { onChange, value, name },
-									fieldState: { error },
-								}) => (
-									<FormControl
-										required
-										error={!!error}
-										component="fieldset"
-									>
-										<FormControlLabel
-											control={
-												<Checkbox
-													icon={
-														<img
-															src={uncheckedIcon}
-														/>
-													}
-													checkedIcon={
-														<img
-															src={checkedIcon}
-														/>
-													}
-													checked={value}
-													onChange={(e) => {
-														onChange(e);
-													}}
-													name="termsAndConditions"
-													id="terms-and-conditions"
-													color="primary"
-												/>
+
+							<FormControl
+								required
+								error={
+									errors["termsAndConditions"] ? true : false
+								}
+								component="fieldset"
+							>
+								<FormControlLabel
+									control={
+										<Checkbox
+											icon={<img src={uncheckedIcon} />}
+											checkedIcon={
+												<img src={checkedIcon} />
 											}
-											label={
-												<span
-													className={
-														classes.termsLabel
-													}
-												>
-													By creating an event, I
-													agree to the{" "}
-													<a
-														target="_blank"
-														href="/terms-and-conditions"
-													>
-														policies and terms of
-														use
-													</a>
-													.
-												</span>
-											}
+											checked={!!termsAndConditions}
+											onChange={(e) => {
+												handlePickerValue({
+													name: "termsAndConditions",
+													value: !termsAndConditions,
+												});
+											}}
+											name="termsAndConditions"
+											id="terms-and-conditions"
+											color="primary"
 										/>
-										<FormHelperText>
-											{error ? error.message : null}
-										</FormHelperText>
-									</FormControl>
-								)}
-								rules={{
-									required:
-										"Please agree to all the terms and conditions before creating an event.",
-								}}
-							/>
+									}
+									label={
+										<span className={classes.termsLabel}>
+											By creating an event, I agree to the{" "}
+											<a
+												target="_blank"
+												href="/terms-and-conditions"
+											>
+												policies and terms of use
+											</a>
+											.
+										</span>
+									}
+								/>
+								<FormHelperText>
+									{errors["termsAndConditions"]}
+								</FormHelperText>
+							</FormControl>
 						</div>
 					</React.Fragment>
 				);
@@ -1952,11 +1619,6 @@ const MyStepper = ({
 					</React.Fragment>
 				);
 		}
-	}
-
-	// flaming stepper
-	function getFlamingSteps() {
-		return ["Upload Data", "Confirm Transaction", "Publish Event"];
 	}
 
 	function getFlamingStepContent(step) {

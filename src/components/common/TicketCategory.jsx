@@ -40,7 +40,12 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const TicketCategory = ({ cat, index }) => {
+const TicketCategory = ({
+	cat,
+	index,
+	handleDeleteTicketCategory,
+	handleEditTicketCategory,
+}) => {
 	const classes = useStyles();
 
 	return (
@@ -60,6 +65,7 @@ const TicketCategory = ({ cat, index }) => {
 				>
 					<Grid
 						item
+						container
 						direction="column"
 						xs={12}
 						sm={12}
@@ -72,9 +78,9 @@ const TicketCategory = ({ cat, index }) => {
 							{` Ticket`}
 						</p>
 						<p className={classes.ticketAvailabilityCat}>
-							{cat.ticketAvailability
-								? cat.noOfTickets
-								: `Unlimited  Tickets`}
+							{cat.ticketAvailability === "unlimited"
+								? `Unlimited  Tickets`
+								: cat.noOfTickets}
 						</p>
 					</Grid>
 					<Grid
@@ -84,6 +90,7 @@ const TicketCategory = ({ cat, index }) => {
 						lg={3}
 						xl={3}
 						item
+						container
 						direction="column"
 						style={{
 							textAlign: "end",
@@ -123,9 +130,9 @@ const TicketCategory = ({ cat, index }) => {
 				>
 					<Grid item>
 						<Button
-							// onClick={handleSubmit((data) =>
-							// 	handleEditTicketCategory(data, index, cat)
-							// )}
+							onClick={() => {
+								handleEditTicketCategory(index);
+							}}
 							style={{
 								justifyContent: "center",
 							}}
@@ -135,9 +142,9 @@ const TicketCategory = ({ cat, index }) => {
 					</Grid>
 					<Grid item>
 						<Button
-							// onClick={handleSubmit((data) =>
-							// 	handleDeleteTicketCategory(data, index, cat)
-							// )}
+							onClick={() => {
+								handleDeleteTicketCategory(index);
+							}}
 							style={{
 								justifyContent: "center",
 							}}

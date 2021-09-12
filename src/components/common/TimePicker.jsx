@@ -37,6 +37,8 @@ const TimePicker = ({
 	errors,
 	handlePickerValue,
 	fullWidth,
+	clearable,
+	helperText,
 }) => {
 	const classes = useStyles();
 
@@ -64,8 +66,9 @@ const TimePicker = ({
 					// }}
 					fullwidth={fullWidth}
 					inputVariant="outlined"
+					variant="inline"
 					autoOk={true}
-					clearable
+					clearable={clearable}
 					FormHelperTextProps={{
 						classes: {
 							root: classes.timeHelperText,
@@ -84,6 +87,7 @@ const TimePicker = ({
 							value: e,
 						});
 					}}
+					helperText={helperText}
 					{...(errors[name] && {
 						error: true,
 						helperText: errors[name],

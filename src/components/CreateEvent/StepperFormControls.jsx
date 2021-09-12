@@ -35,11 +35,13 @@ const initialFormValues = {
 	//3rd_stepper
 	eventCategory: "free",
 	restrictWallet: false,
+	ticketIndex: 0,
 	ticketName: "",
 	dollarPrice: "",
 	phnxPrice: "",
 	ticketAvailability: "unlimited",
 	noOfTickets: "",
+	isCompleted: false,
 	ticketCategories: [
 		{
 			ticketName: "",
@@ -47,10 +49,14 @@ const initialFormValues = {
 			phnxPrice: "",
 			ticketAvailability: "unlimited",
 			noOfTickets: "",
+			isShown: false,
 		},
 	],
 	token: false, // false means free
 	PhoenixDAO_market: {},
+	//4th_stepper
+	eventDescription: "",
+	termsAndConditions: false,
 };
 
 export const useFormControls = () => {
@@ -72,6 +78,24 @@ export const useFormControls = () => {
 
 		fetchData();
 	}, []);
+
+	// useEffect(() => {
+	// 	if (
+	// 		values.ticketCategories === undefined ||
+	// 		values.ticketCategories.length == 0
+	// 	) {
+	// 		handleAddAnotherCategory();
+	// 	}
+	// }, [values.ticketCategories]);
+
+	useEffect(() => {
+		if (values.ticketCategories.length == 1) {
+			setValues({
+				...values,
+				ticketIndex: 0,
+			});
+		}
+	}, [values.ticketCategories]);
 
 	const isValidDate = (d) => {
 		return d instanceof Date && !isNaN(d);
@@ -106,15 +130,20 @@ export const useFormControls = () => {
 					: "Invalid Date Format";
 		}
 
-		if ("eventStartTime" in fieldValues)
+		if ("eventStartTime" in fieldValues) {
 			temp.eventStartTime = fieldValues.eventStartTime
 				? ""
 				: "This field is required.";
+			if (fieldValues.eventStartTime)
+				temp.eventStartTime = isValidDate(fieldValues.eventStartTime)
+					? ""
+					: "Invalid Time Format";
+		}
 
 		if ("eventEndTime" in fieldValues)
-			temp.eventEndTime = fieldValues.eventEndTime
+			temp.eventEndTime = isValidDate(fieldValues.eventEndTime)
 				? ""
-				: "This field is required.";
+				: "Invalid Time Format";
 
 		if ("eventStartDate" in fieldValues) {
 			temp.eventStartDate = fieldValues.eventStartDate
@@ -195,6 +224,18 @@ export const useFormControls = () => {
 				? ""
 				: "This field is required.";
 
+		//4th_stepper
+		if ("eventDescription" in fieldValues)
+			temp.eventDescription =
+				fieldValues.eventDescription.length > 500
+					? ""
+					: "Min 500 characters.";
+
+		if ("termsAndConditions" in fieldValues)
+			temp.termsAndConditions = fieldValues.termsAndConditions
+				? ""
+				: "*Please agree to all the terms and conditions before creating an event.";
+
 		//tutotials
 		if ("fullName" in fieldValues)
 			temp.fullName = fieldValues.fullName
@@ -220,6 +261,132 @@ export const useFormControls = () => {
 		setErrors({
 			...temp,
 		});
+	};
+
+	const formIsValid = (activeStep, fieldValues = values) => {
+		const {
+			eventName,
+			eventOrganizer,
+			eventTime,
+			eventDate,
+			eventStartTime,
+			eventEndTime,
+			eventStartDate,
+			eventEndDate,
+			//2nd_stepper
+			eventType,
+			eventTopic,
+			eventLocation,
+			eventLink,
+			country,
+			state,
+			city,
+			images,
+			image0,
+			//3rd_stepper
+			eventCategory,
+			ticketIndex,
+			restrictWallet,
+			ticketCategories,
+			ticketAvailability,
+			phnxPrice,
+			dollarPrice,
+			noOfTickets,
+			isCompleted,
+			eventDescription,
+			termsAndConditions,
+		} = fieldValues;
+
+		if (activeStep === 0) {
+			if (eventTime === "onedayevent") {
+				const isValid =
+					!errors["eventName"] &&
+					eventName &&
+					!errors["eventOrganizer"] &&
+					eventOrganizer &&
+					!errors["eventDate"] &&
+					eventDate &&
+					!errors["eventStartTime"] &&
+					eventStartTime &&
+					!errors["eventEndTime"];
+				return isValid;
+			} else {
+				const isValid =
+					!errors["eventName"] &&
+					eventName &&
+					!errors["eventOrganizer"] &&
+					eventOrganizer &&
+					!errors["eventStartDate"] &&
+					eventStartDate &&
+					!errors["eventEndDate"] &&
+					eventEndDate &&
+					!errors["eventStartTime"] &&
+					eventStartTime;
+				!errors["eventEndTime"];
+				return isValid;
+			}
+		} else if (activeStep === 1) {
+			if (eventType === "physical") {
+				const isValid =
+					country.name &&
+					state.name &&
+					city.name &&
+					!errors["eventLocation"] &&
+					eventLocation &&
+					!errors["image0"] &&
+					image0 &&
+					eventTopic;
+				return isValid;
+			} else {
+				const isValid =
+					!errors["eventLink"] &&
+					eventLink &&
+					!errors["image0"] &&
+					image0 &&
+					eventTopic;
+				return isValid;
+			}
+		} else if (activeStep === 2) {
+			if (eventCategory === "free") {
+				//free event
+				if (ticketAvailability === "unlimited") {
+					return true;
+				} else {
+					const isValid = !errors["noOfTickets"] && noOfTickets;
+					return isValid;
+				}
+			} else if (eventCategory === "single") {
+				//single paid event
+				if (ticketAvailability === "unlimited") {
+					const isValid =
+						!errors["phnxPrice"] &&
+						phnxPrice &&
+						!errors["dollarPrice"] &&
+						dollarPrice;
+					return isValid;
+				} else {
+					const isValid =
+						!errors["noOfTickets"] &&
+						noOfTickets &&
+						!errors["phnxPrice"] &&
+						phnxPrice &&
+						!errors["dollarPrice"] &&
+						dollarPrice;
+					return isValid;
+				}
+			} else {
+				// multiple ticket type event
+				const isValid = ticketCategories[0].isShown;
+				return isValid;
+			}
+		} else if (activeStep === 3) {
+			const isValid =
+				!errors["eventDescription"] &&
+				eventDescription &&
+				!errors["termsAndConditions"] &&
+				termsAndConditions;
+			return isValid;
+		}
 	};
 
 	const handleInputValue = (e) => {
@@ -325,10 +492,67 @@ export const useFormControls = () => {
 		});
 	};
 
+	//change btw free/single/multiple
+	const handleEventCategory = (event) => {
+		const { name, value } = event.target;
+		setValues({
+			...values,
+			[name]: value,
+			ticketIndex: 0,
+			ticketName: "",
+			dollarPrice: "",
+			phnxPrice: "",
+			ticketAvailability: "unlimited",
+			noOfTickets: "",
+			ticketCategories: [
+				{
+					ticketName: "",
+					dollarPrice: "",
+					phnxPrice: "",
+					ticketAvailability: "unlimited",
+					noOfTickets: "",
+					isShown: false,
+				},
+			],
+			token: value === "free" ? false : true,
+		});
+	};
+
+	const isTicketCategoryValid = (fieldValues = values) => {
+		const {
+			ticketName,
+			dollarPrice,
+			phnxPrice,
+			ticketAvailability,
+			noOfTickets,
+		} = fieldValues;
+
+		if (ticketAvailability === "unlimited") {
+			const isValid =
+				!errors["ticketName"] &&
+				ticketName &&
+				!errors["dollarPrice"] &&
+				dollarPrice &&
+				!errors["phnxPrice"] &&
+				phnxPrice;
+			return isValid;
+		} else {
+			const isValid =
+				!errors["ticketName"] &&
+				ticketName &&
+				!errors["dollarPrice"] &&
+				dollarPrice &&
+				!errors["phnxPrice"] &&
+				phnxPrice &&
+				!errors["noOfTickets"] &&
+				noOfTickets;
+			return isValid;
+		}
+	};
+
 	const handleTicketCatogory = (event, index, fieldValues = values) => {
+		const { name, value } = event.target;
 		const { ticketCategories } = fieldValues;
-		const value = event.target.value;
-		const name = event.target.name;
 		if (name === "dollarPrice") {
 			let USD = value;
 			let PHNX = dollarToPhnx(value);
@@ -339,6 +563,7 @@ export const useFormControls = () => {
 				ticketCategories: [...ticketCategories],
 				dollarPrice: USD,
 				phnxPrice: PHNX,
+				token: true,
 			});
 		} else if (name === "phnxPrice") {
 			let USD = phnxToDollar(value);
@@ -350,6 +575,7 @@ export const useFormControls = () => {
 				ticketCategories: [...ticketCategories],
 				dollarPrice: USD,
 				phnxPrice: PHNX,
+				token: true,
 			});
 		} else {
 			ticketCategories[index][name] = value;
@@ -361,6 +587,76 @@ export const useFormControls = () => {
 		}
 
 		validate({ [name]: value });
+	};
+
+	const handleSaveTicketCatogory = (ticketIndex, fieldValues = values) => {
+		const { ticketCategories } = fieldValues;
+		if (isTicketCategoryValid()) {
+			ticketCategories[ticketIndex].isShown = true;
+			let sortedCategories = ticketCategories.sort(
+				(a, b) => parseFloat(a.dollarPrice) - parseFloat(b.dollarPrice)
+			);
+			setValues({
+				...values,
+				ticketName: "",
+				dollarPrice: "",
+				phnxPrice: "",
+				ticketAvailability: "unlimited",
+				noOfTickets: "",
+				isCompleted: true,
+				ticketCategories: [...sortedCategories],
+			});
+		}
+	};
+
+	const handleAddAnotherCategory = (fieldValues = values) => {
+		const { ticketCategories } = fieldValues;
+		const newCat = {
+			ticketName: "",
+			dollarPrice: "",
+			phnxPrice: "",
+			ticketAvailability: "unlimited",
+			noOfTickets: "",
+			isShown: false,
+		};
+		let index = ticketCategories.length == 0 ? 0 : ticketCategories.length;
+		ticketCategories.push(newCat);
+		setValues({
+			...values,
+			ticketIndex: index,
+			ticketCategories: [...ticketCategories],
+			isCompleted: false,
+		});
+	};
+
+	const handleDeleteTicketCategory = (index, fieldValues = values) => {
+		let ticketCategories = fieldValues.ticketCategories;
+		ticketCategories.splice(index, 1);
+
+		if (ticketCategories === undefined || ticketCategories.length == 0) {
+			handleAddAnotherCategory();
+		} else {
+			setValues({
+				...values,
+				ticketCategories: [...ticketCategories],
+			});
+		}
+	};
+
+	const handleEditTicketCategory = (index, fieldValues = values) => {
+		const { ticketCategories } = fieldValues;
+		console.log(ticketCategories[index]);
+
+		setValues({
+			...values,
+			ticketIndex: index,
+			ticketName: ticketCategories[index].ticketName,
+			dollarPrice: ticketCategories[index].dollarPrice,
+			phnxPrice: ticketCategories[index].phnxPrice,
+			ticketAvailability: ticketCategories[index].ticketAvailability,
+			noOfTickets: ticketCategories[index].noOfTickets,
+			isCompleted: false,
+		});
 	};
 
 	const dollarToPhnx = (d, fieldValues = values) => {
@@ -381,98 +677,33 @@ export const useFormControls = () => {
 		return dollarValue;
 	};
 
-	const handleSuccess = () => {
+	const handleRickTextValue = (value) => {
 		setValues({
-			...initialFormValues,
-			formSubmitted: true,
-			success: true,
+			...values,
+			eventDescription: value,
 		});
+		validate({ eventDescription: value });
 	};
 
-	const handleError = () => {
-		setValues({
-			...initialFormValues,
-			formSubmitted: true,
-			success: false,
-		});
-	};
-
-	const formIsValid = (activeStep, fieldValues = values) => {
-		const {
-			eventName,
-			eventOrganizer,
-			eventTime,
-			eventDate,
-			eventStartTime,
-			eventEndTime,
-			eventStartDate,
-			eventEndDate,
-			//2nd_stepper
-			eventType,
-			eventTopic,
-			eventLocation,
-			eventLink,
-			country,
-			state,
-			city,
-			images,
-			image0,
-		} = fieldValues;
-
+	const stepperIsValid = (activeStep, callback, createEventCb) => {
 		if (activeStep === 0) {
-			if (eventTime === "onedayevent") {
-				const isValid =
-					eventName &&
-					eventOrganizer &&
-					eventDate &&
-					eventStartTime &&
-					Object.values(errors).every((x) => x === "");
-				return isValid;
-			} else {
-				const isValid =
-					eventName &&
-					eventOrganizer &&
-					eventStartDate &&
-					eventEndDate &&
-					eventStartTime &&
-					Object.values(errors).every((x) => x === "");
-				return isValid;
-			}
-		} else if (activeStep === 1) {
-			if (eventType === "physical") {
-				const isValid =
-					country.name &&
-					eventLocation &&
-					image0 &&
-					eventTopic &&
-					Object.values(errors).every((x) => x === "");
-				return isValid;
-			} else {
-				console.log("images.length", images.length);
-				const isValid =
-					eventLink &&
-					image0 &&
-					eventTopic &&
-					Object.values(errors).every((x) => x === "");
-				return isValid;
-			}
-		}
-	};
-
-	const stepperIsValid = (activeStep, callback) => {
-		if (activeStep === 0) {
-			stepperOneIsValid(callback);
+			stepperOneIsValid(activeStep, callback);
 		} else if (activeStep === 1) {
 			callback();
 		} else if (activeStep === 2) {
-			//
+			callback();
+		} else if (activeStep === 3) {
+			callback();
+			createEventCb();
 		}
 	};
 
-	const stepperOneIsValid = (callback, fieldValues = values) => {
+	const stepperOneIsValid = (activeStep, callback, fieldValues = values) => {
 		let temp = { ...errors };
 
 		const {
+			eventName,
+			eventOrganizer,
 			eventTime,
 			eventDate,
 			eventStartTime,
@@ -483,6 +714,7 @@ export const useFormControls = () => {
 
 		if (eventTime === "onedayevent") {
 			console.log("onedayevent");
+
 			let eventDateOneDay = eventDate;
 			let eventStartTimeOneday = eventStartTime;
 			let eventEndTimeOneday = eventEndTime;
@@ -615,6 +847,22 @@ export const useFormControls = () => {
 		//
 	};
 
+	const handleSuccess = () => {
+		setValues({
+			...initialFormValues,
+			formSubmitted: true,
+			success: true,
+		});
+	};
+
+	const handleError = () => {
+		setValues({
+			...initialFormValues,
+			formSubmitted: true,
+			success: false,
+		});
+	};
+
 	const handleFormSubmit = async (e) => {
 		e.preventDefault();
 		const isValid =
@@ -637,5 +885,11 @@ export const useFormControls = () => {
 		addAnotherImage,
 		handelRemoveImage,
 		handleTicketCatogory,
+		handleSaveTicketCatogory,
+		handleRickTextValue,
+		handleEventCategory,
+		handleAddAnotherCategory,
+		handleDeleteTicketCategory,
+		handleEditTicketCategory,
 	};
 };

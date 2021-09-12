@@ -170,7 +170,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PreviewEvent({ fields, activeStep }) {
 	const classes = useStyles();
-	const [tktQnty, setTktQnty] = useState(0);
 	const [open, setOpen] = useState(false);
 
 	const {
@@ -195,19 +194,6 @@ export default function PreviewEvent({ fields, activeStep }) {
 		city,
 		country,
 	} = fields;
-
-	useEffect(() => {
-		// const { categories: ticketCategories } = fields;
-		let totalTktQnty = 0;
-		if (ticketCategories) {
-			for (var i = 0; i < ticketCategories.length; i++) {
-				totalTktQnty =
-					parseInt(totalTktQnty) +
-					parseInt(ticketCategories[i].noOfTickets);
-			}
-			setTktQnty(totalTktQnty);
-		}
-	}, [fields, ticketCategories]);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -241,10 +227,10 @@ export default function PreviewEvent({ fields, activeStep }) {
 						<CardMedia
 							component="img"
 							alt={eventpreviewplaceholder}
-							height="200"
-							width="400"
+							height="200px"
+							width="400px"
 							image={
-								!image0
+								!image0 || !image0.name
 									? eventpreviewplaceholder
 									: URL.createObjectURL(image0)
 							}
@@ -450,16 +436,12 @@ export default function PreviewEvent({ fields, activeStep }) {
 							>
 								<ConfirmationNumberOutlined fontSize="small" />{" "}
 								<span>&nbsp;</span>
-								{/* {!eventCategory
-									? `Number of Tickets`
-									: tktQnty === 0
-									? `Unlimited Tickets`
-									: tktQnty} */}
-								{tktQnty === 0
-									? `Unlimited Tickets`
-									: tktQnty
-									? tktQnty
-									: "0"}
+								{ticketCategories
+									? ticketCategories[0].ticketAvailability ===
+									  "unlimited"
+										? `Unlimited Tickets`
+										: ticketCategories[0].noOfTickets
+									: `Unlimited Tickets`}
 							</Typography>
 						</CardContent>
 					</CardActionArea>
@@ -485,7 +467,6 @@ export default function PreviewEvent({ fields, activeStep }) {
 							eventType === "physical" ? eventLocation : eventLink
 						}
 						eventTopic={eventTopic ? eventTopic : "music"}
-						tktQnty={tktQnty}
 						eventTime={eventTime}
 						eventDate={eventDate}
 						eventStartDate={eventStartDate}
