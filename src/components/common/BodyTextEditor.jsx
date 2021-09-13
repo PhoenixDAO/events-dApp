@@ -55,6 +55,7 @@ export default function BodyTextEditor({
 				readOnly={readOnly}
 				value={editorValue}
 				onChange={handleChange}
+				onBlur={handleChange}
 				required
 				id={id}
 				name={name}

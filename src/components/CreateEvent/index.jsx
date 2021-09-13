@@ -91,7 +91,6 @@ class CreateEvent extends Component {
 			},
 			activeStep: 0,
 			activeFlamingStep: 0,
-			isEventCreated: false,
 			progressText: 0,
 			shareUrl: "",
 			PhoenixDAO_market: {},
@@ -100,69 +99,11 @@ class CreateEvent extends Component {
 		this.onHandleTxReject = this.onHandleTxReject.bind(this);
 	}
 
-	convertDollarToPhnx = (d) => {
-		let value = parseFloat(d);
-		value = value > 0 ? value : 0;
-		let usd = this.state.PhoenixDAO_market.usd;
-		let phoenixValue = value / usd;
-		phoenixValue = phoenixValue.toFixed(5);
-		return phoenixValue;
-	};
-
-	getPhoenixdaoMarket = async () => {
-		fetch(
-			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
-		)
-			.then((res) => res.json())
-			.then((data) => {
-				this.setState({ PhoenixDAO_market: data.phoenixdao });
-			})
-			.catch(console.log);
-	};
-
 	onFieldsChange = (f) => {
 		this.setState({ fields: { ...this.state.fields, ...f } });
 	};
 
-	onGetRealTimeFields = (f) => {
-		let fields = this.state.fields;
-
-		if (
-			f.name === "dollarPricePreview" ||
-			f.name === "phnxPricePreview" ||
-			f.name === "ticketAvailabilityPreview" ||
-			f.name === "noOfTicketsPreview"
-		) {
-			let cat = [];
-			let obj = {
-				ticketName: "free",
-				dollarPrice: "0",
-				phnxPrice: "0",
-				ticketAvailability: false,
-				noOfTickets: "0",
-			};
-			if (f.name === "dollarPricePreview") {
-				obj.dollarPrice = f.value;
-				obj.phnxPrice = this.convertDollarToPhnx(f.value);
-				fields.token = true;
-			} else if (f.name === "ticketAvailabilityPreview") {
-				obj.ticketAvailability = f.value;
-			} else if (f.name === "noOfTicketsPreview") {
-				obj.noOfTickets = f.value;
-			}
-
-			cat.push(obj);
-			fields.categories = cat;
-			fields[f.name] = f.value;
-			this.setState(fields);
-		} else {
-			fields[f.name] = f.value;
-			this.setState(fields);
-		}
-	};
-
 	onStepsChange = (type) => {
-		console.log("type", type);
 		this.setState((prevState) => {
 			return {
 				activeStep:
@@ -217,7 +158,7 @@ class CreateEvent extends Component {
 			eventLocation,
 			eventLink,
 			restrictWallet: oneTimeBuy,
-			categories: ticketCategories,
+			ticketCategories, // categories: ticketCategories,
 			token, //false means free
 			eventDate, //onedayevent date format
 			eventStartDate, //morethanadayevent
@@ -261,17 +202,30 @@ class CreateEvent extends Component {
 			) / 1000;
 
 		for (var i = 0; i < ticketCategories.length; i++) {
-			ticketLimited.push(ticketCategories[i].ticketAvailability);
-			tktQnty.push(ticketCategories[i].noOfTickets);
+			categories.push(ticketCategories[i].ticketName);
 			prices.push(ticketCategories[i].dollarPrice * 1000000);
 			tktQntySold.push("0");
-			categories.push(ticketCategories[i].ticketName);
-			totalQuantity =
-				totalQuantity + parseInt(ticketCategories[i].noOfTickets);
-		}
 
-		console.log("token", token);
-		console.log(ticketLimited, tktQnty, prices, tktQntySold, categories);
+			ticketLimited.push(
+				ticketCategories[i].ticketAvailability === "unlimited"
+					? false
+					: true
+			);
+
+			tktQnty.push(
+				ticketCategories[i].ticketAvailability === "unlimited"
+					? "0"
+					: ticketCategories[i].noOfTickets
+			);
+
+			totalQuantity =
+				totalQuantity +
+				parseInt(
+					ticketCategories[i].ticketAvailability === "unlimited"
+						? "0"
+						: ticketCategories[i].noOfTickets
+				);
+		}
 
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({
@@ -673,8 +627,6 @@ class CreateEvent extends Component {
 
 	componentDidMount() {
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
-
-		this.getPhoenixdaoMarket();
 	}
 
 	render() {
@@ -707,12 +659,9 @@ class CreateEvent extends Component {
 							<MyStepper
 								handleCreateEvent={this.handleCreateEvent}
 								onFieldsChange={this.onFieldsChange}
-								onGetRealTimeFields={this.onGetRealTimeFields}
 								onStepsChange={this.onStepsChange}
 								activeStep={this.state.activeStep}
-								onFlamingStepsChange={this.onFlamingStepsChange}
 								activeFlamingStep={this.state.activeFlamingStep}
-								isEventCreated={this.state.isEventCreated}
 								progressText={this.state.progressText}
 								shareUrl={this.state.shareUrl}
 							/>
@@ -739,11 +688,8 @@ class CreateEvent extends Component {
 						<MyStepper
 							handleCreateEvent={this.handleCreateEvent}
 							onFieldsChange={this.onFieldsChange}
-							onGetRealTimeFields={this.onGetRealTimeFields}
 							onStepsChange={this.onStepsChange}
-							onFlamingStepsChange={this.onFlamingStepsChange}
 							activeFlamingStep={this.state.activeFlamingStep}
-							isEventCreated={this.state.isEventCreated}
 							progressText={this.state.progressText}
 							shareUrl={this.state.shareUrl}
 						/>
