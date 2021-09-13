@@ -38,9 +38,6 @@ jobs:
             ${{ runner.os }}-node-
             ${{ runner.os }}-
             
-      - name: Install dependencies
-        run: npm i
-        
       - name: building new build
         run: npm run build
         env:
