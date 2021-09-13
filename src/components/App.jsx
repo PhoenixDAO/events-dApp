@@ -69,7 +69,6 @@ import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
 import IdentityForm from "./common/AvatarSelector/identityform";
 import DialogueBox from "./common/DialogueBox";
-import TravallaBannerFooter from "./common/TravallaBannerFooter";
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -1594,31 +1593,21 @@ class App extends Component {
 							}}
 							open={this.state.openWalletConnected}
 							onClose={this.handleOpenWalletConnected}
-							message="Wallet connected"
+							message={
+								<span style={{ color: "#413AE2" }}>
+									{" "}
+									<img
+										style={{ width: "20px" }}
+										src="/images/check-wallet.svg"
+										alt=""
+									/>{" "}
+									Wallet connected
+								</span>
+							}
 							autoHideDuration={3000}
 							key={"top" + "center"}
 							className="snackbar"
 						/>
-						<Switch>
-							<Route
-								exact
-								path="/"
-								render={(props) => <TravallaBannerFooter />}
-							/>
-
-							<Route
-								exact
-								path="/upcomingevents/:page"
-								render={(props) => <TravallaBannerFooter />}
-							/>
-
-							<Route
-								exact
-								path="/mytickets/:page"
-								render={(props) => <TravallaBannerFooter />}
-							/>
-
-						</Switch>
 					</div>
 					<ToastContainer />
 				</div>

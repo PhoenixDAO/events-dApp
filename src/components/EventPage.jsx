@@ -45,7 +45,11 @@ import {
 	explorerWithAddress,
 } from "../config/const.js";
 import CheckUser from "./CheckUser";
-import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
+import {
+	Open_events_ABI,
+	Open_events_Address,
+	Open_events_Address_2,
+} from "../config/OpenEvents";
 import BuyTicket from "./common/BuyTicket";
 import {
 	updateEventViews,
@@ -61,6 +65,11 @@ import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
+import {
+	PhoenixDAO_Testnet_Token_ABI,
+	PhoenixDAO_Mainnet_Token_Address,
+	PhoenixDAO_Testnet_Token_Address_2,
+} from "../config/phoenixDAOcontract_testnet.js";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -158,7 +167,7 @@ const styles = (theme) => ({
 			paddingRight: "25px",
 		},
 		[theme.breakpoints.down("xs")]: {
-			"&. MuiOutlinedInput-root":{
+			"&. MuiOutlinedInput-root": {
 				minWidth: "116px",
 				width: "100%",
 			},
@@ -186,7 +195,7 @@ const styles = (theme) => ({
 		justifyContent: "center",
 		textAlign: "center",
 		overflow: "hidden",
-		wordBreak:"break-word"
+		wordBreak: "break-word",
 	},
 	organizerDescription: {
 		justifyContent: "center",
@@ -295,6 +304,8 @@ class EventPage extends Component {
 			allowBuySnackbar: false,
 			errorMessage: "",
 			SnackbarMessage: "",
+			btnText: "",
+			locationEvent: "",
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -403,7 +414,7 @@ class EventPage extends Component {
 						oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 					});
 					this.updateIPFS();
-					const networkId = await getNetworkId()
+					const networkId = await getNetworkId();
 					if (networkId) {
 						console.log(
 							"graphData",
@@ -655,12 +666,12 @@ class EventPage extends Component {
 	priceCalculation = (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
 		let phnx_price = event_data.prices.map((price) => {
-			return (
-				(price/1000000) / this.state.PhoenixDAO_market.usd
-			).toFixed(2);
+			return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
+				2
+			);
 		});
 
-		let dollar_price = event_data.prices[categoryIndex] /1000000;
+		let dollar_price = event_data.prices[categoryIndex] / 1000000;
 		let priceInPhnx = event_data.token
 			? phnx_price[categoryIndex] + "PHNX"
 			: "FREE";
@@ -753,15 +764,6 @@ class EventPage extends Component {
 	handleCategoryChange = (event) => {
 		this.setState({ selectedCategoryIndex: event.target.value });
 		this.priceCalculation(event.target.value);
-	};
-
-	allowance = async () => {
-		let a = await this.props.phnxContract.methods
-			.allowance(this.account, this.props.eventsAddress)
-			.call();
-		console.log("allowance", a);
-
-		return a;
 	};
 
 	giveApproval = async () => {
@@ -981,7 +983,7 @@ class EventPage extends Component {
 						width: "60px",
 						borderRadius: "50%",
 						height: "60px",
-						objectFit:"cover",
+						objectFit: "cover",
 					}}
 				/>
 			);
@@ -1052,6 +1054,73 @@ class EventPage extends Component {
 		}
 	};
 
+	contractAddressProviders = async () => {
+		let eventAddress = "";
+		let phoenixAddress = "";
+		const networkId = await getNetworkId();
+		console.log("This called networkId", networkId);
+		if (networkId === GLOBAL_NETWORK_ID) {
+			eventAddress = Open_events_Address;
+			phoenixAddress = PhoenixDAO_Mainnet_Token_Address;
+		} else if (networkId === GLOBAL_NETWORK_ID_2) {
+			eventAddress = Open_events_Address_2;
+			phoenixAddress = PhoenixDAO_Testnet_Token_Address_2;
+		} else {
+			console.log("Wrong network address | not supported");
+		}
+		console.log(
+			"eventAddress, phoenixAddress",
+			eventAddress,
+			phoenixAddress
+		);
+		return { eventAddress, phoenixAddress };
+	};
+
+	allowance = async () => {
+		if (this.props.accounts[0]) {
+			const { eventAddress, phoenixAddress } =
+				await this.contractAddressProviders();
+			let a = await this.props.phnxContract.methods
+				.allowance(this.props.accounts[0], eventAddress)
+				.call();
+
+			console.log("allowance", a);
+			return a;
+		}
+	};
+
+	getButtonText = async () => {
+		const a = await this.allowance();
+		console.log("get button text", a);
+		if (a == 0) {
+			this.setState({
+				btnText: "Approve",
+			});
+			return "Approve";
+		} else {
+			let event_data = this.state.blockChainEvent;
+			let btnText = event_data.token ? "Buy Ticket" : " Get Ticket";
+			console.log("btn text in getbutton", btnText, event_data);
+			this.setState({
+				btnText: btnText,
+			});
+			return btnText;
+		}
+	};
+
+	checkUserTicketLocation = async () => {
+		const eventId = this.props.match.params.id;
+		const users = await generateBuyerArr(eventId);
+		console.log("All userss", users);
+		let event_data = this.state.blockChainEvent;
+		console.log("event data", event_data);
+		if (users.includes(this.props.accounts[0])) {
+			this.setState({
+				locationEvent: event_data.location,
+			});
+		}
+	};
+
 	render() {
 		const { classes } = this.props;
 
@@ -1084,10 +1153,10 @@ class EventPage extends Component {
 				// to be changed
 				let image = this.getImage();
 				let description = this.getDescription();
-				let locations = event_data.location;
-				let buttonText = event_data.token
-					? " Buy Ticket"
-					: " Get Ticket";
+				let locations = event_data.onsite
+					? event_data.location
+					: this.state.locationEvent;
+				let buttonText = this.state.btnText;
 				let symbol = event_data.token
 					? "PhoenixDAO.svg"
 					: "PhoenixDAO.svg";
@@ -1329,7 +1398,9 @@ class EventPage extends Component {
 															horizontal: "left",
 														},
 													}}
-													className={classes.selectInput}
+													className={
+														classes.selectInput
+													}
 												>
 													{event_data.categories
 														.length > 1
@@ -1398,7 +1469,10 @@ class EventPage extends Component {
 													"$"
 												)}
 												{console.log(
-													"dollar price ",this.state.dollar_price, " pheonix",this.state.phnx_price
+													"dollar price ",
+													this.state.dollar_price,
+													" pheonix",
+													this.state.phnx_price
 												)}
 											</div>
 										</div>
@@ -1820,7 +1894,7 @@ class EventPage extends Component {
 	async componentDidMount() {
 		let buyers = await generateBuyerArr(this.props.match.params.id);
 		this.setState({ soldTicket: buyers });
-		this.loadEventFromBlockchain();
+		await this.loadEventFromBlockchain();
 		console.log("count", this.props.accounts[0]);
 		window.scroll({
 			top: 0,
@@ -1830,6 +1904,8 @@ class EventPage extends Component {
 		// this.updateIPFS();
 		// this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
+		await this.getButtonText();
+		await this.checkUserTicketLocation();
 	}
 
 	geoFindMe = async () => {
