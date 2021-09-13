@@ -46,6 +46,11 @@ const useStyles = makeStyles((theme) => ({
 		color: "#413AE2",
 		fontSize: 18,
 	},
+	publishIcon:{
+		"@media (max-width: 530px)": {
+			height: "15px",
+		},
+	},
 	nextButton: {
 		textTransform: "none",
 		"&:focus": {
@@ -54,13 +59,20 @@ const useStyles = makeStyles((theme) => ({
 		background: "#413AE2",
 		color: "white",
 		height: "45px",
-		width: "40%",
+		// width: "40%",
+		width:"175px",
 		fontSize: 16,
-		maxWidth: "175px",
+		// maxWidth: "175px",
 		fontWeight: 700,
 		"@media (max-width: 530px)": {
-			width: "57%",
-			fontSize: 15,
+			// width: "57%",
+			width:"150px",
+			fontSize: 12,
+		},
+		"@media (max-width: 320px)": {
+			// width: "57%",
+			width:"100px",
+			fontSize: 12,
 		},
 		"& .MuiButton-endIcon": {
 			position: "absolute",
@@ -232,7 +244,7 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	altImage: {
-		[theme.breakpoints.between("xs", "sm")]: {
+		[theme.breakpoints.between("xs", "sm", "md", "lg")]: {
 			transform: `rotate(90deg)`,
 		},
 	},
@@ -398,6 +410,8 @@ const useStyles = makeStyles((theme) => ({
 		left: "-13px",
 	},
 	altIconStyle: {
+		paddingTop:"25px",
+		paddingInline:"10px",
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
