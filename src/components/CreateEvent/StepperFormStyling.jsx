@@ -41,10 +41,10 @@ const useStyles = makeStyles((theme) => ({
 	deleteImageButton:{
 		position: 'absolute',
 		/* float:'left', */
-		background: '#eb5151',
+		background: '#413AE2',
 		color: 'white',
 		top: '-10px',
-		left: '-10px',
+		right: '-10px',
 		border: '0px',
 		borderRadius: '100%',
 		width: '28px',
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 		/* padding: 0px; */
 		paddingBottom: '4px',
 		'&:hover': {
-			background: '#d33939',
+			background: '#303FA0',
 		}
 	},
 	backButton: {
