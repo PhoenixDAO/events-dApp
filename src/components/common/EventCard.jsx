@@ -611,7 +611,8 @@ const EventCard = (props, context) => {
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
 										{event_data.tktTotalQuantitySold}/
-										{event_data.tktTotalQuantity}
+										{event_data.tktTotalQuantity == 0 ? '∞' : event_data.tktTotalQuantity}
+
 									</Typography>
 									<Typography
 										variant="body2"
@@ -639,9 +640,8 @@ const EventCard = (props, context) => {
 									>
 										Dollar Revenue:{" "}
 										{pricingFormatter(
-											Web3.utils.fromWei(
-												event_data.eventRevenueInDollar
-											),
+												event_data.eventRevenueInDollar/1000000
+											,
 											"$"
 										)}
 									</Typography>

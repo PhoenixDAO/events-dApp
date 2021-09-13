@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { makeStyles } from "@material-ui/core/styles";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
+import { getNetworkId } from "../../config/getGraphApi";
+import { GLOBAL_NETWORK_ID } from "../../config/const";
+
 import clsx from "clsx";
 import {
 	Button,
@@ -58,6 +61,10 @@ const Header = ({
 	const [openWallet, setOpenWallet] = useState(false);
 	const [openBuyPhnx, setOpenBuyPhnx] = useState(false);
 	const [transak, setTransak] = useState(false);
+	const [chainId, setChain] = useState("ethereum");
+	useEffect(() => {
+		setTransakChain();
+	}, [chainId]);
 	const handleOpenWallet = () => {
 		setOpenWallet(true);
 	};
@@ -81,7 +88,19 @@ const Header = ({
 	const closeTransak = () => {
 		setTransak(false);
 	};
+	const setTransakChain = async ()=>{
+		const network = await getNetworkId();
+		console.log("network", network);
+		if (network == GLOBAL_NETWORK_ID) {
+			setChain("ethereum");
+			console.log("chain",chainId);
+		}
+		else {
+			setChain("polygon");
 
+		}
+	}
+	
 	let connect = searchBar && Object.keys(accounts).length !== 0;
 
 	return (
@@ -101,7 +120,7 @@ const Header = ({
 				{/* Back button Arrow */}
 				<div
 					className="header-heading"
-					style={{ display: "flex", alignItems: "center" }}
+					style={{ display: "flex", alignItems: "center", overflow:"hidden", wordBreak:"break-word" }}
 				>
 					{page === "event" ||
 					page === "topic" ||
@@ -180,6 +199,7 @@ const Header = ({
 						closeTransak={closeTransak}
 						transak={transak}
 						accounts={accounts}
+						chain={chainId}
 					/>
 				</DialogueBox>
 			</Grid>

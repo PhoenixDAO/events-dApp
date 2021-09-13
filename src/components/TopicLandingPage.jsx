@@ -957,7 +957,7 @@ let btnTextMessage = "No events are available 😔. Want to be the first?";
 											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
-										Near you
+										Near Your Location
 									</MenuItem>
 								</Select>
 							</FormControl>

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import roundlogo from "../Images/roundlogo.svg";
 import transakSDK from "@transak/transak-sdk";
-import { transakApi } from "../../config/const";
+import { GLOBAL_NETWORK_ID, transakApi } from "../../config/const";
 import { Link } from "react-router-dom";
-
 const BuyPhoenixModal = (props) => {
-	const [error, setError] = useState("");
 	const settings = {
 		apiKey: transakApi, // Your API Key
 		environment: "PRODUCTION", // STAGING/PRODUCTION
@@ -15,19 +13,18 @@ const BuyPhoenixModal = (props) => {
 		hostURL: window.location.origin,
 		widgetHeight: "642px",
 		widgetWidth: "500px",
-		networks: "ethereum,polygon",
+		networks:props.chain,
+		//  network: chainId,
 	};
 	const transak = new transakSDK(settings);
 
 	useEffect(() => {
-		console.log("setttings", props.accounts[0]);
 		transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, (orderData) => {
-			console.log("closed successfully widged");
 			props.closeTransak();
 		});
 	}, []);
 
-	const openTransak = () => {
+	const openTransak = async () => {
 		transak.init();
 		props.handleClose();
 		props.openTransak();
