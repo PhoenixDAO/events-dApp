@@ -38,6 +38,23 @@ const useStyles = makeStyles((theme) => ({
 			paddingRight: "0px !important",
 		},
 	},
+	deleteImageButton:{
+		position: 'absolute',
+		/* float:'left', */
+		background: '#eb5151',
+		color: 'white',
+		top: '-10px',
+		left: '-10px',
+		border: '0px',
+		borderRadius: '100%',
+		width: '28px',
+		// height: '20px',
+		/* padding: 0px; */
+		paddingBottom: '4px',
+		'&:hover': {
+			background: '#d33939',
+		}
+	},
 	backButton: {
 		textTransform: "none",
 		"&:focus": {
