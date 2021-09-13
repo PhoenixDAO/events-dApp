@@ -1136,7 +1136,9 @@ class FindEvents extends Component {
 						<br />
 
 						{body}
-						<a
+
+						
+						{/* <a
 							href="https://www.travala.com/?ref=phoenixdao"
 							target="_blank"
 						>
@@ -1146,7 +1148,7 @@ class FindEvents extends Component {
 									className="img-fluid w-100"
 								/>
 							</div>
-						</a>
+						</a> */}
 					</div>
 
 					{/* <div className="topics-wrapper">

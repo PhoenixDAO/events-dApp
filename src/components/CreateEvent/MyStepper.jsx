@@ -1,6 +1,7 @@
 import "date-fns";
 import React, { useState, useRef, useEffect } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import "./style.css"
 import {
 	Stepper,
 	Step,
