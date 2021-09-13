@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: "600",
     },
     box2: {
+        height:"100%",
         boxShadow: "none",
         border: "1px solid #E4E4E7",
         borderRadius: "8px",

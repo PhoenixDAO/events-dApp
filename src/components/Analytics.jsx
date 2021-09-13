@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	emptyContent: {
-		padding: "0 !important",
+		// padding: "0 !important",
 	},
 	EmptyRow: {
 		display: "flex",
@@ -1126,6 +1126,7 @@ const Analytics = (props, context) => {
 	return (
 		<div>
 			<Header title="Analytics" page="analytics" phnxButton="true" />
+			{console.log("event analytics: ", props)}
 			{props.eventName.length > 0 ? (
 				<Grid container className={classes.content}>
 					<Grid className={classes.row}>
@@ -1503,8 +1504,15 @@ const Analytics = (props, context) => {
 					container
 					className={`${classes.emptyContent} ${classes.content}`}
 				>
-					<Grid className={classes.EmptyRow}>
+					<Grid container style={{paddingBottom:"30px"}}>
 						<EmptyStateAnalytics />
+					</Grid>
+					<Grid>
+					<EventsAnalytics
+						userDetails={userDetails}
+						createdEvents={props.eventName.length}
+						ticketBought={props.ticketBought}
+					/>
 					</Grid>
 				</Grid>
 			)}

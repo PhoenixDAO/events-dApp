@@ -564,10 +564,10 @@ class EventPreviewPage extends Component {
 
 							<Grid container className={classes.socialDiv}>
 								<Grid
-									lg={2}
-									md={3}
-									sm={2}
-									xs={6}
+									lg={4}
+									md={4}
+									sm={12}
+									xs={12}
 									className={classes.categoryGrid}
 								>
 									<ModeCommentOutlined />
@@ -576,7 +576,7 @@ class EventPreviewPage extends Component {
 										{this.state.topic}
 									</div>
 								</Grid>
-								<Grid lg={10} md={9} sm={10} xs={12}>
+								<Grid lg={8} md={8} sm={12} xs={12}>
 									<SocialMedia disabled={true} shareUrl="" />
 								</Grid>
 							</Grid>
