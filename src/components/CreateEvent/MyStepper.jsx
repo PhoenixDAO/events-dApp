@@ -51,7 +51,7 @@ import DatePicker from "../common/DatePicker";
 import TimePicker from "../common/TimePicker";
 import CustomTextField from "../common/CustomTextField";
 import TicketCategory from "../common/TicketCategory";
-
+import "./style.css";
 var badWords = require("bad-words");
 
 const MyStepper = ({
@@ -500,7 +500,6 @@ const MyStepper = ({
 								</RadioGroup>
 							</FormControl>
 							<br />
-
 							{eventType === "physical" ? (
 								<div>
 									<br />
@@ -1214,6 +1213,10 @@ const MyStepper = ({
 															type="number"
 															variant="outlined"
 															InputProps={{
+															inputProps:{
+																min:"0",
+																max:"100"
+															},
 																startAdornment:
 																	(
 																		<InputAdornment position="start">
@@ -1232,9 +1235,9 @@ const MyStepper = ({
 																			</Button>
 																		</InputAdornment>
 																	),
-																inputProps: {
-																	min: 0,
-																},
+																// inputProps: {
+																// 	min: 0,
+																// },
 															}}
 															value={
 																ticketCategories[
@@ -1846,7 +1849,7 @@ const MyStepper = ({
 								}
 								startIcon={
 									activeStep === steps.length - 1 ? (
-										<img src={publishIcon} atl="publish" />
+										<img src={publishIcon} className={classes.publishIcon} atl="publish" />
 									) : null
 								}
 							>

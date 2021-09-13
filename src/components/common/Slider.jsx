@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
 				width: "70%",
 
 			},
+			"@media (max-width: 580px)":{
+				width: "88%",
+			},
 			
 			width: "57%",
 			textShadow: "none",
@@ -41,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	title: {
 		textAlign: "left",
-		"@media (max-width: 800px)": {
+		"@media (max-width: 805px)": {
 			marginBottom: "15px",
 			fontSize: "24px !important",
 		},
