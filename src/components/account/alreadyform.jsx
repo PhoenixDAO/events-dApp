@@ -7,6 +7,9 @@ import IconButton from "@material-ui/core/IconButton";
 const AlreadyForm = (props) => {
 	const closeForm = (e) => {
 		e.preventDefault();
+		props.handleAvatarNumber(props.avatarNumber);
+		props.handleCustomAvatar(props.customAvatar);
+		props.handleName(props.name);
 		props.handleClose();
 	};
 	return (

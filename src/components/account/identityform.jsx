@@ -15,9 +15,6 @@ const IdentityForm = (props) => {
 		e.preventDefault();
 		if (type === "alreadyform") {
 			if (selectImage.name) {
-				props.handleAvatarNumber(avatarNumber);
-				props.handleName(name);
-				props.handleCustomAvatar(avatarCustom);
 				setFormType(type);
 				props.setNextForm(value);
 			}
@@ -153,7 +150,11 @@ const IdentityForm = (props) => {
 								toggleForm={toggleForm}
 								handleClose={props.handleClose}
 								handleAvatarNumber={props.handleAvatarNumber}
+								handleName={props.handleName}
 								handleCustomAvatar={props.handleCustomAvatar}
+								avatarCustom={avatarCustom}
+								name={name}
+								avatarNumber={avatarNumber}
 							/>
 						) : (
 							<CustomForm
