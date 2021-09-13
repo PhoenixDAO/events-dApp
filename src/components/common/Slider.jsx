@@ -77,10 +77,7 @@ const Slider = () => {
 							Be more with Phoenix Events
 						</p>
 						<p className={classes.text}>
-							Events Marketplace allows event attendees to secure
-							tickets with crypto and verify authenticity of peer
-							to peer ticket transfers via Phoenix Identity
-							protocol.
+							PhoenixDAO events marketplace come NFT ticketing dApp allows events attendee's to secure tickets with crypto and verify authenticity of peer to peer ticket transfer leveraging the power of blockchain (i.e a combination of both in-house and third-party protocols)
 						</p>
 					</Carousel.Caption>
 				</Carousel.Item>
@@ -94,10 +91,7 @@ const Slider = () => {
 					<Carousel.Caption className={classes.carouselCaption}>
 						<p className={classes.title}>Privacy Assured</p>
 						<p className={classes.text}>
-							Events Marketplace allows event attendees to secure
-							tickets with crypto and verify authenticity of peer
-							to peer ticket transfers via Phoenix Identity
-							protocol.
+							PhoenixDAO events marketplace come NFT ticketing dApp allows events attendee's to secure tickets with crypto and verify authenticity of peer to peer ticket transfer leveraging the power of blockchain (i.e a combination of both in-house and third-party protocols)
 						</p>
 					</Carousel.Caption>
 				</Carousel.Item>
@@ -111,10 +105,7 @@ const Slider = () => {
 					<Carousel.Caption className={classes.carouselCaption}>
 						<p className={classes.title}>Privacy Assured</p>
 						<p className={classes.text}>
-							Events Marketplace allows event attendees to secure
-							tickets with crypto and verify authenticity of peer
-							to peer ticket transfers via Phoenix Identity
-							protocol.
+							PhoenixDAO events marketplace come NFT ticketing dApp allows events attendee's to secure tickets with crypto and verify authenticity of peer to peer ticket transfer leveraging the power of blockchain (i.e a combination of both in-house and third-party protocols)
 						</p>
 					</Carousel.Caption>
 				</Carousel.Item>

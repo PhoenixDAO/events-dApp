@@ -37,16 +37,16 @@
 // export const explorerWithAddress ="https://explorer-mumbai.maticvigil.com/address/"
 // export const graphURL="https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp2"
 
-//Rinkeby
+//Rinkeby	
 export const INFURA_URL =
-	"https://rinkeby.infura.io/v3/c89f216154d84b83bb9344a7d0a91108";
+	"https://rinkeby.infura.io/v3/388c2e54484b4d90a0a54aa9238f1db7";
 export const INFURA_WEB_URL =
-	"wss://rinkeby.infura.io/ws/v3/72e114745bbf4822b987489c119f858b";
+	"wss://rinkeby.infura.io/ws/v3/388c2e54484b4d90a0a54aa9238f1db7";
 
 export const INFURA_URL_2 =
-	"https://goerli.infura.io/v3/0db053799f0e48e99357b6dce022b1e7";
+	"https://goerli.infura.io/v3/388c2e54484b4d90a0a54aa9238f1db7";
 export const INFURA_WEB_URL_2 =
-	"wss://goerli.infura.io/ws/v3/0db053799f0e48e99357b6dce022b1e7";
+	"wss://goerli.infura.io/ws/v3/388c2e54484b4d90a0a54aa9238f1db7";
 
 export const GLOBAL_NETWORK_ID = 4;
 export const GLOBAL_NETWORK_ID_2 = 5;
