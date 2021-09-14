@@ -1219,7 +1219,7 @@ const MyStepper = ({
 															InputProps={{
 															inputProps:{
 																min:"0",
-																max:"100"
+																max:"10"
 															},
 																startAdornment:
 																	(
@@ -1243,14 +1243,8 @@ const MyStepper = ({
 																// 	min: 0,
 																// },
 															}}
-															value={
-																ticketCategories[
-																	ticketIndex
-																].dollarPrice
-															}
-															onChange={(
-																event
-															) => {
+															value={ticketCategories[ticketIndex].dollarPrice}
+															onChange={(event) => {
 																handleTicketCatogory(
 																	event,
 																	ticketIndex
@@ -1273,7 +1267,6 @@ const MyStepper = ({
 															})}
 														/>
 													</span>
-
 													<div
 														className={
 															classes.altIconStyle
