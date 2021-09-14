@@ -128,6 +128,7 @@ class App extends Component {
 			open2: false,
 			eventsAddress: "",
 			openWalletConnected: false,
+			date2: null,
 		};
 		this.myRef = React.createRef();
 
@@ -433,7 +434,8 @@ class App extends Component {
 		name,
 		phnx_price,
 		dollar_price,
-		time
+		time,
+		date
 	) => {
 		let chainId = await this.getNetworkId();
 		if (
@@ -456,6 +458,7 @@ class App extends Component {
 					phnx_price,
 					dollar_price,
 					time,
+					date2: date,
 				},
 				() => this.buy()
 			);
@@ -1384,6 +1387,7 @@ class App extends Component {
 							<AnalyticsWrapper
 								{...props}
 								eventsContract={this.state.eventsContract}
+								executeScroll={this.executeScroll}
 							/>
 						)}
 					/>
@@ -1412,11 +1416,15 @@ class App extends Component {
 					<Route
 						exact
 						path="/favorites"
-						component={Favorites}
-						executeScroll={this.executeScroll}
-						inquire={this.inquireBuy}
-						disabledStatus={this.state.disabledStatus}
-						toggleDisabling={this.toggleDisabling}
+						render={(props) => (
+							<Favorites
+								{...props}
+								executeScroll={this.executeScroll}
+								inquire={this.inquireBuy}
+								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
+							/>
+						)}
 					/>
 					{/* <Route
 						exact
@@ -1619,7 +1627,7 @@ class App extends Component {
 							key={"top" + "center"}
 							className="snackbar"
 						/>
-							<Switch>
+						<Switch>
 							<Route
 								exact
 								path="/"
@@ -1637,7 +1645,6 @@ class App extends Component {
 								path="/mytickets/:page"
 								render={(props) => <TravallaBannerFooter />}
 							/>
-
 						</Switch>
 					</div>
 					<ToastContainer />

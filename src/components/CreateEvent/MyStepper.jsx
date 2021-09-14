@@ -117,8 +117,6 @@ const MyStepper = ({
 		termsAndConditions,
 	} = values;
 
-	console.log(values);
-
 	const steps = ["", "", "", ""];
 	function getFlamingSteps() {
 		return ["Upload Data", "Confirm Transaction", "Publish Event"];
@@ -891,18 +889,13 @@ const MyStepper = ({
 								) : eventCategory === "single" ? (
 									<div>
 										<br />
-									
-											
-												<InputLabel htmlFor="input-with-icon-adornment">
-													<label
-														className={
-															classes.label
-														}
-													>
-														TICKET PRICE
-													</label>
-												</InputLabel>
-												<div
+
+										<InputLabel htmlFor="input-with-icon-adornment">
+											<label className={classes.label}>
+												TICKET PRICE
+											</label>
+										</InputLabel>
+										<div
 											className={
 												classes.ticketPriceContainer
 											}
@@ -1198,20 +1191,20 @@ const MyStepper = ({
 												<br />
 												<br />
 												<InputLabel htmlFor="input-with-icon-adornment">
-															<label
-																className={
-																	classes.label
-																}
-															>
-																TICKET PRICE
-															</label>
-														</InputLabel>
+													<label
+														className={
+															classes.label
+														}
+													>
+														TICKET PRICE
+													</label>
+												</InputLabel>
 												<div
 													className={
 														classes.ticketPriceContainer
 													}
 												>
-														<span>
+													<span>
 														<TextField
 															className={
 																classes.margin
@@ -1225,8 +1218,7 @@ const MyStepper = ({
 															variant="outlined"
 															InputProps={{
 																inputProps: {
-																	min: "0",
-																	max: "10",
+																	min: 1,
 																},
 
 																startAdornment:
@@ -1297,9 +1289,7 @@ const MyStepper = ({
 
 													<span>
 														<TextField
-															className={
-																`${classes.margin}`
-															}
+															className={`${classes.margin}`}
 															id="phnx-price"
 															name="phnxPrice"
 															onKeyDown={

@@ -59,7 +59,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi ,{ getNetworkId } from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
@@ -712,6 +712,7 @@ class EventPage extends Component {
 		this.setState({
 			disableBuyTicketBtn: result,
 		});
+		console.log("result handelCLickopen2", result);
 		if (!result) {
 			if (
 				this.props.networkId != GLOBAL_NETWORK_ID &&
@@ -734,10 +735,39 @@ class EventPage extends Component {
 								"This event is restricted to one wallet address, you can't buy it again.",
 						});
 					} else {
-						this.setState({ open2: true });
+						console.log("open 2 called in inner else");
+						if ((await this.allowance()) == 0) {
+							let balance = await this.props.phnxContract.methods
+								.totalSupply()
+								.call();
+							this.setState({
+								approve:
+									this.props.phnxContract.methods.approve(
+										this.props.eventsAddress,
+										balance
+									),
+							});
+							this.handleClickOpen();
+						} else {
+							this.setState({ open2: true });
+						}
 					}
 				} else {
-					this.setState({ open2: true });
+					console.log("open 2 called in outer else");
+					if ((await this.allowance()) == 0) {
+						let balance = await this.props.phnxContract.methods
+							.totalSupply()
+							.call();
+						this.setState({
+							approve: this.props.phnxContract.methods.approve(
+								this.props.eventsAddress,
+								balance
+							),
+						});
+						this.handleClickOpen();
+					} else {
+						this.setState({ open2: true });
+					}
 				}
 			}
 		}
@@ -764,7 +794,6 @@ class EventPage extends Component {
 		let a = await this.props.phnxContract.methods
 			.allowance(this.account, this.props.eventsAddress)
 			.call();
-			console.log("a",a);
 		return a;
 	};
 
@@ -832,28 +861,40 @@ class EventPage extends Component {
 	}
 
 	checkUserBalance = async () => {
-		let balance = await this.props.phnxContract.methods
-			.balanceOf(this.props.accounts[0])
-			.call();
-		console.log(
-			"PHNx balance of the user",
-			balance,
-			this.state.blockChainEvent
-		);
-		balance = Web3.utils.fromWei(balance.toString());
+		const networkId = await getNetworkId();
+		if (
+			networkId === GLOBAL_NETWORK_ID ||
+			networkId === GLOBAL_NETWORK_ID_2
+		) {
+			console.log("this.props.phnxContract", this.props.phnxContract);
+			let balance = await this.props.phnxContract.methods
+				.balanceOf(this.props.accounts[0])
+				.call();
+			console.log(
+				"PHNx balance of the user",
+				balance,
+				this.state.blockChainEvent
+			);
+			balance = Web3.utils.fromWei(balance.toString());
 
-		console.log("less price", balance, this.state.phnx_price);
-		if (balance < Number(this.state.phnx_price.split("PHNX")[0])) {
-			return true;
+			console.log("less price", balance, this.state.phnx_price);
+			if (balance < Number(this.state.phnx_price.split("PHNX")[0])) {
+				return true;
+			} else {
+				this.setState({
+					disableBuyTicketBtn: false,
+				});
+				return false;
+			}
 		} else {
-			this.setState({
-				disableBuyTicketBtn: false,
-			});
 			return false;
 		}
 	};
 
 	inquire = async () => {
+		let event_data = this.state.blockChainEvent;
+		let date2 = new Date(parseInt(event_data.time, 10) * 1000);
+
 		let balance = await this.props.phnxContract.methods
 			.totalSupply()
 			.call();
@@ -895,13 +936,14 @@ class EventPage extends Component {
 						this.state.buyticket,
 						this.state.approve,
 						this.state.eventTime,
-						this.state.eventDate,
+						date2, // this.state.eventDate,
 						this.state.eventEndDate,
 						this.state.image,
 						this.state.blockChainEvent.name,
 						this.state.phnx_price,
 						this.state.dollar_price,
-						time
+						time,
+						date2
 					);
 				}
 			}
@@ -1214,6 +1256,7 @@ class EventPage extends Component {
 								eventTitle={event_data.name}
 								date={event_date}
 								time={time}
+								date2={date}
 								buy={this.inquire}
 								buttonText={buttonText}
 								eventTime={this.state.eventTime}
@@ -1242,7 +1285,7 @@ class EventPage extends Component {
 								}}
 								open={this.state.disableBuyTicketBtn}
 								onClose={this.handleCloseSnackbar4}
-								message="You dont have enought PHNX token to buy the ticket"
+								message="You do not have enough PHNX token to buy the ticket"
 								autoHideDuration={3000}
 								key={"top" + "center"}
 								className="snackbar"
@@ -1879,7 +1922,8 @@ class EventPage extends Component {
 		// console.log("this.props.userDetails", this.props.userDetails);
 		// console.log("prevProps.userDetails", prevProps.userDetails);
 		if (this.props.purchased !== prevProps.purchased) {
-			this.loadEventFromBlockchain();
+			await this.loadEventFromBlockchain();
+			await this.checkUserTicketLocation();
 			let buyers = await generateBuyerArr(this.props.match.params.id);
 			this.setState({ soldTicket: buyers });
 		}
