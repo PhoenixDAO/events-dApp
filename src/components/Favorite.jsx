@@ -657,6 +657,7 @@ class Favorites extends Component {
 	}
 
 	async componentDidMount() {
+		this.props.executeScroll();
 		if (typeof ethereum !== "undefined") {
 			const a = ethereum.enable();
 			web3 = new Web3(ethereum);

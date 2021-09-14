@@ -59,7 +59,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi ,{ getNetworkId } from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
@@ -831,23 +831,32 @@ class EventPage extends Component {
 	}
 
 	checkUserBalance = async () => {
-		let balance = await this.props.phnxContract.methods
-			.balanceOf(this.props.accounts[0])
-			.call();
-		console.log(
-			"PHNx balance of the user",
-			balance,
-			this.state.blockChainEvent
-		);
-		balance = Web3.utils.fromWei(balance.toString());
+		const networkId = await getNetworkId();
+		if (
+			networkId === GLOBAL_NETWORK_ID ||
+			networkId === GLOBAL_NETWORK_ID_2
+		) {
+			console.log("this.props.phnxContract", this.props.phnxContract);
+			let balance = await this.props.phnxContract.methods
+				.balanceOf(this.props.accounts[0])
+				.call();
+			console.log(
+				"PHNx balance of the user",
+				balance,
+				this.state.blockChainEvent
+			);
+			balance = Web3.utils.fromWei(balance.toString());
 
-		console.log("less price", balance, this.state.phnx_price);
-		if (balance < Number(this.state.phnx_price.split("PHNX")[0])) {
-			return true;
+			console.log("less price", balance, this.state.phnx_price);
+			if (balance < Number(this.state.phnx_price.split("PHNX")[0])) {
+				return true;
+			} else {
+				this.setState({
+					disableBuyTicketBtn: false,
+				});
+				return false;
+			}
 		} else {
-			this.setState({
-				disableBuyTicketBtn: false,
-			});
 			return false;
 		}
 	};
@@ -1241,7 +1250,7 @@ class EventPage extends Component {
 								}}
 								open={this.state.disableBuyTicketBtn}
 								onClose={this.handleCloseSnackbar4}
-								message="You dont have enought PHNX token to buy the ticket"
+								message="You do not have enough PHNX token to buy the ticket"
 								autoHideDuration={3000}
 								key={"top" + "center"}
 								className="snackbar"
@@ -1878,7 +1887,8 @@ class EventPage extends Component {
 		// console.log("this.props.userDetails", this.props.userDetails);
 		// console.log("prevProps.userDetails", prevProps.userDetails);
 		if (this.props.purchased !== prevProps.purchased) {
-			this.loadEventFromBlockchain();
+			await this.loadEventFromBlockchain();
+			await this.checkUserTicketLocation();
 			let buyers = await generateBuyerArr(this.props.match.params.id);
 			this.setState({ soldTicket: buyers });
 		}
