@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { drizzleConnect } from "drizzle-react";
 import { ToastContainer, toast } from "react-toastify";
 import Web3 from "web3";
+import TravallaBannerFooter from "./common/TravallaBannerFooter";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "startbootstrap-simple-sidebar/css/simple-sidebar.css";
@@ -534,6 +535,9 @@ class App extends Component {
 								pauseOnHover: true,
 							}
 						);
+						this.setState({
+							purchased: false,
+						});
 					}
 				});
 			this.setState({ afterApprove: false });
@@ -1608,6 +1612,26 @@ class App extends Component {
 							key={"top" + "center"}
 							className="snackbar"
 						/>
+							<Switch>
+							<Route
+								exact
+								path="/"
+								render={(props) => <TravallaBannerFooter />}
+							/>
+
+							<Route
+								exact
+								path="/upcomingevents/:page"
+								render={(props) => <TravallaBannerFooter />}
+							/>
+
+							<Route
+								exact
+								path="/mytickets/:page"
+								render={(props) => <TravallaBannerFooter />}
+							/>
+
+						</Switch>
 					</div>
 					<ToastContainer />
 				</div>
