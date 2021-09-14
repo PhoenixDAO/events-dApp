@@ -416,7 +416,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
           purchased ?
           <div className={classes.bannerImage}>
           <a href="https://www.travala.com/?ref=phoenixdao">
-            <img src="/images/travala.svg" className={classes.image} />
+            <img src="/images/travalla.jpg" className={classes.image} />
             </a>
           </div>
             : null

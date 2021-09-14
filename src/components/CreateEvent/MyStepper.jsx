@@ -891,12 +891,8 @@ const MyStepper = ({
 								) : eventCategory === "single" ? (
 									<div>
 										<br />
-										<div
-											className={
-												classes.ticketPriceContainer
-											}
-										>
-											<span>
+									
+											
 												<InputLabel htmlFor="input-with-icon-adornment">
 													<label
 														className={
@@ -906,6 +902,12 @@ const MyStepper = ({
 														TICKET PRICE
 													</label>
 												</InputLabel>
+												<div
+											className={
+												classes.ticketPriceContainer
+											}
+										>
+											<span>
 												<TextField
 													className={classes.margin}
 													onKeyDown={
@@ -977,9 +979,6 @@ const MyStepper = ({
 											</div>
 
 											<span>
-												<InputLabel htmlFor="input-with-icon-adornment">
-													<span>&nbsp;</span>
-												</InputLabel>
 												<TextField
 													className={classes.margin}
 													id="phnx-price"
@@ -1198,14 +1197,7 @@ const MyStepper = ({
 												<br />
 												<br />
 												<br />
-
-												<div
-													className={
-														classes.ticketPriceContainer
-													}
-												>
-													<span>
-														<InputLabel htmlFor="input-with-icon-adornment">
+												<InputLabel htmlFor="input-with-icon-adornment">
 															<label
 																className={
 																	classes.label
@@ -1214,6 +1206,12 @@ const MyStepper = ({
 																TICKET PRICE
 															</label>
 														</InputLabel>
+												<div
+													className={
+														classes.ticketPriceContainer
+													}
+												>
+														<span>
 														<TextField
 															className={
 																classes.margin
@@ -1227,8 +1225,7 @@ const MyStepper = ({
 															variant="outlined"
 															InputProps={{
 															inputProps:{
-																min:"0",
-																max:"10"
+																min:0
 															},
 																startAdornment:
 																	(
@@ -1291,12 +1288,9 @@ const MyStepper = ({
 													</div>
 
 													<span>
-														<InputLabel htmlFor="input-with-icon-adornment">
-															<span>&nbsp;</span>
-														</InputLabel>
 														<TextField
 															className={
-																classes.margin
+																`${classes.margin}`
 															}
 															id="phnx-price"
 															name="phnxPrice"
