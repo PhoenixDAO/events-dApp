@@ -177,9 +177,21 @@ class CreateEvent extends Component {
 			city,
 		} = this.state.fields;
 
-		let image0Base64 = image0 ? await this.getBase64(image0) : "";
-		let image1Base64 = image1 ? await this.getBase64(image1) : "";
-		let image2Base64 = image2 ? await this.getBase64(image2) : "";
+		let image0Base64 = image0
+			? (await this.isFileImage(image0))
+				? await this.getBase64(image0)
+				: ""
+			: "";
+		let image1Base64 = image1
+			? (await this.isFileImage(image1))
+				? await this.getBase64(image1)
+				: ""
+			: "";
+		let image2Base64 = image2
+			? (await this.isFileImage(image2))
+				? await this.getBase64(image2)
+				: ""
+			: "";
 
 		let countryName = eventType === "physical" ? country.name : "";
 		let stateName = eventType === "physical" ? state.name : "";
@@ -204,7 +216,9 @@ class CreateEvent extends Component {
 
 		for (var i = 0; i < ticketCategories.length; i++) {
 			categories.push(ticketCategories[i].ticketName);
-			prices.push((ticketCategories[i].dollarPrice * 1000000).toString());
+			prices.push(
+				Math.ceil(ticketCategories[i].dollarPrice * 1000000).toString()
+			);
 
 			tktQntySold.push("0");
 
@@ -361,28 +375,6 @@ class CreateEvent extends Component {
 					})
 					.then(async (receipt) => {
 						console.log("receipt----->", receipt);
-						// toast(
-						// 	<Notify
-						// 		text={
-						// 			"Transaction successfull!\nYou can check event now."
-						// 		}
-						// 		icon="fas fa-check-circle fa-3x"
-						// 		color="#413AE2"
-						// 		hash={receipt.transactionHash}
-						// 	/>,
-						// 	{
-						// 		position: "bottom-right",
-						// 		autoClose: true,
-						// 		pauseOnHover: true,
-						// 	}
-						// );
-						// this.onFlamingStepsChange();
-						// await userTweet({
-						// 	address: this.props.accounts[0],
-						// 	networkId: this.props.web3.networkId,
-						// 	base64Image: image0Base64,
-						// 	message: eventName,
-						// });
 					})
 					.catch((error) => {
 						console.log("tx error", error);
@@ -435,6 +427,14 @@ class CreateEvent extends Component {
 			reader.onerror = (error) => reject(error);
 		});
 	};
+
+	isFileImage(file) {
+		try {
+			return file && file["type"].split("/")[0] === "image";
+		} catch (error) {
+			return false;
+		}
+	}
 
 	createEvent = (
 		fileHandle,
