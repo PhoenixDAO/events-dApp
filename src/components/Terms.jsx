@@ -92,7 +92,7 @@ const Terms = (props) => {
 					sm={6}
 					xs={12}
 				>
-					<p>Last updated: January 23, 2021</p>
+					<p>Last updated: September 20th, 2021</p>
 					<p>
 						Please read these terms and conditions carefully before
 						using Our Service.
@@ -107,6 +107,22 @@ const Terms = (props) => {
 					>
 						Interpretation and Definitions
 					</h2>
+
+					<h5>
+						<strong>
+							{" "}
+							NB: This product from PhoenixDAO is
+							opensource/decentralized, meaning the project has
+							little to no control on its use (though it will
+							continue to make sure security of users remains a
+							high priority). Make sure as a user/event creator,
+							this is only used for social good as deemed fit by
+							all legal jurisdiction across the world. PhoenixDAO
+							cannot be held liable if a user uses the product for
+							any activity that breaches legality in
+							region/jurisdiction.{" "}
+						</strong>{" "}
+					</h5>
 					<h3
 						ref={(el) =>
 							(pageRefs.current = {
@@ -585,14 +601,29 @@ const Terms = (props) => {
 					</h2>
 					{/* <ul> */}
 					<p>
-						for any enquiries or questions please contact the
-						platform moderators:
-						<a
-							href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=events@phoenixdao.io"
-							target="_blank"
-						>
-							events@phoenixdao.io
-						</a>
+						If you have any questions about these Terms and
+						Conditions, You can contact us:
+						<ul>
+							<li>
+								By email:{" "}
+								<a
+									href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=hello@phoenixdao.io"
+									target="_blank"
+								>
+									hello@phoenixdao.io
+								</a>
+							</li>
+							<li>
+								{" "}
+								By visiting this page on our website:
+								<a
+									href="http//www.phoenixdao.io/contact"
+									target="_blank"
+								>
+									http//www.phoenixdao.io/contact
+								</a>
+							</li>
+						</ul>
 					</p>
 
 					{/* <li>	

@@ -18,6 +18,7 @@ const AnalyticsWrapper = (props) => {
 	const [todayGraphData, setTodayGraphData] = useState([]);
 	useEffect(() => {
 		loadApis();
+		props.executeScroll();
 	}, []);
 	const loadApis = async () => {
 		const eventName = await getEventName(props.accounts);
