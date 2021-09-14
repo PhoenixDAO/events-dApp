@@ -712,6 +712,7 @@ class EventPage extends Component {
 		this.setState({
 			disableBuyTicketBtn: result,
 		});
+		console.log("result handelCLickopen2", result);
 		if (!result) {
 			if (
 				this.props.networkId != GLOBAL_NETWORK_ID &&
@@ -734,10 +735,39 @@ class EventPage extends Component {
 								"This event is restricted to one wallet address, you can't buy it again.",
 						});
 					} else {
-						this.setState({ open2: true });
+						console.log("open 2 called in inner else");
+						if ((await this.allowance()) == 0) {
+							let balance = await this.props.phnxContract.methods
+								.totalSupply()
+								.call();
+							this.setState({
+								approve:
+									this.props.phnxContract.methods.approve(
+										this.props.eventsAddress,
+										balance
+									),
+							});
+							this.handleClickOpen();
+						} else {
+							this.setState({ open2: true });
+						}
 					}
 				} else {
-					this.setState({ open2: true });
+					console.log("open 2 called in outer else");
+					if ((await this.allowance()) == 0) {
+						let balance = await this.props.phnxContract.methods
+							.totalSupply()
+							.call();
+						this.setState({
+							approve: this.props.phnxContract.methods.approve(
+								this.props.eventsAddress,
+								balance
+							),
+						});
+						this.handleClickOpen();
+					} else {
+						this.setState({ open2: true });
+					}
 				}
 			}
 		}
@@ -764,6 +794,7 @@ class EventPage extends Component {
 		let a = await this.props.phnxContract.methods
 			.allowance(this.account, this.props.eventsAddress)
 			.call();
+		console.log("Approve", a);
 		return a;
 	};
 
