@@ -606,7 +606,7 @@ const MyStepper = ({
 										<label className={classes.label}>
 											COVER IMAGE {index + 1}
 										</label>
-
+										<div style={{position:"relative"}}>
 										<TextField
 											variant="outlined"
 											id={`image${index}`}
@@ -645,8 +645,8 @@ const MyStepper = ({
 												),
 											}}
 										/>
-
-										{index === 0 ? (
+											
+												{index === 0 ? (
 											<p
 												className={
 													classes.imageMaxStyle
@@ -658,14 +658,18 @@ const MyStepper = ({
 											</p>
 										) : (
 											<button
+												className={classes.deleteImageButton}
 												disabled={index === 0}
 												onClick={() => {
 													handelRemoveImage(index);
 												}}
 											>
-												Remove Image
+												x
 											</button>
 										)}
+										</div>
+
+								
 									</div>
 								);
 							})}
