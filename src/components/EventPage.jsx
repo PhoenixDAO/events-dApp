@@ -57,7 +57,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
@@ -575,14 +575,14 @@ class EventPage extends Component {
 	}
 
 	async getPhoenixDAOMarketValue() {
+		console.log("request sent to the server");
 		fetch(
 			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
 		)
 			.then((res) => res.json())
 			.then((data) => {
-				if (this._isMounted) {
-					this.setState({ PhoenixDAO_market: data.phoenixdao });
-				}
+				console.log("phnx price", data);
+				this.setState({ PhoenixDAO_market: data.phoenixdao });
 			})
 			.catch(console.log);
 	}
@@ -653,6 +653,15 @@ class EventPage extends Component {
 			? phnx_price[categoryIndex] + "PHNX"
 			: "FREE";
 		let priceInDollar = event_data.token ? "$" + dollar_price : "";
+
+		console.log(
+			"price in phnx",
+			this.state.PhoenixDAO_market,
+			event_data,
+			phnx_price,
+			categoryIndex,
+			priceInPhnx
+		);
 		this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
 	};
 	getImage = () => {
@@ -790,7 +799,6 @@ class EventPage extends Component {
 			});
 	};
 	onConfirmation(confirmationNumber, receipt) {
-
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
 			toast(
@@ -823,7 +831,7 @@ class EventPage extends Component {
 			minute: "2-digit",
 		});
 		const geoFindUser = await this.geoFindMe();
-console.log("selectedIndex",this.state.selectedCategoryIndex)
+		console.log("selectedIndex", this.state.selectedCategoryIndex);
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
@@ -1018,10 +1026,13 @@ console.log("selectedIndex",this.state.selectedCategoryIndex)
 		console.log("All userss", users);
 		let event_data = this.state.blockChainEvent;
 		console.log("event data", event_data);
-		if (users.includes(this.props.accounts[0])) {
-			this.setState({
-				locationEvent: event_data.location,
-			});
+		for (let i = 0; i < users.length; i++) {
+			if (users[i].address === this.props.accounts[0].toLowerCase()) {
+				this.setState({
+					locationEvent: event_data.location,
+				});
+				break;
+			}
 		}
 	};
 
@@ -1270,7 +1281,8 @@ console.log("selectedIndex",this.state.selectedCategoryIndex)
 															.selectedCategoryIndex
 													}
 													onChange={
-														this.handleCategoryChange
+														this
+															.handleCategoryChange
 													}
 													inputProps={{
 														name: "age",
@@ -1773,7 +1785,9 @@ console.log("selectedIndex",this.state.selectedCategoryIndex)
 	async componentDidMount() {
 		let buyers = await generateBuyerArr(this.props.match.params.id);
 		this.setState({ soldTicket: buyers });
+		await this.getPhoenixDAOMarketValue();
 		await this.loadEventFromBlockchain();
+		await this.checkUserTicketLocation();
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
@@ -1781,7 +1795,6 @@ console.log("selectedIndex",this.state.selectedCategoryIndex)
 		this._isMounted = true;
 		// this.updateIPFS();
 		// this.loadblockhain();
-		this.getPhoenixDAOMarketValue();
 	}
 
 	geoFindMe = async () => {
