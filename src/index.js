@@ -93,10 +93,16 @@ const theme = createMuiTheme({
 // }
 // if (appPassword == process.env.REACT_APP_PASSWORD) {
 
+const render = () => {
+	return (
+		<DrizzleProvider options={options}>
+			<App />
+		</DrizzleProvider>
+	);
+};
+
 ReactDOM.render(
-	<DrizzleProvider options={options}>
-		<App />
-	</DrizzleProvider>,
+	<React.Fragment>{render()}</React.Fragment>,
 	document.getElementById("root")
 );
 // } else {
