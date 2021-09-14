@@ -17,6 +17,7 @@ import {
 	ShoppingCartOutlined,
 	ModeCommentOutlined,
 	ContactlessOutlined,
+	Web,
 } from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
@@ -291,6 +292,8 @@ class EventPage extends Component {
 			errorMessage: "",
 			SnackbarMessage: "",
 			locationEvent: "",
+			disableBuyTicketBtn: false,
+			phnx_price: "",
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -702,32 +705,39 @@ class EventPage extends Component {
 			);
 		return description;
 	};
-	handleClickOpen2 = () => {
-		if (
-			this.props.networkId != GLOBAL_NETWORK_ID &&
-			this.props.networkId != GLOBAL_NETWORK_ID_2
-		) {
-			this.setState({
-				open3: true,
-				open3Message: "Please connect to Rinkbey or Goerli network",
-			});
-		} else {
-			// this.setState({ open2: true });
-			if (this.state.oneTimeBuy) {
-				let buyers = this.state.soldTicket;
-				const account = this.props.accounts[0];
-				if (this.userExists(buyers, account)) {
-					// alert("One time buy");
-					this.setState({
-						open3: true,
-						open3Message:
-							"This event is restricted to one wallet address, you can't buy it again.",
-					});
+
+	handleClickOpen2 = async () => {
+		const result = await this.checkUserBalance();
+		this.setState({
+			disableBuyTicketBtn: result,
+		});
+		if (!result) {
+			if (
+				this.props.networkId != GLOBAL_NETWORK_ID &&
+				this.props.networkId != GLOBAL_NETWORK_ID_2
+			) {
+				this.setState({
+					open3: true,
+					open3Message: "Please connect to Rinkbey or Goerli network",
+				});
+			} else {
+				// this.setState({ open2: true });
+				if (this.state.oneTimeBuy) {
+					let buyers = this.state.soldTicket;
+					const account = this.props.accounts[0];
+					if (this.userExists(buyers, account)) {
+						// alert("One time buy");
+						this.setState({
+							open3: true,
+							open3Message:
+								"This event is restricted to one wallet address, you can't buy it again.",
+						});
+					} else {
+						this.setState({ open2: true });
+					}
 				} else {
 					this.setState({ open2: true });
 				}
-			} else {
-				this.setState({ open2: true });
 			}
 		}
 	};
@@ -818,6 +828,28 @@ class EventPage extends Component {
 		}
 	}
 
+	checkUserBalance = async () => {
+		let balance = await this.props.phnxContract.methods
+			.balanceOf(this.props.accounts[0])
+			.call();
+		console.log(
+			"PHNx balance of the user",
+			balance,
+			this.state.blockChainEvent
+		);
+		balance = Web3.utils.fromWei(balance.toString());
+
+		console.log("less price", balance, this.state.phnx_price);
+		if (balance < Number(this.state.phnx_price.split("PHNX")[0])) {
+			return true;
+		} else {
+			this.setState({
+				disableBuyTicketBtn: false,
+			});
+			return false;
+		}
+	};
+
 	inquire = async () => {
 		let balance = await this.props.phnxContract.methods
 			.totalSupply()
@@ -898,6 +930,12 @@ class EventPage extends Component {
 	handleCloseSnackbar() {
 		this.setState({ open3: false, open3Message: "" });
 	}
+
+	handleCloseSnackbar4 = () => {
+		this.setState({
+			disableBuyTicketBtn: false,
+		});
+	};
 
 	imageData = (index) => {
 		let myArray = [
@@ -1189,6 +1227,19 @@ class EventPage extends Component {
 								open={this.state.open3}
 								onClose={this.handleCloseSnackbar}
 								message={this.state.open3Message}
+								autoHideDuration={3000}
+								key={"top" + "center"}
+								className="snackbar"
+							/>
+
+							<Snackbar
+								anchorOrigin={{
+									vertical: "top",
+									horizontal: "center",
+								}}
+								open={this.state.disableBuyTicketBtn}
+								onClose={this.handleCloseSnackbar4}
+								message="You dont have enought PHNX token to buy the ticket"
 								autoHideDuration={3000}
 								key={"top" + "center"}
 								className="snackbar"
@@ -1788,6 +1839,7 @@ class EventPage extends Component {
 		await this.getPhoenixDAOMarketValue();
 		await this.loadEventFromBlockchain();
 		await this.checkUserTicketLocation();
+		await this.checkUserBalance();
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
