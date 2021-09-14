@@ -198,12 +198,14 @@ export default function sendTicket({
 					className={classes.header}
 					onClose={handleClose}
 				>
-					<img
-						src={roundlogo}
-						className={classes.logo}
-						alt="phnx logo"
-					/>
-					<span style={{ fontSize: "20px" }}>PhoenixDAO</span>
+					<div>
+						<img
+							src={roundlogo}
+							className={classes.logo}
+							alt="phnx logo"
+						/>
+						<span style={{ fontSize: "20px" }}>PhoenixDAO</span>
+					</div>
 					<h2
 						className={classes.sharelink}
 						style={{ textAlign: "center" }}
@@ -241,8 +243,8 @@ export default function sendTicket({
 										errorAddress
 											? "Invalid account address"
 											: error
-											? error.message
-											: null
+												? error.message
+												: null
 									}
 									onChange={(e) => {
 										onChange(e);
