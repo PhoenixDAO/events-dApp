@@ -1538,12 +1538,17 @@ class App extends Component {
 									}
 									handleClose={this.handleSnackbarClose}
 								/> */}
-								<Snackbar1
+								<Snackbar
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "center",
+									}}
 									open={this.state.openSnackbarForNoMetaMask}
 									message={this.state.errorMessage}
-									handleClose={() =>
-										this.handleSnackbarClose(1)
-									}
+									onClose={() => this.handleSnackbarClose(1)}
+									autoHideDuration={3000}
+									key={"top" + "center"}
+									className="snackbar"
 								/>
 								<Snackbar2
 									style={{ zIndex: "9999999 !important" }}
