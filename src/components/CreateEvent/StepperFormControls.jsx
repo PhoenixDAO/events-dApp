@@ -434,23 +434,22 @@ export const useFormControls = () => {
 		const { name, value } = e;
 		if (name === "country") {
 			geonames.children({ geonameId: value.id }).then((res) => {
-				if (res.totalResultsCount){
+				if (res.totalResultsCount) {
 					setValues({
 						...values,
 						[name]: value,
 						state: { id: "", name: "" },
 						city: { id: "", name: "" },
 					});
-				}
-				else{
-					setValues({...values,
+				} else {
+					setValues({
+						...values,
 						[name]: value,
 						state: { id: "", name: " " },
 						city: { id: "", name: " " },
-					})
+					});
 				}
-		  });
-			
+			});
 		} else if (name === "state") {
 			setValues({
 				...values,
@@ -586,21 +585,14 @@ export const useFormControls = () => {
 	};
 
 	const handleTicketCatogory = (event, index, fieldValues = values) => {
-		const { name, value } = event.target;
+		const { name, value, min, max } = event.target;
 		const { ticketCategories } = fieldValues;
-		console.log("count",value )
-		if(value.length > 16){
-			return;
-		}
-		
-					
-		// if(value.length >= 16)
-		// {
-			
-		// 	console.log("count",value.length )
-		// 	event.preventDefault();
-		// }
+		console.log("min", min, "max", max);
+
 		if (name === "dollarPrice") {
+			if (value.length > 16) {
+				return;
+			}
 			let USD = value;
 			let PHNX = dollarToPhnx(value);
 			ticketCategories[index]["dollarPrice"] = USD;
@@ -612,12 +604,14 @@ export const useFormControls = () => {
 				phnxPrice: PHNX,
 				token: true,
 			});
-			validate({ ['dollarPrice']: USD });
-			setTimeout(()=>{
-				validate({ ['phnxPrice']: PHNX });
-			}, 100)
-
+			validate({ ["dollarPrice"]: USD });
+			setTimeout(() => {
+				validate({ ["phnxPrice"]: PHNX });
+			}, 100);
 		} else if (name === "phnxPrice") {
+			if (value.length > 16) {
+				return;
+			}
 			let USD = phnxToDollar(value);
 			let PHNX = value;
 			ticketCategories[index]["dollarPrice"] = USD;
@@ -629,12 +623,10 @@ export const useFormControls = () => {
 				phnxPrice: PHNX,
 				token: true,
 			});
-			validate({ ['phnxPrice']: PHNX });
+			validate({ ["phnxPrice"]: PHNX });
 			setTimeout(() => {
-				validate({ ['dollarPrice']: USD });
+				validate({ ["dollarPrice"]: USD });
 			}, 100);
-
-
 		} else {
 			ticketCategories[index][name] = value;
 			setValues({
@@ -642,10 +634,8 @@ export const useFormControls = () => {
 				ticketCategories: [...ticketCategories],
 				[name]: value,
 			});
-		validate({ [name]: value });
-
+			validate({ [name]: value });
 		}
-
 	};
 
 	const handleSaveTicketCatogory = (ticketIndex, fieldValues = values) => {
@@ -720,19 +710,19 @@ export const useFormControls = () => {
 
 	const dollarToPhnx = (d, fieldValues = values) => {
 		let value = d; //parseFloat(d);
-		// value = value > 0 ? value : "";
+		value = value > 0 ? value : "";
 		let usd = fieldValues.PhoenixDAO_market.usd;
 		let phoenixValue = value / usd;
-		// phoenixValue = phoenixValue.toFixed(5);
+		phoenixValue = phoenixValue.toFixed(5);
 		return phoenixValue;
 	};
 
 	const phnxToDollar = (d, fieldValues = values) => {
 		let value = d; //parseFloat(d);
-		// value = value > 0 ? value : "";
+		value = value > 0 ? value : "";
 		let usd = fieldValues.PhoenixDAO_market.usd;
 		let dollarValue = value * usd;
-		// dollarValue = dollarValue.toFixed(5);
+		dollarValue = dollarValue.toFixed(5);
 		return dollarValue;
 	};
 

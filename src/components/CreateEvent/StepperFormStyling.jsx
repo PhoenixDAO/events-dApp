@@ -259,6 +259,9 @@ const useStyles = makeStyles((theme) => ({
 		[theme.breakpoints.down("md")]: {
 			flexDirection: "column",
 		},
+		"@media (min-width: 1150px)":{
+			alignItems:"flex-start"
+		}
 	},
 	altImage: {
 		[theme.breakpoints.between("xs", "sm", "md", "lg")]: {
@@ -427,7 +430,8 @@ const useStyles = makeStyles((theme) => ({
 		left: "-13px",
 	},
 	altIconStyle: {
-		paddingTop:"25px",
+		paddingTop:"15px",
+		paddingBottom: "15px",
 		paddingInline:"10px",
 		display: "flex",
 		justifyContent: "center",

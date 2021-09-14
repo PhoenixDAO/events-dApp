@@ -58,9 +58,9 @@ class Sidebar extends Component {
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.toggleSidebarClass(false);
-		this.getNetworkId();
+		await this.getNetworkId();
 	}
 
 	componentDidUpdate(prevProps) {
@@ -243,6 +243,7 @@ class Sidebar extends Component {
 
 	getNetworkId = async () => {
 		try {
+			console.log("WOrking....");
 			this.setState({
 				loading: true,
 			});
@@ -252,35 +253,30 @@ class Sidebar extends Component {
 			} else if (typeof web3 !== "undefined") {
 				web3 = new Web3(web3.currentProvider);
 			} else {
-				const network = await web3.eth.net.getId();
-				let infura;
-				if (network === GLOBAL_NETWORK_ID) {
-					infura = INFURA_URL;
-				} else if (network === GLOBAL_NETWORK_ID_2) {
-					infura = INFURA_URL_2;
-				}
-				web3 = new Web3(new Web3.providers.HttpProvider(infura));
+				this.setState({
+					loading: false,
+				});
 			}
 			const networkId = await web3.eth.net.getId();
 
 			console.log("This called getNetworkId", networkId);
+			this.setState({
+				loading: false,
+			});
 			if (networkId === GLOBAL_NETWORK_ID) {
 				this.setState({
 					networkId: true,
-					loading: false,
 				});
 				return;
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
 				this.setState({
 					networkId: true,
-					loading: false,
 				});
 				return;
 			} else {
 				console.log("network id not suported");
 			}
 			this.setState({
-				loading: false,
 				networkId: false,
 			});
 			return;
@@ -290,10 +286,13 @@ class Sidebar extends Component {
 	};
 
 	getWalletError = () => {
+		console.log("metamask called");
 		let message = "";
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
+			console.log("metamask not founnd");
 			message = <span>Please install Metamask</span>;
 		} else {
+			console.log("metamask founnd");
 			if (this.state.networkId) {
 				message = (
 					<span
@@ -321,6 +320,7 @@ class Sidebar extends Component {
 		}
 		return message;
 	};
+
 	render() {
 		let user = (
 			<div>
@@ -333,32 +333,7 @@ class Sidebar extends Component {
 					style={{ display: "flex", alignItems: "start" }}
 				>
 					<span className="toggleHidden">
-						{this.state.loading ? null : !window.ethereum ||
-						  !window.ethereum.isMetaMask ? (
-							<span>
-								{console.log("Metamask not connected")}
-								Metamask not connected{" "}
-							</span>
-						) : this.state.networkId ? (
-							<span
-								className="sidebarOpenWallet"
-								onClick={this.handleOpenWallet}
-							>
-								<img
-									className="switch-img"
-									src="/images/icons/switch.svg"
-								/>
-								Connect Wallet
-							</span>
-						) : (
-							<span>
-								<img
-									className="switch-img"
-									src="/images/icons/switch.svg"
-								/>
-								Switch to rinkeby or goerli network
-							</span>
-						)}
+						{this.state.loading ? null : this.getWalletError()}
 					</span>
 				</p>
 			</div>
@@ -637,7 +612,10 @@ class Sidebar extends Component {
 								</li>
 							</ul>
 
-							<ul className="grid toggleHidden" style={{maxWidth:"250px"}}>
+							<ul
+								className="grid toggleHidden"
+								style={{ maxWidth: "250px" }}
+							>
 								<div className="imageHolder">
 									<a
 										aria-label="Homepage"
@@ -1019,12 +997,15 @@ class Sidebar extends Component {
 										</span>
 									</NavLink>
 								</li>
-								<li style={{display:"none"}}>
+								<li style={{ display: "none" }}>
 									<ThemeSwitch />
 								</li>
 							</ul>
 
-							<ul className="grid toggleHidden" style={{maxWidth:"250px"}}>
+							<ul
+								className="grid toggleHidden"
+								style={{ maxWidth: "250px" }}
+							>
 								<div className="imageHolder">
 									<a
 										aria-label="Homepage"
