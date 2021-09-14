@@ -592,6 +592,40 @@ class TopicLandingPage extends Component {
 		}
 	};
 
+	onCategoryChange = (e) => {
+		this.setState({
+			category: e.target.value,
+		});
+		let updatedList = [];
+		let events = this.state.Topic_Events;
+		console.log("eventssss", events);
+
+		if (e.target.value === "Trending Events") {
+			for (let i = 0; i < events.length; i++) {
+				if (this.state.Topic_Events[i].tktTotalQuantitySold >= 5) {
+					updatedList.push(events[i]);
+				}
+			}
+		} else if (e.target.value === "Near you") {
+			for (let i = 0; i < events.length; i++) {
+				this.findNearToYouEvents(events[i]).then((eventExist) => {
+					if (eventExist) {
+						updatedList.push(events[i]);
+					}
+				});
+			}
+		} else {
+			updatedList = this.state.Topic_Events;
+		}
+		this.setState({
+			topic_copy: updatedList,
+		});
+
+		if (Number(this.props.match.params.id) != 1) {
+			this.props.history.push(`/topic/${this.props.match.params.page}/1`);
+		}
+	};
+
 	render() {
 		if (count === 0 && !this.state.loading) {
 			body = (
@@ -609,16 +643,16 @@ class TopicLandingPage extends Component {
 		// if (
 		// this.state.active_length == 0
 		// ) {
-		let count = this.state.active_length;
+		let count = this.state.topic_copy.length;
 
 		// console.log("this.props.match.params.page",this.props.match.params.id)
 		let currentPage = Number(this.props.match.params.id);
 		let events_list = [];
 		let skip = false;
-		for (let i = 0; i < this.state.Topic_Events.length; i++) {
+		for (let i = 0; i < this.state.topic_copy.length; i++) {
 			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
-					this.state.Topic_Events[i].eventId ==
+					this.state.topic_copy[i].eventId ==
 					this.state.Deleted_Events[j].eventId
 				) {
 					skip = true;
@@ -627,7 +661,7 @@ class TopicLandingPage extends Component {
 			if (!skip) {
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
-						this.state.Topic_Events[i].eventId ==
+						this.state.topic_copy[i].eventId ==
 						this.state.hideEvent[j].id
 					) {
 						console.log("skipped", this.state.hideEvent[j].id);
@@ -636,7 +670,7 @@ class TopicLandingPage extends Component {
 				}
 			}
 			if (!skip) {
-				events_list.push(this.state.Topic_Events[i]);
+				events_list.push(this.state.topic_copy[i]);
 			}
 			skip = false;
 		}
@@ -644,6 +678,7 @@ class TopicLandingPage extends Component {
 			body = (
 				<EmptyState
 					text="No events found 🤔. Want to be the first?"
+					btnText="Create an Event"
 					url="/createevent"
 				/>
 			);
@@ -658,66 +693,20 @@ class TopicLandingPage extends Component {
 			let start = end - this.perPage;
 			if (end > count) end = count;
 			let pages = Math.ceil(count / this.perPage);
-
 			for (let i = start; i < end; i++) {
-				console.log("EVENTS", events_list[i]);
-				if (this.state.category === "Trending Events") {
-					if (events_list[i].tktTotalQuantitySold > 5) {
-						updated_list.push(
-							<Event
-								eventData={events_list[i]}
-								toggleBuying={this.toggleBuying}
-								disabledBuying={this.state.disabledBuying}
-								disabledStatus={this.props.disabledStatus}
-								inquire={this.props.inquire}
-								key={events_list[i].eventId}
-								id={events_list[i].eventId}
-								ipfs={events_list[i].ipfsHash}
-								loading={this.state.loading}
-							/>
-						);
-					}
-				} else if (this.state.category === "Near you") {
-					this.findNearToYouEvents(events_list[i])
-						.then((eventExist) => {
-							if (eventExist) {
-								updated_list.push(
-									<Event
-										eventData={events_list[i]}
-										toggleBuying={this.toggleBuying}
-										disabledBuying={
-											this.state.disabledBuying
-										}
-										disabledStatus={
-											this.props.disabledStatus
-										}
-										inquire={this.props.inquire}
-										key={events_list[i].eventId}
-										id={events_list[i].eventId}
-										ipfs={events_list[i].ipfsHash}
-										loading={this.state.loading}
-									/>
-								);
-							}
-						})
-						.catch((err) => {
-							console.log("Err", err);
-						});
-				} else {
-					updated_list.push(
-						<Event
-							eventData={events_list[i]}
-							toggleBuying={this.toggleBuying}
-							disabledBuying={this.state.disabledBuying}
-							disabledStatus={this.props.disabledStatus}
-							inquire={this.props.inquire}
-							key={events_list[i].eventId}
-							id={events_list[i].eventId}
-							ipfs={events_list[i].ipfsHash}
-							loading={this.state.loading}
-						/>
-					);
-				}
+				updated_list.push(
+					<Event
+						eventData={events_list[i]}
+						toggleBuying={this.toggleBuying}
+						disabledBuying={this.state.disabledBuying}
+						disabledStatus={this.props.disabledStatus}
+						inquire={this.props.inquire}
+						key={events_list[i].eventId}
+						id={events_list[i].eventId}
+						ipfs={events_list[i].ipfsHash}
+						loading={this.state.loading}
+					/>
+				);
 			}
 			// console.log("updated_list",updated_list)
 			// updated_list.reverse();
@@ -757,12 +746,14 @@ class TopicLandingPage extends Component {
 					</nav>
 				);
 			}
-let btnTextMessage = "No events are available 😔. Want to be the first?";
-			if(this.state.category === "Near you"){
-				btnTextMessage = "No events are available near you 😔. Want to be the first?"
-			}
-			else{
-				btnTextMessage = "No events are available 😔. Want to be the first?";
+			let btnTextMessage =
+				"No events are available 😔. Want to be the first?";
+			if (this.state.category === "Near you") {
+				btnTextMessage =
+					"No events are available near you 😔. Want to be the first?";
+			} else {
+				btnTextMessage =
+					"No events are available 😔. Want to be the first?";
 			}
 			body = (
 				<div>
@@ -921,7 +912,7 @@ let btnTextMessage = "No events are available 😔. Want to be the first?";
 									id="demo-simple-select-outlined"
 									fullWidth
 									value={this.state.category}
-									onChange={this.categoryChange}
+									onChange={this.onCategoryChange}
 									displayEmpty
 									className={classes.menuPaper}
 									MenuProps={{
