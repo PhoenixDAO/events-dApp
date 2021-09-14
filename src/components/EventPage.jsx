@@ -45,11 +45,7 @@ import {
 	explorerWithAddress,
 } from "../config/const.js";
 import CheckUser from "./CheckUser";
-import {
-	Open_events_ABI,
-	Open_events_Address,
-	Open_events_Address_2,
-} from "../config/OpenEvents";
+import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import BuyTicket from "./common/BuyTicket";
 import {
 	updateEventViews,
@@ -61,15 +57,10 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
+import GetGraphApi from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
-import {
-	PhoenixDAO_Testnet_Token_ABI,
-	PhoenixDAO_Mainnet_Token_Address,
-	PhoenixDAO_Testnet_Token_Address_2,
-} from "../config/phoenixDAOcontract_testnet.js";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -304,7 +295,6 @@ class EventPage extends Component {
 			allowBuySnackbar: false,
 			errorMessage: "",
 			SnackbarMessage: "",
-			btnText: "",
 			locationEvent: "",
 		};
 		this.isCancelled = false;
@@ -414,8 +404,7 @@ class EventPage extends Component {
 						oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 					});
 					this.updateIPFS();
-					const networkId = await getNetworkId();
-					if (networkId) {
+					if (this.props.networkId) {
 						console.log(
 							"graphData",
 							graphEvents.data.data.events[0].owner
@@ -423,12 +412,12 @@ class EventPage extends Component {
 						await updateEventViews({
 							eventId: graphEvents.data.data.events[0].eventId,
 							address: graphEvents.data.data.events[0].owner,
-							networkId: networkId,
+							networkId: this.props.networkId,
 						});
 
 						const userDetails = await getUser({
 							address: graphEvents.data.data.events[0].owner,
-							networkId: networkId,
+							networkId: this.props.networkId,
 						});
 
 						console.log("userDEtails in event page", userDetails);
@@ -766,6 +755,15 @@ class EventPage extends Component {
 		this.priceCalculation(event.target.value);
 	};
 
+	allowance = async () => {
+		let a = await this.props.phnxContract.methods
+			.allowance(this.account, this.props.eventsAddress)
+			.call();
+		console.log("allowance", a);
+
+		return a;
+	};
+
 	giveApproval = async () => {
 		this.setState({ disabledBuying: true });
 		this.handleClose();
@@ -1054,60 +1052,6 @@ class EventPage extends Component {
 		}
 	};
 
-	contractAddressProviders = async () => {
-		let eventAddress = "";
-		let phoenixAddress = "";
-		const networkId = await getNetworkId();
-		console.log("This called networkId", networkId);
-		if (networkId === GLOBAL_NETWORK_ID) {
-			eventAddress = Open_events_Address;
-			phoenixAddress = PhoenixDAO_Mainnet_Token_Address;
-		} else if (networkId === GLOBAL_NETWORK_ID_2) {
-			eventAddress = Open_events_Address_2;
-			phoenixAddress = PhoenixDAO_Testnet_Token_Address_2;
-		} else {
-			console.log("Wrong network address | not supported");
-		}
-		console.log(
-			"eventAddress, phoenixAddress",
-			eventAddress,
-			phoenixAddress
-		);
-		return { eventAddress, phoenixAddress };
-	};
-
-	allowance = async () => {
-		if (this.props.accounts[0]) {
-			const { eventAddress, phoenixAddress } =
-				await this.contractAddressProviders();
-			let a = await this.props.phnxContract.methods
-				.allowance(this.props.accounts[0], eventAddress)
-				.call();
-
-			console.log("allowance", a);
-			return a;
-		}
-	};
-
-	getButtonText = async () => {
-		const a = await this.allowance();
-		console.log("get button text", a);
-		if (a == 0) {
-			this.setState({
-				btnText: "Approve",
-			});
-			return "Approve";
-		} else {
-			let event_data = this.state.blockChainEvent;
-			let btnText = event_data.token ? "Buy Ticket" : " Get Ticket";
-			console.log("btn text in getbutton", btnText, event_data);
-			this.setState({
-				btnText: btnText,
-			});
-			return btnText;
-		}
-	};
-
 	checkUserTicketLocation = async () => {
 		const eventId = this.props.match.params.id;
 		const users = await generateBuyerArr(eventId);
@@ -1156,7 +1100,9 @@ class EventPage extends Component {
 				let locations = event_data.onsite
 					? event_data.location
 					: this.state.locationEvent;
-				let buttonText = this.state.btnText;
+				let buttonText = event_data.token
+					? " Buy Ticket"
+					: " Get Ticket";
 				let symbol = event_data.token
 					? "PhoenixDAO.svg"
 					: "PhoenixDAO.svg";
@@ -1894,7 +1840,7 @@ class EventPage extends Component {
 	async componentDidMount() {
 		let buyers = await generateBuyerArr(this.props.match.params.id);
 		this.setState({ soldTicket: buyers });
-		await this.loadEventFromBlockchain();
+		this.loadEventFromBlockchain();
 		console.log("count", this.props.accounts[0]);
 		window.scroll({
 			top: 0,
@@ -1904,8 +1850,6 @@ class EventPage extends Component {
 		// this.updateIPFS();
 		// this.loadblockhain();
 		this.getPhoenixDAOMarketValue();
-		await this.getButtonText();
-		await this.checkUserTicketLocation();
 	}
 
 	geoFindMe = async () => {
