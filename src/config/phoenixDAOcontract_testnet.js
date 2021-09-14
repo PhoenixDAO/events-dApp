@@ -289,7 +289,7 @@ export const PhoenixDAO_Testnet_Token_ABI = [
 ];
 
 export const PhoenixDAO_Testnet_Token_Address_2 =
-	"0x6b1f007951D77dFE220B2aD010C8f5Cd27231158";
+	"0x92C59F1cC9A322670CCa29594e4D994d48BDFd36";
 /*--------------------------------------------------------------------------------------------------------*/
 
 // Matic Testnet

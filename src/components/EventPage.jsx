@@ -648,7 +648,7 @@ class EventPage extends Component {
 		let event_data = this.state.blockChainEvent;
 		let phnx_price = event_data.prices.map((price) => {
 			return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
-				2
+				6
 			);
 		});
 
@@ -719,7 +719,7 @@ class EventPage extends Component {
 			) {
 				this.setState({
 					open3: true,
-					open3Message: "Please connect to Rinkbey or Goerli network",
+					open3Message: "Please connect to Ethereum or Matic Mainnet",
 				});
 			} else {
 				// this.setState({ open2: true });
@@ -764,6 +764,7 @@ class EventPage extends Component {
 		let a = await this.props.phnxContract.methods
 			.allowance(this.account, this.props.eventsAddress)
 			.call();
+			console.log("a",a);
 		return a;
 	};
 

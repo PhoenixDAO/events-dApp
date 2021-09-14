@@ -436,7 +436,7 @@ const MyStepper = ({
 												}
 												fullWidth={true}
 												clearable={true}
-												helperText="Don’t have an end time? leave here blank"
+												helperText="Don't have an end time for the event? Leave this space blank."
 											/>
 										</Grid>
 									</Grid>

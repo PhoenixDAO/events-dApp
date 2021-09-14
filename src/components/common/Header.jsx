@@ -22,7 +22,7 @@ import ConnectWalletButton from "./ConnectWalletButton";
 import SearchBar from "./SearchBar";
 import DialogueBox from "./DialogueBox";
 import Wallet from "./Wallet";
-// import BuyPhoenixModal from "./BuyPhoenixModal";
+import BuyPhoenixModal from "./BuyPhoenixModal";
 const useStyles = makeStyles((theme) => ({
 	buy: {
 		marginLeft: "13px",
@@ -201,14 +201,14 @@ const Header = ({
 					handleClose={handleCloseBuyPhnx}
 					maxWidth="xs"
 				>
-					{/* <BuyPhoenixModal
+					<BuyPhoenixModal
 						handleClose={handleCloseBuyPhnx}
 						openTransak={openTransak}
 						closeTransak={closeTransak}
 						transak={transak}
 						accounts={accounts}
 						chain={chainId}
-					/> */}
+					/>
 				</DialogueBox>
 			</Grid>
 		</div>
