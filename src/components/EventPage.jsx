@@ -798,6 +798,7 @@ class EventPage extends Component {
 				<Notify
 					hash={receipt.transactionHash}
 					icon="fas fa-check-circle fa-3x"
+					color="#413AE2"
 					text={"Transaction successful!\nYou can buy a ticket now."}
 				/>,
 				{
