@@ -43,7 +43,7 @@ export const INFURA_URL =
 export const INFURA_WEB_URL =
 	"wss://rinkeby.infura.io/ws/v3/388c2e54484b4d90a0a54aa9238f1db7";
 export const INFURA_URL_2="https://matic-mainnet.chainstacklabs.com";
-export const INFURA_WEB_URL_2="wss://rpc-mainnet.matic.quiknode.pro";
+export const INFURA_WEB_URL_2="wss://ws-matic-mainnet.chainstacklabs.com";
 // export const INFURA_URL_2 =
 // 	"https://goerli.infura.io/v3/388c2e54484b4d90a0a54aa9238f1db7";
 // export const INFURA_WEB_URL_2 =
