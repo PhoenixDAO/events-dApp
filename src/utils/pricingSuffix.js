@@ -1,33 +1,3 @@
-// export function pricingFormatter(num) {
-//     const lookup = [
-//       { value: 1, symbol: "" },
-//       { value: 1e3, symbol: "k" },
-//       { value: 1e6, symbol: "M" },
-//       { value: 1e9, symbol: "G" },
-//       { value: 1e12, symbol: "T" },
-//       { value: 1e15, symbol: "P" },
-//       { value: 1e18, symbol: "E" }
-//     ];
-//     if(typeof(num) === "string"){
-//         if (num == "FREE"){
-//             return "FREE"
-//         }
-//         // const number = num.split("PHNX")
-//         // const price = parseInt(number[0]);
-//         num = parseInt(num.split("PHNX")[0]);
-//         const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-//         var item = lookup.slice().reverse().find(function(item) {
-//             return num >= item.value;
-//         });
-//         num = item ? (num / item.value) .replace(rx, "$1") + item.symbol : "0";
-//         return num + " PHNX"
-//     }
-//     else{
-//         return null
-//     }
-//   }
-  
-
 export function pricingFormatter(num, currencyType){
     if(typeof(num) === "string" && currencyType == "$"){
         if (num == "" || num == "0" || num =="$0"){
@@ -37,11 +7,10 @@ export function pricingFormatter(num, currencyType){
                 num = num.split("$")
                 return formatting(num[1],currencyType);
             }
-            
             return formatting(num,currencyType);
     }
     else if (typeof(num) === "string" && currencyType == "PHNX"){
-        if (num == "FREE" || num == "0.00" || num=="0.00PHNX"){
+        if (num == "FREE" || num == "0.000000" || num=="0.000000PHNX"){
             return "Free"
         }
         // num = parseInt(num.split("PHNX")[0]);
@@ -55,7 +24,6 @@ export function pricingFormatter(num, currencyType){
         return null
     }
   }
-
   function formatting(num, type){
       if(type =="$"){
         if(num > 999 && num < 1000000){
@@ -70,16 +38,14 @@ export function pricingFormatter(num, currencyType){
             return type + (Math.round(((num/1000000000000)+ Number.EPSILON)* 10000)/10000) + 'T';
         }
         else if(num < 999){
-            return type+ (Math.round((num)* 1000)/1000); 
+            return type+ (Math.round((num)* 1000000)/1000000); 
         }
         else if(num > 999999999999999){
             return type + (Math.round(((num / 1000000000000000)+ Number.EPSILON)* 10000)/10000) + 'P'
-
         }
         else {
-            return type +  (Math.round(((num))* 10000)/10000);
+            return type +  (Math.round(((num))* 1000000)/1000000);
         }
-        
       }else{
         if(num > 999 && num < 1000000){
             return (Math.round(((num/1000)+ Number.EPSILON)* 10000)/10000) + 'K ' + type;
@@ -93,16 +59,13 @@ export function pricingFormatter(num, currencyType){
             return (Math.round(((num/1000000000000)+ Number.EPSILON)* 10000)/10000) + 'T ' + type;
         }
         else if(num < 999){
-            return (Math.round((num)* 10000)/10000) +" "+ type; 
+            return (Math.round((num)* 1000000)/1000000) +" "+ type; 
         }
         else if(num > 999999999999999){
             return (Math.round(((num / 1000000000000000)+ Number.EPSILON)* 10000)/10000)+'P '+ type;
-            
         }
         else {
-            return (Math.round(((num))* 10000)/10000) +" " + type;
+            return (Math.round(((num))* 1000000)/1000000) +" " + type;
         }
-        
       }
-   
   }

@@ -313,8 +313,8 @@ class Sidebar extends Component {
 							className="switch-img"
 							src="/images/icons/switch.svg"
 						/>
-						Switch to rinkeby or goerli network
-					</span>
+						Please switch to Ethereum or Matic Mainnet			
+								</span>
 				);
 			}
 		}
@@ -387,7 +387,7 @@ class Sidebar extends Component {
 			console.log(
 				"I am doing that",
 				this.props.networkId == GLOBAL_NETWORK_ID ||
-					this.props.networkId == GLOBAL_NETWORK_ID_2
+				this.props.networkId == GLOBAL_NETWORK_ID_2
 			);
 			return (
 				<React.Fragment>

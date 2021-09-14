@@ -194,7 +194,7 @@ class App extends Component {
 			}
 			return null;
 		} catch (err) {
-			console.log("err", err);
+			console.log("errmus", err);
 		}
 	}
 	async initializeContract() {
@@ -219,6 +219,8 @@ class App extends Component {
 				PhoenixDAO_Testnet_Token_ABI,
 				phoenixAddress
 			);
+			console.log("Phnx",PHNX)
+			console.log("events",openEvents)
 			this.setState({
 				eventsContract: openEvents,
 				phnxContract: PHNX,

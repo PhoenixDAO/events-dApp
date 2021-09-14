@@ -299,7 +299,7 @@ const EventCard = (props, context) => {
 	};
 
 	let phnx_price = event_data.prices.map((price) => {
-		return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(2);
+		return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
 	});
 	let dollar_price = event_data.prices[0] / 1000000;
 
@@ -452,6 +452,7 @@ const EventCard = (props, context) => {
 										"Free"
 									) : phnx_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
+											{console.log("phnx price",phnx_price)}
 											<p
 												title={phnx_price[0] + " PHNX"}
 												style={{

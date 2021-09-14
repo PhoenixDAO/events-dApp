@@ -573,6 +573,14 @@ div[class|="r-sticky"] .header3 {
 	left: 5%;
 	top: 25%;
 }
+@media screen and (max-width:1400px) {
+	.carousel-caption p {
+		position: absolute;
+		left: 5%;
+		top: 21%;
+	}
+	
+}
 
 .carousel-caption p:last-of-type {
 	margin-top: 70px;
