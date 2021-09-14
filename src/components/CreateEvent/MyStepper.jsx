@@ -117,7 +117,7 @@ const MyStepper = ({
 		termsAndConditions,
 	} = values;
 
-	console.log(values);
+	// console.log(values);
 
 	const steps = ["", "", "", ""];
 	function getFlamingSteps() {
@@ -606,70 +606,76 @@ const MyStepper = ({
 										<label className={classes.label}>
 											COVER IMAGE {index + 1}
 										</label>
-										<div style={{position:"relative"}}>
-										<TextField
-											variant="outlined"
-											id={`image${index}`}
-											name={`image${index}`}
-											fullWidth
-											disabled
-											value={image.name}
-											placeholder="Select Image"
-											{...(errors[`image${index}`] && {
-												error: true,
-												helperText:
-													errors[`image${index}`],
-											})}
-											InputProps={{
-												endAdornment: (
-													<Button
-														component="label"
-														className={
-															classes.imageSelectBtnStyle
-														}
-													>
-														Browse
-														<input
-															type="file"
-															hidden
-															multiple={false}
-															accept="image/*"
-															onChange={(e) => {
-																handleImageInput(
-																	e,
-																	index
-																);
-															}}
-														/>
-													</Button>
-												),
-											}}
-										/>
-											
-												{index === 0 ? (
-											<p
-												className={
-													classes.imageMaxStyle
-												}
-											>
-												Max: 3 Pictures. Not greater
-												than 5MB (Recommended 1000px *
-												1000px)
-											</p>
-										) : (
-											<button
-												className={classes.deleteImageButton}
-												disabled={index === 0}
-												onClick={() => {
-													handelRemoveImage(index);
+										<div style={{ position: "relative" }}>
+											<TextField
+												variant="outlined"
+												id={`image${index}`}
+												name={`image${index}`}
+												fullWidth
+												disabled
+												value={image.name}
+												placeholder="Select Image"
+												{...(errors[
+													`image${index}`
+												] && {
+													error: true,
+													helperText:
+														errors[`image${index}`],
+												})}
+												InputProps={{
+													endAdornment: (
+														<Button
+															component="label"
+															className={
+																classes.imageSelectBtnStyle
+															}
+														>
+															Browse
+															<input
+																type="file"
+																hidden
+																multiple={false}
+																accept="image/*"
+																onChange={(
+																	e
+																) => {
+																	handleImageInput(
+																		e,
+																		index
+																	);
+																}}
+															/>
+														</Button>
+													),
 												}}
-											>
-												x
-											</button>
-										)}
-										</div>
+											/>
 
-								
+											{index === 0 ? (
+												<p
+													className={
+														classes.imageMaxStyle
+													}
+												>
+													Max: 3 Pictures. Not greater
+													than 5MB (Recommended 1000px
+													* 1000px)
+												</p>
+											) : (
+												<button
+													className={
+														classes.deleteImageButton
+													}
+													disabled={index === 0}
+													onClick={() => {
+														handelRemoveImage(
+															index
+														);
+													}}
+												>
+													x
+												</button>
+											)}
+										</div>
 									</div>
 								);
 							})}
@@ -1001,6 +1007,9 @@ const MyStepper = ({
 																</Button>
 															</InputAdornment>
 														),
+														inputProps: {
+															min: 1,
+														},
 													}}
 													value={
 														ticketCategories[
@@ -1217,10 +1226,10 @@ const MyStepper = ({
 															type="number"
 															variant="outlined"
 															InputProps={{
-															inputProps:{
-																min:"0",
-																max:"100"
-															},
+																inputProps: {
+																	min: "0",
+																	max: "100",
+																},
 																startAdornment:
 																	(
 																		<InputAdornment position="start">
@@ -1322,6 +1331,9 @@ const MyStepper = ({
 																			</Button>
 																		</InputAdornment>
 																	),
+																inputProps: {
+																	min: 1,
+																},
 															}}
 															value={
 																ticketCategories[
@@ -1569,6 +1581,7 @@ const MyStepper = ({
 								</FormHelperText>
 							</FormControl>
 
+							<br />
 							<br />
 
 							<FormControl
@@ -1853,7 +1866,11 @@ const MyStepper = ({
 								}
 								startIcon={
 									activeStep === steps.length - 1 ? (
-										<img src={publishIcon} className={classes.publishIcon} atl="publish" />
+										<img
+											src={publishIcon}
+											className={classes.publishIcon}
+											atl="publish"
+										/>
 									) : null
 								}
 							>
