@@ -128,6 +128,7 @@ class App extends Component {
 			open2: false,
 			eventsAddress: "",
 			openWalletConnected: false,
+			date2: null,
 		};
 		this.myRef = React.createRef();
 
@@ -431,7 +432,8 @@ class App extends Component {
 		name,
 		phnx_price,
 		dollar_price,
-		time
+		time,
+		date
 	) => {
 		let chainId = await this.getNetworkId();
 		if (
@@ -454,6 +456,7 @@ class App extends Component {
 					phnx_price,
 					dollar_price,
 					time,
+					date2: date,
 				},
 				() => this.buy()
 			);

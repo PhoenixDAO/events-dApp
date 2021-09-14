@@ -893,6 +893,9 @@ class EventPage extends Component {
 	};
 
 	inquire = async () => {
+		let event_data = this.state.blockChainEvent;
+		let date2 = new Date(parseInt(event_data.time, 10) * 1000);
+
 		let balance = await this.props.phnxContract.methods
 			.totalSupply()
 			.call();
@@ -934,13 +937,14 @@ class EventPage extends Component {
 						this.state.buyticket,
 						this.state.approve,
 						this.state.eventTime,
-						this.state.eventDate,
+						date2, // this.state.eventDate,
 						this.state.eventEndDate,
 						this.state.image,
 						this.state.blockChainEvent.name,
 						this.state.phnx_price,
 						this.state.dollar_price,
-						time
+						time,
+						date2
 					);
 				}
 			}
@@ -1253,6 +1257,7 @@ class EventPage extends Component {
 								eventTitle={event_data.name}
 								date={event_date}
 								time={time}
+								date2={date}
 								buy={this.inquire}
 								buttonText={buttonText}
 								eventTime={this.state.eventTime}
