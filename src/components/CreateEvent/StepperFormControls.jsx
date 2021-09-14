@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
 import { pricingFormatter } from "../../utils/pricingSuffix";
+import Geonames from "geonames.js";
+import PropTypes from "prop-types";
+
+const geonames = new Geonames({
+	username: "thalesandrade",
+	lan: "en",
+	encoding: "JSON",
+});
 
 const PostContactForm = async (values, successCallback, errorCallback) => {
 	// do stuff
@@ -410,12 +418,24 @@ export const useFormControls = () => {
 	const handleGeoValues = (e) => {
 		const { name, value } = e;
 		if (name === "country") {
-			setValues({
-				...values,
-				[name]: value,
-				state: { id: "", name: "" },
-				city: { id: "", name: "" },
-			});
+			geonames.children({ geonameId: value.id }).then((res) => {
+				if (res.totalResultsCount){
+					setValues({
+						...values,
+						[name]: value,
+						state: { id: "", name: "" },
+						city: { id: "", name: "" },
+					});
+				}
+				else{
+					setValues({...values,
+						[name]: value,
+						state: { id: "", name: " " },
+						city: { id: "", name: " " },
+					})
+				}
+		  });
+			
 		} else if (name === "state") {
 			setValues({
 				...values,

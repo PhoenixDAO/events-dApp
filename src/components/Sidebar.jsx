@@ -576,12 +576,7 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-											<InfoOutlined
-												style={{
-													color: "#73727D",
-													fill: "#73727D",
-												}}
-											/>
+											{Works}
 										</span>{" "}
 										<span className="toggleHidden">
 											How It Works
