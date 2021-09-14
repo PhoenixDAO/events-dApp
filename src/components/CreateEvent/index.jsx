@@ -136,11 +136,12 @@ class CreateEvent extends Component {
 	}
 
 	async getEventURL() {
-		let eventCount = await await this.props.eventsContract.methods
+		let eventCount = await this.props.eventsContract.methods
 			.getEventsCount()
 			.call();
+		eventCount = Number(eventCount) + 1;
 		console.log("eventCount", eventCount);
-		// eventCount = Number(eventCount) + 1;
+
 		var base_url = window.location.origin;
 		const shareUrl = `${base_url}/event/${eventCount}`;
 		this.setState({ shareUrl: shareUrl });
@@ -262,6 +263,7 @@ class CreateEvent extends Component {
 				});
 
 				this.onFlamingStepsChange();
+				await this.getEventURL();
 
 				// ipfs.get(hash[0].hash).then((file) => {
 				// 	let data = JSON.parse(file[0].content.toString());
@@ -348,11 +350,10 @@ class CreateEvent extends Component {
 										}
 									);
 									this.onFlamingStepsChange();
-									await this.getEventURL();
 									clearInterval(intervalVar);
 									clearStateCb();
 								}
-							}, 5000);
+							}, 2000);
 						}
 					})
 					.then(async (receipt) => {
