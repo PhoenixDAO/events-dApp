@@ -80,6 +80,7 @@ const Terms = (props) => {
 		});
 	}
 	return (
+		// test comment
 		<div className={`event-page-wrapper ${classes.termsPage}`}>
 			<Header title="Terms and Conditions" phnxButton={true} />
 			<Grid container className={classes.gridContainer}>
