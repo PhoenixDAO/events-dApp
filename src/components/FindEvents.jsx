@@ -440,6 +440,62 @@ class FindEvents extends Component {
 		});
 	};
 
+	success(pos) {
+		var crd = pos.coords;
+
+		console.log("Your current position is:");
+		console.log(`Latitude : ${crd.latitude}`);
+		console.log(`Longitude: ${crd.longitude}`);
+		console.log(`More or less ${crd.accuracy} meters.`);
+	}
+
+	errors(err) {
+		console.warn(`ERROR(${err.code}): ${err.message}`);
+	}
+
+	geoFindMe = async () => {
+		//AIzaSyDzm4lNQsRTjvYj5ltMKDVLtc4plnapEhs
+
+		//location
+		if (navigator.geolocation) {
+			navigator.permissions
+				.query({ name: "geolocation" })
+				.then(function (result) {
+					if (result.state === "granted") {
+						console.log(result.state);
+						//If granted then you can directly call your function here
+						navigator.geolocation.getCurrentPosition(function (
+							pos
+						) {
+							var crd = pos.coords;
+							console.log("pos", pos);
+							console.log("Your current position is:");
+							console.log(`Latitude : ${crd.latitude}`);
+							console.log(`Longitude: ${crd.longitude}`);
+						});
+					} else if (result.state === "prompt") {
+						navigator.geolocation.getCurrentPosition(function (
+							pos
+						) {
+							var crd = pos.coords;
+							console.log("pos", pos);
+							console.log("Your current position is:");
+							console.log(`Latitude : ${crd.latitude}`);
+							console.log(`Longitude: ${crd.longitude}`);
+						});
+					} else if (result.state === "denied") {
+						console.log("user denied");
+						//If denied then you have to show instructions to enable location
+					}
+					result.onchange = function () {
+						console.log(result.state);
+					};
+				});
+		} else {
+			alert("Sorry Not available!");
+		}
+	};
+
 	geoFindMe = async () => {
 		try {
 			const get = await axios.get(`http://ip-api.com/json`);
@@ -769,7 +825,6 @@ class FindEvents extends Component {
 			body = (
 				<EmptyState
 					text="No events are available😔. Want to be the first?"
-
 					btnText="Create an Event"
 					url="/createevent"
 				/>
@@ -1137,7 +1192,6 @@ class FindEvents extends Component {
 
 						{body}
 
-						
 						{/* <a
 							href="https://www.travala.com/?ref=phoenixdao"
 							target="_blank"

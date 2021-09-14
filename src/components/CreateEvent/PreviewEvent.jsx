@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	root: {
 		maxWidth: 365,
-		width:"100%",
+		width: "100%",
 		"& .MuiCardContent-root": {
 			padding: "16px 16px 0px",
 		},
@@ -284,7 +284,6 @@ export default function PreviewEvent({ fields, activeStep }) {
 									variant="body1"
 									component="h2"
 								>
-									{console.log("token in preview event card: ",token)}
 									{!token ? (
 										"Free"
 									) : ticketCategories.length === 1 ? (
@@ -468,7 +467,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 						location={
 							eventType === "physical" ? eventLocation : eventLink
 						}
-						token={token?token:false}
+						token={token ? token : false}
 						eventTopic={eventTopic ? eventTopic : "music"}
 						eventTime={eventTime}
 						eventDate={eventDate}

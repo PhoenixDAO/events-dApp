@@ -136,17 +136,18 @@ class CreateEvent extends Component {
 	}
 
 	async getEventURL() {
-		let eventCount = await await this.props.eventsContract.methods
+		let eventCount = await this.props.eventsContract.methods
 			.getEventsCount()
 			.call();
+		eventCount = Number(eventCount) + 1;
 		console.log("eventCount", eventCount);
-		// eventCount = Number(eventCount) + 1;
+
 		var base_url = window.location.origin;
 		const shareUrl = `${base_url}/event/${eventCount}`;
 		this.setState({ shareUrl: shareUrl });
 	}
 
-	handleCreateEvent = async () => {
+	handleCreateEvent = async (clearStateCb) => {
 		console.log("handleCreateEvent111", this.state.fields);
 		this.stageUpdater(90);
 
@@ -203,7 +204,8 @@ class CreateEvent extends Component {
 
 		for (var i = 0; i < ticketCategories.length; i++) {
 			categories.push(ticketCategories[i].ticketName);
-			prices.push(ticketCategories[i].dollarPrice * 1000000);
+			prices.push((ticketCategories[i].dollarPrice * 1000000).toString());
+
 			tktQntySold.push("0");
 
 			ticketLimited.push(
@@ -226,6 +228,8 @@ class CreateEvent extends Component {
 						: ticketCategories[i].noOfTickets
 				);
 		}
+
+		console.log("prices", prices);
 
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({
@@ -262,6 +266,7 @@ class CreateEvent extends Component {
 				});
 
 				this.onFlamingStepsChange();
+				await this.getEventURL();
 
 				// ipfs.get(hash[0].hash).then((file) => {
 				// 	let data = JSON.parse(file[0].content.toString());
@@ -326,7 +331,7 @@ class CreateEvent extends Component {
 							const web3 = new Web3(infura);
 
 							let intervalVar = setInterval(async () => {
-								console.log("web3.eth", web3.eth);
+								// console.log("web3.eth", web3.eth);
 								let receipt =
 									await web3.eth.getTransactionReceipt(
 										txhash
@@ -348,10 +353,10 @@ class CreateEvent extends Component {
 										}
 									);
 									this.onFlamingStepsChange();
-									await this.getEventURL();
 									clearInterval(intervalVar);
+									clearStateCb();
 								}
-							}, 5000);
+							}, 2000);
 						}
 					})
 					.then(async (receipt) => {

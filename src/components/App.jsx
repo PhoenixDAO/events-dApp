@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { drizzleConnect } from "drizzle-react";
 import { ToastContainer, toast } from "react-toastify";
 import Web3 from "web3";
+import TravallaBannerFooter from "./common/TravallaBannerFooter";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "startbootstrap-simple-sidebar/css/simple-sidebar.css";
@@ -69,7 +70,6 @@ import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
 import IdentityForm from "./common/AvatarSelector/identityform";
 import DialogueBox from "./common/DialogueBox";
-import TravallaBannerFooter from "./common/TravallaBannerFooter";
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -535,6 +535,9 @@ class App extends Component {
 								pauseOnHover: true,
 							}
 						);
+						this.setState({
+							purchased: false,
+						});
 					}
 				});
 			this.setState({ afterApprove: false });
@@ -1539,12 +1542,17 @@ class App extends Component {
 									}
 									handleClose={this.handleSnackbarClose}
 								/> */}
-								<Snackbar1
+								<Snackbar
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "center",
+									}}
 									open={this.state.openSnackbarForNoMetaMask}
 									message={this.state.errorMessage}
-									handleClose={() =>
-										this.handleSnackbarClose(1)
-									}
+									onClose={() => this.handleSnackbarClose(1)}
+									autoHideDuration={3000}
+									key={"top" + "center"}
+									className="snackbar"
 								/>
 								<Snackbar2
 									style={{ zIndex: "9999999 !important" }}
@@ -1594,12 +1602,22 @@ class App extends Component {
 							}}
 							open={this.state.openWalletConnected}
 							onClose={this.handleOpenWalletConnected}
-							message="Wallet connected"
+							message={
+								<span style={{ color: "#413AE2" }}>
+									{" "}
+									<img
+										style={{ width: "20px" }}
+										src="/images/check-wallet.svg"
+										alt=""
+									/>{" "}
+									Wallet connected
+								</span>
+							}
 							autoHideDuration={3000}
 							key={"top" + "center"}
 							className="snackbar"
 						/>
-						<Switch>
+							<Switch>
 							<Route
 								exact
 								path="/"

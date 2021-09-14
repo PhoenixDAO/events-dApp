@@ -87,15 +87,6 @@ export const useFormControls = () => {
 		fetchData();
 	}, []);
 
-	// useEffect(() => {
-	// 	if (
-	// 		values.ticketCategories === undefined ||
-	// 		values.ticketCategories.length == 0
-	// 	) {
-	// 		handleAddAnotherCategory();
-	// 	}
-	// }, [values.ticketCategories]);
-
 	useEffect(() => {
 		if (values.ticketCategories.length == 1) {
 			setValues({
@@ -104,6 +95,30 @@ export const useFormControls = () => {
 			});
 		}
 	}, [values.ticketCategories]);
+
+	useEffect(() => {
+		const img = values.images;
+		const tkt = values.ticketCategories;
+		tkt[0] = {
+			ticketName: "",
+			dollarPrice: "",
+			phnxPrice: "",
+			ticketAvailability: "unlimited",
+			noOfTickets: "",
+			isShown: false,
+		};
+		img[0] = { name: "" };
+		setValues({
+			...initialFormValues,
+			images: img,
+		});
+	}, []);
+
+	const clearState = () => {
+		// setValues({
+		// 	...initialFormValues,
+		// });
+	};
 
 	const isValidDate = (d) => {
 		return d instanceof Date && !isNaN(d);
@@ -935,5 +950,6 @@ export const useFormControls = () => {
 		handleAddAnotherCategory,
 		handleDeleteTicketCategory,
 		handleEditTicketCategory,
+		clearState,
 	};
 };

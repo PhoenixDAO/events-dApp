@@ -403,7 +403,8 @@ class EventPreviewPage extends Component {
 																style={{
 																	fontFamily:
 																		"'Aeonik', sans-serif",
-																	maxWidth:"170px"
+																	maxWidth:
+																		"170px",
 																}}
 															>
 																<span
@@ -424,11 +425,10 @@ class EventPreviewPage extends Component {
 
 									<div className={classes.eventinfo}>
 										<span className={classes.PhnxPrice}>
-										{console.log("token in event preview:", this.props.token)}
-										{!(this.props.token) ? (
-										"Free"
-									) : this.props.ticketCategories
-												.length > 0
+											{!this.props.token
+												? "Free"
+												: this.props.ticketCategories
+														.length > 0
 												? pricingFormatter(
 														this.props
 															.ticketCategories[
