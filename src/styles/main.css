@@ -581,7 +581,7 @@ div[class|="r-sticky"] .header3 {
 	bottom: 7em !important ;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 780px) {
 	.carousel-caption p:last-of-type {
 		margin-top: 45px;
 	}

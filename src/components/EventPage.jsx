@@ -57,7 +57,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
+import GetGraphApi from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
@@ -158,7 +158,7 @@ const styles = (theme) => ({
 			paddingRight: "25px",
 		},
 		[theme.breakpoints.down("xs")]: {
-			"&. MuiOutlinedInput-root":{
+			"&. MuiOutlinedInput-root": {
 				minWidth: "116px",
 				width: "100%",
 			},
@@ -186,7 +186,7 @@ const styles = (theme) => ({
 		justifyContent: "center",
 		textAlign: "center",
 		overflow: "hidden",
-		wordBreak:"break-word"
+		wordBreak: "break-word",
 	},
 	organizerDescription: {
 		justifyContent: "center",
@@ -241,11 +241,6 @@ class EventPage extends Component {
 		// } catch (e) { }
 		super(props);
 		// this.contracts = context.drizzle.contracts;
-		console.log(
-			"contracts in eventsPage",
-			props.eventsContract,
-			props.phnxContract
-		);
 		this.account = this.props.accounts[0];
 		this.state = {
 			blockChainEventLoaded: false,
@@ -295,6 +290,7 @@ class EventPage extends Component {
 			allowBuySnackbar: false,
 			errorMessage: "",
 			SnackbarMessage: "",
+			locationEvent: "",
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -403,24 +399,18 @@ class EventPage extends Component {
 						oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 					});
 					this.updateIPFS();
-					const networkId = await getNetworkId()
+					const networkId = await getNetworkId();
 					if (networkId) {
-						console.log(
-							"graphData",
-							graphEvents.data.data.events[0].owner
-						);
 						await updateEventViews({
 							eventId: graphEvents.data.data.events[0].eventId,
 							address: graphEvents.data.data.events[0].owner,
-							networkId: networkId,
+							networkId: this.props.networkId,
 						});
 
 						const userDetails = await getUser({
 							address: graphEvents.data.data.events[0].owner,
-							networkId: networkId,
+							networkId: this.props.networkId,
 						});
-
-						console.log("userDEtails in event page", userDetails);
 						if (!userDetails.error) {
 							this.setState({
 								organizerDetails:
@@ -438,7 +428,6 @@ class EventPage extends Component {
 				}
 			})
 			.catch((err) => {
-				console.log("Error", err);
 				this.setState({
 					blockChainEvent: {},
 					blockChainEventLoaded: true,
@@ -604,7 +593,6 @@ class EventPage extends Component {
 			this.state.loading === false &&
 			this.state.blockChainEvent
 		) {
-			console.log("Iam in update");
 			this.setState(
 				{
 					loading: true,
@@ -655,12 +643,12 @@ class EventPage extends Component {
 	priceCalculation = (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
 		let phnx_price = event_data.prices.map((price) => {
-			return (
-				(price/1000000) / this.state.PhoenixDAO_market.usd
-			).toFixed(2);
+			return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
+				2
+			);
 		});
 
-		let dollar_price = event_data.prices[categoryIndex] /1000000;
+		let dollar_price = event_data.prices[categoryIndex] / 1000000;
 		let priceInPhnx = event_data.token
 			? phnx_price[categoryIndex] + "PHNX"
 			: "FREE";
@@ -686,7 +674,6 @@ class EventPage extends Component {
 				</p>
 			);
 		if (this.state.description !== null)
-			// console.log("desc", this.state.eventDescription);
 			description = (
 				<RichTextEditor
 					readOnly
@@ -717,11 +704,9 @@ class EventPage extends Component {
 			});
 		} else {
 			// this.setState({ open2: true });
-			console.log(this.state.oneTimeBuy);
 			if (this.state.oneTimeBuy) {
 				let buyers = this.state.soldTicket;
 				const account = this.props.accounts[0];
-				console.log("userExists", this.userExists(buyers, account));
 				if (this.userExists(buyers, account)) {
 					// alert("One time buy");
 					this.setState({
@@ -759,8 +744,6 @@ class EventPage extends Component {
 		let a = await this.props.phnxContract.methods
 			.allowance(this.account, this.props.eventsAddress)
 			.call();
-		console.log("allowance", a);
-
 		return a;
 	};
 
@@ -793,7 +776,6 @@ class EventPage extends Component {
 				this.onConfirmation(confirmationNumber, receipt)
 			)
 			.on("error", (error) => {
-				console.log("asd error in giveApproval function", error);
 				if (error !== null) {
 					this.setState({ disabledBuying: false });
 					txerror = error;
@@ -808,10 +790,6 @@ class EventPage extends Component {
 			});
 	};
 	onConfirmation(confirmationNumber, receipt) {
-		console.log(
-			"asd in onConfirmation confirmationNumber",
-			confirmationNumber
-		);
 
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
@@ -845,7 +823,7 @@ class EventPage extends Component {
 			minute: "2-digit",
 		});
 		const geoFindUser = await this.geoFindMe();
-
+console.log("selectedIndex",this.state.selectedCategoryIndex)
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
@@ -947,8 +925,6 @@ class EventPage extends Component {
 
 	provideImage = (userDetails) => {
 		if (Object.keys(userDetails).length > 0) {
-			// console.log("userdetailsss", this.props.userDetails);
-			// console.log("", this.props.userDetails);
 			const avatarCustom = userDetails.avatarCustom;
 			const avatarId = userDetails.avatarNumber;
 			const avatar = userDetails.avatar;
@@ -971,8 +947,6 @@ class EventPage extends Component {
 
 	renderImage = () => {
 		if (this.state.avatarCustom) {
-			// return <image
-			// console.log("avatar ipfs image", this.state.avatar);
 			return (
 				<img
 					src={this.state.avatar}
@@ -981,7 +955,7 @@ class EventPage extends Component {
 						width: "60px",
 						borderRadius: "50%",
 						height: "60px",
-						objectFit:"cover",
+						objectFit: "cover",
 					}}
 				/>
 			);
@@ -1003,13 +977,6 @@ class EventPage extends Component {
 	allowBuy = () => {
 		if (Object.keys(this.state.blockChainEvent).length > 0) {
 			let index = this.state.selectedCategoryIndex;
-			console.log(
-				"test",
-				this.state.blockChainEvent.catTktQuantity[index] != 0,
-				parseInt(this.state.blockChainEvent.catTktQuantitySold[index]),
-				parseInt(this.state.blockChainEvent.catTktQuantity[index])
-			);
-
 			if (
 				Number(this.state.blockChainEvent.time) <
 				new Date().getTime() / 1000
@@ -1040,15 +1007,21 @@ class EventPage extends Component {
 						"All tickets have been sold for this category",
 				});
 			} else {
-				console.log(
-					"allow buy in else",
-					Number(this.state.blockChainEvent.time),
-					moment().unix(),
-					this.state.blockChainEvent.tktTotalQuantitySold,
-					this.state.blockChainEvent.tktTotalQuantity
-				);
 				return true;
 			}
+		}
+	};
+
+	checkUserTicketLocation = async () => {
+		const eventId = this.props.match.params.id;
+		const users = await generateBuyerArr(eventId);
+		console.log("All userss", users);
+		let event_data = this.state.blockChainEvent;
+		console.log("event data", event_data);
+		if (users.includes(this.props.accounts[0])) {
+			this.setState({
+				locationEvent: event_data.location,
+			});
 		}
 	};
 
@@ -1057,18 +1030,13 @@ class EventPage extends Component {
 
 		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
-			console.log(
-				"render blockchain event",
-				Object.keys(this.state.blockChainEvent).length
-			);
 			if (
 				this.state.blockChainEvent === undefined ||
 				Object.keys(this.state.blockChainEvent).length === 0
 			) {
-				console.log("hg");
 				body = (
 					// <div className="text-center mt-5">
-					// 	<span role="img" aria-label="unicorn">
+					// 	<span role="img" aria-label="uncorn">
 					// 		🦄
 					// 	</span>{" "}
 					// 	PhoenixDAO Event not found
@@ -1084,7 +1052,9 @@ class EventPage extends Component {
 				// to be changed
 				let image = this.getImage();
 				let description = this.getDescription();
-				let locations = event_data.location;
+				let locations = event_data.onsite
+					? event_data.location
+					: this.state.locationEvent;
 				let buttonText = event_data.token
 					? " Buy Ticket"
 					: " Get Ticket";
@@ -1095,7 +1065,6 @@ class EventPage extends Component {
 				// 	event_data.prices[this.state.selectedCategoryIndex]
 				// );
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
-				console.log("phnx prices", event_data);
 
 				let max_seats = event_data.tktLimited[
 					this.state.selectedCategoryIndex
@@ -1166,7 +1135,6 @@ class EventPage extends Component {
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(" ");
 				//Friendly URL Title
-				console.log("event_data in eventPage", event_data);
 				let rawTitle = event_data.name;
 				var titleRemovedSpaces = rawTitle;
 				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
@@ -1184,9 +1152,6 @@ class EventPage extends Component {
 				// event_data.categories
 				let ticketPrices =
 					event_data.token && event_data.categories.length > 1;
-
-				console.log("event_data.categories", event_data.categories);
-
 				if (this.props.match.params.id == event_data.eventId) {
 					body = (
 						<Grid>
@@ -1276,12 +1241,6 @@ class EventPage extends Component {
 												deadline={date}
 												event_unix={event_data.time}
 											/>
-											{console.log(
-												"deadline date is: ",
-												date,
-												"eventData time is: ",
-												event_data.time
-											)}
 										</Grid>
 									</Grid>
 									<Grid
@@ -1311,8 +1270,7 @@ class EventPage extends Component {
 															.selectedCategoryIndex
 													}
 													onChange={
-														this
-															.handleCategoryChange
+														this.handleCategoryChange
 													}
 													inputProps={{
 														name: "age",
@@ -1329,7 +1287,9 @@ class EventPage extends Component {
 															horizontal: "left",
 														},
 													}}
-													className={classes.selectInput}
+													className={
+														classes.selectInput
+													}
 												>
 													{event_data.categories
 														.length > 1
@@ -1396,9 +1356,6 @@ class EventPage extends Component {
 												{pricingFormatter(
 													this.state.dollar_price,
 													"$"
-												)}
-												{console.log(
-													"dollar price ",this.state.dollar_price, " pheonix",this.state.phnx_price
 												)}
 											</div>
 										</div>
@@ -1486,10 +1443,6 @@ class EventPage extends Component {
 										</h2>
 										{this.state.load && <Loading />}
 										<Grid container lg={12}>
-											{console.log(
-												"sold ticket",
-												this.state.soldTicket
-											)}
 											{this.state.pageTransactions.map(
 												(sold, index) => (
 													<p
@@ -1820,8 +1773,7 @@ class EventPage extends Component {
 	async componentDidMount() {
 		let buyers = await generateBuyerArr(this.props.match.params.id);
 		this.setState({ soldTicket: buyers });
-		this.loadEventFromBlockchain();
-		console.log("count", this.props.accounts[0]);
+		await this.loadEventFromBlockchain();
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
@@ -1859,12 +1811,6 @@ class EventPage extends Component {
 		// console.log("this.props.userDetails", this.props.userDetails);
 		// console.log("prevProps.userDetails", prevProps.userDetails);
 		if (this.props.purchased !== prevProps.purchased) {
-			console.log(
-				"thisprops",
-				this.props.purchased,
-				"",
-				prevProps.purchased
-			);
 			this.loadEventFromBlockchain();
 			let buyers = await generateBuyerArr(this.props.match.params.id);
 			this.setState({ soldTicket: buyers });

@@ -74,11 +74,11 @@ class Sidebar extends Component {
 		}
 	}
 	handleOpenWallet = () => {
-        this.setState({ openWallet: true });
-    };
-    handleCloseWallet = () => {
-        this.setState({ openWallet: false });
-    };
+		this.setState({ openWallet: true });
+	};
+	handleCloseWallet = () => {
+		this.setState({ openWallet: false });
+	};
 	sidebarClick() {
 		// this.toggleSidebarClass(true);
 		var isActive = this.context.router.route.location.pathname;
@@ -222,7 +222,11 @@ class Sidebar extends Component {
 			return (
 				<img
 					src={this.state.avatar}
-					style={{ width: "40px", height: "40px", objectFit:"cover" }}
+					style={{
+						width: "40px",
+						height: "40px",
+						objectFit: "cover",
+					}}
 					className="bird"
 				/>
 			);
@@ -285,6 +289,38 @@ class Sidebar extends Component {
 		}
 	};
 
+	getWalletError = () => {
+		let message = "";
+		if (!window.ethereum || !window.ethereum.isMetaMask) {
+			message = <span>Please install Metamask</span>;
+		} else {
+			if (this.state.networkId) {
+				message = (
+					<span
+						className="sidebarOpenWallet"
+						onClick={this.handleOpenWallet}
+					>
+						<img
+							className="switch-img"
+							src="/images/icons/switch.svg"
+						/>
+						Connect Wallet
+					</span>
+				);
+			} else {
+				message = (
+					<span>
+						<img
+							className="switch-img"
+							src="/images/icons/switch.svg"
+						/>
+						Switch to rinkeby or goerli network
+					</span>
+				);
+			}
+		}
+		return message;
+	};
 	render() {
 		let user = (
 			<div>
@@ -292,26 +328,37 @@ class Sidebar extends Component {
 					<i className="fas fa-plug"></i>
 				</div> */}
 
-				<p className="small connection" style={{display:"flex", alignItems:"start"}}>
-					
+				<p
+					className="small connection"
+					style={{ display: "flex", alignItems: "start" }}
+				>
 					<span className="toggleHidden">
-					{this.state.loading ? null : this.state.networkId ? (
-                            <span className="sidebarOpenWallet" onClick={this.handleOpenWallet}>
-                                <img
-                                    className="switch-img"
-                                    src="/images/icons/switch.svg"
-                                />
-                                Connect Wallet
-                            </span>
-                        ) : (
-                            <span>
-                                <img
-                                    className="switch-img"
-                                    src="/images/icons/switch.svg"
-                                />
-                                Switch to rinkeby or goerli network
-                            </span>
-                        )}
+						{this.state.loading ? null : !window.ethereum ||
+						  !window.ethereum.isMetaMask ? (
+							<span>
+								{console.log("Metamask not connected")}
+								Metamask not connected{" "}
+							</span>
+						) : this.state.networkId ? (
+							<span
+								className="sidebarOpenWallet"
+								onClick={this.handleOpenWallet}
+							>
+								<img
+									className="switch-img"
+									src="/images/icons/switch.svg"
+								/>
+								Connect Wallet
+							</span>
+						) : (
+							<span>
+								<img
+									className="switch-img"
+									src="/images/icons/switch.svg"
+								/>
+								Switch to rinkeby or goerli network
+							</span>
+						)}
 					</span>
 				</p>
 			</div>
@@ -421,8 +468,11 @@ class Sidebar extends Component {
 									>
 										<span className="iconMargin">
 											<Dashboard
-												style={{ color: "#73727D" ,fontSize:"20px"}}
-												/>
+												style={{
+													color: "#73727D",
+													fontSize: "20px",
+												}}
+											/>
 										</span>{" "}
 										<span className="toggleHidden">
 											Dashboard
@@ -526,12 +576,7 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-											<InfoOutlined
-												style={{
-													color: "#73727D",
-													fill: "#73727D",
-												}}
-											/>
+											{Works}
 										</span>{" "}
 										<span className="toggleHidden">
 											How It Works
@@ -600,7 +645,10 @@ class Sidebar extends Component {
 										title="Telegram"
 										href="https://t.me/PHNXDAO"
 									>
-										<img src="/images/icons/telegram.svg" alt="telegram"/>
+										<img
+											src="/images/icons/telegram.svg"
+											alt="telegram"
+										/>
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -610,7 +658,10 @@ class Sidebar extends Component {
 										title="Twitter"
 										href="https://twitter.com/phnxdao"
 									>
-										<img src="/images/icons/twitter.svg" alt="twitter"/>
+										<img
+											src="/images/icons/twitter.svg"
+											alt="twitter"
+										/>
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -620,20 +671,23 @@ class Sidebar extends Component {
 										title="GitHub"
 										href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
 									>
-										<img src="/images/icons/github.svg" alt="github" />
+										<img
+											src="/images/icons/github.svg"
+											alt="github"
+										/>
 									</a>
 								</div>
 							</ul>
 						</div>
 					</div>
 					<DialogueBox
-                        open={this.state.openWallet}
-                        handleClose={this.handleCloseWallet}
-                        maxWidth="xs"
-                    >
-                        {/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}
-                        <Wallet />
-                    </DialogueBox>
+						open={this.state.openWallet}
+						handleClose={this.handleCloseWallet}
+						maxWidth="xs"
+					>
+						{/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}
+						<Wallet />
+					</DialogueBox>
 				</React.Fragment>
 			);
 		} else
@@ -689,7 +743,10 @@ class Sidebar extends Component {
 									>
 										<span className="iconMargin">
 											<Dashboard
-												style={{ color: "#73727D" ,fontSize:"20px"}}
+												style={{
+													color: "#73727D",
+													fontSize: "20px",
+												}}
 											/>
 										</span>{" "}
 										<span className="toggleHidden">
@@ -871,8 +928,11 @@ class Sidebar extends Component {
 									>
 										<span className="iconMargin">
 											<Favorite
-												style={{ color: "#73727D" ,fontSize:"20px"}}
-												/>
+												style={{
+													color: "#73727D",
+													fontSize: "20px",
+												}}
+											/>
 										</span>
 										{"  "}
 										<span className="toggleHidden">
