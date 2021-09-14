@@ -454,52 +454,56 @@ class FindEvents extends Component {
 	}
 
 	geoFindMe = async () => {
+		//AIzaSyDzm4lNQsRTjvYj5ltMKDVLtc4plnapEhs
+
+		//location
+		if (navigator.geolocation) {
+			navigator.permissions
+				.query({ name: "geolocation" })
+				.then(function (result) {
+					if (result.state === "granted") {
+						console.log(result.state);
+						//If granted then you can directly call your function here
+						navigator.geolocation.getCurrentPosition(function (
+							pos
+						) {
+							var crd = pos.coords;
+							console.log("pos", pos);
+							console.log("Your current position is:");
+							console.log(`Latitude : ${crd.latitude}`);
+							console.log(`Longitude: ${crd.longitude}`);
+						});
+					} else if (result.state === "prompt") {
+						navigator.geolocation.getCurrentPosition(function (
+							pos
+						) {
+							var crd = pos.coords;
+							console.log("pos", pos);
+							console.log("Your current position is:");
+							console.log(`Latitude : ${crd.latitude}`);
+							console.log(`Longitude: ${crd.longitude}`);
+						});
+					} else if (result.state === "denied") {
+						console.log("user denied");
+						//If denied then you have to show instructions to enable location
+					}
+					result.onchange = function () {
+						console.log(result.state);
+					};
+				});
+		} else {
+			alert("Sorry Not available!");
+		}
+	};
+
+	geoFindMe = async () => {
 		try {
-			// const get = await axios.get(`http://ip-api.com/json`);
-			// console.log("Get location", get);
-			// if (!get.data) {
-			// 	return { cityName: "Unknown", stateName: "Unknown" };
-			// }
-			// return { cityName: get.data.city, stateName: get.data.regionName };
-
-			//AIzaSyDzm4lNQsRTjvYj5ltMKDVLtc4plnapEhs
-
-			//location
-			if (navigator.geolocation) {
-				navigator.permissions
-					.query({ name: "geolocation" })
-					.then(function (result) {
-						if (result.state === "granted") {
-							console.log(result.state);
-							//If granted then you can directly call your function here
-							navigator.geolocation.getCurrentPosition(function (
-								pos
-							) {
-								var crd = pos.coords;
-								console.log("Your current position is:");
-								console.log(`Latitude : ${crd.latitude}`);
-								console.log(`Longitude: ${crd.longitude}`);
-							});
-						} else if (result.state === "prompt") {
-							navigator.geolocation.getCurrentPosition(function (
-								pos
-							) {
-								var crd = pos.coords;
-								console.log("Your current position is:");
-								console.log(`Latitude : ${crd.latitude}`);
-								console.log(`Longitude: ${crd.longitude}`);
-							});
-						} else if (result.state === "denied") {
-							console.log("user denied");
-							//If denied then you have to show instructions to enable location
-						}
-						result.onchange = function () {
-							console.log(result.state);
-						};
-					});
-			} else {
-				alert("Sorry Not available!");
+			const get = await axios.get(`http://ip-api.com/json`);
+			console.log("Get location", get);
+			if (!get.data) {
+				return { cityName: "Unknown", stateName: "Unknown" };
 			}
+			return { cityName: get.data.city, stateName: get.data.regionName };
 		} catch (error) {
 			return { cityName: "Unknown", stateName: "Unknown" };
 		}

@@ -204,7 +204,8 @@ class CreateEvent extends Component {
 
 		for (var i = 0; i < ticketCategories.length; i++) {
 			categories.push(ticketCategories[i].ticketName);
-			prices.push(ticketCategories[i].dollarPrice * 1000000);
+			prices.push((ticketCategories[i].dollarPrice * 1000000).toString());
+
 			tktQntySold.push("0");
 
 			ticketLimited.push(
@@ -227,6 +228,8 @@ class CreateEvent extends Component {
 						: ticketCategories[i].noOfTickets
 				);
 		}
+
+		console.log("prices", prices);
 
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({
