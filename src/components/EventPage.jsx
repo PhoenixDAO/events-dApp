@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import SocialMedia from "./common/SocialMedia";
 import { pricingFormatter } from "../utils/pricingSuffix";
 import { makeStyles } from "@material-ui/core/styles";
+
 import {
 	Button,
 	Grid,
@@ -57,7 +58,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
+import GetGraphApi ,{ getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";

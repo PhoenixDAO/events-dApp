@@ -29,7 +29,6 @@ import {
 	VisibilityOutlined as VisibilityOutlinedIcon,
 } from "@material-ui/icons";
 import GoldonBlue from "../Images/GoldonBlue.gif";
-import { useForm, Controller } from "react-hook-form";
 import phnxLogo from "../Images/phnx.png";
 import dollarIcon from "../Images/dollar.png";
 import eventTopics from "../../config/topics.json";
@@ -85,6 +84,7 @@ const MyStepper = ({
 		handleAddAnotherCategory,
 		handleDeleteTicketCategory,
 		handleEditTicketCategory,
+		clearState,
 	} = useFormControls();
 
 	const {
@@ -117,7 +117,7 @@ const MyStepper = ({
 		termsAndConditions,
 	} = values;
 
-	// console.log(values);
+	console.log(values);
 
 	const steps = ["", "", "", ""];
 	function getFlamingSteps() {
@@ -193,7 +193,7 @@ const MyStepper = ({
 			() => {
 				onStepsChange("inc");
 			},
-			() => handleCreateEvent()
+			() => handleCreateEvent(() => clearState())
 		);
 	};
 
@@ -343,7 +343,7 @@ const MyStepper = ({
 												}
 												fullWidth={true}
 												clearable={true}
-												helperText="Don’t have an end time? leave here blank"
+												helperText="Don't have an end time for the event? Leave this space blank."
 											/>
 										</Grid>
 									</Grid>
@@ -606,7 +606,7 @@ const MyStepper = ({
 										<label className={classes.label}>
 											COVER IMAGE {index + 1}
 										</label>
-
+										<div style={{position:"relative"}}>
 										<TextField
 											variant="outlined"
 											id={`image${index}`}
@@ -645,8 +645,8 @@ const MyStepper = ({
 												),
 											}}
 										/>
-
-										{index === 0 ? (
+											
+												{index === 0 ? (
 											<p
 												className={
 													classes.imageMaxStyle
@@ -658,14 +658,18 @@ const MyStepper = ({
 											</p>
 										) : (
 											<button
+												className={classes.deleteImageButton}
 												disabled={index === 0}
 												onClick={() => {
 													handelRemoveImage(index);
 												}}
 											>
-												Remove Image
+												x
 											</button>
 										)}
+										</div>
+
+								
 									</div>
 								);
 							})}
@@ -1215,7 +1219,7 @@ const MyStepper = ({
 															InputProps={{
 															inputProps:{
 																min:"0",
-																max:"100"
+																max:"10"
 															},
 																startAdornment:
 																	(
@@ -1239,14 +1243,8 @@ const MyStepper = ({
 																// 	min: 0,
 																// },
 															}}
-															value={
-																ticketCategories[
-																	ticketIndex
-																].dollarPrice
-															}
-															onChange={(
-																event
-															) => {
+															value={ticketCategories[ticketIndex].dollarPrice}
+															onChange={(event) => {
 																handleTicketCatogory(
 																	event,
 																	ticketIndex
@@ -1269,7 +1267,6 @@ const MyStepper = ({
 															})}
 														/>
 													</span>
-
 													<div
 														className={
 															classes.altIconStyle

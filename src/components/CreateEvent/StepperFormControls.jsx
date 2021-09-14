@@ -87,15 +87,6 @@ export const useFormControls = () => {
 		fetchData();
 	}, []);
 
-	// useEffect(() => {
-	// 	if (
-	// 		values.ticketCategories === undefined ||
-	// 		values.ticketCategories.length == 0
-	// 	) {
-	// 		handleAddAnotherCategory();
-	// 	}
-	// }, [values.ticketCategories]);
-
 	useEffect(() => {
 		if (values.ticketCategories.length == 1) {
 			setValues({
@@ -104,6 +95,30 @@ export const useFormControls = () => {
 			});
 		}
 	}, [values.ticketCategories]);
+
+	useEffect(() => {
+		const img = values.images;
+		const tkt = values.ticketCategories;
+		tkt[0] = {
+			ticketName: "",
+			dollarPrice: "",
+			phnxPrice: "",
+			ticketAvailability: "unlimited",
+			noOfTickets: "",
+			isShown: false,
+		};
+		img[0] = { name: "" };
+		setValues({
+			...initialFormValues,
+			images: img,
+		});
+	}, []);
+
+	const clearState = () => {
+		// setValues({
+		// 	...initialFormValues,
+		// });
+	};
 
 	const isValidDate = (d) => {
 		return d instanceof Date && !isNaN(d);
@@ -573,6 +588,18 @@ export const useFormControls = () => {
 	const handleTicketCatogory = (event, index, fieldValues = values) => {
 		const { name, value } = event.target;
 		const { ticketCategories } = fieldValues;
+		console.log("count",value )
+		if(value.length > 16){
+			return;
+		}
+		
+					
+		// if(value.length >= 16)
+		// {
+			
+		// 	console.log("count",value.length )
+		// 	event.preventDefault();
+		// }
 		if (name === "dollarPrice") {
 			let USD = value;
 			let PHNX = dollarToPhnx(value);
@@ -585,6 +612,11 @@ export const useFormControls = () => {
 				phnxPrice: PHNX,
 				token: true,
 			});
+			validate({ ['dollarPrice']: USD });
+			setTimeout(()=>{
+				validate({ ['phnxPrice']: PHNX });
+			}, 100)
+
 		} else if (name === "phnxPrice") {
 			let USD = phnxToDollar(value);
 			let PHNX = value;
@@ -597,6 +629,12 @@ export const useFormControls = () => {
 				phnxPrice: PHNX,
 				token: true,
 			});
+			validate({ ['phnxPrice']: PHNX });
+			setTimeout(() => {
+				validate({ ['dollarPrice']: USD });
+			}, 100);
+
+
 		} else {
 			ticketCategories[index][name] = value;
 			setValues({
@@ -604,9 +642,10 @@ export const useFormControls = () => {
 				ticketCategories: [...ticketCategories],
 				[name]: value,
 			});
+		validate({ [name]: value });
+
 		}
 
-		validate({ [name]: value });
 	};
 
 	const handleSaveTicketCatogory = (ticketIndex, fieldValues = values) => {
@@ -911,5 +950,6 @@ export const useFormControls = () => {
 		handleAddAnotherCategory,
 		handleDeleteTicketCategory,
 		handleEditTicketCategory,
+		clearState,
 	};
 };
