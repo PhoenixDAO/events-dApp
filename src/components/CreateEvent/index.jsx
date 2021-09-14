@@ -146,7 +146,7 @@ class CreateEvent extends Component {
 		this.setState({ shareUrl: shareUrl });
 	}
 
-	handleCreateEvent = async () => {
+	handleCreateEvent = async (clearStateCb) => {
 		console.log("handleCreateEvent111", this.state.fields);
 		this.stageUpdater(90);
 
@@ -326,7 +326,7 @@ class CreateEvent extends Component {
 							const web3 = new Web3(infura);
 
 							let intervalVar = setInterval(async () => {
-								console.log("web3.eth", web3.eth);
+								// console.log("web3.eth", web3.eth);
 								let receipt =
 									await web3.eth.getTransactionReceipt(
 										txhash
@@ -350,6 +350,7 @@ class CreateEvent extends Component {
 									this.onFlamingStepsChange();
 									await this.getEventURL();
 									clearInterval(intervalVar);
+									clearStateCb();
 								}
 							}, 5000);
 						}

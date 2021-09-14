@@ -29,7 +29,6 @@ import {
 	VisibilityOutlined as VisibilityOutlinedIcon,
 } from "@material-ui/icons";
 import GoldonBlue from "../Images/GoldonBlue.gif";
-import { useForm, Controller } from "react-hook-form";
 import phnxLogo from "../Images/phnx.png";
 import dollarIcon from "../Images/dollar.png";
 import eventTopics from "../../config/topics.json";
@@ -85,6 +84,7 @@ const MyStepper = ({
 		handleAddAnotherCategory,
 		handleDeleteTicketCategory,
 		handleEditTicketCategory,
+		clearState,
 	} = useFormControls();
 
 	const {
@@ -117,7 +117,7 @@ const MyStepper = ({
 		termsAndConditions,
 	} = values;
 
-	// console.log(values);
+	console.log(values);
 
 	const steps = ["", "", "", ""];
 	function getFlamingSteps() {
@@ -193,7 +193,7 @@ const MyStepper = ({
 			() => {
 				onStepsChange("inc");
 			},
-			() => handleCreateEvent()
+			() => handleCreateEvent(() => clearState())
 		);
 	};
 
