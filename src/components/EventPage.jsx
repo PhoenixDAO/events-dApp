@@ -711,52 +711,28 @@ class EventPage extends Component {
 	};
 
 	handleClickOpen2 = async () => {
-		const result = await this.checkUserBalance();
-		this.setState({
-			disableBuyTicketBtn: result,
-		});
-		console.log("result handelCLickopen2", result);
-		if (!result) {
-			if (
-				this.props.networkId != GLOBAL_NETWORK_ID &&
-				this.props.networkId != GLOBAL_NETWORK_ID_2
-			) {
-				this.setState({
-					open3: true,
-					open3Message: "Please connect to Rinkbey or Goerli network",
-				});
-			} else {
-				// this.setState({ open2: true });
-				if (this.state.oneTimeBuy) {
-					let buyers = this.state.soldTicket;
-					const account = this.props.accounts[0];
-					if (this.userExists(buyers, account)) {
-						// alert("One time buy");
-						this.setState({
-							open3: true,
-							open3Message:
-								"This event is restricted to one wallet address, you can't buy it again.",
-						});
-					} else {
-						console.log("open 2 called in inner else");
-						if ((await this.allowance()) == 0) {
-							let balance = await this.props.phnxContract.methods
-								.totalSupply()
-								.call();
-							this.setState({
-								approve:
-									this.props.phnxContract.methods.approve(
-										this.props.eventsAddress,
-										balance
-									),
-							});
-							this.handleClickOpen();
-						} else {
-							this.setState({ open2: true });
-						}
-					}
+		if (
+			this.props.networkId != GLOBAL_NETWORK_ID &&
+			this.props.networkId != GLOBAL_NETWORK_ID_2
+		) {
+			this.setState({
+				open3: true,
+				open3Message: "Please connect to Rinkbey or Goerli network",
+			});
+		} else {
+			// this.setState({ open2: true });
+			if (this.state.oneTimeBuy) {
+				let buyers = this.state.soldTicket;
+				const account = this.props.accounts[0];
+				if (this.userExists(buyers, account)) {
+					// alert("One time buy");
+					this.setState({
+						open3: true,
+						open3Message:
+							"This event is restricted to one wallet address, you can't buy it again.",
+					});
 				} else {
-					console.log("open 2 called in outer else");
+					console.log("open 2 called in inner else");
 					if ((await this.allowance()) == 0) {
 						let balance = await this.props.phnxContract.methods
 							.totalSupply()
@@ -769,6 +745,36 @@ class EventPage extends Component {
 						});
 						this.handleClickOpen();
 					} else {
+						const result = await this.checkUserBalance();
+						this.setState({
+							disableBuyTicketBtn: result,
+						});
+						console.log("result handelCLickopen2", result);
+						if (!result) {
+							this.setState({ open2: true });
+						}
+					}
+				}
+			} else {
+				console.log("open 2 called in outer else");
+				if ((await this.allowance()) == 0) {
+					let balance = await this.props.phnxContract.methods
+						.totalSupply()
+						.call();
+					this.setState({
+						approve: this.props.phnxContract.methods.approve(
+							this.props.eventsAddress,
+							balance
+						),
+					});
+					this.handleClickOpen();
+				} else {
+					const result = await this.checkUserBalance();
+					this.setState({
+						disableBuyTicketBtn: result,
+					});
+					console.log("result handelCLickopen2", result);
+					if (!result) {
 						this.setState({ open2: true });
 					}
 				}
@@ -797,6 +803,8 @@ class EventPage extends Component {
 		let a = await this.props.phnxContract.methods
 			.allowance(this.account, this.props.eventsAddress)
 			.call();
+		console.log("allowance", a);
+		return a;
 	};
 
 	giveApproval = async () => {
