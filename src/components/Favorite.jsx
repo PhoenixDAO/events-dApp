@@ -481,6 +481,9 @@ class Favorites extends Component {
 			let start = end - this.perPage;
 			if (end > count) end = count;
 			let pages = Math.ceil(count / this.perPage);
+
+			console.log("event list", events_list, start, end, end - this.perPage);
+
 			for (let i = start; i < end; i++) {
 				updated_list.push(
 					<Event
