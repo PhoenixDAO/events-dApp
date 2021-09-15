@@ -489,17 +489,17 @@ const EventCard = (props, context) => {
 												Starting from
 											</p>
 											<p
-												title={phnx_price[0]}
+												title={phnx_price[0] + " PHNX"}
 												style={{
 													fontFamily:
 														'"Aeonik", sans-serif',
 												}}
 											>
-												{phnx_price[0]}
-												{/* {pricingFormatter(
+												{/* {phnx_price[0]} */}
+												{pricingFormatter(
 													phnx_price[0],
 													"PHNX"
-												)} */}
+												)}
 											</p>
 											<p
 												className={classes.starting}
