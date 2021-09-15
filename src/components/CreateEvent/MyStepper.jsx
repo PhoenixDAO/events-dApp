@@ -1561,7 +1561,7 @@ const MyStepper = ({
 									name="eventDescription"
 									id="event-description"
 								/>
-								<FormHelperText>
+								<FormHelperText style={{ alignSelf: "end" }}>
 									{errors["eventDescription"]}
 								</FormHelperText>
 							</FormControl>
