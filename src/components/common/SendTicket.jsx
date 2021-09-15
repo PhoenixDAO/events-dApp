@@ -198,7 +198,7 @@ export default function sendTicket({
 					className={classes.header}
 					onClose={handleClose}
 				>
-					<div>
+					<div style={{ display: "flex", justifyContent: "center" }}>
 						<img
 							src={roundlogo}
 							className={classes.logo}
@@ -243,8 +243,8 @@ export default function sendTicket({
 										errorAddress
 											? "Invalid account address"
 											: error
-												? error.message
-												: null
+											? error.message
+											: null
 									}
 									onChange={(e) => {
 										onChange(e);
