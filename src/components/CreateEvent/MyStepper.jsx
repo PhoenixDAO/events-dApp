@@ -217,6 +217,7 @@ const MyStepper = ({
 								value={eventName}
 								handleInputValue={handleInputValue}
 								errors={errors}
+								maxLength={100}
 							/>
 							<br />
 							<br />
@@ -228,6 +229,7 @@ const MyStepper = ({
 								value={eventOrganizer}
 								handleInputValue={handleInputValue}
 								errors={errors}
+								maxLength={100}
 							/>
 							<br />
 							<br />
@@ -579,6 +581,7 @@ const MyStepper = ({
 										value={eventLocation}
 										handleInputValue={handleInputValue}
 										errors={errors}
+										maxLength={100}
 									/>
 								</div>
 							) : (
@@ -591,6 +594,7 @@ const MyStepper = ({
 										value={eventLink}
 										handleInputValue={handleInputValue}
 										errors={errors}
+										maxLength={1000}
 									/>
 								</div>
 							)}
@@ -861,6 +865,7 @@ const MyStepper = ({
 													id="no-of-tickets"
 													name="noOfTickets"
 													fullWidth={true}
+													maxLength={16}
 													label="NUMBER OF TICKETS"
 													value={
 														ticketCategories[
@@ -1112,6 +1117,7 @@ const MyStepper = ({
 													id="no-of-tickets"
 													name="noOfTickets"
 													fullWidth={true}
+													maxLength={16}
 													label="NUMBER OF TICKETS"
 													value={
 														ticketCategories[
@@ -1171,6 +1177,7 @@ const MyStepper = ({
 													name="ticketName"
 													fullWidth
 													label="TICKET NAME"
+													maxLength={100}
 													value={
 														ticketCategories[
 															ticketIndex
@@ -1440,6 +1447,7 @@ const MyStepper = ({
 															id="no-of-tickets"
 															name="noOfTickets"
 															fullWidth={true}
+															maxLength={16}
 															label="NUMBER OF TICKETS"
 															value={
 																ticketCategories[
