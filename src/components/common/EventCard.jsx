@@ -39,6 +39,7 @@ import {
 
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
+import ticketSoldQuantityFormatter from "../../utils/ticketsQuantityFormatter";
 var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
@@ -394,11 +395,12 @@ const EventCard = (props, context) => {
 									{event_data.tktTotalQuantity != 0 ? (
 										<Typography
 											className={classes.quantitySold}
+											title={""+ event_data.tktTotalQuantitySold + "/"+ ((event_data.tktTotalQuantity == 0) ? "∞" : event_data.tktTotalQuantity)+""}
 										>
 											<ConfirmationNumberOutlined fontSize="medium" />
 											<span>&nbsp;</span>
-											{event_data.tktTotalQuantitySold}/
-											{event_data.tktTotalQuantity}
+											{ticketSoldQuantityFormatter(event_data.tktTotalQuantitySold)}/
+										{event_data.tktTotalQuantity == 0 ? '∞' : ticketSoldQuantityFormatter(event_data.tktTotalQuantity)}
 										</Typography>
 									) : null}
 									{!myEvent && !ticket ? (
@@ -612,11 +614,12 @@ const EventCard = (props, context) => {
 										component="p"
 										gutterBottom
 										className={classes.text}
+										title={""+ event_data.tktTotalQuantitySold + "/"+ ((event_data.tktTotalQuantity == 0) ? "∞" : event_data.tktTotalQuantity)+""}
 									>
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
-										{event_data.tktTotalQuantitySold}/
-										{event_data.tktTotalQuantity == 0 ? '∞' : event_data.tktTotalQuantity}
+										{ticketSoldQuantityFormatter(event_data.tktTotalQuantitySold)}/
+										{event_data.tktTotalQuantity == 0 ? '∞' : ticketSoldQuantityFormatter(event_data.tktTotalQuantity)}
 
 									</Typography>
 									<Typography
