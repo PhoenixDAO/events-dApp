@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { pricingFormatter } from "../../utils/pricingSuffix";
+import RichTextEditor from "react-rte";
 import Geonames from "geonames.js";
 import PropTypes from "prop-types";
 
@@ -248,11 +249,12 @@ export const useFormControls = () => {
 				: "This field is required.";
 
 		//4th_stepper
-		if ("eventDescription" in fieldValues)
-			temp.eventDescription =
-				fieldValues.eventDescription.length > 500
-					? ""
-					: "Min 500 characters.";
+		if ("eventDescription" in fieldValues) {
+			let count = fieldValues.eventDescription
+				.toString("html")
+				.replace(/<[^>]*>/g, "").length;
+			temp.eventDescription = count > 500 ? "" : `${count}/500`;
+		}
 
 		if ("termsAndConditions" in fieldValues)
 			temp.termsAndConditions = fieldValues.termsAndConditions

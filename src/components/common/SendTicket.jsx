@@ -218,7 +218,7 @@ export default function sendTicket({
 					</Typography>
 				</DialogTitle>
 				<DialogContent>
-					<h5 className={classes.ethereum}>ETHEREUM ADDRESS</h5>
+					<h5 className={classes.ethereum}>WALLET ADDRESS</h5>
 
 					<FormControl
 						variant="outlined"

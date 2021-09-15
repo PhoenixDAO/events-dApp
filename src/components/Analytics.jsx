@@ -48,6 +48,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	menuPaper: {
 		maxHeight: "200px",
+		right:"10% !important",
+
 	},
 	formControls: {
 		"@media (max-width: 600px)": {
@@ -632,7 +634,9 @@ const Analytics = (props, context) => {
 		const dollarKey = Object.keys(dollarData);
 		for (let i = 0; i < dollarKey.length; i++) {
 			const obj = dollarData[dollarKey[i]];
-			dollarRev.push(obj.totalDollarRevenue / 1000000);
+			dollarRev.push(
+				Web3.utils.fromWei(obj.totalDollarRevenue.toString())
+			);
 			if (timeStamp == 86400) {
 				dollarLabel.push(
 					moment.unix(obj.startTimeStamp).format("HH:mm")
@@ -717,11 +721,14 @@ const Analytics = (props, context) => {
 					>
 						{revenueCategory == "eventRevenueInPhnx"
 							? (
-									event.eventRevenueInPhnx /
-									1000000000000000000
-							  ).toFixed(3) + " PHNX"
+								event.eventRevenueInPhnx /
+								1000000000000000000
+							).toFixed(3) + " PHNX"
 							: "$ " +
-							  (event.eventRevenueInDollar / 1000000).toFixed(3)}
+							(
+								event.eventRevenueInDollar /
+								1000000000000000000
+							).toFixed(3)}
 					</Grid>
 				</Grid>
 			));
@@ -950,9 +957,11 @@ const Analytics = (props, context) => {
 				if (timestamp === "86400") {
 					const createdDate = moment().minutes(0).seconds(0).unix();
 					if (event.startTimeStamp <= createdDate - 86400) {
-						totalDollarPrev +=
-							Number(event.totalDollarRevenue.toString()) /
-							1000000;
+						// totalDollarPrev +=
+						// 	Number(event.totalDollarRevenue.toString()) /
+						// 	1000000;
+						totalDollarPrev += Number(
+							Web3.utils.fromWei(event.totalDollarRevenue.toString()))
 						console.log("totalDollarPrev", totalDollarPrev);
 						totalSoldTicketsPrev += Number(
 							event.soldTickets.toString()
@@ -964,8 +973,9 @@ const Analytics = (props, context) => {
 						);
 					}
 				} else {
-					totalDollarPrev +=
-						Number(event.totalDollarRevenue.toString()) / 1000000;
+					// totalDollarPrev +=
+					// 	Number(event.totalDollarRevenue.toString()) / 1000000;
+					totalDollarPrev +=Number(Web3.utils.fromWei(event.totalDollarRevenue.toString()));
 					console.log("totalDollarPrev", totalDollarPrev);
 					totalSoldTicketsPrev += Number(
 						event.soldTickets.toString()
@@ -978,11 +988,12 @@ const Analytics = (props, context) => {
 			console.log("totalSoldTicketsPrev", totalSoldTicketsPrev);
 			if (graphForDays.length > 0) {
 				graphForDays.forEach((event) => {
-					totalDollarRevenue +=
-						Number(event.totalDollarRevenue.toString()) / 1000000;
+					// totalDollarRevenue +=Number(event.totalDollarRevenue.toString()) / 1000000;
+					totalDollarRevenue +=Number(Web3.utils.fromWei(event.totalDollarRevenue.toString()));
+
 					console.log("totalDollarRevenue", totalDollarRevenue);
 					soldTicket += Number(event.soldTickets.toString());
-					totalPhnxRevenue += event.totalPhnxRevenue/1000000000000000000
+					totalPhnxRevenue += event.totalPhnxRevenue / 1000000000000000000
 				});
 
 				console.log("DIFFERENCE", difference);
@@ -998,10 +1009,16 @@ const Analytics = (props, context) => {
 				setSoldTicket(soldTicket);
 				//calculate data for change and difference of cards
 				let lastIndex = graphForDays.length - 1;
-				let originalNumber =
-					graphForDays[0].totalDollarRevenue / 1000000;
-				let newNumber =
-					graphForDays[lastIndex].totalDollarRevenue / 1000000;
+				// let originalNumber =
+				// 	graphForDays[0].totalDollarRevenue / 1000000;
+				// let newNumber =
+				// 	graphForDays[lastIndex].totalDollarRevenue / 1000000;
+				let originalNumber = Web3.utils.fromWei(
+					graphForDays[0].totalDollarRevenue.toString()
+				);
+				let newNumber = Web3.utils.fromWei(
+					graphForDays[lastIndex].totalDollarRevenue.toString()
+				);
 				console.log("phnx", originalNumber, newNumber);
 				let PHNXoriginalNumber = Web3.utils.fromWei(
 					graphForDays[0].totalPhnxRevenue.toString()
@@ -1225,12 +1242,12 @@ const Analytics = (props, context) => {
 								onShow={
 									timeStamp === "custom"
 										? (e, p) =>
-												console.log(
-													"event",
-													e,
-													"picker",
-													p
-												)
+											console.log(
+												"event",
+												e,
+												"picker",
+												p
+											)
 										: null
 								}
 								onEvent={handleEvent}
@@ -1528,15 +1545,15 @@ const Analytics = (props, context) => {
 					container
 					className={`${classes.emptyContent} ${classes.content}`}
 				>
-					<Grid container style={{paddingBottom:"30px"}}>
+					<Grid container style={{ paddingBottom: "30px" }}>
 						<EmptyStateAnalytics />
 					</Grid>
 					<Grid>
-					<EventsAnalytics
-						userDetails={userDetails}
-						createdEvents={props.eventName.length}
-						ticketBought={props.ticketBought}
-					/>
+						<EventsAnalytics
+							userDetails={userDetails}
+							createdEvents={props.eventName.length}
+							ticketBought={props.ticketBought}
+						/>
 					</Grid>
 				</Grid>
 			)}

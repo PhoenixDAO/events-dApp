@@ -647,12 +647,15 @@ class EventPage extends Component {
 	priceCalculation = (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
 		let phnx_price = event_data.prices.map((price) => {
-			return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
-				2
+			// return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
+			// 	2
+			// );
+			return (Web3.utils.fromWei(price.toString()) / this.state.PhoenixDAO_market.usd).toFixed(
+				3
 			);
 		});
 
-		let dollar_price = event_data.prices[categoryIndex] / 1000000;
+		let dollar_price = Web3.utils.fromWei(event_data.prices[categoryIndex].toString());
 		let priceInPhnx = event_data.token
 			? phnx_price[categoryIndex] + "PHNX"
 			: "FREE";
@@ -1078,7 +1081,7 @@ class EventPage extends Component {
 					Number(this.state.blockChainEvent.time),
 					moment().unix(),
 					parseInt(this.state.blockChainEvent.tktTotalQuantitySold) >=
-						parseInt(this.state.blockChainEvent.tktTotalQuantity),
+					parseInt(this.state.blockChainEvent.tktTotalQuantity),
 					this.state.blockChainEvent.tktTotalQuantitySold,
 					this.state.blockChainEvent.tktTotalQuantity
 				);
@@ -1161,8 +1164,8 @@ class EventPage extends Component {
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-							this.state.selectedCategoryIndex
-					  ]
+					this.state.selectedCategoryIndex
+					]
 					: "∞";
 
 				let disabled = false;
@@ -1173,14 +1176,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-							this.state.selectedCategoryIndex
+						this.state.selectedCategoryIndex
 						]
 					) >=
-						Number(
-							event_data.catTktQuantity[
-								this.state.selectedCategoryIndex
-							]
-						)
+					Number(
+						event_data.catTktQuantity[
+						this.state.selectedCategoryIndex
+						]
+					)
 				) {
 					// disabled = true;
 					// disabledStatus = (
@@ -1399,31 +1402,31 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-																(
-																	category,
-																	i
-																) => (
-																	<MenuItem
-																		value={
-																			i
+															(
+																category,
+																i
+															) => (
+																<MenuItem
+																	value={
+																		i
+																	}
+																	style={{
+																		fontFamily:
+																			"'Aeonik', sans-serif",
+																	}}
+																>
+																	<span
+																		className={
+																			classes.selectWidth
 																		}
-																		style={{
-																			fontFamily:
-																				"'Aeonik', sans-serif",
-																		}}
 																	>
-																		<span
-																			className={
-																				classes.selectWidth
-																			}
-																		>
-																			{
-																				category
-																			}
-																		</span>
-																	</MenuItem>
-																)
-														  )
+																		{
+																			category
+																		}
+																	</span>
+																</MenuItem>
+															)
+														)
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1475,11 +1478,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-												  "onedayevent"
-												? moment(
+													"onedayevent"
+													? moment(
 														this.state.eventDate
-												  ).format("Do MMM, YYYY")
-												: `
+													).format("Do MMM, YYYY")
+													: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1493,24 +1496,24 @@ class EventPage extends Component {
 											{!this.state.eventStartTime
 												? `Time`
 												: !this.state.eventEndTime
-												? moment(
+													? moment(
 														this.state
 															.eventStartTime
-												  )
+													)
 														.utcOffset(0)
 														.format("hh:mma z")
-												: `${moment(
+													: `${moment(
 														this.state
 															.eventStartTime
-												  )
+													)
 														.utcOffset(0)
 														.format(
 															"hh:mma"
 														)} - ${moment(
-														this.state.eventEndTime
-												  )
-														.utcOffset(0)
-														.format("hh:mma z")}`}
+															this.state.eventEndTime
+														)
+															.utcOffset(0)
+															.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
@@ -1532,8 +1535,8 @@ class EventPage extends Component {
 										<p className={classes.eventinfo}>
 											{
 												event_data.catTktQuantitySold[
-													this.state
-														.selectedCategoryIndex
+												this.state
+													.selectedCategoryIndex
 												]
 												// event_data.tktTotalQuantitySold
 											}

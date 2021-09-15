@@ -299,9 +299,13 @@ const EventCard = (props, context) => {
 	};
 
 	let phnx_price = event_data.prices.map((price) => {
-		return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
+		// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
+		return (Web3.utils.fromWei(price.toString()) / PhoenixDAO_market.usd).toFixed(
+			3
+		);
 	});
-	let dollar_price = event_data.prices[0] / 1000000;
+	// let dollar_price = event_data.prices[0] / 1000000;
+	let dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
 
 	const checkExpiry = () => {
 		if (props.checkExpiry) {
@@ -641,7 +645,7 @@ const EventCard = (props, context) => {
 									>
 										Dollar Revenue:{" "}
 										{pricingFormatter(
-												event_data.eventRevenueInDollar/1000000
+												Web3.utils.fromWei(event_data.eventRevenueInDollar.toString())
 											,
 											"$"
 										)}

@@ -217,7 +217,8 @@ class CreateEvent extends Component {
 		for (var i = 0; i < ticketCategories.length; i++) {
 			categories.push(ticketCategories[i].ticketName);
 			prices.push(
-				Math.ceil(ticketCategories[i].dollarPrice * 1000000).toString()
+				Web3.utils.toWei(ticketCategories[i].dollarPrice.toString())
+				// Math.ceil(ticketCategories[i].dollarPrice * 1000000).toString()
 			);
 
 			tktQntySold.push("0");
@@ -553,7 +554,7 @@ class CreateEvent extends Component {
 						error: true,
 						error_text: "Transaction Rejected",
 					},
-					() => {}
+					() => { }
 				);
 			});
 	};

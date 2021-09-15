@@ -219,7 +219,7 @@ class App extends Component {
 				phoenixAddress
 			);
 			console.log("Phnx",PHNX)
-			console.log("events",openEvents)
+			console.log("even",openEvents)
 			this.setState({
 				eventsContract: openEvents,
 				phnxContract: PHNX,

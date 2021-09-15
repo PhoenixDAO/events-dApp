@@ -47,22 +47,7 @@ export default async function GetGraphApi() {
 	let graphURL = "";
 	let networkId = 0;
 	try {
-		if (window.ethereum && window.ethereum.isMetaMask) {
-			web3 = new Web3(ethereum);
-		} else if (typeof web3 !== "undefined") {
-			web3 = new Web3(web3.currentProvider);
-		} else {
-			const network = await getNetworkId();
-			let infura;
-			if (network === GLOBAL_NETWORK_ID) {
-				infura = INFURA_URL;
-			} else if (network === GLOBAL_NETWORK_ID_2) {
-				infura = INFURA_URL_2;
-			}
-			web3 = new Web3(new Web3.providers.HttpProvider(infura));
-		}
-		console.log("networkId", web3);
-		networkId = await getNetworkId();
+		let networkId = await getNetworkId();
 		console.log("This called getNetworkId", networkId);
 		if (networkId === GLOBAL_NETWORK_ID) {
 			graphURL = graphURLV1;
