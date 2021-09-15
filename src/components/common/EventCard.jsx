@@ -136,7 +136,7 @@ const useStyles = makeStyles((theme) => ({
 	price: {
 		color: "#413AE2",
 		fontWeight: "700",
-		maxWidth: "34.33%",
+		maxWidth: "35.33%",
 		fontSize: "16px",
 		fontFamily: "'Aeonik', sans-serif !important",
 		"& p": {
@@ -162,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	eventTitle: {
 		color: "#1E1E22",
-		maxWidth: "65.66%",
+		maxWidth: "64.66%",
 		fontSize: 16,
 		maxHeight: "52px",
 		fontWeight: 700,
@@ -429,7 +429,7 @@ const EventCard = (props, context) => {
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
-									height: "72px",
+									height: "88px",
 								}}
 							>
 								<Typography
@@ -491,17 +491,17 @@ const EventCard = (props, context) => {
 												Starting from
 											</p>
 											<p
-												title={phnx_price[0]}
+												title={phnx_price[0] + " PHNX"}
 												style={{
 													fontFamily:
 														'"Aeonik", sans-serif',
 												}}
 											>
-												{phnx_price[0]}
-												{/* {pricingFormatter(
+												{/* {phnx_price[0]} */}
+												{pricingFormatter(
 													phnx_price[0],
 													"PHNX"
-												)} */}
+												)}
 											</p>
 											<p
 												className={classes.starting}
