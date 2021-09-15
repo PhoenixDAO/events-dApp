@@ -216,6 +216,8 @@ class FindEvents extends Component {
 			cityName: "",
 			stateName: "",
 			search: "",
+			latitude: "",
+			longitude: "",
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -228,6 +230,8 @@ class FindEvents extends Component {
 
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
+		// this.success = this.success.bind(this);
+		// this.errors = this.errors.bind(this);
 	}
 
 	async categoryChange(event) {
@@ -450,59 +454,69 @@ class FindEvents extends Component {
 		});
 	};
 
-	success(pos) {
-		var crd = pos.coords;
-
-		console.log("Your current position is:");
-		console.log(`Latitude : ${crd.latitude}`);
-		console.log(`Longitude: ${crd.longitude}`);
-		console.log(`More or less ${crd.accuracy} meters.`);
-	}
-
-	errors(err) {
-		console.warn(`ERROR(${err.code}): ${err.message}`);
-	}
-
 	geoFindMe1 = async () => {
-		//AIzaSyDzm4lNQsRTjvYj5ltMKDVLtc4plnapEhs
+		try {
+			if (navigator.geolocation) {
+				navigator.permissions
+					.query({ name: "geolocation" })
+					.then(async function (result) {
+						async function success(pos) {
+							console.log("success", pos);
+							var crd = pos.coords;
+							if (crd) {
+								let lat = crd.latitude;
+								let lng = crd.longitude;
+								let apikey = process.env.REACT_APP_HERE_API_KEY;
+								const get = await axios.get(
+									`https://places.ls.hereapi.com/places/v1/discover/search?at=${lat},${lng}&q=${lat},${lng}&apikey=${apikey}`
+								);
+								if (get) {
+									console.log("get1", get);
+									return {
+										cityName:
+											get.data.search.context.location
+												.address.city,
+										stateName:
+											get.data.search.context.location
+												.address.country,
+									};
+								}
+							}
+							console.log("Your current position is:");
+							console.log(`Latitude : ${crd.latitude}`);
+							console.log(`Longitude: ${crd.longitude}`);
+							console.log(`More or less ${crd.accuracy} meters.`);
+						}
 
-		//location
-		if (navigator.geolocation) {
-			navigator.permissions
-				.query({ name: "geolocation" })
-				.then(function (result) {
-					if (result.state === "granted") {
-						console.log(result.state);
-						//If granted then you can directly call your function here
-						navigator.geolocation.getCurrentPosition(function (
-							pos
-						) {
-							var crd = pos.coords;
-							console.log("pos", pos);
-							console.log("Your current position is:");
-							console.log(`Latitude : ${crd.latitude}`);
-							console.log(`Longitude: ${crd.longitude}`);
-						});
-					} else if (result.state === "prompt") {
-						navigator.geolocation.getCurrentPosition(function (
-							pos
-						) {
-							var crd = pos.coords;
-							console.log("pos", pos);
-							console.log("Your current position is:");
-							console.log(`Latitude : ${crd.latitude}`);
-							console.log(`Longitude: ${crd.longitude}`);
-						});
-					} else if (result.state === "denied") {
-						console.log("user denied");
-						//If denied then you have to show instructions to enable location
-					}
-					result.onchange = function () {
-						console.log(result.state);
-					};
-				});
-		} else {
-			alert("Sorry Not available!");
+						async function errors(err) {
+							console.warn(`ERROR(${err.code}): ${err.message}`);
+						}
+
+						if (result.state === "granted") {
+							console.log(result.state);
+							//If granted then you can directly call your function here
+							navigator.geolocation.getCurrentPosition(
+								success,
+								errors
+							);
+						} else if (result.state === "prompt") {
+							navigator.geolocation.getCurrentPosition(
+								this.success,
+								this.errors
+							);
+						} else if (result.state === "denied") {
+							//If denied then you have to show instructions to enable location
+							console.log("user denied");
+						}
+						result.onchange = function () {
+							console.log(result.state);
+						};
+					});
+			} else {
+				return { cityName: "Unknown", stateName: "Unknown" };
+			}
+		} catch (error) {
+			return { cityName: "Unknown", stateName: "Unknown" };
 		}
 	};
 
@@ -521,7 +535,11 @@ class FindEvents extends Component {
 
 	findNearToYouEvents = async () => {
 		this.setState({ loading: true });
-		const geoFindUser = await this.geoFindMe();
+		// const geoFindUser = await this.geoFindMe();
+		const geoFindUser = await this.geoFindMe1();
+
+		console.log("geoFindUser", geoFindUser);
+
 		if (geoFindUser) {
 			let cityName = geoFindUser.cityName;
 			let stateName = geoFindUser.stateName;
@@ -1298,7 +1316,7 @@ class FindEvents extends Component {
 
 	// comment out the below to re-render on every click
 	// shouldComponentUpdate(nextProps, nextState) {
-	// 	return this.state.Events_Blockchain != nextState.Events_Blockchain;
+	// 	return this.state.latitude != nextState.latitude;
 	// }
 
 	componentWillUnmount() {
