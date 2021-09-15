@@ -22,6 +22,7 @@ const CustomTextField = ({
 	type,
 	onKeyDown,
 	onInput,
+	maxLength,
 }) => {
 	const classes = useStyles();
 
@@ -34,7 +35,7 @@ const CustomTextField = ({
 				name={name}
 				fullWidth={fullWidth}
 				variant="outlined"
-				inputProps={{ maxLength: 100 }}
+				inputProps={{ maxLength: maxLength }}
 				value={value}
 				onBlur={handleInputValue}
 				onChange={handleInputValue}
