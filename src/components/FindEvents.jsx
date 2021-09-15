@@ -236,16 +236,26 @@ class FindEvents extends Component {
 		} else {
 			this.setState({
 				category: event.target.value,
-				pageTitle: event.target.value,
+				// pageTitle: event.target.value,
 			});
-			let query;
+
+			let updatedList = [];
+			let events = this.state.event_copy;
+
 			if (event.target.value === "All Events") {
-				query = `orderBy:eventId orderDirection:asc`;
-			} else {
+				updatedList = events;
+			} else if (event.target.value === "Trending Events") {
 				//trending events
-				query = `where: {tktTotalQuantitySold_gte: 5} orderBy:eventId orderDirection:asc`;
+				for (let i = 0; i < events.length; i++) {
+					if (events[i].tktTotalQuantitySold >= 5) {
+						updatedList.push(events[i]);
+					}
+				}
 			}
-			this.loadBlockchain(query);
+			this.setState({
+				Events_Blockchain: updatedList,
+			});
+			this.props.history.push("/upcomingevents/" + 1);
 		}
 	}
 
@@ -367,14 +377,14 @@ class FindEvents extends Component {
 					this.setState({
 						Events_Blockchain: newsort,
 						// active_length: newsort.length,
-						// event_copy: newsort,
+						event_copy: newsort,
 					});
 
-					if (this.state.pageTitle === "All Events") {
-						this.setState({
-							event_copy: newsort,
-						});
-					}
+					// if (this.state.pageTitle === "All Events") {
+					// 	this.setState({
+					// 		event_copy: newsort,
+					// 	});
+					// }
 
 					this.props.history.push("/upcomingevents/" + 1);
 
@@ -453,7 +463,7 @@ class FindEvents extends Component {
 		console.warn(`ERROR(${err.code}): ${err.message}`);
 	}
 
-	geoFindMe = async () => {
+	geoFindMe1 = async () => {
 		//AIzaSyDzm4lNQsRTjvYj5ltMKDVLtc4plnapEhs
 
 		//location
@@ -536,6 +546,7 @@ class FindEvents extends Component {
 					console.log("xord-->", filteredEvents);
 					this.setState({
 						Events_Blockchain: filteredEvents,
+						event_copy: filteredEvents,
 					});
 					setTimeout(() => {
 						this.setState({ loading: false });
@@ -545,6 +556,7 @@ class FindEvents extends Component {
 				console.log("findNearToYouEvents", e);
 				this.setState({
 					Events_Blockchain: [],
+					event_copy: [],
 				});
 				setTimeout(() => {
 					this.setState({ loading: false });
@@ -571,7 +583,13 @@ class FindEvents extends Component {
 			behavior: "smooth",
 			block: "center",
 		});
-		this.setState({ selectedTab: newValue, pageTitle: newValue });
+
+		this.setState({
+			selectedTab: newValue,
+			pageTitle: newValue,
+			category: "All Events",
+		});
+
 		let query;
 		if (newValue === "All Events") {
 			query = `orderBy:eventId orderDirection:asc`;

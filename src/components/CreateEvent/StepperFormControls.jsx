@@ -46,7 +46,7 @@ const initialFormValues = {
 	restrictWallet: false,
 	ticketIndex: 0,
 	ticketName: "",
-	dollarPrice: "",
+	dollarPrice: "0",
 	phnxPrice: "",
 	ticketAvailability: "unlimited",
 	noOfTickets: "",
@@ -54,7 +54,7 @@ const initialFormValues = {
 	ticketCategories: [
 		{
 			ticketName: "",
-			dollarPrice: "",
+			dollarPrice: "0",
 			phnxPrice: "",
 			ticketAvailability: "unlimited",
 			noOfTickets: "",
@@ -102,7 +102,7 @@ export const useFormControls = () => {
 		const tkt = values.ticketCategories;
 		tkt[0] = {
 			ticketName: "",
-			dollarPrice: "",
+			dollarPrice: "0",
 			phnxPrice: "",
 			ticketAvailability: "unlimited",
 			noOfTickets: "",
@@ -536,14 +536,14 @@ export const useFormControls = () => {
 			[name]: value,
 			ticketIndex: 0,
 			ticketName: "",
-			dollarPrice: "",
+			dollarPrice: "0",
 			phnxPrice: "",
 			ticketAvailability: "unlimited",
 			noOfTickets: "",
 			ticketCategories: [
 				{
 					ticketName: "",
-					dollarPrice: "",
+					dollarPrice: "0",
 					phnxPrice: "",
 					ticketAvailability: "unlimited",
 					noOfTickets: "",
@@ -650,7 +650,7 @@ export const useFormControls = () => {
 			setValues({
 				...values,
 				ticketName: "",
-				dollarPrice: "",
+				dollarPrice: "0",
 				phnxPrice: "",
 				ticketAvailability: "unlimited",
 				noOfTickets: "",
@@ -664,7 +664,7 @@ export const useFormControls = () => {
 		const { ticketCategories } = fieldValues;
 		const newCat = {
 			ticketName: "",
-			dollarPrice: "",
+			dollarPrice: "0",
 			phnxPrice: "",
 			ticketAvailability: "unlimited",
 			noOfTickets: "",
