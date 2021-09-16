@@ -628,7 +628,7 @@ class App extends Component {
 								pauseOnHover: true,
 							}
 						);
-						this.setState({ disabledStatus: false });
+						this.setState({ disabledStatus: false,purchased:false });
 					}
 				});
 		} else {
@@ -702,7 +702,7 @@ class App extends Component {
 							}
 						);
 					}
-					this.setState({ disabledStatus: false });
+					this.setState({ disabledStatus: false ,purchased:false});
 				});
 		}
 	};
