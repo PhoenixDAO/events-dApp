@@ -97,10 +97,9 @@ class MyTickets extends Component {
 				this.setState({
 					blockChainTickets: graphEvents.data.data.tickets,
 					blockChainTicketsCopy: graphEvents.data.data.tickets,
+					blockChainTicketsLoaded: false 
 				});
-				setTimeout(() => {
-					this.setState({ blockChainTicketsLoaded: false });
-				}, 2000);
+			
 			}
 		});
 		// const blockChainTickets = await this.props.eventsContract.methods

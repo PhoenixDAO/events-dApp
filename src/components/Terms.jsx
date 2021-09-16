@@ -99,10 +99,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								InterpretationAndDefinitions: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							InterpretationAndDefinitions: el,
+						})
 						}
 					>
 						Interpretation and Definitions
@@ -125,10 +125,10 @@ const Terms = (props) => {
 					</h5>
 					<h3
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Interpretation: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Interpretation: el,
+						})
 						}
 					>
 						Interpretation
@@ -142,10 +142,10 @@ const Terms = (props) => {
 					</p>
 					<h3
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Definitions: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Definitions: el,
+						})
 						}
 					>
 						Definitions
@@ -242,10 +242,10 @@ const Terms = (props) => {
 					</ul>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Acknowledgment: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Acknowledgment: el,
+						})
 						}
 					>
 						Acknowledgment
@@ -288,10 +288,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Websites: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Websites: el,
+						})
 						}
 					>
 						Links to Other Websites
@@ -319,10 +319,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Termination: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Termination: el,
+						})
 						}
 					>
 						Termination
@@ -339,10 +339,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Limitation: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Limitation: el,
+						})
 						}
 					>
 						Limitation of Liability
@@ -382,10 +382,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Disclaimer: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Disclaimer: el,
+						})
 						}
 					>
 						&quot;AS IS&quot; and &quot;AS AVAILABLE&quot;
@@ -439,10 +439,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Governing: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Governing: el,
+						})
 						}
 					>
 						Governing Law
@@ -455,10 +455,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Disputes: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Disputes: el,
+						})
 						}
 					>
 						Disputes Resolution
@@ -470,10 +470,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								European: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							European: el,
+						})
 						}
 					>
 						For European Union (EU) Users
@@ -485,10 +485,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								United: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							United: el,
+						})
 						}
 					>
 						United States Legal Compliance
@@ -504,20 +504,20 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								SeverabilityAndWaiver: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							SeverabilityAndWaiver: el,
+						})
 						}
 					>
 						Severability and Waiver
 					</h2>
 					<h3
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Severability: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Severability: el,
+						})
 						}
 					>
 						Severability
@@ -532,10 +532,10 @@ const Terms = (props) => {
 					</p>
 					<h3
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Waiver: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Waiver: el,
+						})
 						}
 					>
 						Waiver
@@ -550,10 +550,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Translation: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Translation: el,
+						})
 						}
 					>
 						Translation Interpretation
@@ -566,10 +566,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Changes: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Changes: el,
+						})
 						}
 					>
 						Changes to These Terms and Conditions
@@ -591,10 +591,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Contact: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Contact: el,
+						})
 						}
 					>
 						Contact Us
@@ -617,11 +617,11 @@ const Terms = (props) => {
 								{" "}
 								By visiting this page on our website:
 								<a
-									href="http//www.phoenixdao.io/contact"
+									href="https://phoenixdao.io/contact"
 									target="_blank"
 								>
-									http//www.phoenixdao.io/contact
-								</a>
+									www.phoenixdao.io/contact	
+																</a>
 							</li>
 						</ul>
 					</p>

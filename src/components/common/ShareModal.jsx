@@ -141,7 +141,7 @@ export default function ShareModal({ handleClose, open, titleURL }) {
 		setShareUrl(shareUrl1);
 	}, []);
 
-	let URL = "https://phoenixdao-events-dapp.herokuapp.com" + titleURL;
+	let URL = "https://events.phoenixdao.io" + titleURL;
 	return (
 		<div>
 			<Dialog
