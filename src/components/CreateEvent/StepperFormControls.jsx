@@ -589,7 +589,6 @@ export const useFormControls = () => {
 	const handleTicketCatogory = (event, index, fieldValues = values) => {
 		const { name, value, min, max } = event.target;
 		const { ticketCategories } = fieldValues;
-		console.log("min", min, "max", max);
 
 		if (name === "dollarPrice") {
 			if (value.length > 16) {
@@ -696,7 +695,7 @@ export const useFormControls = () => {
 
 	const handleEditTicketCategory = (index, fieldValues = values) => {
 		const { ticketCategories } = fieldValues;
-		console.log(ticketCategories[index]);
+		// console.log(ticketCategories[index]);
 
 		setValues({
 			...values,
@@ -764,7 +763,7 @@ export const useFormControls = () => {
 		} = fieldValues;
 
 		if (eventTime === "onedayevent") {
-			console.log("onedayevent");
+			// console.log("onedayevent");
 
 			let eventDateOneDay = eventDate;
 			let eventStartTimeOneday = eventStartTime;
@@ -813,7 +812,7 @@ export const useFormControls = () => {
 				}
 			}
 		} else {
-			console.log("morethanaday");
+			// console.log("morethanaday");
 			let eventDateOneDay = eventStartDate;
 			let eventEndDateOneDay = eventEndDate;
 			let eventStartTimeOneday = eventStartTime;
@@ -843,7 +842,7 @@ export const useFormControls = () => {
 			} else {
 				const diffTime = eventEndDateOneDay - eventDateOneDay;
 				const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-				console.log(diffDays + " days");
+				// console.log(diffDays + " days");
 				if (diffDays > 0) {
 					if (eventEndTimeOneday) {
 						eventEndTimeOneday.setFullYear(

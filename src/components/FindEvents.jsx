@@ -217,6 +217,7 @@ class FindEvents extends Component {
 			search: "",
 			latitude: "",
 			longitude: "",
+			cityName: "Unknown",
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -229,6 +230,7 @@ class FindEvents extends Component {
 
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
+		this.findNearToYouEvents = this.findNearToYouEvents.bind(this);
 		// this.success = this.success.bind(this);
 		// this.errors = this.errors.bind(this);
 	}
@@ -453,39 +455,48 @@ class FindEvents extends Component {
 		});
 	};
 
-	findNearToYouEvents = async (cityName) => {
+	getCityName = (cityName) => {
+		this.setState({ cityName: cityName });
+	};
+
+	findNearToYouEvents = async () => {
 		this.setState({ loading: true });
 
-		this.props.history.push("/upcomingevents/" + 1);
+		const cityName = this.state.cityName;
+		console.log("cityName---->", cityName);
 
-		try {
-			if (cityName) {
-				var filteredEvents = this.state.event_copy;
-
-				filteredEvents = filteredEvents.filter((event) => {
-					return (
-						event.city
-							.toLowerCase()
-							.search(cityName.toLowerCase()) !== -1
-					);
-				});
-
+		if (cityName) {
+			this.props.history.push("/upcomingevents/" + 1);
+			try {
+				if (cityName) {
+					var filteredEvents = this.state.event_copy;
+					console.log("filteredEvents", filteredEvents);
+					filteredEvents = filteredEvents.filter((event) => {
+						return (
+							event.city
+								.toLowerCase()
+								.search(cityName.toLowerCase()) !== -1
+						);
+					});
+					console.log("xord-->", filteredEvents);
+					this.setState({
+						Events_Blockchain: filteredEvents,
+						// event_copy: filteredEvents,
+					});
+					setTimeout(() => {
+						this.setState({ loading: false });
+					}, 1000);
+				}
+			} catch (e) {
+				console.log("findNearToYouEvents error", e);
 				this.setState({
-					Events_Blockchain: filteredEvents,
-					event_copy: filteredEvents,
+					Events_Blockchain: [],
+					// event_copy: [],
 				});
 				setTimeout(() => {
 					this.setState({ loading: false });
 				}, 1000);
 			}
-		} catch (e) {
-			this.setState({
-				Events_Blockchain: [],
-				event_copy: [],
-			});
-			setTimeout(() => {
-				this.setState({ loading: false });
-			}, 1000);
 		}
 	};
 
@@ -519,7 +530,7 @@ class FindEvents extends Component {
 			query = `orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Near Your Location") {
-			// await this.findNearToYouEvents();
+			await this.findNearToYouEvents();
 		} else if (newValue === "Today") {
 			console.log(newValue);
 			var todaydate = new Date();
@@ -976,9 +987,7 @@ class FindEvents extends Component {
 					<br />
 
 					{this.state.pageTitle === "Near Your Location" ? (
-						<NearToYou
-							findNearToYouEvents={this.findNearToYouEvents}
-						/>
+						<NearToYou getCityName={this.getCityName} />
 					) : null}
 
 					<div>

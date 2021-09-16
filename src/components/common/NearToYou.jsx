@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const NearToYou = ({ findNearToYouEvents }) => {
+const NearToYou = ({ getCityName }) => {
 	const classes = useStyles();
 	const [cityName, setCityName] = useState("Unknown");
 	const [stateName, setStateName] = useState("Unknown");
@@ -40,7 +40,7 @@ const NearToYou = ({ findNearToYouEvents }) => {
 	}, []);
 
 	useEffect(() => {
-		findNearToYouEvents(cityName);
+		getCityName(cityName);
 	}, [cityName]);
 
 	async function success(pos) {
