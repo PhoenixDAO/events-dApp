@@ -208,6 +208,7 @@ class FindEvents extends Component {
 			// active_length: "",
 			isOldestFirst: false,
 			event_copy: [],
+			event_copy_for_loc: [],
 			prevPath: -1,
 			hideEvent: [],
 			selectedTab: "All Events",
@@ -217,7 +218,7 @@ class FindEvents extends Component {
 			search: "",
 			latitude: "",
 			longitude: "",
-			cityName: "Unknown",
+			cityName: "....",
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -245,7 +246,12 @@ class FindEvents extends Component {
 			});
 
 			let updatedList = [];
-			let events = this.state.event_copy;
+			// let events = this.state.event_copy;
+			let events = [];
+			events =
+				this.state.selectedTab === "Near Your Location"
+					? this.state.event_copy_for_loc
+					: this.state.event_copy;
 
 			if (event.target.value === "All Events") {
 				updatedList = events;
@@ -385,11 +391,11 @@ class FindEvents extends Component {
 						event_copy: newsort,
 					});
 
-					// if (this.state.pageTitle === "All Events") {
-					// 	this.setState({
-					// 		event_copy: newsort,
-					// 	});
-					// }
+					if (this.state.pageTitle === "All Events") {
+						this.setState({
+							event_copy_for_loc: newsort,
+						});
+					}
 
 					this.props.history.push("/upcomingevents/" + 1);
 
@@ -456,7 +462,9 @@ class FindEvents extends Component {
 	};
 
 	getCityName = (cityName) => {
-		this.setState({ cityName: cityName });
+		this.setState({ cityName: cityName }, function () {
+			this.findNearToYouEvents();
+		});
 	};
 
 	findNearToYouEvents = async () => {
@@ -469,7 +477,7 @@ class FindEvents extends Component {
 			this.props.history.push("/upcomingevents/" + 1);
 			try {
 				if (cityName) {
-					var filteredEvents = this.state.event_copy;
+					var filteredEvents = this.state.event_copy_for_loc;
 					console.log("filteredEvents", filteredEvents);
 					filteredEvents = filteredEvents.filter((event) => {
 						return (
