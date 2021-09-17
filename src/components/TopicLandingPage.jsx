@@ -36,7 +36,7 @@ import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -508,7 +508,10 @@ class TopicLandingPage extends Component {
 
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			console.log("topic landing page filtered events", get);
 			this.setState({
 				hideEvent: get.data.result,
@@ -580,7 +583,10 @@ class TopicLandingPage extends Component {
 
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			console.log("topic landing page filtered events", get);
 			this.setState({
 				hideEvent: get.data.result,

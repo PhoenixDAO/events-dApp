@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { explorerWithAddress } from "../config/const";
 import EventCard from "./common/EventCard.jsx";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Loading from "./Loading";
 import SkeletonLayout from "./common/SkeletonLayout";
 
@@ -71,7 +71,10 @@ class Ticket extends Component {
 	}
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});

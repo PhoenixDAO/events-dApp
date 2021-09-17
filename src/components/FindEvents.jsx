@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import Carousel from "react-bootstrap/Carousel";
 import { API_URL, REPORT_EVENT } from "../config/const";
-import GetGraphApi from "../config/getGraphApi";
 import axios from "axios";
 // Import dApp Components
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 // import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
@@ -41,6 +41,7 @@ import Slider from "./common/Slider";
 import roundlogo from "./Images/roundlogo.svg";
 import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
+import NearToYou from "./common/NearToYou";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -207,15 +208,17 @@ class FindEvents extends Component {
 			// active_length: "",
 			isOldestFirst: false,
 			event_copy: [],
+			event_copy_for_loc: [],
 			prevPath: -1,
 			hideEvent: [],
 			selectedTab: "All Events",
 			eventCount: 0,
 			category: "All Events",
 			pageTitle: "All Events",
-			cityName: "",
-			stateName: "",
 			search: "",
+			latitude: "",
+			longitude: "",
+			cityName: "Unknown",
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -228,6 +231,9 @@ class FindEvents extends Component {
 
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
+		this.findNearToYouEvents = this.findNearToYouEvents.bind(this);
+		// this.success = this.success.bind(this);
+		// this.errors = this.errors.bind(this);
 	}
 
 	async categoryChange(event) {
@@ -240,7 +246,12 @@ class FindEvents extends Component {
 			});
 
 			let updatedList = [];
-			let events = this.state.event_copy;
+			// let events = this.state.event_copy;
+			let events = [];
+			events =
+				this.state.selectedTab === "Near Your Location"
+					? this.state.event_copy_for_loc
+					: this.state.event_copy;
 
 			if (event.target.value === "All Events") {
 				updatedList = events;
@@ -380,11 +391,11 @@ class FindEvents extends Component {
 						event_copy: newsort,
 					});
 
-					// if (this.state.pageTitle === "All Events") {
-					// 	this.setState({
-					// 		event_copy: newsort,
-					// 	});
-					// }
+					if (this.state.pageTitle === "All Events") {
+						this.setState({
+							event_copy_for_loc: newsort,
+						});
+					}
 
 					this.props.history.push("/upcomingevents/" + 1);
 
@@ -450,91 +461,23 @@ class FindEvents extends Component {
 		});
 	};
 
-	success(pos) {
-		var crd = pos.coords;
-
-		console.log("Your current position is:");
-		console.log(`Latitude : ${crd.latitude}`);
-		console.log(`Longitude: ${crd.longitude}`);
-		console.log(`More or less ${crd.accuracy} meters.`);
-	}
-
-	errors(err) {
-		console.warn(`ERROR(${err.code}): ${err.message}`);
-	}
-
-	geoFindMe1 = async () => {
-		//AIzaSyDzm4lNQsRTjvYj5ltMKDVLtc4plnapEhs
-
-		//location
-		if (navigator.geolocation) {
-			navigator.permissions
-				.query({ name: "geolocation" })
-				.then(function (result) {
-					if (result.state === "granted") {
-						console.log(result.state);
-						//If granted then you can directly call your function here
-						navigator.geolocation.getCurrentPosition(function (
-							pos
-						) {
-							var crd = pos.coords;
-							console.log("pos", pos);
-							console.log("Your current position is:");
-							console.log(`Latitude : ${crd.latitude}`);
-							console.log(`Longitude: ${crd.longitude}`);
-						});
-					} else if (result.state === "prompt") {
-						navigator.geolocation.getCurrentPosition(function (
-							pos
-						) {
-							var crd = pos.coords;
-							console.log("pos", pos);
-							console.log("Your current position is:");
-							console.log(`Latitude : ${crd.latitude}`);
-							console.log(`Longitude: ${crd.longitude}`);
-						});
-					} else if (result.state === "denied") {
-						console.log("user denied");
-						//If denied then you have to show instructions to enable location
-					}
-					result.onchange = function () {
-						console.log(result.state);
-					};
-				});
-		} else {
-			alert("Sorry Not available!");
-		}
-	};
-
-	geoFindMe = async () => {
-		try {
-			const get = await axios.get(`http://ip-api.com/json`);
-			console.log("Get location", get);
-			if (!get.data) {
-				return { cityName: "Unknown", stateName: "Unknown" };
-			}
-			return { cityName: get.data.city, stateName: get.data.regionName };
-		} catch (error) {
-			return { cityName: "Unknown", stateName: "Unknown" };
-		}
+	getCityName = (cityName) => {
+		this.setState({ cityName: cityName }, function () {
+			this.findNearToYouEvents();
+		});
 	};
 
 	findNearToYouEvents = async () => {
 		this.setState({ loading: true });
-		const geoFindUser = await this.geoFindMe();
-		if (geoFindUser) {
-			let cityName = geoFindUser.cityName;
-			let stateName = geoFindUser.stateName;
-			this.setState({
-				cityName: cityName,
-				stateName: stateName,
-			});
 
+		const cityName = this.state.cityName;
+		console.log("cityName---->", cityName);
+
+		if (cityName) {
 			this.props.history.push("/upcomingevents/" + 1);
-
 			try {
 				if (cityName) {
-					var filteredEvents = this.state.event_copy;
+					var filteredEvents = this.state.event_copy_for_loc;
 					console.log("filteredEvents", filteredEvents);
 					filteredEvents = filteredEvents.filter((event) => {
 						return (
@@ -546,17 +489,17 @@ class FindEvents extends Component {
 					console.log("xord-->", filteredEvents);
 					this.setState({
 						Events_Blockchain: filteredEvents,
-						event_copy: filteredEvents,
+						// event_copy: filteredEvents,
 					});
 					setTimeout(() => {
 						this.setState({ loading: false });
 					}, 1000);
 				}
 			} catch (e) {
-				console.log("findNearToYouEvents", e);
+				console.log("findNearToYouEvents error", e);
 				this.setState({
 					Events_Blockchain: [],
-					event_copy: [],
+					// event_copy: [],
 				});
 				setTimeout(() => {
 					this.setState({ loading: false });
@@ -566,17 +509,19 @@ class FindEvents extends Component {
 	};
 
 	filterHideEvent = async () => {
-		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			this.setState({
-				hideEvent: get.data.result,
-			});
-			// console.log("hide event", this.state.hideEvent);
-			return;
-		} catch (error) {
-			console.log("check error", error);
-		}
-	};
+        try {
+            const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );          this.setState({
+                hideEvent: get.data.result,
+            });
+            // console.log("hide event", this.state.hideEvent);
+            return;
+        } catch (error) {
+            console.log("check error", error);
+        }
+    };
 
 	onTabChange = async (event, newValue) => {
 		this.executeEventScroll({
@@ -1052,40 +997,7 @@ class FindEvents extends Component {
 					<br />
 
 					{this.state.pageTitle === "Near Your Location" ? (
-						<span>
-							<div
-								style={{
-									paddingTop: "13px",
-									paddingBottom: "13px",
-									// height: 68,
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "flex-start",
-									backgroundColor: "#FFFFFF",
-									paddingLeft: 28,
-									border: " 0.5px solid #E4E4E7",
-									borderRadius: 8,
-								}}
-							>
-								<span>
-									<span className={classes.nearStyleBlack}>
-										Events within{" "}
-									</span>
-									<span className={classes.nearStyleBlue}>
-										50 Miles{" "}
-									</span>
-									<span className={classes.nearStyleBlack}>
-										of{" "}
-									</span>
-									<span className={classes.nearStyleBlue}>
-										{this.state.cityName},{" "}
-										{this.state.stateName}
-									</span>
-								</span>
-							</div>
-							<br />
-							<br />
-						</span>
+						<NearToYou getCityName={this.getCityName} />
 					) : null}
 
 					<div>
@@ -1298,7 +1210,7 @@ class FindEvents extends Component {
 
 	// comment out the below to re-render on every click
 	// shouldComponentUpdate(nextProps, nextState) {
-	// 	return this.state.Events_Blockchain != nextState.Events_Blockchain;
+	// 	return this.state.latitude != nextState.latitude;
 	// }
 
 	componentWillUnmount() {

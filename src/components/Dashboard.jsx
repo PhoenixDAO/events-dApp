@@ -11,6 +11,7 @@ import { Bar, Doughnut } from "react-chartjs-2";
 // import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import UniswapModal from "./UniswapModal";
 import topicsJson from "../config/topics.json";
+import { getNetworkId } from "../config/getGraphApi";
 // import {INFURA_WEB_URL} from "../config/const.js";
 
 let numeral = require("numeral");
@@ -96,7 +97,10 @@ class Dashboard extends Component {
 	}
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			if (get.data.result.length != 0) {
 				this.setState({
 					hideEvent: get.data.result,

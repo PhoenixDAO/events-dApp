@@ -7,7 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Ticket from "./Ticket";
 import Header from "./common/Header";
 import EmptyState from "./EmptyState";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import axios from "axios";
 import { API_URL, REPORT_EVENT } from "../config/const";
 
@@ -118,8 +118,10 @@ class MyTickets extends Component {
 
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			this.setState({
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );			this.setState({
 				hideEvent: get.data.result,
 			});
 			// console.log("hide event", this.state.hideEvent);

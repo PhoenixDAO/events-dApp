@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 import axios from "axios";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi, { getNetworkId }  from '../config/getGraphApi';
 
 export const getEvents = (props, context) => {
     const [Deleted_Events, setDeleted_Events] = useState([]);
@@ -25,7 +25,10 @@ export const getEvents = (props, context) => {
     }, [MyEvents]);
     const filterHideEvent = async() => {
         try {
-            const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+            const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
             if (get.data.result.length != 0) {
                 setHideEvent(get.data.result)
             }

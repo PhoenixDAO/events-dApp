@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "20px",
 		lineHeight: "150%",
 		fontFamily: "'AeonikReg', sans-serif",
+		whiteSpace: "pre-wrap",
 	},
 	detailsParent: {
 		padding: "8px 50px 16px 0",
