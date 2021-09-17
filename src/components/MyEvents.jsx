@@ -45,6 +45,16 @@ const styles = (theme) => ({
 			boxShadow: "none",
 		},
 	},
+	sticky: {
+		position: "sticky",
+		zIndex: 1,
+		top: 0,
+		display: "flex",
+		flexDirection: "column",
+		background: `#F2F2FD !important`,
+		opacity: `1 !important`,
+		marginLeft: -2,
+	},
 	tabBar: {
 		"&:hover, &:focus ": {
 			outline: "none",
@@ -575,7 +585,8 @@ class MyEvents extends Component {
 			);
 		}
 		return (
-			<div className="event-page-wrapper" ref={this.myRef}>
+			<div className={`event-page-wrapper`} ref={this.myRef}>
+				<div className={`${classes.sticky}`}>
 				<Header
 					title="Created Events"
 					page="myEvent"
@@ -612,6 +623,7 @@ class MyEvents extends Component {
 					</Tabs>
 					<Divider light />
 				</AppBar>
+				</div>
 				<TabPanel value={this.state.selectedTab} index={0}>
 					<div>{body}</div>
 				</TabPanel>
