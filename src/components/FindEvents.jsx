@@ -41,6 +41,7 @@ import Slider from "./common/Slider";
 import roundlogo from "./Images/roundlogo.svg";
 import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
+import NearToYou from "./common/NearToYou";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -213,9 +214,9 @@ class FindEvents extends Component {
 			eventCount: 0,
 			category: "All Events",
 			pageTitle: "All Events",
-			cityName: "",
-			stateName: "",
 			search: "",
+			latitude: "",
+			longitude: "",
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -228,6 +229,8 @@ class FindEvents extends Component {
 
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
+		// this.success = this.success.bind(this);
+		// this.errors = this.errors.bind(this);
 	}
 
 	async categoryChange(event) {
@@ -450,118 +453,39 @@ class FindEvents extends Component {
 		});
 	};
 
-	success(pos) {
-		var crd = pos.coords;
-
-		console.log("Your current position is:");
-		console.log(`Latitude : ${crd.latitude}`);
-		console.log(`Longitude: ${crd.longitude}`);
-		console.log(`More or less ${crd.accuracy} meters.`);
-	}
-
-	errors(err) {
-		console.warn(`ERROR(${err.code}): ${err.message}`);
-	}
-
-	geoFindMe1 = async () => {
-		//AIzaSyDzm4lNQsRTjvYj5ltMKDVLtc4plnapEhs
-
-		//location
-		if (navigator.geolocation) {
-			navigator.permissions
-				.query({ name: "geolocation" })
-				.then(function (result) {
-					if (result.state === "granted") {
-						console.log(result.state);
-						//If granted then you can directly call your function here
-						navigator.geolocation.getCurrentPosition(function (
-							pos
-						) {
-							var crd = pos.coords;
-							console.log("pos", pos);
-							console.log("Your current position is:");
-							console.log(`Latitude : ${crd.latitude}`);
-							console.log(`Longitude: ${crd.longitude}`);
-						});
-					} else if (result.state === "prompt") {
-						navigator.geolocation.getCurrentPosition(function (
-							pos
-						) {
-							var crd = pos.coords;
-							console.log("pos", pos);
-							console.log("Your current position is:");
-							console.log(`Latitude : ${crd.latitude}`);
-							console.log(`Longitude: ${crd.longitude}`);
-						});
-					} else if (result.state === "denied") {
-						console.log("user denied");
-						//If denied then you have to show instructions to enable location
-					}
-					result.onchange = function () {
-						console.log(result.state);
-					};
-				});
-		} else {
-			alert("Sorry Not available!");
-		}
-	};
-
-	geoFindMe = async () => {
-		try {
-			const get = await axios.get(`http://ip-api.com/json`);
-			console.log("Get location", get);
-			if (!get.data) {
-				return { cityName: "Unknown", stateName: "Unknown" };
-			}
-			return { cityName: get.data.city, stateName: get.data.regionName };
-		} catch (error) {
-			return { cityName: "Unknown", stateName: "Unknown" };
-		}
-	};
-
-	findNearToYouEvents = async () => {
+	findNearToYouEvents = async (cityName) => {
 		this.setState({ loading: true });
-		const geoFindUser = await this.geoFindMe();
-		if (geoFindUser) {
-			let cityName = geoFindUser.cityName;
-			let stateName = geoFindUser.stateName;
-			this.setState({
-				cityName: cityName,
-				stateName: stateName,
-			});
 
-			this.props.history.push("/upcomingevents/" + 1);
+		this.props.history.push("/upcomingevents/" + 1);
 
-			try {
-				if (cityName) {
-					var filteredEvents = this.state.event_copy;
-					console.log("filteredEvents", filteredEvents);
-					filteredEvents = filteredEvents.filter((event) => {
-						return (
-							event.city
-								.toLowerCase()
-								.search(cityName.toLowerCase()) !== -1
-						);
-					});
-					console.log("xord-->", filteredEvents);
-					this.setState({
-						Events_Blockchain: filteredEvents,
-						event_copy: filteredEvents,
-					});
-					setTimeout(() => {
-						this.setState({ loading: false });
-					}, 1000);
-				}
-			} catch (e) {
-				console.log("findNearToYouEvents", e);
+		try {
+			if (cityName) {
+				var filteredEvents = this.state.event_copy;
+
+				filteredEvents = filteredEvents.filter((event) => {
+					return (
+						event.city
+							.toLowerCase()
+							.search(cityName.toLowerCase()) !== -1
+					);
+				});
+
 				this.setState({
-					Events_Blockchain: [],
-					event_copy: [],
+					Events_Blockchain: filteredEvents,
+					event_copy: filteredEvents,
 				});
 				setTimeout(() => {
 					this.setState({ loading: false });
 				}, 1000);
 			}
+		} catch (e) {
+			this.setState({
+				Events_Blockchain: [],
+				event_copy: [],
+			});
+			setTimeout(() => {
+				this.setState({ loading: false });
+			}, 1000);
 		}
 	};
 
@@ -595,7 +519,7 @@ class FindEvents extends Component {
 			query = `orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Near Your Location") {
-			await this.findNearToYouEvents();
+			// await this.findNearToYouEvents();
 		} else if (newValue === "Today") {
 			console.log(newValue);
 			var todaydate = new Date();
@@ -1052,40 +976,9 @@ class FindEvents extends Component {
 					<br />
 
 					{this.state.pageTitle === "Near Your Location" ? (
-						<span>
-							<div
-								style={{
-									paddingTop: "13px",
-									paddingBottom: "13px",
-									// height: 68,
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "flex-start",
-									backgroundColor: "#FFFFFF",
-									paddingLeft: 28,
-									border: " 0.5px solid #E4E4E7",
-									borderRadius: 8,
-								}}
-							>
-								<span>
-									<span className={classes.nearStyleBlack}>
-										Events within{" "}
-									</span>
-									<span className={classes.nearStyleBlue}>
-										50 Miles{" "}
-									</span>
-									<span className={classes.nearStyleBlack}>
-										of{" "}
-									</span>
-									<span className={classes.nearStyleBlue}>
-										{this.state.cityName},{" "}
-										{this.state.stateName}
-									</span>
-								</span>
-							</div>
-							<br />
-							<br />
-						</span>
+						<NearToYou
+							findNearToYouEvents={this.findNearToYouEvents}
+						/>
 					) : null}
 
 					<div>
@@ -1298,7 +1191,7 @@ class FindEvents extends Component {
 
 	// comment out the below to re-render on every click
 	// shouldComponentUpdate(nextProps, nextState) {
-	// 	return this.state.Events_Blockchain != nextState.Events_Blockchain;
+	// 	return this.state.latitude != nextState.latitude;
 	// }
 
 	componentWillUnmount() {

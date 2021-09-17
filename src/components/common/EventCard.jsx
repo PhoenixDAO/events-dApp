@@ -429,7 +429,7 @@ const EventCard = (props, context) => {
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
-									height: "88px",
+									height: "80px",
 								}}
 							>
 								<Typography

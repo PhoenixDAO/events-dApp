@@ -54,7 +54,7 @@ export default async function GetGraphApi() {
 		} else if (networkId === GLOBAL_NETWORK_ID_2) {
 			graphURL = graphURLV2;
 		} else {
-			graphURL = graphURLV1;
+			graphURL = graphURLV2;
 			console.log("network id not suported");
 		}
 		console.log("GRAPHURL", graphURL);

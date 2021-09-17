@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import GetGraphApi from "../config/getGraphApi";
+
 import {
 	Button,
 	Typography,
@@ -25,6 +27,7 @@ import { useForm, Controller } from "react-hook-form";
 import Header from "./common/Header";
 import { generateBuyerArr } from "../utils/graphApis";
 import Web3 from "web3";
+import axios from "axios";
 const useStyles = makeStyles((theme) => ({
 	wrapper: {
 		background: "#fff",
@@ -39,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 		"@media (max-width: 900px)": {
 			padding: "20px",
 		},
-		"@media (max-width: 650px)":{
+		"@media (max-width: 650px)": {
 			padding: "10px",
 		},
 	},
@@ -49,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	formWrapper: {
 		width: "45%",
-		"@media (max-width: 650px)":{
+		"@media (max-width: 650px)": {
 			width: "90%",
 		},
 		margin: "0 auto",
@@ -102,30 +105,51 @@ const ConfirmPurchase = (props) => {
 	const [errorAddress, setErrorAddress] = useState(false);
 	const [errorId, seterrorId] = useState(false);
 	const [prevPath, setPrevPath] = useState(-1);
+	const [eventlength, setLength] = useState(0);
 
-	useEffect(() => {
+	useEffect( () => {
 		if (prevPath == -1) {
 			props.executeScroll();
 		}
+		const loadGraphData = async () => {
+			const graphURL = await GetGraphApi();
+	
+			let result = await axios({
+				url: graphURL,
+				method: "post",
+				data: {
+					query: `
+			{
+			  events(first:1000){
+				eventId
+			  }
+			}
+			`,
+				},
+			});
+			console.log("result",result.data.data.events.length);
+			setLength(result.data.data.events.length);
+		}
+		loadGraphData();
 	}, []);
-
+	
 	const checkTickets = async () => {
-		const eventLength = await props.eventsContract.methods
-			.getEventsCount()
-			.call();
+		// const eventLength = await props.eventsContract.methods
+		// 	.getEventsCount()
+		// 	.call();
 
-		// console.log("length", length, eventId);
+
 		const buyers = await generateBuyerArr(eventId);
 		const isaddress = Web3.utils.isAddress(address);
-		let error=parseInt(eventId) > parseInt(eventLength)
+		let error = parseInt(eventId) > parseInt(eventlength)
 		if (error) {
 			seterrorId(true);
 			console.log("error", errorId);
-		} 
-		 if (!isaddress) {
+		}
+		if (!isaddress) {
 			setErrorAddress(true);
-		} 
-		if(isaddress  && !error ) {
+		}
+		if (isaddress && !error) {
 			const isowner = buyers.find((element) => {
 				return element.address.toLowerCase() == address.toLowerCase();
 			});
@@ -190,8 +214,8 @@ const ConfirmPurchase = (props) => {
 									errorId
 										? "This event doesn't exist"
 										: error
-										? error.message
-										: null
+											? error.message
+											: null
 								}
 								// helperText={error ? error.message : null}
 								onChange={(e) => {
@@ -200,7 +224,7 @@ const ConfirmPurchase = (props) => {
 									seterrorId(false);
 									setEventId(e.target.value);
 								}}
-								// inputProps={{ pattern: "[0-9]{1,15}" }}
+							// inputProps={{ pattern: "[0-9]{1,15}" }}
 							/>
 						)}
 						rules={{
@@ -240,8 +264,8 @@ const ConfirmPurchase = (props) => {
 									errorAddress
 										? "Invalid account address"
 										: error
-										? error.message
-										: null
+											? error.message
+											: null
 								}
 							/>
 						)}
