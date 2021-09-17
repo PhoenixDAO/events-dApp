@@ -37,23 +37,20 @@ export const getEvents = (props, context) => {
 	const loadBockchain = async () => {
 		if (_isMounted) {
 			// if (this._isMounted) {
-
-			// Graph BLOCK
-			// await axios({
-			//     url: graphURL,
-			//     method: 'post',
-			//     data: {
-			//         query: `
-			//   {
-			//     eventsRemoveds {
-			//       id
-			//       eventId
-			//     }
-			//   }
-			//   `
-			//     }
-			// }).then((graphDeletedEvents) => {
-
+        }
+        return () => {
+            set_isMounted(false);
+        }
+    }, [MyEvents]);
+    const filterHideEvent = async() => {
+        try {
+            const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
+            if (get.data.result.length != 0) {
+                setHideEvent(get.data.result)
+            }
 			//     if (!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined') {
 			//         setDeleted_Events([]);
 			//     } else {
