@@ -30,6 +30,7 @@ import { toast } from "react-toastify";
 //eventCard
 import EventCard from "./common/EventCard";
 import SkeletonLayout from "./common/SkeletonLayout.jsx";
+import { getNetworkId } from "../config/getGraphApi.js";
 
 var moment = require("moment");
 
@@ -419,7 +420,10 @@ class Event extends Component {
 	// }
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});

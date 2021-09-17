@@ -23,6 +23,7 @@ import Snackbar from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar3 from "./Snackbar3";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { getNetworkId } from "../config/getGraphApi";
 
 class Home extends Component {
 	constructor(props, context) {
@@ -142,7 +143,10 @@ class Home extends Component {
 	};
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});

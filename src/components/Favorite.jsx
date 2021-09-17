@@ -14,7 +14,7 @@ import {
 import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 
 //Material UI styles
 import { withStyles } from "@material-ui/core/styles";
@@ -305,7 +305,10 @@ class Favorites extends Component {
 
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});

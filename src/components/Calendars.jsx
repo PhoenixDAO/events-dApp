@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { getTickets } from "../utils/graphApis";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi, { getNetworkId }  from '../config/getGraphApi';
 
 const styles = (theme) => ({
 	content: {
@@ -199,7 +199,10 @@ class Calendars extends Component {
 	}
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});
