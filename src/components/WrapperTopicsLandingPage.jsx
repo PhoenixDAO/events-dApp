@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import TopicsLandingPage from "./TopicsLandingPage";
 import topicsJson from "../config/topics.json";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import moment from "moment";
 import { API_URL, REPORT_EVENT } from "../config/const";
 
@@ -87,7 +87,10 @@ const WrapperTopicsLandingPage = (props) => {
 
 	const filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
 			console.log("HIde event", get);
 			setHideEvent(get.data.result);
 		} catch (error) {
