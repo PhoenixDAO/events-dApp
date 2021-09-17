@@ -505,6 +505,14 @@ class FindEvents extends Component {
 					this.setState({ loading: false });
 				}, 1000);
 			}
+		} catch (e) {
+			this.setState({
+				Events_Blockchain: [],
+				event_copy: [],
+			});
+			setTimeout(() => {
+				this.setState({ loading: false });
+			}, 1000);
 		}
 	};
 
@@ -540,7 +548,7 @@ class FindEvents extends Component {
 			query = `orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Near Your Location") {
-			await this.findNearToYouEvents();
+			// await this.findNearToYouEvents();
 		} else if (newValue === "Today") {
 			console.log(newValue);
 			var todaydate = new Date();
