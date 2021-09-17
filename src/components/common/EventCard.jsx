@@ -135,7 +135,7 @@ const useStyles = makeStyles((theme) => ({
 	price: {
 		color: "#413AE2",
 		fontWeight: "700",
-		maxWidth: "34.33%",
+		maxWidth: "35.33%",
 		fontSize: "16px",
 		fontFamily: "'Aeonik', sans-serif !important",
 		"& p": {
@@ -161,8 +161,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	eventTitle: {
 		color: "#1E1E22",
-		maxWidth: "65.66%",
-		fontSize: 16,
+		maxWidth: "64.66%",
+				fontSize: 16,
 		maxHeight: "52px",
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
@@ -427,7 +427,7 @@ const EventCard = (props, context) => {
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
-									height: "72px",
+									height: "80px",
 								}}
 							>
 								<Typography

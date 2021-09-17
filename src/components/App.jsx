@@ -1518,7 +1518,7 @@ class App extends Component {
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
 					/>
-					<div id="page-content-wrapper" className="sidebar-open">
+					<div id="page-content-wrapper"  className="sidebar-open">
 						{/* <div
 							id="bgImage"
 							ref="bgImage"
@@ -1553,17 +1553,50 @@ class App extends Component {
 									handleClose={this.handleSnackbarClose}
 								/> */}
 								<Snackbar
-									anchorOrigin={{
-										vertical: "top",
-										horizontal: "center",
-									}}
-									open={this.state.openSnackbarForNoMetaMask}
-									message={this.state.errorMessage}
-									onClose={() => this.handleSnackbarClose(1)}
-									autoHideDuration={3000}
-									key={"top" + "center"}
-									className="snackbar"
-								/>
+                                    anchorOrigin={{
+                                        vertical: "top",
+                                        horizontal: "center",
+                                    }}
+                                    open={this.state.openSnackbarForNoMetaMask}
+                                    message={
+                                        <span>
+                                            {" "}
+                                            {this.state.errorMessage}
+                                            {typeof InstallTrigger !==
+                                            "undefined" ? (
+                                                <a
+                                                    target="_blank"
+                                                    style={{
+                                                        textAlign: "center",
+                                                        color: "blue",
+                                                        opacity: "1",
+                                                    }}
+                                                    href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"
+                                                >
+                                                    {" "}
+                                                    [LINK]
+                                                </a>
+                                            ) : (
+                                                <a
+                                                    target="_blank"
+                                                    style={{
+                                                        textAlign: "center",
+                                                        color: "blue",
+                                                        opacity: "1",
+                                                    }}
+                                                    href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
+                                                >
+                                                    {" "}
+                                                    [LINK]
+                                                </a>
+                                            )}
+                                        </span>
+                                    }
+                                    onClose={() => this.handleSnackbarClose(1)}
+                                    autoHideDuration={5000}
+                                    key={"top" + "center"}
+                                    className="snackbar"
+                                />
 								<Snackbar2
 									style={{ zIndex: "9999999 !important" }}
 									open={
