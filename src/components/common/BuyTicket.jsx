@@ -258,7 +258,6 @@ const DialogTitle = withStyles(styles)((props) => {
 	return (
 		<MuiDialogTitle disableTypography className={classes.root} {...other}>
 			<Typography variant="div">{children}</Typography>
-			{console.log("onclose", onClose)}
 			{onClose ? (
 				<IconButton
 					aria-label="close"
@@ -304,7 +303,6 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
     handleClose();
 
   }
-  console.log("purchased", purchased, "event time",time);
   return (
     <div >
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" TransitionComponent={Transition} open={open} className={classes.root} >
@@ -346,9 +344,6 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
                 `},{" "}
                 
                {moment(time,"hh:mm A", false).utcOffset(0).format("hh:mma z")}
-                {
-								console.log("Time in buy modal", time)
-							}
                   </Typography>
                 </div>
                 </Grid>
@@ -356,7 +351,6 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
                 <div className={classes.priceAlignment}>
                   <div className={classes.eventinfo}>
                     <span className={classes.PhnxPrice} title={phnx_price}>
-                    {/* {console.log("pheonix value", phnx_price, typeof(phnx_price))} */}
                       {pricingFormatter(phnx_price, "PHNX")}
                     </span>
                     <div style={{ color: "#56555D", fontSize: "14px" }} title={dollar_price}>

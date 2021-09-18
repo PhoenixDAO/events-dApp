@@ -121,7 +121,6 @@ const DialogTitle = withStyles(styles)((props) => {
 	return (
 		<MuiDialogTitle disableTypography className={classes.root} {...other}>
 			<Typography variant="div">{children}</Typography>
-			{console.log("onclose", onClose)}
 			{onClose ? (
 				<IconButton
 					aria-label="close"
@@ -171,14 +170,12 @@ export default function sendTicket({
 
 	const accountChange = (event) => {
 		setAddress(event.target.value);
-		console.log("address", address);
 	};
 	const send = () => {
 		const isaddress = Web3.utils.isAddress(address);
 		if (!isaddress) {
 			setErrorAddress(true);
 		}
-		// console.log("props", sendTicket2)
 		else {
 			sendTicket2(address, eventId);
 			handleClose();

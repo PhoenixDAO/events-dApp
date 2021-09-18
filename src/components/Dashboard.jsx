@@ -109,7 +109,6 @@ class Dashboard extends Component {
 
 			return;
 		} catch (error) {
-			// console.log("check error", error);
 		}
 	};
 	async loadBockchain() {
@@ -172,25 +171,17 @@ class Dashboard extends Component {
 				  }`
 				}
 				}).then((graphEvents)=>{
-				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
 				if(!graphEvents.data || graphEvents.data.data == 'undefined'){
-					// console.log("GraphQL query -- graphEvents undefined")
-
 					this.setState({ loading:false, Topic_Events: [], active_length: 0 });
 				}else{
 					if (this._isMounted) {
 						const dateTime = Date.now();
 						const dateNow = Math.floor(dateTime / 1000);
 						let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
-						// console.log("graph userEvents",userEvents)
 						if(userEvents){
 							let newsort = userEvents.userEvents
 							.concat()
 							.sort((a, b) => b.blockNumber - a.blockNumber)
-							
-								// console.log("GraphQL query newsort",newsort)
-		
-
 									this.setState({
 										MyEvents: newsort,
 										active_length: newsort.length,
@@ -211,8 +202,6 @@ class Dashboard extends Component {
 		let createdEventlen = 0;
 		let skip = false;
 		let skip2 = false;
-		// console.log("Dashboard NewAndUpdatedEvent in dashboard after uniqueness this.state.MyEvents",this.state.MyEvents)
-
 		for (let i = 0; i < this.state.MyEvents.length; i++) {
 			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
@@ -317,10 +306,6 @@ class Dashboard extends Component {
 				limited=[]
 				limited.seats=0;
 				limited.sold=0;
-				// console.log(
-				// 	"limited",limited
-				// )
-
 			}
 		
 			let top_PhoenixDAORevenue = phoenixDAORevenue

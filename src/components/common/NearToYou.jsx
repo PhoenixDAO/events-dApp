@@ -44,7 +44,6 @@ const NearToYou = ({ getCityName }) => {
 	}, [cityName]);
 
 	async function success(pos) {
-		// console.log("success", pos);
 		var crd = pos.coords;
 		if (crd) {
 			let lat = crd.latitude;
@@ -54,7 +53,6 @@ const NearToYou = ({ getCityName }) => {
 				`https://places.ls.hereapi.com/places/v1/discover/search?at=${lat},${lng}&q=${lat},${lng}&apikey=${apikey}`
 			);
 			if (get.data) {
-				// console.log("get1", get);
 				const city = get.data.search.context.location.address.city;
 				const state = get.data.search.context.location.address.country;
 				setCityName(city ? city : "Unknown");
@@ -77,7 +75,6 @@ const NearToYou = ({ getCityName }) => {
 					.then(async function (result) {
 						setPermission(result.state);
 						if (result.state === "granted") {
-							// console.log(result.state);
 							//If granted then you can directly call your function here
 							navigator.geolocation.getCurrentPosition(
 								success,
@@ -90,10 +87,8 @@ const NearToYou = ({ getCityName }) => {
 							);
 						} else if (result.state === "denied") {
 							//If denied then you have to show instructions to enable location
-							console.log("user denied");
 						}
 						result.onchange = function () {
-							console.log("result.state", result.state);
 						};
 					});
 			}

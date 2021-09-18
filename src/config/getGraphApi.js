@@ -27,17 +27,15 @@ export const getNetworkId = async () => {
 			web3 = new Web3(new Web3.providers.HttpProvider(infura));
 		}
 		const networkId = await web3.eth.net.getId();
-		console.log("This called getNetworkId", networkId);
 		if (networkId === GLOBAL_NETWORK_ID) {
 			return networkId;
 		} else if (networkId === GLOBAL_NETWORK_ID_2) {
 			return networkId;
 		} else {
-			console.log("network id not suported");
 		}
 		return null;
 	} catch (err) {
-		console.log("err", err);
+		// console.log("err", err);
 	}
 };
 
@@ -48,18 +46,14 @@ export default async function GetGraphApi() {
 	let networkId = 0;
 	try {
 		let networkId = await getNetworkId();
-		console.log("This called getNetworkId", networkId);
 		if (networkId === GLOBAL_NETWORK_ID) {
 			graphURL = graphURLV1;
 		} else if (networkId === GLOBAL_NETWORK_ID_2) {
 			graphURL = graphURLV2;
 		} else {
 			graphURL = graphURLV2;
-			console.log("network id not suported");
 		}
-		console.log("GRAPHURL", graphURL);
 		return graphURL;
 	} catch (err) {
-		console.log("err", err);
 	}
 }

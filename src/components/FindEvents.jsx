@@ -195,7 +195,6 @@ class FindEvents extends Component {
 
 	constructor(props, context) {
 		super(props);
-		// console.log("props", props);
 		this.state = {
 			openEvents: "",
 			upload: false,
@@ -309,7 +308,6 @@ class FindEvents extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain(filter) {
-		console.log("filter1", filter);
 		const graphURL = await GetGraphApi();
 
 		await axios({
@@ -346,18 +344,11 @@ class FindEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				console.log(
-					"GraphQL query response",
-					Date.now(),
-					graphEvents.data.data.events
-				);
-
 				if (
 					!graphEvents.data ||
 					graphEvents.data.data == "undefined" ||
 					graphEvents.data.data.events.length === 0
 				) {
-					console.log("GraphQL query -- graphEvents undefined");
 					// this.setState({
 					// 	Events_Blockchain: [],
 					// 	// active_length: 0,
@@ -471,14 +462,11 @@ class FindEvents extends Component {
 		this.setState({ loading: true });
 
 		const cityName = this.state.cityName;
-		console.log("cityName---->", cityName);
-
 		if (cityName) {
 			this.props.history.push("/upcomingevents/" + 1);
 			try {
 				if (cityName) {
 					var filteredEvents = this.state.event_copy_for_loc;
-					console.log("filteredEvents", filteredEvents);
 					filteredEvents = filteredEvents.filter((event) => {
 						return (
 							event.city
@@ -486,7 +474,6 @@ class FindEvents extends Component {
 								.search(cityName.toLowerCase()) !== -1
 						);
 					});
-					console.log("xord-->", filteredEvents);
 					this.setState({
 						Events_Blockchain: filteredEvents,
 						// event_copy: filteredEvents,
@@ -496,7 +483,6 @@ class FindEvents extends Component {
 					}, 1000);
 				}
 			} catch (e) {
-				console.log("findNearToYouEvents error", e);
 				this.setState({
 					Events_Blockchain: [],
 					// event_copy: [],
@@ -519,7 +505,6 @@ class FindEvents extends Component {
             // console.log("hide event", this.state.hideEvent);
             return;
         } catch (error) {
-            console.log("check error", error);
         }
     };
 
@@ -542,53 +527,42 @@ class FindEvents extends Component {
 		} else if (newValue === "Near Your Location") {
 			await this.findNearToYouEvents();
 		} else if (newValue === "Today") {
-			console.log(newValue);
 			var todaydate = new Date();
 			todaydate.setDate(todaydate.getDate() + 1);
 			todaydate = parseInt(
 				(new Date(todaydate).getTime() / 1000).toFixed(0)
 			);
-			console.log(todaydate);
 			query = `where: {time_lte: ${todaydate} } orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "This Week") {
-			console.log(newValue);
 			var thisWeekdate = new Date();
 			thisWeekdate.setDate(thisWeekdate.getDate() + 7);
 			thisWeekdate = parseInt(
 				(new Date(thisWeekdate).getTime() / 1000).toFixed(0)
 			);
-			console.log(thisWeekdate);
 			query = `where: {time_lte: ${thisWeekdate} } orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "This Month") {
-			console.log(newValue);
 			var thisMonthdate = new Date();
 			thisMonthdate.setDate(thisMonthdate.getDate() + 30);
 			thisMonthdate = parseInt(
 				(new Date(thisMonthdate).getTime() / 1000).toFixed(0)
 			);
-			console.log(thisMonthdate);
 			query = `where: {time_lte: ${thisMonthdate} } orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Paid Events") {
-			console.log(newValue);
 			query = `where: {token: true} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Free Events") {
-			console.log(newValue);
 			query = `where: {token: false} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Online Events") {
-			console.log(newValue);
 			query = `where: {onsite: false} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Physical Events") {
-			console.log(newValue);
 			query = `where: {onsite: true} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else {
-			console.log(newValue);
 			query = `orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		}
@@ -619,8 +593,6 @@ class FindEvents extends Component {
 			);
 		}
 		//when user is not connectd hide connect wallet button
-		// console.log("accounts---->", this.props.accounts);
-
 		const { classes } = this.props;
 
 		let body = <PhoenixDAOLoader />;
@@ -649,7 +621,6 @@ class FindEvents extends Component {
 				}
 			}
 			if (!skip) {
-				// console.log("this.state.hideEvent", this.state.hideEvent);
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
 						this.state.Events_Blockchain[i].eventId ==
@@ -666,7 +637,6 @@ class FindEvents extends Component {
 		}
 
 		events_list.reverse();
-		// console.log("events_listt",events_list)
 		let updated_list = [];
 		count = events_list.length;
 		if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
@@ -694,7 +664,6 @@ class FindEvents extends Component {
 			let links = [];
 
 			if (pages > 5 && currentPage >= 3) {
-				// console.log("pag pages > 5 && currentPage >= 3");
 				for (
 					let i = currentPage - 2;
 					i <= currentPage + 2 && i <= pages;
@@ -724,7 +693,6 @@ class FindEvents extends Component {
 					}
 				}
 			} else if (pages > 5 && currentPage < 3) {
-				// console.log("pag pages > 5 && currentPage < 3");
 				for (let i = 1; i <= 5 && i <= pages; i++) {
 					let active = i === currentPage ? "active" : "";
 					links.push(
@@ -750,7 +718,6 @@ class FindEvents extends Component {
 					}
 				}
 			} else {
-				// console.log("pag else");
 				for (let i = 1; i <= pages; i++) {
 					let active = i === currentPage ? "active" : "";
 					links.push(

@@ -35,7 +35,6 @@ export const getEvents = (props, context) => {
 
             return;
         } catch (error) {
-            // console.log("check error", error);
         }
     };
     const loadBockchain = async() => {
@@ -71,7 +70,6 @@ export const getEvents = (props, context) => {
 
 
             //Listen For My Newly Created Events
-            console.log("account", props.revenueCategory);
             let graphURL  = await GetGraphApi();
             await axios({
                 url: graphURL,
@@ -103,9 +101,7 @@ export const getEvents = (props, context) => {
               }`
                 }
             }).then((graphEvents) => {
-                // console.log("GraphQL query response in getEvents.js", graphEvents.data.data)
                 if (!graphEvents.data || graphEvents.data.data == 'undefined') {
-                    // console.log("GraphQL query -- graphEvents undefined")
                     setLoading(false);
                     setActive_length(0);
 
@@ -137,8 +133,6 @@ export const getEvents = (props, context) => {
         let filteredDeleted = [];
         let skip = false;
         let skip2 = false;
-        // console.log("GraphQL query newsort", MyEvents, "deleted", Deleted_Events);
-
         for (let i = 0; i < MyEvents.length; i++) {
             for (let j = 0; j < Deleted_Events.length; j++) {
                 if (
@@ -169,7 +163,6 @@ export const getEvents = (props, context) => {
             skip = false;
             skip2 = false;
         }
-        // console.log("filtered", filteredDeletedReported, filteredDeleted)
         setMyEvents(filteredDeletedReported);
     }
     return MyEvents;

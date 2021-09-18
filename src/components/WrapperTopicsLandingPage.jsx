@@ -41,9 +41,7 @@ const WrapperTopicsLandingPage = (props) => {
 			},
 		});
 		if (isActive) {
-			console.log("this called", isActive);
 			const event = await loadActiveEvents();
-			console.log("EVENTS", event);
 			let eventObj = {};
 			if (event && event.length > 0) {
 				for (let i = 0; i < event.length; i++) {
@@ -75,10 +73,7 @@ const WrapperTopicsLandingPage = (props) => {
 			}
 			setEventObj(eventObj);
 			setEventObjCopy(eventObj);
-			console.log("eventObj", eventObj);
-			console.log("This is object array", Object.keys(eventObj));
 		} else {
-			console.log("this called", isActive);
 			loadPastEvents();
 		}
 	};
@@ -91,10 +86,8 @@ const WrapperTopicsLandingPage = (props) => {
             const get = await axios.get(
                 `${API_URL}${REPORT_EVENT}/${networkId}`
             );
-			console.log("HIde event", get);
 			setHideEvent(get.data.result);
 		} catch (error) {
-			console.log("check error", error);
 		}
 	};
 
@@ -140,9 +133,7 @@ const WrapperTopicsLandingPage = (props) => {
   	`,
 				},
 			});
-			// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 			if (!graphEvents.data || graphEvents.data.data == "undefined") {
-				// console.log("GraphQL query -- graphEvents undefined")
 				setTimeout(() => {
 					setLoading(false);
 				}, 2000);
@@ -152,19 +143,11 @@ const WrapperTopicsLandingPage = (props) => {
 			} else {
 				const dateTime = Date.now();
 				const dateNow = Math.floor(dateTime / 1000);
-				console.log("Data", graphEvents.data.data.events);
 				let newsort = graphEvents.data.data.events
 					.concat()
 					.sort((a, b) => b.blockNumber - a.blockNumber);
-				console.log("GraphQL query newsort", newsort);
-				console.log("Hide events", hideEvent);
 				for (let i = 0; i < newsort.length; i++) {
 					for (let j = 0; j < hideEvent.length; j++) {
-						console.log(
-							newsort[i].eventId,
-							hideEvent[j].id,
-							newsort[i].eventId === hideEvent[j].id
-						);
 						if (newsort[i].eventId === hideEvent[j].id) {
 							newsort[i].hide = true;
 							break;
@@ -177,7 +160,6 @@ const WrapperTopicsLandingPage = (props) => {
 					setLoading(false);
 				}, 2000);
 
-				console.log("newsort in wrapper", newsort);
 				setTopicEvents(newsort);
 				setTopicCopy(newsort);
 				setActiveLength(newsort.length);
@@ -191,12 +173,10 @@ const WrapperTopicsLandingPage = (props) => {
 
 	// Get My Past Events on Blockchain
 	const loadPastEvents = async () => {
-		// console.log("inLoadPastEvents")
 		setLoading(true);
 		setTopicEvents([]);
 		setActiveLength(0);
 		// GRAPH BLOCK //
-		// console.log("GraphQL query before call",Date.now())
 		const graphURL = await GetGraphApi();
 
 		await axios({
@@ -233,10 +213,8 @@ const WrapperTopicsLandingPage = (props) => {
 			},
 		})
 			.then((graphEvents) => {
-				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
-					// console.log("GraphQL query -- graphEvents undefined")
 					setTimeout(() => {
 						setLoading(false);
 					}, 2000);
@@ -248,7 +226,6 @@ const WrapperTopicsLandingPage = (props) => {
 					let newsort = graphEvents.data.data.events
 						.concat()
 						.sort((a, b) => b.blockNumber - a.blockNumber);
-					// console.log("GraphQL query newsort",newsort)
 					setTimeout(() => {
 						setLoading(false);
 					}, 2000);
@@ -267,7 +244,6 @@ const WrapperTopicsLandingPage = (props) => {
 		let filteredTopics = eventObjCopy;
 		try {
 			if (value !== "") {
-				console.log("if called in updated search");
 				filteredTopics = Object.keys(eventObjCopy).filter((event) => {
 					return (
 						eventObjCopy[event].name
@@ -284,15 +260,11 @@ const WrapperTopicsLandingPage = (props) => {
 				}
 				setEventObj(eventObjHldr);
 			} else {
-				console.log("else called in update search");
-				console.log("eventObj", eventObj);
 				setEventObj(eventObjCopy);
 			}
 		} catch (e) {
 			console.log(e);
 		}
-		console.log("valuee", value);
-		console.log("filteredTopics", filteredTopics);
 	};
 	return (
 		<TopicsLandingPage

@@ -100,7 +100,6 @@ class MyEvents extends Component {
 			selectedTab: 0,
 			value: "",
 		};
-		console.log("qwe", this.props.accounts[0]);
 		// this.contracts = context.drizzle.contracts;
 		// this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
 		// 	this.props.accounts[0]
@@ -137,8 +136,6 @@ class MyEvents extends Component {
 				},
 			})
 				.then((graphDeletedEvents) => {
-					// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
-
 					if (
 						!graphDeletedEvents.data ||
 						!graphDeletedEvents.data.data === undefined
@@ -154,7 +151,6 @@ class MyEvents extends Component {
 				.catch((err) => {
 					this.setState({ Deleted_Events: [], loading: false });
 				});
-			// console.log("Graph this.state.isActive",this.state.isActive)
 			if (this.state.isActive) {
 				this.loadActiveEvents();
 			} else {
@@ -169,13 +165,7 @@ class MyEvents extends Component {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
 		// GRAPH BLOCK //
-		// console.log("GraphQL query before call",Date.now())
 		const graphURL = await GetGraphApi();
-		console.log(
-			"checking this.accounts",
-			typeof this.account,
-			this.account
-		);
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -208,11 +198,6 @@ class MyEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				console.log(
-					"GraphQL query response in MyEvents Upcoming Events",
-					Date.now(),
-					graphEvents.data.data
-				);
 				if (!graphEvents.data || graphEvents.data.data === undefined) {
 					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({
@@ -292,11 +277,6 @@ class MyEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				console.log(
-					"GraphQL query response in MyEvents Past Events",
-					Date.now(),
-					graphEvents.data.data
-				);
 
 				if (!graphEvents.data || graphEvents.data.data === undefined) {
 					// console.log("GraphQL query -- graphEvents undefined")
@@ -342,7 +322,6 @@ class MyEvents extends Component {
 	//Display My Concluded Events
 	PastEvent = (e) => {
 		let value = "";
-		console.log("past event");
 		this.setState(
 			{
 				isActive: false,
@@ -412,7 +391,6 @@ class MyEvents extends Component {
 	};
 	render() {
 		const { classes } = this.props;
-		console.log("class props for event card", classes.tabBar);
 		let body;
 		// if (
 		// 	// typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==

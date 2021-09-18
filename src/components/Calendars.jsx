@@ -126,7 +126,6 @@ class Calendars extends Component {
 			},
 		})
 			.then((graphDeletedEvents) => {
-				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 
 				if (
 					!graphDeletedEvents.data ||
@@ -208,7 +207,6 @@ class Calendars extends Component {
 			});
 			return;
 		} catch (error) {
-			// console.log("check error", error);
 		}
 	};
 
@@ -243,7 +241,6 @@ class Calendars extends Component {
 				category:"created"
 			});
 		} else if (category == "favourite") {
-			// console.log("props",this.account, this.props.networkId);
 			const data = await getUserDetails({
 				address: this.account,
 				networkId: this.props.networkId,
@@ -252,7 +249,6 @@ class Calendars extends Component {
 				let favoriteEvents = this.state.event_copy.filter((item) =>
 					data.result.result.userHldr.favourites.includes(item.eventId)
 				);
-				console.log("favorite",favoriteEvents)
 				this.setState({
 					Events_Blockchain: favoriteEvents,
 					category:"favourite"

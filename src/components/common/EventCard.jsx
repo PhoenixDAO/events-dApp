@@ -255,7 +255,6 @@ const EventCard = (props, context) => {
 						},
 					}
 				);
-				console.log("result", result);
 				if (result.status === 200 || result.status === 400) {
 					setIcon(!Icon);
 				}
@@ -271,7 +270,6 @@ const EventCard = (props, context) => {
 						},
 					}
 				);
-				console.log("result", result);
 				if (result.status === 200 || result.status === 400) {
 					setIcon(!Icon);
 				}
@@ -279,10 +277,6 @@ const EventCard = (props, context) => {
 			}
 		} catch (error) {
 			if (error.response && error.response.data) {
-				console.log(
-					"Consoleee notify report response error.response.data",
-					error.response.data
-				);
 			}
 		}
 	};
@@ -456,7 +450,6 @@ const EventCard = (props, context) => {
 										"Free"
 									) : phnx_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
-											{console.log("phnx price",phnx_price)}
 											<p
 												title={phnx_price[0] + " PHNX"}
 												style={{
