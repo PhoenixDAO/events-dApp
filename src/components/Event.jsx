@@ -447,7 +447,7 @@ class Event extends Component {
 					},
 				}
 			);
-			console.log("get.data.result.favourites", get);
+			// console.log("get.data.result.favourites", get);
 			this.setState({
 				UserFavoriteEvents: get.data.result.userHldr.favourites,
 			});
