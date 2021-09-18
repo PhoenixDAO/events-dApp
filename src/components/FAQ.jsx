@@ -85,6 +85,26 @@ const useStyles = makeStyles((theme) => ({
 
 const questions = [
 	{
+		heading: "How to setup MetaMask for Matic?",
+		description: (<span>
+			Follow these steps and/or watch our walkthrough guide here - <a href="https://youtu.be/TDt0VoXoNuM" target="_blank">https://youtu.be/TDt0VoXoNuM</a>
+
+			<ul>
+				<li>Go to network tab on metamask</li>
+				<li>From there select custom Rpc</li>
+				<li>In custom RPC add network name Matic Mainnet</li>
+				<li>In RPC URL :  https://rpc-mainnet.matic.quiknode.pro</li>
+				<li>In network Id: 137</li>
+
+				<li>After adding these details click on save</li>
+				<li>Now you can use the Events Marketplace</li>
+
+
+			</ul>
+
+		</span>)
+	},
+	{
 		heading: "What is PhoenixDAO Events dApp?",
 		description:
 			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens (Meaning they are NFT’s).",

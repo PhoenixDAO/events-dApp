@@ -68,7 +68,7 @@ export default function (props) {
 					</Typography>
 				</AccordionSummary>
 				<AccordionDetails className={classes.detailsParent}>
-					<Typography className={classes.description}>
+					<Typography className={classes.description} component='div'>
 						{props.description}
 					</Typography>
 				</AccordionDetails>

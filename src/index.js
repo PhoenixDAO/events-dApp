@@ -85,17 +85,17 @@ const theme = createMuiTheme({
 // const drizzle = new Drizzle(options);
 // const { DrizzleProvider } = drizzleReactHooks;
 
-const account_login = localStorage.getItem("account");
-let appPassword = localStorage.getItem("app_password");
-if (
-	
-	!appPassword ||
-	appPassword != process.env.REACT_APP_PASSWORD
-) {
-	appPassword = prompt("App password");
-	localStorage.setItem("app_password", appPassword);
-}
-if (appPassword == process.env.REACT_APP_PASSWORD) {
+// const account_login = localStorage.getItem("account");
+// let appPassword = localStorage.getItem("app_password");
+// if (
+	 
+// 	!appPassword ||
+// 	appPassword != process.env.REACT_APP_PASSWORD
+// ) {
+// 	appPassword = prompt("App password");
+// 	localStorage.setItem("app_password", appPassword);
+// }
+// if (appPassword == process.env.REACT_APP_PASSWORD) {
 	const render = () => {
 		return (
 			<DrizzleProvider options={options}>
@@ -108,6 +108,6 @@ if (appPassword == process.env.REACT_APP_PASSWORD) {
 		<React.Fragment>{render()}</React.Fragment>,
 		document.getElementById("root")
 	);
-} else {
-	alert("Wrong password");
-}
+// } else {
+// 	alert("Wrong password");
+// }

@@ -313,8 +313,8 @@ class Sidebar extends Component {
 							className="switch-img"
 							src="/images/icons/switch.svg"
 						/>
-						Please switch to Ethereum or Matic Mainnet			
-								</span>
+						Please switch to Ethereum or Matic Mainnet
+					</span>
 				);
 			}
 		}
@@ -656,6 +656,14 @@ class Sidebar extends Component {
 									</a>
 								</div>
 							</ul>
+							<span className="toggleHidden suggestion">
+								Kindly give us your feedback(s) <a style={{
+									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
+									textDecoration: "underline",
+									display: "flex",
+									alignItems: "center",
+								}} href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform" target="_blank">here</a>
+							</span>
 						</div>
 					</div>
 					<DialogueBox
@@ -995,8 +1003,10 @@ class Sidebar extends Component {
 										<span className="toggleHidden">
 											Terms and Conditions
 										</span>
+
 									</NavLink>
 								</li>
+
 								<li style={{ display: "none" }}>
 									<ThemeSwitch />
 								</li>
@@ -1037,6 +1047,16 @@ class Sidebar extends Component {
 									</a>
 								</div>
 							</ul>
+							{/* <div className="toggleHidden suggestion"> */}
+							<span className="toggleHidden suggestion">
+								Kindly give us your feedback(s) <a style={{
+									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
+									textDecoration: "underline",
+									display: "flex",
+									alignItems: "center",
+								}} href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform" target="_blank">here</a>
+							</span>
+							{/* </div> */}
 						</div>
 					</div>
 				</React.Fragment>

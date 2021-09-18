@@ -4,7 +4,7 @@ import { drizzleConnect } from "drizzle-react";
 import { ToastContainer, toast } from "react-toastify";
 import Web3 from "web3";
 import TravallaBannerFooter from "./common/TravallaBannerFooter";
-
+import MobileScreenDialog from "./common/MobileScreenDialog";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "startbootstrap-simple-sidebar/css/simple-sidebar.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
