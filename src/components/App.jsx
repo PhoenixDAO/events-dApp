@@ -70,6 +70,7 @@ import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
 import IdentityForm from "./common/AvatarSelector/identityform";
 import DialogueBox from "./common/DialogueBox";
+import MobileScreenDialog from "./common/MobileScreenDialog";
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -1518,7 +1519,7 @@ class App extends Component {
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
 					/>
-					<div id="page-content-wrapper"  className="sidebar-open">
+					<div id="page-content-wrapper" className="sidebar-open" style={{minHeight: "100vh", paddingBottom: "10%"}}>
 						{/* <div
 							id="bgImage"
 							ref="bgImage"
@@ -1638,6 +1639,7 @@ class App extends Component {
 								</DialogueBox>
 							</div>
 						</div>
+						<MobileScreenDialog/>
 						<Snackbar
 							anchorOrigin={{
 								vertical: "top",
