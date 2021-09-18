@@ -54,7 +54,6 @@ const NearToYou = ({ getCityName }) => {
 				`https://places.ls.hereapi.com/places/v1/discover/search?at=${lat},${lng}&q=${lat},${lng}&apikey=${apikey}`
 			);
 			if (get.data) {
-				// console.log("get1", get);
 				const city = get.data.search.context.location.address.city;
 				const state = get.data.search.context.location.address.country;
 				setCityName(city ? city : "....");
@@ -132,7 +131,6 @@ const NearToYou = ({ getCityName }) => {
 					</span>
 				</div>
 			)}
-
 			<br />
 			<br />
 		</span>

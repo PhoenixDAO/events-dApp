@@ -4,9 +4,10 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import Carousel from "react-bootstrap/Carousel";
 import { API_URL, REPORT_EVENT } from "../config/const";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import axios from "axios";
 // Import dApp Components
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 // import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
@@ -218,7 +219,7 @@ class FindEvents extends Component {
 			search: "",
 			latitude: "",
 			longitude: "",
-			cityName: "....",
+			cityName: "Unknown",
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -510,7 +511,10 @@ class FindEvents extends Component {
 
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
 			this.setState({
 				hideEvent: get.data.result,
 			});
@@ -901,7 +905,6 @@ class FindEvents extends Component {
 						<div>
 							<div className={classes.root}>
 								<AppBar
-									style={{ padding: "0 19px" }}
 									position="sticky"
 									className={classes.appBar}
 									color="transparent"

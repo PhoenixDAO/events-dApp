@@ -4,7 +4,7 @@ import { drizzleConnect } from "drizzle-react";
 import { ToastContainer, toast } from "react-toastify";
 import Web3 from "web3";
 import TravallaBannerFooter from "./common/TravallaBannerFooter";
-
+import MobileScreenDialog from "./common/MobileScreenDialog";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "startbootstrap-simple-sidebar/css/simple-sidebar.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -70,6 +70,7 @@ import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
 import IdentityForm from "./common/AvatarSelector/identityform";
 import DialogueBox from "./common/DialogueBox";
+import MobileScreenDialog from "./common/MobileScreenDialog";
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -1518,7 +1519,7 @@ class App extends Component {
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
 					/>
-					<div id="page-content-wrapper" className="sidebar-open">
+					<div id="page-content-wrapper" className="sidebar-open" style={{minHeight: "100vh", paddingBottom: "10%"}}>
 						{/* <div
 							id="bgImage"
 							ref="bgImage"
@@ -1553,17 +1554,50 @@ class App extends Component {
 									handleClose={this.handleSnackbarClose}
 								/> */}
 								<Snackbar
-									anchorOrigin={{
-										vertical: "top",
-										horizontal: "center",
-									}}
-									open={this.state.openSnackbarForNoMetaMask}
-									message={this.state.errorMessage}
-									onClose={() => this.handleSnackbarClose(1)}
-									autoHideDuration={3000}
-									key={"top" + "center"}
-									className="snackbar"
-								/>
+                                    anchorOrigin={{
+                                        vertical: "top",
+                                        horizontal: "center",
+                                    }}
+                                    open={this.state.openSnackbarForNoMetaMask}
+                                    message={
+                                        <span>
+                                            {" "}
+                                            {this.state.errorMessage}
+                                            {typeof InstallTrigger !==
+                                            "undefined" ? (
+                                                <a
+                                                    target="_blank"
+                                                    style={{
+                                                        textAlign: "center",
+                                                        color: "blue",
+                                                        opacity: "1",
+                                                    }}
+                                                    href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"
+                                                >
+                                                    {" "}
+                                                    [LINK]
+                                                </a>
+                                            ) : (
+                                                <a
+                                                    target="_blank"
+                                                    style={{
+                                                        textAlign: "center",
+                                                        color: "blue",
+                                                        opacity: "1",
+                                                    }}
+                                                    href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
+                                                >
+                                                    {" "}
+                                                    [LINK]
+                                                </a>
+                                            )}
+                                        </span>
+                                    }
+                                    onClose={() => this.handleSnackbarClose(1)}
+                                    autoHideDuration={5000}
+                                    key={"top" + "center"}
+                                    className="snackbar"
+                                />
 								<Snackbar2
 									style={{ zIndex: "9999999 !important" }}
 									open={
@@ -1605,6 +1639,7 @@ class App extends Component {
 								</DialogueBox>
 							</div>
 						</div>
+						<MobileScreenDialog/>
 						<Snackbar
 							anchorOrigin={{
 								vertical: "top",

@@ -85,66 +85,81 @@ const useStyles = makeStyles((theme) => ({
 
 const questions = [
 	{
-		heading: "What is events dApp?",
-		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+		heading: "How to setup MetaMask for Matic?",
+		description: (<span>
+			Follow these steps and/or watch our walkthrough guide here - <a href="https://youtu.be/TDt0VoXoNuM" target="_blank">https://youtu.be/TDt0VoXoNuM</a>
+
+			<ul>
+				<li>Go to network tab on metamask</li>
+				<li>From there select custom Rpc</li>
+				<li>In custom RPC add network name Matic Mainnet</li>
+				<li>In RPC URL :  https://rpc-mainnet.matic.quiknode.pro</li>
+				<li>In network Id: 137</li>
+
+				<li>After adding these details click on save</li>
+				<li>Now you can use the Events Marketplace</li>
+
+
+			</ul>
+
+		</span>)
 	},
 	{
-		heading: "Can I create Multiple types of tickets?",
+		heading: "What is PhoenixDAO Events dApp?",
 		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens (Meaning they are NFT’s).",
 	},
 	{
-		heading: "Do I compulsorily need to use meta mask?",
+		heading: "Can I create multiple types of tickets?",
 		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+			"Yes you can create multiple types of tickets. By way of example you can create free/paid tickets on the dApp. For paid events, you can also make the tickets in categories with different prices which helps you distinguish the different types of attendees you’ll be expecting to participate.",
 	},
 	{
-		heading: "My Event failed to create, what can I do?",
+		heading: "Do I compulsorily need to use Meta Mask?",
 		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+			"For now, yes. You need MetaMask (MM) if you want to be able to see and interact with all events that are live on the dApp. Tickets fees are charged from your MM wallet. We are working to support other web wallets which will give users options based on preferences.",
 	},
 	{
-		heading: "Help!! I can’t connect to metamask",
+		heading: "My event failed to create, what do I do?",
 		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+			"First, in the situation that your event failed to create, you may need to do some basic checks like making sure your Metamask wallet is connected, you have balance that can cover the gas cost of creating your event/interacting with the blockchain and also you have properly filled all required fields while creating the events. If all these are ticked and it still doesn’t work, then it could be a network problem. You’re advised to give some time and try again. There’s also a feedback form at the bottom of the platform to get back to the team if it persist.",
+	},
+	{
+		heading: "Help, I can't connect to meta mask",
+		description:
+			"Here’s a video guide on “How to connect to Meta mask”, “How to change Network”, and “How to be Safe on Meta Mask”. Don’t forget to check our “How it works page” on the dApp menu.",
 	},
 	{
 		heading: "What is Matic Mainnet?",
 		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+			"Matic Network is a Layer 2 scaling solution that achieves scale by utilizing sidechains for off-chain computation while ensuring asset security using the Plasma framework and a decentralized network of Proof-of-Stake (PoS) validators. PhoenixDAO Events dApp is hosted on both Matic Network and the Ethereum Layer1 Network. Users can switch between both networks to create and manage their events based on preference.\nNB: Fees are much cheaper on Matic Network than Ethereum. Most times about a fraction of a dollar.",
 	},
 	{
-		heading: "Can I shedule an event for later?",
+		heading: "Can I schedule an event for later?",
 		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+			"Yes you can schedule an event for later by adding to your favourite. This way it becomes easier for you to check the event details.\nNB: When you schedule an event for later, it doesn’t change the date set by the creator for the event to hold. Also, you can only add and view favourite after/when you connect your wallet",
 	},
 	{
-		heading: "Can I create Multiple types of tickets",
+		heading: "What could be the possible reason for event creation failing?",
 		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
-	},
-	{
-		heading:
-			"What could be the possible reasons for event creation failing?",
-		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+			"Some of the reasons include but not limited to Network congestion/failure to send either on the Ethereum/Matic Network, low/insufficient balance to cover gas fee in your MetaMask wallet, missing required details while filling events details, and probably when using a wallet that has been flagged for fraudulent/suspicious activities.",
 	},
 	{
 		heading:
-			"What If I’m no longer interested in a ticket, can I get a refund?",
+			"What if I'm no longer interested in a ticket/an event, can I get a refund?",
 		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+			"These and more features are already on the development backlog to be integrated. The best bet now if you find yourself in such a situation is to resell your ticket.\nNB: There are features planned to be integrated in future versions/iterations of the dApp.",
 	},
 	{
-		heading: "Is there a limit to the number of tickets I can buy?",
+		heading:
+			"Is there a limit to the number of tickets I can buy?",
 		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+			"If ticket category is limited you can buy tickets to that limit or if it is unlimited no of seats you can buy infinite no of tickets.\nIf the event is restricted to one wallet address then you can only buy it once with one wallet address.",
 	},
 	{
-		heading: "Can I preview event before hosting?",
+		heading: "Can I preview events before hosting?",
 		description:
-			"The PhoenixDAO Events Marketplace is a dApp that allows people to create events and sell tickets online, with the option to make an event, paid or free. The tickets created on this service are ERC721 tokens",
+			"Yes you can preview events before hosting/submitting them to the public.",
 	},
 ];
 

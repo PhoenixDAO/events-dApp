@@ -39,6 +39,7 @@ import {
 
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
+import ticketSoldQuantityFormatter from "../../utils/ticketsQuantityFormatter";
 var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
@@ -135,7 +136,7 @@ const useStyles = makeStyles((theme) => ({
 	price: {
 		color: "#413AE2",
 		fontWeight: "700",
-		maxWidth: "34.33%",
+		maxWidth: "35.33%",
 		fontSize: "16px",
 		fontFamily: "'Aeonik', sans-serif !important",
 		"& p": {
@@ -161,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	eventTitle: {
 		color: "#1E1E22",
-		maxWidth: "65.66%",
+		maxWidth: "64.66%",
 		fontSize: 16,
 		maxHeight: "52px",
 		fontWeight: 700,
@@ -394,11 +395,12 @@ const EventCard = (props, context) => {
 									{event_data.tktTotalQuantity != 0 ? (
 										<Typography
 											className={classes.quantitySold}
+											title={""+ event_data.tktTotalQuantitySold + "/"+ ((event_data.tktTotalQuantity == 0) ? "∞" : event_data.tktTotalQuantity)+""}
 										>
 											<ConfirmationNumberOutlined fontSize="medium" />
 											<span>&nbsp;</span>
-											{event_data.tktTotalQuantitySold}/
-											{event_data.tktTotalQuantity}
+											{ticketSoldQuantityFormatter(event_data.tktTotalQuantitySold)}/
+										{event_data.tktTotalQuantity == 0 ? '∞' : ticketSoldQuantityFormatter(event_data.tktTotalQuantity)}
 										</Typography>
 									) : null}
 									{!myEvent && !ticket ? (
@@ -427,7 +429,7 @@ const EventCard = (props, context) => {
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
-									height: "72px",
+									height: "80px",
 								}}
 							>
 								<Typography
@@ -612,11 +614,12 @@ const EventCard = (props, context) => {
 										component="p"
 										gutterBottom
 										className={classes.text}
+										title={""+ event_data.tktTotalQuantitySold + "/"+ ((event_data.tktTotalQuantity == 0) ? "∞" : event_data.tktTotalQuantity)+""}
 									>
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
-										{event_data.tktTotalQuantitySold}/
-										{event_data.tktTotalQuantity == 0 ? '∞' : event_data.tktTotalQuantity}
+										{ticketSoldQuantityFormatter(event_data.tktTotalQuantitySold)}/
+										{event_data.tktTotalQuantity == 0 ? '∞' : ticketSoldQuantityFormatter(event_data.tktTotalQuantity)}
 
 									</Typography>
 									<Typography
