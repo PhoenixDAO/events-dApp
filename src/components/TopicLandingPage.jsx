@@ -509,9 +509,9 @@ class TopicLandingPage extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-            const get = await axios.get(
-                `${API_URL}${REPORT_EVENT}/${networkId}`
-            );
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
 			console.log("topic landing page filtered events", get);
 			this.setState({
 				hideEvent: get.data.result,
@@ -584,9 +584,9 @@ class TopicLandingPage extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-            const get = await axios.get(
-                `${API_URL}${REPORT_EVENT}/${networkId}`
-            );
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
 			console.log("topic landing page filtered events", get);
 			this.setState({
 				hideEvent: get.data.result,

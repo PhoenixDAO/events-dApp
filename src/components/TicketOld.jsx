@@ -70,9 +70,9 @@ class Ticket extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-            const get = await axios.get(
-                `${API_URL}${REPORT_EVENT}/${networkId}`
-            );
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
 			this.setState({
 				hideEvent: get.data.result,
 			});

@@ -45,6 +45,16 @@ const styles = (theme) => ({
 			boxShadow: "none",
 		},
 	},
+	sticky: {
+		position: "sticky",
+		zIndex: 1,
+		top: 0,
+		display: "flex",
+		flexDirection: "column",
+		background: `#F2F2FD !important`,
+		opacity: `1 !important`,
+		marginLeft: -2,
+	},
 	tabBar: {
 		"&:hover, &:focus ": {
 			outline: "none",
@@ -587,43 +597,43 @@ class MyEvents extends Component {
 		return (
 			<div className={`event-page-wrapper`} ref={this.myRef}>
 				<div className={`${classes.sticky}`}>
-					<Header
-						title="Created Events"
-						page="myEvent"
-						searchBar={true}
-						handleSearch={this.updateSearch}
-					/>
-					<AppBar
-						position="static"
-						className={classes.AppBar}
-						color="transparent"
-						style={{ padding: "0 19px" }}
+				<Header
+					title="Created Events"
+					page="myEvent"
+					searchBar={true}
+					handleSearch={this.updateSearch}
+				/>
 
+				<AppBar
+					position="static"
+					style={{ padding: "0 19px" }}
+					className={classes.AppBar}
+					color="transparent"
+				>
+					<Tabs
+						value={this.state.selectedTab}
+						onChange={this.onTabChange.bind(this)}
+						indicatorColor="primary"
+						textColor="primary"
+						variant="scrollable"
+						scrollButtons="auto"
+						aria-label="scrollable auto tabs example"
+						style={{ height: "40px" }}
 					>
-						<Tabs
-							value={this.state.selectedTab}
-							onChange={this.onTabChange.bind(this)}
-							indicatorColor="primary"
-							textColor="primary"
-							variant="scrollable"
-							scrollButtons="auto"
-							aria-label="scrollable auto tabs example"
-							style={{ height: "40px" }}
-						>
-							<Tab
-								className={classes.tabBar}
-								mx="0"
-								label="Upcoming Events"
-								{...a11yProps(0)}
-							/>
-							<Tab
-								className={classes.tabBar}
-								label="Past Events"
-								{...a11yProps(1)}
-							/>
-						</Tabs>
-						<Divider light />
-					</AppBar>
+						<Tab
+							className={classes.tabBar}
+							mx="0"
+							label="Upcoming Events"
+							{...a11yProps(0)}
+						/>
+						<Tab
+							className={classes.tabBar}
+							label="Past Events"
+							{...a11yProps(1)}
+						/>
+					</Tabs>
+					<Divider light />
+				</AppBar>
 				</div>
 				<TabPanel value={this.state.selectedTab} index={0}>
 					<div>{body}</div>
