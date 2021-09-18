@@ -96,7 +96,7 @@ class CreateEvent extends Component {
 			PhoenixDAO_market: {},
 		};
 		this.contracts = context.drizzle.contracts;
-		// this.onHandleTxReject = this.onHandleTxReject.bind(this);
+		this.onHandleTxReject = this.onHandleTxReject.bind(this);
 	}
 
 	onFieldsChange = (f) => {
@@ -124,8 +124,8 @@ class CreateEvent extends Component {
 		});
 	};
 
-	onHandleTxReject = async () => {
-		console.log("onHandleTxReject");
+	onHandleTxReject(err) {
+		console.log("onHandleTxReject", err);
 		this.setState((prevState) => {
 			return {
 				activeStep: prevState.activeStep - 1,
@@ -133,7 +133,7 @@ class CreateEvent extends Component {
 				progressText: 0,
 			};
 		});
-	};
+	}
 
 	async getEventURL() {
 		let eventCount = await this.props.eventsContract.methods
@@ -243,6 +243,8 @@ class CreateEvent extends Component {
 				);
 		}
 
+		console.log("prices", prices);
+
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({
 			//new
@@ -289,16 +291,6 @@ class CreateEvent extends Component {
 				let txconfirmed = "";
 				let txerror = "";
 
-				let infura;
-				const network = await getNetworkId();
-				if (network === GLOBAL_NETWORK_ID) {
-					infura = INFURA_URL;
-				} else if (network === GLOBAL_NETWORK_ID_2) {
-					infura = INFURA_URL_2;
-				}
-				const web3 = new Web3(infura);
-				console.log("web3", network, infura, web3);
-
 				await this.props.eventsContract.methods
 					.createEvent([
 						oneTimeBuy,
@@ -343,20 +335,56 @@ class CreateEvent extends Component {
 									pauseOnHover: true,
 								}
 							);
+							let infura;
+							const network = await getNetworkId();
+							if (network === GLOBAL_NETWORK_ID) {
+								infura = INFURA_URL;
+							} else if (network === GLOBAL_NETWORK_ID_2) {
+								infura = INFURA_URL_2;
+							}
+							const web3 = new Web3(infura);
+
+							let intervalVar = setInterval(async () => {
+								// console.log("web3.eth", web3.eth);
+								let receipt =
+									await web3.eth.getTransactionReceipt(
+										txhash
+									);
+								if (receipt) {
+									toast(
+										<Notify
+											text={
+												"Transaction successful!\nYou can check event now."
+											}
+											icon="fas fa-check-circle fa-3x"
+											color="#413AE2"
+											hash={receipt.transactionHash}
+										/>,
+										{
+											position: "bottom-right",
+											autoClose: true,
+											pauseOnHover: true,
+										}
+									);
+									this.onFlamingStepsChange();
+									clearInterval(intervalVar);
+									clearStateCb();
+								}
+							}, 2000);
 						}
 					})
-					.on("confirmation", (confirmationNumber, receipt) => {
-						console.log(confirmationNumber);
-						if (confirmationNumber === 2) {
-							// tx confirmed
+					.then(async (receipt) => {
+						console.log("receipt----->", receipt);
+					})
+					.catch((error) => {
+						console.log("tx error", error);
+						this.onHandleTxReject(error);
+						if (error !== null) {
+							txerror = error;
 							toast(
 								<Notify
-									text={
-										"Transaction successful!\nYou can check event now."
-									}
-									icon="fas fa-check-circle fa-3x"
-									color="#413AE2"
-									hash={receipt.transactionHash}
+									error={error}
+									message={txerror.message}
 								/>,
 								{
 									position: "bottom-right",
@@ -364,31 +392,12 @@ class CreateEvent extends Component {
 									pauseOnHover: true,
 								}
 							);
-							this.onFlamingStepsChange();
-							clearStateCb();
 						}
-					})
-					.on("error", (error) => {
-						console.log("tx error", error);
-						// if (error !== null) {
-						// 	txerror = error;
-						// 	toast(
-						// 		<Notify
-						// 			error={error}
-						// 			message={txerror.message}
-						// 		/>,
-						// 		{
-						// 			position: "bottom-right",
-						// 			autoClose: true,
-						// 			pauseOnHover: true,
-						// 		}
-						// 	);
-						// 	// this.onHandleTxReject();
-						// }
 					});
 			})
 			.catch((error) => {
 				console.log("ipfs error", error);
+				this.onHandleTxReject(error);
 				if (error !== null) {
 					let txerror = error;
 					toast(
@@ -406,7 +415,6 @@ class CreateEvent extends Component {
 							pauseOnHover: true,
 						}
 					);
-					this.onHandleTxReject();
 				}
 			});
 	};
