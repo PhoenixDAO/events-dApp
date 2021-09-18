@@ -596,6 +596,7 @@ class MyEvents extends Component {
 
 				<AppBar
 					position="static"
+					style={{ padding: "0 19px" }}
 					className={classes.AppBar}
 					color="transparent"
 				>
