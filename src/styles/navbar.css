@@ -23,7 +23,14 @@
 	padding-left: 6px;
 	margin: 12px 7px;
 }
-
+.suggestion {
+	display: flex;
+	justify-content: center;
+	text-align: center;
+    display: flex;
+    padding-inline: 25px;
+	text-align: inherit;
+}
 /* #sidebar-wrapper.my-sidebar .user-status .user-status-icon img {
 	border-radius: 50%;
 	width: 65%;
