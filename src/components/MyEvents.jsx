@@ -77,6 +77,16 @@ const styles = (theme) => ({
 		paddingTop: "40px",
 		alignItems: "baseline",
 	},
+	sticky: {
+		position: "sticky",
+		zIndex: 1,
+		top: 0,
+		display: "flex",
+		flexDirection: "column",
+		background: `#F2F2FD !important`,
+		opacity: `1 !important`,
+		marginLeft: -2,
+	},
 });
 
 class MyEvents extends Component {
@@ -392,7 +402,7 @@ class MyEvents extends Component {
 				} else {
 					filteredEvents = this.state.check;
 				}
-			} catch (e) {}
+			} catch (e) { }
 			this.setState({
 				MyEvents: filteredEvents,
 				active_length: filteredEvents.length,
@@ -632,47 +642,7 @@ class MyEvents extends Component {
 					{body}
 					{/* <FindEvents {...this.props}/> */}
 				</TabPanel>
-
-				{/* <h2 className="col-md-10" ref={this.myRef}>
-					{this.state.isActive ? (
-						<i className="fa fa-calendar-alt "></i>
-					) : (
-						<i className="fa fa-archive"></i>
-					)}{" "}
-					My{this.state.isActive ? " Active" : " Past"} Events
-				</h2>
-				<div className="input-group input-group-lg mb-2">
-					<button
-						className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2"
-						onClick={this.ActiveEvent}
-					>
-						Active Events
-					</button>
-					<button
-						className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2"
-						onClick={this.PastEvent}
-					>
-						Past Events
-					</button>
-					<div className="input-group-prepend ml-2 mt-2">
-						<span
-							className="input-group-text rounded-left  search-icon float-right"
-							id="inputGroup-sizing-lg"
-						>
-							<i className="fa fa-search"></i>&nbsp;Search{" "}
-						</span>
-					</div>
-					<input
-						type="text"
-						value={this.state.value}
-						onChange={this.updateSearch.bind(this)}
-						className="form-control mr-2 mt-2 col-md-6"
-						aria-label="Large"
-						aria-describedby="inputGroup-sizing-sm"
-					/>
-				</div>
-				<hr />
-				{body} */}
+				
 			</div>
 		);
 	}

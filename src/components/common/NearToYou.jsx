@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const NearToYou = ({ findNearToYouEvents }) => {
+const NearToYou = ({ getCityName }) => {
 	const classes = useStyles();
 	const [cityName, setCityName] = useState("Unknown");
 	const [stateName, setStateName] = useState("Unknown");
@@ -40,7 +40,7 @@ const NearToYou = ({ findNearToYouEvents }) => {
 	}, []);
 
 	useEffect(() => {
-		findNearToYouEvents(cityName);
+		getCityName(cityName);
 	}, [cityName]);
 
 	async function success(pos) {
@@ -54,7 +54,6 @@ const NearToYou = ({ findNearToYouEvents }) => {
 				`https://places.ls.hereapi.com/places/v1/discover/search?at=${lat},${lng}&q=${lat},${lng}&apikey=${apikey}`
 			);
 			if (get.data) {
-				console.log("get1", get);
 				const city = get.data.search.context.location.address.city;
 				const state = get.data.search.context.location.address.country;
 				setCityName(city ? city : "Unknown");
@@ -104,12 +103,11 @@ const NearToYou = ({ findNearToYouEvents }) => {
 
 	return (
 		<span>
-			<div className={classes.main}>
-				{permission === "denied" ? (
+			{permission === "denied" ? (
+				<div className={classes.main}>
 					<span>
 						<span>
-							We're are having trouble finding you. Check you
-							connection and{" "}
+							We're are having trouble finding you. Check your{" "}
 							<a
 								target="_blank"
 								href="https://support.google.com/chrome/answer/142065?hl=en"
@@ -118,7 +116,9 @@ const NearToYou = ({ findNearToYouEvents }) => {
 							</a>
 						</span>
 					</span>
-				) : (
+				</div>
+			) : (
+				<div className={classes.main}>
 					<span>
 						<span className={classes.nearStyleBlack}>
 							Events within{" "}
@@ -129,8 +129,8 @@ const NearToYou = ({ findNearToYouEvents }) => {
 							{cityName}, {stateName}
 						</span>
 					</span>
-				)}
-			</div>
+				</div>
+			)}
 			<br />
 			<br />
 		</span>

@@ -253,7 +253,7 @@ export const useFormControls = () => {
 			let count = fieldValues.eventDescription
 				.toString("html")
 				.replace(/<[^>]*>/g, "").length;
-			temp.eventDescription = count > 500 ? "" : `${count}/500`;
+			temp.eventDescription = count > 50 ? "" : `${count}/50`;
 		}
 
 		if ("termsAndConditions" in fieldValues)
