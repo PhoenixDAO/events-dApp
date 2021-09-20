@@ -7,7 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Ticket from "./Ticket";
 import Header from "./common/Header";
 import EmptyState from "./EmptyState";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import axios from "axios";
 import { API_URL, REPORT_EVENT } from "../config/const";
 
@@ -46,7 +46,7 @@ class MyTickets extends Component {
 			blockChainTickets: [],
 			blockChainTicketsCopy: [],
 			value: "",
-			hideEvent:[]
+			hideEvent: [],
 		};
 		// this.contracts = context.drizzle.contracts;
 		// this.tickets = this.contracts['DaoEvents'].methods.ticketsOf.cacheCall(this.props.accounts[0]);
@@ -69,7 +69,6 @@ class MyTickets extends Component {
 			.ticketsOf(this.props.accounts)
 			.call();
 		// const newsort = blockChainTickets.concat().sort((a, b) => b - a);
-		console.log("blockchainTickets0", blockChainTickets.length);
 		const graphURL = await GetGraphApi();
 		await axios({
 			url: graphURL,
@@ -86,19 +85,18 @@ class MyTickets extends Component {
 				`,
 			},
 		}).then((graphEvents) => {
-			console.log("TicketData", Date.now(), graphEvents);
 
 			if (
 				graphEvents.data ||
 				graphEvents.data.data !== "undefined" ||
 				graphEvents.data.data.tickets.length > 0
 			) {
-				console.log("Data is here from graph");
 				this.setState({
 					blockChainTickets: graphEvents.data.data.tickets,
 					blockChainTicketsCopy: graphEvents.data.data.tickets,
-					blockChainTicketsLoaded: false,
+					blockChainTicketsLoaded: false 
 				});
+			
 			}
 		});
 		// const blockChainTickets = await this.props.eventsContract.methods
@@ -117,14 +115,15 @@ class MyTickets extends Component {
 
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			this.setState({
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );			this.setState({
 				hideEvent: get.data.result,
 			});
 			// console.log("hide event", this.state.hideEvent);
 			return;
 		} catch (error) {
-			console.log("check error", error);
 		}
 	};
 
@@ -133,11 +132,14 @@ class MyTickets extends Component {
 	//Search Active Events By Name
 	updateSearch = (value) => {
 		let filteredTickets = this.state.blockChainTicketsCopy;
-		console.log(this.state.blockChainTickets);
 		try {
 			if (value !== "") {
 				filteredTickets = filteredTickets.filter((ticket) => {
-					return ticket.eventName.toLowerCase().search(value) !== -1;
+					return (
+						ticket.eventName
+							.toLowerCase()
+							.search(value.toLowerCase()) !== -1
+					);
 				});
 			} else {
 				filteredTickets = this.state.blockChainTicketsCopy;
@@ -145,11 +147,11 @@ class MyTickets extends Component {
 		} catch (e) {
 			console.log(e);
 		}
-		console.log("FIltered Tickets", filteredTickets);
 		this.setState({
 			blockChainTickets: filteredTickets,
 			// active_length: filteredEvents.length,
 		});
+		this.props.history.push("/mytickets/" + 1);
 	};
 
 	render() {
@@ -168,6 +170,7 @@ class MyTickets extends Component {
 		// 		</div>
 		// }
 		//this was else if before
+		let count = this.state.blockChainTickets.length;
 		if (this.state.blockChainTicketsLoaded) {
 			body = <PhoenixDAOLoader />;
 		} else if (
@@ -183,12 +186,8 @@ class MyTickets extends Component {
 			);
 		}
 		// else condition removed from here
-		// console.log('MyTickets blockChainTickets',this.state.blockChainTickets)
-		let count = this.state.blockChainTickets.length;
 		let currentPage = Number(this.props.match.params.page);
-
-		let tickets = [];
-		let ticket_list=[];
+		let ticket_list = [];
 		let skip = false;
 		for (let i = 0; i < this.state.blockChainTickets.length; i++) {
 			for (let j = 0; j < this.state.hideEvent.length; j++) {
@@ -204,19 +203,15 @@ class MyTickets extends Component {
 			}
 			skip = false;
 		}
-
+		let tickets = [];
 		count = ticket_list.length;
 		if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
-
 		let end = currentPage * this.perPage;
 		let start = end - this.perPage;
 		if (end > count) end = count;
 		let pages = Math.ceil(count / this.perPage);
-
 		for (let i = start; i < end; i++) {
-			// console.log("ticketData this.state.blockChainTickets[i]",this.state.blockChainTickets[i])
 			let ticket = parseInt(ticket_list[i].id, 10);
-			console.log("tickets", ticket);
 			tickets.push(
 				<Ticket
 					key={ticket}
@@ -321,7 +316,7 @@ class MyTickets extends Component {
 			);
 		}
 
-		if (tickets.length === 0 && !this.state.loading) {
+		if (tickets.length === 0 && !this.state.blockChainTicketsLoaded) {
 			body = (
 				<EmptyState
 					text="You have no Tickets 😔"

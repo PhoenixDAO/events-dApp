@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import SocialMedia from "./common/SocialMedia";
 import { pricingFormatter } from "../utils/pricingSuffix";
 import { makeStyles } from "@material-ui/core/styles";
+
 import {
 	Button,
 	Grid,
@@ -17,6 +18,7 @@ import {
 	ShoppingCartOutlined,
 	ModeCommentOutlined,
 	ContactlessOutlined,
+	Web,
 } from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
@@ -57,7 +59,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
@@ -130,7 +132,7 @@ const styles = (theme) => ({
 		fontWeight: "700",
 		color: "#413AE2",
 		wordBreak: "break-word",
-		textTransform:"uppercase"
+		// textTransform:"uppercase"
 	},
 	categoryGrid: {
 		backgroundColor: "white",
@@ -158,7 +160,7 @@ const styles = (theme) => ({
 			paddingRight: "25px",
 		},
 		[theme.breakpoints.down("xs")]: {
-			"&. MuiOutlinedInput-root":{
+			"&. MuiOutlinedInput-root": {
 				minWidth: "116px",
 				width: "100%",
 			},
@@ -166,9 +168,27 @@ const styles = (theme) => ({
 			minWidth: "141px",
 		},
 	},
+	selectInput: {
+		width: "170px",
+		marginTop: "10px",
+		marginBottom: "10px",
+		height: "40px",
+		"& .MuiSelect-outlined": {
+			padding: "10px",
+			paddingRight: "25px !important",
+			"@media (max-width: 600px)": {
+				width: "120px",
+			},
+		},
+		[theme.breakpoints.down("xs")]: {
+			width: "auto",
+		},
+	},
 	organizerDetails: {
 		justifyContent: "center",
 		textAlign: "center",
+		overflow: "hidden",
+		wordBreak: "break-word",
 	},
 	organizerDescription: {
 		justifyContent: "center",
@@ -223,11 +243,6 @@ class EventPage extends Component {
 		// } catch (e) { }
 		super(props);
 		// this.contracts = context.drizzle.contracts;
-		console.log(
-			"contracts in eventsPage",
-			props.eventsContract,
-			props.phnxContract
-		);
 		this.account = this.props.accounts[0];
 		this.state = {
 			blockChainEventLoaded: false,
@@ -277,6 +292,9 @@ class EventPage extends Component {
 			allowBuySnackbar: false,
 			errorMessage: "",
 			SnackbarMessage: "",
+			locationEvent: "",
+			disableBuyTicketBtn: false,
+			phnx_price: "",
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -308,13 +326,11 @@ class EventPage extends Component {
 	// 	const blockChainEvent = await openEvents.methods
 	// 		.events(this.props.match.params.id)
 	// 		.call();
-	// 		console.log("blockChain Events in eventPage",blockChainEvent)
 	// 	this.setState({
 	// 		blockChainEvent: blockChainEvent,
 	// 		blockChainEventLoaded: true,
 	// 	});
 	// 	this.updateIPFS();
-	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
 
 	userExists(buyers, account) {
@@ -373,10 +389,6 @@ class EventPage extends Component {
 			},
 		})
 			.then(async (graphEvents) => {
-				console.log(
-					"GraphQL query response of events in eventPage",
-					graphEvents.data
-				);
 				if (graphEvents.data.data.events.length > 0) {
 					this.setState({
 						blockChainEvent: graphEvents.data.data.events[0],
@@ -385,11 +397,8 @@ class EventPage extends Component {
 						oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 					});
 					this.updateIPFS();
-					if (this.props.networkId) {
-						console.log(
-							"graphData",
-							graphEvents.data.data.events[0].owner
-						);
+					const networkId = await getNetworkId();
+					if (networkId) {
 						await updateEventViews({
 							eventId: graphEvents.data.data.events[0].eventId,
 							address: graphEvents.data.data.events[0].owner,
@@ -400,8 +409,6 @@ class EventPage extends Component {
 							address: graphEvents.data.data.events[0].owner,
 							networkId: this.props.networkId,
 						});
-
-						console.log("userDEtails in event page", userDetails);
 						if (!userDetails.error) {
 							this.setState({
 								organizerDetails:
@@ -419,7 +426,6 @@ class EventPage extends Component {
 				}
 			})
 			.catch((err) => {
-				console.log("Error", err);
 				this.setState({
 					blockChainEvent: {},
 					blockChainEventLoaded: true,
@@ -572,9 +578,7 @@ class EventPage extends Component {
 		)
 			.then((res) => res.json())
 			.then((data) => {
-				if (this._isMounted) {
-					this.setState({ PhoenixDAO_market: data.phoenixdao });
-				}
+				this.setState({ PhoenixDAO_market: data.phoenixdao });
 			})
 			.catch(console.log);
 	}
@@ -585,7 +589,6 @@ class EventPage extends Component {
 			this.state.loading === false &&
 			this.state.blockChainEvent
 		) {
-			console.log("Iam in update");
 			this.setState(
 				{
 					loading: true,
@@ -636,12 +639,15 @@ class EventPage extends Component {
 	priceCalculation = (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
 		let phnx_price = event_data.prices.map((price) => {
-			return (
-				(price/1000000) / this.state.PhoenixDAO_market.usd
-			).toFixed(2);
+			// return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
+			// 	2
+			// );
+			return (Web3.utils.fromWei(price.toString()) / this.state.PhoenixDAO_market.usd).toFixed(
+				3
+			);
 		});
 
-		let dollar_price = event_data.prices[categoryIndex] /1000000;
+		let dollar_price = Web3.utils.fromWei(event_data.prices[categoryIndex].toString());
 		let priceInPhnx = event_data.token
 			? phnx_price[categoryIndex] + "PHNX"
 			: "FREE";
@@ -667,7 +673,6 @@ class EventPage extends Component {
 				</p>
 			);
 		if (this.state.description !== null)
-			// console.log("desc", this.state.eventDescription);
 			description = (
 				<RichTextEditor
 					readOnly
@@ -687,22 +692,21 @@ class EventPage extends Component {
 			);
 		return description;
 	};
-	handleClickOpen2 = () => {
+
+	handleClickOpen2 = async () => {
 		if (
 			this.props.networkId != GLOBAL_NETWORK_ID &&
 			this.props.networkId != GLOBAL_NETWORK_ID_2
 		) {
 			this.setState({
 				open3: true,
-				open3Message: "Please connect to Rinkbey or Goerli network",
+				open3Message: "Please connect to Ethereum or Matic Mainnet",
 			});
 		} else {
 			// this.setState({ open2: true });
-			console.log(this.state.oneTimeBuy);
 			if (this.state.oneTimeBuy) {
 				let buyers = this.state.soldTicket;
 				const account = this.props.accounts[0];
-				console.log("userExists", this.userExists(buyers, account));
 				if (this.userExists(buyers, account)) {
 					// alert("One time buy");
 					this.setState({
@@ -711,10 +715,48 @@ class EventPage extends Component {
 							"This event is restricted to one wallet address, you can't buy it again.",
 					});
 				} else {
-					this.setState({ open2: true });
+					if ((await this.allowance()) == 0) {
+						let balance = await this.props.phnxContract.methods
+							.totalSupply()
+							.call();
+						this.setState({
+							approve: this.props.phnxContract.methods.approve(
+								this.props.eventsAddress,
+								balance
+							),
+						});
+						this.handleClickOpen();
+					} else {
+						const result = await this.checkUserBalance();
+						this.setState({
+							disableBuyTicketBtn: result,
+						});
+						if (!result) {
+							this.setState({ open2: true });
+						}
+					}
 				}
 			} else {
-				this.setState({ open2: true });
+				if ((await this.allowance()) == 0) {
+					let balance = await this.props.phnxContract.methods
+						.totalSupply()
+						.call();
+					this.setState({
+						approve: this.props.phnxContract.methods.approve(
+							this.props.eventsAddress,
+							balance
+						),
+					});
+					this.handleClickOpen();
+				} else {
+					const result = await this.checkUserBalance();
+					this.setState({
+						disableBuyTicketBtn: result,
+					});
+					if (!result) {
+						this.setState({ open2: true });
+					}
+				}
 			}
 		}
 	};
@@ -740,8 +782,6 @@ class EventPage extends Component {
 		let a = await this.props.phnxContract.methods
 			.allowance(this.account, this.props.eventsAddress)
 			.call();
-		console.log("allowance", a);
-
 		return a;
 	};
 
@@ -774,7 +814,6 @@ class EventPage extends Component {
 				this.onConfirmation(confirmationNumber, receipt)
 			)
 			.on("error", (error) => {
-				console.log("asd error in giveApproval function", error);
 				if (error !== null) {
 					this.setState({ disabledBuying: false });
 					txerror = error;
@@ -789,17 +828,13 @@ class EventPage extends Component {
 			});
 	};
 	onConfirmation(confirmationNumber, receipt) {
-		console.log(
-			"asd in onConfirmation confirmationNumber",
-			confirmationNumber
-		);
-
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
 			toast(
 				<Notify
 					hash={receipt.transactionHash}
 					icon="fas fa-check-circle fa-3x"
+					color="#413AE2"
 					text={"Transaction successful!\nYou can buy a ticket now."}
 				/>,
 				{
@@ -813,7 +848,33 @@ class EventPage extends Component {
 		}
 	}
 
+	checkUserBalance = async () => {
+		const networkId = await getNetworkId();
+		if (
+			networkId === GLOBAL_NETWORK_ID ||
+			networkId === GLOBAL_NETWORK_ID_2
+		) {
+			let balance = await this.props.phnxContract.methods
+				.balanceOf(this.props.accounts[0])
+				.call();
+			balance = Web3.utils.fromWei(balance.toString());
+			if (balance < Number(this.state.phnx_price.split("PHNX")[0])) {
+				return true;
+			} else {
+				this.setState({
+					disableBuyTicketBtn: false,
+				});
+				return false;
+			}
+		} else {
+			return false;
+		}
+	};
+
 	inquire = async () => {
+		let event_data = this.state.blockChainEvent;
+		let date2 = new Date(parseInt(event_data.time, 10) * 1000);
+
 		let balance = await this.props.phnxContract.methods
 			.totalSupply()
 			.call();
@@ -826,7 +887,6 @@ class EventPage extends Component {
 			minute: "2-digit",
 		});
 		const geoFindUser = await this.geoFindMe();
-
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
@@ -855,13 +915,14 @@ class EventPage extends Component {
 						this.state.buyticket,
 						this.state.approve,
 						this.state.eventTime,
-						this.state.eventDate,
+						date2, // this.state.eventDate,
 						this.state.eventEndDate,
 						this.state.image,
 						this.state.blockChainEvent.name,
 						this.state.phnx_price,
 						this.state.dollar_price,
-						time
+						time,
+						date2
 					);
 				}
 			}
@@ -893,6 +954,12 @@ class EventPage extends Component {
 	handleCloseSnackbar() {
 		this.setState({ open3: false, open3Message: "" });
 	}
+
+	handleCloseSnackbar4 = () => {
+		this.setState({
+			disableBuyTicketBtn: false,
+		});
+	};
 
 	imageData = (index) => {
 		let myArray = [
@@ -928,8 +995,6 @@ class EventPage extends Component {
 
 	provideImage = (userDetails) => {
 		if (Object.keys(userDetails).length > 0) {
-			// console.log("userdetailsss", this.props.userDetails);
-			// console.log("", this.props.userDetails);
 			const avatarCustom = userDetails.avatarCustom;
 			const avatarId = userDetails.avatarNumber;
 			const avatar = userDetails.avatar;
@@ -939,9 +1004,7 @@ class EventPage extends Component {
 			});
 			if (avatarCustom) {
 				ipfs.get(avatar).then((file) => {
-					// console.log("ipfs file,", file);
 					let data = JSON.parse(file[0].content.toString());
-					// console.log("dataaaa", data.image0);
 					this.setState({
 						avatar: data.image0,
 					});
@@ -952,8 +1015,6 @@ class EventPage extends Component {
 
 	renderImage = () => {
 		if (this.state.avatarCustom) {
-			// return <image
-			// console.log("avatar ipfs image", this.state.avatar);
 			return (
 				<img
 					src={this.state.avatar}
@@ -962,7 +1023,7 @@ class EventPage extends Component {
 						width: "60px",
 						borderRadius: "50%",
 						height: "60px",
-						objectFit:"cover",
+						objectFit: "cover",
 					}}
 				/>
 			);
@@ -984,13 +1045,6 @@ class EventPage extends Component {
 	allowBuy = () => {
 		if (Object.keys(this.state.blockChainEvent).length > 0) {
 			let index = this.state.selectedCategoryIndex;
-			console.log(
-				"test",
-				this.state.blockChainEvent.catTktQuantity[index] != 0,
-				parseInt(this.state.blockChainEvent.catTktQuantitySold[index]),
-				parseInt(this.state.blockChainEvent.catTktQuantity[index])
-			);
-
 			if (
 				Number(this.state.blockChainEvent.time) <
 				new Date().getTime() / 1000
@@ -999,15 +1053,6 @@ class EventPage extends Component {
 					allowBuySnackbar: true,
 					SnackbarMessage: "This event is already ended",
 				});
-				console.log(
-					"allow buy in if",
-					Number(this.state.blockChainEvent.time),
-					moment().unix(),
-					parseInt(this.state.blockChainEvent.tktTotalQuantitySold) >=
-						parseInt(this.state.blockChainEvent.tktTotalQuantity),
-					this.state.blockChainEvent.tktTotalQuantitySold,
-					this.state.blockChainEvent.tktTotalQuantity
-				);
 				return false;
 			} else if (
 				this.state.blockChainEvent.catTktQuantity[index] != 0 &&
@@ -1021,14 +1066,21 @@ class EventPage extends Component {
 						"All tickets have been sold for this category",
 				});
 			} else {
-				console.log(
-					"allow buy in else",
-					Number(this.state.blockChainEvent.time),
-					moment().unix(),
-					this.state.blockChainEvent.tktTotalQuantitySold,
-					this.state.blockChainEvent.tktTotalQuantity
-				);
 				return true;
+			}
+		}
+	};
+
+	checkUserTicketLocation = async () => {
+		const eventId = this.props.match.params.id;
+		const users = await generateBuyerArr(eventId);
+		let event_data = this.state.blockChainEvent;
+		for (let i = 0; i < users.length; i++) {
+			if (users[i].address === this.props.accounts[0].toLowerCase()) {
+				this.setState({
+					locationEvent: event_data.location,
+				});
+				break;
 			}
 		}
 	};
@@ -1038,18 +1090,13 @@ class EventPage extends Component {
 
 		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
-			console.log(
-				"render blockchain event",
-				Object.keys(this.state.blockChainEvent).length
-			);
 			if (
 				this.state.blockChainEvent === undefined ||
 				Object.keys(this.state.blockChainEvent).length === 0
 			) {
-				console.log("hg");
 				body = (
 					// <div className="text-center mt-5">
-					// 	<span role="img" aria-label="unicorn">
+					// 	<span role="img" aria-label="uncorn">
 					// 		🦄
 					// 	</span>{" "}
 					// 	PhoenixDAO Event not found
@@ -1065,7 +1112,9 @@ class EventPage extends Component {
 				// to be changed
 				let image = this.getImage();
 				let description = this.getDescription();
-				let locations = event_data.location;
+				let locations = event_data.onsite
+					? event_data.location
+					: this.state.locationEvent;
 				let buttonText = event_data.token
 					? " Buy Ticket"
 					: " Get Ticket";
@@ -1076,14 +1125,13 @@ class EventPage extends Component {
 				// 	event_data.prices[this.state.selectedCategoryIndex]
 				// );
 				let date = new Date(parseInt(event_data.time, 10) * 1000);
-				console.log("phnx prices", event_data);
 
 				let max_seats = event_data.tktLimited[
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-							this.state.selectedCategoryIndex
-					  ]
+					this.state.selectedCategoryIndex
+					]
 					: "∞";
 
 				let disabled = false;
@@ -1094,14 +1142,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-							this.state.selectedCategoryIndex
+						this.state.selectedCategoryIndex
 						]
 					) >=
-						Number(
-							event_data.catTktQuantity[
-								this.state.selectedCategoryIndex
-							]
-						)
+					Number(
+						event_data.catTktQuantity[
+						this.state.selectedCategoryIndex
+						]
+					)
 				) {
 					// disabled = true;
 					// disabledStatus = (
@@ -1147,7 +1195,6 @@ class EventPage extends Component {
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 					.join(" ");
 				//Friendly URL Title
-				console.log("event_data in eventPage", event_data);
 				let rawTitle = event_data.name;
 				var titleRemovedSpaces = rawTitle;
 				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
@@ -1165,9 +1212,6 @@ class EventPage extends Component {
 				// event_data.categories
 				let ticketPrices =
 					event_data.token && event_data.categories.length > 1;
-
-				console.log("event_data.categories", event_data.categories);
-
 				if (this.props.match.params.id == event_data.eventId) {
 					body = (
 						<Grid>
@@ -1178,6 +1222,7 @@ class EventPage extends Component {
 								eventTitle={event_data.name}
 								date={event_date}
 								time={time}
+								date2={date}
 								buy={this.inquire}
 								buttonText={buttonText}
 								eventTime={this.state.eventTime}
@@ -1194,6 +1239,19 @@ class EventPage extends Component {
 								open={this.state.open3}
 								onClose={this.handleCloseSnackbar}
 								message={this.state.open3Message}
+								autoHideDuration={3000}
+								key={"top" + "center"}
+								className="snackbar"
+							/>
+
+							<Snackbar
+								anchorOrigin={{
+									vertical: "top",
+									horizontal: "center",
+								}}
+								open={this.state.disableBuyTicketBtn}
+								onClose={this.handleCloseSnackbar4}
+								message="You do not have enough PHNX token to buy the ticket"
 								autoHideDuration={3000}
 								key={"top" + "center"}
 								className="snackbar"
@@ -1257,12 +1315,6 @@ class EventPage extends Component {
 												deadline={date}
 												event_unix={event_data.time}
 											/>
-											{console.log(
-												"deadline date is: ",
-												date,
-												"eventData time is: ",
-												event_data.time
-											)}
 										</Grid>
 									</Grid>
 									<Grid
@@ -1310,35 +1362,38 @@ class EventPage extends Component {
 															horizontal: "left",
 														},
 													}}
+													className={
+														classes.selectInput
+													}
 												>
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-																(
-																	category,
-																	i
-																) => (
-																	<MenuItem
-																		value={
-																			i
+															(
+																category,
+																i
+															) => (
+																<MenuItem
+																	value={
+																		i
+																	}
+																	style={{
+																		fontFamily:
+																			"'Aeonik', sans-serif",
+																	}}
+																>
+																	<span
+																		className={
+																			classes.selectWidth
 																		}
-																		style={{
-																			fontFamily:
-																				"'Aeonik', sans-serif",
-																		}}
 																	>
-																		<span
-																			className={
-																				classes.selectWidth
-																			}
-																		>
-																			{
-																				category
-																			}
-																		</span>
-																	</MenuItem>
-																)
-														  )
+																		{
+																			category
+																		}
+																	</span>
+																</MenuItem>
+															)
+														)
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1377,9 +1432,6 @@ class EventPage extends Component {
 													this.state.dollar_price,
 													"$"
 												)}
-												{console.log(
-													"dollar price ",this.state.dollar_price, " pheonix",this.state.phnx_price
-												)}
 											</div>
 										</div>
 
@@ -1393,11 +1445,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-												  "onedayevent"
-												? moment(
+													"onedayevent"
+													? moment(
 														this.state.eventDate
-												  ).format("Do MMM, YYYY")
-												: `
+													).format("Do MMM, YYYY")
+													: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1411,24 +1463,24 @@ class EventPage extends Component {
 											{!this.state.eventStartTime
 												? `Time`
 												: !this.state.eventEndTime
-												? moment(
+													? moment(
 														this.state
 															.eventStartTime
-												  )
+													)
 														.utcOffset(0)
 														.format("hh:mma z")
-												: `${moment(
+													: `${moment(
 														this.state
 															.eventStartTime
-												  )
+													)
 														.utcOffset(0)
 														.format(
 															"hh:mma"
 														)} - ${moment(
-														this.state.eventEndTime
-												  )
-														.utcOffset(0)
-														.format("hh:mma z")}`}
+															this.state.eventEndTime
+														)
+															.utcOffset(0)
+															.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
@@ -1450,8 +1502,8 @@ class EventPage extends Component {
 										<p className={classes.eventinfo}>
 											{
 												event_data.catTktQuantitySold[
-													this.state
-														.selectedCategoryIndex
+												this.state
+													.selectedCategoryIndex
 												]
 												// event_data.tktTotalQuantitySold
 											}
@@ -1466,10 +1518,6 @@ class EventPage extends Component {
 										</h2>
 										{this.state.load && <Loading />}
 										<Grid container lg={12}>
-											{console.log(
-												"sold ticket",
-												this.state.soldTicket
-											)}
 											{this.state.pageTransactions.map(
 												(sold, index) => (
 													<p
@@ -1800,8 +1848,10 @@ class EventPage extends Component {
 	async componentDidMount() {
 		let buyers = await generateBuyerArr(this.props.match.params.id);
 		this.setState({ soldTicket: buyers });
-		this.loadEventFromBlockchain();
-		console.log("count", this.props.accounts[0]);
+		await this.getPhoenixDAOMarketValue();
+		await this.loadEventFromBlockchain();
+		await this.checkUserTicketLocation();
+		await this.checkUserBalance();
 		window.scroll({
 			top: 0,
 			behavior: "smooth",
@@ -1809,7 +1859,6 @@ class EventPage extends Component {
 		this._isMounted = true;
 		// this.updateIPFS();
 		// this.loadblockhain();
-		this.getPhoenixDAOMarketValue();
 	}
 
 	geoFindMe = async () => {
@@ -1836,16 +1885,9 @@ class EventPage extends Component {
 		this._isMounted = false;
 	}
 	async componentDidUpdate(prevProps) {
-		// console.log("this.props.userDetails", this.props.userDetails);
-		// console.log("prevProps.userDetails", prevProps.userDetails);
 		if (this.props.purchased !== prevProps.purchased) {
-			console.log(
-				"thisprops",
-				this.props.purchased,
-				"",
-				prevProps.purchased
-			);
-			this.loadEventFromBlockchain();
+			await this.loadEventFromBlockchain();
+			await this.checkUserTicketLocation();
 			let buyers = await generateBuyerArr(this.props.match.params.id);
 			this.setState({ soldTicket: buyers });
 		}

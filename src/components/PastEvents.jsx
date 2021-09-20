@@ -16,6 +16,7 @@ import Event from "./Event";
 
 // TODO: Make slides dynamic: import slidesJson from '../config/slides.json';
 import topicsJson from "../config/topics.json";
+import { getNetworkId } from "../config/getGraphApi";
 
 class PastEvents extends Component {
 	constructor(props, context) {
@@ -510,7 +511,10 @@ class PastEvents extends Component {
 
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});

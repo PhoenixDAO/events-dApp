@@ -143,7 +143,7 @@ const Terms = (props) => {
 					<div>
 					<div className={classes.centerItems}>
 						<div className={classes.videoResponsive}>
-						<iframe width="560" height="315" src="https://www.youtube.com/embed/Pj63VX1Jdxo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+						<iframe width="560" height="315" src="https://www.youtube.com/embed/TDt0VoXoNuM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 						</div>
 						<strong className={classes.walkThroughHeading}>
 							Walk through video
@@ -185,7 +185,7 @@ const Terms = (props) => {
 							</li>
 						</ul>
 
-						<p>[ Image to be entered ]</p>
+						{/* <p>[ Image to be entered ]</p> */}
 
 						<h3
 							ref={(el) =>
@@ -218,7 +218,7 @@ const Terms = (props) => {
 							</li>
 						</ul>
 
-						<p>[ 2 IMAGES TO BE ENTERED ]</p>
+						{/* <p>[ 2 IMAGES TO BE ENTERED ]</p> */}
 						<ul>
 							<li>
 								On the next step it will ask you to enter the
@@ -258,7 +258,7 @@ const Terms = (props) => {
 							</li>
 						</ul>
 
-						<p>[ IMAGE TO BE ENTERED ]</p>
+						{/* <p>[ IMAGE TO BE ENTERED ]</p> */}
 					</div>
 					</div>
 				</Grid>

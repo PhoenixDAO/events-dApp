@@ -4,6 +4,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import slider1 from "../Images/slider1.svg";
 import slider2 from "../Images/slider2.svg";
 import slider3 from "../Images/slider3.svg";
+import slider11 from "../Images/slider11.svg";
+import slider22 from "../Images/slider22.svg";
+import slider33 from "../Images/slider33.svg";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -14,10 +17,10 @@ const useStyles = makeStyles((theme) => ({
 				width: "100%",
 			},
 		},
-		"& div ol li":{
-			backgroundColor:"#aeaeae"
-		}
+		"& div ol li": {
+			backgroundColor: "#aeaeae",
 		},
+	},
 	carouselCaption: {
 		"& p": {
 			"@media (max-width: 800px)": {
@@ -25,9 +28,11 @@ const useStyles = makeStyles((theme) => ({
 			},
 			"@media (max-width: 1000px)": {
 				width: "70%",
-
 			},
-			
+			"@media (max-width: 580px)": {
+				width: "88%",
+			},
+
 			width: "57%",
 			textShadow: "none",
 			fontSize: "18px",
@@ -41,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	title: {
 		textAlign: "left",
-		"@media (max-width: 800px)": {
+		"@media (max-width: 805px)": {
 			marginBottom: "15px",
 			fontSize: "24px !important",
 		},
@@ -49,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: '"Aeonik" ,sans-serif',
 	},
 	text: {
-		textAlign:"justify",
+		textAlign: "justify",
 		fontSize: 20,
 		fontWeight: "400",
 	},
@@ -69,54 +74,60 @@ const Slider = () => {
 				<Carousel.Item interval={duration}>
 					<img
 						className="d-block slider-image shadow-none"
-						src={slider1}
+						src={slider11}
 						alt="First slide"
 					/>
-					<Carousel.Caption className={classes.carouselCaption}>
+					{/* <Carousel.Caption className={classes.carouselCaption}>
 						<p className={classes.title}>
 							Be more with Phoenix Events
 						</p>
 						<p className={classes.text}>
-							Events Marketplace allows event attendees to secure
-							tickets with crypto and verify authenticity of peer
-							to peer ticket transfers via Phoenix Identity
-							protocol.
+							PhoenixDAO events marketplace and NFT ticketing dApp
+							allows events attendee's to secure tickets with
+							crypto and verify authenticity of peer to peer
+							ticket transfer leveraging the power of blockchain
+							(i.e a combination of both in-house and third-party
+							protocols)
 						</p>
-					</Carousel.Caption>
+					</Carousel.Caption> */}
 				</Carousel.Item>
 
 				<Carousel.Item interval={duration}>
 					<img
 						className="d-block slider-image shadow-none"
-						src={slider2}
+						src={slider22}
 						alt="Second slide"
 					/>
-					<Carousel.Caption className={classes.carouselCaption}>
+					{/* <Carousel.Caption className={classes.carouselCaption}>
 						<p className={classes.title}>Privacy Assured</p>
 						<p className={classes.text}>
-							Events Marketplace allows event attendees to secure
-							tickets with crypto and verify authenticity of peer
-							to peer ticket transfers via Phoenix Identity
-							protocol.
+							PhoenixDAO events marketplace and NFT ticketing dApp
+							allows events attendee's to secure tickets with
+							crypto and verify authenticity of peer to peer
+							ticket transfer leveraging the power of blockchain
+							(i.e a combination of both in-house and third-party
+							protocols)
 						</p>
-					</Carousel.Caption>
+					</Carousel.Caption> */}
 				</Carousel.Item>
 
 				<Carousel.Item interval={duration}>
 					<img
 						className="d-block slider-image shadow-none"
-						src={slider3}
+						src={slider33}
 						alt="Third slide"
 					/>
-					<Carousel.Caption className={classes.carouselCaption}>
+					{/* <Carousel.Caption className={classes.carouselCaption}>
 						<p className={classes.title}>Privacy Assured</p>
 						<p className={classes.text}>
-							Events Marketplace allows event attendees to secure
-							tickets with crypto and verify authenticity of peer
-							to peer ticket transfers via Phoenix Identity
-							protocol.
+							PhoenixDAO events marketplace and NFT ticketing dApp
+							allows events attendee's to secure tickets with
+							crypto and verify authenticity of peer to peer
+							ticket transfer leveraging the power of blockchain
+							(i.e a combination of both in-house and third-party
+							protocols)
 						</p>
-					</Carousel.Caption>
+					</Carousel.Caption> */}
 				</Carousel.Item>
 			</Carousel>
 		</div>

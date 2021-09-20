@@ -43,7 +43,6 @@ import {
 import Wallet from "./common/Wallet";
 class Sidebar extends Component {
 	constructor(props, context) {
-		console.log("accounts props in sidebar", props.account);
 		super(props);
 		this.state = {
 			errorMessage: "",
@@ -58,14 +57,12 @@ class Sidebar extends Component {
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.toggleSidebarClass(false);
-		this.getNetworkId();
+		await this.getNetworkId();
 	}
 
 	componentDidUpdate(prevProps) {
-		// console.log("this.props.userDetails", this.props.userDetails);
-		// console.log("prevProps.userDetails", prevProps.userDetails);
 		if (
 			JSON.stringify(this.props.userDetails) !==
 			JSON.stringify(prevProps.userDetails)
@@ -74,11 +71,11 @@ class Sidebar extends Component {
 		}
 	}
 	handleOpenWallet = () => {
-        this.setState({ openWallet: true });
-    };
-    handleCloseWallet = () => {
-        this.setState({ openWallet: false });
-    };
+		this.setState({ openWallet: true });
+	};
+	handleCloseWallet = () => {
+		this.setState({ openWallet: false });
+	};
 	sidebarClick() {
 		// this.toggleSidebarClass(true);
 		var isActive = this.context.router.route.location.pathname;
@@ -189,10 +186,7 @@ class Sidebar extends Component {
 	};
 
 	provideImage = () => {
-		console.log("this.props.userDetails", this.props.userDetails);
 		if (Object.keys(this.props.userDetails).length > 0) {
-			// console.log("userdetailsss", this.props.userDetails);
-			// console.log("", this.props.userDetails);
 			const avatarCustom =
 				this.props.userDetails.result.result.userHldr.avatarCustom;
 			const avatarId =
@@ -204,9 +198,7 @@ class Sidebar extends Component {
 			});
 			if (avatarCustom) {
 				ipfs.get(avatar).then((file) => {
-					// console.log("ipfs file,", file);
 					let data = JSON.parse(file[0].content.toString());
-					// console.log("dataaaa", data.image0);
 					this.setState({
 						avatar: data.image0,
 					});
@@ -217,12 +209,14 @@ class Sidebar extends Component {
 
 	renderImage = () => {
 		if (this.state.avatarCustom) {
-			// return <image
-			// console.log("avatar ipfs image", this.state.avatar);
 			return (
 				<img
 					src={this.state.avatar}
-					style={{ width: "40px", height: "40px", objectFit:"cover" }}
+					style={{
+						width: "40px",
+						height: "40px",
+						objectFit: "cover",
+					}}
 					className="bird"
 				/>
 			);
@@ -248,41 +242,66 @@ class Sidebar extends Component {
 			} else if (typeof web3 !== "undefined") {
 				web3 = new Web3(web3.currentProvider);
 			} else {
-				const network = await web3.eth.net.getId();
-				let infura;
-				if (network === GLOBAL_NETWORK_ID) {
-					infura = INFURA_URL;
-				} else if (network === GLOBAL_NETWORK_ID_2) {
-					infura = INFURA_URL_2;
-				}
-				web3 = new Web3(new Web3.providers.HttpProvider(infura));
+				this.setState({
+					loading: false,
+				});
 			}
 			const networkId = await web3.eth.net.getId();
 
-			console.log("This called getNetworkId", networkId);
+			this.setState({
+				loading: false,
+			});
 			if (networkId === GLOBAL_NETWORK_ID) {
 				this.setState({
 					networkId: true,
-					loading: false,
 				});
 				return;
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
 				this.setState({
 					networkId: true,
-					loading: false,
 				});
 				return;
 			} else {
-				console.log("network id not suported");
 			}
 			this.setState({
-				loading: false,
 				networkId: false,
 			});
 			return;
 		} catch (err) {
-			console.log("err", err);
 		}
+	};
+
+	getWalletError = () => {
+		let message = "";
+		if (!window.ethereum || !window.ethereum.isMetaMask) {
+			message = <span>Please install Metamask</span>;
+		} else {
+			if (this.state.networkId) {
+				message = (
+					<span
+						className="sidebarOpenWallet"
+						onClick={this.handleOpenWallet}
+					>
+						<img
+							className="switch-img"
+							src="/images/icons/switch.svg"
+						/>
+						Connect Wallet
+					</span>
+				);
+			} else {
+				message = (
+					<span>
+						<img
+							className="switch-img"
+							src="/images/icons/switch.svg"
+						/>
+						Please switch to Ethereum or Matic Mainnet
+					</span>
+				);
+			}
+		}
+		return message;
 	};
 
 	render() {
@@ -292,26 +311,12 @@ class Sidebar extends Component {
 					<i className="fas fa-plug"></i>
 				</div> */}
 
-				<p className="small connection" style={{display:"flex", alignItems:"start"}}>
-					
+				<p
+					className="small connection"
+					style={{ display: "flex", alignItems: "start" }}
+				>
 					<span className="toggleHidden">
-					{this.state.loading ? null : this.state.networkId ? (
-                            <span className="sidebarOpenWallet" onClick={this.handleOpenWallet}>
-                                <img
-                                    className="switch-img"
-                                    src="/images/icons/switch.svg"
-                                />
-                                Connect Wallet
-                            </span>
-                        ) : (
-                            <span>
-                                <img
-                                    className="switch-img"
-                                    src="/images/icons/switch.svg"
-                                />
-                                Switch to rinkeby or goerli network
-                            </span>
-                        )}
+						{this.state.loading ? null : this.getWalletError()}
 					</span>
 				</p>
 			</div>
@@ -324,17 +329,6 @@ class Sidebar extends Component {
 							to="/accountdetails"
 							style={{ display: "flex", alignItems: "center" }}
 						>
-							{/* <img
-								src={makeBlockie(this.props.account)}
-								alt={this.props.account}
-							/> */}
-							{/* {console.log(
-								"this.props.userDetails",
-								this.props.userDetails
-							)} */}
-							{/* {this.provideImage(this.props.userDetails)} */}
-							{/* <img src="./images/metamask.svg" className="bird" /> */}
-
 							{this.renderImage()}
 
 							<span
@@ -362,11 +356,6 @@ class Sidebar extends Component {
 			this.props.account.length === 0 ||
 			!this.props.status
 		) {
-			console.log(
-				"I am doing that",
-				this.props.networkId == GLOBAL_NETWORK_ID ||
-					this.props.networkId == GLOBAL_NETWORK_ID_2
-			);
 			return (
 				<React.Fragment>
 					<Snackbar
@@ -421,8 +410,11 @@ class Sidebar extends Component {
 									>
 										<span className="iconMargin">
 											<Dashboard
-												style={{ color: "#73727D" ,fontSize:"20px"}}
-												/>
+												style={{
+													color: "#73727D",
+													fontSize: "20px",
+												}}
+											/>
 										</span>{" "}
 										<span className="toggleHidden">
 											Dashboard
@@ -526,12 +518,7 @@ class Sidebar extends Component {
 										}}
 									>
 										<span className="iconMargin">
-											<InfoOutlined
-												style={{
-													color: "#73727D",
-													fill: "#73727D",
-												}}
-											/>
+											{Works}
 										</span>{" "}
 										<span className="toggleHidden">
 											How It Works
@@ -592,7 +579,10 @@ class Sidebar extends Component {
 								</li>
 							</ul>
 
-							<ul className="grid toggleHidden">
+							<ul
+								className="grid toggleHidden"
+								style={{ maxWidth: "250px" }}
+							>
 								<div className="imageHolder">
 									<a
 										aria-label="Homepage"
@@ -600,7 +590,10 @@ class Sidebar extends Component {
 										title="Telegram"
 										href="https://t.me/PHNXDAO"
 									>
-										<img src="/images/icons/telegram.svg" alt="telegram"/>
+										<img
+											src="/images/icons/telegram.svg"
+											alt="telegram"
+										/>
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -610,7 +603,10 @@ class Sidebar extends Component {
 										title="Twitter"
 										href="https://twitter.com/phnxdao"
 									>
-										<img src="/images/icons/twitter.svg" alt="twitter"/>
+										<img
+											src="/images/icons/twitter.svg"
+											alt="twitter"
+										/>
 									</a>
 								</div>
 								<div className="imageHolder">
@@ -620,20 +616,31 @@ class Sidebar extends Component {
 										title="GitHub"
 										href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
 									>
-										<img src="/images/icons/github.svg" alt="github" />
+										<img
+											src="/images/icons/github.svg"
+											alt="github"
+										/>
 									</a>
 								</div>
 							</ul>
+							<span className="toggleHidden suggestion">
+								Kindly give us your feedback(s) <a style={{
+									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
+									textDecoration: "underline",
+									display: "flex",
+									alignItems: "center",
+								}} href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform" target="_blank">here</a>
+							</span>
 						</div>
 					</div>
 					<DialogueBox
-                        open={this.state.openWallet}
-                        handleClose={this.handleCloseWallet}
-                        maxWidth="xs"
-                    >
-                        {/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}
-                        <Wallet />
-                    </DialogueBox>
+						open={this.state.openWallet}
+						handleClose={this.handleCloseWallet}
+						maxWidth="xs"
+					>
+						{/* <IdentityForm setNextForm={setNextForm} nextForm={nextForm} /> */}
+						<Wallet />
+					</DialogueBox>
 				</React.Fragment>
 			);
 		} else
@@ -689,7 +696,10 @@ class Sidebar extends Component {
 									>
 										<span className="iconMargin">
 											<Dashboard
-												style={{ color: "#73727D" ,fontSize:"20px"}}
+												style={{
+													color: "#73727D",
+													fontSize: "20px",
+												}}
 											/>
 										</span>{" "}
 										<span className="toggleHidden">
@@ -871,8 +881,11 @@ class Sidebar extends Component {
 									>
 										<span className="iconMargin">
 											<Favorite
-												style={{ color: "#73727D" ,fontSize:"20px"}}
-												/>
+												style={{
+													color: "#73727D",
+													fontSize: "20px",
+												}}
+											/>
 										</span>
 										{"  "}
 										<span className="toggleHidden">
@@ -957,14 +970,19 @@ class Sidebar extends Component {
 										<span className="toggleHidden">
 											Terms and Conditions
 										</span>
+
 									</NavLink>
 								</li>
-								<li>
+
+								<li style={{ display: "none" }}>
 									<ThemeSwitch />
 								</li>
 							</ul>
 
-							<ul className="grid toggleHidden">
+							<ul
+								className="grid toggleHidden"
+								style={{ maxWidth: "250px" }}
+							>
 								<div className="imageHolder">
 									<a
 										aria-label="Homepage"
@@ -996,6 +1014,16 @@ class Sidebar extends Component {
 									</a>
 								</div>
 							</ul>
+							{/* <div className="toggleHidden suggestion"> */}
+							<span className="toggleHidden suggestion">
+								Kindly give us your feedback(s) <a style={{
+									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
+									textDecoration: "underline",
+									display: "flex",
+									alignItems: "center",
+								}} href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform" target="_blank">here</a>
+							</span>
+							{/* </div> */}
 						</div>
 					</div>
 				</React.Fragment>

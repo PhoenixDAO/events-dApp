@@ -5,8 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import Notify from "../Notify";
 
 import ipfs from "../../utils/ipfs";
-
-import Form from "./Form";
 import Loader from "./Loader";
 import Done from "./Done";
 
@@ -91,7 +89,6 @@ class CreateEvent extends Component {
 			},
 			activeStep: 0,
 			activeFlamingStep: 0,
-			isEventCreated: false,
 			progressText: 0,
 			shareUrl: "",
 			PhoenixDAO_market: {},
@@ -100,69 +97,11 @@ class CreateEvent extends Component {
 		this.onHandleTxReject = this.onHandleTxReject.bind(this);
 	}
 
-	convertDollarToPhnx = (d) => {
-		let value = parseFloat(d);
-		value = value > 0 ? value : 0;
-		let usd = this.state.PhoenixDAO_market.usd;
-		let phoenixValue = value / usd;
-		phoenixValue = phoenixValue.toFixed(5);
-		return phoenixValue;
-	};
-
-	getPhoenixdaoMarket = async () => {
-		fetch(
-			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
-		)
-			.then((res) => res.json())
-			.then((data) => {
-				this.setState({ PhoenixDAO_market: data.phoenixdao });
-			})
-			.catch(console.log);
-	};
-
 	onFieldsChange = (f) => {
 		this.setState({ fields: { ...this.state.fields, ...f } });
 	};
 
-	onGetRealTimeFields = (f) => {
-		let fields = this.state.fields;
-
-		if (
-			f.name === "dollarPricePreview" ||
-			f.name === "phnxPricePreview" ||
-			f.name === "ticketAvailabilityPreview" ||
-			f.name === "noOfTicketsPreview"
-		) {
-			let cat = [];
-			let obj = {
-				ticketName: "free",
-				dollarPrice: "0",
-				phnxPrice: "0",
-				ticketAvailability: false,
-				noOfTickets: "0",
-			};
-			if (f.name === "dollarPricePreview") {
-				obj.dollarPrice = f.value;
-				obj.phnxPrice = this.convertDollarToPhnx(f.value);
-				fields.token = true;
-			} else if (f.name === "ticketAvailabilityPreview") {
-				obj.ticketAvailability = f.value;
-			} else if (f.name === "noOfTicketsPreview") {
-				obj.noOfTickets = f.value;
-			}
-
-			cat.push(obj);
-			fields.categories = cat;
-			fields[f.name] = f.value;
-			this.setState(fields);
-		} else {
-			fields[f.name] = f.value;
-			this.setState(fields);
-		}
-	};
-
 	onStepsChange = (type) => {
-		console.log("type", type);
 		this.setState((prevState) => {
 			return {
 				activeStep:
@@ -174,7 +113,6 @@ class CreateEvent extends Component {
 	};
 
 	onFlamingStepsChange = () => {
-		console.log("onFlamingStepsChange");
 		// this.setState({ activeFlamingStep: this.state.activeFlamingStep + 1 });
 		this.setState((prevState) => {
 			return {
@@ -184,7 +122,6 @@ class CreateEvent extends Component {
 	};
 
 	onHandleTxReject(err) {
-		console.log("onHandleTxReject", err);
 		this.setState((prevState) => {
 			return {
 				activeStep: prevState.activeStep - 1,
@@ -195,18 +132,16 @@ class CreateEvent extends Component {
 	}
 
 	async getEventURL() {
-		let eventCount = await await this.props.eventsContract.methods
+		let eventCount = await this.props.eventsContract.methods
 			.getEventsCount()
 			.call();
-		console.log("eventCount", eventCount);
-		// eventCount = Number(eventCount) + 1;
+		eventCount = Number(eventCount) + 1;
 		var base_url = window.location.origin;
 		const shareUrl = `${base_url}/event/${eventCount}`;
 		this.setState({ shareUrl: shareUrl });
 	}
 
-	handleCreateEvent = async () => {
-		console.log("handleCreateEvent111", this.state.fields);
+	handleCreateEvent = async (clearStateCb) => {
 		this.stageUpdater(90);
 
 		let {
@@ -217,7 +152,7 @@ class CreateEvent extends Component {
 			eventLocation,
 			eventLink,
 			restrictWallet: oneTimeBuy,
-			categories: ticketCategories,
+			ticketCategories, // categories: ticketCategories,
 			token, //false means free
 			eventDate, //onedayevent date format
 			eventStartDate, //morethanadayevent
@@ -235,9 +170,21 @@ class CreateEvent extends Component {
 			city,
 		} = this.state.fields;
 
-		let image0Base64 = image0 ? await this.getBase64(image0) : "";
-		let image1Base64 = image1 ? await this.getBase64(image1) : "";
-		let image2Base64 = image2 ? await this.getBase64(image2) : "";
+		let image0Base64 = image0
+			? (await this.isFileImage(image0))
+				? await this.getBase64(image0)
+				: ""
+			: "";
+		let image1Base64 = image1
+			? (await this.isFileImage(image1))
+				? await this.getBase64(image1)
+				: ""
+			: "";
+		let image2Base64 = image2
+			? (await this.isFileImage(image2))
+				? await this.getBase64(image2)
+				: ""
+			: "";
 
 		let countryName = eventType === "physical" ? country.name : "";
 		let stateName = eventType === "physical" ? state.name : "";
@@ -261,18 +208,33 @@ class CreateEvent extends Component {
 			) / 1000;
 
 		for (var i = 0; i < ticketCategories.length; i++) {
-			ticketLimited.push(ticketCategories[i].ticketAvailability);
-			tktQnty.push(ticketCategories[i].noOfTickets);
-			prices.push(ticketCategories[i].dollarPrice * 1000000);
-			tktQntySold.push("0");
 			categories.push(ticketCategories[i].ticketName);
+			prices.push(
+				Web3.utils.toWei(ticketCategories[i].dollarPrice.toString())
+			);
+
+			tktQntySold.push("0");
+
+			ticketLimited.push(
+				ticketCategories[i].ticketAvailability === "unlimited"
+					? false
+					: true
+			);
+
+			tktQnty.push(
+				ticketCategories[i].ticketAvailability === "unlimited"
+					? "0"
+					: ticketCategories[i].noOfTickets
+			);
+
 			totalQuantity =
-				totalQuantity + parseInt(ticketCategories[i].noOfTickets);
+				totalQuantity +
+				parseInt(
+					ticketCategories[i].ticketAvailability === "unlimited"
+						? "0"
+						: ticketCategories[i].noOfTickets
+				);
 		}
-
-		console.log("token", token);
-		console.log(ticketLimited, tktQnty, prices, tktQntySold, categories);
-
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({
 			//new
@@ -302,12 +264,12 @@ class CreateEvent extends Component {
 		let buffer = Buffer.from(ipfsData);
 		ipfs.add(buffer, { pin: pinit })
 			.then(async (hash) => {
-				console.log("hashhh", hash[0].hash);
 				this.setState({
 					progressText: 100,
 				});
 
 				this.onFlamingStepsChange();
+				await this.getEventURL();
 
 				// ipfs.get(hash[0].hash).then((file) => {
 				// 	let data = JSON.parse(file[0].content.toString());
@@ -344,7 +306,6 @@ class CreateEvent extends Component {
 					.on("transactionHash", async (txhash) => {
 						// hash of tx
 						if (txhash !== null) {
-							console.log("txhash", txhash);
 							this.onFlamingStepsChange();
 							this.setState({
 								progressText: 0,
@@ -372,7 +333,6 @@ class CreateEvent extends Component {
 							const web3 = new Web3(infura);
 
 							let intervalVar = setInterval(async () => {
-								console.log("web3.eth", web3.eth);
 								let receipt =
 									await web3.eth.getTransactionReceipt(
 										txhash
@@ -394,39 +354,15 @@ class CreateEvent extends Component {
 										}
 									);
 									this.onFlamingStepsChange();
-									await this.getEventURL();
 									clearInterval(intervalVar);
+									clearStateCb();
 								}
-							}, 5000);
+							}, 2000);
 						}
 					})
 					.then(async (receipt) => {
-						console.log("receipt----->", receipt);
-						// toast(
-						// 	<Notify
-						// 		text={
-						// 			"Transaction successfull!\nYou can check event now."
-						// 		}
-						// 		icon="fas fa-check-circle fa-3x"
-						// 		color="#413AE2"
-						// 		hash={receipt.transactionHash}
-						// 	/>,
-						// 	{
-						// 		position: "bottom-right",
-						// 		autoClose: true,
-						// 		pauseOnHover: true,
-						// 	}
-						// );
-						// this.onFlamingStepsChange();
-						// await userTweet({
-						// 	address: this.props.accounts[0],
-						// 	networkId: this.props.web3.networkId,
-						// 	base64Image: image0Base64,
-						// 	message: eventName,
-						// });
 					})
 					.catch((error) => {
-						console.log("tx error", error);
 						this.onHandleTxReject(error);
 						if (error !== null) {
 							txerror = error;
@@ -445,7 +381,6 @@ class CreateEvent extends Component {
 					});
 			})
 			.catch((error) => {
-				console.log("ipfs error", error);
 				this.onHandleTxReject(error);
 				if (error !== null) {
 					let txerror = error;
@@ -476,6 +411,14 @@ class CreateEvent extends Component {
 			reader.onerror = (error) => reject(error);
 		});
 	};
+
+	isFileImage(file) {
+		try {
+			return file && file["type"].split("/")[0] === "image";
+		} catch (error) {
+			return false;
+		}
+	}
 
 	createEvent = (
 		fileHandle,
@@ -532,11 +475,8 @@ class CreateEvent extends Component {
 	};
 
 	readFile = (file) => {
-		console.log("readFile calling", file);
 		let reader = new window.FileReader();
-		console.log("reader", reader);
 		reader.readAsDataURL(file);
-		console.log("reader.readAsDataURL", reader);
 		reader.onloadend = () => this.convertAndUpload(reader);
 	};
 
@@ -544,7 +484,6 @@ class CreateEvent extends Component {
 		let data;
 		let pinit = process.env.NODE_ENV === "production";
 		if (this.state.data.fileHandle) {
-			console.log("fileHandle", true);
 			data = JSON.stringify({
 				image: reader.result,
 				text: this.state.data.description,
@@ -561,9 +500,6 @@ class CreateEvent extends Component {
 				topic: this.state.data.topic,
 			});
 		}
-
-		console.log("createevent data", data);
-
 		let buffer = Buffer.from(data);
 		ipfs.add(buffer, { pin: pinit })
 			.then((hash) => {
@@ -588,7 +524,6 @@ class CreateEvent extends Component {
 				);
 			})
 			.catch((error) => {
-				// console.log("error in convertAndUpload",error)
 				this.setState(
 					{
 						error: true,
@@ -642,7 +577,6 @@ class CreateEvent extends Component {
 	transactionChecker = (id) => {
 		this.tx_checkerInterval = setInterval(() => {
 			let tx = this.props.transactionStack[id];
-			console.log("tx -------->", tx);
 			if (typeof tx !== "undefined") {
 				this.setState({
 					upload: false,
@@ -673,8 +607,6 @@ class CreateEvent extends Component {
 
 	componentDidMount() {
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
-
-		this.getPhoenixdaoMarket();
 	}
 
 	render() {
@@ -707,12 +639,9 @@ class CreateEvent extends Component {
 							<MyStepper
 								handleCreateEvent={this.handleCreateEvent}
 								onFieldsChange={this.onFieldsChange}
-								onGetRealTimeFields={this.onGetRealTimeFields}
 								onStepsChange={this.onStepsChange}
 								activeStep={this.state.activeStep}
-								onFlamingStepsChange={this.onFlamingStepsChange}
 								activeFlamingStep={this.state.activeFlamingStep}
-								isEventCreated={this.state.isEventCreated}
 								progressText={this.state.progressText}
 								shareUrl={this.state.shareUrl}
 							/>
@@ -739,11 +668,8 @@ class CreateEvent extends Component {
 						<MyStepper
 							handleCreateEvent={this.handleCreateEvent}
 							onFieldsChange={this.onFieldsChange}
-							onGetRealTimeFields={this.onGetRealTimeFields}
 							onStepsChange={this.onStepsChange}
-							onFlamingStepsChange={this.onFlamingStepsChange}
 							activeFlamingStep={this.state.activeFlamingStep}
-							isEventCreated={this.state.isEventCreated}
 							progressText={this.state.progressText}
 							shareUrl={this.state.shareUrl}
 						/>

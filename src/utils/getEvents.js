@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 import axios from "axios";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi, { getNetworkId }  from '../config/getGraphApi';
 
 export const getEvents = (props, context) => {
     const [Deleted_Events, setDeleted_Events] = useState([]);
@@ -25,14 +25,16 @@ export const getEvents = (props, context) => {
     }, [MyEvents]);
     const filterHideEvent = async() => {
         try {
-            const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+            const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
             if (get.data.result.length != 0) {
                 setHideEvent(get.data.result)
             }
 
             return;
         } catch (error) {
-            // console.log("check error", error);
         }
     };
     const loadBockchain = async() => {
@@ -68,7 +70,6 @@ export const getEvents = (props, context) => {
 
 
             //Listen For My Newly Created Events
-            console.log("account", props.revenueCategory);
             let graphURL  = await GetGraphApi();
             await axios({
                 url: graphURL,
@@ -100,9 +101,7 @@ export const getEvents = (props, context) => {
               }`
                 }
             }).then((graphEvents) => {
-                // console.log("GraphQL query response in getEvents.js", graphEvents.data.data)
                 if (!graphEvents.data || graphEvents.data.data == 'undefined') {
-                    // console.log("GraphQL query -- graphEvents undefined")
                     setLoading(false);
                     setActive_length(0);
 
@@ -134,8 +133,6 @@ export const getEvents = (props, context) => {
         let filteredDeleted = [];
         let skip = false;
         let skip2 = false;
-        // console.log("GraphQL query newsort", MyEvents, "deleted", Deleted_Events);
-
         for (let i = 0; i < MyEvents.length; i++) {
             for (let j = 0; j < Deleted_Events.length; j++) {
                 if (
@@ -166,7 +163,6 @@ export const getEvents = (props, context) => {
             skip = false;
             skip2 = false;
         }
-        // console.log("filtered", filteredDeletedReported, filteredDeleted)
         setMyEvents(filteredDeletedReported);
     }
     return MyEvents;

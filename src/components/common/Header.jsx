@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { makeStyles } from "@material-ui/core/styles";
 import { drizzleConnect } from "drizzle-react";
@@ -36,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
 			width: "160px",
 		},
 	},
-	SearchAndBuyPheonixButtonMargin:{
-		marginRight: theme.spacing(1)
-	}
+	SearchAndBuyPheonixButtonMargin: {
+		marginRight: theme.spacing(1),
+	},
 }));
 
 const Header = ({
@@ -88,19 +88,15 @@ const Header = ({
 	const closeTransak = () => {
 		setTransak(false);
 	};
-	const setTransakChain = async ()=>{
+	const setTransakChain = async () => {
 		const network = await getNetworkId();
-		console.log("network", network);
 		if (network == GLOBAL_NETWORK_ID) {
 			setChain("ethereum");
-			console.log("chain",chainId);
-		}
-		else {
+		} else {
 			setChain("polygon");
-
 		}
-	}
-	
+	};
+
 	let connect = searchBar && Object.keys(accounts).length !== 0;
 
 	return (
@@ -120,7 +116,12 @@ const Header = ({
 				{/* Back button Arrow */}
 				<div
 					className="header-heading"
-					style={{ display: "flex", alignItems: "center" }}
+					style={{
+						display: "flex",
+						alignItems: "center",
+						overflow: "hidden",
+						wordBreak: "break-word",
+					}}
 				>
 					{page === "event" ||
 					page === "topic" ||
@@ -133,9 +134,7 @@ const Header = ({
 						</IconButton>
 					) : null}
 					{/* Header Title */}
-					<h2>
-						{title}
-					</h2>
+					<h2>{title}</h2>
 				</div>
 
 				{/* {page == "analytics" || page == "create" || phnxButton ? (
@@ -143,11 +142,11 @@ const Header = ({
 			) : null} */}
 				{searchBar ? (
 					<div>
-					<SearchBar
-						connect={connect}
-						handleSearch={handleSearch}
-						search={search}
-					/>
+						<SearchBar
+							connect={connect}
+							handleSearch={handleSearch}
+							search={search}
+						/>
 					</div>
 				) : null}
 				{Object.keys(accounts).length === 0 ? (
@@ -171,15 +170,22 @@ const Header = ({
 						</Button>
 					</div>
 				) : page === "analytics" ||
-					page === "create" ||
-					page === "confirm-purchase" ||
-					phnxButton ? (
-						<div className={(page=="dashboard")&& classes.SearchAndBuyPheonixButtonMargin}>
-					<BuyPhnxButton onClick={handleOpenBuyPhnx} />
+				  page === "create" ||
+				  page === "confirm-purchase" ||
+				  phnxButton ? (
+					<div
+						className={
+							page == "dashboard" &&
+							classes.SearchAndBuyPheonixButtonMargin
+						}
+					>
+						<BuyPhnxButton onClick={handleOpenBuyPhnx} />
 					</div>
-				) : <div >
-				<BuyPhnxButton onClick={handleOpenBuyPhnx} />
-				</div>}
+				) : (
+					<div>
+						<BuyPhnxButton onClick={handleOpenBuyPhnx} />
+					</div>
+				)}
 				<DialogueBox
 					open={openWallet}
 					handleClose={handleCloseWallet}

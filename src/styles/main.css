@@ -142,6 +142,7 @@
 
 html {
 	scroll-behavior: smooth;
+	overflow: visible !important;
 }
 
 body {
@@ -573,6 +574,14 @@ div[class|="r-sticky"] .header3 {
 	left: 5%;
 	top: 25%;
 }
+@media screen and (max-width:1400px) {
+	.carousel-caption p {
+		position: absolute;
+		left: 5%;
+		top: 21%;
+	}
+	
+}
 
 .carousel-caption p:last-of-type {
 	margin-top: 70px;
@@ -581,7 +590,7 @@ div[class|="r-sticky"] .header3 {
 	bottom: 7em !important ;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 780px) {
 	.carousel-caption p:last-of-type {
 		margin-top: 45px;
 	}
@@ -2953,6 +2962,7 @@ canvas#doughnut {
 	padding: 10px 20px;
 	display: flex;
 	justify-content: center;
+	font-size: 16px;
 }
 .snackbar {
 	border-radius: 8px;

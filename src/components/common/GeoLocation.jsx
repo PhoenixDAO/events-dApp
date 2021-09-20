@@ -71,11 +71,15 @@ export default function GeoLocation(props) {
 			const data = async () => {
 				(await isCountry)
 					? geonames.countryInfo({}).then((res) => {
-							// console.log(res);
 							setOptions(res.geonames);
 					  })
 					: geonames.children({ geonameId: geoId }).then((res) => {
-							if (res.totalResultsCount) setOptions(res.geonames);
+							if (res.totalResultsCount){
+								setOptions(res.geonames);
+							}
+							else{
+								setOptions([])
+							}
 					  });
 			};
 			data();
@@ -88,14 +92,12 @@ export default function GeoLocation(props) {
 
 	const handleChange = (e) => {
 		const { myValue, value } = e.currentTarget.dataset;
-		console.log(myValue, value);
 		// setCurrentItem(value);
-		onChange({ name: myValue, id: value });
+		onChange({ name: name, value: { name: myValue, id: value } });
 	};
 
 	const handleClick = (event) => {
 		const { myValue } = event.currentTarget.dataset;
-		console.log(myValue.geonameId); // --> 123
 	};
 
 	return (

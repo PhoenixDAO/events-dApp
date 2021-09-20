@@ -67,6 +67,16 @@ const styles = (theme) => ({
 		paddingTop: "40px",
 		alignItems: "baseline",
 	},
+	sticky: {
+		position: "sticky",
+		zIndex: 1,
+		top: 0,
+		display: "flex",
+		flexDirection: "column",
+		background: `#F2F2FD !important`,
+		opacity: `1 !important`,
+		marginLeft: -2,
+	},
 });
 
 class MyEvents extends Component {
@@ -90,7 +100,6 @@ class MyEvents extends Component {
 			selectedTab: 0,
 			value: "",
 		};
-		console.log("qwe", this.props.accounts[0]);
 		// this.contracts = context.drizzle.contracts;
 		// this.events = this.contracts["DaoEvents"].methods.eventsOf.cacheCall(
 		// 	this.props.accounts[0]
@@ -127,8 +136,6 @@ class MyEvents extends Component {
 				},
 			})
 				.then((graphDeletedEvents) => {
-					// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
-
 					if (
 						!graphDeletedEvents.data ||
 						!graphDeletedEvents.data.data === undefined
@@ -144,7 +151,6 @@ class MyEvents extends Component {
 				.catch((err) => {
 					this.setState({ Deleted_Events: [], loading: false });
 				});
-			// console.log("Graph this.state.isActive",this.state.isActive)
 			if (this.state.isActive) {
 				this.loadActiveEvents();
 			} else {
@@ -159,13 +165,7 @@ class MyEvents extends Component {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
 		// GRAPH BLOCK //
-		// console.log("GraphQL query before call",Date.now())
 		const graphURL = await GetGraphApi();
-		console.log(
-			"checking this.accounts",
-			typeof this.account,
-			this.account
-		);
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -198,11 +198,6 @@ class MyEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				console.log(
-					"GraphQL query response in MyEvents Upcoming Events",
-					Date.now(),
-					graphEvents.data.data
-				);
 				if (!graphEvents.data || graphEvents.data.data === undefined) {
 					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({
@@ -282,11 +277,6 @@ class MyEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				console.log(
-					"GraphQL query response in MyEvents Past Events",
-					Date.now(),
-					graphEvents.data.data
-				);
 
 				if (!graphEvents.data || graphEvents.data.data === undefined) {
 					// console.log("GraphQL query -- graphEvents undefined")
@@ -332,7 +322,6 @@ class MyEvents extends Component {
 	//Display My Concluded Events
 	PastEvent = (e) => {
 		let value = "";
-		console.log("past event");
 		this.setState(
 			{
 				isActive: false,
@@ -382,7 +371,7 @@ class MyEvents extends Component {
 				} else {
 					filteredEvents = this.state.check;
 				}
-			} catch (e) {}
+			} catch (e) { }
 			this.setState({
 				MyEvents: filteredEvents,
 				active_length: filteredEvents.length,
@@ -402,7 +391,6 @@ class MyEvents extends Component {
 	};
 	render() {
 		const { classes } = this.props;
-		console.log("class props for event card", classes.tabBar);
 		let body;
 		// if (
 		// 	// typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
@@ -575,43 +563,46 @@ class MyEvents extends Component {
 			);
 		}
 		return (
-			<div className="event-page-wrapper" ref={this.myRef}>
-				<Header
-					title="Created Events"
-					page="myEvent"
-					searchBar={true}
-					handleSearch={this.updateSearch}
-				/>
+			<div className={`event-page-wrapper`} ref={this.myRef}>
+				<div className={`${classes.sticky}`}>
+					<Header
+						title="Created Events"
+						page="myEvent"
+						searchBar={true}
+						handleSearch={this.updateSearch}
+					/>
+					<AppBar
+						position="static"
+						className={classes.AppBar}
+						color="transparent"
+						style={{ padding: "0 19px" }}
 
-				<AppBar
-					position="static"
-					className={classes.AppBar}
-					color="transparent"
-				>
-					<Tabs
-						value={this.state.selectedTab}
-						onChange={this.onTabChange.bind(this)}
-						indicatorColor="primary"
-						textColor="primary"
-						variant="scrollable"
-						scrollButtons="auto"
-						aria-label="scrollable auto tabs example"
-						style={{ height: "40px" }}
 					>
-						<Tab
-							className={classes.tabBar}
-							mx="0"
-							label="Upcoming Events"
-							{...a11yProps(0)}
-						/>
-						<Tab
-							className={classes.tabBar}
-							label="Past Events"
-							{...a11yProps(1)}
-						/>
-					</Tabs>
-					<Divider light />
-				</AppBar>
+						<Tabs
+							value={this.state.selectedTab}
+							onChange={this.onTabChange.bind(this)}
+							indicatorColor="primary"
+							textColor="primary"
+							variant="scrollable"
+							scrollButtons="auto"
+							aria-label="scrollable auto tabs example"
+							style={{ height: "40px" }}
+						>
+							<Tab
+								className={classes.tabBar}
+								mx="0"
+								label="Upcoming Events"
+								{...a11yProps(0)}
+							/>
+							<Tab
+								className={classes.tabBar}
+								label="Past Events"
+								{...a11yProps(1)}
+							/>
+						</Tabs>
+						<Divider light />
+					</AppBar>
+				</div>
 				<TabPanel value={this.state.selectedTab} index={0}>
 					<div>{body}</div>
 				</TabPanel>
@@ -619,47 +610,7 @@ class MyEvents extends Component {
 					{body}
 					{/* <FindEvents {...this.props}/> */}
 				</TabPanel>
-
-				{/* <h2 className="col-md-10" ref={this.myRef}>
-					{this.state.isActive ? (
-						<i className="fa fa-calendar-alt "></i>
-					) : (
-						<i className="fa fa-archive"></i>
-					)}{" "}
-					My{this.state.isActive ? " Active" : " Past"} Events
-				</h2>
-				<div className="input-group input-group-lg mb-2">
-					<button
-						className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2"
-						onClick={this.ActiveEvent}
-					>
-						Active Events
-					</button>
-					<button
-						className="btn rounded-pill btn-dark col-md-2 mx-2 mt-2"
-						onClick={this.PastEvent}
-					>
-						Past Events
-					</button>
-					<div className="input-group-prepend ml-2 mt-2">
-						<span
-							className="input-group-text rounded-left  search-icon float-right"
-							id="inputGroup-sizing-lg"
-						>
-							<i className="fa fa-search"></i>&nbsp;Search{" "}
-						</span>
-					</div>
-					<input
-						type="text"
-						value={this.state.value}
-						onChange={this.updateSearch.bind(this)}
-						className="form-control mr-2 mt-2 col-md-6"
-						aria-label="Large"
-						aria-describedby="inputGroup-sizing-sm"
-					/>
-				</div>
-				<hr />
-				{body} */}
+				
 			</div>
 		);
 	}
