@@ -625,9 +625,7 @@ const Analytics = (props, context) => {
 		const dollarKey = Object.keys(dollarData);
 		for (let i = 0; i < dollarKey.length; i++) {
 			const obj = dollarData[dollarKey[i]];
-			dollarRev.push(
-				Web3.utils.fromWei(obj.totalDollarRevenue.toString())
-			);
+			dollarRev.push(obj.totalDollarRevenue / 1000000);
 			if (timeStamp == 86400) {
 				dollarLabel.push(
 					moment.unix(obj.startTimeStamp).format("HH:mm")
