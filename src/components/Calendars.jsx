@@ -20,11 +20,11 @@ import PropTypes from "prop-types";
 import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { getTickets } from "../utils/graphApis";
-import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId }  from '../config/getGraphApi';
 
 const styles = (theme) => ({
 	content: {
-		position: "relative",
+		position:"relative",
 		// "@media screen and (min-width: 1200px)": {
 		// 	margin: "40px 0px",
 		// },
@@ -53,21 +53,22 @@ const styles = (theme) => ({
 			width: "auto",
 			minWidth: "141px",
 		},
+
 	},
-	selectDropDown: {
+	selectDropDown:{
 		maxHeight: "200px",
-		width: "150px",
+		width:"150px",
 	},
 	selectDiv: {
-		"@media (min-width:1200px)": {
+		"@media (min-width:1200px)":{
 			position: "absolute",
 			top: "43px",
 			right: "50px",
 		},
-		"@media (max-width: 1200px)": {
+		"@media (max-width: 1200px)":{
 			top: "14%",
-			right: "50%",
-		},
+			right:"50%"
+		}
 	},
 	calenderContainer: {
 		position: "relative",
@@ -78,8 +79,8 @@ const styles = (theme) => ({
 			width: "150px",
 		},
 	},
-	fullWidth: {
-		width: "150px",
+	fullWidth:{
+		width:"150px",
 	},
 });
 class Calendars extends Component {
@@ -95,19 +96,19 @@ class Calendars extends Component {
 			events: [],
 			Deleted_Events: [],
 			event_copy: [],
-			category: "all",
+			category:"all",
 		};
 
 		this._isMounted = false;
 		this.account = this.props.accounts[0];
 	}
-
+	
 	selectBoxRef = React.createRef();
 	calendarComponentRef = React.createRef();
 
 	async loadBlockchain() {
 		// GRAPH BLOCK //
-		const graphURL = await GetGraphApi();
+		const graphURL  = await GetGraphApi();
 		const ownerTickets = await getTickets(this.props.accounts[0]);
 		this.setState({ activeEvents: ownerTickets });
 		await axios({
@@ -125,7 +126,6 @@ class Calendars extends Component {
 			},
 		})
 			.then((graphDeletedEvents) => {
-				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 
 				if (
 					!graphDeletedEvents.data ||
@@ -199,15 +199,14 @@ class Calendars extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-			const get = await axios.get(
-				`${API_URL}${REPORT_EVENT}/${networkId}`
-			);
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
 		} catch (error) {
-			// console.log("check error", error);
 		}
 	};
 
@@ -239,24 +238,20 @@ class Calendars extends Component {
 			);
 			this.setState({
 				Events_Blockchain: userEvents,
-				category: "created",
+				category:"created"
 			});
 		} else if (category == "favourite") {
-			// console.log("props",this.account, this.props.networkId);
 			const data = await getUserDetails({
 				address: this.account,
 				networkId: this.props.networkId,
 			});
 			if (data.result.result.userHldr.favourites != "undefined") {
 				let favoriteEvents = this.state.event_copy.filter((item) =>
-					data.result.result.userHldr.favourites.includes(
-						item.eventId
-					)
+					data.result.result.userHldr.favourites.includes(item.eventId)
 				);
-				console.log("favorite", favoriteEvents);
 				this.setState({
 					Events_Blockchain: favoriteEvents,
-					category: "favourite",
+					category:"favourite"
 				});
 			}
 		} else if (category == "tickets") {
@@ -265,12 +260,12 @@ class Calendars extends Component {
 			);
 			this.setState({
 				Events_Blockchain: tickets,
-				category: "tickets",
+				category:"tickets"
 			});
 		} else {
 			this.setState({
 				Events_Blockchain: this.state.event_copy,
-				category: "all",
+				category:"all"
 			});
 		}
 	};
@@ -318,72 +313,75 @@ class Calendars extends Component {
 					account: events_list[i].owner,
 				});
 			}
-			this.selectBox = (
+			this.selectBox=(
 				<FormControl
-					variant="outlined"
-					className={classes.categorySelect}
-					// ref={this.selectBoxRef}
-				>
-					<Select
-						labelId="demo-simple-select-outlined-label"
-						id="demo-simple-select-outlined"
-						fullWidth
-						value={this.state.category}
-						onChange={this.categoryChange}
-						displayEmpty
-						className={classes.fullWidth}
-						MenuProps={{
-							classes: {
-								paper: classes.menuPaper,
-							},
-							getContentAnchorEl: null,
-							anchorOrigin: {
-								vertical: "bottom",
-								horizontal: "left",
-							},
-						}}
-					>
-						<MenuItem
-							value="all"
-							style={{
-								fontFamily: "'Aeonik', sans-serif",
-							}}
-						>
-							All Events
-						</MenuItem>
-						<MenuItem
-							value="tickets"
-							style={{
-								fontFamily: "'Aeonik', sans-serif",
-							}}
-						>
-							Tickets
-						</MenuItem>
-						<MenuItem
-							value="created"
-							style={{
-								fontFamily: "'Aeonik', sans-serif",
-							}}
-						>
-							Created Events
-						</MenuItem>
-						<MenuItem
-							value="favourite"
-							style={{
-								fontFamily: "'Aeonik', sans-serif",
-							}}
-						>
-							Favourites
-						</MenuItem>
-					</Select>
-				</FormControl>
-			);
+									variant="outlined"
+									className={classes.categorySelect}
+									// ref={this.selectBoxRef}
+								>
+									<Select
+									labelId="demo-simple-select-outlined-label"
+									id="demo-simple-select-outlined"
+									fullWidth
+									value={this.state.category}
+									onChange={this.categoryChange}
+									displayEmpty
+									className={classes.fullWidth}
+									MenuProps={{
+										classes: {
+											paper: classes.menuPaper,
+										},
+										getContentAnchorEl: null,
+										anchorOrigin: {
+											vertical: "bottom",
+											horizontal: "left",
+										},
+									}}
+								>
+											<MenuItem value="all"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														All Events
+													</MenuItem>
+													<MenuItem			
+														value="tickets"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Tickets
+													</MenuItem>
+													<MenuItem			
+														value="created"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Created Events
+													</MenuItem>
+													<MenuItem			
+														value="favourite"
+														style={{
+															fontFamily:
+																"'Aeonik', sans-serif",
+														}}
+													>
+														Favourites
+													</MenuItem>
+										</Select>
+							</FormControl>
+			)
 			body = (
 				<div className={classes.calenderContainer}>
 					<Header title="Calendar" phnxButton={true} />
 					<div className={classes.content}>
-						<div className={`${classes.selectDiv}`}>
-							{/* <FormControl
+					<div className={`${classes.selectDiv}`}>
+						{/* <FormControl
 									variant="outlined"
 									className={classes.categorySelect}
 									ref={this.selectBoxRef}
@@ -479,7 +477,7 @@ class Calendars extends Component {
 							headerToolbar={{
 								left: "dayGridMonth,timeGridWeek,timeGridDay",
 								center: "prev,title,next",
-								right: "selectBox",
+								right: 'selectBox',
 							}}
 							selectable={true}
 							plugins={[
@@ -510,9 +508,11 @@ class Calendars extends Component {
 								selectBox: {
 									text: this.selectBox,
 									// click: this.selectBox
-								},
-							}}
+								  }
+								}
+							}
 						/>
+					
 					</div>
 				</div>
 			);

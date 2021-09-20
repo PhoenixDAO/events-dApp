@@ -29,7 +29,6 @@ async function getResult(eventId) {
 export async function generateBuyerArr(eventId) {
 	let buyersListJson = {};
 	let ticketArr = await getResult(eventId);
-	console.log("buyer list", ticketArr);
 	ticketArr.forEach((tktObj) => {
 		// creating json
 		if (buyersListJson[tktObj.buyer] == null) {
@@ -70,7 +69,6 @@ export async function generateJSON(eventId) {
 		}
 		jsonData[tktObj.boughtLocation] += Number(1);
 	});
-	// console.log(`event ${eventId} jsonData > `, jsonData);
 	let ticketSold = [];
 	for (const [key, value] of Object.entries(jsonData)) {
 		ticketSold.push({ location: key, ticketSold: value });
@@ -118,7 +116,6 @@ export async function getTimeData(owner) {
 		},
 	});
 	let totalDollarRevenue = 0;
-	console.log(result);
 	const timeDataArr = result.data.data.ownerDayDatas;
 	// if (timeDataArr.length === 0) {
 	// 	timeDataArr.push({
@@ -133,9 +130,7 @@ export async function getTimeData(owner) {
 	timeDataArr.forEach((event) => {
 		totalDollarRevenue += Number(event.totalDollarRevenue);
 	});
-	console.log("getTimeData > ", timeDataArr);
 	let newTimeDataArr = [];
-	console.log("timedataarr", timeDataArr);
 	timeDataArr.forEach((timeData, i) => {
 		newTimeDataArr.push(timeData);
 		// const { startTimeStamp } = timeData;
@@ -168,8 +163,6 @@ export async function getTimeData(owner) {
 			// }
 		}
 	}, timeDataArr);
-
-	console.log("new TIme Data", newTimeDataArr);
 	let max = newTimeDataArr.length;
 	for (let i = 0; i < max; i++) {
 		if (i + 1 < max) {
@@ -194,7 +187,6 @@ export async function getTimeData(owner) {
 			}
 		}
 	}
-	console.log("new time data arr", newTimeDataArr);
 	return newTimeDataArr;
 }
 export async function getTodayData(owner, timestamp) {
@@ -215,7 +207,6 @@ export async function getTodayData(owner, timestamp) {
               }`,
 		},
 	});
-	console.log(result.data.data.ownerHourDatas);
 	const timeDataArr = result.data.data.ownerHourDatas;
 	if (timeDataArr.length === 0) {
 		timeDataArr.push({
@@ -230,12 +221,10 @@ export async function getTodayData(owner, timestamp) {
 	let newTimeDataArr = [];
 	let timeInterval = timestamp;
 	let finalTimestamp = timestamp + 86400;
-	console.log("timedataarr", timeDataArr);
 	timeDataArr.forEach((timeData, i) => {
 		newTimeDataArr.push(timeData);
 		// const { startTimeStamp } = timeData;
 		if (timeInterval != newTimeDataArr[i].startTimeStamp) {
-			console.log("new data time array", newTimeDataArr);
 			newTimeDataArr.splice(i, 0, {
 				startTimeStamp: timeInterval,
 				eventId: "0",
@@ -326,44 +315,8 @@ export async function getTodayData(owner, timestamp) {
 			}
 		}
 	}
-	console.log(newTimeDataArr);
 	return newTimeDataArr;
 }
-// getTimeData("0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b")
-//   .then((timeDataArr) => {
-//     console.log("getTimeData > ", timeDataArr);
-//     let newTimeDataArr = [];
-// ​
-//     timeDataArr.forEach((timeData, i) => {
-//       newTimeDataArr.push(timeData);
-//       const { startTimeStamp } = timeData;
-// ​
-//       if (
-//         Number(startTimeStamp) + 86400 !=
-//           timeDataArr[i + 1]?.startTimeStamp &&
-//         i + 1 < timeDataArr.length
-//       ) {
-//         // skip loop if the current and next startTimeStamp are same
-//         if (
-//           Number(startTimeStamp) == timeDataArr[i + 1]?.startTimeStamp
-//         ) {
-//           return;
-//         }
-// ​
-//         newTimeDataArr.push({
-//           startTimeStamp: Number(startTimeStamp) + 86400,
-//           eventId: "0",
-//           soldTickets: "0",
-//           totalDollarRevenue: "0",
-//           totalPhnxRevenue: "0",
-//         });
-//       }
-//     }, timeDataArr);
-// ​
-//     console.log("**********************************");
-//     console.log("newTimeDataArr > ", newTimeDataArr);
-//   })
-//   .catch((e) => console.log(e));
 export async function getPhoenixDAOMarketValue(price) {
 	let result = fetch(
 		"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
@@ -379,7 +332,6 @@ export async function getPhoenixDAOMarketValue(price) {
 }
 // getTimeData("0xA7aD7aAB0A61ebDCA059F438d4C0F3928D99c69b");
 // export async function getTimeData() {
-//     console.log("time", moment().subtract(1, 'days').calendar()); // Last Wednesday at 2:20 PM
 // }
 // timestamp()
 // const getPhnxRevenue = async() => {

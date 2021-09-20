@@ -3,7 +3,7 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Carousel from "react-bootstrap/Carousel";
-import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
+import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
 import axios from "axios";
 // import Web3 from "web3";
 // import Loading from "./Loading";
@@ -98,9 +98,9 @@ class Dashboard extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-			const get = await axios.get(
-				`${API_URL}${REPORT_EVENT}/${networkId}`
-			);
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			if (get.data.result.length != 0) {
 				this.setState({
 					hideEvent: get.data.result,
@@ -109,60 +109,45 @@ class Dashboard extends Component {
 
 			return;
 		} catch (error) {
-			// console.log("check error", error);
 		}
 	};
 	async loadBockchain() {
 		if (this._isMounted) {
-			this.setState({
-				Deleted_Events: [],
-				MyEvents: [],
-				active_length: 0,
-			});
+			this.setState({ Deleted_Events: [] ,MyEvents: [],active_length:0 });
 			// Graph BLOCK
-			this.setState({
-				MyEvents: [],
-				active_length: false,
-				loading: true,
-			});
+			this.setState({ MyEvents: [],active_length:false ,loading:true});
 			await axios({
 				url: graphURL,
-				method: "post",
+				method: 'post',
 				data: {
-					query: `
+				  query: `
 				  {
 					eventsRemoveds {
 					  id
 					  eventId
 					}
 				  }
-				  `,
-				},
+				  `
+				}
+			}).then((graphDeletedEvents)=>{
+	
+				if(!graphDeletedEvents.data || !graphDeletedEvents.data.data == 'undefined'){
+					this.setState({ Deleted_Events: [] });
+				}else{
+					this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
+				}
+			}).catch((err)=>{
+				console.error("graph error here",err);
+				this.setState({ Deleted_Events: [],loading:false });
 			})
-				.then((graphDeletedEvents) => {
-					if (
-						!graphDeletedEvents.data ||
-						!graphDeletedEvents.data.data == "undefined"
-					) {
-						this.setState({ Deleted_Events: [] });
-					} else {
-						this.setState({
-							Deleted_Events:
-								graphDeletedEvents.data.data.eventsRemoveds,
-						});
-					}
-				})
-				.catch((err) => {
-					console.error("graph error here", err);
-					this.setState({ Deleted_Events: [], loading: false });
-				});
+
 
 			//Listen For My Newly Created Events
 
 			await axios({
 				url: graphURL,
-				method: "post",
-				data: {
+				method: 'post',
+				data: {						
 					query: `{
 						users {
 					  id
@@ -183,63 +168,40 @@ class Dashboard extends Component {
 						revenueOfEvent
 					  }
 					}
-				  }`,
-				},
-			})
-				.then((graphEvents) => {
-					// console.log("GraphQL query response",Date.now(),graphEvents.data.data.users)
-					if (
-						!graphEvents.data ||
-						graphEvents.data.data == "undefined"
-					) {
-						// console.log("GraphQL query -- graphEvents undefined")
-
-						this.setState({
-							loading: false,
-							Topic_Events: [],
-							active_length: 0,
-						});
-					} else {
-						if (this._isMounted) {
-							const dateTime = Date.now();
-							const dateNow = Math.floor(dateTime / 1000);
-							let userEvents = graphEvents.data.data.users.find(
-								(user) =>
-									user.account.toLowerCase() ==
-									this.account.toLowerCase()
-							);
-							// console.log("graph userEvents",userEvents)
-							if (userEvents) {
-								let newsort = userEvents.userEvents
-									.concat()
-									.sort(
-										(a, b) => b.blockNumber - a.blockNumber
-									);
-
-								// console.log("GraphQL query newsort",newsort)
-
-								this.setState({
-									MyEvents: newsort,
-									active_length: newsort.length,
-								});
-							}
-
-							this.setState({ loading: false });
+				  }`
+				}
+				}).then((graphEvents)=>{
+				if(!graphEvents.data || graphEvents.data.data == 'undefined'){
+					this.setState({ loading:false, Topic_Events: [], active_length: 0 });
+				}else{
+					if (this._isMounted) {
+						const dateTime = Date.now();
+						const dateNow = Math.floor(dateTime / 1000);
+						let userEvents=graphEvents.data.data.users.find((user)=> user.account.toLowerCase() == this.account.toLowerCase())
+						if(userEvents){
+							let newsort = userEvents.userEvents
+							.concat()
+							.sort((a, b) => b.blockNumber - a.blockNumber)
+									this.setState({
+										MyEvents: newsort,
+										active_length: newsort.length,
+									});
 						}
+						
+						this.setState({ loading: false });
 					}
-				})
-				.catch((err) => {
+		
+				}
+		
+				}).catch((err) => {
 					this.setState({ loading: false });
-					console.error("graph some error", err);
-				});
+					console.error("graph some error",err)})
 		}
 		let deletedArray = [];
 		let deletedArray2 = [];
 		let createdEventlen = 0;
 		let skip = false;
 		let skip2 = false;
-		// console.log("Dashboard NewAndUpdatedEvent in dashboard after uniqueness this.state.MyEvents",this.state.MyEvents)
-
 		for (let i = 0; i < this.state.MyEvents.length; i++) {
 			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
@@ -261,6 +223,7 @@ class Dashboard extends Component {
 				}
 			}
 			if (!skip2) {
+				
 				deletedArray2.push(this.state.MyEvents[i]);
 			}
 			if (!skip) {
@@ -300,8 +263,9 @@ class Dashboard extends Component {
 			typeof this.props.contracts["DaoEvents"].eventsOf[this.events] !==
 			"undefined"
 		) {
-			let eventCount =
-				this.props.contracts["DaoEvents"].eventsOf[this.events].value;
+			let eventCount = this.props.contracts["DaoEvents"].eventsOf[
+				this.events
+			].value;
 			var loading = true;
 			let eventCache = [];
 			let eventDetails = [];
@@ -320,10 +284,8 @@ class Dashboard extends Component {
 							.value
 					) {
 						eventDetails.push({
-							returnValues:
-								this.props.contracts["DaoEvents"].events[
-									eventCache[i]
-								].value,
+							returnValues: this.props.contracts["DaoEvents"]
+								.events[eventCache[i]].value,
 							id: eventCount[i],
 						});
 					}
@@ -339,26 +301,28 @@ class Dashboard extends Component {
 			let limited = CreatedEvent.filter(
 				(event_seats) => event_seats.limited == true
 			);
-			if (limited == undefined) {
-				limited = [];
-				limited.seats = 0;
-				limited.sold = 0;
-				// console.log(
-				// 	"limited",limited
-				// )
+			if (limited==undefined)
+			{
+				limited=[]
+				limited.seats=0;
+				limited.sold=0;
 			}
-
+		
 			let top_PhoenixDAORevenue = phoenixDAORevenue
 				.concat()
 				.sort(
 					(a, b) =>
 						parseInt(
 							b.sold *
-								this.context.drizzle.web3.utils.fromWei(b.price)
+								this.context.drizzle.web3.utils.fromWei(
+									b.price
+								)
 						) -
 						parseInt(
 							a.sold *
-								this.context.drizzle.web3.utils.fromWei(a.price)
+								this.context.drizzle.web3.utils.fromWei(
+									a.price
+								)
 						)
 				);
 			var array1 = CreatedEvent;
@@ -412,11 +376,12 @@ class Dashboard extends Component {
 					accumulator + parseInt(currentValue.sold),
 				0
 			);
-
+		
 			let totalSeats = limited.reduce(
 				(accumulator, currentValue) =>
 					accumulator + parseInt(currentValue.seats),
 				0
+				
 			);
 
 			var array1 = eventDetails;
@@ -525,7 +490,9 @@ class Dashboard extends Component {
 				gradient2.addColorStop(0, "rgb(100, 101, 102)");
 				if (topEvents.length !== 0) {
 					return {
-						labels: topEvents.map((event) => [event.name]),
+						labels: topEvents.map((event) => [
+							event.name,
+						]),
 						datasets: [
 							{
 								label: "Ticket Sold",
@@ -551,7 +518,10 @@ class Dashboard extends Component {
 								weight: 5,
 								borderAlign: "center",
 								data: topEvents.map((event) =>
-									parseInt(event.sold)
+									parseInt(
+										event.sold
+		
+									)
 								),
 							},
 						],
@@ -706,7 +676,10 @@ class Dashboard extends Component {
 												</Link>
 												{topEvents.map(
 													(event, index) => {
-														if (event.name != "") {
+														if (
+															event
+																.name != ""
+														) {
 															return (
 																<h4
 																	className="eventTitle"
@@ -715,12 +688,18 @@ class Dashboard extends Component {
 																		1
 																	}
 																	title={
-																		event.name
+																		event
+																			
+																			.name
 																	}
 																	onClick={() =>
 																		this.goTo(
-																			event.eventId,
-																			event.name
+																			event
+																				
+																				.eventId,
+																			event
+																				
+																				.name
 																		)
 																	}
 																>
@@ -730,7 +709,11 @@ class Dashboard extends Component {
 																			1
 																		}. `}
 																	</span>
-																	{event.name}
+																	{
+																		event
+																			
+																			.name
+																	}
 																</h4>
 															);
 														}
@@ -745,7 +728,9 @@ class Dashboard extends Component {
 													topEvents.map(
 														(event, index) => {
 															if (
-																event.name != ""
+																event
+																	
+																	.name != ""
 															) {
 																return (
 																	<h4
@@ -753,18 +738,26 @@ class Dashboard extends Component {
 																			index
 																		}
 																		title={
-																			event.sold +
+																			event
+																				
+																				.sold +
 																			" Tickets Sold"
 																		}
 																		onClick={() =>
 																			this.goTo(
-																				event.eventId,
-																				event.name
+																				event
+																					
+																					.eventId,
+																				event
+																					
+																					.name
 																			)
 																		}
 																	>
 																		{
-																			event.sold
+																			event
+																				
+																				.sold
 																		}
 																	</h4>
 																);
@@ -813,7 +806,8 @@ class Dashboard extends Component {
 												title: {
 													display: true,
 													position: "top",
-													text: "Based On Ticket Sold",
+													text:
+														"Based On Ticket Sold",
 													fontSize: 16,
 													lineHeight: 1.5,
 													padding: 1,
@@ -887,7 +881,8 @@ class Dashboard extends Component {
 													title: {
 														display: true,
 														position: "bottom",
-														text: "Limited Tickets Sold",
+														text:
+															"Limited Tickets Sold",
 														fontSize: 16,
 														lineHeight: 1.5,
 														padding: 1.6,
@@ -972,10 +967,11 @@ class Dashboard extends Component {
 										style={{
 											backgroundImage:
 												"url(/images/quickswap.jpg)",
-											backgroundRepeat: "round",
+												backgroundRepeat:"round"
 										}}
 										// onClick={this.props.networkId==1 ? this.handleClickOpen : ()=> {}}
 										onClick={this.handleClickOpen}
+
 									>
 										{/* <p className="dashboard-uniswap">
 											<i className="fas fa-sync"></i> BUY
@@ -1043,7 +1039,7 @@ const mapStateToProps = (state) => {
 	return {
 		contracts: state.contracts,
 		accounts: state.accounts,
-		networkId: state.web3.networkId,
+		networkId: state.web3.networkId
 	};
 };
 

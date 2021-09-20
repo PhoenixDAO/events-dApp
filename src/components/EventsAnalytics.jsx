@@ -86,18 +86,10 @@ const EventsAnalytics = (props) => {
     // const [MyEvents, setMyEvents] = useState([]);
 
     useEffect(() => {
-        // console.log("props in EventsAnalytics",props.userDetails)
         setUserDetails(props.userDetails);
 
     }, [props.userDetails]);
     const classes = useStyles();
-    // let result;
-    // if (
-    //     _isMounted
-    // ) {
-    //     result = getEvents({ _isMounted: true, accounts: props.accounts });
-    //     //  console.log("result",result);
-    // }
     let favouriteLength = (props.userDetails.favourites) ? props.userDetails.favourites.length : 0;
 
     return (

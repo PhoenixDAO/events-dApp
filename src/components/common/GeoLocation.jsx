@@ -92,14 +92,12 @@ export default function GeoLocation(props) {
 
 	const handleChange = (e) => {
 		const { myValue, value } = e.currentTarget.dataset;
-		console.log(myValue, value);
 		// setCurrentItem(value);
 		onChange({ name: name, value: { name: myValue, id: value } });
 	};
 
 	const handleClick = (event) => {
 		const { myValue } = event.currentTarget.dataset;
-		console.log(myValue.geonameId); // --> 123
 	};
 
 	return (
