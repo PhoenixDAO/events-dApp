@@ -623,7 +623,7 @@ class Sidebar extends Component {
 									</a>
 								</div>
 							</ul>
-							<span className=" grid toggleHidden suggestion">
+							<span className="toggleHidden suggestion">
 								Kindly give us your feedback(s) <a style={{
 									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
 									textDecoration: "underline",
