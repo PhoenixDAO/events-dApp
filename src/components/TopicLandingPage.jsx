@@ -36,7 +36,7 @@ import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -191,12 +191,10 @@ class TopicLandingPage extends Component {
 
 	getTopicData() {
 		let topicSlug = this.getLastURLSegment();
-		console.log("topicSlug", topicSlug);
 		let theTopic = {};
 		if (topicsJson[topicSlug]) {
 			theTopic = topicsJson[topicSlug];
 		}
-		console.log("theTopic", theTopic);
 		return theTopic.name;
 	}
 
@@ -306,7 +304,6 @@ class TopicLandingPage extends Component {
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
 					// console.log("GraphQL query -- graphEvents undefined")
-					console.log("topic data", graphEvents.data);
 					// this.setState({
 					// 	Topic_Events: [],
 					// 	active_length: 0,
@@ -320,20 +317,15 @@ class TopicLandingPage extends Component {
 					}, 1000);
 				} else {
 					if (this._isMounted) {
-						console.log("topic data", graphEvents.data);
-						console.log("topic data", graphEvents.data.data.events);
 						let newsort = graphEvents.data.data.events
 							.concat()
 							.sort((a, b) => b.blockNumber - a.blockNumber);
 						// .filter(
 						// 	(activeEvents) =>{
-						// 		console.log("activeEvents", activeEvents.topic)
-						// 		console.log("this.props.match.params.page", this.props.match.params.page)
 						// 		// activeEvents.time >= dateNow &&
 						// 		activeEvents.topic ===
 						// 			this.props.match.params.page}
 						// );
-						console.log("GraphQL query newsort", newsort);
 						if (this._isMounted) {
 							this.setState({
 								Topic_Events: newsort,
@@ -354,7 +346,6 @@ class TopicLandingPage extends Component {
 
 	// Get My Past Events on Blockchain
 	async loadPastEvents() {
-		// console.log("inLoadPastEvents")
 		if (this._isMounted) {
 			this.setState({
 				loading: true,
@@ -365,8 +356,6 @@ class TopicLandingPage extends Component {
 		const graphURL = await GetGraphApi();
 
 		// GRAPH BLOCK //
-		// console.log("GraphQL query before call",Date.now())
-
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -401,10 +390,8 @@ class TopicLandingPage extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
-					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({
 						loading: false,
 						Topic_Events: [],
@@ -423,8 +410,6 @@ class TopicLandingPage extends Component {
 									activeEvents.category ===
 										this.props.match.params.page
 							);
-						// console.log("GraphQL query newsort",newsort)
-
 						if (this._isMounted) {
 							this.setState({
 								Topic_Events: newsort,
@@ -508,14 +493,15 @@ class TopicLandingPage extends Component {
 
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			console.log("topic landing page filtered events", get);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
 		} catch (error) {
-			// console.log("check error", error);
 		}
 	};
 	//Sort Active Events By Date(Newest/Oldest)
@@ -573,22 +559,53 @@ class TopicLandingPage extends Component {
 				}
 			}
 		} catch (e) {
-			console.log("findNearToYouEvents", e);
 			return false;
 		}
 	};
 
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			console.log("topic landing page filtered events", get);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});
-			// console.log("hide event", this.state.hideEvent);
 			return;
 		} catch (error) {
-			console.log("check error", error);
+		}
+	};
+
+	onCategoryChange = (e) => {
+		this.setState({
+			category: e.target.value,
+		});
+		let updatedList = [];
+		let events = this.state.Topic_Events;
+		if (e.target.value === "Trending Events") {
+			for (let i = 0; i < events.length; i++) {
+				if (this.state.Topic_Events[i].tktTotalQuantitySold >= 5) {
+					updatedList.push(events[i]);
+				}
+			}
+		} else if (e.target.value === "Near you") {
+			for (let i = 0; i < events.length; i++) {
+				this.findNearToYouEvents(events[i]).then((eventExist) => {
+					if (eventExist) {
+						updatedList.push(events[i]);
+					}
+				});
+			}
+		} else {
+			updatedList = this.state.Topic_Events;
+		}
+		this.setState({
+			topic_copy: updatedList,
+		});
+
+		if (Number(this.props.match.params.id) != 1) {
+			this.props.history.push(`/topic/${this.props.match.params.page}/1`);
 		}
 	};
 
@@ -609,16 +626,14 @@ class TopicLandingPage extends Component {
 		// if (
 		// this.state.active_length == 0
 		// ) {
-		let count = this.state.active_length;
-
-		// console.log("this.props.match.params.page",this.props.match.params.id)
+		let count = this.state.topic_copy.length;
 		let currentPage = Number(this.props.match.params.id);
 		let events_list = [];
 		let skip = false;
-		for (let i = 0; i < this.state.Topic_Events.length; i++) {
+		for (let i = 0; i < this.state.topic_copy.length; i++) {
 			for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 				if (
-					this.state.Topic_Events[i].eventId ==
+					this.state.topic_copy[i].eventId ==
 					this.state.Deleted_Events[j].eventId
 				) {
 					skip = true;
@@ -627,16 +642,15 @@ class TopicLandingPage extends Component {
 			if (!skip) {
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
-						this.state.Topic_Events[i].eventId ==
+						this.state.topic_copy[i].eventId ==
 						this.state.hideEvent[j].id
 					) {
-						console.log("skipped", this.state.hideEvent[j].id);
 						skip = true;
 					}
 				}
 			}
 			if (!skip) {
-				events_list.push(this.state.Topic_Events[i]);
+				events_list.push(this.state.topic_copy[i]);
 			}
 			skip = false;
 		}
@@ -644,82 +658,33 @@ class TopicLandingPage extends Component {
 			body = (
 				<EmptyState
 					text="No events found 🤔. Want to be the first?"
+					btnText="Create an Event"
 					url="/createevent"
 				/>
 			);
 		} else {
 			let updated_list = [];
-			// console.log("events_list",events_list)
 			count = events_list.length;
-			// console.log("currentPage",currentPage)
-			// console.log("this.perPage",this.perPage)
 			if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 			let end = currentPage * this.perPage;
 			let start = end - this.perPage;
 			if (end > count) end = count;
 			let pages = Math.ceil(count / this.perPage);
-
 			for (let i = start; i < end; i++) {
-				console.log("EVENTS", events_list[i]);
-				if (this.state.category === "Trending Events") {
-					if (events_list[i].tktTotalQuantitySold > 5) {
-						updated_list.push(
-							<Event
-								eventData={events_list[i]}
-								toggleBuying={this.toggleBuying}
-								disabledBuying={this.state.disabledBuying}
-								disabledStatus={this.props.disabledStatus}
-								inquire={this.props.inquire}
-								key={events_list[i].eventId}
-								id={events_list[i].eventId}
-								ipfs={events_list[i].ipfsHash}
-								loading={this.state.loading}
-							/>
-						);
-					}
-				} else if (this.state.category === "Near you") {
-					this.findNearToYouEvents(events_list[i])
-						.then((eventExist) => {
-							if (eventExist) {
-								updated_list.push(
-									<Event
-										eventData={events_list[i]}
-										toggleBuying={this.toggleBuying}
-										disabledBuying={
-											this.state.disabledBuying
-										}
-										disabledStatus={
-											this.props.disabledStatus
-										}
-										inquire={this.props.inquire}
-										key={events_list[i].eventId}
-										id={events_list[i].eventId}
-										ipfs={events_list[i].ipfsHash}
-										loading={this.state.loading}
-									/>
-								);
-							}
-						})
-						.catch((err) => {
-							console.log("Err", err);
-						});
-				} else {
-					updated_list.push(
-						<Event
-							eventData={events_list[i]}
-							toggleBuying={this.toggleBuying}
-							disabledBuying={this.state.disabledBuying}
-							disabledStatus={this.props.disabledStatus}
-							inquire={this.props.inquire}
-							key={events_list[i].eventId}
-							id={events_list[i].eventId}
-							ipfs={events_list[i].ipfsHash}
-							loading={this.state.loading}
-						/>
-					);
-				}
+				updated_list.push(
+					<Event
+						eventData={events_list[i]}
+						toggleBuying={this.toggleBuying}
+						disabledBuying={this.state.disabledBuying}
+						disabledStatus={this.props.disabledStatus}
+						inquire={this.props.inquire}
+						key={events_list[i].eventId}
+						id={events_list[i].eventId}
+						ipfs={events_list[i].ipfsHash}
+						loading={this.state.loading}
+					/>
+				);
 			}
-			// console.log("updated_list",updated_list)
 			// updated_list.reverse();
 
 			let pagination = "";
@@ -757,12 +722,14 @@ class TopicLandingPage extends Component {
 					</nav>
 				);
 			}
-let btnTextMessage = "No events are available 😔. Want to be the first?";
-			if(this.state.category === "Near you"){
-				btnTextMessage = "No events are available near you 😔. Want to be the first?"
-			}
-			else{
-				btnTextMessage = "No events are available 😔. Want to be the first?";
+			let btnTextMessage =
+				"No events are available 😔. Want to be the first?";
+			if (this.state.category === "Near you") {
+				btnTextMessage =
+					"No events are available near you 😔. Want to be the first?";
+			} else {
+				btnTextMessage =
+					"No events are available 😔. Want to be the first?";
 			}
 			body = (
 				<div>
@@ -921,7 +888,7 @@ let btnTextMessage = "No events are available 😔. Want to be the first?";
 									id="demo-simple-select-outlined"
 									fullWidth
 									value={this.state.category}
-									onChange={this.categoryChange}
+									onChange={this.onCategoryChange}
 									displayEmpty
 									className={classes.menuPaper}
 									MenuProps={{
@@ -957,7 +924,7 @@ let btnTextMessage = "No events are available 😔. Want to be the first?";
 											fontFamily: "'Aeonik', sans-serif",
 										}}
 									>
-										Near you
+										Near Your Location
 									</MenuItem>
 								</Select>
 							</FormControl>

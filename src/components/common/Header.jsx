@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { makeStyles } from "@material-ui/core/styles";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
+import { getNetworkId } from "../../config/getGraphApi";
+import { GLOBAL_NETWORK_ID } from "../../config/const";
+
 import clsx from "clsx";
 import {
 	Button,
@@ -33,9 +36,9 @@ const useStyles = makeStyles((theme) => ({
 			width: "160px",
 		},
 	},
-	SearchAndBuyPheonixButtonMargin:{
-		marginRight: theme.spacing(1)
-	}
+	SearchAndBuyPheonixButtonMargin: {
+		marginRight: theme.spacing(1),
+	},
 }));
 
 const Header = ({
@@ -58,6 +61,10 @@ const Header = ({
 	const [openWallet, setOpenWallet] = useState(false);
 	const [openBuyPhnx, setOpenBuyPhnx] = useState(false);
 	const [transak, setTransak] = useState(false);
+	const [chainId, setChain] = useState("ethereum");
+	useEffect(() => {
+		setTransakChain();
+	}, [chainId]);
 	const handleOpenWallet = () => {
 		setOpenWallet(true);
 	};
@@ -81,6 +88,14 @@ const Header = ({
 	const closeTransak = () => {
 		setTransak(false);
 	};
+	const setTransakChain = async () => {
+		const network = await getNetworkId();
+		if (network == GLOBAL_NETWORK_ID) {
+			setChain("ethereum");
+		} else {
+			setChain("polygon");
+		}
+	};
 
 	let connect = searchBar && Object.keys(accounts).length !== 0;
 
@@ -101,7 +116,12 @@ const Header = ({
 				{/* Back button Arrow */}
 				<div
 					className="header-heading"
-					style={{ display: "flex", alignItems: "center" }}
+					style={{
+						display: "flex",
+						alignItems: "center",
+						overflow: "hidden",
+						wordBreak: "break-word",
+					}}
 				>
 					{page === "event" ||
 					page === "topic" ||
@@ -114,9 +134,7 @@ const Header = ({
 						</IconButton>
 					) : null}
 					{/* Header Title */}
-					<h2>
-						{title}
-					</h2>
+					<h2>{title}</h2>
 				</div>
 
 				{/* {page == "analytics" || page == "create" || phnxButton ? (
@@ -124,11 +142,11 @@ const Header = ({
 			) : null} */}
 				{searchBar ? (
 					<div>
-					<SearchBar
-						connect={connect}
-						handleSearch={handleSearch}
-						search={search}
-					/>
+						<SearchBar
+							connect={connect}
+							handleSearch={handleSearch}
+							search={search}
+						/>
 					</div>
 				) : null}
 				{Object.keys(accounts).length === 0 ? (
@@ -152,15 +170,22 @@ const Header = ({
 						</Button>
 					</div>
 				) : page === "analytics" ||
-					page === "create" ||
-					page === "confirm-purchase" ||
-					phnxButton ? (
-						<div className={(page=="dashboard")&& classes.SearchAndBuyPheonixButtonMargin}>
-					<BuyPhnxButton onClick={handleOpenBuyPhnx} />
+				  page === "create" ||
+				  page === "confirm-purchase" ||
+				  phnxButton ? (
+					<div
+						className={
+							page == "dashboard" &&
+							classes.SearchAndBuyPheonixButtonMargin
+						}
+					>
+						<BuyPhnxButton onClick={handleOpenBuyPhnx} />
 					</div>
-				) : <div >
-				<BuyPhnxButton onClick={handleOpenBuyPhnx} />
-				</div>}
+				) : (
+					<div>
+						<BuyPhnxButton onClick={handleOpenBuyPhnx} />
+					</div>
+				)}
 				<DialogueBox
 					open={openWallet}
 					handleClose={handleCloseWallet}
@@ -180,6 +205,7 @@ const Header = ({
 						closeTransak={closeTransak}
 						transak={transak}
 						accounts={accounts}
+						chain={chainId}
 					/>
 				</DialogueBox>
 			</Grid>

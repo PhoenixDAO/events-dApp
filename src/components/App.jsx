@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { drizzleConnect } from "drizzle-react";
 import { ToastContainer, toast } from "react-toastify";
 import Web3 from "web3";
-
+import TravallaBannerFooter from "./common/TravallaBannerFooter";
+import MobileScreenDialog from "./common/MobileScreenDialog";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "startbootstrap-simple-sidebar/css/simple-sidebar.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -77,14 +78,7 @@ const randomBG = items[Math.floor(Math.random() * items.length)];
 class App extends Component {
 	constructor(props, context) {
 		super(props);
-		console.log("context", context);
 		this.contractAddressProviders().then((data) => {
-			console.log(
-				"eventAddress, phoenixAddress constructor",
-				context,
-				data.eventAddress,
-				data.phoenixAddress
-			);
 			var contractConfig = {
 				contractName: "PHNX",
 				web3Contract:
@@ -127,6 +121,7 @@ class App extends Component {
 			open2: false,
 			eventsAddress: "",
 			openWalletConnected: false,
+			date2: null,
 		};
 		this.myRef = React.createRef();
 
@@ -147,7 +142,6 @@ class App extends Component {
 		let eventAddress = "";
 		let phoenixAddress = "";
 		const networkId = await this.getNetworkId();
-		console.log("This called networkId", networkId);
 		if (networkId === GLOBAL_NETWORK_ID) {
 			eventAddress = Open_events_Address;
 			phoenixAddress = PhoenixDAO_Mainnet_Token_Address;
@@ -157,11 +151,6 @@ class App extends Component {
 		} else {
 			console.log("Wrong network address | not supported");
 		}
-		console.log(
-			"eventAddress, phoenixAddress",
-			eventAddress,
-			phoenixAddress
-		);
 		return { eventAddress, phoenixAddress };
 	}
 
@@ -182,13 +171,11 @@ class App extends Component {
 				web3 = new Web3(new Web3.providers.HttpProvider(infura));
 			}
 			const networkId = await web3.eth.net.getId();
-			console.log("This called getNetworkId", networkId);
 			if (networkId === GLOBAL_NETWORK_ID) {
 				return networkId;
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
 				return networkId;
 			} else {
-				console.log("network id not suported");
 			}
 			return null;
 		} catch (err) {
@@ -203,12 +190,6 @@ class App extends Component {
 			);
 			const { eventAddress, phoenixAddress } =
 				await this.contractAddressProviders();
-			console.log(
-				"eventAddress, phoenixAddress, initializeContract",
-				eventAddress,
-				phoenixAddress
-			);
-
 			const openEvents = await new web3.eth.Contract(
 				Open_events_ABI,
 				eventAddress
@@ -223,7 +204,6 @@ class App extends Component {
 				eventsAddress: eventAddress,
 			});
 		} catch (err) {
-			console.log("error initializing the contract", err);
 		}
 	}
 
@@ -330,7 +310,6 @@ class App extends Component {
 							address: accounts[0],
 							networkId: networkId,
 						});
-						console.log("userChecker", userChecker);
 						if (!userChecker.error) {
 							this.setState({
 								userDetails: userChecker,
@@ -342,7 +321,6 @@ class App extends Component {
 					}
 					const userDetails = await this.authMetaMask();
 					if (!userDetails.error) {
-						console.log("userDetails", userDetails);
 						this.setState({
 							userDetails: userDetails,
 							open: userDetails.result.result.userHldr.firstTime,
@@ -361,7 +339,6 @@ class App extends Component {
 	}
 
 	updateUserInfo = async (e) => {
-		console.log("Working");
 		const detail = await updateUserDetails({
 			address: this.props.accounts[0],
 			networkId: this.props.web3.networkId,
@@ -373,9 +350,8 @@ class App extends Component {
 			alternateCurrency: "",
 		});
 		if (detail.error) {
-			console.log("error occured");
+			console.log();
 		} else {
-			console.log("DOne");
 			this.setUserDetails(detail.result);
 			this.setState({
 				openWalletConnected: true,
@@ -430,14 +406,14 @@ class App extends Component {
 		name,
 		phnx_price,
 		dollar_price,
-		time 
+		time,
+		date
 	) => {
 		let chainId = await this.getNetworkId();
 		if (
 			this.state.account.length !== 0 &&
 			this.props.web3.networkId === (await this.getNetworkId())
 		) {
-			console.log("event time in app",time);
 			this.setState({ disabledStatus: true });
 			this.setState(
 				{
@@ -452,7 +428,8 @@ class App extends Component {
 					name,
 					phnx_price,
 					dollar_price,
-					time
+					time,
+					date2: date,
 				},
 				() => this.buy()
 			);
@@ -534,6 +511,9 @@ class App extends Component {
 								pauseOnHover: true,
 							}
 						);
+						this.setState({
+							purchased: false,
+						});
 					}
 				});
 			this.setState({ afterApprove: false });
@@ -547,8 +527,6 @@ class App extends Component {
 			let a = await this.state.phnxContract.methods
 				.allowance(this.state.account, eventAddress)
 				.call();
-
-			console.log("allowance", a);
 			return a;
 		}
 	};
@@ -599,8 +577,6 @@ class App extends Component {
 								}
 							);
 							this.afterApprove();
-							console.log("purchased", this.state.purchased);
-
 							this.setState({
 								disabledStatus: false,
 								purchased: true,
@@ -619,7 +595,7 @@ class App extends Component {
 								pauseOnHover: true,
 							}
 						);
-						this.setState({ disabledStatus: false });
+						this.setState({ disabledStatus: false,purchased:false });
 					}
 				});
 		} else {
@@ -650,8 +626,6 @@ class App extends Component {
 								disabledStatus: false,
 								purchased: true,
 							});
-							console.log("purchased", this.state.purchased);
-
 							clearInterval(intervalVar);
 						}
 					}, 5000);
@@ -681,7 +655,6 @@ class App extends Component {
 				// 	}
 				// })
 				.on("error", (error) => {
-					console.log("error", error);
 					if (error !== null) {
 						txerror = error;
 						toast(
@@ -693,7 +666,7 @@ class App extends Component {
 							}
 						);
 					}
-					this.setState({ disabledStatus: false });
+					this.setState({ disabledStatus: false ,purchased:false});
 				});
 		}
 	};
@@ -900,8 +873,6 @@ class App extends Component {
 		try {
 			const publicAddress = await web3.eth.getAccounts();
 			const networkId = await this.getNetworkId();
-			console.log("Public address", publicAddress);
-			console.log("networkId", networkId);
 			const message = await getMessage();
 			const sign = await this.handleSignMessage(
 				publicAddress[0],
@@ -921,20 +892,16 @@ class App extends Component {
 
 	handleSignMessage = async (publicAddress, message) => {
 		try {
-			console.log("message", message);
 			const sign = await web3.eth.sign(
 				web3.utils.sha3(message),
 				publicAddress
 			);
-			console.log("sign", sign);
 			return sign;
 		} catch (err) {
-			console.log(err);
 		}
 	};
 
 	setUserDetails = (userDetails) => {
-		console.log("userDetails", userDetails);
 		this.setState({
 			userDetails: userDetails,
 		});
@@ -951,11 +918,6 @@ class App extends Component {
 		// 	this.props.web3.networkId != GLOBAL_NETWORK_ID) {
 
 		//condition when drizzle is not initialized
-		console.log(
-			"Im in !this.props.drizzleStatus.initialized ",
-			this.props.web3.networkId != GLOBAL_NETWORK_ID &&
-				this.props.web3.networkId != GLOBAL_NETWORK_ID_2
-		);
 
 		if (
 			!this.props.drizzleStatus.initialized ||
@@ -1103,7 +1065,6 @@ class App extends Component {
 			(this.props.web3.networkId != GLOBAL_NETWORK_ID &&
 				this.props.web3.networkId != GLOBAL_NETWORK_ID_2)
 		) {
-			console.log("third else if", this.props.web3.networkId);
 			body = (
 				<div>
 					<Switch>
@@ -1378,6 +1339,7 @@ class App extends Component {
 							<AnalyticsWrapper
 								{...props}
 								eventsContract={this.state.eventsContract}
+								executeScroll={this.executeScroll}
 							/>
 						)}
 					/>
@@ -1406,11 +1368,15 @@ class App extends Component {
 					<Route
 						exact
 						path="/favorites"
-						component={Favorites}
-						executeScroll={this.executeScroll}
-						inquire={this.inquireBuy}
-						disabledStatus={this.state.disabledStatus}
-						toggleDisabling={this.toggleDisabling}
+						render={(props) => (
+							<Favorites
+								{...props}
+								executeScroll={this.executeScroll}
+								inquire={this.inquireBuy}
+								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
+							/>
+						)}
 					/>
 					{/* <Route
 						exact
@@ -1492,7 +1458,6 @@ class App extends Component {
 						purchased={this.state.purchased}
 						eventTime={this.state.eventTime}
 						time={this.state.time}
-
 						eventDate={this.state.eventDate}
 						eventEndDate={this.state.eventEndDate}
 						phnx_price={this.state.phnx_price}
@@ -1505,7 +1470,7 @@ class App extends Component {
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
 					/>
-					<div id="page-content-wrapper" className="sidebar-open">
+					<div id="page-content-wrapper"  className="sidebar-open">
 						{/* <div
 							id="bgImage"
 							ref="bgImage"
@@ -1527,10 +1492,6 @@ class App extends Component {
 							<div className="container">
 								<div className="retract-page-inner-wrapper">
 									{body}
-									{console.log(
-										"Account",
-										this.props.accounts
-									)}
 								</div>
 								{/* <Snackbar
 									open={this.state.openSnackbar}
@@ -1539,13 +1500,51 @@ class App extends Component {
 									}
 									handleClose={this.handleSnackbarClose}
 								/> */}
-								<Snackbar1
-									open={this.state.openSnackbarForNoMetaMask}
-									message={this.state.errorMessage}
-									handleClose={() =>
-										this.handleSnackbarClose(1)
-									}
-								/>
+								<Snackbar
+                                    anchorOrigin={{
+                                        vertical: "top",
+                                        horizontal: "center",
+                                    }}
+                                    open={this.state.openSnackbarForNoMetaMask}
+                                    message={
+                                        <span>
+                                            {" "}
+                                            {this.state.errorMessage}
+                                            {typeof InstallTrigger !==
+                                            "undefined" ? (
+                                                <a
+                                                    target="_blank"
+                                                    style={{
+                                                        textAlign: "center",
+                                                        color: "blue",
+                                                        opacity: "1",
+                                                    }}
+                                                    href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"
+                                                >
+                                                    {" "}
+                                                    [LINK]
+                                                </a>
+                                            ) : (
+                                                <a
+                                                    target="_blank"
+                                                    style={{
+                                                        textAlign: "center",
+                                                        color: "blue",
+                                                        opacity: "1",
+                                                    }}
+                                                    href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
+                                                >
+                                                    {" "}
+                                                    [LINK]
+                                                </a>
+                                            )}
+                                        </span>
+                                    }
+                                    onClose={() => this.handleSnackbarClose(1)}
+                                    autoHideDuration={5000}
+                                    key={"top" + "center"}
+                                    className="snackbar"
+                                />
 								<Snackbar2
 									style={{ zIndex: "9999999 !important" }}
 									open={
@@ -1556,10 +1555,6 @@ class App extends Component {
 										this.handleSnackbarClose(2)
 									}
 								/>
-								{console.log(
-									"this.state.open",
-									this.state.open
-								)}
 								<DialogueBox
 									open={this.state.open}
 									handleClose={this.handleClose}
@@ -1587,6 +1582,7 @@ class App extends Component {
 								</DialogueBox>
 							</div>
 						</div>
+						<MobileScreenDialog/>
 						<Snackbar
 							anchorOrigin={{
 								vertical: "top",
@@ -1594,11 +1590,40 @@ class App extends Component {
 							}}
 							open={this.state.openWalletConnected}
 							onClose={this.handleOpenWalletConnected}
-							message="Wallet connected"
+							message={
+								<span style={{ color: "#413AE2" }}>
+									{" "}
+									<img
+										style={{ width: "20px" }}
+										src="/images/check-wallet.svg"
+										alt=""
+									/>{" "}
+									Wallet connected
+								</span>
+							}
 							autoHideDuration={3000}
 							key={"top" + "center"}
 							className="snackbar"
 						/>
+						<Switch>
+							<Route
+								exact
+								path="/"
+								render={(props) => <TravallaBannerFooter />}
+							/>
+
+							<Route
+								exact
+								path="/upcomingevents/:page"
+								render={(props) => <TravallaBannerFooter />}
+							/>
+
+							<Route
+								exact
+								path="/mytickets/:page"
+								render={(props) => <TravallaBannerFooter />}
+							/>
+						</Switch>
 					</div>
 					<ToastContainer />
 				</div>

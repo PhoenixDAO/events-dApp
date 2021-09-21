@@ -23,6 +23,7 @@ export default function BodyTextEditor({
 		setEditorValue(value);
 		setValue(value.toString("html"));
 	};
+
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
 		display: [
@@ -48,13 +49,16 @@ export default function BodyTextEditor({
 			{ label: "OL", style: "ordered-list-item" },
 		],
 	};
+
 	return (
 		<div className="editor-demo">
 			<RichTextEditor
+				autoFocus
 				toolbarConfig={toolbarConfig}
 				readOnly={readOnly}
 				value={editorValue}
 				onChange={handleChange}
+				onBlur={handleChange}
 				required
 				id={id}
 				name={name}
@@ -63,7 +67,7 @@ export default function BodyTextEditor({
 				variant="filled"
 				className="editor"
 				// className={classes.editor}
-				placeholder="Type something here....."
+				placeholder="Tell us about your event....."
 			/>
 		</div>
 	);

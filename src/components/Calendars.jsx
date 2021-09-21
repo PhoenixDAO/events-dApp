@@ -20,7 +20,7 @@ import PropTypes from "prop-types";
 import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { getTickets } from "../utils/graphApis";
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi, { getNetworkId }  from '../config/getGraphApi';
 
 const styles = (theme) => ({
 	content: {
@@ -126,7 +126,6 @@ class Calendars extends Component {
 			},
 		})
 			.then((graphDeletedEvents) => {
-				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 
 				if (
 					!graphDeletedEvents.data ||
@@ -199,13 +198,15 @@ class Calendars extends Component {
 	}
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
 		} catch (error) {
-			// console.log("check error", error);
 		}
 	};
 
@@ -240,7 +241,6 @@ class Calendars extends Component {
 				category:"created"
 			});
 		} else if (category == "favourite") {
-			// console.log("props",this.account, this.props.networkId);
 			const data = await getUserDetails({
 				address: this.account,
 				networkId: this.props.networkId,
@@ -249,7 +249,6 @@ class Calendars extends Component {
 				let favoriteEvents = this.state.event_copy.filter((item) =>
 					data.result.result.userHldr.favourites.includes(item.eventId)
 				);
-				console.log("favorite",favoriteEvents)
 				this.setState({
 					Events_Blockchain: favoriteEvents,
 					category:"favourite"
