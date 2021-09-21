@@ -102,6 +102,7 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: "'Aeonik', sans-serif",
 	},
 	FavoriteIcon: {
+		textAlign:"center",
 		border: "none",
 		backgroundColor: "#fff",
 		fontSize: 15,
@@ -389,7 +390,7 @@ const EventCard = (props, context) => {
 										<Typography
 											className={classes.quantitySold}
 										>
-											<ConfirmationNumberOutlined fontSize="medium" />
+											<ConfirmationNumberOutlined fontSize="small" />
 											<span>&nbsp;</span>
 											{event_data.tktTotalQuantitySold}/
 											{event_data.tktTotalQuantity}
@@ -398,16 +399,16 @@ const EventCard = (props, context) => {
 									{!myEvent && !ticket ? (
 										<Typography
 											className={classes.FavoriteIcon}
-											component="button"
+											component="span"
 											onClick={addTofavorite}
 										>
 											{Icon ? (
 												<Favorite
 													fontSize="small"
-													style={{ color: "#413AE2" }}
-												/>
+													style={{ color: "#413AE2", marginTop:"6px" }}
+										/>
 											) : (
-												<FavoriteBorder fontSize="small" />
+												<FavoriteBorder fontSize="small" style={{color: "#000000", marginTop: "6px"}}/>
 											)}
 											{Icon}
 										</Typography>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .EditorToolbar__root___3_Aqz{
     position: absolute;
     overflow: scroll;
@@ -8,4 +9,20 @@
 
 .RichTextEditor__editor___1QqIU{
     margin-top: 50px;
+=======
+.EditorToolbar__root___3_Aqz{
+    position: absolute;
+    overflow: scroll;
+    width: 96%;
+    background-color: #fff;
+    z-index: 12;
+}
+
+.RichTextEditor__editor___1QqIU{
+    margin-top: 50px;
+}
+
+.public-DraftStyleDefault-block {
+    word-break: break-word;
+>>>>>>> d4284ba7c117a681d67e372101c7a3818ff18595
 }
