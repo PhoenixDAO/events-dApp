@@ -18,7 +18,6 @@ export const getMessage = async () => {
 		const result = await axios.get(`${API_URL}${GET_MESSAGE}`);
 		return { result: result.data, error: false };
 	} catch (err) {
-		console.log("serverAPI error occured in getUserDetails", err);
 		return { error: true, message: err };
 	}
 };
@@ -38,7 +37,6 @@ export const loginWithMetaMask = async ({
 		});
 		return { result: result.data, error: false };
 	} catch (err) {
-		console.log("serverAPI error occured in getUserDetails", err);
 		return { error: true, message: err };
 	}
 };
@@ -62,7 +60,6 @@ export const getUserDetails = async ({ address, networkId }) => {
 		// console.log("serverAPI getUserDetails", result.data.result);
 		return { result: result.data, error: false };
 	} catch (err) {
-		console.log("serverAPI error occured in getUserDetails", err);
 		return { error: true, message: err };
 	}
 };
@@ -73,10 +70,8 @@ export const getUser = async ({ address, networkId }) => {
 		const result = await axios.get(
 			`${API_URL}${GET_USER_EXIST_DETAIL}/${address}/${networkId}`
 		);
-		// console.log("serverAPI getUserDetails", result.data.result);
 		return { result: result.data, error: false };
 	} catch (err) {
-		console.log("serverAPI error occured in getUser", err);
 		return { error: true, message: err };
 	}
 };
@@ -84,18 +79,11 @@ export const getUser = async ({ address, networkId }) => {
 export const updateEventViews = async ({ address, networkId, eventId }) => {
 	try {
 		const token = localStorage.getItem("AUTH_TOKEN");
-		console.log(
-			"updateEvent in API call function",
-			address,
-			networkId,
-			eventId
-		);
 		const result = await axios.post(`${API_URL}${UPDATE_EVENT_VIEWS}`, {
 			address,
 			networkId,
 			eventId,
 		});
-		console.log("serverAPI updateEventViews", result);
 		return { result: result.data.result, error: false };
 	} catch (err) {
 		// console.log("error occured in updateEventViews", err);
@@ -119,7 +107,6 @@ export const addToFavourites = async ({ address, networkId, eventId }) => {
 				},
 			}
 		);
-		console.log("serverAPI addToFavourites", result);
 		return { result: result.data.result, error: false };
 	} catch (err) {
 		// console.log("error occured in addToFavourites", err);
@@ -145,7 +132,6 @@ export const removeFromFavourites = async ({ address, networkId, eventId }) => {
 		// console.log("serverAPI removeFromFavourites", result);
 		return { result: result.data.result, error: false };
 	} catch (err) {
-		console.log("error occured in removeFromFavourites", err);
 		return { error: true, message: err };
 	}
 };
@@ -162,7 +148,6 @@ export const updateUserDetails = async ({
 }) => {
 	try {
 		const token = localStorage.getItem("AUTH_TOKEN");
-		console.log("update user token", token);
 		const result = await axios.post(
 			`${API_URL}${UPDATE_USER_DETAIL}`,
 			{
@@ -181,10 +166,8 @@ export const updateUserDetails = async ({
 				},
 			}
 		);
-		// console.log("serverAPI removeFromFavourites", result);
 		return { result: result.data.result, error: false };
 	} catch (err) {
-		console.log("error occured in updateUserDetails", err);
 		return { error: true, message: err };
 	}
 };
@@ -211,10 +194,8 @@ export const userTweet = async ({
 				},
 			}
 		);
-		// console.log("serverAPI removeFromFavourites", result);
 		return { result: result.data.result, error: false };
 	} catch (err) {
-		console.log("error occured in removeFromFavourites", err);
 		return { error: true, message: err };
 	}
 };

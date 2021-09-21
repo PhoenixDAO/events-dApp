@@ -72,15 +72,14 @@ class Ticket extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-			const get = await axios.get(
-				`${API_URL}${REPORT_EVENT}/${networkId}`
-			);
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
 		} catch (error) {
-			console.log("check error", error);
 		}
 	};
 	updateIPFS = () => {
@@ -94,10 +93,6 @@ class Ticket extends Component {
 					loading: true,
 				},
 				() => {
-					console.log(
-						"blockChainEvent.ipfsHash",
-						this.state.blockChainEvent.ipfsHash
-					);
 					ipfs.get(this.state.blockChainEvent.ipfsHash)
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
@@ -126,8 +121,6 @@ class Ticket extends Component {
 							}
 						})
 						.catch((e) => {
-							console.log("file", e);
-
 							if (!this.isCancelled) {
 								this.setState({
 									loading: false,
@@ -203,13 +196,6 @@ class Ticket extends Component {
 			let txreceiptApproved = "";
 			let txconfirmedApproved = "";
 			let txerror = "";
-			console.log(
-				"sender",
-				this.props.accounts[0],
-				"receiver",
-				address,
-				this.props.id
-			);
 			this.setState({ wrong_address: false });
 			this.props.eventsContract.methods
 				.safeTransferFrom(
@@ -290,15 +276,6 @@ class Ticket extends Component {
 			this.state.eventId != ""
 		) {
 			let graphURL = await GetGraphApi();
-			console.log("graphURl.....", this.state.eventId);
-
-			// console.log("in ticket.js",this.props.eventsContract.getTicket[this.ticket])
-			// this.event = await this.props.eventsContract.methods.events(this.state.eventId).call();
-			// const openEvents = new this.web3.eth.Contract(
-			// 	Open_events_ABI,
-			// 	Open_events_Address
-			// );
-			// console.log("this.props.")
 			await axios({
 				url: graphURL,
 				method: "post",
@@ -333,31 +310,21 @@ class Ticket extends Component {
 				},
 			})
 				.then((graphEvents) => {
-					console.log(
-						"GraphQL query response of events in eventPage",
-						graphEvents.data.data.events[0]
-					);
 					this.setState({
 						blockChainEvent: graphEvents.data.data.events[0],
 						blockChainEventLoaded: true,
 					});
 				})
 				.catch((err) => {
-					console.log(
-						"Error in GraphQL query response of events in eventPage",
-						err
-					);
 					this.setState({
 						blockChainEvent: {},
 						blockChainEventLoaded: true,
 					});
 				});
 			// 	const blockChainEvent = await this.props.eventsContract.methods.events(this.state.eventId).call()
-			// 	console.log('blockChainEvent', blockChainEvent)
 			// this.setState({ blockChainEvent: blockChainEvent, blockChainEventLoaded: true })
 		}
 		if (this.event !== null) {
-			console.log("Iam here");
 			this.updateIPFS();
 		}
 	};
@@ -567,7 +534,6 @@ class Ticket extends Component {
 	}
 
 	componentDidMount() {
-		// console.log("this.ticket in Ticket",this.ticket)
 		this.updateIPFS();
 
 		this.updateEvent();

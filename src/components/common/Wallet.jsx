@@ -36,9 +36,6 @@ const Wallet = () => {
 						"Connection request already pending. Please check MetaMask !"
 					);
 					setOpen(true);
-					console.log(
-						"Connection request already pending. Please check MetaMask !"
-					);
 				}
 			}
 		} else {
@@ -46,9 +43,6 @@ const Wallet = () => {
 				"MetaMask is not installed. Please install MetaMask to continue !"
 			);
 			setOpen(true);
-			console.log(
-				"MetaMask is not installed. Please install MetaMask to continue !"
-			);
 		}
 	};
 	const walletManager = [

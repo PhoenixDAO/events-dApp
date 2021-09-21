@@ -90,10 +90,8 @@ const Header = ({
 	};
 	const setTransakChain = async () => {
 		const network = await getNetworkId();
-		console.log("network", network);
 		if (network == GLOBAL_NETWORK_ID) {
 			setChain("ethereum");
-			console.log("chain", chainId);
 		} else {
 			setChain("polygon");
 		}

@@ -251,7 +251,6 @@ class MyEventStat extends Component {
 				  `
 				}
 			}).then((graphEvents)=>{
-				// console.log("mere soldTickets by Id",graphEvents.data.data.events)
 				let tickets = graphEvents.data.data.events.find((event) => event.eventId == this.props.match.params.id)
 				
 				

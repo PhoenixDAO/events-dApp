@@ -140,7 +140,6 @@ class TopicsLandingPage extends Component {
 	}
 
 	topicClick(slug) {
-		console.log("/topic/" + slug + "/" + 1);
 		// this.props.history.push("/topic/" + slug + "/" + 1);
 		// window.scrollTo(0, 180);
 	}
@@ -165,31 +164,6 @@ class TopicsLandingPage extends Component {
 		});
 	};
 
-	// displayTrendingTopics = topicsJson.filter(
-	// 	(data) => data.popular === "true"
-	// );
-	// renderTopicCard = Object.keys(this.props.eventObj).map((key) => {
-	// 	console.log("this.props.eventObj", key);
-	// 	return (
-	// 		<div
-	// 			key={this.props.eventObj[key].topic}
-	// 			className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
-	// 		>
-	// 			<TopicCard
-	// 				image={"images/topics/" + this.props.eventObj[key].image}
-	// 				name={this.props.eventObj[key].topic}
-	// 				slug={this.props.eventObj[key].topic}
-	// 			/>
-	// 		</div>
-	// 	);
-	// });
-	// renderTopicCard = () => {
-	// 	const keys = Object.keys(this.props.eventObj);
-	// 	console.log("keys", keys);
-	// 	for (let i = 0; i < keys.length; i++) {
-	// 		console.log(this.props.eventObj[keys[i]]);
-	// 	}
-	// };
 
 	render() {
 		const { classes } = this.props;
@@ -206,7 +180,7 @@ class TopicsLandingPage extends Component {
 					return (
 						<div
 							key={this.props.eventObj[key].topic}
-							className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
+							// className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
 						>
 							<TopicCard
 								image={
@@ -520,9 +494,7 @@ class TopicsLandingPage extends Component {
 												);
 											})
 										) : body.length > 0 ? (
-											// <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4">
 												body
-											// </div>
 										) : (
 											<div style={{ margin: "0 auto" }}>
 												<EmptyState
@@ -546,13 +518,11 @@ class TopicsLandingPage extends Component {
 			top: 0,
 			behavior: "smooth",
 		});
-		// console.log("this.props",this.props.eventsContract.methods.getEventsCount());
 		// if(this.props.eventsContract){
 		// 	let eventCount = await this.props.eventsContract.methods
 		// 	.getEventsCount()
 		// 	.call();
 		// if (eventCount) {
-		// 	console.log("events count", eventCount);
 		// 	this.setState({ eventCount });
 		// }
 		// }

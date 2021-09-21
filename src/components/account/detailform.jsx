@@ -118,7 +118,7 @@ const DetailForm = (props) => {
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
 				return networkId;
 			} else {
-				console.log("network id not suported");
+				console.log("network id not suported")
 			}
 			return null;
 		} catch (err) {
@@ -131,8 +131,6 @@ const DetailForm = (props) => {
 			const web3 = await web3Provider();
 			const publicAddress = await web3.eth.getAccounts();
 			const networkId = await getNetworkId();
-			console.log("Public address", publicAddress);
-			console.log("networkId", networkId);
 			const message = await getMessage();
 			const sign = await handleSignMessage(
 				publicAddress[0],
@@ -153,12 +151,10 @@ const DetailForm = (props) => {
 	const handleSignMessage = async (publicAddress, message) => {
 		try {
 			const web3 = await web3Provider();
-			console.log("message", message);
 			const sign = await web3.eth.sign(
 				web3.utils.sha3(message),
 				publicAddress
 			);
-			console.log("sign", sign);
 			return sign;
 		} catch (err) {
 			console.log(err);
@@ -167,7 +163,6 @@ const DetailForm = (props) => {
 
 	const provideImage = () => {
 		if (Object.keys(props.userDetails).length > 0) {
-			console.log("userdetailsss", props.userDetails);
 			const avaCustom =
 				props.userDetails.result.result.userHldr.avatarCustom;
 			const avatarId =
@@ -176,13 +171,7 @@ const DetailForm = (props) => {
 			const name = props.userDetails.result.result.userHldr.name;
 			const org =
 				props.userDetails.result.result.userHldr.organizerDetails;
-			console.log("avatarCustom,", avaCustom);
 			if (avaCustom) {
-				// ipfs.get(ava).then((f) => {
-				// 	let data = JSON.parse(f[0].content.toString());
-				// 	console.log("Data image", data);
-				// 	setAvatar(data.image0);
-				// });
 				setAvatar(ava);
 			}
 			setAvatarCustom(avaCustom);
@@ -197,7 +186,6 @@ const DetailForm = (props) => {
 			ipfs.get(avatar)
 				.then((f) => {
 					let data = JSON.parse(f[0].content.toString());
-					console.log("Data image", data);
 					setIpfsImage(data.image0);
 				})
 				.catch((err) => {
@@ -257,22 +245,18 @@ const DetailForm = (props) => {
 		});
 		setLoading(false);
 		if (detail.error) {
-			console.log("error occured", detail);
 			if (detail.message.response.status === 403) {
 				const userDetails = await authMetaMask();
 				if (!userDetails.error) {
-					console.log("userDetails", userDetails);
 					localStorage.removeItem("AUTH_TOKEN");
 					localStorage.setItem(
 						"AUTH_TOKEN",
 						userDetails.result.result.token
 					);
-					console.log("successfully signed in favourites");
 					updateUserInfo(e);
 				}
 			}
 		} else {
-			console.log("details", detail);
 			props.setUserDetails(detail.result);
 			props.history.push("/");
 			// window.location.reload();

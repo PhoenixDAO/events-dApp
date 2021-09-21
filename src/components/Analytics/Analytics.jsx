@@ -1,11 +1,4 @@
-import React, {
-	useState,
-	useEffect,
-	useMemo,
-	useCallback,
-	useRef,
-} from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 import {
@@ -15,347 +8,34 @@ import {
 	Button,
 	Typography,
 } from "@material-ui/core";
-// import {Graph} from "../utils/graph";
-import { Doughnut, Line } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import EventsAnalytics from "./EventsAnalytics";
-import { Card } from "./common/Card";
-import { getEvents } from "../utils/getEvents";
-import { getUserDetails } from "../config/serverAPIs";
-import Header from "./common/Header";
-import EmptyStateAnalytics from "./EmptyStateAnalytics";
+import { Card } from "../common/Card";
+import { getEvents } from "../../utils/getEvents";
+import { getUserDetails } from "../../config/serverAPIs";
+import Header from "../common/Header";
+import EmptyStateAnalytics from "../EmptyStateAnalytics";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import "bootstrap/dist/css/bootstrap.css";
-// you will also need the css that comes with bootstrap-daterangepicker
 import "bootstrap-daterangepicker/daterangepicker.css";
-import "../styles/customCalendar.css";
-import { getPhoenixDAOMarketValue } from "../utils/graphApis";
+import "../../styles/customCalendar.css";
+import { getPhoenixDAOMarketValue } from "../../utils/graphApis";
 import Web3 from "web3";
-import MyEvents from "./MyEvents";
+import MyEvents from "../MyEvents";
 import MenuItem from "@material-ui/core/MenuItem";
 import moment from "moment";
-import { getTodayData } from "../utils/graphApis";
+import { getTodayData } from "../../utils/graphApis";
 import { SelectAllOutlined } from "@material-ui/icons";
-const useStyles = makeStyles((theme) => ({
-	content: {
-		backgroundColor: "white",
-		margin: "40px 0px",
-		padding: "50px",
-		borderRadius: "8px",
-		paddingBottom: "80px",
-		[theme.breakpoints.down("xs")]: {
-			padding: "10px",
-		},
-	},
-	menuPaper: {
-		maxHeight: "200px",
-		right:"10% !important",
-
-	},
-	formControls: {
-		"@media (max-width: 600px)": {
-			width: "120px",
-		},
-		"@media (min-width: 1024px)": {
-			flex: "0 0 20% !important",
-			marginLeft: "5%",
-		},
-		justifyContent: "space-around",
-		// alignItems: "center",
-		// minWidth: 120,
-		"& .MuiInputBase-formControl": {
-			"@media (max-width: 575px)": {
-				marginLeft: "50px",
-				maxWidth: "100%",
-			},
-		},
-		"& .MuiSelect-root.MuiSelect-select": {
-			fontWeight: 700,
-			padding: "10px",
-			paddingRight: "20px",
-			background: "#fff",
-		},
-		"& option": {
-			padding: "10px",
-		},
-	},
-	select: {
-		width: "170px",
-		marginTop: "10px",
-		marginBottom: "10px",
-		height: "40px",
-		"& .MuiSelect-outlined": {
-			padding: "10px",
-			paddingRight: "25px !important",
-			"@media (max-width: 600px)": {
-				width: "120px",
-			},
-		},
-		[theme.breakpoints.down("xs")]: {
-			width: "auto",
-		},
-	},
-	row: {
-		display: "flex",
-		justifyContent: "space-between",
-		width: "100%",
-		alignItems: "center",
-		marginBottom: "25px",
-		[theme.breakpoints.down("xs")]: {
-			display: "grid",
-		},
-	},
-	emptyContent: {
-		// padding: "0 !important",
-	},
-	EmptyRow: {
-		display: "flex",
-		justifyContent: "space-between",
-		width: "100%",
-		alignItems: "center",
-		marginBottom: "25px",
-		[theme.breakpoints.down("xs")]: {
-			display: "grid",
-		},
-		"& > div": {
-			flex: "0 0 100%",
-		},
-	},
-	heading: {
-		display: "flex",
-		alignItems: "center",
-		color: "#413AE2",
-		fontSize: "28px",
-		fontWeight: "600",
-		alignItems: "center",
-	},
-	box: {
-		border: "1px solid #E4E4E7",
-		borderRadius: "8px",
-		padding: "30px 20px",
-		backgroundColor: "white",
-		textAlign: "inherit",
-		justifyContent: "space-between",
-		alignItems: "center",
-		marginTop: "40px",
-		width: "100%",
-	},
-	heading2: {
-		fontSize: "20px",
-		fontWeight: "700",
-	},
-	row2: {
-		display: "flex",
-		justifyContent: "space-between",
-		padding: "10px",
-		"& span": {
-			color: "#73727D",
-			fontSize: "18px",
-			marginBottom: "15px",
-		},
-	},
-	city: {
-		fontSize: "18px",
-		fontWeight: "600",
-		letterSpacing: "0.5px",
-		wordBreak: "break-word",
-		display: "-webkit-box",
-		WebkitBoxOrient: "vertical",
-		WebkitLineClamp: "2",
-		overflow: "hidden",
-		display: "flex",
-		alignItems: "baseline",
-		[theme.breakpoints.down("xs")]: {
-			fontSize: "16px",
-		},
-	},
-	ticketSold: {
-		color: "#4E4E55",
-		paddingRight: "10px",
-		fontSize: "18px",
-		[theme.breakpoints.down("xs")]: {
-			fontSize: "16px",
-		},
-	},
-	row3: {
-		display: "flex",
-		justifyContent: "space-between",
-		padding: "15px 0px",
-		borderBottom: "1px solid #E4E4E7",
-		margin: "0px 10px",
-		"&:last-child": {
-			borderBottom: "none",
-		},
-	},
-	chartDiv: {
-		// background: `url('/images/graph.svg') no-repeat center 87px`,
-		display: "flex",
-		justifyContent: "center",
-		alignItems: "center",
-		[theme.breakpoints.down("sm")]: {
-			marginTop: "35px",
-			// background: `url('/images/graph.svg') no-repeat center`,
-		},
-		[theme.breakpoints.down("xs")]: {
-			marginTop: "35px",
-			// background: `url('/images/graph.svg') no-repeat center`,
-			backgroundSize: "300px 100px",
-		},
-	},
-	highlighter: {
-		width: "10px",
-		height: "10px",
-		display: "flex",
-		borderRadius: "50%",
-		marginRight: "12px",
-	},
-	Top5Events: {
-		marginTop: "60px",
-		width: "100%",
-	},
-	header: {
-		color: "#73727D",
-		fontSize: "18px",
-		marginBottom: "15px",
-	},
-	image: {
-		position: "absolute",
-		paddingTop: "25px",
-		width: "14%",
-		zIndex: 0,
-		[theme.breakpoints.down("xl")]: {
-			width: "7%",
-		},
-		[theme.breakpoints.down("lg")]: {
-			width: "14%",
-		},
-		[theme.breakpoints.down("md")]: {
-			width: "14%",
-		},
-		[theme.breakpoints.down("sm")]: {
-			width: "30%",
-		},
-		[theme.breakpoints.down("xs")]: {
-			width: "20%",
-			paddingTop: "13px",
-		},
-	},
-	noTicket: {
-		fontSize: "18px",
-		fontWeight: "600",
-		letterSpacing: "0.5px",
-		padding: "10px",
-	},
-	button: {
-		"@media screen and (max-width: 1200px) and (min-width: 900px)": {
-			width: "30%",
-			height: "45px",
-		},
-		margin: theme.spacing(1),
-		fontFamily: "'Aeonik', sans-serif",
-		background: "#413AE2",
-		color: "white",
-		textTransform: "Capitalize",
-		// maxHeight: 54,
-		// maxWidth: 230,
-		"&:focus": {
-			outline: "none",
-		},
-	},
-	sortBy: {
-		position: "absolute",
-		left: "-50px",
-		color: "#73727D",
-		fontSize: "18px",
-		"@media (max-width: 575px)": {
-			left: "0",
-		},
-	},
-	selectWidth: {
-		width: "170px",
-	},
-}));
-
-//for doughnut chart
-const chartColors = ["#ACFFE3", "#96A6FF", "#FF8795", "#E8B56B", "#D0A6F2"];
-
-//doughnut chart options
-const options2 = {
-	legend: {
-		display: false,
-		position: "right",
-	},
-	elements: {
-		arc: {
-			borderWidth: 0,
-		},
-	},
-	layout: {
-		margin: {
-			bottom: 25, //set that fits the best
-		},
-	},
-	plugins: {
-		doughnutlabel: {
-			labels: [
-				{
-					text: "550",
-					font: {
-						size: 20,
-						weight: "bold",
-					},
-				},
-				{
-					text: "total",
-				},
-			],
-		},
-	},
-	cutoutPercentage: 85,
-	tooltips: {
-		zIndex: 99,
-		callbacks: {
-			title: function (tooltipItem, data) {
-				return data["labels"][tooltipItem[0]["index"]];
-			},
-			label: function (tooltipItem, data) {
-				return (
-					data["datasets"][0]["data"][tooltipItem["index"]] +
-					" Tickets"
-				);
-			},
-			// afterLabel: function (tooltipItem, data) {
-			//     var dataset = data['datasets'][0];
-			//     var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
-			//     return '(' + percent + '%)';
-			// }
-		},
-		backgroundColor: "black",
-		titleFontSize: 16,
-		xPadding: 15,
-		yPadding: 15,
-		titleFontColor: "#fff",
-		bodyFontColor: "#E4E4E7",
-		bodyFontSize: 14,
-		displayColors: false,
-		position: "nearest",
-		yAlign: "bottom",
-		x: 40,
-		y: 40,
-	},
-};
-//line chart options
+import { useStyles } from "./styles";
+import Top5Events from "./Top5Events";
+import TicketsByLocation from "./TicketsByLocation";
 
 const Analytics = (props, context) => {
 	const classes = useStyles();
-	// const [graphData, setGraphData] = useState([]);
-	// const [todayGraphData, setTodayGraphData] = useState([]);
 	const [graphDays, setGraphDays] = useState([]);
 	const [userDetails, setUserDetails] = useState([]);
-	// const [TicketSales, setTicketSales] = useState([]);
-	// const [eventName, setEventName] = useState([]);
 	const [revenueCategory, setrevenueCategory] =
 		useState("eventRevenueInPhnx");
-	// const [ticketBought, setTicketBought] = useState(0);
 	const [timeStamp, setTimeStamp] = useState("86400");
 	const [dollarRevenue, setDollarRevenue] = useState(0);
 	const [phnxRevenue, setPhnxRevenue] = useState(0);
@@ -377,60 +57,30 @@ const Analytics = (props, context) => {
 	const [legend, setlegend] = useState("REVENUE ($) ");
 	const [timeLabel, settimeLabel] = useState("TIME");
 	const [eventNames, setEventNames] = useState("");
-	// const [startDate, setStartDate] = useState("");
-	// const [endDate, setEndDate] = useState("");
+
 	const [customDate, setCustomDate] = useState({
 		startDate: "",
 		endDate: "",
 	});
-	const [reload, setReload] = useState(false);
+
 	useEffect(() => {
 		if (props.eventName) {
 			setEventNames(props.eventName[0]);
 		}
 	}, [props.eventName]);
 	useEffect(() => {
-		// getPhnxRevenue();
 		getViewsAndFavourites();
 		handleTimeStampChange();
-		console.log("recalled");
-		// loadApis();
 	}, [props.graphData, customDate.startDate, customDate.endDate]);
 
 	useEffect(() => {
 		getDollarRevenue();
 	}, [graphDays]);
-	// const loadApis = async () => {
-	// 	const eventName = await getEventName(props.accounts);
-	// 	setEventName(eventName);
-	// 	if (eventName.length != 0) {
-	// 		const tickets = await generateJSON(eventName[0].eventId);
-	// 		setTicketSales(tickets);
-	// 	}
-	// 	const blockChainTickets = await props.eventsContract.methods
-	// 		.ticketsOf(props.accounts)
-	// 		.call();
-	// 	setTicketBought(blockChainTickets.length);
-	// 	// const timeData = await getTimeData(props.accounts);
-	// 	const timeData = await getTimeData(
-	// 		props.accounts
-	// 	);
-	// 	console.log("timeData", timeData);
-	// 	setGraphData(timeData);
-	// 	console.log("timestamp", Number(moment().unix()));
-	// 	const todayData = await getTodayData(
-	// 		props.accounts,
-	// 		Number(moment().unix()- 86400)
-	// 	);
-	// 	console.log("time stamp--- ", moment().unix())
-	// 	console.log("todayData", todayData);
-	// 	setTodayGraphData(todayData);
-	// 	handleTimeStampChange(null, todayData);
-	// };
 
 	const handleEventName = (e) => {
 		setEventNames({ eventId: e.target.value });
 	};
+
 	const chartOptions = {
 		// capBezierPoints: true,
 		legend: {
@@ -485,16 +135,13 @@ const Analytics = (props, context) => {
 		accounts: props.accounts,
 		revenueCategory: revenueCategory,
 	});
-	// console.log("events", events);
-	//for graph datasets
-	let dataset = [];
+
 	const data = (canvas, graph) => {
 		const ctx = canvas.getContext("2d");
 		var gradient = ctx.createLinearGradient(0, 0, 0, 400);
 		gradient.addColorStop(0, "#F2F2FD");
 		gradient.addColorStop(1, "rgba(242, 242, 253, 0)");
 		return {
-			// labels: ["jan", "feb", "march", "april", "may"],
 			labels: labels,
 			datasets: [
 				{
@@ -512,39 +159,19 @@ const Analytics = (props, context) => {
 			],
 		};
 	};
-	const data2 = {
-		maintainAspectRatio: false,
-		responsive: false,
-		labels: props.TicketSales.map((event) => {
-			return event.location;
-		}),
-		datasets: [
-			{
-				data: props.TicketSales.map((event) => {
-					return event.ticketSold;
-				}),
-				backgroundColor: chartColors,
-				hoverBackgroundColor: chartColors,
-			},
-		],
-	};
 
 	const handleEvent = (event, picker) => {
-		console.log("startdate", moment(picker.startDate._d).unix());
-		console.log("enddate", moment(picker.endDate._d).unix());
-		// setStartDate(moment(picker.startDate._d).unix());
-		// setEndDate(moment(picker.endDate._d).unix());
 		setCustomDate({
 			startDate: moment(picker.startDate._d).unix(),
 			endDate: moment(picker.endDate._d).unix(),
 		});
 	};
+
 	const getPhnxRevenue = () => {
 		let phxRevenue = [];
 		let phnxLabel = [];
 		let phxData = {};
 		setlegend("REVENUE (PHNX) ");
-		console.log(graphDays);
 		for (let i = 0; i < graphDays.length; i++) {
 			let key = graphDays[i].startTimeStamp;
 			if (key in phxData) {
@@ -654,26 +281,6 @@ const Analytics = (props, context) => {
 		setLabels(dollarLabel);
 	};
 
-	const TicketAnalytics = () => {
-		if (props.TicketSales.length == 0) {
-			return <Grid className={classes.noTicket}>No tickets sold</Grid>;
-		} else {
-			return props.TicketSales.map((event, index) => (
-				<Grid className={classes.row3}>
-					<Grid className={classes.city}>
-						<div
-							className={classes.highlighter}
-							style={{ backgroundColor: chartColors[index] }}
-						></div>
-						{event.location}
-					</Grid>
-					<Grid className={classes.ticketSold}>
-						{event.ticketSold}
-					</Grid>
-				</Grid>
-			));
-		}
-	};
 	const getViewsAndFavourites = async () => {
 		const userDetails = await getUserDetails({
 			address: props.accounts,
@@ -684,9 +291,9 @@ const Analytics = (props, context) => {
 		} else {
 		}
 	};
-	const Top5Events = () => {
+
+	const TopEvents = () => {
 		if (events.length == 0) {
-			// console.log("MyEvents", events);
 			return (
 				<p
 					className="text-center not-found"
@@ -721,14 +328,14 @@ const Analytics = (props, context) => {
 					>
 						{revenueCategory == "eventRevenueInPhnx"
 							? (
-								event.eventRevenueInPhnx /
-								1000000000000000000
-							).toFixed(3) + " PHNX"
+									event.eventRevenueInPhnx /
+									1000000000000000000
+							  ).toFixed(3) + " PHNX"
 							: "$ " +
-							(
-								event.eventRevenueInDollar /
-								1000000000000000000
-							).toFixed(3)}
+							  (
+									event.eventRevenueInDollar /
+									1000000000000000000
+							  ).toFixed(3)}
 					</Grid>
 				</Grid>
 			));
@@ -738,11 +345,11 @@ const Analytics = (props, context) => {
 		setrevenueCategory(event.target.value);
 	};
 
+    //used to calculate data between ranges
 	const dayHelper = (day, data) => {
 		settimeLabel("DATE");
 		let newDataObj = {};
 		const timeDataArr = data;
-		console.log("Day helper", data);
 		for (let i = 0; i < timeDataArr.length; i++) {
 			if (newDataObj[timeDataArr[i].startTimeStamp]) {
 				const soldTickets = Number(
@@ -770,27 +377,20 @@ const Analytics = (props, context) => {
 			}
 		}
 
-		console.log("newDataObj", newDataObj);
 		const todayTimeStamp = Number(moment().unix());
-		console.log("todayTimeStamp", todayTimeStamp);
 		const today = new Date();
 		const d = new Date(today.setHours(0, 0, 0, 0));
 		d.setDate(d.getDate() - day);
 		d.setHours(0, 0, 0, 0);
 		d.setUTCHours(0, 0, 0, 0);
 		const calculatedTimestamp = moment(d).unix() + 172800;
-		console.log("calculatedTimestamp", calculatedTimestamp);
-
 		const d1 = new Date(today.setHours(0, 0, 0, 0));
 		d1.setDate(d1.getDate() - (day + day));
 		d1.setHours(0, 0, 0, 0);
 		d1.setUTCHours(0, 0, 0, 0);
 		const calculatedTimestamp1 = moment(d1).unix() + 172800;
-		console.log("calculatedTimestamp1", calculatedTimestamp1);
-
 		let dataArr = [];
 		for (let i = calculatedTimestamp; i <= todayTimeStamp; i = i + 86400) {
-			console.log("newDataObj[i]", newDataObj[i]);
 			if (newDataObj[i]) {
 				dataArr.push(newDataObj[i]);
 			} else {
@@ -810,7 +410,6 @@ const Analytics = (props, context) => {
 			i <= calculatedTimestamp - 86400;
 			i = i + 86400
 		) {
-			console.log("newDataObj[i]", newDataObj[i]);
 			if (newDataObj[i]) {
 				dataArr1.push(newDataObj[i]);
 			} else {
@@ -838,53 +437,25 @@ const Analytics = (props, context) => {
 		} else {
 			timestamp = timeStamp;
 		}
-		// let element = document.getElementsByClassName("daterangepicker");
-
-		// 		if(timestamp == "custom")
-		// 		{
-		// 			element[0].setAttribute("style", "top: 272.6px; left: auto;right: 0px;display: block;");
-
-		// console.log("element",element[0]);
-		// 		}
-		// 		else{
-		// 			element[0].style.display="none";
-		// 		}
 
 		setTimeStamp(timestamp);
 		let today = Math.floor(Date.now() / 1000);
 		let elapsedTime = today - timestamp;
-		console.log("graph", props.graphData);
 		if (props.graphData.length != 0) {
 			let graphForDays = [];
 			let difference = [];
-			console.log("called herer");
 			if (timestamp === "86400") {
 				settimeLabel("TIME");
-				console.log("graphData", "called here");
 				if (props.todayGraphData.length > 0) {
 					const minutes = moment().minutes();
 					const createdDate = moment().minutes(0).seconds(0).unix();
-					console.log(
-						"graphData",
-						"else if called here",
-						props.todayGraphData
-					);
 					graphForDays = props.todayGraphData;
 					difference = await getTodayData(
 						props.accounts,
 						Number(createdDate - 172800)
 					);
 				}
-				console.log("moment", moment().unix(), Date.now() / 1000);
 			} else if (timestamp === "custom") {
-				console.log(
-					"graphData",
-					props.graphData,
-					"start",
-					customDate.startDate,
-					"end",
-					customDate.endDate
-				);
 				graphForDays = props.graphData.filter(
 					(event) =>
 						customDate.startDate <= event.startTimeStamp &&
@@ -907,30 +478,18 @@ const Analytics = (props, context) => {
 					betweenDays,
 					"days"
 				);
-				console.log(
-					"newStartDate",
-					moment(newStartDate).unix(),
-					"betweenDays",
-					betweenDays,
-					"newEndDate",
-					moment(newEndDate).unix()
-				);
 
 				difference = props.graphData.filter(
 					(event) =>
 						moment(newStartDate).unix() <= event.startTimeStamp &&
 						event.startTimeStamp <= moment(newEndDate).unix()
 				);
-				console.log("graph for days for custom", graphForDays);
-				console.log("difference", difference);
 			} else if (timestamp === "604800") {
 				const { dataArr, dataArr1 } = dayHelper(7, props.graphData);
-				console.log("DIfference in 7days", dataArr1, dataArr);
 				graphForDays = dataArr;
 				difference = dataArr1;
 			} else if (timestamp === "2419200") {
 				const { dataArr, dataArr1 } = dayHelper(28, props.graphData);
-				console.log("DIfference in 28days", dataArr1, dataArr);
 				graphForDays = dataArr;
 				difference = dataArr1;
 			} else if (timestamp === "7776000") {
@@ -938,15 +497,7 @@ const Analytics = (props, context) => {
 				graphForDays = dataArr;
 				difference = dataArr1;
 			}
-			// else {
-			// 	settimeLabel("DATE");
-			// 	console.log("graphData", props.graphData);
-			// 	graphForDays = props.graphData.filter(
-			// 		(event) => event.startTimeStamp >= elapsedTime
-			// 	);
-			// }
 			setGraphDays(graphForDays);
-			console.log("graph data in analytics", graphForDays);
 			let totalDollarRevenue = 0;
 			let totalPhnxRevenue = 0;
 			let soldTicket = 0;
@@ -957,12 +508,11 @@ const Analytics = (props, context) => {
 				if (timestamp === "86400") {
 					const createdDate = moment().minutes(0).seconds(0).unix();
 					if (event.startTimeStamp <= createdDate - 86400) {
-						// totalDollarPrev +=
-						// 	Number(event.totalDollarRevenue.toString()) /
-						// 	1000000;
 						totalDollarPrev += Number(
-							Web3.utils.fromWei(event.totalDollarRevenue.toString()))
-						console.log("totalDollarPrev", totalDollarPrev);
+							Web3.utils.fromWei(
+								event.totalDollarRevenue.toString()
+							)
+						);
 						totalSoldTicketsPrev += Number(
 							event.soldTickets.toString()
 						);
@@ -973,10 +523,9 @@ const Analytics = (props, context) => {
 						);
 					}
 				} else {
-					// totalDollarPrev +=
-					// 	Number(event.totalDollarRevenue.toString()) / 1000000;
-					totalDollarPrev +=Number(Web3.utils.fromWei(event.totalDollarRevenue.toString()));
-					console.log("totalDollarPrev", totalDollarPrev);
+					totalDollarPrev += Number(
+						Web3.utils.fromWei(event.totalDollarRevenue.toString())
+					);
 					totalSoldTicketsPrev += Number(
 						event.soldTickets.toString()
 					);
@@ -985,21 +534,16 @@ const Analytics = (props, context) => {
 					);
 				}
 			});
-			console.log("totalSoldTicketsPrev", totalSoldTicketsPrev);
 			if (graphForDays.length > 0) {
 				graphForDays.forEach((event) => {
-					// totalDollarRevenue +=Number(event.totalDollarRevenue.toString()) / 1000000;
-					totalDollarRevenue +=Number(Web3.utils.fromWei(event.totalDollarRevenue.toString()));
+					totalDollarRevenue += Number(
+						Web3.utils.fromWei(event.totalDollarRevenue.toString())
+					);
 
-					console.log("totalDollarRevenue", totalDollarRevenue);
 					soldTicket += Number(event.soldTickets.toString());
-					totalPhnxRevenue += event.totalPhnxRevenue / 1000000000000000000
+					totalPhnxRevenue +=
+						event.totalPhnxRevenue / 1000000000000000000;
 				});
-
-				console.log("DIFFERENCE", difference);
-				// totalPhnxRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
-				// totalDollarRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
-				console.log("totalDollarRevenue", totalDollarRevenue);
 				let liveDollarRevenue = await getPhoenixDAOMarketValue(
 					totalDollarRevenue
 				);
@@ -1007,19 +551,13 @@ const Analytics = (props, context) => {
 				setDollarRevenue(totalDollarRevenue.toFixed(3));
 				setPhnxRevenue(totalPhnxRevenue.toFixed(3));
 				setSoldTicket(soldTicket);
-				//calculate data for change and difference of cards
 				let lastIndex = graphForDays.length - 1;
-				// let originalNumber =
-				// 	graphForDays[0].totalDollarRevenue / 1000000;
-				// let newNumber =
-				// 	graphForDays[lastIndex].totalDollarRevenue / 1000000;
 				let originalNumber = Web3.utils.fromWei(
 					graphForDays[0].totalDollarRevenue.toString()
 				);
 				let newNumber = Web3.utils.fromWei(
 					graphForDays[lastIndex].totalDollarRevenue.toString()
 				);
-				console.log("phnx", originalNumber, newNumber);
 				let PHNXoriginalNumber = Web3.utils.fromWei(
 					graphForDays[0].totalPhnxRevenue.toString()
 				);
@@ -1049,18 +587,8 @@ const Analytics = (props, context) => {
 				setPhnxChange(PhnxChange);
 				setDollarChange(price);
 				setTicketSoldChange(ticketChange);
-				console.log("new", newNumber, originalNumber);
-				// originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenue);
-				// newNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenue);
 				let dollartDifference =
 					totalDollarRevenue - (totalDollarRevenue - totalDollarPrev);
-				console.log(
-					"totalDollarPrev",
-					totalDollarPrev,
-					"totalDollarRevenue",
-					totalDollarRevenue,
-					"dollartDifference"
-				);
 				setdollarDifference(
 					totalDollarPrev > totalDollarRevenue
 						? -(totalDollarPrev - totalDollarRevenue)
@@ -1075,25 +603,12 @@ const Analytics = (props, context) => {
 				);
 				let ticketsDifference =
 					soldTicket - (soldTicket - totalSoldTicketsPrev);
-				console.log(
-					"totalSoldTicketsPrev",
-					totalSoldTicketsPrev,
-					"soldTicket",
-					soldTicket,
-					"ticketsDifference",
-					ticketsDifference
-				);
 				setTicketDifference(
 					totalSoldTicketsPrev > soldTicket
 						? -(totalSoldTicketsPrev - soldTicket)
 						: soldTicket - totalSoldTicketsPrev
 				);
 			} else {
-				console.log(
-					"GRpah for day else called",
-					graphForDays,
-					dollarRevenue
-				);
 				setDollarRevenue(0);
 				setPhnxRevenue(0);
 				setSoldTicket(0);
@@ -1124,13 +639,6 @@ const Analytics = (props, context) => {
 			}
 		}
 	};
-	// const calculatePercentage =() =>{
-	//         let price = (((newNumber - orignalNumber) / orignalNumber) * 100);
-	// }
-	// chandleEvent = async (event) => {
-	// 	const tickets = await generateJSON(Number(event.target.value));
-	// 	setTicketSales(tickets);
-	// };
 
 	const provideGraph = () => {
 		if (dollarClicked) {
@@ -1160,7 +668,6 @@ const Analytics = (props, context) => {
 	return (
 		<div>
 			<Header title="Analytics" page="analytics" phnxButton="true" />
-			{console.log("event analytics: ", props)}
 			{props.eventName.length > 0 ? (
 				<Grid container className={classes.content}>
 					<Grid className={classes.row}>
@@ -1178,7 +685,6 @@ const Analytics = (props, context) => {
 									value={timeStamp}
 									onChange={handleTimeStampChange}
 									displayEmpty
-									// className={classes.menuPaper}
 									MenuProps={{
 										classes: {
 											paper: classes.menuPaper,
@@ -1215,25 +721,6 @@ const Analytics = (props, context) => {
 										Last 28 Days
 									</MenuItem>
 								</Select>
-								{/* <Select
-									native
-									value={timeStamp}
-									onChange={handleTimeStampChange}
-									inputProps={{
-										name: "age",
-										id: "outlined-age-native-simple",
-									}}
-								>
-									<option value="86400">Today</option>
-									{/* <option aria-label="None" value="Yesterday">
-								Yesterday
-							</option>*/}
-								{/* <option value="604800">Last 7 Days</option>
-									<option value="2419200">
-										Last 28 Days
-									</option>
-							
-								</Select> */}
 							</FormControl>
 							<DateRangePicker
 								initialSettings={{
@@ -1242,12 +729,12 @@ const Analytics = (props, context) => {
 								onShow={
 									timeStamp === "custom"
 										? (e, p) =>
-											console.log(
-												"event",
-												e,
-												"picker",
-												p
-											)
+												console.log(
+													"event",
+													e,
+													"picker",
+													p
+												)
 										: null
 								}
 								onEvent={handleEvent}
@@ -1266,7 +753,6 @@ const Analytics = (props, context) => {
 						</div>
 					</Grid>
 					<Grid container style={{ justifyContent: "space-evenly" }}>
-						{console.log("DOLLAR REVENUE", dollarRevenue)}
 						<Card
 							color="#E5AB00"
 							click={getDollarRevenue}
@@ -1310,235 +796,26 @@ const Analytics = (props, context) => {
 					</Grid>
 					<Grid container style={{ margin: "70px 0px" }}>
 						{provideGraph()}
-						{/* <Line data={data} options={chartOptions} /> */}
 					</Grid>
 					<EventsAnalytics
 						userDetails={userDetails}
 						createdEvents={props.eventName.length}
 						ticketBought={props.ticketBought}
 					/>
-					<Grid className={classes.box}>
-						<Grid className={classes.row}>
-							<Grid className={classes.row}>
-								<h5 className={classes.heading2}>
-									Ticket sales by Location
-								</h5>
-							</Grid>
-							<Grid
-								style={{
-									display: "flex",
-									alignItems: "center",
-								}}
-							>
-								{props.eventName.length > 0 ? (
-									<div>
-										{/* <span
-											style={{
-												color: "#73727D",
-												marginRight: "10px",
-											}}
-										>
-											Event
-										</span> */}
-										<FormControl
-											variant="outlined"
-											className={classes.formControls}
-										>
-											<Typography
-												variant="p"
-												className={`${classes.sortBy}`}
-											>
-												Event
-											</Typography>
-											{/* <Select
-											labelId="demo-simple-select-outlined-label"
-											id="demo-simple-select-outlined"
-											fullWidth
-											value={props.eventName[0].eventId}
-											onChange={props.handleEvent}
-											displayEmpty
-											className={classes.menuPaper}
-											MenuProps={{
-												classes: {
-													paper: classes.menuPaper,
-												},
-												getContentAnchorEl: null,
-												anchorOrigin: {
-												vertical: "bottom",
-												horizontal: "left"}
-											}}
-										>
-										{props.eventName.map(
-													(event) => {
-														return (
-															<MenuItem
-															style={{
-																fontFamily:
-																	"'Aeonik', sans-serif",
-															}}
-																value={
-																	event.eventId
-																}
-															>
-																{event.name}
-															</MenuItem>
-														);
-													})}
-										</Select> */}
-											{/* {console.log("event name", (eventNames)&&eventNames['eventId'])} */}
-											{eventNames && (
-												<Select
-													fullWidth
-													// value={state.age}
-													value={
-														eventNames &&
-														eventNames["eventId"]
-													}
-													onChange={(e) => {
-														props.handleEvent(e);
-														handleEventName(e);
-													}}
-													inputProps={{
-														name: "age",
-														id: "outlined-age-native-simple",
-													}}
-													MenuProps={{
-														classes: {
-															paper: classes.menuPaper,
-														},
-														getContentAnchorEl:
-															null,
-														anchorOrigin: {
-															vertical: "bottom",
-															horizontal: "left",
-														},
-													}}
-													className={
-														classes.selectWidth
-													}
-												>
-													{props.eventName.map(
-														(event) => {
-															return (
-																<MenuItem
-																	style={{
-																		fontFamily:
-																			"'Aeonik', sans-serif",
-																		width: "350px",
-																	}}
-																	value={
-																		event.eventId
-																	}
-																>
-																	{event.name}
-																</MenuItem>
-															);
-														}
-													)}
-												</Select>
-											)}
-										</FormControl>
-									</div>
-								) : null}
-							</Grid>
-						</Grid>
-
-						<Grid container>
-							<Grid lg={7} sm={12} xs={12} md={6}>
-								<Grid className={classes.row2}>
-									<span>Cities</span>
-									<span>No of Tickets</span>
-								</Grid>
-								<TicketAnalytics />
-							</Grid>
-							<Grid
-								lg={5}
-								sm={12}
-								xs={12}
-								md={6}
-								className={classes.chartDiv}
-							>
-								<Doughnut
-									id="doughnut"
-									data={data2}
-									options={options2}
-								/>
-								<img
-									src="/images/graph.svg"
-									className={classes.image}
-								/>
-							</Grid>
-						</Grid>
-					</Grid>
-					<Grid className={classes.Top5Events}>
-						<Grid className={classes.row}>
-							<h2 className={classes.heading2}>Top 5 Events</h2>
-							<FormControl
-								variant="outlined"
-								className={classes.select}
-							>
-								<Select
-									labelId="demo-simple-select-outlined-label"
-									id="demo-simple-select-outlined"
-									fullWidth
-									value={timeStamp}
-									value={revenueCategory}
-									onChange={handleRevenue}
-									displayEmpty
-									// className={classes.menuPaper}
-									MenuProps={{
-										classes: {
-											paper: classes.menuPaper,
-										},
-										getContentAnchorEl: null,
-										anchorOrigin: {
-											vertical: "bottom",
-											horizontal: "left",
-										},
-									}}
-								>
-									<MenuItem
-										value="eventRevenueInPhnx"
-										style={{
-											fontFamily: "'Aeonik', sans-serif",
-										}}
-									>
-										PHNX
-									</MenuItem>
-									<MenuItem
-										value="eventRevenueInDollar"
-										style={{
-											fontFamily: "'Aeonik', sans-serif",
-										}}
-									>
-										Dollar
-									</MenuItem>
-								</Select>
-							</FormControl>
-						</Grid>
-
-						<Grid
-							className={classes.box}
-							style={{ marginTop: "30px" }}
-						>
-							<Grid className={classes.row2}>
-								<Grid className={classes.header} lg={3}>
-									No of Tickets
-								</Grid>
-								<Grid className={classes.header} lg={6}>
-									Event Name
-								</Grid>
-								<Grid
-									className={classes.header}
-									style={{ textAlign: "end" }}
-									lg={3}
-								>
-									Revenue
-								</Grid>
-							</Grid>
-							<Top5Events />
-						</Grid>
-					</Grid>
+					<TicketsByLocation
+						eventName={props.eventName}
+						eventNames={eventNames}
+						handleEvent={props.handleEvent}
+						handleEventName={handleEventName}
+						TicketSales={props.TicketSales}
+					/>
+					<Top5Events
+						timeStamp={timeStamp}
+						revenueCategory={revenueCategory}
+						handleRevenue={handleRevenue}
+					>
+						<TopEvents />
+					</Top5Events>
 				</Grid>
 			) : (
 				<Grid
@@ -1565,7 +842,6 @@ Analytics.contextTypes = {
 };
 const mapStateToProps = (state) => {
 	return {
-		// contracts: state.contracts,
 		accounts: state.accounts[0],
 		networkId: state.web3.networkId,
 	};

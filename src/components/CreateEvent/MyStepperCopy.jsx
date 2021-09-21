@@ -79,9 +79,6 @@ const MyStepper = ({
 
 	const { handleInputValue, handleFormSubmit, formIsValid, errors, values } =
 		useFormControls();
-
-	console.log("value", values);
-
 	const { handleSubmit, control, setValue: setFormValue } = useForm();
 	const steps = ["", "", "", ""];
 	const [eventTime, setEventTime] = useState("onedayevent");
@@ -194,8 +191,6 @@ const MyStepper = ({
 
 	//next button steeper
 	const handleNext = (fields) => {
-		console.log("fields", fields);
-		// console.log("categories", categories);
 		const filter = new badWords();
 		let badEventName = filter.clean(fields.eventName);
 		fields.eventName = badEventName;
@@ -210,10 +205,8 @@ const MyStepper = ({
 
 			// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			if (fields.eventTime === "onedayevent") {
-				console.log("onedayevent----->");
 				let eventDateOneDay = fields.eventDate;
 				let eventStartTimeOneday = fields.eventStartTime;
-				console.log("timestamp", eventStartTimeOneday);
 				let eventEndTimeOneday = fields.eventEndTime;
 
 				eventDateOneDay.setHours(
@@ -229,7 +222,6 @@ const MyStepper = ({
 				var today = new Date();
 				today.setHours(today.getHours() + 3);
 				if (eventStartTimeOneday <= today) {
-					console.log("im here error show");
 					setTimeError({
 						isError: true,
 						message: "Event should be after 3 Hours.",
@@ -245,11 +237,6 @@ const MyStepper = ({
 							fields.eventDate = eventDateOneDay;
 							fields.eventStartTime = eventStartTimeOneday;
 							fields.eventEndTime = eventEndTimeOneday;
-							console.log(
-								eventDateOneDay,
-								eventStartTimeOneday,
-								eventEndTimeOneday
-							);
 							onFieldsChange(fields);
 							onStepsChange("inc");
 						} else {
@@ -263,13 +250,11 @@ const MyStepper = ({
 					} else {
 						fields.eventDate = eventDateOneDay;
 						fields.eventStartTime = eventStartTimeOneday;
-						console.log(eventDateOneDay, eventStartTimeOneday);
 						onFieldsChange(fields);
 						onStepsChange("inc");
 					}
 				}
 			} else {
-				console.log("morethanaday---->");
 				let eventDateOneDay = fields.eventStartDate;
 				let eventEndDateOneDay = fields.eventEndDate;
 				let eventStartTimeOneday = fields.eventStartTime;
@@ -294,7 +279,6 @@ const MyStepper = ({
 				var today = new Date();
 				today.setHours(today.getHours() + 3);
 				if (eventStartTimeOneday <= today) {
-					console.log("im here error show");
 					setTimeError({
 						isError: true,
 						message:
@@ -305,7 +289,6 @@ const MyStepper = ({
 					const diffDays = Math.ceil(
 						diffTime / (1000 * 60 * 60 * 24)
 					);
-					console.log(diffDays + " days");
 					if (diffDays > 0) {
 						if (eventEndTimeOneday) {
 							eventEndTimeOneday.setFullYear(
@@ -323,11 +306,6 @@ const MyStepper = ({
 								fields.eventEndDateOneDay = eventEndDateOneDay;
 								fields.eventStartTime = eventStartTimeOneday;
 								fields.eventEndTime = eventEndTimeOneday;
-								console.log(
-									eventDateOneDay,
-									eventStartTimeOneday,
-									eventEndTimeOneday
-								);
 								onFieldsChange(fields);
 								onStepsChange("inc");
 							} else {
@@ -342,7 +320,6 @@ const MyStepper = ({
 							fields.eventStartDate = eventDateOneDay;
 							fields.eventStartTime = eventStartTimeOneday;
 							fields.eventEndDateOneDay = eventEndDateOneDay;
-							console.log(eventDateOneDay, eventStartTimeOneday);
 							onFieldsChange(fields);
 							onStepsChange("inc");
 						}
@@ -364,11 +341,7 @@ const MyStepper = ({
 		} else if (activeStep === 2) {
 			// 3rd stepper -  event categories (free, single paid, multiple paid)
 			// bool token; // false means free
-
-			console.log("fields.eventCategory ", fields.eventCategory);
-
 			if (fields.eventCategory === "free") {
-				console.log("free--------->");
 				let cat = [];
 				let obj = {
 					ticketName: "free",
@@ -392,7 +365,6 @@ const MyStepper = ({
 				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				onStepsChange("inc");
 			} else if (fields.eventCategory === "single") {
-				console.log("single fields", fields);
 				let cat = [];
 				let obj = {
 					ticketName: "single",
@@ -416,7 +388,6 @@ const MyStepper = ({
 				// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 				onStepsChange("inc");
 			} else {
-				console.log("multiple fields");
 				if (categories.length > 0) {
 					let sortedCategories = categories.sort(
 						(a, b) =>
@@ -431,12 +402,10 @@ const MyStepper = ({
 					// setActiveStep((prevActiveStep) => prevActiveStep + 1);
 					onStepsChange("inc");
 				} else {
-					console.log("Please add ticket category");
 				}
 			}
 		} else if (activeStep === 3) {
 			// 4th stepper
-			console.log("fields", fields.categories);
 			fields.categories = categoriesOfTicket;
 			fields.token = categoriesOfToken;
 			onFieldsChange(fields);
@@ -468,9 +437,6 @@ const MyStepper = ({
 	};
 
 	const handleSaveCatogory = (fields) => {
-		console.log(fields);
-		console.log("ticketCategory", ticketCategory);
-
 		let obj = {
 			id: ticketCategory,
 			ticketName: fields[`ticketName${ticketCategory}`],
@@ -488,10 +454,7 @@ const MyStepper = ({
 
 		// let arr = categories;
 		// arr.push(obj);
-		// console.log("arr", arr);
 		upsert(categories, obj);
-		// console.log("arr", arr);
-		// setCategories([...arr]);
 		setaddAnotherCat(!addAnotherCat);
 	};
 
@@ -513,17 +476,14 @@ const MyStepper = ({
 	};
 
 	const handleDeleteTicketCategory = (data, index, cat) => {
-		console.log("delete clicked", data, index, cat);
 		let arr = categories;
 		arr = arr.filter((obj) => obj.id !== cat.id);
 		// arr.splice(index, 1);
-		console.log(arr);
 		setCategories([...arr]);
 	};
 
 	const handleEditTicketCategory = (data, index, cat) => {
 		setTicketCategory(Math.floor(100000 + Math.random() * 900000));
-		console.log("edit index", cat.id);
 		setaddAnotherCat(!addAnotherCat);
 		setTicketCategory(cat.id);
 	};
@@ -532,9 +492,7 @@ const MyStepper = ({
 		let value = parseFloat(d);
 		value = value > 0 ? value : 0;
 		let usd = PhoenixDAO_market.usd;
-		console.log("dollar", PhoenixDAO_market);
 		let phoenixValue = value / usd;
-		console.log("phnx", phoenixValue);
 
 		phoenixValue = phoenixValue.toFixed(5);
 		return phoenixValue;
@@ -2729,7 +2687,6 @@ const MyStepper = ({
 									<div>
 										{/*paid multiple - ticket category box*/}
 										{categories.map((cat, index) => {
-											// console.log("cat", cat);
 											return (
 												<div
 													key={index}

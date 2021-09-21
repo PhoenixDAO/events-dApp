@@ -39,7 +39,6 @@ import {
 
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
-import ticketSoldQuantityFormatter from "../../utils/ticketsQuantityFormatter";
 var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
@@ -163,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
 	eventTitle: {
 		color: "#1E1E22",
 		maxWidth: "64.66%",
-		fontSize: 16,
+				fontSize: 16,
 		maxHeight: "52px",
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
@@ -256,7 +255,6 @@ const EventCard = (props, context) => {
 						},
 					}
 				);
-				console.log("result", result);
 				if (result.status === 200 || result.status === 400) {
 					setIcon(!Icon);
 				}
@@ -272,7 +270,6 @@ const EventCard = (props, context) => {
 						},
 					}
 				);
-				console.log("result", result);
 				if (result.status === 200 || result.status === 400) {
 					setIcon(!Icon);
 				}
@@ -280,10 +277,6 @@ const EventCard = (props, context) => {
 			}
 		} catch (error) {
 			if (error.response && error.response.data) {
-				console.log(
-					"Consoleee notify report response error.response.data",
-					error.response.data
-				);
 			}
 		}
 	};
@@ -395,12 +388,11 @@ const EventCard = (props, context) => {
 									{event_data.tktTotalQuantity != 0 ? (
 										<Typography
 											className={classes.quantitySold}
-											title={""+ event_data.tktTotalQuantitySold + "/"+ ((event_data.tktTotalQuantity == 0) ? "∞" : event_data.tktTotalQuantity)+""}
 										>
 											<ConfirmationNumberOutlined fontSize="medium" />
 											<span>&nbsp;</span>
-											{ticketSoldQuantityFormatter(event_data.tktTotalQuantitySold)}/
-										{event_data.tktTotalQuantity == 0 ? '∞' : ticketSoldQuantityFormatter(event_data.tktTotalQuantity)}
+											{event_data.tktTotalQuantitySold}/
+											{event_data.tktTotalQuantity}
 										</Typography>
 									) : null}
 									{!myEvent && !ticket ? (
@@ -458,7 +450,6 @@ const EventCard = (props, context) => {
 										"Free"
 									) : phnx_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
-											{console.log("phnx price",phnx_price)}
 											<p
 												title={phnx_price[0] + " PHNX"}
 												style={{
@@ -614,12 +605,11 @@ const EventCard = (props, context) => {
 										component="p"
 										gutterBottom
 										className={classes.text}
-										title={""+ event_data.tktTotalQuantitySold + "/"+ ((event_data.tktTotalQuantity == 0) ? "∞" : event_data.tktTotalQuantity)+""}
 									>
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
-										{ticketSoldQuantityFormatter(event_data.tktTotalQuantitySold)}/
-										{event_data.tktTotalQuantity == 0 ? '∞' : ticketSoldQuantityFormatter(event_data.tktTotalQuantity)}
+										{event_data.tktTotalQuantitySold}/
+										{event_data.tktTotalQuantity == 0 ? '∞' : event_data.tktTotalQuantity}
 
 									</Typography>
 									<Typography

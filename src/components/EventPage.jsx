@@ -326,13 +326,11 @@ class EventPage extends Component {
 	// 	const blockChainEvent = await openEvents.methods
 	// 		.events(this.props.match.params.id)
 	// 		.call();
-	// 		console.log("blockChain Events in eventPage",blockChainEvent)
 	// 	this.setState({
 	// 		blockChainEvent: blockChainEvent,
 	// 		blockChainEventLoaded: true,
 	// 	});
 	// 	this.updateIPFS();
-	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
 
 	userExists(buyers, account) {
@@ -391,10 +389,6 @@ class EventPage extends Component {
 			},
 		})
 			.then(async (graphEvents) => {
-				console.log(
-					"GraphQL query response of events in eventPage",
-					graphEvents.data
-				);
 				if (graphEvents.data.data.events.length > 0) {
 					this.setState({
 						blockChainEvent: graphEvents.data.data.events[0],
@@ -579,13 +573,11 @@ class EventPage extends Component {
 	}
 
 	async getPhoenixDAOMarketValue() {
-		console.log("request sent to the server");
 		fetch(
 			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
 		)
 			.then((res) => res.json())
 			.then((data) => {
-				console.log("phnx price", data);
 				this.setState({ PhoenixDAO_market: data.phoenixdao });
 			})
 			.catch(console.log);
@@ -660,15 +652,6 @@ class EventPage extends Component {
 			? phnx_price[categoryIndex] + "PHNX"
 			: "FREE";
 		let priceInDollar = event_data.token ? "$" + dollar_price : "";
-
-		console.log(
-			"price in phnx",
-			this.state.PhoenixDAO_market,
-			event_data,
-			phnx_price,
-			categoryIndex,
-			priceInPhnx
-		);
 		this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
 	};
 	getImage = () => {
@@ -732,7 +715,6 @@ class EventPage extends Component {
 							"This event is restricted to one wallet address, you can't buy it again.",
 					});
 				} else {
-					console.log("open 2 called in inner else");
 					if ((await this.allowance()) == 0) {
 						let balance = await this.props.phnxContract.methods
 							.totalSupply()
@@ -749,14 +731,12 @@ class EventPage extends Component {
 						this.setState({
 							disableBuyTicketBtn: result,
 						});
-						console.log("result handelCLickopen2", result);
 						if (!result) {
 							this.setState({ open2: true });
 						}
 					}
 				}
 			} else {
-				console.log("open 2 called in outer else");
 				if ((await this.allowance()) == 0) {
 					let balance = await this.props.phnxContract.methods
 						.totalSupply()
@@ -773,7 +753,6 @@ class EventPage extends Component {
 					this.setState({
 						disableBuyTicketBtn: result,
 					});
-					console.log("result handelCLickopen2", result);
 					if (!result) {
 						this.setState({ open2: true });
 					}
@@ -803,7 +782,6 @@ class EventPage extends Component {
 		let a = await this.props.phnxContract.methods
 			.allowance(this.account, this.props.eventsAddress)
 			.call();
-		console.log("allowance", a);
 		return a;
 	};
 
@@ -876,18 +854,10 @@ class EventPage extends Component {
 			networkId === GLOBAL_NETWORK_ID ||
 			networkId === GLOBAL_NETWORK_ID_2
 		) {
-			console.log("this.props.phnxContract", this.props.phnxContract);
 			let balance = await this.props.phnxContract.methods
 				.balanceOf(this.props.accounts[0])
 				.call();
-			console.log(
-				"PHNx balance of the user",
-				balance,
-				this.state.blockChainEvent
-			);
 			balance = Web3.utils.fromWei(balance.toString());
-
-			console.log("less price", balance, this.state.phnx_price);
 			if (balance < Number(this.state.phnx_price.split("PHNX")[0])) {
 				return true;
 			} else {
@@ -917,7 +887,6 @@ class EventPage extends Component {
 			minute: "2-digit",
 		});
 		const geoFindUser = await this.geoFindMe();
-		console.log("selectedIndex", this.state.selectedCategoryIndex);
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
@@ -1035,9 +1004,7 @@ class EventPage extends Component {
 			});
 			if (avatarCustom) {
 				ipfs.get(avatar).then((file) => {
-					// console.log("ipfs file,", file);
 					let data = JSON.parse(file[0].content.toString());
-					// console.log("dataaaa", data.image0);
 					this.setState({
 						avatar: data.image0,
 					});
@@ -1086,15 +1053,6 @@ class EventPage extends Component {
 					allowBuySnackbar: true,
 					SnackbarMessage: "This event is already ended",
 				});
-				console.log(
-					"allow buy in if",
-					Number(this.state.blockChainEvent.time),
-					moment().unix(),
-					parseInt(this.state.blockChainEvent.tktTotalQuantitySold) >=
-					parseInt(this.state.blockChainEvent.tktTotalQuantity),
-					this.state.blockChainEvent.tktTotalQuantitySold,
-					this.state.blockChainEvent.tktTotalQuantity
-				);
 				return false;
 			} else if (
 				this.state.blockChainEvent.catTktQuantity[index] != 0 &&
@@ -1116,9 +1074,7 @@ class EventPage extends Component {
 	checkUserTicketLocation = async () => {
 		const eventId = this.props.match.params.id;
 		const users = await generateBuyerArr(eventId);
-		console.log("All userss", users);
 		let event_data = this.state.blockChainEvent;
-		console.log("event data", event_data);
 		for (let i = 0; i < users.length; i++) {
 			if (users[i].address === this.props.accounts[0].toLowerCase()) {
 				this.setState({
@@ -1929,8 +1885,6 @@ class EventPage extends Component {
 		this._isMounted = false;
 	}
 	async componentDidUpdate(prevProps) {
-		// console.log("this.props.userDetails", this.props.userDetails);
-		// console.log("prevProps.userDetails", prevProps.userDetails);
 		if (this.props.purchased !== prevProps.purchased) {
 			await this.loadEventFromBlockchain();
 			await this.checkUserTicketLocation();

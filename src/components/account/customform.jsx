@@ -13,7 +13,6 @@ const CustomForm = React.memo((props) => {
 	const [errorName, setErrorName] = useState("");
 
 	const handleFile = (e) => {
-		console.log(e.target.files);
 		if (
 			e.target.files[0] !== undefined &&
 			e.target.files[0].size < 3 * 1024 * 1024
@@ -45,7 +44,6 @@ const CustomForm = React.memo((props) => {
 	const uploadImage = async (e) => {
 		e.preventDefault();
 		let pinit = process.env.NODE_ENV === "production";
-		console.log("FIle", file[0]);
 		if (file[0] !== undefined) {
 			const base64Img = await getBase64(file[0]);
 			setLoading(true);
@@ -53,11 +51,9 @@ const CustomForm = React.memo((props) => {
 				image0: base64Img,
 			});
 			let buffer = Buffer.from(ipfsData);
-			console.log("buffer", buffer);
 			ipfs.add(buffer, { pin: pinit })
 				.then((hash) => {
 					setLoading(false);
-					console.log("hash", hash);
 					props.handleCustomAvatar(true);
 					props.handleAvatar(hash[0].hash);
 					props.handleClose();
