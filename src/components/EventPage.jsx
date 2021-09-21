@@ -700,7 +700,7 @@ class EventPage extends Component {
 		) {
 			this.setState({
 				open3: true,
-				open3Message: "Please connect to Ethereum or Matic Mainnet",
+				open3Message: "Please connect to Rinkeby network",
 			});
 		} else {
 			// this.setState({ open2: true });
