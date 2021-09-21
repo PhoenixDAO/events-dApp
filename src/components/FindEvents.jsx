@@ -96,6 +96,20 @@ const useStyles = (theme) => ({
 	menuPaper: {
 		maxHeight: "200px",
 	},
+	mainHeadingStyle:{
+		fontWeight: 900,
+		color: "#1E1E22",
+		marginBottom: "0px",
+		"@media (max-width: 600px)":{
+			fontSize: "1.4rem",
+		}
+	},
+	LargeScreenBreakLine:{
+		display:"block",
+		"@media (max-width: 600px)":{
+			display: "none",
+		}
+	},
 	selectDropDown: {
 		maxHeight: "200px",
 		width: "85%",
@@ -803,15 +817,11 @@ class FindEvents extends Component {
 								<div style={{ display: "flex" }}>
 									<img src={roundlogo} alt="phnx logo" />
 									<span>&nbsp;&nbsp;</span>
-									<h2
-										style={{
-											fontWeight: 900,
-											color: "#1E1E22",
-											marginBottom: "0px",
-										}}
+									<span
+										className={classes.mainHeadingStyle}
 									>
 										PhoenixDAO Events Marketplace
-									</h2>
+									</span>
 								</div>
 							}
 							handleSearch={this.updateSearch}
@@ -864,7 +874,7 @@ class FindEvents extends Component {
 								<Grid item>SearchBar</Grid>
 								<Grid item>Connect Wallet</Grid>
 							</Grid> */}
-						<br />
+						<br className={classes.LargeScreenBreakLine}/>
 
 						{/* tabs */}
 						<div>
@@ -979,7 +989,7 @@ class FindEvents extends Component {
 							>
 								<Typography
 									ref={this.eventRef}
-									variant="p"
+									variant="div"
 									className={`${classes.sortBy}`}
 								>
 									Sort:
