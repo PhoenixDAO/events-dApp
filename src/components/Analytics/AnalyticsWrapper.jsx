@@ -4,7 +4,7 @@ import {
 	getEventName,
 	getTimeData,
 	getTodayData,
-} from "../utils/graphApis";
+} from "../../utils/graphApis";
 import Analytics from "./Analytics";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
@@ -16,10 +16,12 @@ const AnalyticsWrapper = (props) => {
 	const [ticketBought, setTicketBought] = useState(0);
 	const [graphData, setGraphData] = useState([]);
 	const [todayGraphData, setTodayGraphData] = useState([]);
+
 	useEffect(() => {
 		loadApis();
 		props.executeScroll();
 	}, []);
+
 	const loadApis = async () => {
 		const eventName = await getEventName(props.accounts);
 		setEventName(eventName);
@@ -38,7 +40,6 @@ const AnalyticsWrapper = (props) => {
 			Number(createdDate - 86400)
 		);
 		setTodayGraphData(todayData);
-
 		const timeData = await getTimeData(props.accounts);
 		setGraphData(timeData);
 	};
@@ -56,19 +57,15 @@ const AnalyticsWrapper = (props) => {
 			graphData={graphData}
 			todayGraphData={todayGraphData}
 			handleEvent={handleEvent}
-			// NumbergraphData={props.NumbergraphData}
 		/>
 	);
 };
-
-// export default AnalyticsWrapper
 
 AnalyticsWrapper.contextTypes = {
 	drizzle: PropTypes.object,
 };
 const mapStateToProps = (state) => {
 	return {
-		// contracts: state.contracts,
 		accounts: state.accounts[0],
 		networkId: state.web3.networkId,
 	};
