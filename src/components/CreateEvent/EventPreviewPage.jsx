@@ -343,7 +343,7 @@ class EventPreviewPage extends Component {
 										className={classes.clockTime}
 									>
 										<Clock
-											deadline={this.props.eventDate}
+											deadline={(this.props.eventTime=="onedayevent")?this.props.eventDate:this.props.eventStartDate}
 											event_unix={this.props.eventTime}
 										/>
 									</Grid>

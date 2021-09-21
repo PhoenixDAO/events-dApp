@@ -93,27 +93,43 @@ const Terms = (props) => {
 					sm={6}
 					xs={12}
 				>
-					<p>Last updated: January 23, 2021</p>
+					<p>Last updated: September 20th, 2021</p>
 					<p>
 						Please read these terms and conditions carefully before
 						using Our Service.
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								InterpretationAndDefinitions: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							InterpretationAndDefinitions: el,
+						})
 						}
 					>
 						Interpretation and Definitions
 					</h2>
+
+					<h6>
+						<strong>
+							{" "}
+							NB: This product from PhoenixDAO is
+							opensource/decentralized, meaning the project has
+							little to no control on its use (though it will
+							continue to make sure security of users remains a
+							high priority). Make sure as a user/event creator,
+							this is only used for social good as deemed fit by
+							all legal jurisdiction across the world. PhoenixDAO
+							cannot be held liable if a user uses the product for
+							any activity that breaches legality in
+							region/jurisdiction.{" "}
+						</strong>{" "}
+					</h6>
 					<h3
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Interpretation: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Interpretation: el,
+						})
 						}
 					>
 						Interpretation
@@ -127,10 +143,10 @@ const Terms = (props) => {
 					</p>
 					<h3
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Definitions: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Definitions: el,
+						})
 						}
 					>
 						Definitions
@@ -227,10 +243,10 @@ const Terms = (props) => {
 					</ul>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Acknowledgment: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Acknowledgment: el,
+						})
 						}
 					>
 						Acknowledgment
@@ -273,10 +289,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Websites: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Websites: el,
+						})
 						}
 					>
 						Links to Other Websites
@@ -304,10 +320,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Termination: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Termination: el,
+						})
 						}
 					>
 						Termination
@@ -324,10 +340,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Limitation: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Limitation: el,
+						})
 						}
 					>
 						Limitation of Liability
@@ -367,10 +383,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Disclaimer: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Disclaimer: el,
+						})
 						}
 					>
 						&quot;AS IS&quot; and &quot;AS AVAILABLE&quot;
@@ -424,10 +440,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Governing: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Governing: el,
+						})
 						}
 					>
 						Governing Law
@@ -440,10 +456,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Disputes: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Disputes: el,
+						})
 						}
 					>
 						Disputes Resolution
@@ -455,10 +471,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								European: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							European: el,
+						})
 						}
 					>
 						For European Union (EU) Users
@@ -470,10 +486,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								United: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							United: el,
+						})
 						}
 					>
 						United States Legal Compliance
@@ -489,20 +505,20 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								SeverabilityAndWaiver: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							SeverabilityAndWaiver: el,
+						})
 						}
 					>
 						Severability and Waiver
 					</h2>
 					<h3
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Severability: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Severability: el,
+						})
 						}
 					>
 						Severability
@@ -517,10 +533,10 @@ const Terms = (props) => {
 					</p>
 					<h3
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Waiver: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Waiver: el,
+						})
 						}
 					>
 						Waiver
@@ -535,10 +551,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Translation: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Translation: el,
+						})
 						}
 					>
 						Translation Interpretation
@@ -551,10 +567,10 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Changes: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Changes: el,
+						})
 						}
 					>
 						Changes to These Terms and Conditions
@@ -576,24 +592,39 @@ const Terms = (props) => {
 					</p>
 					<h2
 						ref={(el) =>
-							(pageRefs.current = {
-								...pageRefs.current,
-								Contact: el,
-							})
+						(pageRefs.current = {
+							...pageRefs.current,
+							Contact: el,
+						})
 						}
 					>
 						Contact Us
 					</h2>
 					{/* <ul> */}
 					<p>
-						for any enquiries or questions please contact the
-						platform moderators:
-						<a
-							href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=events@phoenixdao.io"
-							target="_blank"
-						>
-							events@phoenixdao.io
-						</a>
+						If you have any questions about these Terms and
+						Conditions, You can contact us:
+						<ul>
+							<li>
+								By email:{" "}
+								<a
+									href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=hello@phoenixdao.io"
+									target="_blank"
+								>
+									hello@phoenixdao.io
+								</a>
+							</li>
+							<li>
+								{" "}
+								By visiting this page on our website:
+								<a
+									href="https://phoenixdao.io/contact"
+									target="_blank"
+								>
+									www.phoenixdao.io/contact	
+																</a>
+							</li>
+						</ul>
 					</p>
 
 					{/* <li>	

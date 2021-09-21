@@ -48,6 +48,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	menuPaper: {
 		maxHeight: "200px",
+		right:"10% !important",
+
 	},
 	formControls: {
 		"@media (max-width: 600px)": {
@@ -391,7 +393,6 @@ const Analytics = (props, context) => {
 		// getPhnxRevenue();
 		getViewsAndFavourites();
 		handleTimeStampChange();
-		console.log("recalled");
 		// loadApis();
 	}, [props.graphData, customDate.startDate, customDate.endDate]);
 
@@ -413,15 +414,11 @@ const Analytics = (props, context) => {
 	// 	const timeData = await getTimeData(
 	// 		props.accounts
 	// 	);
-	// 	console.log("timeData", timeData);
 	// 	setGraphData(timeData);
-	// 	console.log("timestamp", Number(moment().unix()));
 	// 	const todayData = await getTodayData(
 	// 		props.accounts,
 	// 		Number(moment().unix()- 86400)
 	// 	);
-	// 	console.log("time stamp--- ", moment().unix())
-	// 	console.log("todayData", todayData);
 	// 	setTodayGraphData(todayData);
 	// 	handleTimeStampChange(null, todayData);
 	// };
@@ -483,7 +480,6 @@ const Analytics = (props, context) => {
 		accounts: props.accounts,
 		revenueCategory: revenueCategory,
 	});
-	// console.log("events", events);
 	//for graph datasets
 	let dataset = [];
 	const data = (canvas, graph) => {
@@ -528,8 +524,6 @@ const Analytics = (props, context) => {
 	};
 
 	const handleEvent = (event, picker) => {
-		console.log("startdate", moment(picker.startDate._d).unix());
-		console.log("enddate", moment(picker.endDate._d).unix());
 		// setStartDate(moment(picker.startDate._d).unix());
 		// setEndDate(moment(picker.endDate._d).unix());
 		setCustomDate({
@@ -542,7 +536,6 @@ const Analytics = (props, context) => {
 		let phnxLabel = [];
 		let phxData = {};
 		setlegend("REVENUE (PHNX) ");
-		console.log(graphDays);
 		for (let i = 0; i < graphDays.length; i++) {
 			let key = graphDays[i].startTimeStamp;
 			if (key in phxData) {
@@ -682,7 +675,6 @@ const Analytics = (props, context) => {
 	};
 	const Top5Events = () => {
 		if (events.length == 0) {
-			// console.log("MyEvents", events);
 			return (
 				<p
 					className="text-center not-found"
@@ -717,11 +709,14 @@ const Analytics = (props, context) => {
 					>
 						{revenueCategory == "eventRevenueInPhnx"
 							? (
-									event.eventRevenueInPhnx /
-									1000000000000000000
-							  ).toFixed(3) + " PHNX"
+								event.eventRevenueInPhnx /
+								1000000000000000000
+							).toFixed(3) + " PHNX"
 							: "$ " +
-							  (event.eventRevenueInDollar / 1000000).toFixed(3)}
+							(
+								event.eventRevenueInDollar /
+								1000000000000000000
+							).toFixed(3)}
 					</Grid>
 				</Grid>
 			));
@@ -735,7 +730,6 @@ const Analytics = (props, context) => {
 		settimeLabel("DATE");
 		let newDataObj = {};
 		const timeDataArr = data;
-		console.log("Day helper", data);
 		for (let i = 0; i < timeDataArr.length; i++) {
 			if (newDataObj[timeDataArr[i].startTimeStamp]) {
 				const soldTickets = Number(
@@ -763,27 +757,20 @@ const Analytics = (props, context) => {
 			}
 		}
 
-		console.log("newDataObj", newDataObj);
 		const todayTimeStamp = Number(moment().unix());
-		console.log("todayTimeStamp", todayTimeStamp);
 		const today = new Date();
 		const d = new Date(today.setHours(0, 0, 0, 0));
 		d.setDate(d.getDate() - day);
 		d.setHours(0, 0, 0, 0);
 		d.setUTCHours(0, 0, 0, 0);
 		const calculatedTimestamp = moment(d).unix() + 172800;
-		console.log("calculatedTimestamp", calculatedTimestamp);
-
 		const d1 = new Date(today.setHours(0, 0, 0, 0));
 		d1.setDate(d1.getDate() - (day + day));
 		d1.setHours(0, 0, 0, 0);
 		d1.setUTCHours(0, 0, 0, 0);
 		const calculatedTimestamp1 = moment(d1).unix() + 172800;
-		console.log("calculatedTimestamp1", calculatedTimestamp1);
-
 		let dataArr = [];
 		for (let i = calculatedTimestamp; i <= todayTimeStamp; i = i + 86400) {
-			console.log("newDataObj[i]", newDataObj[i]);
 			if (newDataObj[i]) {
 				dataArr.push(newDataObj[i]);
 			} else {
@@ -803,7 +790,6 @@ const Analytics = (props, context) => {
 			i <= calculatedTimestamp - 86400;
 			i = i + 86400
 		) {
-			console.log("newDataObj[i]", newDataObj[i]);
 			if (newDataObj[i]) {
 				dataArr1.push(newDataObj[i]);
 			} else {
@@ -846,38 +832,21 @@ const Analytics = (props, context) => {
 		setTimeStamp(timestamp);
 		let today = Math.floor(Date.now() / 1000);
 		let elapsedTime = today - timestamp;
-		console.log("graph", props.graphData);
 		if (props.graphData.length != 0) {
 			let graphForDays = [];
 			let difference = [];
-			console.log("called herer");
 			if (timestamp === "86400") {
 				settimeLabel("TIME");
-				console.log("graphData", "called here");
 				if (props.todayGraphData.length > 0) {
 					const minutes = moment().minutes();
 					const createdDate = moment().minutes(0).seconds(0).unix();
-					console.log(
-						"graphData",
-						"else if called here",
-						props.todayGraphData
-					);
 					graphForDays = props.todayGraphData;
 					difference = await getTodayData(
 						props.accounts,
 						Number(createdDate - 172800)
 					);
 				}
-				console.log("moment", moment().unix(), Date.now() / 1000);
 			} else if (timestamp === "custom") {
-				console.log(
-					"graphData",
-					props.graphData,
-					"start",
-					customDate.startDate,
-					"end",
-					customDate.endDate
-				);
 				graphForDays = props.graphData.filter(
 					(event) =>
 						customDate.startDate <= event.startTimeStamp &&
@@ -900,30 +869,18 @@ const Analytics = (props, context) => {
 					betweenDays,
 					"days"
 				);
-				console.log(
-					"newStartDate",
-					moment(newStartDate).unix(),
-					"betweenDays",
-					betweenDays,
-					"newEndDate",
-					moment(newEndDate).unix()
-				);
 
 				difference = props.graphData.filter(
 					(event) =>
 						moment(newStartDate).unix() <= event.startTimeStamp &&
 						event.startTimeStamp <= moment(newEndDate).unix()
 				);
-				console.log("graph for days for custom", graphForDays);
-				console.log("difference", difference);
 			} else if (timestamp === "604800") {
 				const { dataArr, dataArr1 } = dayHelper(7, props.graphData);
-				console.log("DIfference in 7days", dataArr1, dataArr);
 				graphForDays = dataArr;
 				difference = dataArr1;
 			} else if (timestamp === "2419200") {
 				const { dataArr, dataArr1 } = dayHelper(28, props.graphData);
-				console.log("DIfference in 28days", dataArr1, dataArr);
 				graphForDays = dataArr;
 				difference = dataArr1;
 			} else if (timestamp === "7776000") {
@@ -933,13 +890,11 @@ const Analytics = (props, context) => {
 			}
 			// else {
 			// 	settimeLabel("DATE");
-			// 	console.log("graphData", props.graphData);
 			// 	graphForDays = props.graphData.filter(
 			// 		(event) => event.startTimeStamp >= elapsedTime
 			// 	);
 			// }
 			setGraphDays(graphForDays);
-			console.log("graph data in analytics", graphForDays);
 			let totalDollarRevenue = 0;
 			let totalPhnxRevenue = 0;
 			let soldTicket = 0;
@@ -950,10 +905,11 @@ const Analytics = (props, context) => {
 				if (timestamp === "86400") {
 					const createdDate = moment().minutes(0).seconds(0).unix();
 					if (event.startTimeStamp <= createdDate - 86400) {
-						totalDollarPrev +=
-							Number(event.totalDollarRevenue.toString()) /
-							1000000;
-						console.log("totalDollarPrev", totalDollarPrev);
+						// totalDollarPrev +=
+						// 	Number(event.totalDollarRevenue.toString()) /
+						// 	1000000;
+						totalDollarPrev += Number(
+							Web3.utils.fromWei(event.totalDollarRevenue.toString()))
 						totalSoldTicketsPrev += Number(
 							event.soldTickets.toString()
 						);
@@ -964,9 +920,9 @@ const Analytics = (props, context) => {
 						);
 					}
 				} else {
-					totalDollarPrev +=
-						Number(event.totalDollarRevenue.toString()) / 1000000;
-					console.log("totalDollarPrev", totalDollarPrev);
+					// totalDollarPrev +=
+					// 	Number(event.totalDollarRevenue.toString()) / 1000000;
+					totalDollarPrev +=Number(Web3.utils.fromWei(event.totalDollarRevenue.toString()));
 					totalSoldTicketsPrev += Number(
 						event.soldTickets.toString()
 					);
@@ -975,20 +931,17 @@ const Analytics = (props, context) => {
 					);
 				}
 			});
-			console.log("totalSoldTicketsPrev", totalSoldTicketsPrev);
 			if (graphForDays.length > 0) {
 				graphForDays.forEach((event) => {
-					totalDollarRevenue +=
-						Number(event.totalDollarRevenue.toString()) / 1000000;
-					console.log("totalDollarRevenue", totalDollarRevenue);
+					// totalDollarRevenue +=Number(event.totalDollarRevenue.toString()) / 1000000;
+					totalDollarRevenue +=Number(Web3.utils.fromWei(event.totalDollarRevenue.toString()));
+
 					soldTicket += Number(event.soldTickets.toString());
-					totalPhnxRevenue += event.totalPhnxRevenue/1000000000000000000
+					totalPhnxRevenue += event.totalPhnxRevenue / 1000000000000000000
 				});
 
-				console.log("DIFFERENCE", difference);
 				// totalPhnxRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
 				// totalDollarRevenue = parseFloat(totalPhnxRevenue).toFixed(3);
-				console.log("totalDollarRevenue", totalDollarRevenue);
 				let liveDollarRevenue = await getPhoenixDAOMarketValue(
 					totalDollarRevenue
 				);
@@ -998,11 +951,16 @@ const Analytics = (props, context) => {
 				setSoldTicket(soldTicket);
 				//calculate data for change and difference of cards
 				let lastIndex = graphForDays.length - 1;
-				let originalNumber =
-					graphForDays[0].totalDollarRevenue / 1000000;
-				let newNumber =
-					graphForDays[lastIndex].totalDollarRevenue / 1000000;
-				console.log("phnx", originalNumber, newNumber);
+				// let originalNumber =
+				// 	graphForDays[0].totalDollarRevenue / 1000000;
+				// let newNumber =
+				// 	graphForDays[lastIndex].totalDollarRevenue / 1000000;
+				let originalNumber = Web3.utils.fromWei(
+					graphForDays[0].totalDollarRevenue.toString()
+				);
+				let newNumber = Web3.utils.fromWei(
+					graphForDays[lastIndex].totalDollarRevenue.toString()
+				);
 				let PHNXoriginalNumber = Web3.utils.fromWei(
 					graphForDays[0].totalPhnxRevenue.toString()
 				);
@@ -1032,18 +990,10 @@ const Analytics = (props, context) => {
 				setPhnxChange(PhnxChange);
 				setDollarChange(price);
 				setTicketSoldChange(ticketChange);
-				console.log("new", newNumber, originalNumber);
 				// originalNumber = Web3.utils.fromWei(graphForDays[0].totalDollarRevenue);
 				// newNumber = Web3.utils.fromWei(graphForDays[lastIndex].totalDollarRevenue);
 				let dollartDifference =
 					totalDollarRevenue - (totalDollarRevenue - totalDollarPrev);
-				console.log(
-					"totalDollarPrev",
-					totalDollarPrev,
-					"totalDollarRevenue",
-					totalDollarRevenue,
-					"dollartDifference"
-				);
 				setdollarDifference(
 					totalDollarPrev > totalDollarRevenue
 						? -(totalDollarPrev - totalDollarRevenue)
@@ -1058,25 +1008,12 @@ const Analytics = (props, context) => {
 				);
 				let ticketsDifference =
 					soldTicket - (soldTicket - totalSoldTicketsPrev);
-				console.log(
-					"totalSoldTicketsPrev",
-					totalSoldTicketsPrev,
-					"soldTicket",
-					soldTicket,
-					"ticketsDifference",
-					ticketsDifference
-				);
 				setTicketDifference(
 					totalSoldTicketsPrev > soldTicket
 						? -(totalSoldTicketsPrev - soldTicket)
 						: soldTicket - totalSoldTicketsPrev
 				);
 			} else {
-				console.log(
-					"GRpah for day else called",
-					graphForDays,
-					dollarRevenue
-				);
 				setDollarRevenue(0);
 				setPhnxRevenue(0);
 				setSoldTicket(0);
@@ -1143,7 +1080,6 @@ const Analytics = (props, context) => {
 	return (
 		<div>
 			<Header title="Analytics" page="analytics" phnxButton="true" />
-			{console.log("event analytics: ", props)}
 			{props.eventName.length > 0 ? (
 				<Grid container className={classes.content}>
 					<Grid className={classes.row}>
@@ -1225,12 +1161,12 @@ const Analytics = (props, context) => {
 								onShow={
 									timeStamp === "custom"
 										? (e, p) =>
-												console.log(
-													"event",
-													e,
-													"picker",
-													p
-												)
+											console.log(
+												"event",
+												e,
+												"picker",
+												p
+											)
 										: null
 								}
 								onEvent={handleEvent}
@@ -1249,7 +1185,6 @@ const Analytics = (props, context) => {
 						</div>
 					</Grid>
 					<Grid container style={{ justifyContent: "space-evenly" }}>
-						{console.log("DOLLAR REVENUE", dollarRevenue)}
 						<Card
 							color="#E5AB00"
 							click={getDollarRevenue}
@@ -1368,7 +1303,6 @@ const Analytics = (props, context) => {
 														);
 													})}
 										</Select> */}
-											{/* {console.log("event name", (eventNames)&&eventNames['eventId'])} */}
 											{eventNames && (
 												<Select
 													fullWidth
@@ -1528,15 +1462,15 @@ const Analytics = (props, context) => {
 					container
 					className={`${classes.emptyContent} ${classes.content}`}
 				>
-					<Grid container style={{paddingBottom:"30px"}}>
+					<Grid container style={{ paddingBottom: "30px" }}>
 						<EmptyStateAnalytics />
 					</Grid>
 					<Grid>
-					<EventsAnalytics
-						userDetails={userDetails}
-						createdEvents={props.eventName.length}
-						ticketBought={props.ticketBought}
-					/>
+						<EventsAnalytics
+							userDetails={userDetails}
+							createdEvents={props.eventName.length}
+							ticketBought={props.ticketBought}
+						/>
 					</Grid>
 				</Grid>
 			)}

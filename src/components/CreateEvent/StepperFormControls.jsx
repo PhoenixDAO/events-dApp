@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { pricingFormatter } from "../../utils/pricingSuffix";
+import RichTextEditor from "react-rte";
 import Geonames from "geonames.js";
 import PropTypes from "prop-types";
 
@@ -45,7 +46,7 @@ const initialFormValues = {
 	restrictWallet: false,
 	ticketIndex: 0,
 	ticketName: "",
-	dollarPrice: "",
+	dollarPrice: "0",
 	phnxPrice: "",
 	ticketAvailability: "unlimited",
 	noOfTickets: "",
@@ -53,7 +54,7 @@ const initialFormValues = {
 	ticketCategories: [
 		{
 			ticketName: "",
-			dollarPrice: "",
+			dollarPrice: "0",
 			phnxPrice: "",
 			ticketAvailability: "unlimited",
 			noOfTickets: "",
@@ -101,7 +102,7 @@ export const useFormControls = () => {
 		const tkt = values.ticketCategories;
 		tkt[0] = {
 			ticketName: "",
-			dollarPrice: "",
+			dollarPrice: "0",
 			phnxPrice: "",
 			ticketAvailability: "unlimited",
 			noOfTickets: "",
@@ -248,11 +249,12 @@ export const useFormControls = () => {
 				: "This field is required.";
 
 		//4th_stepper
-		if ("eventDescription" in fieldValues)
-			temp.eventDescription =
-				fieldValues.eventDescription.length > 500
-					? ""
-					: "Min 500 characters.";
+		if ("eventDescription" in fieldValues) {
+			let count = fieldValues.eventDescription
+				.toString("html")
+				.replace(/<[^>]*>/g, "").length;
+			temp.eventDescription = count > 50 ? "" : `${count}/50`;
+		}
 
 		if ("termsAndConditions" in fieldValues)
 			temp.termsAndConditions = fieldValues.termsAndConditions
@@ -534,14 +536,14 @@ export const useFormControls = () => {
 			[name]: value,
 			ticketIndex: 0,
 			ticketName: "",
-			dollarPrice: "",
+			dollarPrice: "0",
 			phnxPrice: "",
 			ticketAvailability: "unlimited",
 			noOfTickets: "",
 			ticketCategories: [
 				{
 					ticketName: "",
-					dollarPrice: "",
+					dollarPrice: "0",
 					phnxPrice: "",
 					ticketAvailability: "unlimited",
 					noOfTickets: "",
@@ -587,8 +589,6 @@ export const useFormControls = () => {
 	const handleTicketCatogory = (event, index, fieldValues = values) => {
 		const { name, value, min, max } = event.target;
 		const { ticketCategories } = fieldValues;
-		console.log("min", min, "max", max);
-
 		if (name === "dollarPrice") {
 			if (value.length > 16) {
 				return;
@@ -648,7 +648,7 @@ export const useFormControls = () => {
 			setValues({
 				...values,
 				ticketName: "",
-				dollarPrice: "",
+				dollarPrice: "0",
 				phnxPrice: "",
 				ticketAvailability: "unlimited",
 				noOfTickets: "",
@@ -662,7 +662,7 @@ export const useFormControls = () => {
 		const { ticketCategories } = fieldValues;
 		const newCat = {
 			ticketName: "",
-			dollarPrice: "",
+			dollarPrice: "0",
 			phnxPrice: "",
 			ticketAvailability: "unlimited",
 			noOfTickets: "",
@@ -694,8 +694,6 @@ export const useFormControls = () => {
 
 	const handleEditTicketCategory = (index, fieldValues = values) => {
 		const { ticketCategories } = fieldValues;
-		console.log(ticketCategories[index]);
-
 		setValues({
 			...values,
 			ticketIndex: index,
@@ -762,8 +760,6 @@ export const useFormControls = () => {
 		} = fieldValues;
 
 		if (eventTime === "onedayevent") {
-			console.log("onedayevent");
-
 			let eventDateOneDay = eventDate;
 			let eventStartTimeOneday = eventStartTime;
 			let eventEndTimeOneday = eventEndTime;
@@ -811,7 +807,6 @@ export const useFormControls = () => {
 				}
 			}
 		} else {
-			console.log("morethanaday");
 			let eventDateOneDay = eventStartDate;
 			let eventEndDateOneDay = eventEndDate;
 			let eventStartTimeOneday = eventStartTime;
@@ -841,7 +836,6 @@ export const useFormControls = () => {
 			} else {
 				const diffTime = eventEndDateOneDay - eventDateOneDay;
 				const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-				console.log(diffDays + " days");
 				if (diffDays > 0) {
 					if (eventEndTimeOneday) {
 						eventEndTimeOneday.setFullYear(

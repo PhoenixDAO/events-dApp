@@ -59,7 +59,7 @@ import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
 import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
-import GetGraphApi ,{ getNetworkId } from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
@@ -201,6 +201,11 @@ const styles = (theme) => ({
 	row: {
 		marginTop: "40px",
 	},
+	eventDescriptionFont:{
+		"& .RichTextEditor__root___2QXK-":{
+			fontFamily: "sans-serif",
+		}
+	},
 	heading: {
 		borderBottom: "1px solid #E4E4E7",
 		fontWeight: "700",
@@ -326,13 +331,11 @@ class EventPage extends Component {
 	// 	const blockChainEvent = await openEvents.methods
 	// 		.events(this.props.match.params.id)
 	// 		.call();
-	// 		console.log("blockChain Events in eventPage",blockChainEvent)
 	// 	this.setState({
 	// 		blockChainEvent: blockChainEvent,
 	// 		blockChainEventLoaded: true,
 	// 	});
 	// 	this.updateIPFS();
-	// 	// console.log("temp Event web3",blockChainEvent)
 	// }
 
 	userExists(buyers, account) {
@@ -391,10 +394,6 @@ class EventPage extends Component {
 			},
 		})
 			.then(async (graphEvents) => {
-				console.log(
-					"GraphQL query response of events in eventPage",
-					graphEvents.data
-				);
 				if (graphEvents.data.data.events.length > 0) {
 					this.setState({
 						blockChainEvent: graphEvents.data.data.events[0],
@@ -579,13 +578,11 @@ class EventPage extends Component {
 	}
 
 	async getPhoenixDAOMarketValue() {
-		console.log("request sent to the server");
 		fetch(
 			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
 		)
 			.then((res) => res.json())
 			.then((data) => {
-				console.log("phnx price", data);
 				this.setState({ PhoenixDAO_market: data.phoenixdao });
 			})
 			.catch(console.log);
@@ -647,25 +644,19 @@ class EventPage extends Component {
 	priceCalculation = (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
 		let phnx_price = event_data.prices.map((price) => {
-			return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
-				2
+			// return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
+			// 	2
+			// );
+			return (Web3.utils.fromWei(price.toString()) / this.state.PhoenixDAO_market.usd).toFixed(
+				3
 			);
 		});
 
-		let dollar_price = event_data.prices[categoryIndex] / 1000000;
+		let dollar_price = Web3.utils.fromWei(event_data.prices[categoryIndex].toString());
 		let priceInPhnx = event_data.token
 			? phnx_price[categoryIndex] + "PHNX"
 			: "FREE";
 		let priceInDollar = event_data.token ? "$" + dollar_price : "";
-
-		console.log(
-			"price in phnx",
-			this.state.PhoenixDAO_market,
-			event_data,
-			phnx_price,
-			categoryIndex,
-			priceInPhnx
-		);
 		this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
 	};
 	getImage = () => {
@@ -708,36 +699,68 @@ class EventPage extends Component {
 	};
 
 	handleClickOpen2 = async () => {
-		const result = await this.checkUserBalance();
-		this.setState({
-			disableBuyTicketBtn: result,
-		});
-		if (!result) {
-			if (
-				this.props.networkId != GLOBAL_NETWORK_ID &&
-				this.props.networkId != GLOBAL_NETWORK_ID_2
-			) {
-				this.setState({
-					open3: true,
-					open3Message: "Please connect to Rinkbey or Goerli network",
-				});
-			} else {
-				// this.setState({ open2: true });
-				if (this.state.oneTimeBuy) {
-					let buyers = this.state.soldTicket;
-					const account = this.props.accounts[0];
-					if (this.userExists(buyers, account)) {
-						// alert("One time buy");
+		if (
+			this.props.networkId != GLOBAL_NETWORK_ID &&
+			this.props.networkId != GLOBAL_NETWORK_ID_2
+		) {
+			this.setState({
+				open3: true,
+				open3Message: "Please connect to Rinkeby network",
+			});
+		} else {
+			// this.setState({ open2: true });
+			if (this.state.oneTimeBuy) {
+				let buyers = this.state.soldTicket;
+				const account = this.props.accounts[0];
+				if (this.userExists(buyers, account)) {
+					// alert("One time buy");
+					this.setState({
+						open3: true,
+						open3Message:
+							"This event is restricted to one wallet address, you can't buy it again.",
+					});
+				} else {
+					if ((await this.allowance()) == 0) {
+						let balance = await this.props.phnxContract.methods
+							.totalSupply()
+							.call();
 						this.setState({
-							open3: true,
-							open3Message:
-								"This event is restricted to one wallet address, you can't buy it again.",
+							approve: this.props.phnxContract.methods.approve(
+								this.props.eventsAddress,
+								balance
+							),
 						});
+						this.handleClickOpen();
 					} else {
+						const result = await this.checkUserBalance();
+						this.setState({
+							disableBuyTicketBtn: result,
+						});
+						if (!result) {
+							this.setState({ open2: true });
+						}
+					}
+				}
+			} else {
+				if ((await this.allowance()) == 0) {
+					let balance = await this.props.phnxContract.methods
+						.totalSupply()
+						.call();
+					this.setState({
+						approve: this.props.phnxContract.methods.approve(
+							this.props.eventsAddress,
+							balance
+						),
+					});
+					this.handleClickOpen();
+				} else {
+					const result = await this.checkUserBalance();
+					this.setState({
+						disableBuyTicketBtn: result,
+					});
+					if (!result) {
 						this.setState({ open2: true });
 					}
-				} else {
-					this.setState({ open2: true });
 				}
 			}
 		}
@@ -831,28 +854,32 @@ class EventPage extends Component {
 	}
 
 	checkUserBalance = async () => {
-		let balance = await this.props.phnxContract.methods
-			.balanceOf(this.props.accounts[0])
-			.call();
-		console.log(
-			"PHNx balance of the user",
-			balance,
-			this.state.blockChainEvent
-		);
-		balance = Web3.utils.fromWei(balance.toString());
-
-		console.log("less price", balance, this.state.phnx_price);
-		if (balance < Number(this.state.phnx_price.split("PHNX")[0])) {
-			return true;
+		const networkId = await getNetworkId();
+		if (
+			networkId === GLOBAL_NETWORK_ID ||
+			networkId === GLOBAL_NETWORK_ID_2
+		) {
+			let balance = await this.props.phnxContract.methods
+				.balanceOf(this.props.accounts[0])
+				.call();
+			balance = Web3.utils.fromWei(balance.toString());
+			if (balance < Number(this.state.phnx_price.split("PHNX")[0])) {
+				return true;
+			} else {
+				this.setState({
+					disableBuyTicketBtn: false,
+				});
+				return false;
+			}
 		} else {
-			this.setState({
-				disableBuyTicketBtn: false,
-			});
 			return false;
 		}
 	};
 
 	inquire = async () => {
+		let event_data = this.state.blockChainEvent;
+		let date2 = new Date(parseInt(event_data.time, 10) * 1000);
+
 		let balance = await this.props.phnxContract.methods
 			.totalSupply()
 			.call();
@@ -865,7 +892,6 @@ class EventPage extends Component {
 			minute: "2-digit",
 		});
 		const geoFindUser = await this.geoFindMe();
-		console.log("selectedIndex", this.state.selectedCategoryIndex);
 		this.setState(
 			{
 				fee: this.state.blockChainEvent[2],
@@ -894,13 +920,14 @@ class EventPage extends Component {
 						this.state.buyticket,
 						this.state.approve,
 						this.state.eventTime,
-						this.state.eventDate,
+						date2, // this.state.eventDate,
 						this.state.eventEndDate,
 						this.state.image,
 						this.state.blockChainEvent.name,
 						this.state.phnx_price,
 						this.state.dollar_price,
-						time
+						time,
+						date2
 					);
 				}
 			}
@@ -982,9 +1009,7 @@ class EventPage extends Component {
 			});
 			if (avatarCustom) {
 				ipfs.get(avatar).then((file) => {
-					// console.log("ipfs file,", file);
 					let data = JSON.parse(file[0].content.toString());
-					// console.log("dataaaa", data.image0);
 					this.setState({
 						avatar: data.image0,
 					});
@@ -1033,15 +1058,6 @@ class EventPage extends Component {
 					allowBuySnackbar: true,
 					SnackbarMessage: "This event is already ended",
 				});
-				console.log(
-					"allow buy in if",
-					Number(this.state.blockChainEvent.time),
-					moment().unix(),
-					parseInt(this.state.blockChainEvent.tktTotalQuantitySold) >=
-						parseInt(this.state.blockChainEvent.tktTotalQuantity),
-					this.state.blockChainEvent.tktTotalQuantitySold,
-					this.state.blockChainEvent.tktTotalQuantity
-				);
 				return false;
 			} else if (
 				this.state.blockChainEvent.catTktQuantity[index] != 0 &&
@@ -1063,9 +1079,7 @@ class EventPage extends Component {
 	checkUserTicketLocation = async () => {
 		const eventId = this.props.match.params.id;
 		const users = await generateBuyerArr(eventId);
-		console.log("All userss", users);
 		let event_data = this.state.blockChainEvent;
-		console.log("event data", event_data);
 		for (let i = 0; i < users.length; i++) {
 			if (users[i].address === this.props.accounts[0].toLowerCase()) {
 				this.setState({
@@ -1121,8 +1135,8 @@ class EventPage extends Component {
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-							this.state.selectedCategoryIndex
-					  ]
+					this.state.selectedCategoryIndex
+					]
 					: "∞";
 
 				let disabled = false;
@@ -1133,14 +1147,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-							this.state.selectedCategoryIndex
+						this.state.selectedCategoryIndex
 						]
 					) >=
-						Number(
-							event_data.catTktQuantity[
-								this.state.selectedCategoryIndex
-							]
-						)
+					Number(
+						event_data.catTktQuantity[
+						this.state.selectedCategoryIndex
+						]
+					)
 				) {
 					// disabled = true;
 					// disabledStatus = (
@@ -1213,6 +1227,7 @@ class EventPage extends Component {
 								eventTitle={event_data.name}
 								date={event_date}
 								time={time}
+								date2={date}
 								buy={this.inquire}
 								buttonText={buttonText}
 								eventTime={this.state.eventTime}
@@ -1241,7 +1256,7 @@ class EventPage extends Component {
 								}}
 								open={this.state.disableBuyTicketBtn}
 								onClose={this.handleCloseSnackbar4}
-								message="You dont have enought PHNX token to buy the ticket"
+								message="You do not have enough PHNX token to buy the ticket"
 								autoHideDuration={3000}
 								key={"top" + "center"}
 								className="snackbar"
@@ -1359,31 +1374,31 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-																(
-																	category,
-																	i
-																) => (
-																	<MenuItem
-																		value={
-																			i
+															(
+																category,
+																i
+															) => (
+																<MenuItem
+																	value={
+																		i
+																	}
+																	style={{
+																		fontFamily:
+																			"'Aeonik', sans-serif",
+																	}}
+																>
+																	<span
+																		className={
+																			classes.selectWidth
 																		}
-																		style={{
-																			fontFamily:
-																				"'Aeonik', sans-serif",
-																		}}
 																	>
-																		<span
-																			className={
-																				classes.selectWidth
-																			}
-																		>
-																			{
-																				category
-																			}
-																		</span>
-																	</MenuItem>
-																)
-														  )
+																		{
+																			category
+																		}
+																	</span>
+																</MenuItem>
+															)
+														)
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1435,11 +1450,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-												  "onedayevent"
-												? moment(
+													"onedayevent"
+													? moment(
 														this.state.eventDate
-												  ).format("Do MMM, YYYY")
-												: `
+													).format("Do MMM, YYYY")
+													: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1453,24 +1468,24 @@ class EventPage extends Component {
 											{!this.state.eventStartTime
 												? `Time`
 												: !this.state.eventEndTime
-												? moment(
+													? moment(
 														this.state
 															.eventStartTime
-												  )
+													)
 														.utcOffset(0)
 														.format("hh:mma z")
-												: `${moment(
+													: `${moment(
 														this.state
 															.eventStartTime
-												  )
+													)
 														.utcOffset(0)
 														.format(
 															"hh:mma"
 														)} - ${moment(
-														this.state.eventEndTime
-												  )
-														.utcOffset(0)
-														.format("hh:mma z")}`}
+															this.state.eventEndTime
+														)
+															.utcOffset(0)
+															.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
@@ -1492,8 +1507,8 @@ class EventPage extends Component {
 										<p className={classes.eventinfo}>
 											{
 												event_data.catTktQuantitySold[
-													this.state
-														.selectedCategoryIndex
+												this.state
+													.selectedCategoryIndex
 												]
 												// event_data.tktTotalQuantitySold
 											}
@@ -1830,7 +1845,7 @@ class EventPage extends Component {
 					giveApproval={this.giveApproval}
 				/>
 
-				{body}
+				<span className={classes.eventDescriptionFont}>{body}</span>
 			</div>
 		);
 	}
@@ -1875,10 +1890,9 @@ class EventPage extends Component {
 		this._isMounted = false;
 	}
 	async componentDidUpdate(prevProps) {
-		// console.log("this.props.userDetails", this.props.userDetails);
-		// console.log("prevProps.userDetails", prevProps.userDetails);
 		if (this.props.purchased !== prevProps.purchased) {
-			this.loadEventFromBlockchain();
+			await this.loadEventFromBlockchain();
+			await this.checkUserTicketLocation();
 			let buyers = await generateBuyerArr(this.props.match.params.id);
 			this.setState({ soldTicket: buyers });
 		}

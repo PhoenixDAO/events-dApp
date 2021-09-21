@@ -30,6 +30,7 @@ import { toast } from "react-toastify";
 //eventCard
 import EventCard from "./common/EventCard";
 import SkeletonLayout from "./common/SkeletonLayout.jsx";
+import { getNetworkId } from "../config/getGraphApi.js";
 
 var moment = require("moment");
 
@@ -50,15 +51,7 @@ class Event extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-			//Importing PhoenixDAO contracts
-			// **** ENDS UP HERE, SO THIS WORKS
-			/*console.log(
-			  "SUCCESS",
-			  PhoenixDAO_Testnet_Token_Address,
-			  context.drizzle.contracts
-			);*/
 		} catch (e) {
-			//console.log("ERROR", PhoenixDAO_Testnet_Token_Address, e);
 		}
 		super(props);
 		this.contracts = this.props.eventsContract;
@@ -66,10 +59,6 @@ class Event extends Component {
 		// 	this.props.id
 		// );
 		this.organizerName = "qwerty";
-		// this.contracts["DaoEvents"].methods.getOwnerDetails.cacheCall(
-		// 	this.props.id
-		// );
-		// console.log("this.props.eventData 123",this.props.eventData,this.props.accounts[0])
 		this.account = this.props.accounts[0];
 		this.state = {
 			eventData: props.eventData,
@@ -419,7 +408,10 @@ class Event extends Component {
 	// }
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});
@@ -443,14 +435,13 @@ class Event extends Component {
 					},
 				}
 			);
-			console.log("get.data.result.favourites", get);
 			this.setState({
 				UserFavoriteEvents: get.data.result.userHldr.favourites,
 			});
 
 			return;
 		} catch (error) {
-			console.log("check error", error);
+			// console.log("check error", error);
 		}
 	};
 

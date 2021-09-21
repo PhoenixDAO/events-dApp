@@ -18,6 +18,7 @@ const AnalyticsWrapper = (props) => {
 	const [todayGraphData, setTodayGraphData] = useState([]);
 	useEffect(() => {
 		loadApis();
+		props.executeScroll();
 	}, []);
 	const loadApis = async () => {
 		const eventName = await getEventName(props.accounts);
@@ -30,22 +31,16 @@ const AnalyticsWrapper = (props) => {
 			.ticketsOf(props.accounts)
 			.call();
 		setTicketBought(blockChainTickets.length);
-		console.log("ticket bought", blockChainTickets);
 		// const timeData = await getTimeData(props.accounts);
 		const createdDate = moment().minutes(0).seconds(0).unix();
-		console.log("created date", createdDate);
 		const todayData = await getTodayData(
 			props.accounts,
 			Number(createdDate - 86400)
 		);
-		console.log("time stamp--- ", moment().unix());
-		console.log("todayData", todayData);
 		setTodayGraphData(todayData);
 
 		const timeData = await getTimeData(props.accounts);
-		console.log("timeData", timeData);
 		setGraphData(timeData);
-		console.log("timestamp", Number(moment().unix()));
 	};
 
 	const handleEvent = async (event) => {

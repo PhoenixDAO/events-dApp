@@ -5,8 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import Notify from "../Notify";
 
 import ipfs from "../../utils/ipfs";
-
-import Form from "./Form";
 import Loader from "./Loader";
 import Done from "./Done";
 
@@ -115,7 +113,6 @@ class CreateEvent extends Component {
 	};
 
 	onFlamingStepsChange = () => {
-		console.log("onFlamingStepsChange");
 		// this.setState({ activeFlamingStep: this.state.activeFlamingStep + 1 });
 		this.setState((prevState) => {
 			return {
@@ -125,7 +122,6 @@ class CreateEvent extends Component {
 	};
 
 	onHandleTxReject(err) {
-		console.log("onHandleTxReject", err);
 		this.setState((prevState) => {
 			return {
 				activeStep: prevState.activeStep - 1,
@@ -140,15 +136,12 @@ class CreateEvent extends Component {
 			.getEventsCount()
 			.call();
 		eventCount = Number(eventCount) + 1;
-		console.log("eventCount", eventCount);
-
 		var base_url = window.location.origin;
 		const shareUrl = `${base_url}/event/${eventCount}`;
 		this.setState({ shareUrl: shareUrl });
 	}
 
 	handleCreateEvent = async (clearStateCb) => {
-		console.log("handleCreateEvent111", this.state.fields);
 		this.stageUpdater(90);
 
 		let {
@@ -217,7 +210,7 @@ class CreateEvent extends Component {
 		for (var i = 0; i < ticketCategories.length; i++) {
 			categories.push(ticketCategories[i].ticketName);
 			prices.push(
-				Math.ceil(ticketCategories[i].dollarPrice * 1000000).toString()
+				Web3.utils.toWei(ticketCategories[i].dollarPrice.toString())
 			);
 
 			tktQntySold.push("0");
@@ -242,9 +235,6 @@ class CreateEvent extends Component {
 						: ticketCategories[i].noOfTickets
 				);
 		}
-
-		console.log("prices", prices);
-
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({
 			//new
@@ -274,7 +264,6 @@ class CreateEvent extends Component {
 		let buffer = Buffer.from(ipfsData);
 		ipfs.add(buffer, { pin: pinit })
 			.then(async (hash) => {
-				console.log("hashhh", hash[0].hash);
 				this.setState({
 					progressText: 100,
 				});
@@ -317,7 +306,6 @@ class CreateEvent extends Component {
 					.on("transactionHash", async (txhash) => {
 						// hash of tx
 						if (txhash !== null) {
-							console.log("txhash", txhash);
 							this.onFlamingStepsChange();
 							this.setState({
 								progressText: 0,
@@ -345,7 +333,6 @@ class CreateEvent extends Component {
 							const web3 = new Web3(infura);
 
 							let intervalVar = setInterval(async () => {
-								// console.log("web3.eth", web3.eth);
 								let receipt =
 									await web3.eth.getTransactionReceipt(
 										txhash
@@ -374,10 +361,8 @@ class CreateEvent extends Component {
 						}
 					})
 					.then(async (receipt) => {
-						console.log("receipt----->", receipt);
 					})
 					.catch((error) => {
-						console.log("tx error", error);
 						this.onHandleTxReject(error);
 						if (error !== null) {
 							txerror = error;
@@ -396,7 +381,6 @@ class CreateEvent extends Component {
 					});
 			})
 			.catch((error) => {
-				console.log("ipfs error", error);
 				this.onHandleTxReject(error);
 				if (error !== null) {
 					let txerror = error;
@@ -491,11 +475,8 @@ class CreateEvent extends Component {
 	};
 
 	readFile = (file) => {
-		console.log("readFile calling", file);
 		let reader = new window.FileReader();
-		console.log("reader", reader);
 		reader.readAsDataURL(file);
-		console.log("reader.readAsDataURL", reader);
 		reader.onloadend = () => this.convertAndUpload(reader);
 	};
 
@@ -503,7 +484,6 @@ class CreateEvent extends Component {
 		let data;
 		let pinit = process.env.NODE_ENV === "production";
 		if (this.state.data.fileHandle) {
-			console.log("fileHandle", true);
 			data = JSON.stringify({
 				image: reader.result,
 				text: this.state.data.description,
@@ -520,9 +500,6 @@ class CreateEvent extends Component {
 				topic: this.state.data.topic,
 			});
 		}
-
-		console.log("createevent data", data);
-
 		let buffer = Buffer.from(data);
 		ipfs.add(buffer, { pin: pinit })
 			.then((hash) => {
@@ -547,7 +524,6 @@ class CreateEvent extends Component {
 				);
 			})
 			.catch((error) => {
-				// console.log("error in convertAndUpload",error)
 				this.setState(
 					{
 						error: true,
@@ -601,7 +577,6 @@ class CreateEvent extends Component {
 	transactionChecker = (id) => {
 		this.tx_checkerInterval = setInterval(() => {
 			let tx = this.props.transactionStack[id];
-			console.log("tx -------->", tx);
 			if (typeof tx !== "undefined") {
 				this.setState({
 					upload: false,

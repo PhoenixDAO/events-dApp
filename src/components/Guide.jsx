@@ -143,7 +143,7 @@ const Terms = (props) => {
 					<div>
 					<div className={classes.centerItems}>
 						<div className={classes.videoResponsive}>
-						<iframe width="560" height="315" src="https://www.youtube.com/embed/Pj63VX1Jdxo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+						<iframe width="560" height="315" src="https://www.youtube.com/embed/TDt0VoXoNuM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 						</div>
 						<strong className={classes.walkThroughHeading}>
 							Walk through video
@@ -185,7 +185,7 @@ const Terms = (props) => {
 							</li>
 						</ul>
 
-						<p>[ Image to be entered ]</p>
+						{/* <p>[ Image to be entered ]</p> */}
 
 						<h3
 							ref={(el) =>
@@ -218,7 +218,7 @@ const Terms = (props) => {
 							</li>
 						</ul>
 
-						<p>[ 2 IMAGES TO BE ENTERED ]</p>
+						{/* <p>[ 2 IMAGES TO BE ENTERED ]</p> */}
 						<ul>
 							<li>
 								On the next step it will ask you to enter the
@@ -246,7 +246,13 @@ const Terms = (props) => {
 							Getting into app and connecting wallet - Ethereum /
 							Polygon configurations.
 						</h2>
-						<h3>Ethereum main-net</h3>
+						<h3 ref={(el) =>
+								(pageRefs.current = {
+									...pageRefs.current,
+									Ethereum: el,
+								})
+							}
+							>Ethereum main-net</h3>
 						<ul>
 							<li>
 								Open the PhoenixDAO Events Marketplace dApp.
@@ -258,7 +264,7 @@ const Terms = (props) => {
 							</li>
 						</ul>
 
-						<p>[ IMAGE TO BE ENTERED ]</p>
+						{/* <p>[ IMAGE TO BE ENTERED ]</p> */}
 					</div>
 					</div>
 				</Grid>
@@ -309,7 +315,7 @@ const Terms = (props) => {
 						>
 							Ethereum main-net
 						</h6>
-						<h6
+						{/* <h6
 							className={classes.menuSubHeading}
 							onClick={() => scrollIntoView("Import1")}
 						>
@@ -357,7 +363,7 @@ const Terms = (props) => {
 							onClick={() => scrollIntoView("Past")}
 						>
 							Past Events
-						</h6>
+						</h6> */}
 					</div>
 				</Grid>
 			</Grid>

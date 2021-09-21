@@ -43,7 +43,6 @@ import {
 import Wallet from "./common/Wallet";
 class Sidebar extends Component {
 	constructor(props, context) {
-		console.log("accounts props in sidebar", props.account);
 		super(props);
 		this.state = {
 			errorMessage: "",
@@ -64,8 +63,6 @@ class Sidebar extends Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		// console.log("this.props.userDetails", this.props.userDetails);
-		// console.log("prevProps.userDetails", prevProps.userDetails);
 		if (
 			JSON.stringify(this.props.userDetails) !==
 			JSON.stringify(prevProps.userDetails)
@@ -189,10 +186,7 @@ class Sidebar extends Component {
 	};
 
 	provideImage = () => {
-		console.log("this.props.userDetails", this.props.userDetails);
 		if (Object.keys(this.props.userDetails).length > 0) {
-			// console.log("userdetailsss", this.props.userDetails);
-			// console.log("", this.props.userDetails);
 			const avatarCustom =
 				this.props.userDetails.result.result.userHldr.avatarCustom;
 			const avatarId =
@@ -204,9 +198,7 @@ class Sidebar extends Component {
 			});
 			if (avatarCustom) {
 				ipfs.get(avatar).then((file) => {
-					// console.log("ipfs file,", file);
 					let data = JSON.parse(file[0].content.toString());
-					// console.log("dataaaa", data.image0);
 					this.setState({
 						avatar: data.image0,
 					});
@@ -217,8 +209,6 @@ class Sidebar extends Component {
 
 	renderImage = () => {
 		if (this.state.avatarCustom) {
-			// return <image
-			// console.log("avatar ipfs image", this.state.avatar);
 			return (
 				<img
 					src={this.state.avatar}
@@ -243,7 +233,6 @@ class Sidebar extends Component {
 
 	getNetworkId = async () => {
 		try {
-			console.log("WOrking....");
 			this.setState({
 				loading: true,
 			});
@@ -259,7 +248,6 @@ class Sidebar extends Component {
 			}
 			const networkId = await web3.eth.net.getId();
 
-			console.log("This called getNetworkId", networkId);
 			this.setState({
 				loading: false,
 			});
@@ -274,25 +262,20 @@ class Sidebar extends Component {
 				});
 				return;
 			} else {
-				console.log("network id not suported");
 			}
 			this.setState({
 				networkId: false,
 			});
 			return;
 		} catch (err) {
-			console.log("err", err);
 		}
 	};
 
 	getWalletError = () => {
-		console.log("metamask called");
 		let message = "";
 		if (!window.ethereum || !window.ethereum.isMetaMask) {
-			console.log("metamask not founnd");
 			message = <span>Please install Metamask</span>;
 		} else {
-			console.log("metamask founnd");
 			if (this.state.networkId) {
 				message = (
 					<span
@@ -313,7 +296,7 @@ class Sidebar extends Component {
 							className="switch-img"
 							src="/images/icons/switch.svg"
 						/>
-						Switch to rinkeby or goerli network
+						Please switch to Rinkeby
 					</span>
 				);
 			}
@@ -346,17 +329,6 @@ class Sidebar extends Component {
 							to="/accountdetails"
 							style={{ display: "flex", alignItems: "center" }}
 						>
-							{/* <img
-								src={makeBlockie(this.props.account)}
-								alt={this.props.account}
-							/> */}
-							{/* {console.log(
-								"this.props.userDetails",
-								this.props.userDetails
-							)} */}
-							{/* {this.provideImage(this.props.userDetails)} */}
-							{/* <img src="./images/metamask.svg" className="bird" /> */}
-
 							{this.renderImage()}
 
 							<span
@@ -384,11 +356,6 @@ class Sidebar extends Component {
 			this.props.account.length === 0 ||
 			!this.props.status
 		) {
-			console.log(
-				"I am doing that",
-				this.props.networkId == GLOBAL_NETWORK_ID ||
-					this.props.networkId == GLOBAL_NETWORK_ID_2
-			);
 			return (
 				<React.Fragment>
 					<Snackbar
@@ -656,6 +623,14 @@ class Sidebar extends Component {
 									</a>
 								</div>
 							</ul>
+							<span className="toggleHidden suggestion">
+								Kindly give us your feedback(s) <a style={{
+									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
+									textDecoration: "underline",
+									display: "flex",
+									alignItems: "center",
+								}} href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform" target="_blank">here</a>
+							</span>
 						</div>
 					</div>
 					<DialogueBox
@@ -995,8 +970,10 @@ class Sidebar extends Component {
 										<span className="toggleHidden">
 											Terms and Conditions
 										</span>
+
 									</NavLink>
 								</li>
+
 								<li style={{ display: "none" }}>
 									<ThemeSwitch />
 								</li>
@@ -1037,6 +1014,16 @@ class Sidebar extends Component {
 									</a>
 								</div>
 							</ul>
+							{/* <div className="toggleHidden suggestion"> */}
+							<span className="toggleHidden suggestion">
+								Kindly give us your feedback(s) <a style={{
+									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
+									textDecoration: "underline",
+									display: "flex",
+									alignItems: "center",
+								}} href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform" target="_blank">here</a>
+							</span>
+							{/* </div> */}
 						</div>
 					</div>
 				</React.Fragment>

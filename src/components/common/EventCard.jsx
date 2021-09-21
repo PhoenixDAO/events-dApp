@@ -102,6 +102,7 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: "'Aeonik', sans-serif",
 	},
 	FavoriteIcon: {
+		textAlign:"center",
 		border: "none",
 		backgroundColor: "#fff",
 		fontSize: 15,
@@ -135,7 +136,7 @@ const useStyles = makeStyles((theme) => ({
 	price: {
 		color: "#413AE2",
 		fontWeight: "700",
-		maxWidth: "34.33%",
+		maxWidth: "35.33%",
 		fontSize: "16px",
 		fontFamily: "'Aeonik', sans-serif !important",
 		"& p": {
@@ -161,8 +162,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	eventTitle: {
 		color: "#1E1E22",
-		maxWidth: "65.66%",
-		fontSize: 16,
+		maxWidth: "64.66%",
+				fontSize: 16,
 		maxHeight: "52px",
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
@@ -255,7 +256,6 @@ const EventCard = (props, context) => {
 						},
 					}
 				);
-				console.log("result", result);
 				if (result.status === 200 || result.status === 400) {
 					setIcon(!Icon);
 				}
@@ -271,7 +271,6 @@ const EventCard = (props, context) => {
 						},
 					}
 				);
-				console.log("result", result);
 				if (result.status === 200 || result.status === 400) {
 					setIcon(!Icon);
 				}
@@ -279,10 +278,6 @@ const EventCard = (props, context) => {
 			}
 		} catch (error) {
 			if (error.response && error.response.data) {
-				console.log(
-					"Consoleee notify report response error.response.data",
-					error.response.data
-				);
 			}
 		}
 	};
@@ -299,9 +294,13 @@ const EventCard = (props, context) => {
 	};
 
 	let phnx_price = event_data.prices.map((price) => {
-		return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(2);
+		// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
+		return (Web3.utils.fromWei(price.toString()) / PhoenixDAO_market.usd).toFixed(
+			3
+		);
 	});
-	let dollar_price = event_data.prices[0] / 1000000;
+	// let dollar_price = event_data.prices[0] / 1000000;
+	let dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
 
 	const checkExpiry = () => {
 		if (props.checkExpiry) {
@@ -391,7 +390,7 @@ const EventCard = (props, context) => {
 										<Typography
 											className={classes.quantitySold}
 										>
-											<ConfirmationNumberOutlined fontSize="medium" />
+											<ConfirmationNumberOutlined fontSize="small" />
 											<span>&nbsp;</span>
 											{event_data.tktTotalQuantitySold}/
 											{event_data.tktTotalQuantity}
@@ -400,16 +399,16 @@ const EventCard = (props, context) => {
 									{!myEvent && !ticket ? (
 										<Typography
 											className={classes.FavoriteIcon}
-											component="button"
+											component="span"
 											onClick={addTofavorite}
 										>
 											{Icon ? (
 												<Favorite
 													fontSize="small"
-													style={{ color: "#413AE2" }}
-												/>
+													style={{ color: "#413AE2", marginTop:"6px" }}
+										/>
 											) : (
-												<FavoriteBorder fontSize="small" />
+												<FavoriteBorder fontSize="small" style={{color: "#000000", marginTop: "6px"}}/>
 											)}
 											{Icon}
 										</Typography>
@@ -423,7 +422,7 @@ const EventCard = (props, context) => {
 								style={{
 									display: "flex",
 									justifyContent: "space-between",
-									height: "72px",
+									height: "80px",
 								}}
 							>
 								<Typography
@@ -484,17 +483,17 @@ const EventCard = (props, context) => {
 												Starting from
 											</p>
 											<p
-												title={phnx_price[0]}
+												title={phnx_price[0] + " PHNX"}
 												style={{
 													fontFamily:
 														'"Aeonik", sans-serif',
 												}}
 											>
-												{phnx_price[0]}
-												{/* {pricingFormatter(
+												{/* {phnx_price[0]} */}
+												{pricingFormatter(
 													phnx_price[0],
 													"PHNX"
-												)} */}
+												)}
 											</p>
 											<p
 												className={classes.starting}
@@ -640,7 +639,7 @@ const EventCard = (props, context) => {
 									>
 										Dollar Revenue:{" "}
 										{pricingFormatter(
-												event_data.eventRevenueInDollar/1000000
+												Web3.utils.fromWei(event_data.eventRevenueInDollar.toString())
 											,
 											"$"
 										)}

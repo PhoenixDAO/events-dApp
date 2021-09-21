@@ -117,11 +117,9 @@ const MyStepper = ({
 		termsAndConditions,
 	} = values;
 
-	console.log(values);
-
 	const steps = ["", "", "", ""];
 	function getFlamingSteps() {
-		return ["Upload Data", "Confirm Transaction", "Publish Event"];
+		return ["Uploading", "Confirming Transaction", "Publishing Event"];
 	}
 	const flamingSteps = getFlamingSteps();
 	const [isCopied, setIsCopied] = useState(false);
@@ -219,6 +217,7 @@ const MyStepper = ({
 								value={eventName}
 								handleInputValue={handleInputValue}
 								errors={errors}
+								maxLength={100}
 							/>
 							<br />
 							<br />
@@ -230,6 +229,7 @@ const MyStepper = ({
 								value={eventOrganizer}
 								handleInputValue={handleInputValue}
 								errors={errors}
+								maxLength={100}
 							/>
 							<br />
 							<br />
@@ -436,7 +436,7 @@ const MyStepper = ({
 												}
 												fullWidth={true}
 												clearable={true}
-												helperText="Don’t have an end time? leave here blank"
+												helperText="Don't have an end time for the event? Leave this space blank."
 											/>
 										</Grid>
 									</Grid>
@@ -581,6 +581,7 @@ const MyStepper = ({
 										value={eventLocation}
 										handleInputValue={handleInputValue}
 										errors={errors}
+										maxLength={100}
 									/>
 								</div>
 							) : (
@@ -593,6 +594,7 @@ const MyStepper = ({
 										value={eventLink}
 										handleInputValue={handleInputValue}
 										errors={errors}
+										maxLength={1000}
 									/>
 								</div>
 							)}
@@ -863,6 +865,7 @@ const MyStepper = ({
 													id="no-of-tickets"
 													name="noOfTickets"
 													fullWidth={true}
+													maxLength={16}
 													label="NUMBER OF TICKETS"
 													value={
 														ticketCategories[
@@ -891,18 +894,13 @@ const MyStepper = ({
 								) : eventCategory === "single" ? (
 									<div>
 										<br />
-									
-											
-												<InputLabel htmlFor="input-with-icon-adornment">
-													<label
-														className={
-															classes.label
-														}
-													>
-														TICKET PRICE
-													</label>
-												</InputLabel>
-												<div
+
+										<InputLabel htmlFor="input-with-icon-adornment">
+											<label className={classes.label}>
+												TICKET PRICE
+											</label>
+										</InputLabel>
+										<div
 											className={
 												classes.ticketPriceContainer
 											}
@@ -1119,6 +1117,7 @@ const MyStepper = ({
 													id="no-of-tickets"
 													name="noOfTickets"
 													fullWidth={true}
+													maxLength={16}
 													label="NUMBER OF TICKETS"
 													value={
 														ticketCategories[
@@ -1178,6 +1177,7 @@ const MyStepper = ({
 													name="ticketName"
 													fullWidth
 													label="TICKET NAME"
+													maxLength={100}
 													value={
 														ticketCategories[
 															ticketIndex
@@ -1198,20 +1198,20 @@ const MyStepper = ({
 												<br />
 												<br />
 												<InputLabel htmlFor="input-with-icon-adornment">
-															<label
-																className={
-																	classes.label
-																}
-															>
-																TICKET PRICE
-															</label>
-														</InputLabel>
+													<label
+														className={
+															classes.label
+														}
+													>
+														TICKET PRICE
+													</label>
+												</InputLabel>
 												<div
 													className={
 														classes.ticketPriceContainer
 													}
 												>
-														<span>
+													<span>
 														<TextField
 															className={
 																classes.margin
@@ -1225,8 +1225,7 @@ const MyStepper = ({
 															variant="outlined"
 															InputProps={{
 																inputProps: {
-																	min: "0",
-																	max: "10",
+																	min: 1,
 																},
 
 																startAdornment:
@@ -1297,9 +1296,7 @@ const MyStepper = ({
 
 													<span>
 														<TextField
-															className={
-																`${classes.margin}`
-															}
+															className={`${classes.margin}`}
 															id="phnx-price"
 															name="phnxPrice"
 															onKeyDown={
@@ -1450,6 +1447,7 @@ const MyStepper = ({
 															id="no-of-tickets"
 															name="noOfTickets"
 															fullWidth={true}
+															maxLength={16}
 															label="NUMBER OF TICKETS"
 															value={
 																ticketCategories[
@@ -1571,7 +1569,7 @@ const MyStepper = ({
 									name="eventDescription"
 									id="event-description"
 								/>
-								<FormHelperText>
+								<FormHelperText style={{ alignSelf: "end" }}>
 									{errors["eventDescription"]}
 								</FormHelperText>
 							</FormControl>

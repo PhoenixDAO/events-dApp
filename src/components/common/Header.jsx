@@ -22,7 +22,7 @@ import ConnectWalletButton from "./ConnectWalletButton";
 import SearchBar from "./SearchBar";
 import DialogueBox from "./DialogueBox";
 import Wallet from "./Wallet";
-// import BuyPhoenixModal from "./BuyPhoenixModal";
+import BuyPhoenixModal from "./BuyPhoenixModal";
 const useStyles = makeStyles((theme) => ({
 	buy: {
 		marginLeft: "13px",
@@ -90,10 +90,8 @@ const Header = ({
 	};
 	const setTransakChain = async () => {
 		const network = await getNetworkId();
-		console.log("network", network);
 		if (network == GLOBAL_NETWORK_ID) {
 			setChain("ethereum");
-			console.log("chain", chainId);
 		} else {
 			setChain("polygon");
 		}
@@ -136,7 +134,8 @@ const Header = ({
 						</IconButton>
 					) : null}
 					{/* Header Title */}
-					<h2>{title}</h2>
+					{console.log("event page: ", page)}
+					<h2 style={{marginBottom: "0px"}}>{title}</h2>
 				</div>
 
 				{/* {page == "analytics" || page == "create" || phnxButton ? (
@@ -201,14 +200,14 @@ const Header = ({
 					handleClose={handleCloseBuyPhnx}
 					maxWidth="xs"
 				>
-					{/* <BuyPhoenixModal
+					<BuyPhoenixModal
 						handleClose={handleCloseBuyPhnx}
 						openTransak={openTransak}
 						closeTransak={closeTransak}
 						transak={transak}
 						accounts={accounts}
 						chain={chainId}
-					/> */}
+					/>
 				</DialogueBox>
 			</Grid>
 		</div>

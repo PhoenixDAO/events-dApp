@@ -14,7 +14,7 @@ import {
 import axios from "axios";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
-import GetGraphApi from "../config/getGraphApi";
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 
 //Material UI styles
 import { withStyles } from "@material-ui/core/styles";
@@ -216,10 +216,7 @@ class Favorites extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
-
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
-					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({
 						Events_Blockchain: [],
 						active_length: 0,
@@ -232,11 +229,6 @@ class Favorites extends Component {
 					this.setState({ loading: true });
 
 					let newsort = graphEvents.data.data.events;
-					//     .concat()
-					//     .sort((a, b) => b.blockNumber - a.blockNumber)
-					//     .filter((activeEvents) => activeEvents.time >= dateNow);
-					// console.log("GraphQL query newsort",newsort)
-
 					this.setState({
 						Events_Blockchain: newsort,
 						active_length: newsort.length,
@@ -305,13 +297,15 @@ class Favorites extends Component {
 
 	filterHideEvent = async () => {
 		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
+			const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
 		} catch (error) {
-			console.log("check error", error);
 		}
 	};
 
@@ -327,7 +321,6 @@ class Favorites extends Component {
 	//     }
 	// };
 	getUserFavoritesEvent = async () => {
-		console.log("loading2", this.state.loading);
 		try {
 			const token = localStorage.getItem("AUTH_TOKEN");
 			const get = await axios.post(
@@ -342,17 +335,14 @@ class Favorites extends Component {
 					},
 				}
 			);
-			console.log("get data", get);
 			this.setState({
 				UserFavoriteEvents: get.data.result.userHldr.favourites,
 			});
 			return;
 		} catch (error) {
-			console.log("check error", error.response);
 			if (error.response.status === 403) {
 				const userDetails = await this.authMetaMask();
 				if (!userDetails.error) {
-					console.log("userDetails", userDetails);
 					this.setState({
 						userDetails: userDetails,
 						open: userDetails.result.result.userHldr.firstTime,
@@ -362,7 +352,6 @@ class Favorites extends Component {
 						"AUTH_TOKEN",
 						userDetails.result.result.token
 					);
-					console.log("successfully signed in favourites");
 					this.getUserFavoritesEvent();
 				}
 			}
@@ -374,8 +363,6 @@ class Favorites extends Component {
 		try {
 			const publicAddress = await web3.eth.getAccounts();
 			const networkId = await this.getNetworkId();
-			console.log("Public address", publicAddress);
-			console.log("networkId", networkId);
 			const message = await getMessage();
 			const sign = await this.handleSignMessage(
 				publicAddress[0],
@@ -395,12 +382,10 @@ class Favorites extends Component {
 
 	handleSignMessage = async (publicAddress, message) => {
 		try {
-			console.log("message", message);
 			const sign = await web3.eth.sign(
 				web3.utils.sha3(message),
 				publicAddress
 			);
-			console.log("sign", sign);
 			return sign;
 		} catch (err) {
 			console.log(err);
@@ -440,8 +425,6 @@ class Favorites extends Component {
 			let currentPage = Number(this.props.match.params.page);
 			let events_list = [];
 			let skip = false;
-			console.log("Favourites", favoriteEvents);
-
 			for (let i = 0; i < this.state.Events_Blockchain.length; i++) {
 				for (let j = 0; j < this.state.Deleted_Events.length; j++) {
 					if (
@@ -471,9 +454,7 @@ class Favorites extends Component {
 			let favoriteEvents = events_list.filter((item) =>
 				this.state.UserFavoriteEvents.includes(item.eventId)
 			);
-			console.log("Favourites", favoriteEvents);
 			favoriteEvents.reverse();
-			// console.log("events_listt",favoriteEvents)
 			let updated_list = [];
 			count = favoriteEvents.length;
 			if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
@@ -642,13 +623,11 @@ class Favorites extends Component {
 				web3 = new Web3(new Web3.providers.HttpProvider(infura));
 			}
 			const networkId = await web3.eth.net.getId();
-			console.log("This called getNetworkId", networkId);
 			if (networkId === GLOBAL_NETWORK_ID) {
 				return networkId;
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
 				return networkId;
 			} else {
-				console.log("network id not suported");
 			}
 			return null;
 		} catch (err) {
@@ -657,6 +636,7 @@ class Favorites extends Component {
 	}
 
 	async componentDidMount() {
+		this.props.executeScroll();
 		if (typeof ethereum !== "undefined") {
 			const a = ethereum.enable();
 			web3 = new Web3(ethereum);
@@ -681,7 +661,6 @@ class Favorites extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (prevState.reload !== this.state.reload) {
-			console.log("prev", prevState, this.state.reload);
 			this.getUserFavoritesEvent();
 		}
 	}

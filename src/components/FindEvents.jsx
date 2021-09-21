@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import Carousel from "react-bootstrap/Carousel";
 import { API_URL, REPORT_EVENT } from "../config/const";
-import GetGraphApi from "../config/getGraphApi";
 import axios from "axios";
 // Import dApp Components
+import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 // import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
 import Event from "./Event";
@@ -41,6 +41,7 @@ import Slider from "./common/Slider";
 import roundlogo from "./Images/roundlogo.svg";
 import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
+import NearToYou from "./common/NearToYou";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -94,6 +95,20 @@ const useStyles = (theme) => ({
 	},
 	menuPaper: {
 		maxHeight: "200px",
+	},
+	mainHeadingStyle:{
+		fontWeight: 900,
+		color: "#1E1E22",
+		marginBottom: "0px",
+		"@media (max-width: 600px)":{
+			fontSize: "1.4rem",
+		}
+	},
+	LargeScreenBreakLine:{
+		display:"block",
+		"@media (max-width: 600px)":{
+			display: "none",
+		}
 	},
 	selectDropDown: {
 		maxHeight: "200px",
@@ -194,7 +209,6 @@ class FindEvents extends Component {
 
 	constructor(props, context) {
 		super(props);
-		// console.log("props", props);
 		this.state = {
 			openEvents: "",
 			upload: false,
@@ -207,15 +221,17 @@ class FindEvents extends Component {
 			// active_length: "",
 			isOldestFirst: false,
 			event_copy: [],
+			event_copy_for_loc: [],
 			prevPath: -1,
 			hideEvent: [],
 			selectedTab: "All Events",
 			eventCount: 0,
 			category: "All Events",
 			pageTitle: "All Events",
-			cityName: "",
-			stateName: "",
 			search: "",
+			latitude: "",
+			longitude: "",
+			cityName: "Unknown",
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -228,6 +244,9 @@ class FindEvents extends Component {
 
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
+		this.findNearToYouEvents = this.findNearToYouEvents.bind(this);
+		// this.success = this.success.bind(this);
+		// this.errors = this.errors.bind(this);
 	}
 
 	async categoryChange(event) {
@@ -236,16 +255,31 @@ class FindEvents extends Component {
 		} else {
 			this.setState({
 				category: event.target.value,
-				pageTitle: event.target.value,
+				// pageTitle: event.target.value,
 			});
-			let query;
+
+			let updatedList = [];
+			// let events = this.state.event_copy;
+			let events = [];
+			events =
+				this.state.selectedTab === "Near Your Location"
+					? this.state.event_copy_for_loc
+					: this.state.event_copy;
+
 			if (event.target.value === "All Events") {
-				query = `orderBy:eventId orderDirection:asc`;
-			} else {
+				updatedList = events;
+			} else if (event.target.value === "Trending Events") {
 				//trending events
-				query = `where: {tktTotalQuantitySold_gte: 5} orderBy:eventId orderDirection:asc`;
+				for (let i = 0; i < events.length; i++) {
+					if (events[i].tktTotalQuantitySold >= 5) {
+						updatedList.push(events[i]);
+					}
+				}
 			}
-			this.loadBlockchain(query);
+			this.setState({
+				Events_Blockchain: updatedList,
+			});
+			this.props.history.push("/upcomingevents/" + 1);
 		}
 	}
 
@@ -288,7 +322,6 @@ class FindEvents extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain(filter) {
-		console.log("filter1", filter);
 		const graphURL = await GetGraphApi();
 
 		await axios({
@@ -325,18 +358,11 @@ class FindEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				console.log(
-					"GraphQL query response",
-					Date.now(),
-					graphEvents.data.data.events
-				);
-
 				if (
 					!graphEvents.data ||
 					graphEvents.data.data == "undefined" ||
 					graphEvents.data.data.events.length === 0
 				) {
-					console.log("GraphQL query -- graphEvents undefined");
 					// this.setState({
 					// 	Events_Blockchain: [],
 					// 	// active_length: 0,
@@ -367,12 +393,12 @@ class FindEvents extends Component {
 					this.setState({
 						Events_Blockchain: newsort,
 						// active_length: newsort.length,
-						// event_copy: newsort,
+						event_copy: newsort,
 					});
 
 					if (this.state.pageTitle === "All Events") {
 						this.setState({
-							event_copy: newsort,
+							event_copy_for_loc: newsort,
 						});
 					}
 
@@ -440,92 +466,21 @@ class FindEvents extends Component {
 		});
 	};
 
-	success(pos) {
-		var crd = pos.coords;
-
-		console.log("Your current position is:");
-		console.log(`Latitude : ${crd.latitude}`);
-		console.log(`Longitude: ${crd.longitude}`);
-		console.log(`More or less ${crd.accuracy} meters.`);
-	}
-
-	errors(err) {
-		console.warn(`ERROR(${err.code}): ${err.message}`);
-	}
-
-	geoFindMe = async () => {
-		//AIzaSyDzm4lNQsRTjvYj5ltMKDVLtc4plnapEhs
-
-		//location
-		if (navigator.geolocation) {
-			navigator.permissions
-				.query({ name: "geolocation" })
-				.then(function (result) {
-					if (result.state === "granted") {
-						console.log(result.state);
-						//If granted then you can directly call your function here
-						navigator.geolocation.getCurrentPosition(function (
-							pos
-						) {
-							var crd = pos.coords;
-							console.log("pos", pos);
-							console.log("Your current position is:");
-							console.log(`Latitude : ${crd.latitude}`);
-							console.log(`Longitude: ${crd.longitude}`);
-						});
-					} else if (result.state === "prompt") {
-						navigator.geolocation.getCurrentPosition(function (
-							pos
-						) {
-							var crd = pos.coords;
-							console.log("pos", pos);
-							console.log("Your current position is:");
-							console.log(`Latitude : ${crd.latitude}`);
-							console.log(`Longitude: ${crd.longitude}`);
-						});
-					} else if (result.state === "denied") {
-						console.log("user denied");
-						//If denied then you have to show instructions to enable location
-					}
-					result.onchange = function () {
-						console.log(result.state);
-					};
-				});
-		} else {
-			alert("Sorry Not available!");
-		}
-	};
-
-	geoFindMe = async () => {
-		try {
-			const get = await axios.get(`http://ip-api.com/json`);
-			console.log("Get location", get);
-			if (!get.data) {
-				return { cityName: "Unknown", stateName: "Unknown" };
-			}
-			return { cityName: get.data.city, stateName: get.data.regionName };
-		} catch (error) {
-			return { cityName: "Unknown", stateName: "Unknown" };
-		}
+	getCityName = (cityName) => {
+		this.setState({ cityName: cityName }, function () {
+			this.findNearToYouEvents();
+		});
 	};
 
 	findNearToYouEvents = async () => {
 		this.setState({ loading: true });
-		const geoFindUser = await this.geoFindMe();
-		if (geoFindUser) {
-			let cityName = geoFindUser.cityName;
-			let stateName = geoFindUser.stateName;
-			this.setState({
-				cityName: cityName,
-				stateName: stateName,
-			});
 
+		const cityName = this.state.cityName;
+		if (cityName) {
 			this.props.history.push("/upcomingevents/" + 1);
-
 			try {
 				if (cityName) {
-					var filteredEvents = this.state.event_copy;
-					console.log("filteredEvents", filteredEvents);
+					var filteredEvents = this.state.event_copy_for_loc;
 					filteredEvents = filteredEvents.filter((event) => {
 						return (
 							event.city
@@ -533,18 +488,18 @@ class FindEvents extends Component {
 								.search(cityName.toLowerCase()) !== -1
 						);
 					});
-					console.log("xord-->", filteredEvents);
 					this.setState({
 						Events_Blockchain: filteredEvents,
+						// event_copy: filteredEvents,
 					});
 					setTimeout(() => {
 						this.setState({ loading: false });
 					}, 1000);
 				}
 			} catch (e) {
-				console.log("findNearToYouEvents", e);
 				this.setState({
 					Events_Blockchain: [],
+					// event_copy: [],
 				});
 				setTimeout(() => {
 					this.setState({ loading: false });
@@ -554,24 +509,31 @@ class FindEvents extends Component {
 	};
 
 	filterHideEvent = async () => {
-		try {
-			const get = await axios.get(`${API_URL}${REPORT_EVENT}`);
-			this.setState({
-				hideEvent: get.data.result,
-			});
-			// console.log("hide event", this.state.hideEvent);
-			return;
-		} catch (error) {
-			console.log("check error", error);
-		}
-	};
+        try {
+            const networkId = await getNetworkId();
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );          this.setState({
+                hideEvent: get.data.result,
+            });
+            // console.log("hide event", this.state.hideEvent);
+            return;
+        } catch (error) {
+        }
+    };
 
 	onTabChange = async (event, newValue) => {
 		this.executeEventScroll({
 			behavior: "smooth",
 			block: "center",
 		});
-		this.setState({ selectedTab: newValue, pageTitle: newValue });
+
+		this.setState({
+			selectedTab: newValue,
+			pageTitle: newValue,
+			category: "All Events",
+		});
+
 		let query;
 		if (newValue === "All Events") {
 			query = `orderBy:eventId orderDirection:asc`;
@@ -579,53 +541,42 @@ class FindEvents extends Component {
 		} else if (newValue === "Near Your Location") {
 			await this.findNearToYouEvents();
 		} else if (newValue === "Today") {
-			console.log(newValue);
 			var todaydate = new Date();
 			todaydate.setDate(todaydate.getDate() + 1);
 			todaydate = parseInt(
 				(new Date(todaydate).getTime() / 1000).toFixed(0)
 			);
-			console.log(todaydate);
 			query = `where: {time_lte: ${todaydate} } orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "This Week") {
-			console.log(newValue);
 			var thisWeekdate = new Date();
 			thisWeekdate.setDate(thisWeekdate.getDate() + 7);
 			thisWeekdate = parseInt(
 				(new Date(thisWeekdate).getTime() / 1000).toFixed(0)
 			);
-			console.log(thisWeekdate);
 			query = `where: {time_lte: ${thisWeekdate} } orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "This Month") {
-			console.log(newValue);
 			var thisMonthdate = new Date();
 			thisMonthdate.setDate(thisMonthdate.getDate() + 30);
 			thisMonthdate = parseInt(
 				(new Date(thisMonthdate).getTime() / 1000).toFixed(0)
 			);
-			console.log(thisMonthdate);
 			query = `where: {time_lte: ${thisMonthdate} } orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Paid Events") {
-			console.log(newValue);
 			query = `where: {token: true} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Free Events") {
-			console.log(newValue);
 			query = `where: {token: false} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Online Events") {
-			console.log(newValue);
 			query = `where: {onsite: false} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else if (newValue === "Physical Events") {
-			console.log(newValue);
 			query = `where: {onsite: true} orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		} else {
-			console.log(newValue);
 			query = `orderBy:eventId orderDirection:asc`;
 			this.loadBlockchain(query);
 		}
@@ -656,8 +607,6 @@ class FindEvents extends Component {
 			);
 		}
 		//when user is not connectd hide connect wallet button
-		// console.log("accounts---->", this.props.accounts);
-
 		const { classes } = this.props;
 
 		let body = <PhoenixDAOLoader />;
@@ -686,7 +635,6 @@ class FindEvents extends Component {
 				}
 			}
 			if (!skip) {
-				// console.log("this.state.hideEvent", this.state.hideEvent);
 				for (let j = 0; j < this.state.hideEvent.length; j++) {
 					if (
 						this.state.Events_Blockchain[i].eventId ==
@@ -703,7 +651,6 @@ class FindEvents extends Component {
 		}
 
 		events_list.reverse();
-		// console.log("events_listt",events_list)
 		let updated_list = [];
 		count = events_list.length;
 		if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
@@ -731,7 +678,6 @@ class FindEvents extends Component {
 			let links = [];
 
 			if (pages > 5 && currentPage >= 3) {
-				// console.log("pag pages > 5 && currentPage >= 3");
 				for (
 					let i = currentPage - 2;
 					i <= currentPage + 2 && i <= pages;
@@ -761,7 +707,6 @@ class FindEvents extends Component {
 					}
 				}
 			} else if (pages > 5 && currentPage < 3) {
-				// console.log("pag pages > 5 && currentPage < 3");
 				for (let i = 1; i <= 5 && i <= pages; i++) {
 					let active = i === currentPage ? "active" : "";
 					links.push(
@@ -787,7 +732,6 @@ class FindEvents extends Component {
 					}
 				}
 			} else {
-				// console.log("pag else");
 				for (let i = 1; i <= pages; i++) {
 					let active = i === currentPage ? "active" : "";
 					links.push(
@@ -873,15 +817,11 @@ class FindEvents extends Component {
 								<div style={{ display: "flex" }}>
 									<img src={roundlogo} alt="phnx logo" />
 									<span>&nbsp;&nbsp;</span>
-									<h2
-										style={{
-											fontWeight: 900,
-											color: "#1E1E22",
-											marginBottom: "0px",
-										}}
+									<span
+										className={classes.mainHeadingStyle}
 									>
 										PhoenixDAO Events Marketplace
-									</h2>
+									</span>
 								</div>
 							}
 							handleSearch={this.updateSearch}
@@ -934,13 +874,12 @@ class FindEvents extends Component {
 								<Grid item>SearchBar</Grid>
 								<Grid item>Connect Wallet</Grid>
 							</Grid> */}
-						<br />
+						<br className={classes.LargeScreenBreakLine}/>
 
 						{/* tabs */}
 						<div>
 							<div className={classes.root}>
 								<AppBar
-									style={{ padding: "0 19px" }}
 									position="sticky"
 									className={classes.appBar}
 									color="transparent"
@@ -1034,40 +973,7 @@ class FindEvents extends Component {
 					<br />
 
 					{this.state.pageTitle === "Near Your Location" ? (
-						<span>
-							<div
-								style={{
-									paddingTop: "13px",
-									paddingBottom: "13px",
-									// height: 68,
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "flex-start",
-									backgroundColor: "#FFFFFF",
-									paddingLeft: 28,
-									border: " 0.5px solid #E4E4E7",
-									borderRadius: 8,
-								}}
-							>
-								<span>
-									<span className={classes.nearStyleBlack}>
-										Events within{" "}
-									</span>
-									<span className={classes.nearStyleBlue}>
-										50 Miles{" "}
-									</span>
-									<span className={classes.nearStyleBlack}>
-										of{" "}
-									</span>
-									<span className={classes.nearStyleBlue}>
-										{this.state.cityName},{" "}
-										{this.state.stateName}
-									</span>
-								</span>
-							</div>
-							<br />
-							<br />
-						</span>
+						<NearToYou getCityName={this.getCityName} />
 					) : null}
 
 					<div>
@@ -1083,7 +989,7 @@ class FindEvents extends Component {
 							>
 								<Typography
 									ref={this.eventRef}
-									variant="p"
+									variant="div"
 									className={`${classes.sortBy}`}
 								>
 									Sort:
@@ -1280,7 +1186,7 @@ class FindEvents extends Component {
 
 	// comment out the below to re-render on every click
 	// shouldComponentUpdate(nextProps, nextState) {
-	// 	return this.state.Events_Blockchain != nextState.Events_Blockchain;
+	// 	return this.state.latitude != nextState.latitude;
 	// }
 
 	componentWillUnmount() {

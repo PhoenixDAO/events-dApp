@@ -121,7 +121,6 @@ const DialogTitle = withStyles(styles)((props) => {
 	return (
 		<MuiDialogTitle disableTypography className={classes.root} {...other}>
 			<Typography variant="div">{children}</Typography>
-			{console.log("onclose", onClose)}
 			{onClose ? (
 				<IconButton
 					aria-label="close"
@@ -171,14 +170,12 @@ export default function sendTicket({
 
 	const accountChange = (event) => {
 		setAddress(event.target.value);
-		console.log("address", address);
 	};
 	const send = () => {
 		const isaddress = Web3.utils.isAddress(address);
 		if (!isaddress) {
 			setErrorAddress(true);
 		}
-		// console.log("props", sendTicket2)
 		else {
 			sendTicket2(address, eventId);
 			handleClose();
@@ -198,7 +195,7 @@ export default function sendTicket({
 					className={classes.header}
 					onClose={handleClose}
 				>
-					<div>
+					<div style={{ display: "flex", justifyContent: "center" }}>
 						<img
 							src={roundlogo}
 							className={classes.logo}
@@ -218,7 +215,7 @@ export default function sendTicket({
 					</Typography>
 				</DialogTitle>
 				<DialogContent>
-					<h5 className={classes.ethereum}>ETHEREUM ADDRESS</h5>
+					<h5 className={classes.ethereum}>WALLET ADDRESS</h5>
 
 					<FormControl
 						variant="outlined"
@@ -243,8 +240,8 @@ export default function sendTicket({
 										errorAddress
 											? "Invalid account address"
 											: error
-												? error.message
-												: null
+											? error.message
+											: null
 									}
 									onChange={(e) => {
 										onChange(e);
