@@ -108,7 +108,7 @@ const Terms = (props) => {
 						Interpretation and Definitions
 					</h2>
 
-					<h5>
+					<h6>
 						<strong>
 							{" "}
 							NB: This product from PhoenixDAO is
@@ -122,7 +122,7 @@ const Terms = (props) => {
 							any activity that breaches legality in
 							region/jurisdiction.{" "}
 						</strong>{" "}
-					</h5>
+					</h6>
 					<h3
 						ref={(el) =>
 						(pageRefs.current = {

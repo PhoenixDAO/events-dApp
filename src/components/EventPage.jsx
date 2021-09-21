@@ -201,6 +201,11 @@ const styles = (theme) => ({
 	row: {
 		marginTop: "40px",
 	},
+	eventDescriptionFont:{
+		"& .RichTextEditor__root___2QXK-":{
+			fontFamily: "sans-serif",
+		}
+	},
 	heading: {
 		borderBottom: "1px solid #E4E4E7",
 		fontWeight: "700",
@@ -700,7 +705,7 @@ class EventPage extends Component {
 		) {
 			this.setState({
 				open3: true,
-				open3Message: "Please connect to Ethereum or Matic Mainnet",
+				open3Message: "Please connect to Rinkeby network",
 			});
 		} else {
 			// this.setState({ open2: true });
@@ -1840,7 +1845,7 @@ class EventPage extends Component {
 					giveApproval={this.giveApproval}
 				/>
 
-				{body}
+				<span className={classes.eventDescriptionFont}>{body}</span>
 			</div>
 		);
 	}

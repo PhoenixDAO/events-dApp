@@ -350,7 +350,7 @@ class App extends Component {
 			alternateCurrency: "",
 		});
 		if (detail.error) {
-			console.log();
+			console.log("error occured");
 		} else {
 			this.setUserDetails(detail.result);
 			this.setState({
@@ -1470,7 +1470,7 @@ class App extends Component {
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
 					/>
-					<div id="page-content-wrapper"  className="sidebar-open">
+					<div id="page-content-wrapper"  className="sidebar-open" style={{minHeight: "100vh", paddingBottom: "10%"}}>
 						{/* <div
 							id="bgImage"
 							ref="bgImage"
