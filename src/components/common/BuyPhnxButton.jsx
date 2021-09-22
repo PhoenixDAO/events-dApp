@@ -10,6 +10,13 @@ const useStyles = makeStyles((theme) => ({
 		marginBottom: theme.spacing(1),
 		marginTop: theme.spacing(1),
 		textTransform: "initial",
+		"&.MuiButton-containedSizeLarge":{
+		"@media (max-width: 450px)":{
+			padding: "2px",
+				fontSize: "12px",
+				letterSpacing:"0.1rem"
+			}
+		},
 		fontWeight: "600",
 		background: "#413AE2",
 		padding: "8px 35px",
@@ -17,13 +24,18 @@ const useStyles = makeStyles((theme) => ({
 		[theme.breakpoints.down("xs")]: {
 			paddingInline: "20px",
 		},
-
+		"@media (max-width: 450px)":{
+			width: "100%",
+		},
 		border: "1px solid #413AE2",
 		// maxHeight: 54,
 		// maxWidth: 230,
 	},
-	phoenix: {
-		height: "21px",
+	pheonixIcon:{
+		height: "24px",
+		"@media (max-width: 450px)":{
+			height: "16px",
+			}
 	},
 }));
 
@@ -38,7 +50,7 @@ const BuyPhnxButton = (props) => {
 			className={classes.button}
 			startIcon={
 				<img
-					style={{ height: "24px" }}
+				className={classes.pheonixIcon}
 					src={roundlogo}
 					alt="phnx logo"
 				/>
