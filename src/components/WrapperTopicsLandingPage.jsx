@@ -262,6 +262,11 @@ const WrapperTopicsLandingPage = (props) => {
 			} else {
 				setEventObj(eventObjCopy);
 			}
+			if((window.screen.height/window.screen.width)<1){
+				window.scroll(0, window.screen.height * 0.5);			
+			}else{
+				window.scroll(0, window.screen.height*0.58);
+			}
 		} catch (e) {
 			console.log(e);
 		}

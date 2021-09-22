@@ -144,7 +144,22 @@ html {
 	scroll-behavior: smooth;
 	overflow: visible !important;
 }
+video,
+iframe {
+    position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 
+.videoSize {
+  background: white;
+  height: 100vh;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
 body {
 	background-color: #F2F2FD !important;
 	font-family: "AeonikReg", sans-serif !important;

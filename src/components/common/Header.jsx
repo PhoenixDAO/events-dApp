@@ -134,7 +134,6 @@ const Header = ({
 						</IconButton>
 					) : null}
 					{/* Header Title */}
-					{console.log("event page: ", page)}
 					<h2 style={{marginBottom: "0px"}}>{title}</h2>
 				</div>
 

@@ -7,7 +7,7 @@ import {
     Typography,
     Paper
 } from "@material-ui/core";
-import { getEvents } from "../utils/getEvents";
+import { getEvents } from "../../utils/getEvents";
 import { Favorite } from "@material-ui/icons";
 const useStyles = makeStyles((theme) => ({
     heading: {

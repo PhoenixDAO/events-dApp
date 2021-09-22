@@ -32,7 +32,6 @@ function TravallaBannerFooter() {
 		marginLeft: "-100px",
 		marginRight: "0%",
 		marginTop: "8%",
-		bottom:0,
 		"@media (max-width: 800px)": {
 			marginLeft: "-90px",
 			"& img": {

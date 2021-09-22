@@ -180,7 +180,7 @@ class TopicsLandingPage extends Component {
 					return (
 						<div
 							key={this.props.eventObj[key].topic}
-							// className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
+							className="col-xl-4 col-lg-4 col-md-6 col-sm-12 pb-4"
 						>
 							<TopicCard
 								image={
