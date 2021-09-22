@@ -10,7 +10,7 @@ import "startbootstrap-simple-sidebar/css/simple-sidebar.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/main.css";
-import AnalyticsWrapper from "../components/AnalyticsWrapper";
+import AnalyticsWrapper from "../components/Analytics/AnalyticsWrapper";
 import Sidebar from "./Sidebar";
 import Guide from "./Guide";
 import FAQ from "./FAQ";

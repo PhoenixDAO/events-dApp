@@ -346,7 +346,7 @@ class MyTickets extends Component {
 				{/* <div className="sticky-nav-travel">
 					<img src={"/images/travel.svg"} />
 				</div> */}
-				{tickets.length !== 0 && !this.state.loading && (
+				{/* {tickets.length !== 0 && !this.state.loading && (
 					<a
 						href="https://www.travala.com/?ref=phoenixdao"
 						target="_blank"
@@ -358,7 +358,7 @@ class MyTickets extends Component {
 							/>
 						</div>
 					</a>
-				)}
+				)} */}
 			</div>
 		);
 	}
