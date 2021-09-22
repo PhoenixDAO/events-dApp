@@ -65,7 +65,7 @@ export const INFURA_WEB_URL_2 =
 export const GLOBAL_NETWORK_ID = 4;
 export const GLOBAL_NETWORK_ID_2 = 4; 
 
-export const API_URL = "http://52.87.153.224/";
+export const API_URL = "https://events.server.pehchan.me/";
 // export const API_URL = "https://events-api.phoenixdao.io/";
 //"https://phoenix-event-dapp-backend-tst.herokuapp.com/";
 // export const API_URL = "http://localhost:5000/";
