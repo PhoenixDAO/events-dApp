@@ -29,9 +29,10 @@ function TravallaBannerFooter() {
 	return (
 		<a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
 			<div style={{		position: "absolute",
-		marginLeft: "-100px",
+		marginLeft: "-90px",
 		marginRight: "0%",
 		marginTop: "8%",
+		bottom: 0,
 		"@media (max-width: 800px)": {
 			marginLeft: "-90px",
 			"& img": {
