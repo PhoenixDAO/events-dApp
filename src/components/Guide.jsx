@@ -50,11 +50,9 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: "15px",
 	},
 	videoResponsive: {
-		overflow: "hidden",
-		paddingBottom: "56.25%",
-		position: "relative",
-		height: 0,
-		backgroundColor: "#fff",
+		position: 'relative',
+		paddingBottom: '56.25%', /* 16:9 */
+		height: '0',
 	},
 	videoResponsiveIframe: {
 		left: "32px",
