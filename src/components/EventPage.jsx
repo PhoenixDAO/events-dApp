@@ -201,6 +201,11 @@ const styles = (theme) => ({
 	row: {
 		marginTop: "40px",
 	},
+	eventDescriptionFont:{
+		"& .RichTextEditor__root___2QXK-":{
+			fontFamily: "sans-serif",
+		}
+	},
 	heading: {
 		borderBottom: "1px solid #E4E4E7",
 		fontWeight: "700",
@@ -1840,7 +1845,7 @@ class EventPage extends Component {
 					giveApproval={this.giveApproval}
 				/>
 
-				{body}
+				<span className={classes.eventDescriptionFont}>{body}</span>
 			</div>
 		);
 	}

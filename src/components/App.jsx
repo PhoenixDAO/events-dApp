@@ -10,7 +10,7 @@ import "startbootstrap-simple-sidebar/css/simple-sidebar.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/main.css";
-import AnalyticsWrapper from "../components/AnalyticsWrapper";
+import AnalyticsWrapper from "../components/Analytics/AnalyticsWrapper";
 import Sidebar from "./Sidebar";
 import Guide from "./Guide";
 import FAQ from "./FAQ";
@@ -1470,7 +1470,7 @@ class App extends Component {
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
 					/>
-					<div id="page-content-wrapper"  className="sidebar-open">
+					<div id="page-content-wrapper"  className="sidebar-open" style={{minHeight: "100vh", paddingBottom: "10%"}}>
 						{/* <div
 							id="bgImage"
 							ref="bgImage"

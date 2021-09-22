@@ -15,6 +15,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddIcon from "@material-ui/icons/Add";
 import AccordianCard from "./common/AccordianCard";
 import Header from "./common/Header";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	termsHeader: {
@@ -126,8 +127,7 @@ const questions = [
 	},
 	{
 		heading: "Help, I can't connect to meta mask",
-		description:
-			"Here’s a video guide on “How to connect to Meta mask”, “How to change Network”, and “How to be Safe on Meta Mask”. Don’t forget to check our “How it works page” on the dApp menu.",
+		description:(<span>Here’s a video guide on <a href="https://www.youtube.com/watch?v=Af_lQ1zUnoM" target="_blank">“How to connect to Meta mask”</a>, <a href="https://quickswap-layer2.medium.com/guide-how-to-set-up-custom-matic-mainnet-rpc-for-metamask-transfer-assets-from-l1-to-l2-to-use-3b1e55ccb5cb" target="_blank">“How to change Network”</a>, and <a href="https://metamask.zendesk.com/hc/en-us/articles/360015489591-Basic-Safety-and-Security-Tips-for-MetaMask" target="_blank">“How to be Safe on Meta Mask”</a>. Don’t forget to check our {<Link to="/guide" >“How it works page”</Link>} on the dApp menu.</span>),
 	},
 	{
 		heading: "What is Matic Mainnet?",

@@ -477,6 +477,11 @@ class TopicLandingPage extends Component {
 					filteredEvents = this.state.topic_copy;
 				}
 			} catch (e) {}
+			if((window.screen.height/window.screen.width)<1){
+				window.scroll(0, window.screen.height * 0.5);			
+			}else{
+				window.scroll(0, window.screen.height*0.58);
+			}
 			this.setState({
 				Topic_Events: filteredEvents,
 				active_length: filteredEvents.length,

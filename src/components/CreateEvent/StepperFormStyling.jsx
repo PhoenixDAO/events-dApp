@@ -310,6 +310,17 @@ const useStyles = makeStyles((theme) => ({
 	adornedStart: {
 		backgroundColor: "#000",
 	},
+	labelIcon:{
+		background: "#413AE2",
+		width: "40px",
+		height: "40px",
+		borderRadius:"50%",
+		color: "white",
+		alignItems:"center",
+		textAlign: "center",
+		justifyContent: "center",
+		display:"flex"
+	},
 	stepperCircle: {
 		"& .MuiSvgIcon-root": {
 			width: 40,

@@ -50,11 +50,9 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: "15px",
 	},
 	videoResponsive: {
-		overflow: "hidden",
-		paddingBottom: "56.25%",
-		position: "relative",
-		height: 0,
-		backgroundColor: "#fff",
+		position: 'relative',
+		paddingBottom: '56.25%', /* 16:9 */
+		height: '0',
 	},
 	videoResponsiveIframe: {
 		left: "32px",
@@ -246,7 +244,13 @@ const Terms = (props) => {
 							Getting into app and connecting wallet - Ethereum /
 							Polygon configurations.
 						</h2>
-						<h3>Ethereum main-net</h3>
+						<h3 ref={(el) =>
+								(pageRefs.current = {
+									...pageRefs.current,
+									Ethereum: el,
+								})
+							}
+							>Ethereum main-net</h3>
 						<ul>
 							<li>
 								Open the PhoenixDAO Events Marketplace dApp.
@@ -309,7 +313,7 @@ const Terms = (props) => {
 						>
 							Ethereum main-net
 						</h6>
-						<h6
+						{/* <h6
 							className={classes.menuSubHeading}
 							onClick={() => scrollIntoView("Import1")}
 						>
@@ -357,7 +361,7 @@ const Terms = (props) => {
 							onClick={() => scrollIntoView("Past")}
 						>
 							Past Events
-						</h6>
+						</h6> */}
 					</div>
 				</Grid>
 			</Grid>
