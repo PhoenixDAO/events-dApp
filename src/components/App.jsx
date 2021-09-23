@@ -1470,7 +1470,7 @@ class App extends Component {
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
 					/>
-					<div id="page-content-wrapper"  className="sidebar-open" style={{minHeight: "100vh", paddingBottom: "10%"}}>
+					<div id="page-content-wrapper"  className="sidebar-open" style={{minHeight: "100vh", paddingBottom: "15%"}}>
 						{/* <div
 							id="bgImage"
 							ref="bgImage"

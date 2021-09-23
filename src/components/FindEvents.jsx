@@ -241,7 +241,6 @@ class FindEvents extends Component {
 		this.topicClick = this.topicClick.bind(this);
 		this.myRef = React.createRef();
 		this.eventRef = React.createRef();
-		this.eventRef2 = React.createRef();
 
 		this.toggleSortDate = this.toggleSortDate.bind(this);
 		this.categoryChange = this.categoryChange.bind(this);
@@ -313,10 +312,6 @@ class FindEvents extends Component {
 	executeEventScroll = (view) => {
 		//this.myRef.current.scrollIntoView();
 		this.eventRef.current.scrollIntoView(view);
-	};
-	executeEventScrollSearch = (view) => {
-		//this.myRef.current.scrollIntoView();
-		this.eventRef2.current.scrollIntoView(view);
 	};
 
 	handleSearch = (value) => {
@@ -1105,9 +1100,7 @@ class FindEvents extends Component {
 
 						<br />
 						<br />
-							<span ref={this.eventRef2} >
 						{body}
-						</span>
 
 						{/* <a
 							href="https://www.travala.com/?ref=phoenixdao"
