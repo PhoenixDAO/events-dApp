@@ -29,6 +29,7 @@ import { SelectAllOutlined } from "@material-ui/icons";
 import { useStyles } from "./styles";
 import Top5Events from "./Top5Events";
 import TicketsByLocation from "./TicketsByLocation";
+import { pricingFormatter } from "../../utils/pricingSuffix";
 
 const Analytics = (props, context) => {
 	const classes = useStyles();
@@ -98,12 +99,15 @@ const Analytics = (props, context) => {
 						display: true,
 						fontColor: "black",
 						fontWeight: "700",
-						fontSize: 16,
+						fontSize: 12,
+						callback: function(value, index, values) {
+							return pricingFormatter('$' + value,"$");
+						}
 					},
 					scaleLabel: {
 						display: true,
 						labelString: legend,
-						fontSize: 14,
+						fontSize: 10,
 						fontColor: "#73727D",
 					},
 				},
@@ -118,12 +122,12 @@ const Analytics = (props, context) => {
 						display: true, //this will remove only the label
 						fontColor: "black",
 						fontWeight: "700",
-						fontSize: 16,
+						fontSize: 12,
 					},
 					scaleLabel: {
 						display: true,
 						labelString: timeLabel,
-						fontSize: 14,
+						fontSize: 10,
 						fontColor: "#73727D",
 					},
 				},
@@ -306,7 +310,7 @@ const Analytics = (props, context) => {
 		} else {
 			return events.map((event, index) => (
 				<Grid container className={classes.row3}>
-					<Grid lg={3} sm={3} className={classes.ticketSold}>
+					<Grid xl={3} lg={3} sm={3} xs={3} className={classes.ticketSold}>
 						<i
 							className="fa fa-ticket-alt"
 							title="My Tickets"
@@ -314,25 +318,25 @@ const Analytics = (props, context) => {
 						></i>
 						{event.tktTotalQuantitySold}
 					</Grid>
-					<Grid lg={6} sm={6} className={`${classes.city} h-100`}>
+					<Grid xl={6} lg={6} sm={6} xs={6} className={`${classes.city} h-100`}>
 						{event.name}
 					</Grid>
 					<Grid
-						lg={3}
-						sm={3}
+						xl={3} lg={3}
+						sm={3} xs={3}
 						className={classes.ticketSold}
 						style={{ textAlign: "end" }}
 					>
 						{revenueCategory == "eventRevenueInPhnx"
-							? (
+							? pricingFormatter((
 									event.eventRevenueInPhnx /
 									1000000000000000000
-							  ).toFixed(3) + " PHNX"
-							: "$ " +
+							  ).toFixed(3) + " PHNX","PHNX")
+							: pricingFormatter("$" +
 							  (
 									event.eventRevenueInDollar /
 									1000000000000000000
-							  ).toFixed(3)}
+							  ).toFixed(3),"$")}
 					</Grid>
 				</Grid>
 			));

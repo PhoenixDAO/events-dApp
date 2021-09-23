@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
 		// 	minWidth:"80%"
 		// },
 	},
+	menuPaper: {
+		maxHeight: "200px",
+	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
 	},
@@ -122,7 +125,17 @@ export default function GeoLocation(props) {
 				// labelWidth={labelWidth}
 				displayEmpty
 				defaultValue=""
-				className={classes.selectLocationPadding}
+				className={`${classes.selectLocationPadding} ${classes.menuPaper}`}
+				MenuProps={{
+					classes: {
+						paper: classes.menuPaper,
+					},
+					getContentAnchorEl: null,
+					anchorOrigin: {
+						vertical: "bottom",
+						horizontal: "left",
+					},
+				}}
 			>
 				<MenuItem
 					disabled
