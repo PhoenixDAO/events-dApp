@@ -97,6 +97,9 @@ export const useStyles = makeStyles((theme) => ({
 		border: "1px solid #E4E4E7",
 		borderRadius: "8px",
 		padding: "30px 20px",
+		"@media (max-width:450px)":{
+			padding: "30px 5px",
+		},
 		backgroundColor: "white",
 		textAlign: "inherit",
 		justifyContent: "space-between",
