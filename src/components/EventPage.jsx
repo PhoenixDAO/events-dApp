@@ -176,9 +176,6 @@ const styles = (theme) => ({
 		"& .MuiSelect-outlined": {
 			padding: "10px",
 			paddingRight: "25px !important",
-			"@media (max-width: 600px)": {
-				width: "120px",
-			},
 		},
 		[theme.breakpoints.down("xs")]: {
 			width: "auto",
