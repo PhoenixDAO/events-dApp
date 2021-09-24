@@ -1848,7 +1848,7 @@ const MyStepper = ({
 								color="primary"
 								onClick={handleNextStep}
 								disabled={!formIsValid(activeStep)}
-								className={classes.nextButton}
+								className={`${classes.nextButton} ${(activeStep === steps.length - 1)&&classes.publishButton}`}
 								endIcon={
 									activeStep === steps.length - 1 ? null : (
 										<img

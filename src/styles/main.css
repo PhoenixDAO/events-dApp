@@ -606,6 +606,13 @@ div[class|="r-sticky"] .header3 {
 }
 
 @media screen and (max-width: 780px) {
+	.Toastify__toast-container--bottom-right{
+		bottom: 7em !important ;
+		padding-inline: 20px;
+	}
+}
+
+@media screen and (max-width: 780px) {
 	.carousel-caption p:last-of-type {
 		margin-top: 45px;
 	}
