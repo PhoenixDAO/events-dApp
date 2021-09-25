@@ -1,15 +1,15 @@
 .EditorToolbar__root___3_Aqz{
-    position: absolute;
-    overflow: scroll;
-    width: 96%;
-    background-color: #fff;
-    z-index: 12;
+display: flex;
+flex-wrap: wrap;
+justify-content: normal;
 }
 
-.RichTextEditor__editor___1QqIU{
+/* .editor-demo > .RichTextEditor__root___2QXK- > .RichTextEditor__editor___1QqIU{
     margin-top: 50px;
+} */
+.editor-demo > .editor {
+    height: 500px;
 }
-
 .public-DraftStyleDefault-block {
     word-break: break-word;
 }

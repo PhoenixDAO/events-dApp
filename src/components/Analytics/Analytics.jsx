@@ -100,9 +100,9 @@ const Analytics = (props, context) => {
 						fontColor: "black",
 						fontWeight: "700",
 						fontSize: 12,
-						callback: function(value, index, values) {
-							return pricingFormatter('$' + value,"$");
-						}
+						callback: function (value, index, values) {
+							return value
+						},
 					},
 					scaleLabel: {
 						display: true,
@@ -264,7 +264,9 @@ const Analytics = (props, context) => {
 		const dollarKey = Object.keys(dollarData);
 		for (let i = 0; i < dollarKey.length; i++) {
 			const obj = dollarData[dollarKey[i]];
-			dollarRev.push(obj.totalDollarRevenue / 1000000);
+			dollarRev.push(
+				Web3.utils.fromWei(obj.totalDollarRevenue.toString())
+			);
 			if (timeStamp == 86400) {
 				dollarLabel.push(
 					moment.unix(obj.startTimeStamp).format("HH:mm")
@@ -310,7 +312,13 @@ const Analytics = (props, context) => {
 		} else {
 			return events.map((event, index) => (
 				<Grid container className={classes.row3}>
-					<Grid xl={3} lg={3} sm={3} xs={3} className={classes.ticketSold}>
+					<Grid
+						xl={3}
+						lg={3}
+						sm={3}
+						xs={3}
+						className={classes.ticketSold}
+					>
 						<i
 							className="fa fa-ticket-alt"
 							title="My Tickets"
@@ -318,25 +326,39 @@ const Analytics = (props, context) => {
 						></i>
 						{event.tktTotalQuantitySold}
 					</Grid>
-					<Grid xl={6} lg={6} sm={6} xs={6} className={`${classes.city} h-100`}>
+					<Grid
+						xl={6}
+						lg={6}
+						sm={6}
+						xs={6}
+						className={`${classes.city} h-100`}
+					>
 						{event.name}
 					</Grid>
 					<Grid
-						xl={3} lg={3}
-						sm={3} xs={3}
+						xl={3}
+						lg={3}
+						sm={3}
+						xs={3}
 						className={classes.ticketSold}
 						style={{ textAlign: "end" }}
 					>
 						{revenueCategory == "eventRevenueInPhnx"
-							? pricingFormatter((
-									event.eventRevenueInPhnx /
-									1000000000000000000
-							  ).toFixed(3) + " PHNX","PHNX")
-							: pricingFormatter("$" +
-							  (
-									event.eventRevenueInDollar /
-									1000000000000000000
-							  ).toFixed(3),"$")}
+							? pricingFormatter(
+									(
+										event.eventRevenueInPhnx /
+										1000000000000000000
+									).toFixed(3) + " PHNX",
+									"PHNX"
+							  )
+							: pricingFormatter(
+									"$" +
+										(
+											event.eventRevenueInDollar /
+											1000000000000000000
+										).toFixed(3),
+									"$"
+							  )}
 					</Grid>
 				</Grid>
 			));
@@ -346,7 +368,7 @@ const Analytics = (props, context) => {
 		setrevenueCategory(event.target.value);
 	};
 
-    //used to calculate data between ranges
+	//used to calculate data between ranges
 	const dayHelper = (day, data) => {
 		settimeLabel("DATE");
 		let newDataObj = {};
