@@ -144,6 +144,18 @@ html {
 	scroll-behavior: smooth;
 	overflow: visible !important;
 }
+#transakOnOffRampWidget {
+	width: 100% !important;
+}
+
+@media (max-width: 500px){
+.transak_modal {
+    height: 100%;
+    max-height: 642px;
+    top: 53%;
+    width: 100% !important;
+}
+}
 video,
 iframe {
     position: absolute;
