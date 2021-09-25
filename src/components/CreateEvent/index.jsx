@@ -331,7 +331,6 @@ class CreateEvent extends Component {
 								infura = INFURA_URL_2;
 							}
 							const web3 = new Web3(infura);
-
 							let intervalVar = setInterval(async () => {
 								let receipt =
 									await web3.eth.getTransactionReceipt(
@@ -361,6 +360,34 @@ class CreateEvent extends Component {
 						}
 					})
 					.then(async (receipt) => {
+						const networkType =
+							this.props.web3.networkId == GLOBAL_NETWORK_ID
+								? "Rinkeby test net"
+								: "Matic main net";
+						const eventDesc =
+							eventDescription.split(" ").length >= 15
+								? eventDescription
+										.split(" ")
+										.splice(0, 14)
+										.join(" ")
+								: eventDescription
+										.split(" ")
+										.splice(
+											0,
+											eventDescription.split(" ").length
+										)
+										.join(" ");
+						const message = `The "${eventName}" event is now live on the ${networkType}🔥
+							${eventDesc.replace(/<[^>]*>?/gm, "")}...
+							${this.state.shareUrl}
+							#EventsDapp #${eventName.replace(/\s/g, "")}
+							`;
+						// await userTweet({
+						// 	address: this.props.accounts[0],
+						// 	networkId: this.props.web3.networkId,
+						// 	base64Image: image0Base64,
+						// 	message: message,
+						// });
 					})
 					.catch((error) => {
 						this.onHandleTxReject(error);
