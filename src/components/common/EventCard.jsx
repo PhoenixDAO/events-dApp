@@ -534,6 +534,7 @@ const EventCard = (props, context) => {
 								component="p"
 								gutterBottom
 								className={classes.text}
+								style={{maxWidth: "80%"}}
 							>
 								<DateRange fontSize="small" />{" "}
 								<span>&nbsp;</span>
