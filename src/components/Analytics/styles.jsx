@@ -14,7 +14,6 @@ export const useStyles = makeStyles((theme) => ({
 	menuPaper: {
 		maxHeight: "200px",
 		right:"10% !important",
-
 	},
 	formControls: {
 		"@media (max-width: 600px)": {
