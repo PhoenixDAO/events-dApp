@@ -99,7 +99,7 @@ const Analytics = (props, context) => {
 						display: true,
 						fontColor: "black",
 						fontWeight: "700",
-						fontSize: 12,
+						fontSize: 16,
 						callback: function (value, index, values) {
 							return value
 						},
@@ -107,7 +107,7 @@ const Analytics = (props, context) => {
 					scaleLabel: {
 						display: true,
 						labelString: legend,
-						fontSize: 10,
+						fontSize: 14,
 						fontColor: "#73727D",
 					},
 				},
@@ -122,12 +122,12 @@ const Analytics = (props, context) => {
 						display: true, //this will remove only the label
 						fontColor: "black",
 						fontWeight: "700",
-						fontSize: 12,
+						fontSize: 16,
 					},
 					scaleLabel: {
 						display: true,
 						labelString: timeLabel,
-						fontSize: 10,
+						fontSize: 14,
 						fontColor: "#73727D",
 					},
 				},
