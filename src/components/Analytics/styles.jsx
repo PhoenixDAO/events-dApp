@@ -13,8 +13,7 @@ export const useStyles = makeStyles((theme) => ({
 	},
 	menuPaper: {
 		maxHeight: "200px",
-		right:"10% !important",
-
+		right: "10% !important",
 	},
 	formControls: {
 		"@media (max-width: 600px)": {
@@ -93,11 +92,21 @@ export const useStyles = makeStyles((theme) => ({
 		fontWeight: "600",
 		alignItems: "center",
 	},
+	graphFontSize: {
+		fontSize:()=>{
+			return 16;
+		},
+		"@media (max-width: 600px)": {
+			fontSize: () => {
+				return 10;
+			},
+		},
+	},
 	box: {
 		border: "1px solid #E4E4E7",
 		borderRadius: "8px",
 		padding: "30px 20px",
-		"@media (max-width:450px)":{
+		"@media (max-width:450px)": {
 			padding: "30px 5px",
 		},
 		backgroundColor: "white",

@@ -168,6 +168,13 @@ const styles = (theme) => ({
 			minWidth: "141px",
 		},
 	},
+	imageDiv:{
+    paddingTop: "40%",
+    maxHeight: "300px",
+    backgroundSize: "cover",
+    mozBackgroundSize: "cover",
+    backgroundPosition: "center",
+	},
 	selectInput: {
 		width: "170px",
 		marginTop: "10px",
@@ -1293,12 +1300,15 @@ class EventPage extends Component {
 										}
 									></Link>
 								)}
-								<Grid lg={12}>
-									<img
+								<Grid lg={12} style={{backgroundImage:`url("${image}")`}} className={classes.imageDiv} >
+									{/* <img
 										className="card-img-top event-image"
 										src={image}
 										alt="Event"
-									/>
+									/> */}
+									<div >
+
+									</div>
 								</Grid>
 								<Grid container>
 									<Grid

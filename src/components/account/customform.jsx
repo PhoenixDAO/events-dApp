@@ -103,11 +103,12 @@ const CustomForm = React.memo((props) => {
 					{file.length > 0 ? (
 						<div
 							className="custom-img-hldr"
+							style={{backgroundImage:`url(${showImage()})`, height: "100px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center"}}
 							// style={{
 							// 	backgroundImage: `url(${showImage()})`,
 							// }}
 						>
-							<img className="custom-img" src={showImage()} />
+							{/* <img className="custom-img" src={showImage()} /> */}
 						</div>
 					) : (
 						<div>
