@@ -198,10 +198,10 @@ const styles = (theme) => ({
 	row: {
 		marginTop: "40px",
 	},
-	eventDescriptionFont:{
-		"& .RichTextEditor__root___2QXK-":{
+	eventDescriptionFont: {
+		"& .RichTextEditor__root___2QXK-": {
 			fontFamily: "sans-serif",
-		}
+		},
 	},
 	heading: {
 		borderBottom: "1px solid #E4E4E7",
@@ -404,12 +404,12 @@ class EventPage extends Component {
 						await updateEventViews({
 							eventId: graphEvents.data.data.events[0].eventId,
 							address: graphEvents.data.data.events[0].owner,
-							networkId: this.props.networkId,
+							networkId: networkId,
 						});
 
 						const userDetails = await getUser({
 							address: graphEvents.data.data.events[0].owner,
-							networkId: this.props.networkId,
+							networkId: networkId,
 						});
 						if (!userDetails.error) {
 							this.setState({
@@ -644,12 +644,15 @@ class EventPage extends Component {
 			// return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
 			// 	2
 			// );
-			return (Web3.utils.fromWei(price.toString()) / this.state.PhoenixDAO_market.usd).toFixed(
-				3
-			);
+			return (
+				Web3.utils.fromWei(price.toString()) /
+				this.state.PhoenixDAO_market.usd
+			).toFixed(3);
 		});
 
-		let dollar_price = Web3.utils.fromWei(event_data.prices[categoryIndex].toString());
+		let dollar_price = Web3.utils.fromWei(
+			event_data.prices[categoryIndex].toString()
+		);
 		let priceInPhnx = event_data.token
 			? phnx_price[categoryIndex] + "PHNX"
 			: "FREE";
@@ -1078,11 +1081,13 @@ class EventPage extends Component {
 		const users = await generateBuyerArr(eventId);
 		let event_data = this.state.blockChainEvent;
 		for (let i = 0; i < users.length; i++) {
-			if (users[i].address === this.props.accounts[0].toLowerCase()) {
-				this.setState({
-					locationEvent: event_data.location,
-				});
-				break;
+			if (this.props.accounts[0]) {
+				if (users[i].address === this.props.accounts[0].toLowerCase()) {
+					this.setState({
+						locationEvent: event_data.location,
+					});
+					break;
+				}
 			}
 		}
 	};
@@ -1132,8 +1137,8 @@ class EventPage extends Component {
 					this.state.selectedCategoryIndex
 				]
 					? event_data.catTktQuantity[
-					this.state.selectedCategoryIndex
-					]
+							this.state.selectedCategoryIndex
+					  ]
 					: "∞";
 
 				let disabled = false;
@@ -1144,14 +1149,14 @@ class EventPage extends Component {
 					event_data.tktLimited[this.state.selectedCategoryIndex] &&
 					Number(
 						event_data.catTktQuantitySold[
-						this.state.selectedCategoryIndex
+							this.state.selectedCategoryIndex
 						]
 					) >=
-					Number(
-						event_data.catTktQuantity[
-						this.state.selectedCategoryIndex
-						]
-					)
+						Number(
+							event_data.catTktQuantity[
+								this.state.selectedCategoryIndex
+							]
+						)
 				) {
 					// disabled = true;
 					// disabledStatus = (
@@ -1371,31 +1376,31 @@ class EventPage extends Component {
 													{event_data.categories
 														.length > 1
 														? event_data.categories.map(
-															(
-																category,
-																i
-															) => (
-																<MenuItem
-																	value={
-																		i
-																	}
-																	style={{
-																		fontFamily:
-																			"'Aeonik', sans-serif",
-																	}}
-																>
-																	<span
-																		className={
-																			classes.selectWidth
+																(
+																	category,
+																	i
+																) => (
+																	<MenuItem
+																		value={
+																			i
 																		}
+																		style={{
+																			fontFamily:
+																				"'Aeonik', sans-serif",
+																		}}
 																	>
-																		{
-																			category
-																		}
-																	</span>
-																</MenuItem>
-															)
-														)
+																		<span
+																			className={
+																				classes.selectWidth
+																			}
+																		>
+																			{
+																				category
+																			}
+																		</span>
+																	</MenuItem>
+																)
+														  )
 														: ""}
 													{/* <option
 													aria-label="None"
@@ -1447,11 +1452,11 @@ class EventPage extends Component {
 											{!this.state.eventTime
 												? `Date`
 												: this.state.eventTime ===
-													"onedayevent"
-													? moment(
+												  "onedayevent"
+												? moment(
 														this.state.eventDate
-													).format("Do MMM, YYYY")
-													: `
+												  ).format("Do MMM, YYYY")
+												: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
@@ -1465,24 +1470,24 @@ class EventPage extends Component {
 											{!this.state.eventStartTime
 												? `Time`
 												: !this.state.eventEndTime
-													? moment(
+												? moment(
 														this.state
 															.eventStartTime
-													)
+												  )
 														.utcOffset(0)
 														.format("hh:mma z")
-													: `${moment(
+												: `${moment(
 														this.state
 															.eventStartTime
-													)
+												  )
 														.utcOffset(0)
 														.format(
 															"hh:mma"
 														)} - ${moment(
-															this.state.eventEndTime
-														)
-															.utcOffset(0)
-															.format("hh:mma z")}`}
+														this.state.eventEndTime
+												  )
+														.utcOffset(0)
+														.format("hh:mma z")}`}
 										</p>
 										<p className={classes.eventHeading}>
 											<LocationOnOutlined /> Location
@@ -1504,8 +1509,8 @@ class EventPage extends Component {
 										<p className={classes.eventinfo}>
 											{
 												event_data.catTktQuantitySold[
-												this.state
-													.selectedCategoryIndex
+													this.state
+														.selectedCategoryIndex
 												]
 												// event_data.tktTotalQuantitySold
 											}
@@ -1848,12 +1853,16 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
+		console.log("component start 1, Event page");
 		let buyers = await generateBuyerArr(this.props.match.params.id);
+		console.log("component start 2, Event page", buyers);
 		this.setState({ soldTicket: buyers });
 		await this.getPhoenixDAOMarketValue();
 		await this.loadEventFromBlockchain();
 		await this.checkUserTicketLocation();
-		await this.checkUserBalance();
+		if (this.props.accounts[0]) {
+			await this.checkUserBalance();
+		}
 		window.scroll({
 			top: 0,
 			behavior: "smooth",

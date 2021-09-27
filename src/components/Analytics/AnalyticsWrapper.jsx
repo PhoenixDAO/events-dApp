@@ -23,24 +23,28 @@ const AnalyticsWrapper = (props) => {
 	}, []);
 
 	const loadApis = async () => {
-		const eventName = await getEventName(props.accounts);
+		const eventName = await getEventName(
+			"0xC63bff977d249606836063e832C96c184b75958C"
+		);
 		setEventName(eventName);
 		if (eventName.length != 0) {
 			const tickets = await generateJSON(eventName[0].eventId);
 			setTicketSales(tickets);
 		}
 		const blockChainTickets = await props.eventsContract.methods
-			.ticketsOf(props.accounts)
+			.ticketsOf("0xC63bff977d249606836063e832C96c184b75958C")
 			.call();
 		setTicketBought(blockChainTickets.length);
-		// const timeData = await getTimeData(props.accounts);
+		// const timeData = await getTimeData("0xC63bff977d249606836063e832C96c184b75958C");
 		const createdDate = moment().minutes(0).seconds(0).unix();
 		const todayData = await getTodayData(
-			props.accounts,
+			"0xC63bff977d249606836063e832C96c184b75958C",
 			Number(createdDate - 86400)
 		);
 		setTodayGraphData(todayData);
-		const timeData = await getTimeData(props.accounts);
+		const timeData = await getTimeData(
+			"0xC63bff977d249606836063e832C96c184b75958C"
+		);
 		setGraphData(timeData);
 	};
 
