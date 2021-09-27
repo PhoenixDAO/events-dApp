@@ -1,3 +1,4 @@
+
 export function pricingFormatter(num, currencyType){
     if(typeof(num) === "string" && currencyType == "$"){
         if (num == "" || num == "0" || num =="$0"){
