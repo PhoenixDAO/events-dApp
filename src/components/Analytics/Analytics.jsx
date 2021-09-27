@@ -64,6 +64,10 @@ const Analytics = (props, context) => {
 		endDate: "",
 	});
 
+	useEffect(()=>{	
+		console.log("width: ", window.innerWidth)
+	},[window.innerWidth])
+
 	useEffect(() => {
 		if (props.eventName) {
 			setEventNames(props.eventName[0]);
@@ -99,15 +103,15 @@ const Analytics = (props, context) => {
 						display: true,
 						fontColor: "black",
 						fontWeight: "700",
-						fontSize: 12,
-						callback: function (value, index, values) {
-							return value
-						},
+						fontSize: (window.innerWidth > 600)?16:12,
+						callback: function(value, index, values) {
+							return pricingFormatter('$' + value,"$");
+						}
 					},
 					scaleLabel: {
 						display: true,
 						labelString: legend,
-						fontSize: 10,
+						fontSize: 14,
 						fontColor: "#73727D",
 					},
 				},
@@ -122,12 +126,12 @@ const Analytics = (props, context) => {
 						display: true, //this will remove only the label
 						fontColor: "black",
 						fontWeight: "700",
-						fontSize: 12,
+						fontSize: (window.innerWidth > 600)?16:12,
 					},
 					scaleLabel: {
 						display: true,
 						labelString: timeLabel,
-						fontSize: 10,
+						fontSize: 14,
 						fontColor: "#73727D",
 					},
 				},

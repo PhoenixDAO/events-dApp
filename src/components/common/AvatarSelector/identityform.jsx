@@ -115,12 +115,12 @@ const IdentityForm = (props) => {
 			{!props.nextForm ? (
 				<div className="idn-hldr">
 					<div className="idn-head">
-						<div>
-							<img
+						<div style={{backgroundImage:`url(${roundlogo})`, height: "24px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center"}}>
+							{/* <img
 								style={{ height: "24px" }}
 								src={roundlogo}
 								alt="phnx logo"
-							/>
+							/> */}
 						</div>
 						<div>
 							<p className="idn-heading">PhoenixDAO</p>

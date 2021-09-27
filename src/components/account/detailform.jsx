@@ -193,10 +193,12 @@ const DetailForm = (props) => {
 				});
 			// console.log("avatar ipfs image", avatar);
 			if (ipfsImage) {
-				return <img src={ipfsImage} className="bird2" />;
+				// return <img src={ipfsImage} className="bird2" />;
+				return ipfsImage;
 			}
 		} else {
-			return <img src={imageData(avatarNumber)} className="bird" />;
+			// return <img src={imageData(avatarNumber)} className="bird" />;
+			return imageData(avatarNumber);
 		}
 	};
 
@@ -289,7 +291,9 @@ const DetailForm = (props) => {
 					className="banner"
 					src="/images/accountDetails.jpg"
 				/>
-				<div className="acc-av-hldr">{renderImage()}</div>
+				<div className="acc-av-hldr" style={{backgroundImage:`url(${renderImage()})`, height: "70px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center"}}>
+					{/* {renderImage()} */}
+					</div>
 				<div className="acc-title-hlder">
 					<p className="acc-title"> {name} </p>
 					<div className="redirect-img-hldr" onClick={handleOpen}>

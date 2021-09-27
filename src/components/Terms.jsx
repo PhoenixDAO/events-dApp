@@ -59,6 +59,10 @@ const useStyles = makeStyles((theme) => ({
 			marginLeft: "1%",
 		},
 	},
+	definition:{
+		textAlign:"justify",
+		lineHeight:"1.6rem"
+	},
 	gridContainer: {
 		marginTop: "20px",
 	},
@@ -109,7 +113,7 @@ const Terms = (props) => {
 						Interpretation and Definitions
 					</h3>
 
-					<h6>
+					<h6 className={classes.definition}>
 						<strong>
 							{" "}
 							NB: This product from PhoenixDAO is

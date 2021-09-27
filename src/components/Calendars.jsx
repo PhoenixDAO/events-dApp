@@ -494,6 +494,29 @@ class Calendars extends Component {
 							eventOverlap={false}
 							eventLimit={3}
 							events={events_calendar}
+							eventContent={(arg) => (
+								// console.log("moment time: ",arg,arg.event.start, moment().isAfter(arg.event.start))
+								<span>{
+							moment().isBefore(arg.event.start)?
+							<p style={{ color: "#413AE2", fontSize:"12px"}}>
+								{arg.timeText}
+								<br/>
+								{arg.event._def.title}
+							</p>:
+							<p  style={{ color: "#c2c2c2", fontSize:"12px"}}>
+								{arg.timeText}
+								<br/>
+								{arg.event._def.title}
+							</p>}
+							</span>
+								// <span>{arg.timeText?'hello':''}</span>
+								// <i>
+								//   {arg.event.extendedProps.isUrgent ?
+								// 	'urgent event' :
+								// 	'normal event'
+								//   }
+								// </i>
+							  )}
 							// select={this.handleSelectedDates}
 							slotEventOverlap={false}
 							eventTimeFormat={{
@@ -512,7 +535,7 @@ class Calendars extends Component {
 								}
 							}
 						/>
-					
+					{console.log("events: ", events_calendar)}
 					</div>
 				</div>
 			);
