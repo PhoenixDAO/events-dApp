@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 			"& .MuiSvgIcon-root": {
 				fontSize: "18px",
 				display: "content",
+				marginTop:"-4px"
 			},
 			display: "inherit",
 		},
