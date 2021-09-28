@@ -137,6 +137,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#413AE2",
 		fontWeight: "700",
 		maxWidth: "35.33%",
+		width:"100%",
 		fontSize: "16px",
 		fontFamily: "'Aeonik', sans-serif !important",
 		"& p": {
@@ -162,7 +163,8 @@ const useStyles = makeStyles((theme) => ({
 	},
 	eventTitle: {
 		color: "#1E1E22",
-		maxWidth: "64.66%",
+		minWidth: "65.66%",
+		width:"100%",
 				fontSize: 16,
 		maxHeight: "52px",
 		fontWeight: 700,
@@ -528,13 +530,14 @@ const EventCard = (props, context) => {
 									</div>
 								</div> */}
 							</div>
+							<div>
 							<Typography
 								variant="body2"
 								color="textSecondary"
 								component="p"
 								gutterBottom
 								className={classes.text}
-								style={{maxWidth: "80%"}}
+								// style={{maxWidth: "80%"}}
 							>
 								<DateRange fontSize="small" />{" "}
 								<span>&nbsp;</span>
@@ -596,7 +599,7 @@ const EventCard = (props, context) => {
 										? eventLocation
 										: `Online`}
 							</Typography>
-
+						</div>
 							{/* For my events page */}
 							{myEvent ? (
 								<Grid item>

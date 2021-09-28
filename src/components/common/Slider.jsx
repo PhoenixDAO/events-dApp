@@ -7,6 +7,7 @@ import slider3 from "../Images/slider3.svg";
 import slider11 from "../Images/slider11.svg";
 import slider22 from "../Images/slider22.svg";
 import slider33 from "../Images/slider33.svg";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -66,6 +67,7 @@ const Slider = () => {
 
 	return (
 		<div className={classes.root}>
+			<Link to="/createevent">
 			<Carousel
 				prevIcon={<span />}
 				nextIcon={<span />}
@@ -130,6 +132,7 @@ const Slider = () => {
 					</Carousel.Caption> */}
 				</Carousel.Item>
 			</Carousel>
+			</Link>
 		</div>
 	);
 };

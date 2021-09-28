@@ -31,8 +31,8 @@ const useStyles = makeStyles((theme) => ({
 
 const NearToYou = ({ getCityName }) => {
 	const classes = useStyles();
-	const [cityName, setCityName] = useState("Unknown");
-	const [stateName, setStateName] = useState("Unknown");
+	const [cityName, setCityName] = useState("....");
+	const [stateName, setStateName] = useState("....");
 	const [permission, setPermission] = useState("");
 
 	useEffect(() => {
@@ -55,8 +55,8 @@ const NearToYou = ({ getCityName }) => {
 			if (get.data) {
 				const city = get.data.search.context.location.address.city;
 				const state = get.data.search.context.location.address.country;
-				setCityName(city ? city : "Unknown");
-				setStateName(state ? state : "Unknown");
+				setCityName(city ? city : "....");
+				setStateName(state ? state : "....");
 			}
 		}
 	}

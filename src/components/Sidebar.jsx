@@ -210,23 +210,30 @@ class Sidebar extends Component {
 	renderImage = () => {
 		if (this.state.avatarCustom) {
 			return (
-				<img
-					src={this.state.avatar}
-					style={{
-						width: "40px",
-						height: "40px",
-						objectFit: "cover",
-					}}
-					className="bird"
-				/>
+				// <img
+				// 	src={this.state.avatar}
+				// 	style={{
+				// 		width: "40px",
+				// 		height: "40px",
+				// 		objectFit: "cover",
+				// 	}}
+				// 	/>
+					<div
+					style={{backgroundImage:`url(${this.state.avatar})`, height: "40px",width: "40px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center", borderRadius: "50%", border: "1px solid #ceced3"}}
+					// className="bird"
+				></div>
 			);
 		} else {
 			return (
-				<img
-					src={this.imageData(this.state.avatarId)}
-					style={{ display: "block", margin: "5px" }}
-					className="bird"
-				/>
+				// <img
+				// 	src={this.imageData(this.state.avatarId)}
+				// 	style={{ display: "block", margin: "5px" }}
+				// 	className="bird"
+				// />
+				<div
+					style={{backgroundImage:`url(${this.imageData(this.state.avatarId)})`, height: "40px",width: "40px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center", borderRadius: "50%", border: "1px solid #ceced3"}}
+					// className="bird"
+				></div>
 			);
 		}
 	};
@@ -329,8 +336,9 @@ class Sidebar extends Component {
 							to="/accountdetails"
 							style={{ display: "flex", alignItems: "center" }}
 						>
+							<span style={{height: "40px", width:"40px"}}>
 							{this.renderImage()}
-
+				</span>
 							<span
 								style={{
 									marginLeft: "20px",
@@ -623,13 +631,14 @@ class Sidebar extends Component {
 									</a>
 								</div>
 							</ul>
-							<span className="toggleHidden suggestion">
-								Kindly give us your feedback(s) <a style={{
+							<span className="toggleHidden suggestion" style={{	whiteSpace:"pre-wrap"}}>
+								Kindly give us your feedback(s) <span><a style={{
 									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
 									textDecoration: "underline",
-									display: "flex",
-									alignItems: "center",
+									// display: "flex",
+									// alignItems: "center",
 								}} href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform" target="_blank">here</a>
+							</span>
 							</span>
 						</div>
 					</div>
@@ -1015,13 +1024,15 @@ class Sidebar extends Component {
 								</div>
 							</ul>
 							{/* <div className="toggleHidden suggestion"> */}
-							<span className="toggleHidden suggestion">
-								Kindly give us your feedback(s) <a style={{
-									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
+							<span className="toggleHidden suggestion"  style={{	whiteSpace:"pre-wrap"}} >
+								Kindly give us your feedback(s) <span>
+								<a style={{
+									color: "#413ae2", ctextDecoration: "underline", color: "rgb(65, 58, 226)",
 									textDecoration: "underline",
-									display: "flex",
-									alignItems: "center",
+									// display: "flex",
+									// alignItems: "center", 
 								}} href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform" target="_blank">here</a>
+								</span>
 							</span>
 							{/* </div> */}
 						</div>
