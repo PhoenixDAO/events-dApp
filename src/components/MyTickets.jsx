@@ -69,7 +69,6 @@ class MyTickets extends Component {
 			.ticketsOf(this.props.accounts)
 			.call();
 		// const newsort = blockChainTickets.concat().sort((a, b) => b - a);
-		console.log("blockchainTickets0", blockChainTickets.length);
 		const graphURL = await GetGraphApi();
 		await axios({
 			url: graphURL,
@@ -86,14 +85,12 @@ class MyTickets extends Component {
 				`,
 			},
 		}).then((graphEvents) => {
-			console.log("TicketData", Date.now(), graphEvents);
 
 			if (
 				graphEvents.data ||
 				graphEvents.data.data !== "undefined" ||
 				graphEvents.data.data.tickets.length > 0
 			) {
-				console.log("Data is here from graph");
 				this.setState({
 					blockChainTickets: graphEvents.data.data.tickets,
 					blockChainTicketsCopy: graphEvents.data.data.tickets,
@@ -119,16 +116,14 @@ class MyTickets extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-			const get = await axios.get(
-				`${API_URL}${REPORT_EVENT}/${networkId}`
-			);
-			this.setState({
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );			this.setState({
 				hideEvent: get.data.result,
 			});
 			// console.log("hide event", this.state.hideEvent);
 			return;
 		} catch (error) {
-			console.log("check error", error);
 		}
 	};
 
@@ -137,7 +132,6 @@ class MyTickets extends Component {
 	//Search Active Events By Name
 	updateSearch = (value) => {
 		let filteredTickets = this.state.blockChainTicketsCopy;
-		console.log(this.state.blockChainTickets);
 		try {
 			if (value !== "") {
 				filteredTickets = filteredTickets.filter((ticket) => {
@@ -153,7 +147,6 @@ class MyTickets extends Component {
 		} catch (e) {
 			console.log(e);
 		}
-		console.log("FIltered Tickets", filteredTickets);
 		this.setState({
 			blockChainTickets: filteredTickets,
 			// active_length: filteredEvents.length,
@@ -193,7 +186,6 @@ class MyTickets extends Component {
 			);
 		}
 		// else condition removed from here
-		// console.log('MyTickets blockChainTickets',this.state.blockChainTickets)
 		let currentPage = Number(this.props.match.params.page);
 		let ticket_list = [];
 		let skip = false;
@@ -218,11 +210,7 @@ class MyTickets extends Component {
 		let start = end - this.perPage;
 		if (end > count) end = count;
 		let pages = Math.ceil(count / this.perPage);
-
-		console.log("ticket list", ticket_list, start, end, end - this.perPage);
-
 		for (let i = start; i < end; i++) {
-			// console.log("ticketData this.state.blockChainTickets[i]",this.state.blockChainTickets[i])
 			let ticket = parseInt(ticket_list[i].id, 10);
 			tickets.push(
 				<Ticket
@@ -234,7 +222,6 @@ class MyTickets extends Component {
 				/>
 			);
 		}
-		console.log("tickets", tickets);
 		let pagination;
 		if (pages > 1) {
 			let links = [];
@@ -359,7 +346,7 @@ class MyTickets extends Component {
 				{/* <div className="sticky-nav-travel">
 					<img src={"/images/travel.svg"} />
 				</div> */}
-				{tickets.length !== 0 && !this.state.loading && (
+				{/* {tickets.length !== 0 && !this.state.loading && (
 					<a
 						href="https://www.travala.com/?ref=phoenixdao"
 						target="_blank"
@@ -371,7 +358,7 @@ class MyTickets extends Component {
 							/>
 						</div>
 					</a>
-				)}
+				)} */}
 			</div>
 		);
 	}

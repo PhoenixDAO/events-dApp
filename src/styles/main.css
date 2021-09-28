@@ -144,7 +144,34 @@ html {
 	scroll-behavior: smooth;
 	overflow: visible !important;
 }
+#transakOnOffRampWidget {
+	width: 100% !important;
+}
 
+@media (max-width: 500px){
+.transak_modal {
+    height: 100%;
+    max-height: 642px;
+    top: 53%;
+    width: 100% !important;
+}
+}
+video,
+iframe {
+    position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.videoSize {
+  background: white;
+  height: 100vh;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
 body {
 	background-color: #F2F2FD !important;
 	font-family: "AeonikReg", sans-serif !important;
@@ -588,6 +615,13 @@ div[class|="r-sticky"] .header3 {
 }
 .Toastify__toast-container--bottom-right{
 	bottom: 7em !important ;
+}
+
+@media screen and (max-width: 780px) {
+	.Toastify__toast-container--bottom-right{
+		bottom: 7em !important ;
+		padding-inline: 20px;
+	}
 }
 
 @media screen and (max-width: 780px) {

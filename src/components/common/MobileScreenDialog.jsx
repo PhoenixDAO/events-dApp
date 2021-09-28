@@ -124,7 +124,6 @@ const MobileScreenDialog = (props) => {
 				<div className={classes.paragraph}>
 					<p>
 					You may not enjoy the best user experience on mobile now as it's still in development stage, in the meantime, please use the web version for best experience
-
 					</p>
 				</div>
 			</div>

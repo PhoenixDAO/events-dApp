@@ -127,7 +127,6 @@ const ConfirmPurchase = (props) => {
 			`,
 				},
 			});
-			console.log("result",result.data.data.events.length);
 			setLength(result.data.data.events.length);
 		}
 		loadGraphData();
@@ -144,7 +143,6 @@ const ConfirmPurchase = (props) => {
 		let error = parseInt(eventId) > parseInt(eventlength)
 		if (error) {
 			seterrorId(true);
-			console.log("error", errorId);
 		}
 		if (!isaddress) {
 			setErrorAddress(true);

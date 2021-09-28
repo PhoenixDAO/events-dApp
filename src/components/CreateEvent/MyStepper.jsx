@@ -119,7 +119,7 @@ const MyStepper = ({
 
 	const steps = ["", "", "", ""];
 	function getFlamingSteps() {
-		return ["Upload Data", "Confirm Transaction", "Publish Event"];
+		return ["Uploading", "Confirming Transaction", "Publishing Event"];
 	}
 	const flamingSteps = getFlamingSteps();
 	const [isCopied, setIsCopied] = useState(false);
@@ -1848,7 +1848,7 @@ const MyStepper = ({
 								color="primary"
 								onClick={handleNextStep}
 								disabled={!formIsValid(activeStep)}
-								className={classes.nextButton}
+								className={`${classes.nextButton} ${(activeStep === steps.length - 1)&&classes.publishButton}`}
 								endIcon={
 									activeStep === steps.length - 1 ? null : (
 										<img

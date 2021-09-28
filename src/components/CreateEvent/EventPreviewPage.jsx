@@ -41,6 +41,11 @@ const styles = (theme) => ({
 		"& .MuiDialog-paperWidthSm": {
 			maxWidth: "60%",
 		},
+		"@media (max-width: 500px)": {
+			"& .MuiDialog-paperWidthSm": {
+				maxWidth: "90%",
+			},
+		},
 	},
 	share: {
 		height: "45px",
@@ -180,6 +185,7 @@ const styles = (theme) => ({
 	},
 	previewPadding: {
 		paddingRight: "50px",
+		paddingTop:"0px !important",
 		paddingLeft: "50px",
 		"@media (max-width: 500px)": {
 			paddingLeft: "20px",

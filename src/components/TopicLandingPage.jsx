@@ -191,12 +191,10 @@ class TopicLandingPage extends Component {
 
 	getTopicData() {
 		let topicSlug = this.getLastURLSegment();
-		console.log("topicSlug", topicSlug);
 		let theTopic = {};
 		if (topicsJson[topicSlug]) {
 			theTopic = topicsJson[topicSlug];
 		}
-		console.log("theTopic", theTopic);
 		return theTopic.name;
 	}
 
@@ -306,7 +304,6 @@ class TopicLandingPage extends Component {
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
 					// console.log("GraphQL query -- graphEvents undefined")
-					console.log("topic data", graphEvents.data);
 					// this.setState({
 					// 	Topic_Events: [],
 					// 	active_length: 0,
@@ -320,20 +317,15 @@ class TopicLandingPage extends Component {
 					}, 1000);
 				} else {
 					if (this._isMounted) {
-						console.log("topic data", graphEvents.data);
-						console.log("topic data", graphEvents.data.data.events);
 						let newsort = graphEvents.data.data.events
 							.concat()
 							.sort((a, b) => b.blockNumber - a.blockNumber);
 						// .filter(
 						// 	(activeEvents) =>{
-						// 		console.log("activeEvents", activeEvents.topic)
-						// 		console.log("this.props.match.params.page", this.props.match.params.page)
 						// 		// activeEvents.time >= dateNow &&
 						// 		activeEvents.topic ===
 						// 			this.props.match.params.page}
 						// );
-						console.log("GraphQL query newsort", newsort);
 						if (this._isMounted) {
 							this.setState({
 								Topic_Events: newsort,
@@ -354,7 +346,6 @@ class TopicLandingPage extends Component {
 
 	// Get My Past Events on Blockchain
 	async loadPastEvents() {
-		// console.log("inLoadPastEvents")
 		if (this._isMounted) {
 			this.setState({
 				loading: true,
@@ -365,8 +356,6 @@ class TopicLandingPage extends Component {
 		const graphURL = await GetGraphApi();
 
 		// GRAPH BLOCK //
-		// console.log("GraphQL query before call",Date.now())
-
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -401,10 +390,8 @@ class TopicLandingPage extends Component {
 			},
 		})
 			.then((graphEvents) => {
-				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
-					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({
 						loading: false,
 						Topic_Events: [],
@@ -423,8 +410,6 @@ class TopicLandingPage extends Component {
 									activeEvents.category ===
 										this.props.match.params.page
 							);
-						// console.log("GraphQL query newsort",newsort)
-
 						if (this._isMounted) {
 							this.setState({
 								Topic_Events: newsort,
@@ -492,6 +477,11 @@ class TopicLandingPage extends Component {
 					filteredEvents = this.state.topic_copy;
 				}
 			} catch (e) {}
+			if((window.screen.height/window.screen.width)<1){
+				window.scroll(0, window.screen.height * 0.5);			
+			}else{
+				window.scroll(0, window.screen.height*0.58);
+			}
 			this.setState({
 				Topic_Events: filteredEvents,
 				active_length: filteredEvents.length,
@@ -509,16 +499,14 @@ class TopicLandingPage extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-			const get = await axios.get(
-				`${API_URL}${REPORT_EVENT}/${networkId}`
-			);
-			console.log("topic landing page filtered events", get);
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
 		} catch (error) {
-			// console.log("check error", error);
 		}
 	};
 	//Sort Active Events By Date(Newest/Oldest)
@@ -576,7 +564,6 @@ class TopicLandingPage extends Component {
 				}
 			}
 		} catch (e) {
-			console.log("findNearToYouEvents", e);
 			return false;
 		}
 	};
@@ -584,17 +571,14 @@ class TopicLandingPage extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-			const get = await axios.get(
-				`${API_URL}${REPORT_EVENT}/${networkId}`
-			);
-			console.log("topic landing page filtered events", get);
+            const get = await axios.get(
+                `${API_URL}${REPORT_EVENT}/${networkId}`
+            );
 			this.setState({
 				hideEvent: get.data.result,
 			});
-			// console.log("hide event", this.state.hideEvent);
 			return;
 		} catch (error) {
-			console.log("check error", error);
 		}
 	};
 
@@ -604,8 +588,6 @@ class TopicLandingPage extends Component {
 		});
 		let updatedList = [];
 		let events = this.state.Topic_Events;
-		console.log("eventssss", events);
-
 		if (e.target.value === "Trending Events") {
 			for (let i = 0; i < events.length; i++) {
 				if (this.state.Topic_Events[i].tktTotalQuantitySold >= 5) {
@@ -650,8 +632,6 @@ class TopicLandingPage extends Component {
 		// this.state.active_length == 0
 		// ) {
 		let count = this.state.topic_copy.length;
-
-		// console.log("this.props.match.params.page",this.props.match.params.id)
 		let currentPage = Number(this.props.match.params.id);
 		let events_list = [];
 		let skip = false;
@@ -670,7 +650,6 @@ class TopicLandingPage extends Component {
 						this.state.topic_copy[i].eventId ==
 						this.state.hideEvent[j].id
 					) {
-						console.log("skipped", this.state.hideEvent[j].id);
 						skip = true;
 					}
 				}
@@ -690,10 +669,7 @@ class TopicLandingPage extends Component {
 			);
 		} else {
 			let updated_list = [];
-			// console.log("events_list",events_list)
 			count = events_list.length;
-			// console.log("currentPage",currentPage)
-			// console.log("this.perPage",this.perPage)
 			if (isNaN(currentPage) || currentPage < 1) currentPage = 1;
 			let end = currentPage * this.perPage;
 			let start = end - this.perPage;
@@ -714,7 +690,6 @@ class TopicLandingPage extends Component {
 					/>
 				);
 			}
-			// console.log("updated_list",updated_list)
 			// updated_list.reverse();
 
 			let pagination = "";

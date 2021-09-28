@@ -50,11 +50,9 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: "15px",
 	},
 	videoResponsive: {
-		overflow: "hidden",
-		paddingBottom: "56.25%",
-		position: "relative",
-		height: 0,
-		backgroundColor: "#fff",
+		position: 'relative',
+		paddingBottom: '56.25%', /* 16:9 */
+		height: '0',
 	},
 	videoResponsiveIframe: {
 		left: "32px",
@@ -150,7 +148,7 @@ const Terms = (props) => {
 						</strong>
 					</div>
 					<div className={classes.alignTextWithVideo}>
-						<h2
+						<h3
 							ref={(el) =>
 								(pageRefs.current = {
 									...pageRefs.current,
@@ -159,8 +157,8 @@ const Terms = (props) => {
 							}
 						>
 							Installation and Configuration
-						</h2>
-						<h3
+						</h3>
+						<h4
 							ref={(el) =>
 								(pageRefs.current = {
 									...pageRefs.current,
@@ -169,7 +167,7 @@ const Terms = (props) => {
 							}
 						>
 							MetaMask Installation
-						</h3>
+						</h4>
 						<p>
 							An Ethereum Wallet in your Browser. MetaMask is a
 							browser extension for storing cryptocurrencies and
@@ -187,7 +185,7 @@ const Terms = (props) => {
 
 						{/* <p>[ Image to be entered ]</p> */}
 
-						<h3
+						<h4
 							ref={(el) =>
 								(pageRefs.current = {
 									...pageRefs.current,
@@ -196,7 +194,7 @@ const Terms = (props) => {
 							}
 						>
 							MetaMask Configuration
-						</h3>
+						</h4>
 
 						<ul>
 							<li>
@@ -235,7 +233,7 @@ const Terms = (props) => {
 								extensions.)
 							</li>
 						</ul>
-						<h2
+						<h3
 							ref={(el) =>
 								(pageRefs.current = {
 									...pageRefs.current,
@@ -245,8 +243,14 @@ const Terms = (props) => {
 						>
 							Getting into app and connecting wallet - Ethereum /
 							Polygon configurations.
-						</h2>
-						<h3>Ethereum main-net</h3>
+						</h3>
+						<h4 ref={(el) =>
+								(pageRefs.current = {
+									...pageRefs.current,
+									Ethereum: el,
+								})
+							}
+							>Ethereum main-net</h4>
 						<ul>
 							<li>
 								Open the PhoenixDAO Events Marketplace dApp.
@@ -309,7 +313,7 @@ const Terms = (props) => {
 						>
 							Ethereum main-net
 						</h6>
-						<h6
+						{/* <h6
 							className={classes.menuSubHeading}
 							onClick={() => scrollIntoView("Import1")}
 						>
@@ -357,7 +361,7 @@ const Terms = (props) => {
 							onClick={() => scrollIntoView("Past")}
 						>
 							Past Events
-						</h6>
+						</h6> */}
 					</div>
 				</Grid>
 			</Grid>

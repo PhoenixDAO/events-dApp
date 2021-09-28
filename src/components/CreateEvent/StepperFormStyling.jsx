@@ -67,6 +67,17 @@ const useStyles = makeStyles((theme) => ({
 		"@media (max-width: 530px)": {
 			height: "15px",
 		},
+		"@media (max-width: 320px)": {
+			height: "10px",
+		},
+	},
+	publishButton:{
+		"@media (max-width: 530px)": {
+			fontSize: "12px !important",
+		},
+		"@media (max-width: 320px)": {
+			fontSize: "9px !important",
+		},
 	},
 	nextButton: {
 		textTransform: "none",
@@ -83,13 +94,16 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: 700,
 		"@media (max-width: 530px)": {
 			// width: "57%",
-			width:"150px",
-			fontSize: 12,
+			width:"120px",
+			fontSize: 14,
+			padding:0,
 		},
 		"@media (max-width: 320px)": {
 			// width: "57%",
 			width:"100px",
-			fontSize: 12,
+			padding:"10px",
+			fontSize: 14,
+			paddingRight:"20px"
 		},
 		"& .MuiButton-endIcon": {
 			position: "absolute",
@@ -309,6 +323,17 @@ const useStyles = makeStyles((theme) => ({
 	},
 	adornedStart: {
 		backgroundColor: "#000",
+	},
+	labelIcon:{
+		background: "#413AE2",
+		width: "40px",
+		height: "40px",
+		borderRadius:"50%",
+		color: "white",
+		alignItems:"center",
+		textAlign: "center",
+		justifyContent: "center",
+		display:"flex"
 	},
 	stepperCircle: {
 		"& .MuiSvgIcon-root": {

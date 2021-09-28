@@ -39,7 +39,6 @@ import {
 
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
-import ticketSoldQuantityFormatter from "../../utils/ticketsQuantityFormatter";
 var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
@@ -103,6 +102,7 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: "'Aeonik', sans-serif",
 	},
 	FavoriteIcon: {
+		textAlign:"center",
 		border: "none",
 		backgroundColor: "#fff",
 		fontSize: 15,
@@ -137,6 +137,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#413AE2",
 		fontWeight: "700",
 		maxWidth: "35.33%",
+		width:"100%",
 		fontSize: "16px",
 		fontFamily: "'Aeonik', sans-serif !important",
 		"& p": {
@@ -162,8 +163,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	eventTitle: {
 		color: "#1E1E22",
-		maxWidth: "64.66%",
-		fontSize: 16,
+		minWidth: "65.66%",
+		width:"100%",
+				fontSize: 16,
 		maxHeight: "52px",
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
@@ -256,7 +258,6 @@ const EventCard = (props, context) => {
 						},
 					}
 				);
-				console.log("result", result);
 				if (result.status === 200 || result.status === 400) {
 					setIcon(!Icon);
 				}
@@ -272,7 +273,6 @@ const EventCard = (props, context) => {
 						},
 					}
 				);
-				console.log("result", result);
 				if (result.status === 200 || result.status === 400) {
 					setIcon(!Icon);
 				}
@@ -280,10 +280,6 @@ const EventCard = (props, context) => {
 			}
 		} catch (error) {
 			if (error.response && error.response.data) {
-				console.log(
-					"Consoleee notify report response error.response.data",
-					error.response.data
-				);
 			}
 		}
 	};
@@ -395,27 +391,26 @@ const EventCard = (props, context) => {
 									{event_data.tktTotalQuantity != 0 ? (
 										<Typography
 											className={classes.quantitySold}
-											title={""+ event_data.tktTotalQuantitySold + "/"+ ((event_data.tktTotalQuantity == 0) ? "∞" : event_data.tktTotalQuantity)+""}
 										>
-											<ConfirmationNumberOutlined fontSize="medium" />
+											<ConfirmationNumberOutlined fontSize="small" />
 											<span>&nbsp;</span>
-											{ticketSoldQuantityFormatter(event_data.tktTotalQuantitySold)}/
-										{event_data.tktTotalQuantity == 0 ? '∞' : ticketSoldQuantityFormatter(event_data.tktTotalQuantity)}
+											{event_data.tktTotalQuantitySold}/
+											{event_data.tktTotalQuantity}
 										</Typography>
 									) : null}
 									{!myEvent && !ticket ? (
 										<Typography
 											className={classes.FavoriteIcon}
-											component="button"
+											component="span"
 											onClick={addTofavorite}
 										>
 											{Icon ? (
 												<Favorite
 													fontSize="small"
-													style={{ color: "#413AE2" }}
-												/>
+													style={{ color: "#413AE2", marginTop:"6px" }}
+										/>
 											) : (
-												<FavoriteBorder fontSize="small" />
+												<FavoriteBorder fontSize="small" style={{color: "#000000", marginTop: "6px"}}/>
 											)}
 											{Icon}
 										</Typography>
@@ -458,7 +453,6 @@ const EventCard = (props, context) => {
 										"Free"
 									) : phnx_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
-											{console.log("phnx price",phnx_price)}
 											<p
 												title={phnx_price[0] + " PHNX"}
 												style={{
@@ -536,12 +530,14 @@ const EventCard = (props, context) => {
 									</div>
 								</div> */}
 							</div>
+							<div>
 							<Typography
 								variant="body2"
 								color="textSecondary"
 								component="p"
 								gutterBottom
 								className={classes.text}
+								// style={{maxWidth: "80%"}}
 							>
 								<DateRange fontSize="small" />{" "}
 								<span>&nbsp;</span>
@@ -603,7 +599,7 @@ const EventCard = (props, context) => {
 										? eventLocation
 										: `Online`}
 							</Typography>
-
+						</div>
 							{/* For my events page */}
 							{myEvent ? (
 								<Grid item>
@@ -614,12 +610,11 @@ const EventCard = (props, context) => {
 										component="p"
 										gutterBottom
 										className={classes.text}
-										title={""+ event_data.tktTotalQuantitySold + "/"+ ((event_data.tktTotalQuantity == 0) ? "∞" : event_data.tktTotalQuantity)+""}
 									>
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
-										{ticketSoldQuantityFormatter(event_data.tktTotalQuantitySold)}/
-										{event_data.tktTotalQuantity == 0 ? '∞' : ticketSoldQuantityFormatter(event_data.tktTotalQuantity)}
+										{event_data.tktTotalQuantitySold}/
+										{event_data.tktTotalQuantity == 0 ? '∞' : event_data.tktTotalQuantity}
 
 									</Typography>
 									<Typography

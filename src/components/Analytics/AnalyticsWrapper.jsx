@@ -4,7 +4,7 @@ import {
 	getEventName,
 	getTimeData,
 	getTodayData,
-} from "../utils/graphApis";
+} from "../../utils/graphApis";
 import Analytics from "./Analytics";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
@@ -16,10 +16,12 @@ const AnalyticsWrapper = (props) => {
 	const [ticketBought, setTicketBought] = useState(0);
 	const [graphData, setGraphData] = useState([]);
 	const [todayGraphData, setTodayGraphData] = useState([]);
+
 	useEffect(() => {
 		loadApis();
 		props.executeScroll();
 	}, []);
+
 	const loadApis = async () => {
 		const eventName = await getEventName(props.accounts);
 		setEventName(eventName);
@@ -31,22 +33,15 @@ const AnalyticsWrapper = (props) => {
 			.ticketsOf(props.accounts)
 			.call();
 		setTicketBought(blockChainTickets.length);
-		console.log("ticket bought", blockChainTickets);
 		// const timeData = await getTimeData(props.accounts);
 		const createdDate = moment().minutes(0).seconds(0).unix();
-		console.log("created date", createdDate);
 		const todayData = await getTodayData(
 			props.accounts,
 			Number(createdDate - 86400)
 		);
-		console.log("time stamp--- ", moment().unix());
-		console.log("todayData", todayData);
 		setTodayGraphData(todayData);
-
 		const timeData = await getTimeData(props.accounts);
-		console.log("timeData", timeData);
 		setGraphData(timeData);
-		console.log("timestamp", Number(moment().unix()));
 	};
 
 	const handleEvent = async (event) => {
@@ -62,19 +57,15 @@ const AnalyticsWrapper = (props) => {
 			graphData={graphData}
 			todayGraphData={todayGraphData}
 			handleEvent={handleEvent}
-			// NumbergraphData={props.NumbergraphData}
 		/>
 	);
 };
-
-// export default AnalyticsWrapper
 
 AnalyticsWrapper.contextTypes = {
 	drizzle: PropTypes.object,
 };
 const mapStateToProps = (state) => {
 	return {
-		// contracts: state.contracts,
 		accounts: state.accounts[0],
 		networkId: state.web3.networkId,
 	};

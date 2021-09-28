@@ -90,10 +90,8 @@ const Header = ({
 	};
 	const setTransakChain = async () => {
 		const network = await getNetworkId();
-		console.log("network", network);
 		if (network == GLOBAL_NETWORK_ID) {
 			setChain("ethereum");
-			console.log("chain", chainId);
 		} else {
 			setChain("polygon");
 		}
@@ -136,7 +134,7 @@ const Header = ({
 						</IconButton>
 					) : null}
 					{/* Header Title */}
-					<h2>{title}</h2>
+					<h2 style={{marginBottom: "0px"}}>{title}</h2>
 				</div>
 
 				{/* {page == "analytics" || page == "create" || phnxButton ? (

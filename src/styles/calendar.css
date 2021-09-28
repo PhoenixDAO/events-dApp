@@ -1,6 +1,26 @@
 ::-webkit-scrollbar {
     height: 0px;
 }
+.fc-event-past {
+    color:#F2F2FD !important;
+}
+
+
+.fc-event-start{
+    color:#F2F2FD;
+}
+.fc-event-future{
+    color:#413AE2 !important;
+}
+.fc-h-event{
+    background-color: #F2F2FD !important;
+}
+
+.fc-v-event{
+    background-color: #F2F2FD !important;
+}
+
+
 
 .fc .fc-daygrid-day-number,
 .fc .fc-col-header-cell-cushion {
@@ -46,17 +66,15 @@ table {
 .fc-event-main-frame,
 .fc-daygrid-event-harness {
     background-color: #F2F2FD;
-    color: #413AE2;
+    OVERFLOW: hidden;
     padding: 0px 5px;
 }
+
 
 .fc-h-event {
     border: 0px !important;
 }
 
-.fc-event-time {
-    color: #413AE2;
-}
 
 .fc-daygrid-event-dot {
     display: none;
@@ -64,7 +82,7 @@ table {
 
 .fc-event-title {
     display: block;
-    color: #413AE2;
+    /* color: #413AE2; */
 }
 
 .fc-h-event,
@@ -193,6 +211,7 @@ table {
 
 .fc-event-main {
     padding: 0px !important;
+    overflow: hidden;
 }
 .fc-timegrid-event{
     border: 0px solid transparent !important;

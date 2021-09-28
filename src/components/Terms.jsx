@@ -59,6 +59,10 @@ const useStyles = makeStyles((theme) => ({
 			marginLeft: "1%",
 		},
 	},
+	definition:{
+		textAlign:"justify",
+		lineHeight:"1.6rem"
+	},
 	gridContainer: {
 		marginTop: "20px",
 	},
@@ -80,6 +84,7 @@ const Terms = (props) => {
 		});
 	}
 	return (
+		// test comment
 		<div className={`event-page-wrapper ${classes.termsPage}`}>
 			<Header title="Terms and Conditions" phnxButton={true} />
 			<Grid container className={classes.gridContainer}>
@@ -97,7 +102,7 @@ const Terms = (props) => {
 						Please read these terms and conditions carefully before
 						using Our Service.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -106,9 +111,9 @@ const Terms = (props) => {
 						}
 					>
 						Interpretation and Definitions
-					</h2>
+					</h3>
 
-					<h5>
+					<h6 className={classes.definition}>
 						<strong>
 							{" "}
 							NB: This product from PhoenixDAO is
@@ -122,8 +127,8 @@ const Terms = (props) => {
 							any activity that breaches legality in
 							region/jurisdiction.{" "}
 						</strong>{" "}
-					</h5>
-					<h3
+					</h6>
+					<h4
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -132,7 +137,7 @@ const Terms = (props) => {
 						}
 					>
 						Interpretation
-					</h3>
+					</h4>
 					<p>
 						The words of which the initial letter is capitalized
 						have meanings defined under the following conditions.
@@ -140,7 +145,7 @@ const Terms = (props) => {
 						regardless of whether they appear in singular or in
 						plural.
 					</p>
-					<h3
+					<h4
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -149,7 +154,7 @@ const Terms = (props) => {
 						}
 					>
 						Definitions
-					</h3>
+					</h4>
 					<p>For the purposes of these Terms and Conditions:</p>
 					<ul>
 						<li>
@@ -240,7 +245,7 @@ const Terms = (props) => {
 							</p>
 						</li>
 					</ul>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -249,7 +254,7 @@ const Terms = (props) => {
 						}
 					>
 						Acknowledgment
-					</h2>
+					</h3>
 					<p>
 						These are the Terms and Conditions governing the use of
 						this Service and the agreement that operates between You
@@ -286,7 +291,7 @@ const Terms = (props) => {
 						read Our Privacy Policy carefully before using Our
 						Service.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -295,7 +300,7 @@ const Terms = (props) => {
 						}
 					>
 						Links to Other Websites
-					</h2>
+					</h3>
 					<p>
 						Our Service may contain links to third-party websites or
 						services that are not owned or controlled by the
@@ -317,7 +322,7 @@ const Terms = (props) => {
 						and privacy policies of any third-party websites or
 						services that You visit.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -326,7 +331,7 @@ const Terms = (props) => {
 						}
 					>
 						Termination
-					</h2>
+					</h3>
 					<p>
 						We may terminate or suspend Your access immediately,
 						without prior notice or liability, for any reason
@@ -337,7 +342,7 @@ const Terms = (props) => {
 						Upon termination, Your right to use the Service will
 						cease immediately.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -346,7 +351,7 @@ const Terms = (props) => {
 						}
 					>
 						Limitation of Liability
-					</h2>
+					</h3>
 					<p>
 						Notwithstanding any damages that You might incur, the
 						entire liability of the Company and any of its suppliers
@@ -380,7 +385,7 @@ const Terms = (props) => {
 						party's liability will be limited to the greatest extent
 						permitted by law.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -390,7 +395,7 @@ const Terms = (props) => {
 					>
 						&quot;AS IS&quot; and &quot;AS AVAILABLE&quot;
 						Disclaimer
-					</h2>
+					</h3>
 					<p>
 						The Service is provided to You &quot;AS IS&quot; and
 						&quot;AS AVAILABLE&quot; and with all faults and defects
@@ -437,7 +442,7 @@ const Terms = (props) => {
 						forth in this section shall be applied to the greatest
 						extent enforceable under applicable law.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -446,14 +451,14 @@ const Terms = (props) => {
 						}
 					>
 						Governing Law
-					</h2>
+					</h3>
 					<p>
 						The laws of the Country, excluding its conflicts of law
 						rules, shall govern this Terms and Your use of the
 						Service. Your use of the Application may also be subject
 						to other local, state, national, or international laws.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -462,13 +467,13 @@ const Terms = (props) => {
 						}
 					>
 						Disputes Resolution
-					</h2>
+					</h3>
 					<p>
 						If You have any concern or dispute about the Service,
 						You agree to first try to resolve the dispute informally
 						by contacting the Company.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -477,13 +482,13 @@ const Terms = (props) => {
 						}
 					>
 						For European Union (EU) Users
-					</h2>
+					</h3>
 					<p>
 						If You are a European Union consumer, you will benefit
 						from any mandatory provisions of the law of the country
 						in which you are resident in.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -492,7 +497,7 @@ const Terms = (props) => {
 						}
 					>
 						United States Legal Compliance
-					</h2>
+					</h3>
 					<p>
 						You represent and warrant that (i) You are not located
 						in a country that is subject to the United States
@@ -502,7 +507,7 @@ const Terms = (props) => {
 						any United States government list of prohibited or
 						restricted parties.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -511,8 +516,8 @@ const Terms = (props) => {
 						}
 					>
 						Severability and Waiver
-					</h2>
-					<h3
+					</h3>
+					<h4
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -521,7 +526,7 @@ const Terms = (props) => {
 						}
 					>
 						Severability
-					</h3>
+					</h4>
 					<p>
 						If any provision of these Terms is held to be
 						unenforceable or invalid, such provision will be changed
@@ -530,7 +535,7 @@ const Terms = (props) => {
 						applicable law and the remaining provisions will
 						continue in full force and effect.
 					</p>
-					<h3
+					<h4
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -539,7 +544,7 @@ const Terms = (props) => {
 						}
 					>
 						Waiver
-					</h3>
+					</h4>
 					<p>
 						Except as provided herein, the failure to exercise a
 						right or to require performance of an obligation under
@@ -548,7 +553,7 @@ const Terms = (props) => {
 						time thereafter nor shall be the waiver of a breach
 						constitute a waiver of any subsequent breach.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -557,14 +562,14 @@ const Terms = (props) => {
 						}
 					>
 						Translation Interpretation
-					</h2>
+					</h3>
 					<p>
 						These Terms and Conditions may have been translated if
 						We have made them available to You on our Service. You
 						agree that the original English text shall prevail in
 						the case of a dispute.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -573,7 +578,7 @@ const Terms = (props) => {
 						}
 					>
 						Changes to These Terms and Conditions
-					</h2>
+					</h3>
 					<p>
 						We reserve the right, at Our sole discretion, to modify
 						or replace these Terms at any time. If a revision is
@@ -589,7 +594,7 @@ const Terms = (props) => {
 						whole or in part, please stop using the website and the
 						Service.
 					</p>
-					<h2
+					<h3
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -598,7 +603,7 @@ const Terms = (props) => {
 						}
 					>
 						Contact Us
-					</h2>
+					</h3>
 					{/* <ul> */}
 					<p>
 						If you have any questions about these Terms and
