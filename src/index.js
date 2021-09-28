@@ -32,7 +32,6 @@ import { CssBaseline } from "@material-ui/core";
 // 		url=INFURA_WEB_URL_2
 // 	}
 // });
-
 const options = {
 	web3: {
 		customProvider: new Web3(INFURA_URL_2),
@@ -41,25 +40,21 @@ const options = {
 			url: INFURA_WEB_URL_2,
 		},
 	},
-
 	contracts: [OpenEvents],
 	// contracts : [{
 	// 	contractName: 'OpenEvents',
 	// 	web3Contract: new web3s.eth.Contract(OpenEvents.abi, Open_events_Address, {data: OpenEvents.deployedBytecode }) // An instance of a Web3 contract
 	//   }],
-
 	events: {
 		OpenEvents: ["CreatedEvent", "SoldTicket"],
 	},
 	polls: {
 		blocks: 2500,
 	},
-
 	transactions: {
 		txHash: {},
 	},
 };
-
 const theme = createMuiTheme({
 	palette: {
 		// primary: {
@@ -80,15 +75,12 @@ const theme = createMuiTheme({
 		},
 	},
 });
-
 // setup drizzle
 // const drizzle = new Drizzle(options);
 // const { DrizzleProvider } = drizzleReactHooks;
-
 // const account_login = localStorage.getItem("account");
 // let appPassword = localStorage.getItem("app_password");
 // if (
-	 
 // 	!appPassword ||
 // 	appPassword != process.env.REACT_APP_PASSWORD
 // ) {
@@ -103,7 +95,6 @@ const theme = createMuiTheme({
 			</DrizzleProvider>
 		);
 	};
-
 	ReactDOM.render(
 		<React.Fragment>{render()}</React.Fragment>,
 		document.getElementById("root")
