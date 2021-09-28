@@ -277,7 +277,6 @@ class MyEvents extends Component {
 			},
 		})
 			.then((graphEvents) => {
-
 				if (!graphEvents.data || graphEvents.data.data === undefined) {
 					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({
@@ -371,7 +370,7 @@ class MyEvents extends Component {
 				} else {
 					filteredEvents = this.state.check;
 				}
-			} catch (e) { }
+			} catch (e) {}
 			this.setState({
 				MyEvents: filteredEvents,
 				active_length: filteredEvents.length,
@@ -448,6 +447,7 @@ class MyEvents extends Component {
 					ipfs={events_list[i].ipfsHash}
 					myEvents={true}
 					loading={this.state.loading}
+					selectedTab={this.state.selectedTab}
 				/>
 			);
 		}
@@ -575,7 +575,6 @@ class MyEvents extends Component {
 						position="static"
 						className={classes.AppBar}
 						color="transparent"
-
 					>
 						<Tabs
 							value={this.state.selectedTab}
@@ -609,7 +608,6 @@ class MyEvents extends Component {
 					{body}
 					{/* <FindEvents {...this.props}/> */}
 				</TabPanel>
-				
 			</div>
 		);
 	}

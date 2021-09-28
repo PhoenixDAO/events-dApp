@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: "'Aeonik', sans-serif",
 	},
 	FavoriteIcon: {
-		textAlign:"center",
+		textAlign: "center",
 		border: "none",
 		backgroundColor: "#fff",
 		fontSize: 15,
@@ -137,7 +137,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#413AE2",
 		fontWeight: "700",
 		maxWidth: "35.33%",
-		width:"100%",
+		width: "100%",
 		fontSize: "16px",
 		fontFamily: "'Aeonik', sans-serif !important",
 		"& p": {
@@ -164,8 +164,8 @@ const useStyles = makeStyles((theme) => ({
 	eventTitle: {
 		color: "#1E1E22",
 		minWidth: "65.66%",
-		width:"100%",
-				fontSize: 16,
+		width: "100%",
+		fontSize: 16,
 		maxHeight: "52px",
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
@@ -297,16 +297,19 @@ const EventCard = (props, context) => {
 
 	let phnx_price = event_data.prices.map((price) => {
 		// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
-		return (Web3.utils.fromWei(price.toString()) / PhoenixDAO_market.usd).toFixed(
-			3
-		);
+		return (
+			Web3.utils.fromWei(price.toString()) / PhoenixDAO_market.usd
+		).toFixed(3);
 	});
 	// let dollar_price = event_data.prices[0] / 1000000;
 	let dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
 
 	const checkExpiry = () => {
-		if (props.checkExpiry) {
-			if (Number(event_data.time) < new Date().getTime() / 1000) {
+		if (props.checkExpiry || props.selectedTab) {
+			if (
+				Number(event_data.time) < new Date().getTime() / 1000 ||
+				props.selectedTab == 1
+			) {
 				return true;
 			}
 		}
@@ -382,9 +385,9 @@ const EventCard = (props, context) => {
 									style={
 										event_data.tktTotalQuantity != 0
 											? {
-												justifyContent:
-													"space-between",
-											}
+													justifyContent:
+														"space-between",
+											  }
 											: { justifyContent: "flex-end" }
 									}
 								>
@@ -407,10 +410,19 @@ const EventCard = (props, context) => {
 											{Icon ? (
 												<Favorite
 													fontSize="small"
-													style={{ color: "#413AE2", marginTop:"6px" }}
-										/>
+													style={{
+														color: "#413AE2",
+														marginTop: "6px",
+													}}
+												/>
 											) : (
-												<FavoriteBorder fontSize="small" style={{color: "#000000", marginTop: "6px"}}/>
+												<FavoriteBorder
+													fontSize="small"
+													style={{
+														color: "#000000",
+														marginTop: "6px",
+													}}
+												/>
 											)}
 											{Icon}
 										</Typography>
@@ -531,75 +543,77 @@ const EventCard = (props, context) => {
 								</div> */}
 							</div>
 							<div>
-							<Typography
-								variant="body2"
-								color="textSecondary"
-								component="p"
-								gutterBottom
-								className={classes.text}
-								// style={{maxWidth: "80%"}}
-							>
-								<DateRange fontSize="small" />{" "}
-								<span>&nbsp;</span>
-								{/* {date.toLocaleDateString()} */}
-								{!eventTime
-									? `Date`
-									: eventTime === "onedayevent"
-										? moment(eventDate).format("Do MMM, YYYY")
+								<Typography
+									variant="body2"
+									color="textSecondary"
+									component="p"
+									gutterBottom
+									className={classes.text}
+									// style={{maxWidth: "80%"}}
+								>
+									<DateRange fontSize="small" />{" "}
+									<span>&nbsp;</span>
+									{/* {date.toLocaleDateString()} */}
+									{!eventTime
+										? `Date`
+										: eventTime === "onedayevent"
+										? moment(eventDate).format(
+												"Do MMM, YYYY"
+										  )
 										: `
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
 							`}
-							</Typography>
+								</Typography>
 
-							<Typography
-								variant="body2"
-								color="textSecondary"
-								component="p"
-								gutterBottom
-								className={classes.text}
-							>
-								<AccessTime fontSize="small" />{" "}
-								<span>&nbsp;</span>
-								{/* {date.toLocaleTimeString([], {
+								<Typography
+									variant="body2"
+									color="textSecondary"
+									component="p"
+									gutterBottom
+									className={classes.text}
+								>
+									<AccessTime fontSize="small" />{" "}
+									<span>&nbsp;</span>
+									{/* {date.toLocaleTimeString([], {
 									hour: "2-digit",
 									minute: "2-digit",
 								})} */}
-								{!eventStartTime
-									? `Time`
-									: !eventEndTime
+									{!eventStartTime
+										? `Time`
+										: !eventEndTime
 										? moment(eventStartTime)
-											.utcOffset(0)
-											.format("hh:mma z")
+												.utcOffset(0)
+												.format("hh:mma z")
 										: `${moment(eventStartTime)
-											.utcOffset(0)
-											.format("hh:mma")} - ${moment(
+												.utcOffset(0)
+												.format("hh:mma")} - ${moment(
 												eventEndTime
-											)
+										  )
 												.utcOffset(0)
 												.format("hh:mma z")}`}
-							</Typography>
+								</Typography>
 
-							<Typography
-								variant="body2"
-								color="textSecondary"
-								component="div"
-								gutterBottom
-								noWrap
-								style={{ paddingBottom: "16px" }}
-								className={classes.text}
-							>
-								<LocationOnOutlined fontSize="small" />{" "}
-								<span>&nbsp;</span>
-								{/* {event_data.location} */}
-								{!eventType
-									? `Location`
-									: eventType === "physical"
+								<Typography
+									variant="body2"
+									color="textSecondary"
+									component="div"
+									gutterBottom
+									noWrap
+									style={{ paddingBottom: "16px" }}
+									className={classes.text}
+								>
+									<LocationOnOutlined fontSize="small" />{" "}
+									<span>&nbsp;</span>
+									{/* {event_data.location} */}
+									{!eventType
+										? `Location`
+										: eventType === "physical"
 										? eventLocation
 										: `Online`}
-							</Typography>
-						</div>
+								</Typography>
+							</div>
 							{/* For my events page */}
 							{myEvent ? (
 								<Grid item>
@@ -614,8 +628,9 @@ const EventCard = (props, context) => {
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
 										{event_data.tktTotalQuantitySold}/
-										{event_data.tktTotalQuantity == 0 ? '∞' : event_data.tktTotalQuantity}
-
+										{event_data.tktTotalQuantity == 0
+											? "∞"
+											: event_data.tktTotalQuantity}
 									</Typography>
 									<Typography
 										variant="body2"
@@ -643,8 +658,9 @@ const EventCard = (props, context) => {
 									>
 										Dollar Revenue:{" "}
 										{pricingFormatter(
-												Web3.utils.fromWei(event_data.eventRevenueInDollar.toString())
-											,
+											Web3.utils.fromWei(
+												event_data.eventRevenueInDollar.toString()
+											),
 											"$"
 										)}
 									</Typography>
@@ -664,54 +680,53 @@ const EventCard = (props, context) => {
 									</Button>
 								</Grid>
 							) : // For my ticket page
-								ticket ? (
-									<Grid item className={classes.row}>
-										<Button
-											className={classes.shareButton}
-											onClick={handleClickOpen}
-											disabled={checkExpiry()}
-										>
-											<LaunchSharp
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
-											/>{" "}
-											Share Event
-										</Button>
-										<Button
-											className={classes.sendTicket}
-											onClick={handleClickOpen2}
-											disabled={checkExpiry()}
-										>
-											<Send
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
-											/>{" "}
-											Send Ticket
-										</Button>
-									</Grid>
-								) : // For my Favorite page
-									myFavorites ? (
-										<Grid item className={classes.row}>
-											<Button
-												className={classes.shareButton}
-												onClick={handleClickOpen}
-												disabled={checkExpiry()}
-
-											>
-												<LaunchSharp
-													style={{
-														marginRight: "7px",
-														fontSize: "19px",
-													}}
-												/>{" "}
-												Share Event
-											</Button>
-										</Grid>
-									) : null}
+							ticket ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+										disabled={checkExpiry()}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+									<Button
+										className={classes.sendTicket}
+										onClick={handleClickOpen2}
+										disabled={checkExpiry()}
+									>
+										<Send
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Send Ticket
+									</Button>
+								</Grid>
+							) : // For my Favorite page
+							myFavorites ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+										disabled={checkExpiry()}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+								</Grid>
+							) : null}
 						</CardContent>
 					</CardActionArea>
 				</Link>
