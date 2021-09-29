@@ -255,7 +255,7 @@ class FindEvents extends Component {
 		} else {
 			this.setState({
 				category: event.target.value,
-				// pageTitle: event.target.value,
+				pageTitle: event.target.value,
 			});
 
 			let updatedList = [];
@@ -739,6 +739,10 @@ class FindEvents extends Component {
 			} else {
 				for (let i = 1; i <= pages; i++) {
 					let active = i === currentPage ? "active" : "";
+					this.executeEventScroll({
+						behavior: "smooth",
+						block: "center",
+					})
 					links.push(
 						<li className={"page-item " + active} key={i}>
 							<Link
@@ -970,7 +974,7 @@ class FindEvents extends Component {
 					{/* slider */}
 					<div>
 						<div>
-							<Slider />
+							<Slider account={this.props.accounts[0]} />
 						</div>
 					</div>
 					<br />

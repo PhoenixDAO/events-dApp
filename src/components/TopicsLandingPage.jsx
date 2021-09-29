@@ -125,7 +125,7 @@ class TopicsLandingPage extends Component {
 		// this.contracts = context.drizzle.contracts;
 		this.state = {
 			eventCount: 0,
-			category: "all",
+			category: "All Topics",
 			Topic_Events: [],
 			topic_copy: [],
 			active_length: "",
@@ -357,7 +357,7 @@ class TopicsLandingPage extends Component {
 								className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}
 							>
 								<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
-									All Topics
+									{this.state.category}
 								</h2>
 								<FormControl
 									variant="outlined"
@@ -390,7 +390,7 @@ class TopicsLandingPage extends Component {
 										}}
 									>
 										<MenuItem
-											value="all"
+											value="All Topics"
 											style={{
 												fontFamily:
 													"'Aeonik', sans-serif",
@@ -399,7 +399,7 @@ class TopicsLandingPage extends Component {
 											All Topics
 										</MenuItem>
 										<MenuItem
-											value="tickets"
+											value="Trending Topics"
 											style={{
 												fontFamily:
 													"'Aeonik', sans-serif",
@@ -446,7 +446,7 @@ class TopicsLandingPage extends Component {
 									) : this.props.eventObj &&
 									  Object.keys(this.props.eventObj).length >
 											0 ? (
-										this.state.category === "all" ? (
+										this.state.category === "All Topics" ? (
 											Object.keys(
 												this.props.eventObj
 											).map((key) => {

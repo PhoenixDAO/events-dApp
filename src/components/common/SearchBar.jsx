@@ -8,7 +8,7 @@ import SearchIcon from "@material-ui/icons/Search";
 const useStyles = makeStyles((theme) => ({
 	textField: {
 		// margin: theme.spacing(1),
-		"@media (min-width: 600px)":{
+		"@media (min-width: 470px)":{
 			marginBottom: theme.spacing(1),
 			marginTop: "8px",
 		},
