@@ -64,6 +64,19 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 17,
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
+		"@media (max-width:900px)":{
+			fontSize:13
+		},
+		"@media (min-width:900px) and (max-width:1450px)":{
+			fontSize:15
+		},
+		"@media (min-width:600px)":{
+			display: "-webkit-box",
+			WebkitBoxOrient: "vertical",
+			WebkitLineClamp: "1",
+			overflow: "hidden",
+			textOverflow: "ellipsis",
+		}
 	},
 	shareButton: {
 		"&:hover": {
@@ -185,6 +198,17 @@ const useStyles = makeStyles((theme) => ({
 		// WebkitLineClamp: "3",
 		// 	}
 	},
+	cardMainDetails:{
+		display: "flex",
+		justifyContent: "space-between",
+		height: "100%",
+		"@media (min-width:765px) and (max-width: 1100px)":{
+			height: "110px"
+		},
+		"@media (min-width:1100px) and (max-width: 1400px)":{
+			height: "90px"
+		}
+	}
 }));
 
 const EventCard = (props, context) => {
@@ -333,7 +357,7 @@ const EventCard = (props, context) => {
 				eventTitle={event_data.name}
 			/>
 
-			<Card className={classes.root}>
+			<Card className={`${classes.root}`}>
 				<Link
 					underline="none"
 					component={RouterLink}
@@ -426,12 +450,7 @@ const EventCard = (props, context) => {
 
 						<CardContent>
 							<div
-								style={{
-									display: "flex",
-									justifyContent: "space-between",
-									height: "80px",
-								}}
-							>
+							className={classes.cardMainDetails} >
 								<Typography
 									variant="h6"
 									component="h2"
@@ -542,6 +561,11 @@ const EventCard = (props, context) => {
 								component="p"
 								gutterBottom
 								className={`${classes.text} ${classes.dateWidthMobile}`}
+								title={`${eventTime === "onedayevent"
+								? `${moment(eventDate).format("Do MMM, YYYY")}`
+								: 
+					`${moment(eventStartDate).format("Do MMM")} - ${moment(eventEndDate).format("Do MMM, YYYY")}`
+				}`}
 							>
 								<DateRange fontSize="small" />{" "}
 								<span>&nbsp;</span>
@@ -563,6 +587,15 @@ const EventCard = (props, context) => {
 								component="p"
 								gutterBottom
 								className={classes.text}
+								title={(!eventEndTime)?moment(eventStartTime)
+									.utcOffset(0)
+									.format("hh:mma z"):`${moment(eventStartTime)
+									.utcOffset(0)
+									.format("hh:mma")} - ${moment(
+										eventEndTime
+									)
+										.utcOffset(0)
+										.format("hh:mma z")}`}
 							>
 								<AccessTime fontSize="small" />{" "}
 								<span>&nbsp;</span>
@@ -593,6 +626,7 @@ const EventCard = (props, context) => {
 								noWrap
 								style={{ paddingBottom: "16px" }}
 								className={classes.text}
+								title={eventType === "physical"? eventLocation: `Online`}
 							>
 								<LocationOnOutlined fontSize="small" />{" "}
 								<span>&nbsp;</span>

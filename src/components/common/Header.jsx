@@ -39,6 +39,11 @@ const useStyles = makeStyles((theme) => ({
 	SearchAndBuyPheonixButtonMargin: {
 		marginRight: theme.spacing(1),
 	},
+	headerTitle:{
+		"@media (max-width: 600px)":{
+			fontSize: "1.4rem",
+		}
+	}
 }));
 
 const Header = ({
@@ -120,7 +125,7 @@ const Header = ({
 						display: "flex",
 						alignItems: "center",
 						overflow: "hidden",
-						wordBreak: "break-word",
+						// wordBreak: "break-word",
 					}}
 				>
 					{page === "event" ||
@@ -134,7 +139,7 @@ const Header = ({
 						</IconButton>
 					) : null}
 					{/* Header Title */}
-					<h2 style={{marginBottom: "0px"}}>{title}</h2>
+					<h2 style={{marginBottom: "0px"}} className={classes.headerTitle}>{title}</h2>
 				</div>
 
 				{/* {page == "analytics" || page == "create" || phnxButton ? (
