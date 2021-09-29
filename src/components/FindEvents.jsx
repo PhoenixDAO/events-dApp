@@ -100,9 +100,6 @@ const useStyles = (theme) => ({
 		fontWeight: 900,
 		color: "#1E1E22",
 		marginBottom: "0px",
-		"@media (max-width: 600px)":{
-			fontSize: "1.4rem",
-		}
 	},
 	LargeScreenBreakLine:{
 		display:"block",

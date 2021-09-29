@@ -407,7 +407,7 @@ input[type="number"] {
 }
 
 /* sticky header */
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 1200px) {
 	.sidebar-closed .header-top-dashboard .header3 {
 		display: block !important;
 	}
@@ -462,7 +462,7 @@ div[class|="r-sticky"] .header3 {
 	} */
 }
 
-@media screen and (max-width: 450px) {
+@media (max-width: 635px) {
 	.header3 {
 		display: block;
 		/* width: 102% !important; */
@@ -1721,7 +1721,7 @@ body,
 	}
 }
 
-@media (max-width: 900px) {
+@media (max-width: 600px) {
 	#wrapper.toggled #sidebar-wrapper {
 		width: 100%;
 		transition-duration: 0.5s;

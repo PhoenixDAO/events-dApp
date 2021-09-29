@@ -28,6 +28,12 @@ const useStyles = makeStyles((theme) => ({
 			width: "100%",
 		},
 		border: "1px solid #413AE2",
+		"& .MuiButton-label":{
+			lineHeight:"1.23",
+		},
+		"@media (min-width:440px)":{
+			height:"43px",
+		},
 		// maxHeight: 54,
 		// maxWidth: 230,
 	},
