@@ -65,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
 		color: "#1E1E22",
 		textAlign: "initial",
 		fontFamily: "AeonikReg",
-		paddingInline: "20px",
 	},
 
 	// send: {
@@ -316,7 +315,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
             </h2> :
             <h2 className={classes.sharelink}>{buttonText}</h2>
           }
-          <Typography gutterBottom className={classes.eventTitle} style={{ color: "#73727D", fontWeight: "500", textAlign:"center" }}>
+          <Typography gutterBottom className={classes.eventTitle} style={{ color: "#73727D", fontWeight: "500", textAlign:"center", paddingInline: "20px", }}>
             {purchased ? null : "You’re about to purchase this ticket"}
           </Typography>
 

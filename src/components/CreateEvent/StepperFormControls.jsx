@@ -453,12 +453,24 @@ export const useFormControls = () => {
 				}
 			});
 		} else if (name === "state") {
+			geonames.children({ geonameId: value.id }).then((res) => {
+			if (res.totalResultsCount) {
 			setValues({
 				...values,
 				[name]: value,
 				city: { id: "", name: "" },
 			});
-		} else {
+		}
+			else{
+				setValues({
+					...values,
+					[name]: value,
+					city: { id: "", name: " " },
+				});
+			}
+			})
+		}
+		 else {
 			setValues({
 				...values,
 				[name]: value,

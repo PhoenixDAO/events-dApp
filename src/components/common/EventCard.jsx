@@ -161,6 +161,11 @@ const useStyles = makeStyles((theme) => ({
 	priceAlignment: {
 		textAlign: "end",
 	},
+	dateWidthMobile:{
+		"@media (max-width:450px)":{
+			maxWidth:"80%"
+		}
+	},
 	eventTitle: {
 		color: "#1E1E22",
 		minWidth: "65.66%",
@@ -536,8 +541,7 @@ const EventCard = (props, context) => {
 								color="textSecondary"
 								component="p"
 								gutterBottom
-								className={classes.text}
-								// style={{maxWidth: "80%"}}
+								className={`${classes.text} ${classes.dateWidthMobile}`}
 							>
 								<DateRange fontSize="small" />{" "}
 								<span>&nbsp;</span>
