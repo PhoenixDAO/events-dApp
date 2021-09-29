@@ -1,34 +1,40 @@
-import GetGraphApi  from '../config/getGraphApi';
+import GetGraphApi from "../config/getGraphApi";
 let axios = require("axios");
 let moment = require("moment");
 let graphURL;
-GetGraphApi().then(
-	(data) => {
-        // Some task on success
-		graphURL=data;
-    },
-);
+GetGraphApi().then((data) => {
+	// Some task on success
+	graphURL = data;
+});
 //  get buyer Array of event
 
 async function getResult(eventId) {
-	let result = await axios({
-		url: graphURL,
-		method: "post",
-		data: {
-			query: `
+	try {
+		const graphURL = await GetGraphApi();
+		console.log("get ticket", graphURL);
+		let result = await axios({
+			url: graphURL,
+			method: "post",
+			data: {
+				query: `
         {
           tickets(where:{eventId:${eventId}}){
             buyer
           }
         }
         `,
-		},
-	});
-	return result.data.data.tickets;
+			},
+		});
+		return result.data.data.tickets;
+	} catch (err) {
+		console.log("error while fetching tickets", err);
+	}
 }
 export async function generateBuyerArr(eventId) {
+	console.log("generate buyer called", eventId);
 	let buyersListJson = {};
 	let ticketArr = await getResult(eventId);
+	console.log("ticketsArr", ticketArr);
 	ticketArr.forEach((tktObj) => {
 		// creating json
 		if (buyersListJson[tktObj.buyer] == null) {
@@ -409,8 +415,8 @@ export async function getTickets(owner) {
         `,
 		},
 	});
-	let array =result.data.data.tickets.map((e)=>{
+	let array = result.data.data.tickets.map((e) => {
 		return e.eventId;
-	})
+	});
 	return array;
 }
