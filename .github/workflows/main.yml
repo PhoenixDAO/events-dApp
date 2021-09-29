@@ -53,8 +53,8 @@ jobs:
         uses: reggionick/s3-deploy@v3
         with:
           folder: build
-          bucket: 'event-dapp-frontend'
-          bucket-region: 'us-east-1'
+          bucket: 'event-dapp-dev.com'
+          bucket-region: 'ap-south-1'
           delete-removed: true
           no-cache: true
           private: true
