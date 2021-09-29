@@ -58,7 +58,7 @@ class Sidebar extends Component {
 	}
 
 	async componentDidMount() {
-		this.toggleSidebarClass(false);
+		this.toggleSidebarClass((window.innerWidth>450)?false:true);
 		await this.getNetworkId();
 	}
 

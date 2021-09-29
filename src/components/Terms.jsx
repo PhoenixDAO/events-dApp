@@ -189,8 +189,7 @@ const Terms = (props) => {
 						</li>
 						<li>
 							<p>
-								<strong>Terms and Conditions</strong> (also
-								referred as &quot;Terms&quot;) (also referred as "Terms") mean these Terms and Conditions that form the entire agreement between You and the Company regarding the use of the Service.{" "}
+								<strong>Terms and Conditions</strong> (also referred as "Terms") mean these Terms and Conditions that form the entire agreement between You and the Company regarding the use of the Service.{" "}
 								.
 							</p>
 						</li>
