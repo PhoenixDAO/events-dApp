@@ -420,6 +420,7 @@ input[type="number"] {
 	top: 0;
 }
 .header3 {
+	/* display: flex; */
 	margin: 0 -11px;
 	display: flex;
 	justify-content: space-between;
@@ -461,7 +462,7 @@ div[class|="r-sticky"] .header3 {
 	} */
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 450px) {
 	.header3 {
 		display: block;
 		/* width: 102% !important; */
@@ -582,7 +583,7 @@ div[class|="r-sticky"] .header3 {
 }
 
 .carousel-caption {
-	position: absolute;
+	/* position: absolute;
 	right: 0 !important;
 	top: -27px;
 	bottom: 0 !important;
@@ -591,27 +592,27 @@ div[class|="r-sticky"] .header3 {
 	padding-top: 162px;
 	padding-bottom: 20px;
 	color: #fff;
-	text-align: center;
+	/* text-align: center; 
 	width: 100%;
 	padding-bottom: 45px;
-	min-height: 415px;
+	min-height: 415px; */
 }
 .carousel-caption p {
-	position: absolute;
+	/* position: absolute;
 	left: 5%;
-	top: 25%;
+	top: 25%; */
 }
 @media screen and (max-width:1400px) {
 	.carousel-caption p {
-		position: absolute;
+		/* position: absolute;
 		left: 5%;
-		top: 21%;
+		top: 21%; */
 	}
 	
 }
 
 .carousel-caption p:last-of-type {
-	margin-top: 70px;
+	/* margin-top: 70px; */
 }
 .Toastify__toast-container--bottom-right{
 	bottom: 7em !important ;
@@ -626,21 +627,21 @@ div[class|="r-sticky"] .header3 {
 
 @media screen and (max-width: 780px) {
 	.carousel-caption p:last-of-type {
-		margin-top: 45px;
+		/* margin-top: 45px; */
 	}
 }
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 1000px) {
 	.carousel-caption p:first-of-type {
-		font-size: 21px !important;
+		font-size: 2.2rem !important;
 	}
 	.carousel-caption p:last-of-type {
-		margin-top: 70px;
+		/* margin-top: 70px; */
 	}
 }
 
 @media screen and (max-width: 1180px) and (min-width: 900px) {
 	.sidebar-closed .carousel-caption p:first-of-type {
-		font-size: 26px !important;
+		font-size: 2.9rem !important;
 	}
 }
 
@@ -702,11 +703,11 @@ div[class|="r-sticky"] .header3 {
 .carousel-caption h3 {
 	font-weight: 900;
 	font-size: 3.75rem;
-	text-shadow: 2px 2px 24px #000;
+	/* text-shadow: 2px 2px 24px #000; */
 }
 
 .carousel-caption p {
-	text-shadow: 2px 2px 24px #000;
+	/* text-shadow: 2px 2px 24px #000; */
 	font-weight: 500;
 }
 
