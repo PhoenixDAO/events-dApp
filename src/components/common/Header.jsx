@@ -42,7 +42,12 @@ const useStyles = makeStyles((theme) => ({
 	headerTitle:{
 		"@media (max-width: 600px)":{
 			fontSize: "1.4rem",
-		}
+		},
+		display: "-webkit-box",
+		WebkitBoxOrient: "vertical",
+		WebkitLineClamp: "4",
+		overflow: "hidden",
+		textOverflow: "ellipsis",
 	}
 }));
 
@@ -107,9 +112,7 @@ const Header = ({
 	return (
 		<div
 			className={clsx(
-				"header-top",
-				(page === "dashboard" || page === "myEvent") &&
-					"header-top-dashboard"
+				"header-top","header-top-dashboard"
 			)}
 			style={
 				page === "dashboard" || page === "myEvent"

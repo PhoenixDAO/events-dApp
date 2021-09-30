@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
 		color: "#413AE2",
 		fontSize: "24px",
 		fontWeight: "600",
+		"@media (min-width:950px)":{
+			fontSize:"22px",
+		},
 		marginBottom: "24px",
 	},
 	menuHeading: {
@@ -35,10 +38,16 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: "600",
 		marginTop: "20px",
 		marginBottom: "20px",
+		"@media (min-width:950px)":{
+			fontSize:"18px",
+		},
 	},
 	menuSubHeading: {
 		fontSize: "17px",
 		color: "#4E4E55",
+		"@media (min-width:950px)":{
+			fontSize:"15px",
+		},
 	},
 	hideScroll: {
 		"&::-webkit-scrollbar": {
@@ -98,10 +107,24 @@ const useStyles = makeStyles((theme) => ({
 		borderRadius:"5px"
 	},
 	leftColumn:{
-		"@media (min-width: 600px)":{
+		"@media (min-width: 950px)":{
 			marginRight: "15px",
 			marginLeft: "-15px",
 		}	
+	},
+	leftColumnPaper:{
+		height: "89%", 
+		"@media (max-width: 900px)":{
+			marginTop:"30px",
+		},
+		position: "sticky", 
+		top:"0px",
+	},
+	sideMenuHeading:{
+		fontSize:"1.5rem",
+	},
+	sideSubMenuHeading:{
+		fontSize:"1.3rem",
 	},
 	rightColumn:{
 		marginLeft:"0px",
@@ -135,7 +158,7 @@ const Terms = (props) => {
 					// style={{ height: "100vh" }}
 					lg={8}
 					md={8}
-					sm={8}
+					sm={12}
 					xs={12}
 				>
 					<div>
@@ -149,6 +172,7 @@ const Terms = (props) => {
 					</div>
 					<div className={classes.alignTextWithVideo}>
 						<h3
+						className={classes.sideMenuHeading}
 							ref={(el) =>
 								(pageRefs.current = {
 									...pageRefs.current,
@@ -159,6 +183,7 @@ const Terms = (props) => {
 							Installation and Configuration
 						</h3>
 						<h4
+						className={classes.sideSubMenuHeading}
 							ref={(el) =>
 								(pageRefs.current = {
 									...pageRefs.current,
@@ -186,6 +211,7 @@ const Terms = (props) => {
 						{/* <p>[ Image to be entered ]</p> */}
 
 						<h4
+						className={classes.sideMenuHeading}
 							ref={(el) =>
 								(pageRefs.current = {
 									...pageRefs.current,
@@ -234,6 +260,7 @@ const Terms = (props) => {
 							</li>
 						</ul>
 						<h3
+						className={classes.sideMenuHeading}
 							ref={(el) =>
 								(pageRefs.current = {
 									...pageRefs.current,
@@ -268,13 +295,12 @@ const Terms = (props) => {
 				</Grid>
 				<Grid
 				item
-					// className={`${classes.hideScroll} ${classes.hideScroll2}`}
-					style={{ height: "89%", position: "sticky", top:"0px" }}
-					lg={4}
-					md={4}
-					sm={4}
-					xs={12}
-					className={classes.mainGrid}
+				style={{ }}
+				lg={4}
+				md={4}
+				sm={12}
+				xs={12}
+				className={`${classes.leftColumnPaper} ${classes.mainGrid}`}
 				>
 					<div className={classes.menu}>
 						<h5 className={classes.menuMainHeading}>Menu</h5>

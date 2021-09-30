@@ -89,11 +89,23 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		color: "#4E4E55",
 		fontSize: 17,
+		"@media (min-width:765px) and (max-width:900px)":{
+		fontSize: "13px",
+		},
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
 		"&:focus": {
 			outline: "none",
 		},
+	},
+	cardActionIcon:{
+		marginRight: "7px",
+		fontSize: "19px",
+		"@media (min-width:765px) and (max-width:900px)":{
+			marginRight: "3px",
+		fontSize: "15px",
+		}
+
 	},
 	sendTicket: {
 		"&:hover": {
@@ -106,6 +118,9 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		color: "#4E4E55",
 		fontSize: 17,
+		"@media (min-width:765px) and (max-width:900px)":{
+			fontSize: "13px",
+			},
 		fontWeight: 500,
 		"&:focus": {
 			outline: "none",
@@ -334,11 +349,8 @@ const EventCard = (props, context) => {
 	let dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
 
 	const checkExpiry = () => {
-		if (props.checkExpiry || props.selectedTab) {
-			if (
-				Number(event_data.time) < new Date().getTime() / 1000 ||
-				props.selectedTab == 1
-			) {
+		if (props.checkExpiry) {
+			if (Number(event_data.time) < new Date().getTime() / 1000) {
 				return true;
 			}
 		}
@@ -351,6 +363,7 @@ const EventCard = (props, context) => {
 				open={open}
 				handleClose={handleClose}
 				titleURL={titleURL}
+				eventTitle={event_data.name}
 			/>
 			<SendTicket
 				sendTicket2={sendTicket2}
@@ -649,23 +662,6 @@ const EventCard = (props, context) => {
 									noWrap
 									style={{ paddingBottom: "16px" }}
 									className={classes.text}
-								>
-									<LocationOnOutlined fontSize="small" />{" "}
-									<span>&nbsp;</span>
-									{/* {event_data.location} */}
-									{!eventType
-										? `Location`
-										: eventType === "physical"}
-								</Typography>
-
-								<Typography
-									variant="body2"
-									color="textSecondary"
-									component="div"
-									gutterBottom
-									noWrap
-									style={{ paddingBottom: "16px" }}
-									className={classes.text}
 									title={
 										eventType === "physical"
 											? eventLocation
@@ -748,53 +744,48 @@ const EventCard = (props, context) => {
 									</Button>
 								</Grid>
 							) : // For my ticket page
-							ticket ? (
-								<Grid item className={classes.row}>
-									<Button
-										className={classes.shareButton}
-										onClick={handleClickOpen}
-										disabled={checkExpiry()}
-									>
-										<LaunchSharp
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Share Event
-									</Button>
-									<Button
-										className={classes.sendTicket}
-										onClick={handleClickOpen2}
-										disabled={checkExpiry()}
-									>
-										<Send
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Send Ticket
-									</Button>
-								</Grid>
-							) : // For my Favorite page
-							myFavorites ? (
-								<Grid item className={classes.row}>
-									<Button
-										className={classes.shareButton}
-										onClick={handleClickOpen}
-										disabled={checkExpiry()}
-									>
-										<LaunchSharp
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Share Event
-									</Button>
-								</Grid>
-							) : null}
+								ticket ? (
+									<Grid item className={classes.row}>
+										<Button
+											className={classes.shareButton}
+											onClick={handleClickOpen}
+											disabled={checkExpiry()}
+										>
+											<LaunchSharp
+											className={classes.cardActionIcon}
+											/>{" "}
+											Share Event
+										</Button>
+										<Button
+											className={classes.sendTicket}
+											onClick={handleClickOpen2}
+											disabled={checkExpiry()}
+										>
+											<Send
+											className={classes.cardActionIcon}
+											/>{" "}
+											Send Ticket
+										</Button>
+									</Grid>
+								) : // For my Favorite page
+									myFavorites ? (
+										<Grid item className={classes.row}>
+											<Button
+												className={classes.shareButton}
+												onClick={handleClickOpen}
+												disabled={checkExpiry()}
+
+											>
+												<LaunchSharp
+												style={{
+													marginRight: "7px",
+													fontSize: "19px",
+												}}
+												/>{" "}
+												Share Event
+											</Button>
+										</Grid>
+									) : null}
 						</CardContent>
 					</CardActionArea>
 				</Link>
