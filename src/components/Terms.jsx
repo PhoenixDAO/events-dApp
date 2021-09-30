@@ -31,12 +31,12 @@ const useStyles = makeStyles((theme) => ({
 	},
 	menuHeading: {
 		fontSize: "20px",
-		"@media (min-width: 950px)":{
-			fontSize:"16px",
-		},
 		fontWeight: "600",
 		marginTop: "20px",
 		marginBottom: "20px",
+		"@media (min-width:950px)":{
+			fontSize:"18px",
+		},
 	},
 	menuSubHeading: {
 		fontSize: "17px",
