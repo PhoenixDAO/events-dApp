@@ -89,11 +89,22 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		color: "#4E4E55",
 		fontSize: 17,
+		"@media (min-width:765px) and (max-width:900px)":{
+		fontSize: "13px",
+		},
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
 		"&:focus": {
 			outline: "none",
 		},
+	},
+	cardActionIcon:{
+		marginRight: "7px",
+		fontSize: "19px",
+		"@media (min-width:765px) and (max-width:900px)":{
+			marginRight: "3px",
+		fontSize: "15px",
+		}
 	},
 	sendTicket: {
 		"&:hover": {
@@ -106,6 +117,9 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		color: "#4E4E55",
 		fontSize: 17,
+		"@media (min-width:765px) and (max-width:900px)":{
+			fontSize: "13px",
+			},
 		fontWeight: 500,
 		"&:focus": {
 			outline: "none",
@@ -710,10 +724,7 @@ const EventCard = (props, context) => {
 											disabled={checkExpiry()}
 										>
 											<LaunchSharp
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
+											className={classes.cardActionIcon}
 											/>{" "}
 											Share Event
 										</Button>
@@ -723,10 +734,7 @@ const EventCard = (props, context) => {
 											disabled={checkExpiry()}
 										>
 											<Send
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
+											className={classes.cardActionIcon}
 											/>{" "}
 											Send Ticket
 										</Button>
@@ -741,10 +749,10 @@ const EventCard = (props, context) => {
 
 											>
 												<LaunchSharp
-													style={{
-														marginRight: "7px",
-														fontSize: "19px",
-													}}
+												style={{
+													marginRight: "7px",
+													fontSize: "19px",
+												}}
 												/>{" "}
 												Share Event
 											</Button>
