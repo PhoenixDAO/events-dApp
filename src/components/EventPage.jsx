@@ -350,23 +350,24 @@ class EventPage extends Component {
 	}
 
 	async checkBlockchainEvent() {
-		console.log("event contract", this.props.eventsContract);
-		this.props.eventsContract.methods
-			.events(this.props.match.params.id)
-			.call()
-			.then((data) => {
-				console.log("events received", data);
-				if (data.name) {
-					this.setState({
-						eventExistInContract: true,
-					});
-				} else {
-					this.setState({
-						eventExistInContract: false,
-					});
-				}
-			})
-			.catch((err) => console.log(err));
+		if (this.props.eventsContract._address) {
+			this.props.eventsContract.methods
+				.events(this.props.match.params.id)
+				.call()
+				.then((data) => {
+					console.log("events received", data);
+					if (data.name) {
+						this.setState({
+							eventExistInContract: true,
+						});
+					} else {
+						this.setState({
+							eventExistInContract: false,
+						});
+					}
+				})
+				.catch((err) => console.log("Err in checkblockchain", err));
+		}
 	}
 	async loadEventFromBlockchain() {
 		// const web3 = new Web3(
@@ -1544,7 +1545,10 @@ class EventPage extends Component {
 												<a
 													href={`https://www.google.com/maps/place/${locations}`}
 													target="_blank"
-													style={{textDecoration:"none", color:"#212529"}}
+													style={{
+														textDecoration: "none",
+														color: "#212529",
+													}}
 												>
 													{locations}
 												</a>
