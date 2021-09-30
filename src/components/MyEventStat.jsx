@@ -919,6 +919,7 @@ this.props.toggleDisabling();
 											url={shareUrl}
 											title={title}
 											resetButtonStyle={false}
+											hashtags={["#phoenixDao"]}
 										>
 											<TwitterIcon size={32} round />
 										</TwitterShareButton>

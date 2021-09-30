@@ -5,6 +5,8 @@ import { ToastContainer, toast } from "react-toastify";
 import Notify from "../Notify";
 
 import ipfs from "../../utils/ipfs";
+
+import Form from "./Form";
 import Loader from "./Loader";
 import Done from "./Done";
 
@@ -94,7 +96,7 @@ class CreateEvent extends Component {
 			PhoenixDAO_market: {},
 		};
 		this.contracts = context.drizzle.contracts;
-		this.onHandleTxReject = this.onHandleTxReject.bind(this);
+		// this.onHandleTxReject = this.onHandleTxReject.bind(this);
 	}
 
 	onFieldsChange = (f) => {
@@ -113,6 +115,7 @@ class CreateEvent extends Component {
 	};
 
 	onFlamingStepsChange = () => {
+		console.log("onFlamingStepsChange");
 		// this.setState({ activeFlamingStep: this.state.activeFlamingStep + 1 });
 		this.setState((prevState) => {
 			return {
@@ -121,7 +124,8 @@ class CreateEvent extends Component {
 		});
 	};
 
-	onHandleTxReject() {
+	onHandleTxReject = async () => {
+		console.log("onHandleTxReject");
 		this.setState((prevState) => {
 			return {
 				activeStep: prevState.activeStep - 1,
@@ -129,19 +133,22 @@ class CreateEvent extends Component {
 				progressText: 0,
 			};
 		});
-	}
+	};
 
 	async getEventURL() {
 		let eventCount = await this.props.eventsContract.methods
 			.getEventsCount()
 			.call();
 		eventCount = Number(eventCount) + 1;
+		console.log("eventCount", eventCount);
+
 		var base_url = window.location.origin;
 		const shareUrl = `${base_url}/event/${eventCount}`;
 		this.setState({ shareUrl: shareUrl });
 	}
 
 	handleCreateEvent = async (clearStateCb) => {
+		console.log("handleCreateEvent111", this.state.fields);
 		this.stageUpdater(90);
 
 		let {
@@ -235,6 +242,7 @@ class CreateEvent extends Component {
 						: ticketCategories[i].noOfTickets
 				);
 		}
+
 		let pinit = process.env.NODE_ENV === "production";
 		let ipfsData = JSON.stringify({
 			//new
@@ -262,146 +270,145 @@ class CreateEvent extends Component {
 		});
 
 		let buffer = Buffer.from(ipfsData);
-		let hash = await ipfs.add(buffer, { pin: pinit });
-		console.log("hxs", hash);
-
-		if (!hash[0].hash) {
-			this.onHandleTxReject();
-			toast(<Notify error={"error"} message={"IPFS problem!"} />, {
-				position: "bottom-right",
-				autoClose: true,
-				pauseOnHover: true,
-			});
-		} else {
-			this.setState({
-				progressText: 100,
-			});
-
-			this.onFlamingStepsChange();
-			await this.getEventURL();
-
-			this.props.eventsContract.methods
-				.createEvent([
-					oneTimeBuy,
-					token, // false means free
-					onsite, // true means event is onsite
-					this.props.accounts[0], //owner
-					time.toString(), //time
-					totalQuantity.toString(), //totalQuantity
-					"0", //totalQntySold
-					eventName,
-					eventTopic,
-					location,
-					cityName,
-					hash[0].hash,
-					ticketLimited,
-					tktQnty,
-					prices,
-					tktQntySold,
-					categories,
-				])
-				.send({
-					from: this.props.accounts[0],
-				})
-				.on("transactionHash", async (txhash) => {
-					// hash of tx
-					if (txhash !== null) {
-						this.onFlamingStepsChange();
-						this.setState({
-							progressText: 0,
-						});
-						toast(
-							<Notify
-								// hash={txhash}
-								icon="fas fa-edit fa-2x"
-								text={"Preparing your event...🚀"}
-								color="#413AE2"
-							/>,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
-						let infura;
-						const network = await getNetworkId();
-						if (network === GLOBAL_NETWORK_ID) {
-							infura = INFURA_URL;
-						} else if (network === GLOBAL_NETWORK_ID_2) {
-							infura = INFURA_URL_2;
-						}
-						const web3 = new Web3(infura);
-						let intervalVar = setInterval(async () => {
-							let receipt = await web3.eth.getTransactionReceipt(
-								txhash
-							);
-							if (receipt) {
-								toast(
-									<Notify
-										text={
-											"Transaction successful!\nYou can check event now."
-										}
-										icon="fas fa-check-circle fa-3x"
-										color="#413AE2"
-										hash={receipt.transactionHash}
-									/>,
-									{
-										position: "bottom-right",
-										autoClose: true,
-										pauseOnHover: true,
-									}
-								);
-								this.onFlamingStepsChange();
-								clearInterval(intervalVar);
-								clearStateCb();
-							}
-						}, 2000);
-					}
-				})
-				.then(async (receipt) => {
-					const networkType =
-						this.props.web3.networkId == GLOBAL_NETWORK_ID
-							? "Rinkeby test net"
-							: "Matic main net";
-					const eventDesc =
-						eventDescription.split(" ").length >= 15
-							? eventDescription
-									.split(" ")
-									.splice(0, 14)
-									.join(" ")
-							: eventDescription
-									.split(" ")
-									.splice(
-										0,
-										eventDescription.split(" ").length
-									)
-									.join(" ");
-					const message = `The "${eventName}" event is now live on the ${networkType}🔥
-						${eventDesc.replace(/<[^>]*>?/gm, "")}...
-						${this.state.shareUrl}
-						#EventsDapp #${eventName.replace(/\s/g, "")}
-						`;
-					// await userTweet({
-					// 	address: this.props.accounts[0],
-					// 	networkId: this.props.web3.networkId,
-					// 	base64Image: image0Base64,
-					// 	message: message,
-					// });
-				})
-				.catch((error) => {
-					this.onHandleTxReject();
-					if (error !== null) {
-						toast(
-							<Notify error={error} message={error.message} />,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
-					}
+		ipfs.add(buffer, { pin: pinit })
+			.then(async (hash) => {
+				console.log("hashhh", hash[0].hash);
+				this.setState({
+					progressText: 100,
 				});
-		}
+
+				this.onFlamingStepsChange();
+				await this.getEventURL();
+
+				// ipfs.get(hash[0].hash).then((file) => {
+				// 	let data = JSON.parse(file[0].content.toString());
+				// 	console.log("data", data);
+				// });
+
+				let txreceipt = "";
+				let txconfirmed = "";
+				let txerror = "";
+
+				let infura;
+				const network = await getNetworkId();
+				if (network === GLOBAL_NETWORK_ID) {
+					infura = INFURA_URL;
+				} else if (network === GLOBAL_NETWORK_ID_2) {
+					infura = INFURA_URL_2;
+				}
+				const web3 = new Web3(infura);
+				console.log("web3", network, infura, web3);
+
+				await this.props.eventsContract.methods
+					.createEvent([
+						oneTimeBuy,
+						token, // false means free
+						onsite, // true means event is onsite
+						this.props.accounts[0], //owner
+						time.toString(), //time
+						totalQuantity.toString(), //totalQuantity
+						"0", //totalQntySold
+						eventName,
+						eventTopic,
+						location,
+						cityName,
+						hash[0].hash,
+						ticketLimited,
+						tktQnty,
+						prices,
+						tktQntySold,
+						categories,
+					])
+					.send({
+						from: this.props.accounts[0],
+					})
+					.on("transactionHash", async (txhash) => {
+						// hash of tx
+						if (txhash !== null) {
+							console.log("txhash", txhash);
+							this.onFlamingStepsChange();
+							this.setState({
+								progressText: 0,
+							});
+							toast(
+								<Notify
+									// hash={txhash}
+									icon="fas fa-edit fa-2x"
+									text={"Preparing your event...🚀"}
+									color="#413AE2"
+								/>,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true,
+								}
+							);
+						}
+					})
+					.on("confirmation", (confirmationNumber, receipt) => {
+						console.log(confirmationNumber);
+						if (confirmationNumber === 2) {
+							// tx confirmed
+							toast(
+								<Notify
+									text={
+										"Transaction successful!\nYou can check event now."
+									}
+									icon="fas fa-check-circle fa-3x"
+									color="#413AE2"
+									hash={receipt.transactionHash}
+								/>,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true,
+								}
+							);
+							this.onFlamingStepsChange();
+							clearStateCb();
+						}
+					})
+					.on("error", (error) => {
+						console.log("tx error", error);
+						// if (error !== null) {
+						// 	txerror = error;
+						// 	toast(
+						// 		<Notify
+						// 			error={error}
+						// 			message={txerror.message}
+						// 		/>,
+						// 		{
+						// 			position: "bottom-right",
+						// 			autoClose: true,
+						// 			pauseOnHover: true,
+						// 		}
+						// 	);
+						// 	// this.onHandleTxReject();
+						// }
+					});
+			})
+			.catch((error) => {
+				console.log("ipfs error", error);
+				if (error !== null) {
+					let txerror = error;
+					toast(
+						<Notify
+							error={error}
+							message={
+								txerror.message
+									? txerror.message
+									: "Something went wrong!"
+							}
+						/>,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
+					this.onHandleTxReject();
+				}
+			});
 	};
 
 	getBase64 = (file) => {
@@ -476,8 +483,11 @@ class CreateEvent extends Component {
 	};
 
 	readFile = (file) => {
+		console.log("readFile calling", file);
 		let reader = new window.FileReader();
+		console.log("reader", reader);
 		reader.readAsDataURL(file);
+		console.log("reader.readAsDataURL", reader);
 		reader.onloadend = () => this.convertAndUpload(reader);
 	};
 
@@ -485,6 +495,7 @@ class CreateEvent extends Component {
 		let data;
 		let pinit = process.env.NODE_ENV === "production";
 		if (this.state.data.fileHandle) {
+			console.log("fileHandle", true);
 			data = JSON.stringify({
 				image: reader.result,
 				text: this.state.data.description,
@@ -501,6 +512,9 @@ class CreateEvent extends Component {
 				topic: this.state.data.topic,
 			});
 		}
+
+		console.log("createevent data", data);
+
 		let buffer = Buffer.from(data);
 		ipfs.add(buffer, { pin: pinit })
 			.then((hash) => {
@@ -525,6 +539,7 @@ class CreateEvent extends Component {
 				);
 			})
 			.catch((error) => {
+				// console.log("error in convertAndUpload",error)
 				this.setState(
 					{
 						error: true,
@@ -578,6 +593,7 @@ class CreateEvent extends Component {
 	transactionChecker = (id) => {
 		this.tx_checkerInterval = setInterval(() => {
 			let tx = this.props.transactionStack[id];
+			console.log("tx -------->", tx);
 			if (typeof tx !== "undefined") {
 				this.setState({
 					upload: false,
@@ -749,3 +765,62 @@ const mapStateToProps = (state) => {
 
 const AppContainer = drizzleConnect(CreateEvent, mapStateToProps);
 export default withStyles(useStyles)(AppContainer);
+
+// .on("transactionHash", async (txhash) => {
+// 	// hash of tx
+// 	if (txhash !== null) {
+// 		console.log("txhash", txhash);
+// 		this.onFlamingStepsChange();
+// 		this.setState({
+// 			progressText: 0,
+// 		});
+// 		toast(
+// 			<Notify
+// 				// hash={txhash}
+// 				icon="fas fa-edit fa-2x"
+// 				text={"Preparing your event...🚀"}
+// 				color="#413AE2"
+// 			/>,
+// 			{
+// 				position: "bottom-right",
+// 				autoClose: true,
+// 				pauseOnHover: true,
+// 			}
+// 		);
+// 	}
+// })
+// .on("receipt", (receipt) => {
+// 	console.log("receipt", receipt);
+// })
+// .on("confirmation", (confirmationNumber, receipt) => {
+// 	// console.log("confirmationNumber", confirmationNumber);
+// 	if (confirmationNumber === 2) {
+// 		// tx confirmed
+// 		toast(
+// 			<Notify
+// 				text={
+// 					"Transaction successful!\nYou can check event now."
+// 				}
+// 				icon="fas fa-check-circle fa-3x"
+// 				color="#413AE2"
+// 				hash={receipt.transactionHash}
+// 			/>,
+// 			{
+// 				position: "bottom-right",
+// 				autoClose: true,
+// 				pauseOnHover: true,
+// 			}
+// 		);
+// 		this.onFlamingStepsChange();
+// 		clearStateCb();
+// 	}
+// })
+// .on("error", (error) => {
+// 	console.log("tx error", error);
+// 	toast(<Notify error={error} message={error.message} />, {
+// 		position: "bottom-right",
+// 		autoClose: true,
+// 		pauseOnHover: true,
+// 	});
+// 	this.onHandleTxReject();
+// });

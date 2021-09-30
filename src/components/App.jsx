@@ -190,6 +190,12 @@ class App extends Component {
 			);
 			const { eventAddress, phoenixAddress } =
 				await this.contractAddressProviders();
+			console.log(
+				"Open events",
+				Open_events_ABI,
+				"eventAddress",
+				eventAddress
+			);
 			const openEvents = await new web3.eth.Contract(
 				Open_events_ABI,
 				eventAddress
@@ -203,8 +209,7 @@ class App extends Component {
 				phnxContract: PHNX,
 				eventsAddress: eventAddress,
 			});
-		} catch (err) {
-		}
+		} catch (err) {}
 	}
 
 	async componentWillMount() {
@@ -512,6 +517,7 @@ class App extends Component {
 							}
 						);
 						this.setState({
+							disabledStatus: false,
 							purchased: false,
 						});
 					}
@@ -595,7 +601,10 @@ class App extends Component {
 								pauseOnHover: true,
 							}
 						);
-						this.setState({ disabledStatus: false,purchased:false });
+						this.setState({
+							disabledStatus: false,
+							purchased: false,
+						});
 					}
 				});
 		} else {
@@ -666,7 +675,7 @@ class App extends Component {
 							}
 						);
 					}
-					this.setState({ disabledStatus: false ,purchased:false});
+					this.setState({ disabledStatus: false, purchased: false });
 				});
 		}
 	};
@@ -897,8 +906,7 @@ class App extends Component {
 				publicAddress
 			);
 			return sign;
-		} catch (err) {
-		}
+		} catch (err) {}
 	};
 
 	setUserDetails = (userDetails) => {
@@ -1470,7 +1478,11 @@ class App extends Component {
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
 					/>
-					<div id="page-content-wrapper"  className="sidebar-open" style={{minHeight: "100vh", paddingBottom: "15%"}}>
+					<div
+						id="page-content-wrapper"
+						className="sidebar-open"
+						style={{ minHeight: "100vh", paddingBottom: "15%" }}
+					>
 						{/* <div
 							id="bgImage"
 							ref="bgImage"
@@ -1501,50 +1513,50 @@ class App extends Component {
 									handleClose={this.handleSnackbarClose}
 								/> */}
 								<Snackbar
-                                    anchorOrigin={{
-                                        vertical: "top",
-                                        horizontal: "center",
-                                    }}
-                                    open={this.state.openSnackbarForNoMetaMask}
-                                    message={
-                                        <span>
-                                            {" "}
-                                            {this.state.errorMessage}
-                                            {typeof InstallTrigger !==
-                                            "undefined" ? (
-                                                <a
-                                                    target="_blank"
-                                                    style={{
-                                                        textAlign: "center",
-                                                        color: "blue",
-                                                        opacity: "1",
-                                                    }}
-                                                    href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"
-                                                >
-                                                    {" "}
-                                                    [LINK]
-                                                </a>
-                                            ) : (
-                                                <a
-                                                    target="_blank"
-                                                    style={{
-                                                        textAlign: "center",
-                                                        color: "blue",
-                                                        opacity: "1",
-                                                    }}
-                                                    href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
-                                                >
-                                                    {" "}
-                                                    [LINK]
-                                                </a>
-                                            )}
-                                        </span>
-                                    }
-                                    onClose={() => this.handleSnackbarClose(1)}
-                                    autoHideDuration={5000}
-                                    key={"top" + "center"}
-                                    className="snackbar"
-                                />
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "center",
+									}}
+									open={this.state.openSnackbarForNoMetaMask}
+									message={
+										<span>
+											{" "}
+											{this.state.errorMessage}
+											{typeof InstallTrigger !==
+											"undefined" ? (
+												<a
+													target="_blank"
+													style={{
+														textAlign: "center",
+														color: "blue",
+														opacity: "1",
+													}}
+													href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"
+												>
+													{" "}
+													[LINK]
+												</a>
+											) : (
+												<a
+													target="_blank"
+													style={{
+														textAlign: "center",
+														color: "blue",
+														opacity: "1",
+													}}
+													href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
+												>
+													{" "}
+													[LINK]
+												</a>
+											)}
+										</span>
+									}
+									onClose={() => this.handleSnackbarClose(1)}
+									autoHideDuration={5000}
+									key={"top" + "center"}
+									className="snackbar"
+								/>
 								<Snackbar2
 									style={{ zIndex: "9999999 !important" }}
 									open={
@@ -1582,7 +1594,7 @@ class App extends Component {
 								</DialogueBox>
 							</div>
 						</div>
-						<MobileScreenDialog/>
+						<MobileScreenDialog />
 						<Snackbar
 							anchorOrigin={{
 								vertical: "top",
