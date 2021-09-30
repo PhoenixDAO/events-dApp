@@ -121,7 +121,7 @@ class CreateEvent extends Component {
 		});
 	};
 
-	onHandleTxReject(err) {
+	onHandleTxReject() {
 		this.setState((prevState) => {
 			return {
 				activeStep: prevState.activeStep - 1,
@@ -262,172 +262,146 @@ class CreateEvent extends Component {
 		});
 
 		let buffer = Buffer.from(ipfsData);
-		ipfs.add(buffer, { pin: pinit })
-			.then(async (hash) => {
-				this.setState({
-					progressText: 100,
-				});
+		let hash = await ipfs.add(buffer, { pin: pinit });
+		console.log("hxs", hash);
 
-				this.onFlamingStepsChange();
-				await this.getEventURL();
-
-				// ipfs.get(hash[0].hash).then((file) => {
-				// 	let data = JSON.parse(file[0].content.toString());
-				// 	console.log("data", data);
-				// });
-
-				let txreceipt = "";
-				let txconfirmed = "";
-				let txerror = "";
-
-				await this.props.eventsContract.methods
-					.createEvent([
-						oneTimeBuy,
-						token, // false means free
-						onsite, // true means event is onsite
-						this.props.accounts[0], //owner
-						time.toString(), //time
-						totalQuantity.toString(), //totalQuantity
-						"0", //totalQntySold
-						eventName,
-						eventTopic,
-						location,
-						cityName,
-						hash[0].hash,
-						ticketLimited,
-						tktQnty,
-						prices,
-						tktQntySold,
-						categories,
-					])
-					.send({
-						from: this.props.accounts[0],
-					})
-					.on("transactionHash", async (txhash) => {
-						// hash of tx
-						if (txhash !== null) {
-							this.onFlamingStepsChange();
-							this.setState({
-								progressText: 0,
-							});
-							toast(
-								<Notify
-									// hash={txhash}
-									icon="fas fa-edit fa-2x"
-									text={"Preparing your event...🚀"}
-									color="#413AE2"
-								/>,
-								{
-									position: "bottom-right",
-									autoClose: true,
-									pauseOnHover: true,
-								}
-							);
-							let infura;
-							const network = await getNetworkId();
-							if (network === GLOBAL_NETWORK_ID) {
-								infura = INFURA_URL;
-							} else if (network === GLOBAL_NETWORK_ID_2) {
-								infura = INFURA_URL_2;
-							}
-							const web3 = new Web3(infura);
-							let intervalVar = setInterval(async () => {
-								let receipt =
-									await web3.eth.getTransactionReceipt(
-										txhash
-									);
-								if (receipt) {
-									toast(
-										<Notify
-											text={
-												"Transaction successful!\nYou can check event now."
-											}
-											icon="fas fa-check-circle fa-3x"
-											color="#413AE2"
-											hash={receipt.transactionHash}
-										/>,
-										{
-											position: "bottom-right",
-											autoClose: true,
-											pauseOnHover: true,
-										}
-									);
-									this.onFlamingStepsChange();
-									clearInterval(intervalVar);
-									clearStateCb();
-								}
-							}, 2000);
-						}
-					})
-					.then(async (receipt) => {
-						const networkType =
-							this.props.web3.networkId == GLOBAL_NETWORK_ID
-								? "Rinkeby test net"
-								: "Matic main net";
-						const eventDesc =
-							eventDescription.split(" ").length >= 15
-								? eventDescription
-										.split(" ")
-										.splice(0, 14)
-										.join(" ")
-								: eventDescription
-										.split(" ")
-										.splice(
-											0,
-											eventDescription.split(" ").length
-										)
-										.join(" ");
-						const message = `The "${eventName}" event is now live on the ${networkType}🔥
-							${eventDesc.replace(/<[^>]*>?/gm, "")}...
-							${this.state.shareUrl}
-							#EventsDapp #${eventName.replace(/\s/g, "")}
-							`;
-						// await userTweet({
-						// 	address: this.props.accounts[0],
-						// 	networkId: this.props.web3.networkId,
-						// 	base64Image: image0Base64,
-						// 	message: message,
-						// });
-					})
-					.catch((error) => {
-						this.onHandleTxReject(error);
-						if (error !== null) {
-							txerror = error;
-							toast(
-								<Notify
-									error={error}
-									message={txerror.message}
-								/>,
-								{
-									position: "bottom-right",
-									autoClose: true,
-									pauseOnHover: true,
-								}
-							);
-						}
-					});
-			})
-			.catch((error) => {
-				this.onHandleTxReject(error);
-				if (error !== null) {
-					let txerror = error;
-					toast(
-						<Notify
-							error={error}
-							message={
-								txerror.message
-									? txerror.message
-									: "Something went wrong!"
-							}
-						/>,
-						{
-							position: "bottom-right",
-							autoClose: true,
-							pauseOnHover: true,
-						}
-					);
-				}
+		if (!hash[0].hash) {
+			this.onHandleTxReject();
+			toast(<Notify error={"error"} message={"IPFS problem!"} />, {
+				position: "bottom-right",
+				autoClose: true,
+				pauseOnHover: true,
 			});
+		} else {
+			this.setState({
+				progressText: 100,
+			});
+
+			this.onFlamingStepsChange();
+			await this.getEventURL();
+
+			this.props.eventsContract.methods
+				.createEvent([
+					oneTimeBuy,
+					token, // false means free
+					onsite, // true means event is onsite
+					this.props.accounts[0], //owner
+					time.toString(), //time
+					totalQuantity.toString(), //totalQuantity
+					"0", //totalQntySold
+					eventName,
+					eventTopic,
+					location,
+					cityName,
+					hash[0].hash,
+					ticketLimited,
+					tktQnty,
+					prices,
+					tktQntySold,
+					categories,
+				])
+				.send({
+					from: this.props.accounts[0],
+				})
+				.on("transactionHash", async (txhash) => {
+					// hash of tx
+					if (txhash !== null) {
+						this.onFlamingStepsChange();
+						this.setState({
+							progressText: 0,
+						});
+						toast(
+							<Notify
+								// hash={txhash}
+								icon="fas fa-edit fa-2x"
+								text={"Preparing your event...🚀"}
+								color="#413AE2"
+							/>,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
+						let infura;
+						const network = await getNetworkId();
+						if (network === GLOBAL_NETWORK_ID) {
+							infura = INFURA_URL;
+						} else if (network === GLOBAL_NETWORK_ID_2) {
+							infura = INFURA_URL_2;
+						}
+						const web3 = new Web3(infura);
+						let intervalVar = setInterval(async () => {
+							let receipt = await web3.eth.getTransactionReceipt(
+								txhash
+							);
+							if (receipt) {
+								toast(
+									<Notify
+										text={
+											"Transaction successful!\nYou can check event now."
+										}
+										icon="fas fa-check-circle fa-3x"
+										color="#413AE2"
+										hash={receipt.transactionHash}
+									/>,
+									{
+										position: "bottom-right",
+										autoClose: true,
+										pauseOnHover: true,
+									}
+								);
+								this.onFlamingStepsChange();
+								clearInterval(intervalVar);
+								clearStateCb();
+							}
+						}, 2000);
+					}
+				})
+				.then(async (receipt) => {
+					const networkType =
+						this.props.web3.networkId == GLOBAL_NETWORK_ID
+							? "Rinkeby test net"
+							: "Matic main net";
+					const eventDesc =
+						eventDescription.split(" ").length >= 15
+							? eventDescription
+									.split(" ")
+									.splice(0, 14)
+									.join(" ")
+							: eventDescription
+									.split(" ")
+									.splice(
+										0,
+										eventDescription.split(" ").length
+									)
+									.join(" ");
+					const message = `The "${eventName}" event is now live on the ${networkType}🔥
+						${eventDesc.replace(/<[^>]*>?/gm, "")}...
+						${this.state.shareUrl}
+						#EventsDapp #${eventName.replace(/\s/g, "")}
+						`;
+					// await userTweet({
+					// 	address: this.props.accounts[0],
+					// 	networkId: this.props.web3.networkId,
+					// 	base64Image: image0Base64,
+					// 	message: message,
+					// });
+				})
+				.catch((error) => {
+					this.onHandleTxReject();
+					if (error !== null) {
+						toast(
+							<Notify error={error} message={error.message} />,
+							{
+								position: "bottom-right",
+								autoClose: true,
+								pauseOnHover: true,
+							}
+						);
+					}
+				});
+		}
 	};
 
 	getBase64 = (file) => {

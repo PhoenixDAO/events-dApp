@@ -765,3 +765,62 @@ const mapStateToProps = (state) => {
 
 const AppContainer = drizzleConnect(CreateEvent, mapStateToProps);
 export default withStyles(useStyles)(AppContainer);
+
+// .on("transactionHash", async (txhash) => {
+// 	// hash of tx
+// 	if (txhash !== null) {
+// 		console.log("txhash", txhash);
+// 		this.onFlamingStepsChange();
+// 		this.setState({
+// 			progressText: 0,
+// 		});
+// 		toast(
+// 			<Notify
+// 				// hash={txhash}
+// 				icon="fas fa-edit fa-2x"
+// 				text={"Preparing your event...🚀"}
+// 				color="#413AE2"
+// 			/>,
+// 			{
+// 				position: "bottom-right",
+// 				autoClose: true,
+// 				pauseOnHover: true,
+// 			}
+// 		);
+// 	}
+// })
+// .on("receipt", (receipt) => {
+// 	console.log("receipt", receipt);
+// })
+// .on("confirmation", (confirmationNumber, receipt) => {
+// 	// console.log("confirmationNumber", confirmationNumber);
+// 	if (confirmationNumber === 2) {
+// 		// tx confirmed
+// 		toast(
+// 			<Notify
+// 				text={
+// 					"Transaction successful!\nYou can check event now."
+// 				}
+// 				icon="fas fa-check-circle fa-3x"
+// 				color="#413AE2"
+// 				hash={receipt.transactionHash}
+// 			/>,
+// 			{
+// 				position: "bottom-right",
+// 				autoClose: true,
+// 				pauseOnHover: true,
+// 			}
+// 		);
+// 		this.onFlamingStepsChange();
+// 		clearStateCb();
+// 	}
+// })
+// .on("error", (error) => {
+// 	console.log("tx error", error);
+// 	toast(<Notify error={error} message={error.message} />, {
+// 		position: "bottom-right",
+// 		autoClose: true,
+// 		pauseOnHover: true,
+// 	});
+// 	this.onHandleTxReject();
+// });
