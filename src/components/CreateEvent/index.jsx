@@ -280,6 +280,16 @@ class CreateEvent extends Component {
 			this.onFlamingStepsChange();
 			await this.getEventURL();
 
+			let infura;
+			let txreceipt;
+			const network = await getNetworkId();
+			if (network === GLOBAL_NETWORK_ID) {
+				infura = INFURA_URL;
+			} else if (network === GLOBAL_NETWORK_ID_2) {
+				infura = INFURA_URL_2;
+			}
+			const web3 = new Web3(infura);
+
 			this.props.eventsContract.methods
 				.createEvent([
 					oneTimeBuy,
@@ -306,6 +316,7 @@ class CreateEvent extends Component {
 				.on("transactionHash", async (txhash) => {
 					// hash of tx
 					if (txhash !== null) {
+						txreceipt = txhash;
 						this.onFlamingStepsChange();
 						this.setState({
 							progressText: 0,
@@ -323,14 +334,7 @@ class CreateEvent extends Component {
 								pauseOnHover: true,
 							}
 						);
-						let infura;
-						const network = await getNetworkId();
-						if (network === GLOBAL_NETWORK_ID) {
-							infura = INFURA_URL;
-						} else if (network === GLOBAL_NETWORK_ID_2) {
-							infura = INFURA_URL_2;
-						}
-						const web3 = new Web3(infura);
+
 						let intervalVar = setInterval(async () => {
 							let receipt = await web3.eth.getTransactionReceipt(
 								txhash
@@ -389,16 +393,55 @@ class CreateEvent extends Component {
 					// });
 				})
 				.catch((error) => {
-					this.onHandleTxReject();
+					console.log("error", error);
+					console.log("txreceipt", txreceipt);
+					console.log("error.message", error.message);
+					console.log("typeof error", typeof error);
 					if (error !== null) {
-						toast(
-							<Notify error={error} message={error.message} />,
-							{
-								position: "bottom-right",
-								autoClose: true,
-								pauseOnHover: true,
-							}
-						);
+						if (
+							error.message.includes("not mined within 50 blocks")
+						) {
+							console.log("error.includes");
+							let intervalVar = setInterval(async () => {
+								let receipt =
+									await web3.eth.getTransactionReceipt(
+										txreceipt
+									);
+								if (receipt) {
+									toast(
+										<Notify
+											text={
+												"Transaction successful!\nYou can check event now."
+											}
+											icon="fas fa-check-circle fa-3x"
+											color="#413AE2"
+											hash={receipt.transactionHash}
+										/>,
+										{
+											position: "bottom-right",
+											autoClose: true,
+											pauseOnHover: true,
+										}
+									);
+									this.onFlamingStepsChange();
+									clearStateCb();
+									clearInterval(intervalVar);
+								}
+							}, 2000);
+						} else {
+							this.onHandleTxReject();
+							toast(
+								<Notify
+									error={error}
+									message={error.message}
+								/>,
+								{
+									position: "bottom-right",
+									autoClose: true,
+									pauseOnHover: true,
+								}
+							);
+						}
 					}
 				});
 		}
