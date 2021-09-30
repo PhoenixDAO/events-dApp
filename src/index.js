@@ -34,11 +34,11 @@ import { CssBaseline } from "@material-ui/core";
 // });
 const options = {
 	web3: {
-		customProvider: new Web3(INFURA_URL_2),
-		fallback: {
-			type: "ws",
-			url: INFURA_WEB_URL_2,
-		},
+		customProvider: new Web3(INFURA_URL),
+		// fallback: {
+		// 	type: "ws",
+		// 	url: INFURA_WEB_URL_2,
+		// },
 	},
 	contracts: [OpenEvents],
 	// contracts : [{
