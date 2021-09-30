@@ -416,7 +416,7 @@ input[type="number"] {
 .header-top {
 	border-bottom: 1px solid #e4e4e7;
 	position: sticky;
-	z-index: 999;
+	z-index: 2;
 	top: 0;
 }
 .header3 {
@@ -446,7 +446,12 @@ div[class|="r-sticky"] .header3 {
 	padding-top: 40px !important;
 	transition: 0.5s;
 }
-
+.InputPopover__root___3Hpj9 {
+	z-index: 12 !important;
+}
+.ButtonWrap__root___1EO_R {
+	z-index: auto !important;
+}
 .zIndx-1 {
 	z-index: -1;
 }
@@ -1633,6 +1638,12 @@ body,
 		padding-right: 0px;
 		transition-duration: 0.75;
 	}
+}
+
+.ImageSpan__root___RoAqL {
+	width: 100% !important;
+	background-size: contain !important;
+	letter-spacing: 0px !important;
 }
 
 #wrapper.toggled #page-content-wrapper.sidebar-open {

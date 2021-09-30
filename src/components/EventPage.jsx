@@ -168,12 +168,12 @@ const styles = (theme) => ({
 			minWidth: "141px",
 		},
 	},
-	imageDiv:{
-    paddingTop: "40%",
-    maxHeight: "300px",
-    backgroundSize: "cover",
-    mozBackgroundSize: "cover",
-    backgroundPosition: "center",
+	imageDiv: {
+		paddingTop: "40%",
+		maxHeight: "300px",
+		backgroundSize: "cover",
+		mozBackgroundSize: "cover",
+		backgroundPosition: "center",
 	},
 	selectInput: {
 		width: "170px",
@@ -304,6 +304,7 @@ class EventPage extends Component {
 			locationEvent: "",
 			disableBuyTicketBtn: false,
 			phnx_price: "",
+			eventExistInContract: false,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -348,6 +349,26 @@ class EventPage extends Component {
 		});
 	}
 
+	async checkBlockchainEvent() {
+		if (this.props.eventsContract._address) {
+			this.props.eventsContract.methods
+				.events(this.props.match.params.id)
+				.call()
+				.then((data) => {
+					console.log("events received", data);
+					if (data.name) {
+						this.setState({
+							eventExistInContract: true,
+						});
+					} else {
+						this.setState({
+							eventExistInContract: false,
+						});
+					}
+				})
+				.catch((err) => console.log("Err in checkblockchain", err));
+		}
+	}
 	async loadEventFromBlockchain() {
 		// const web3 = new Web3(
 		// 	new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
@@ -1105,6 +1126,18 @@ class EventPage extends Component {
 		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
 			if (
+				this.state.eventExistInContract &&
+				(this.state.blockChainEvent === undefined ||
+					Object.keys(this.state.blockChainEvent).length === 0)
+			) {
+				body = (
+					<EmptyState
+						text="The event is being processed and will be available with in 10-15 minutes"
+						btnText="Go to Dashboard"
+						url="/upcomingevents/1"
+					/>
+				);
+			} else if (
 				this.state.blockChainEvent === undefined ||
 				Object.keys(this.state.blockChainEvent).length === 0
 			) {
@@ -1305,15 +1338,19 @@ class EventPage extends Component {
 										}
 									></Link>
 								)}
-								<Grid lg={12} style={{backgroundImage:`url("${image}")`}} className={classes.imageDiv} >
+								<Grid
+									lg={12}
+									style={{
+										backgroundImage: `url("${image}")`,
+									}}
+									className={classes.imageDiv}
+								>
 									{/* <img
 										className="card-img-top event-image"
 										src={image}
 										alt="Event"
 									/> */}
-									<div >
-
-									</div>
+									<div></div>
 								</Grid>
 								<Grid container>
 									<Grid
@@ -1503,7 +1540,21 @@ class EventPage extends Component {
 											<LocationOnOutlined /> Location
 										</p>
 										<p className={classes.eventinfo}>
-											{locations}
+											{this.state.blockChainEvent
+												.onsite ? (
+												<a
+													href={`https://www.google.com/maps/place/${locations}`}
+													target="_blank"
+													style={{
+														textDecoration: "none",
+														color: "#212529",
+													}}
+												>
+													{locations}
+												</a>
+											) : (
+												locations
+											)}
 										</p>
 										<p className={classes.eventHeading}>
 											<PersonOutlined />
@@ -1868,6 +1919,7 @@ class EventPage extends Component {
 		console.log("component start 2, Event page", buyers);
 		this.setState({ soldTicket: buyers });
 		await this.getPhoenixDAOMarketValue();
+		await this.checkBlockchainEvent();
 		await this.loadEventFromBlockchain();
 		await this.checkUserTicketLocation();
 		if (this.props.accounts[0]) {

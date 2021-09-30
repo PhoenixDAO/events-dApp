@@ -64,19 +64,19 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 17,
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
-		"@media (max-width:900px)":{
-			fontSize:13
+		"@media (max-width:900px)": {
+			fontSize: 13,
 		},
-		"@media (min-width:900px) and (max-width:1450px)":{
-			fontSize:15
+		"@media (min-width:900px) and (max-width:1450px)": {
+			fontSize: 15,
 		},
-		"@media (min-width:600px)":{
+		"@media (min-width:600px)": {
 			display: "-webkit-box",
 			WebkitBoxOrient: "vertical",
 			WebkitLineClamp: "1",
 			overflow: "hidden",
 			textOverflow: "ellipsis",
-		}
+		},
 	},
 	shareButton: {
 		"&:hover": {
@@ -89,11 +89,23 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		color: "#4E4E55",
 		fontSize: 17,
+		"@media (min-width:765px) and (max-width:900px)":{
+		fontSize: "13px",
+		},
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
 		"&:focus": {
 			outline: "none",
 		},
+	},
+	cardActionIcon:{
+		marginRight: "7px",
+		fontSize: "19px",
+		"@media (min-width:765px) and (max-width:900px)":{
+			marginRight: "3px",
+		fontSize: "15px",
+		}
+
 	},
 	sendTicket: {
 		"&:hover": {
@@ -106,6 +118,9 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		color: "#4E4E55",
 		fontSize: 17,
+		"@media (min-width:765px) and (max-width:900px)":{
+			fontSize: "13px",
+			},
 		fontWeight: 500,
 		"&:focus": {
 			outline: "none",
@@ -115,7 +130,7 @@ const useStyles = makeStyles((theme) => ({
 		fontFamily: "'Aeonik', sans-serif",
 	},
 	FavoriteIcon: {
-		textAlign:"center",
+		textAlign: "center",
 		border: "none",
 		backgroundColor: "#fff",
 		fontSize: 15,
@@ -150,7 +165,7 @@ const useStyles = makeStyles((theme) => ({
 		color: "#413AE2",
 		fontWeight: "700",
 		maxWidth: "35.33%",
-		width:"100%",
+		width: "100%",
 		fontSize: "16px",
 		fontFamily: "'Aeonik', sans-serif !important",
 		"& p": {
@@ -174,16 +189,16 @@ const useStyles = makeStyles((theme) => ({
 	priceAlignment: {
 		textAlign: "end",
 	},
-	dateWidthMobile:{
-		"@media (max-width:450px)":{
-			maxWidth:"80%"
-		}
+	dateWidthMobile: {
+		"@media (max-width:450px)": {
+			maxWidth: "80%",
+		},
 	},
 	eventTitle: {
 		color: "#1E1E22",
 		minWidth: "65.66%",
-		width:"100%",
-				fontSize: 16,
+		width: "100%",
+		fontSize: 16,
 		maxHeight: "52px",
 		fontWeight: 700,
 		fontFamily: "'Aeonik', sans-serif",
@@ -198,17 +213,17 @@ const useStyles = makeStyles((theme) => ({
 		// WebkitLineClamp: "3",
 		// 	}
 	},
-	cardMainDetails:{
+	cardMainDetails: {
 		display: "flex",
 		justifyContent: "space-between",
 		height: "100%",
-		"@media (min-width:765px) and (max-width: 1100px)":{
-			height: "110px"
+		"@media (min-width:765px) and (max-width: 1100px)": {
+			height: "110px",
 		},
-		"@media (min-width:1100px) and (max-width: 1400px)":{
-			height: "90px"
-		}
-	}
+		"@media (min-width:1100px) and (max-width: 1400px)": {
+			height: "90px",
+		},
+	},
 }));
 
 const EventCard = (props, context) => {
@@ -326,9 +341,9 @@ const EventCard = (props, context) => {
 
 	let phnx_price = event_data.prices.map((price) => {
 		// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
-		return (Web3.utils.fromWei(price.toString()) / PhoenixDAO_market.usd).toFixed(
-			3
-		);
+		return (
+			Web3.utils.fromWei(price.toString()) / PhoenixDAO_market.usd
+		).toFixed(3);
 	});
 	// let dollar_price = event_data.prices[0] / 1000000;
 	let dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
@@ -348,6 +363,7 @@ const EventCard = (props, context) => {
 				open={open}
 				handleClose={handleClose}
 				titleURL={titleURL}
+				eventTitle={event_data.name}
 			/>
 			<SendTicket
 				sendTicket2={sendTicket2}
@@ -411,9 +427,9 @@ const EventCard = (props, context) => {
 									style={
 										event_data.tktTotalQuantity != 0
 											? {
-												justifyContent:
-													"space-between",
-											}
+													justifyContent:
+														"space-between",
+											  }
 											: { justifyContent: "flex-end" }
 									}
 								>
@@ -436,10 +452,19 @@ const EventCard = (props, context) => {
 											{Icon ? (
 												<Favorite
 													fontSize="small"
-													style={{ color: "#413AE2", marginTop:"6px" }}
-										/>
+													style={{
+														color: "#413AE2",
+														marginTop: "6px",
+													}}
+												/>
 											) : (
-												<FavoriteBorder fontSize="small" style={{color: "#000000", marginTop: "6px"}}/>
+												<FavoriteBorder
+													fontSize="small"
+													style={{
+														color: "#000000",
+														marginTop: "6px",
+													}}
+												/>
 											)}
 											{Icon}
 										</Typography>
@@ -449,8 +474,7 @@ const EventCard = (props, context) => {
 						</div>
 
 						<CardContent>
-							<div
-							className={classes.cardMainDetails} >
+							<div className={classes.cardMainDetails}>
 								<Typography
 									variant="h6"
 									component="h2"
@@ -555,89 +579,105 @@ const EventCard = (props, context) => {
 								</div> */}
 							</div>
 							<div>
-							<Typography
-								variant="body2"
-								color="textSecondary"
-								component="p"
-								gutterBottom
-								className={`${classes.text} ${classes.dateWidthMobile}`}
-								title={`${eventTime === "onedayevent"
-								? `${moment(eventDate).format("Do MMM, YYYY")}`
-								: 
-					`${moment(eventStartDate).format("Do MMM")} - ${moment(eventEndDate).format("Do MMM, YYYY")}`
-				}`}
-							>
-								<DateRange fontSize="small" />{" "}
-								<span>&nbsp;</span>
-								{/* {date.toLocaleDateString()} */}
-								{!eventTime
-									? `Date`
-									: eventTime === "onedayevent"
-										? moment(eventDate).format("Do MMM, YYYY")
+								<Typography
+									variant="body2"
+									color="textSecondary"
+									component="p"
+									gutterBottom
+									className={`${classes.text} ${classes.dateWidthMobile}`}
+									title={`${
+										eventTime === "onedayevent"
+											? `${moment(eventDate).format(
+													"Do MMM, YYYY"
+											  )}`
+											: `${moment(eventStartDate).format(
+													"Do MMM"
+											  )} - ${moment(
+													eventEndDate
+											  ).format("Do MMM, YYYY")}`
+									}`}
+								>
+									<DateRange fontSize="small" />{" "}
+									<span>&nbsp;</span>
+									{/* {date.toLocaleDateString()} */}
+									{!eventTime
+										? `Date`
+										: eventTime === "onedayevent"
+										? moment(eventDate).format(
+												"Do MMM, YYYY"
+										  )
 										: `
 							${moment(eventStartDate).format("Do MMM")}
 							-
 							${moment(eventEndDate).format("Do MMM, YYYY")}
 							`}
-							</Typography>
+								</Typography>
 
-							<Typography
-								variant="body2"
-								color="textSecondary"
-								component="p"
-								gutterBottom
-								className={classes.text}
-								title={(!eventEndTime)?moment(eventStartTime)
-									.utcOffset(0)
-									.format("hh:mma z"):`${moment(eventStartTime)
-									.utcOffset(0)
-									.format("hh:mma")} - ${moment(
-										eventEndTime
-									)
-										.utcOffset(0)
-										.format("hh:mma z")}`}
-							>
-								<AccessTime fontSize="small" />{" "}
-								<span>&nbsp;</span>
-								{/* {date.toLocaleTimeString([], {
+								<Typography
+									variant="body2"
+									color="textSecondary"
+									component="p"
+									gutterBottom
+									className={classes.text}
+									title={
+										!eventEndTime
+											? moment(eventStartTime)
+													.utcOffset(0)
+													.format("hh:mma z")
+											: `${moment(eventStartTime)
+													.utcOffset(0)
+													.format(
+														"hh:mma"
+													)} - ${moment(eventEndTime)
+													.utcOffset(0)
+													.format("hh:mma z")}`
+									}
+								>
+									<AccessTime fontSize="small" />{" "}
+									<span>&nbsp;</span>
+									{/* {date.toLocaleTimeString([], {
 									hour: "2-digit",
 									minute: "2-digit",
 								})} */}
-								{!eventStartTime
-									? `Time`
-									: !eventEndTime
+									{!eventStartTime
+										? `Time`
+										: !eventEndTime
 										? moment(eventStartTime)
-											.utcOffset(0)
-											.format("hh:mma z")
+												.utcOffset(0)
+												.format("hh:mma z")
 										: `${moment(eventStartTime)
-											.utcOffset(0)
-											.format("hh:mma")} - ${moment(
+												.utcOffset(0)
+												.format("hh:mma")} - ${moment(
 												eventEndTime
-											)
+										  )
 												.utcOffset(0)
 												.format("hh:mma z")}`}
-							</Typography>
+								</Typography>
 
-							<Typography
-								variant="body2"
-								color="textSecondary"
-								component="div"
-								gutterBottom
-								noWrap
-								style={{ paddingBottom: "16px" }}
-								className={classes.text}
-								title={eventType === "physical"? eventLocation: `Online`}
-							>
-								<LocationOnOutlined fontSize="small" />{" "}
-								<span>&nbsp;</span>
-								{/* {event_data.location} */}
-								{!eventType
-									? `Location`
-									: eventType === "physical"
+								<Typography
+									variant="body2"
+									color="textSecondary"
+									component="div"
+									gutterBottom
+									noWrap
+									style={{ paddingBottom: "16px" }}
+									className={classes.text}
+									title={
+										eventType === "physical"
+											? eventLocation
+											: `Online`
+									}
+								>
+									<LocationOnOutlined fontSize="small" />{" "}
+									<span>&nbsp;</span>
+									{/* {event_data.location} */}
+									{!eventType
+										? `Location`
+										: eventType === "physical"
 										? eventLocation
 										: `Online`}
-							</Typography>
-						</div>
+								</Typography>
+							</div>
 							{/* For my events page */}
 							{myEvent ? (
 								<Grid item>
@@ -652,8 +692,9 @@ const EventCard = (props, context) => {
 										{"Ticket Sold: "}
 										<span>&nbsp;</span>
 										{event_data.tktTotalQuantitySold}/
-										{event_data.tktTotalQuantity == 0 ? '∞' : event_data.tktTotalQuantity}
-
+										{event_data.tktTotalQuantity == 0
+											? "∞"
+											: event_data.tktTotalQuantity}
 									</Typography>
 									<Typography
 										variant="body2"
@@ -681,8 +722,9 @@ const EventCard = (props, context) => {
 									>
 										Dollar Revenue:{" "}
 										{pricingFormatter(
-												Web3.utils.fromWei(event_data.eventRevenueInDollar.toString())
-											,
+											Web3.utils.fromWei(
+												event_data.eventRevenueInDollar.toString()
+											),
 											"$"
 										)}
 									</Typography>
@@ -710,10 +752,7 @@ const EventCard = (props, context) => {
 											disabled={checkExpiry()}
 										>
 											<LaunchSharp
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
+											className={classes.cardActionIcon}
 											/>{" "}
 											Share Event
 										</Button>
@@ -723,10 +762,7 @@ const EventCard = (props, context) => {
 											disabled={checkExpiry()}
 										>
 											<Send
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
+											className={classes.cardActionIcon}
 											/>{" "}
 											Send Ticket
 										</Button>
@@ -741,10 +777,10 @@ const EventCard = (props, context) => {
 
 											>
 												<LaunchSharp
-													style={{
-														marginRight: "7px",
-														fontSize: "19px",
-													}}
+												style={{
+													marginRight: "7px",
+													fontSize: "19px",
+												}}
 												/>{" "}
 												Share Event
 											</Button>

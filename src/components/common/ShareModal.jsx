@@ -123,12 +123,17 @@ const DialogContent = withStyles((theme) => ({
 	},
 }))(MuiDialogContent);
 
-export default function ShareModal({ handleClose, open, titleURL }) {
+export default function ShareModal({
+	handleClose,
+	open,
+	titleURL,
+	eventTitle,
+}) {
 	const [isCopied, setIsCopied] = useState(false);
 	const [shareUrl, setShareUrl] = useState(null);
 
 	const classes = useStyles();
-  
+
 	const onCopyText = () => {
 		setIsCopied(true);
 		setTimeout(() => {
@@ -215,7 +220,11 @@ export default function ShareModal({ handleClose, open, titleURL }) {
 					</FormControl>
 
 					<Grid lg={12} item className={classes.SocialMediaDiv}>
-						<SocialMedia shareUrl={shareUrl} disabled={false} />
+						<SocialMedia
+							shareUrl={shareUrl}
+							disabled={false}
+							eventTitle={eventTitle}
+						/>
 					</Grid>
 					<h5 className={classes.share}>Share on Social Media</h5>
 				</DialogContent>

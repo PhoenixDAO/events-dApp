@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: "600",
 		marginTop: "20px",
 		marginBottom: "20px",
+		"@media (min-width:950px)":{
+			fontSize:"18px",
+		},
 	},
 	menuSubHeading: {
 		fontSize: "17px",
@@ -47,6 +50,26 @@ const useStyles = makeStyles((theme) => ({
 		padding: "20px",
 		background: "#fff",
 		marginTop: "15px",
+	},
+	leftColumn:{
+		"@media (min-width: 950px)":{
+			marginRight: "15px",
+			marginLeft: "-15px",
+		}	
+	},
+	leftColumnPaper:{
+		height: "89%", 
+		"@media (max-width: 900px)":{
+			marginTop:"30px",
+		},
+		position: "sticky", 
+		top:"0px",
+	},
+	sideMenuHeading:{
+		fontSize:"1.5rem",
+	},
+	sideSubMenuHeading:{
+		fontSize:"1.3rem",
 	},
 	hideScroll1: {
 		"@media (min-width:1200px)": {
@@ -94,7 +117,7 @@ const Terms = (props) => {
 					style={{ height: "99vh" }}
 					lg={8}
 					md={8}
-					sm={6}
+					sm={12}
 					xs={12}
 				>
 					<p>Last updated: September 20th, 2021</p>
@@ -103,6 +126,7 @@ const Terms = (props) => {
 						using Our Service.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -164,7 +188,7 @@ const Terms = (props) => {
 						</li>
 						<li>
 							<p>
-								<strong>Country</strong> refers to: Nigeria
+								<strong>Country</strong> refers to: Your location
 							</p>
 						</li>
 						<li>
@@ -206,11 +230,11 @@ const Terms = (props) => {
 								<strong>Website</strong> refers to PhoenixDAO,
 								accessible from{" "}
 								<a
-									href="https://phoenixdao.io/"
+									href="http://www.phoenixdao.io/"
 									rel="external nofollow noopener"
 									target="_blank"
 								>
-									https://phoenixdao.io/
+									http://www.phoenixdao.io/
 								</a>
 							</p>
 						</li>
@@ -221,6 +245,7 @@ const Terms = (props) => {
 						</li>
 					</ul>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -265,6 +290,7 @@ const Terms = (props) => {
 					We strongly advise You to read the terms and conditions and privacy policies of any third-party web sites or services that You visit.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -281,6 +307,7 @@ const Terms = (props) => {
 					Upon termination, Your right to use the Service will cease immediately.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -300,6 +327,7 @@ const Terms = (props) => {
 					NB: PhoenixDAO suite of products are opensource/decentralized, meaning, that you’re responsible for whatever happens with its use.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -320,6 +348,7 @@ const Terms = (props) => {
 					Some jurisdictions do not allow the exclusion of certain types of warranties or limitations on applicable statutory rights of a consumer, so some or all of the above exclusions and limitations may not apply to You. But in such a case the exclusions and limitations set forth in this section shall be applied to the greatest extent enforceable under applicable law.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -346,6 +375,7 @@ const Terms = (props) => {
 					If You have any concern or dispute about the Service, You agree to first try to resolve the dispute informally by contacting the Company.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -359,6 +389,7 @@ const Terms = (props) => {
 					If You are a European Union consumer, you will benefit from any mandatory provisions of the law of the country in which you are resident in.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -372,6 +403,7 @@ const Terms = (props) => {
 					You represent and warrant that (i) You are not located in a country that is subject to the United States government embargo, or that has been designated by the United States government as a "terrorist supporting" country, and (ii) You are not listed on any United States government list of prohibited or restricted parties.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -408,6 +440,7 @@ const Terms = (props) => {
 					Except as provided herein, the failure to exercise a right or to require performance of an obligation under this Terms shall not effect a party's ability to exercise such right or require such performance at any time thereafter nor shall be the waiver of a breach constitute a waiver of any subsequent breach.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -421,6 +454,7 @@ const Terms = (props) => {
 					These Terms and Conditions may have been translated if We have made them available to You on our Service. You agree that the original English text shall prevail in the case of a dispute.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -437,6 +471,7 @@ const Terms = (props) => {
 					By continuing to access or use Our Service after those revisions become effective, You agree to be bound by the revised terms. If You do not agree to the new terms, in whole or in part, please stop using the website and the Service.
 					</p>
 					<h3
+					className={classes.sideMenuHeading}
 						ref={(el) =>
 						(pageRefs.current = {
 							...pageRefs.current,
@@ -465,6 +500,7 @@ const Terms = (props) => {
 								<a
 									href="https://phoenixdao.io/contact"
 									target="_blank"
+									style={{overflowWrap:"break-word"}}
 								>
 									http://www.phoenixdao.io/contact	
 																</a>
@@ -492,7 +528,7 @@ const Terms = (props) => {
 					style={{ height: "99vh" }}
 					lg={4}
 					md={4}
-					sm={6}
+					sm={12}
 					xs={12}
 				>
 					<div className={classes.menu}>
