@@ -51,8 +51,7 @@ class Event extends Component {
 				),
 			};
 			context.drizzle.addContract(contractConfig);
-		} catch (e) {
-		}
+		} catch (e) {}
 		super(props);
 		this.contracts = this.props.eventsContract;
 		// this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
@@ -409,9 +408,9 @@ class Event extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-            const get = await axios.get(
-                `${API_URL}${REPORT_EVENT}/${networkId}`
-            );
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
 			this.setState({
 				hideEvent: get.data.result,
 			});
@@ -604,6 +603,7 @@ class Event extends Component {
 							eventType={this.state.eventType}
 							eventDescription={this.state.eventDescription}
 							eventLocation={this.state.eventLocation}
+							selectedTab={this.props.selectedTab}
 						/>
 					)}
 					{/* new card */}
