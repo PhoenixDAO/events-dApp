@@ -58,7 +58,7 @@ class Sidebar extends Component {
 	}
 
 	async componentDidMount() {
-		this.toggleSidebarClass(false);
+		this.toggleSidebarClass((window.innerWidth>450)?false:true);
 		await this.getNetworkId();
 	}
 
@@ -210,30 +210,30 @@ class Sidebar extends Component {
 	renderImage = () => {
 		if (this.state.avatarCustom) {
 			return (
-				// <img
-				// 	src={this.state.avatar}
-				// 	style={{
-				// 		width: "40px",
-				// 		height: "40px",
-				// 		objectFit: "cover",
-				// 	}}
-				// 	/>
-					<div
-					style={{backgroundImage:`url(${this.state.avatar})`, height: "40px",width: "40px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center", borderRadius: "50%", border: "1px solid #ceced3"}}
-					// className="bird"
-				></div>
+				<img
+					src={this.state.avatar}
+					style={{
+						width: "40px",
+						height: "40px",
+						objectFit: "cover",
+					}}
+					/>
+				// 	<div
+				// 	style={{backgroundImage:`url(${this.state.avatar})`, height: "40px",width: "40px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center", borderRadius: "50%", border: "1px solid #ceced3"}}
+				// 	// className="bird"
+				// ></div>
 			);
 		} else {
 			return (
-				// <img
-				// 	src={this.imageData(this.state.avatarId)}
-				// 	style={{ display: "block", margin: "5px" }}
-				// 	className="bird"
-				// />
-				<div
-					style={{backgroundImage:`url(${this.imageData(this.state.avatarId)})`, height: "40px",width: "40px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center", borderRadius: "50%", border: "1px solid #ceced3"}}
-					// className="bird"
-				></div>
+				<img
+					src={this.imageData(this.state.avatarId)}
+					style={{ display: "block", margin: "5px" }}
+					className="bird"
+				/>
+				// <div
+				// 	style={{backgroundImage:`url(${this.imageData(this.state.avatarId)})`, height: "40px",width: "40px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center", borderRadius: "50%", border: "1px solid #ceced3"}}
+				// 	// className="bird"
+				// ></div>
 			);
 		}
 	};

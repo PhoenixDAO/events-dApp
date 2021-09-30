@@ -535,7 +535,7 @@ class Calendars extends Component {
 								}
 							}
 						/>
-					{console.log("events: ", events_calendar)}
+					{/* {console.log("events: ", events_calendar)} */}
 					</div>
 				</div>
 			);

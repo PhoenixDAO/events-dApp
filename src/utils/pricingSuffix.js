@@ -1,4 +1,3 @@
-
 export function pricingFormatter(num, currencyType){
     if(typeof(num) === "string" && currencyType == "$"){
         if (num == "" || num == "0" || num =="$0"){
@@ -11,7 +10,7 @@ export function pricingFormatter(num, currencyType){
             return formatting(num,currencyType);
     }
     else if (typeof(num) === "string" && currencyType == "PHNX"){
-        if (num == "FREE" || num == "0.000000" || num=="0.000000PHNX" || num == "0.000"){
+        if (num == "FREE" || num == "0.000000" || num=="0.000000PHNX" || num == "0.000" || num == "0.000PHNX"){
             return "Free"
         }
         // num = parseInt(num.split("PHNX")[0]);
