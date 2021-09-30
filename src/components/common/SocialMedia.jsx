@@ -26,14 +26,14 @@ const useStyles = makeStyles((theme) => ({
 			"& .MuiSvgIcon-root": {
 				fontSize: "18px",
 				display: "content",
-				marginTop:"-4px"
+				marginTop: "-4px",
 			},
 			display: "inherit",
 		},
 	},
 }));
 
-const SocialMedia = ({ disabled, shareUrl }) => {
+const SocialMedia = ({ disabled, shareUrl, eventTitle }) => {
 	const classes = useStyles();
 
 	return (
@@ -52,6 +52,8 @@ const SocialMedia = ({ disabled, shareUrl }) => {
 				url={shareUrl}
 				resetButtonStyle={false}
 				disabled={disabled}
+				hashtag="#PHNX"
+				quote={eventTitle}
 			>
 				<i className="fab fa-facebook-f"></i>
 			</FacebookShareButton>
@@ -60,6 +62,8 @@ const SocialMedia = ({ disabled, shareUrl }) => {
 				url={shareUrl}
 				resetButtonStyle={false}
 				disabled={disabled}
+				title={eventTitle}
+				hashtags={["PHNX"]}
 			>
 				<Twitter />
 			</TwitterShareButton>
