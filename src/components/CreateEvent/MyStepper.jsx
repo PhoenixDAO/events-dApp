@@ -1728,6 +1728,10 @@ const MyStepper = ({
 								>
 									Hurray, Event Published
 								</p>
+								<p>
+									Notice: Your event will be displayed in
+									10-15 minutes{" "}
+								</p>
 								<br />
 								<Typography
 									gutterBottom
@@ -1848,7 +1852,10 @@ const MyStepper = ({
 								color="primary"
 								onClick={handleNextStep}
 								disabled={!formIsValid(activeStep)}
-								className={`${classes.nextButton} ${(activeStep === steps.length - 1)&&classes.publishButton}`}
+								className={`${classes.nextButton} ${
+									activeStep === steps.length - 1 &&
+									classes.publishButton
+								}`}
 								endIcon={
 									activeStep === steps.length - 1 ? null : (
 										<img

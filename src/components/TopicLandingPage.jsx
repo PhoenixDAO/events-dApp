@@ -860,7 +860,7 @@ class TopicLandingPage extends Component {
 							className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding} `}
 						>
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
-								{topic}
+								{this.state.category}
 							</h2>
 							<FormControl
 								variant="outlined"
