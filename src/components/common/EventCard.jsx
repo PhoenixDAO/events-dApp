@@ -89,8 +89,8 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		color: "#4E4E55",
 		fontSize: 17,
-		"@media (min-width:765px) and (max-width:900px)": {
-			fontSize: "13px",
+		"@media (min-width:765px) and (max-width:900px)":{
+		fontSize: "13px",
 		},
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
@@ -98,13 +98,14 @@ const useStyles = makeStyles((theme) => ({
 			outline: "none",
 		},
 	},
-	cardActionIcon: {
+	cardActionIcon:{
 		marginRight: "7px",
 		fontSize: "19px",
-		"@media (min-width:765px) and (max-width:900px)": {
+		"@media (min-width:765px) and (max-width:900px)":{
 			marginRight: "3px",
-			fontSize: "15px",
-		},
+		fontSize: "15px",
+		}
+
 	},
 	sendTicket: {
 		"&:hover": {
@@ -117,9 +118,9 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		color: "#4E4E55",
 		fontSize: 17,
-		"@media (min-width:765px) and (max-width:900px)": {
+		"@media (min-width:765px) and (max-width:900px)":{
 			fontSize: "13px",
-		},
+			},
 		fontWeight: 500,
 		"&:focus": {
 			outline: "none",
@@ -743,47 +744,48 @@ const EventCard = (props, context) => {
 									</Button>
 								</Grid>
 							) : // For my ticket page
-							ticket ? (
-								<Grid item className={classes.row}>
-									<Button
-										className={classes.shareButton}
-										onClick={handleClickOpen}
-										disabled={checkExpiry()}
-									>
-										<LaunchSharp
+								ticket ? (
+									<Grid item className={classes.row}>
+										<Button
+											className={classes.shareButton}
+											onClick={handleClickOpen}
+											disabled={checkExpiry()}
+										>
+											<LaunchSharp
 											className={classes.cardActionIcon}
-										/>{" "}
-										Share Event
-									</Button>
-									<Button
-										className={classes.sendTicket}
-										onClick={handleClickOpen2}
-										disabled={checkExpiry()}
-									>
-										<Send
+											/>{" "}
+											Share Event
+										</Button>
+										<Button
+											className={classes.sendTicket}
+											onClick={handleClickOpen2}
+											disabled={checkExpiry()}
+										>
+											<Send
 											className={classes.cardActionIcon}
-										/>{" "}
-										Send Ticket
-									</Button>
-								</Grid>
-							) : // For my Favorite page
-							myFavorites ? (
-								<Grid item className={classes.row}>
-									<Button
-										className={classes.shareButton}
-										onClick={handleClickOpen}
-										disabled={checkExpiry()}
-									>
-										<LaunchSharp
-											style={{
-												marginRight: "7px",
-												fontSize: "19px",
-											}}
-										/>{" "}
-										Share Event
-									</Button>
-								</Grid>
-							) : null}
+											/>{" "}
+											Send Ticket
+										</Button>
+									</Grid>
+								) : // For my Favorite page
+									myFavorites ? (
+										<Grid item className={classes.row}>
+											<Button
+												className={classes.shareButton}
+												onClick={handleClickOpen}
+												disabled={checkExpiry()}
+
+											>
+												<LaunchSharp
+												style={{
+													marginRight: "7px",
+													fontSize: "19px",
+												}}
+												/>{" "}
+												Share Event
+											</Button>
+										</Grid>
+									) : null}
 						</CardContent>
 					</CardActionArea>
 				</Link>

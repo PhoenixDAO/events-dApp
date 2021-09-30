@@ -27,10 +27,10 @@ export default function BodyTextEditor({
 	const toolbarConfig = {
 		// Optionally specify the groups to display (displayed in the order listed).
 		display: [
+			"IMAGE_BUTTON",
 			"INLINE_STYLE_BUTTONS",
 			"BLOCK_TYPE_BUTTONS",
 			"BLOCK_TYPE_DROPDOWN",
-			"IMAGE_BUTTON",
 			"HISTORY_BUTTONS",
 		],
 		INLINE_STYLE_BUTTONS: [
