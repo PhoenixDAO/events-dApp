@@ -54,7 +54,7 @@ export const INFURA_URL =
 export const INFURA_WEB_URL =
 	"wss://mainnet.infura.io/ws/v3/3c62e62341b34568a512b8917a59ad63";
 export const graphURLV1 =
-	"https://api.thegraph.com/subgraphs/name/musfirazia/event-subgraphv1";
+	"https://api.thegraph.com/subgraphs/name/musfirazia/event-subgraph";
 
 //Matic Mainnet
 
