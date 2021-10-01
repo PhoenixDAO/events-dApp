@@ -303,7 +303,7 @@ class Sidebar extends Component {
 							className="switch-img"
 							src="/images/icons/switch.svg"
 						/>
-						Please switch to Rinkeby
+						Please switch to Matic or Ethereum Mainnet 
 					</span>
 				);
 			}
