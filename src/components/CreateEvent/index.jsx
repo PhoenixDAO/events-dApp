@@ -365,8 +365,8 @@ class CreateEvent extends Component {
 				.then(async (receipt) => {
 					const networkType =
 						this.props.web3.networkId == GLOBAL_NETWORK_ID
-							? "Rinkeby test net"
-							: "Matic main net";
+							? "Ethereum Mainnet"
+							: "Matic Mainnet";
 					const eventDesc =
 						eventDescription.split(" ").length >= 15
 							? eventDescription
