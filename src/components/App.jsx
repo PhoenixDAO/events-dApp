@@ -466,7 +466,7 @@ class App extends Component {
 						toast(
 							<Notify
 								hash={hash}
-								text="Preparing your ticket...🚀"
+								text="Preparing your ticket... 🚀"
 								icon="fa fa-ticket-alt"
 							/>,
 							{
@@ -615,7 +615,7 @@ class App extends Component {
 						toast(
 							<Notify
 								hash={hash}
-								text="Preparing your ticket...🚀"
+								text="Preparing your ticket... 🚀"
 								icon="fa fa-ticket-alt fa-3x"
 								color="#413AE2"
 							/>,
@@ -703,7 +703,7 @@ class App extends Component {
 								text={
 									(type === "create"
 										? "Creating"
-										: "Updating") + "your Event..."
+										: "Updating") + " your Event..."
 								}
 							/>,
 							{

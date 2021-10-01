@@ -314,7 +314,7 @@ class CreateEvent extends Component {
 							<Notify
 								// hash={txhash}
 								icon="fas fa-edit fa-2x"
-								text={"Preparing your event...🚀"}
+								text={"Preparing your event... 🚀"}
 								color="#413AE2"
 							/>,
 							{
