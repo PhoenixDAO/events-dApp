@@ -64,7 +64,7 @@ export const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		alignItems: "center",
 		marginBottom: "25px",
-		[theme.breakpoints.down("xs")]: {
+		"@media (max-width: 970px)": {
 			display: "grid",
 		},
 	},
