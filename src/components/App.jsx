@@ -355,7 +355,7 @@ class App extends Component {
 			alternateCurrency: "",
 		});
 		if (detail.error) {
-			console.log("error occured");
+			// console.log("error occured");
 		} else {
 			this.setUserDetails(detail.result);
 			this.setState({
