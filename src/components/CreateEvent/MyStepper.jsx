@@ -1682,7 +1682,7 @@ const MyStepper = ({
 	return (
 		<div
 			className={
-				activeFlamingStep == 3 ? classes.publishedRoot : classes.root
+				activeFlamingStep >= 3 ? classes.publishedRoot : classes.root
 			}
 		>
 			{activeStep === steps.length ? null : (
@@ -1702,7 +1702,7 @@ const MyStepper = ({
 			)}
 			<div
 				className={
-					activeFlamingStep == 3
+					activeFlamingStep >= 3
 						? classes.mainStepperContainerForPublishPage
 						: classes.mainStepperContainer
 				}
@@ -1710,7 +1710,7 @@ const MyStepper = ({
 				<br />
 				{activeStep === steps.length ? (
 					<div>
-						{activeFlamingStep === flamingSteps.length ? (
+						{activeFlamingStep >= flamingSteps.length ? (
 							<div className={classes.activeFlamingStepStyle}>
 								<img
 									src={Checkmark}
@@ -1882,7 +1882,7 @@ const MyStepper = ({
 					</div>
 				)}
 			</div>
-			{activeFlamingStep == 3 && (
+			{activeFlamingStep >= 3 && (
 				<a
 					href="https://www.travala.com/?ref=phoenixdao"
 					target="_blank"

@@ -440,7 +440,7 @@ class App extends Component {
 			);
 		} else {
 			toast(
-				<Notify text="😓 Wrong Network, Please Connect to Rinkeby Network." />,
+				<Notify text="😓 Wrong Network, Please Connect to Ethereum or Matic Mainnet ." />,
 				{
 					position: "bottom-right",
 					autoClose: true,
