@@ -40,13 +40,13 @@ const useStyles = makeStyles((theme) => ({
 				fontSize: "16px",
 			},
 			"@media (max-width: 1000px)": {
-				width: "70%",
+				width: "76%",
 			},
 			"@media (max-width: 580px)": {
 				width: "88%",
 			},
 
-			width: "75%",
+			width: "66%",
 			// textShadow: "none",
 			fontSize: "22px",
 		},
