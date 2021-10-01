@@ -43,11 +43,6 @@ const useStyles = makeStyles((theme) => ({
 		"@media (max-width: 600px)":{
 			fontSize: "1.4rem",
 		},
-		display: "-webkit-box",
-		WebkitBoxOrient: "vertical",
-		WebkitLineClamp: "4",
-		overflow: "hidden",
-		textOverflow: "ellipsis",
 	}
 }));
 
