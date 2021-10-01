@@ -403,7 +403,7 @@ class MyEvents extends Component {
 		if (events === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="You have no created events 😔"
+					text="You have no upcoming events 😔"
 					btnText="Create an Event"
 					url="/createevent"
 				/>
@@ -549,7 +549,7 @@ class MyEvents extends Component {
 		} else if (updated_list.length === 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="You have no created events 😔"
+					text="You have no upcoming events 😔"
 					btnText="Create an Event"
 					url="/createevent"
 				/>
