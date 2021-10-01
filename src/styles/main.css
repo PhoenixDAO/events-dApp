@@ -416,7 +416,7 @@ input[type="number"] {
 .header-top {
 	border-bottom: 1px solid #e4e4e7;
 	position: sticky;
-	z-index: 2;
+	z-index: 3;
 	top: 0;
 }
 .header3 {
