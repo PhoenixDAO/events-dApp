@@ -348,8 +348,11 @@ const EventCard = (props, context) => {
 	let dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
 
 	const checkExpiry = () => {
-		if (props.checkExpiry) {
-			if (Number(event_data.time) < new Date().getTime() / 1000) {
+		if (props.checkExpiry || props.selectedTab) {
+			if (
+				Number(event_data.time) < new Date().getTime() / 1000 ||
+				props.selectedTab == 1
+			) {
 				return true;
 			}
 		}
