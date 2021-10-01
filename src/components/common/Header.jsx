@@ -43,7 +43,12 @@ const useStyles = makeStyles((theme) => ({
 		"@media (max-width: 600px)":{
 			fontSize: "1.4rem",
 		},
-	}
+	},
+	headerWithSearch:{
+			"@media (max-width:635px)":{
+				display: "block !important",
+			}
+	},
 }));
 
 const Header = ({
@@ -122,7 +127,7 @@ const Header = ({
 					style={{
 						display: "flex",
 						alignItems: "center",
-						overflow: "hidden",
+						// overflow: "hidden",
 						// wordBreak: "break-word",
 					}}
 				>
