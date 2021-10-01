@@ -37,9 +37,13 @@ const useStyles = makeStyles((theme) => ({
 		color: "#4E4E55",
 		fontWeight: "200",
 		fontSize: "20px",
+		"@media (max-width:450px)":{
+			fontSize: "18px",
+		},
 		lineHeight: "150%",
 		fontFamily: "'AeonikReg', sans-serif",
 		whiteSpace: "pre-wrap",
+		wordBreak:"break-word",
 	},
 	detailsParent: {
 		padding: "8px 50px 16px 0",
