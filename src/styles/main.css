@@ -2091,12 +2091,13 @@ h4.transactions {
 /*Event Countdown style*/
 
 .countdown {
+    contain: content;
 	text-align: center;
 	color: rgb(58, 58, 58);
 	border-radius: 10px;
 	margin-top: 20px;
 	border: 1px solid #e4e4e7;
-	max-width: 424px;
+	max-width: 100%;
 	float: right;
 	position: relative;
 	padding: 15px;
