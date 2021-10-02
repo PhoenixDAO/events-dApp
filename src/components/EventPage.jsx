@@ -1543,7 +1543,7 @@ class EventPage extends Component {
 											{this.state.blockChainEvent
 												.onsite ? (
 												<a
-													href={`https://www.google.com/maps/place/${locations}`}
+													href={`https://www.google.com/maps/search/${locations}`}
 													target="_blank"
 													style={{
 														textDecoration: "none",
