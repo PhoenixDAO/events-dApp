@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
         border: "1px solid #E4E4E7",
         borderRadius: "8px",
         padding: "30px 20px",
+        "@media (max-width: 450px)":{
+            padding: "30px 10px",
+        },
         backgroundColor: "white",
         textAlign: "inherit",
         display: "flex",
@@ -33,11 +36,17 @@ const useStyles = makeStyles((theme) => ({
     text1: {
         color: "#4E4E55",
         fontSize: "20px",
+        "@media (max-width: 450px)":{
+            fontSize: "16px",
+        },
         fontWeight: 700,
     },
     text: {
         color: "#4E4E55",
         fontSize: "20px",
+        "@media (max-width: 450px)":{
+            fontSize: "16px",
+        },
         fontWeight: 500,
         paddingLeft: "10px"
 

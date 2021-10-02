@@ -799,7 +799,7 @@ const Analytics = (props, context) => {
 							click={getPhnxRevenue}
 							imageSrc="/images/icons/PHNX.png"
 							header="Phnx Revenue"
-							value={phnxRevenue + "PHNX"}
+							value={phnxRevenue + " PHNX"}
 							profit={phnxChange}
 							diffrence={phnxDifference.toFixed(3)}
 							entity="PHNX"

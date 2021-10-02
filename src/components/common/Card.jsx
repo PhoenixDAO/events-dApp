@@ -6,12 +6,16 @@ import {
 } from "@material-ui/core";
 import { SettingsSystemDaydreamSharp } from "@material-ui/icons";
 import moment from "moment";
+import { pricingFormatter } from "../../utils/pricingSuffix";
 
 const useStyles = makeStyles((theme) => ({
     box: {
         border: "1px solid #E4E4E7",
         borderRadius: "8px",
         padding: "20px",
+        "@media (min-width:735px)":{
+            padding: "10px",
+        },
         "&:active": {
             border: "8px solid #F2F2FD"
         },
@@ -62,7 +66,9 @@ const useStyles = makeStyles((theme) => ({
     liveRevenue: {
         color: "#A3A3A3",
         fontSize: "12px",
-        height: "20px"
+        "@media (min-width:735px)":{
+            height: "20px",
+        }
     },
     card:{
         display: "flex",
