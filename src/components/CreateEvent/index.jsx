@@ -385,12 +385,12 @@ class CreateEvent extends Component {
 						${this.state.shareUrl}
 						#EventsDapp #${eventName.replace(/\s/g, "")}
 						`;
-					// await userTweet({
-					// 	address: this.props.accounts[0],
-					// 	networkId: this.props.web3.networkId,
-					// 	base64Image: image0Base64,
-					// 	message: message,
-					// });
+					await userTweet({
+						address: this.props.accounts[0],
+						networkId: this.props.web3.networkId,
+						base64Image: image0Base64,
+						message: message,
+					});
 				})
 				.catch((error) => {
 					console.log("error", error);
@@ -706,7 +706,6 @@ class CreateEvent extends Component {
 			body = (
 				<div className="row">
 					<div className="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<br />
 						<br />
 						<MyStepper
 							handleCreateEvent={this.handleCreateEvent}
