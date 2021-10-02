@@ -112,7 +112,69 @@ const TicketsByLocation = (props) => {
 
 	return (
 		<Grid className={classes.box}>
-			<Grid className={classes.row}>
+				<div
+							className={`row row_mobile ${classes.topicRow}`}
+						>
+							<h5 className={`col-lg-7 col-xl-7 col-md-6 col-sm-12 ${classes.heading2}`}>
+							Ticket sales by Location
+							</h5>
+							<FormControl
+								variant="outlined"
+								className={`col-lg-5 col-xl-5 col-md-6 col-sm-12 ${classes.formControls}`}
+							>
+								<Typography
+									ref={this.eventRef}
+									component="div"
+									className={`${classes.sortBy}`}
+								>
+									Event
+								</Typography>
+								{props.eventNames && (
+									<Select
+										fullWidth
+										value={
+											props.eventNames &&
+											props.eventNames["eventId"]
+										}
+										onChange={(e) => {
+											props.handleEvent(e);
+											props.handleEventName(e);
+										}}
+										inputProps={{
+											name: "age",
+											id: "outlined-age-native-simple",
+										}}
+										MenuProps={{
+											classes: {
+												paper: classes.topicMenuPaper,
+											},
+											getContentAnchorEl: null,
+											anchorOrigin: {
+												vertical: "bottom",
+												horizontal: "left",
+											},
+										}}
+										className={classes.selectWidth}
+									>
+										{props.eventName.map((event) => {
+											return (
+												<MenuItem
+													style={{
+														fontFamily:
+															"'Aeonik', sans-serif",
+														width: "350px",
+													}}
+													value={event.eventId}
+												>
+													{event.name}
+												</MenuItem>
+											);
+										})}
+									</Select>
+								)}
+							</FormControl>
+							</div>
+			{/* <Grid className={classes.row}>
 				<Grid className={classes.row}>
 					<h5 className={classes.heading2}>
 						Ticket sales by Location
@@ -183,7 +245,7 @@ const TicketsByLocation = (props) => {
 						</div>
 					) : null}
 				</Grid>
-			</Grid>
+			</Grid> */}
 			<Grid container>
 				<Grid lg={7} sm={12} xs={12} md={6}>
 					<Grid className={classes.row2}>
