@@ -53,6 +53,7 @@ class Sidebar extends Component {
 			loading: false,
 			networkId: false,
 			openWallet: false,
+			networkIdNumber:0,
 		};
 		this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
@@ -254,7 +255,9 @@ class Sidebar extends Component {
 				});
 			}
 			const networkId = await web3.eth.net.getId();
-
+			this.setState({
+				networkIdNumber: networkId,
+			});
 			this.setState({
 				loading: false,
 			});
@@ -631,14 +634,6 @@ class Sidebar extends Component {
 									</a>
 								</div>
 							</ul>
-							<span className="toggleHidden suggestion"  style={{	whiteSpace:"pre-wrap", marginTop:"20px", marginBottom:"20px"}}>
-								<a href="https://macncheese.finance/matic-polygon-mainnet-faucet.php" style={{
-									color: "#413ae2", ctextDecoration: "underline", color: "rgb(65, 58, 226)",
-									textDecoration: "underline",
-									// display: "flex",
-									// alignItems: "center", 
-								}} target="_blank">Matic(Polygon) Mainnet Faucet - Get Free Matic on Layer2</a>
-							</span>
 							<span className="toggleHidden suggestion" style={{	whiteSpace:"pre-wrap"}}>
 								Kindly give us your feedback(s) <span><a style={{
 									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
@@ -1032,19 +1027,14 @@ class Sidebar extends Component {
 								</div>
 							</ul>
 							{/* <div className="toggleHidden suggestion"> */}
-							<span className="toggleHidden suggestion"  style={{	whiteSpace:"pre-wrap", marginTop:"20px", marginBottom:"20px"}}>
-								<a href="https://macncheese.finance/matic-polygon-mainnet-faucet.php" style={{
-									color: "#413ae2", ctextDecoration: "underline", color: "rgb(65, 58, 226)",
-									textDecoration: "underline",
-									// display: "flex",
-									// alignItems: "center", 
-								}} target="_blank">Matic(Polygon) Mainnet Faucet - Get Free Matic on Layer2</a>
-							</span>
+							{(this.state.networkIdNumber === 137)&&<span className="toggleHidden suggestion PolygonLink"  style={{	whiteSpace:"pre-wrap", marginTop:"20px", marginBottom:"20px"}}>
+								<a href="https://macncheese.finance/matic-polygon-mainnet-faucet.php" target="_blank">🏃‍♂️ Matic(Polygon) Mainnet Faucet - Get Free Matic on Layer2</a>
+							</span>}
 							<span className="toggleHidden suggestion"  style={{	whiteSpace:"pre-wrap"}} >
 								
 								Kindly give us your feedback(s) <span>
 								<a style={{
-									color: "#413ae2", ctextDecoration: "underline", color: "rgb(65, 58, 226)",
+									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
 									textDecoration: "underline",
 									// display: "flex",
 									// alignItems: "center", 
