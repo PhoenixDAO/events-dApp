@@ -33,7 +33,9 @@ import {
 	ConfirmationNumberOutlined,
 } from "@material-ui/icons";
 import { toast } from "react-toastify";
-import ApprovalModal from "./approvalModal";
+// import ApprovalModal from "./approvalModal";
+import ApprovalModal from "./BuyTicket2";
+
 import { withStyles } from "@material-ui/core/styles";
 import { GLOBAL_NETWORK_ID, GLOBAL_NETWORK_ID_2 } from "../config/const.js";
 import Loading from "./Loading";
@@ -305,6 +307,9 @@ class EventPage extends Component {
 			disableBuyTicketBtn: false,
 			phnx_price: "",
 			eventExistInContract: false,
+			allow: 0,
+			loadingApprove: false,
+			loadingPurchase: false,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -726,6 +731,22 @@ class EventPage extends Component {
 		return description;
 	};
 
+	initApproveMethod = async () => {
+		try {
+			let balance = await this.props.phnxContract.methods
+				.totalSupply()
+				.call();
+			this.setState({
+				approve: this.props.phnxContract.methods.approve(
+					this.props.eventsAddress,
+					balance
+				),
+			});
+		} catch (err) {
+			console.log("err", err);
+		}
+	};
+
 	handleClickOpen2 = async () => {
 		if (
 			this.props.networkId != GLOBAL_NETWORK_ID &&
@@ -813,14 +834,17 @@ class EventPage extends Component {
 
 	allowance = async () => {
 		let a = await this.props.phnxContract.methods
-			.allowance(this.account, this.props.eventsAddress)
+			.allowance(this.props.accounts[0], this.props.eventsAddress)
 			.call();
+		this.setState({
+			allow: a,
+		});
 		return a;
 	};
 
 	giveApproval = async () => {
-		this.setState({ disabledBuying: true });
-		this.handleClose();
+		this.setState({ disabledBuying: true, loadingApprove: true });
+		// this.handleClose();
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
@@ -843,9 +867,13 @@ class EventPage extends Component {
 					);
 				}
 			})
-			.on("confirmation", (confirmationNumber, receipt) =>
-				this.onConfirmation(confirmationNumber, receipt)
-			)
+			.on("confirmation", async (confirmationNumber, receipt) => {
+				this.onConfirmation(confirmationNumber, receipt);
+				await this.allowance();
+				this.setState({
+					loadingApprove: false,
+				});
+			})
 			.on("error", (error) => {
 				if (error !== null) {
 					this.setState({ disabledBuying: false });
@@ -858,8 +886,12 @@ class EventPage extends Component {
 					// this.afterApprove()
 					this.setState({ disabledStatus: false });
 				}
+				this.setState({
+					loadingApprove: false,
+				});
 			});
 	};
+
 	onConfirmation(confirmationNumber, receipt) {
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
@@ -905,61 +937,79 @@ class EventPage extends Component {
 	};
 
 	inquire = async () => {
-		let event_data = this.state.blockChainEvent;
-		let date2 = new Date(parseInt(event_data.time, 10) * 1000);
+		try {
+			const result = await this.checkUserBalance();
+			if (result) {
+				this.setState({
+					disableBuyTicketBtn: true,
+				});
+			} else {
+				this.setState({
+					loadingPurchase: true,
+				});
+				let event_data = this.state.blockChainEvent;
+				let date2 = new Date(parseInt(event_data.time, 10) * 1000);
 
-		let balance = await this.props.phnxContract.methods
-			.totalSupply()
-			.call();
-		let date = new Date(
-			parseInt(this.state.blockChainEvent.time, 10) * 1000
-		);
+				let balance = await this.props.phnxContract.methods
+					.totalSupply()
+					.call();
+				let date = new Date(
+					parseInt(this.state.blockChainEvent.time, 10) * 1000
+				);
 
-		let time = date.toLocaleTimeString([], {
-			hour: "2-digit",
-			minute: "2-digit",
-		});
-		const geoFindUser = await this.geoFindMe();
-		this.setState(
-			{
-				fee: this.state.blockChainEvent[2],
-				token: this.state.blockChainEvent[3],
-				openEvents_address: Open_events_Address,
-				buyticket: this.props.eventsContract.methods.buyTicket([
-					this.props.match.params.id,
-					this.state.selectedCategoryIndex,
-					geoFindUser, //"Sydney",
-				]),
-				approve: this.props.phnxContract.methods.approve(
-					this.props.eventsAddress,
-					balance
-				),
-			},
-			async () => {
-				// let temp = await this.allowance();
-				if ((await this.allowance()) == 0) {
-					this.handleClickOpen();
-				} else {
-					this.props.inquire(
-						this.props.id,
-						this.state.fee,
-						this.state.token,
-						this.state.openEvents_address,
-						this.state.buyticket,
-						this.state.approve,
-						this.state.eventTime,
-						date2, // this.state.eventDate,
-						this.state.eventEndDate,
-						this.state.image,
-						this.state.blockChainEvent.name,
-						this.state.phnx_price,
-						this.state.dollar_price,
-						time,
-						date2
-					);
-				}
+				let time = date.toLocaleTimeString([], {
+					hour: "2-digit",
+					minute: "2-digit",
+				});
+				const geoFindUser = await this.geoFindMe();
+				this.setState(
+					{
+						fee: this.state.blockChainEvent[2],
+						token: this.state.blockChainEvent[3],
+						openEvents_address: Open_events_Address,
+						buyticket: this.props.eventsContract.methods.buyTicket([
+							this.props.match.params.id,
+							this.state.selectedCategoryIndex,
+							geoFindUser, //"Sydney",
+						]),
+						approve: this.props.phnxContract.methods.approve(
+							this.props.eventsAddress,
+							balance
+						),
+					},
+					async () => {
+						// let temp = await this.allowance();
+						if ((await this.allowance()) == 0) {
+							this.handleClickOpen();
+						} else {
+							await this.props.inquire(
+								this.props.id,
+								this.state.fee,
+								this.state.token,
+								this.state.openEvents_address,
+								this.state.buyticket,
+								this.state.approve,
+								this.state.eventTime,
+								date2, // this.state.eventDate,
+								this.state.eventEndDate,
+								this.state.image,
+								this.state.blockChainEvent.name,
+								this.state.phnx_price,
+								this.state.dollar_price,
+								time,
+								date2
+							);
+							this.setState({
+								loadingPurchase: false,
+							});
+							this.handleClose();
+						}
+					}
+				);
 			}
-		);
+		} catch (err) {
+			console.log("err while buying", err);
+		}
 	};
 
 	getLocation = () => {
@@ -1278,6 +1328,25 @@ class EventPage extends Component {
 								phnx_price={this.state.phnx_price}
 								dollar_price={this.state.dollar_price}
 							/>
+							<ApprovalModal
+								open={this.state.open}
+								handleClose={this.handleClose}
+								giveApproval={this.giveApproval}
+								image={image}
+								eventTitle={event_data.name}
+								date={event_date}
+								eventStartDate={this.state.eventStartDate}
+								eventTime={this.state.eventTime}
+								eventDate={this.state.eventDate}
+								eventEndDate={this.state.eventEndDate}
+								phnx_price={this.state.phnx_price}
+								dollar_price={this.state.dollar_price}
+								allowance={this.allowance}
+								allow={this.state.allow}
+								inquire={this.inquire}
+								loadingApprove={this.state.loadingApprove}
+								loadingPurchase={this.state.loadingPurchase}
+							/>
 							<Snackbar
 								anchorOrigin={{
 									vertical: "top",
@@ -1314,7 +1383,7 @@ class EventPage extends Component {
 								goBack={this.goBack}
 								page="event"
 								buyTicket={true}
-								handleClickOpen2={this.handleClickOpen2}
+								handleClickOpen={this.handleClickOpen}
 								allowBuy={this.allowBuy}
 							/>
 							<Grid
@@ -1899,15 +1968,8 @@ class EventPage extends Component {
 				}
 			}
 		}
-
 		return (
 			<div className="event-page-wrapper">
-				<ApprovalModal
-					open={this.state.open}
-					handleClose={this.handleClose}
-					giveApproval={this.giveApproval}
-				/>
-
 				<span className={classes.eventDescriptionFont}>{body}</span>
 			</div>
 		);
@@ -1921,8 +1983,10 @@ class EventPage extends Component {
 		await this.getPhoenixDAOMarketValue();
 		await this.checkBlockchainEvent();
 		await this.loadEventFromBlockchain();
+		await this.initApproveMethod();
 		await this.checkUserTicketLocation();
 		if (this.props.accounts[0]) {
+			await this.allowance();
 			await this.checkUserBalance();
 		}
 		window.scroll({

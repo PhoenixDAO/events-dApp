@@ -61,7 +61,7 @@ const Header = ({
 	searchBar,
 	connectWallet,
 	buyTicket,
-	handleClickOpen2,
+	handleClickOpen,
 	accounts,
 	search,
 	handleSearch,
@@ -167,7 +167,7 @@ const Header = ({
 							style={{ marginBottom: "10px" }}
 							className={classes.buy}
 							onClick={() =>
-								allowBuy() ? handleClickOpen2() : null
+								allowBuy() ? handleClickOpen() : null
 							}
 							disabled={disabled}
 						>

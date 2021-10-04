@@ -301,7 +301,6 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
   const buyTicket = () => {
     buy();
     handleClose();
-
   }
   return (
     <div >
