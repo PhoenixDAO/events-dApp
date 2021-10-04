@@ -31,9 +31,12 @@ const useStyles = makeStyles((theme) => ({
 		background: "#413AE2",
 		color: "#fff",
 		padding: "10px 40px",
+		"@media (max-width:350px)":{
+			padding: "5px 10px",
+		},
 		marginTop: "20px",
 		marginInline: "10px",
-		width: "185px"
+		maxWidth: "185px"
 	},
 	title: {
 		fontFamily: "'Aeonik', sans-serif",
@@ -60,6 +63,9 @@ const useStyles = makeStyles((theme) => ({
 		border: "1px solid #413AE2",
 		borderRadius:"20px",
 		padding:"25px",
+		"@media (max-width:350px)":{
+			padding: "10px",
+		},
 		textAlign:"center",
 		width:"100%",
 	},

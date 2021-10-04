@@ -19,6 +19,14 @@
 #sidebar-wrapper.my-sidebar a:hover {
 	text-decoration: underline;
 }
+.PolygonLink a {
+	color: #413ae2 !important;
+	text-decoration: none;
+}
+
+.PolygonLink a:hover {
+	text-decoration: none !important;
+}
 #sidebar-wrapper.my-sidebar .user-status .user-status-icon i {
 	padding-left: 6px;
 	margin: 12px 7px;
