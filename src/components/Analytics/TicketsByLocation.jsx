@@ -24,7 +24,16 @@ const TicketsByLocation = (props) => {
 		layout: {
 			margin: {
 				bottom: 25,
+				right:20,
+				left:20,
+				top:20,
 			},
+			padding:{
+				right:20,
+				left:20,
+				top:20,
+				bottom:20,
+			}
 		},
 		plugins: {
 			doughnutlabel: {
@@ -58,20 +67,19 @@ const TicketsByLocation = (props) => {
 			},
 			backgroundColor: "black",
 			titleFontSize: 16,
-			xPadding: 15,
-			yPadding: 15,
+			// xPadding: 15,
+			// yPadding: 15,
 			titleFontColor: "#fff",
 			bodyFontColor: "#E4E4E7",
 			bodyFontSize: 14,
 			displayColors: false,
 			position: "nearest",
-			yAlign: "bottom",
-			x: 40,
-			y: 40,
+			yAlign: "center",
+			// x: 40,
+			// y: 40,
 		},
 	};
     const chartColors = ["#ACFFE3", "#96A6FF", "#FF8795", "#E8B56B", "#D0A6F2"];
-
 	const data2 = {
 		maintainAspectRatio: false,
 		responsive: false,
