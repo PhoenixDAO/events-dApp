@@ -77,11 +77,10 @@ export default function GeoLocation(props) {
 							setOptions(res.geonames);
 					  })
 					: geonames.children({ geonameId: geoId }).then((res) => {
-							if (res.totalResultsCount){
+							if (res.totalResultsCount) {
 								setOptions(res.geonames);
-							}
-							else{
-								setOptions([])
+							} else {
+								setOptions([]);
 							}
 					  });
 			};
@@ -147,18 +146,24 @@ export default function GeoLocation(props) {
 				>
 					<em>{`Select ${locationTitle}`}</em>
 				</MenuItem>
-				{options.map((v, index) => (
-					<MenuItem
-						key={index}
-						data-my-value={isCountry ? v.countryName : v.name}
-						value={v.geonameId}
-						style={{
-							fontFamily: "'Aeonik', sans-serif",
-						}}
-					>
-						{isCountry ? v.countryName : v.name}
-					</MenuItem>
-				))}
+				{options
+					.sort((a, b) => {
+						let x = a.countryName;
+						let y = b.countryName;
+						return x < y ? -1 : x > y ? 1 : 0;
+					})
+					.map((v, index) => (
+						<MenuItem
+							key={index}
+							data-my-value={isCountry ? v.countryName : v.name}
+							value={v.geonameId}
+							style={{
+								fontFamily: "'Aeonik', sans-serif",
+							}}
+						>
+							{isCountry ? v.countryName : v.name}
+						</MenuItem>
+					))}
 			</Select>
 			<FormHelperText>{error ? error.message : null}</FormHelperText>
 		</FormControl>

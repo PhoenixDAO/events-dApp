@@ -971,7 +971,7 @@ class FindEvents extends Component {
 					{/* slider */}
 					<div>
 						<div>
-							<Slider account={this.props.accounts[0]} />
+							<Slider />
 						</div>
 					</div>
 					<br />
