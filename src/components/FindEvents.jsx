@@ -774,7 +774,7 @@ class FindEvents extends Component {
 		if (updated_list.length == 0 && !this.state.loading) {
 			body = (
 				<EmptyState
-					text="No events are available 😔 .Want to be the first?"
+					text="No events are available 😔. Want to be the first?"
 					btnText="Create an Event"
 					url="/createevent"
 				/>
