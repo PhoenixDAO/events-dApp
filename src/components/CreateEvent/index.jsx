@@ -65,7 +65,7 @@ class CreateEvent extends Component {
 			stage: 0,
 			title: null,
 			error: false,
-			error_text: "Transaction Rejectesd",
+			error_text: "Transaction Rejected",
 			ipfs: null,
 			fileImg: null,
 			data: {
