@@ -1149,7 +1149,7 @@ class EventPage extends Component {
 					// 	PhoenixDAO Event not found
 					// </div>
 					<EmptyState
-						text="Event doesn't exist...😔"
+						text="Event doesn't exist... 😔"
 						btnText="Go to Dashboard"
 						url="/upcomingevents/1"
 					/>

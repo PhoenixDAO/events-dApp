@@ -635,7 +635,7 @@ class Sidebar extends Component {
 								</div>
 							</ul>
 							<span className="toggleHidden suggestion" style={{	whiteSpace:"pre-wrap"}}>
-								Kindly give us your feedback(s) <span><a style={{
+								Kindly give us your feedback <span><a style={{
 									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
 									textDecoration: "underline",
 									// display: "flex",
@@ -1031,8 +1031,7 @@ class Sidebar extends Component {
 								<a href="https://macncheese.finance/matic-polygon-mainnet-faucet.php" target="_blank">🏃‍♂️ Matic(Polygon) Mainnet Faucet - Get Free Matic on Layer2</a>
 							</span>}
 							<span className="toggleHidden suggestion"  style={{	whiteSpace:"pre-wrap"}} >
-								
-								Kindly give us your feedback(s) <span>
+								Kindly give us your feedback<span>
 								<a style={{
 									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
 									textDecoration: "underline",
