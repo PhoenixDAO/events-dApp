@@ -108,6 +108,7 @@ class App extends Component {
 			getPhoenixDAO: "",
 			openSnackbarForNoMetaMask: false,
 			openSnackbarForPendingRequest: false,
+			openNetworkSnackbar : false,
 			disabledStatus: false,
 			eventsContract: {},
 			userDetails: {},
@@ -149,6 +150,7 @@ class App extends Component {
 			eventAddress = Open_events_Address_2;
 			phoenixAddress = PhoenixDAO_Testnet_Token_Address_2;
 		} else {
+			this.setState({openNetworkSnackbar: true});
 			console.log("Wrong network address | not supported");
 		}
 		return { eventAddress, phoenixAddress };
@@ -391,8 +393,11 @@ class App extends Component {
 	handleSnackbarClose = (number) => {
 		if (number == 1) {
 			this.setState({ openSnackbarForNoMetaMask: false });
-		} else {
+		} else if(number == 2){
 			this.setState({ openSnackbarForPendingRequest: false });
+		}
+		else {
+			this.setState({ openNetworkSnackbar: false });
 		}
 	};
 
@@ -1512,6 +1517,23 @@ class App extends Component {
 									}
 									handleClose={this.handleSnackbarClose}
 								/> */}
+									<Snackbar
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "center",
+									}}
+									open={this.state.openNetworkSnackbar}
+									message={
+										<span>
+											{/* {" "} */}
+											Please switch to Matic or Ethereum Mainnet
+										</span>
+									}
+									onClose={() => this.handleSnackbarClose(3)}
+									autoHideDuration={5000}
+									key={"top" + "center"}
+									className="snackbar"
+								/>
 								<Snackbar
 									anchorOrigin={{
 										vertical: "top",

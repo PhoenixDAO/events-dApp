@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 		background: '#413AE2',
 		color: 'white',
 		top: '-10px',
+		height:'28px',
 		right: '-10px',
 		border: '0px',
 		borderRadius: '100%',
