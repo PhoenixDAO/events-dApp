@@ -1525,8 +1525,6 @@ class EventPage extends Component {
 										<span style={{display:"table-header-group"}}>
 										<p className={`${classes.eventinfo} ${classes.eventTimePara}`}>
 											{" "}
-											{console.log("event start time utc: ", this.state.eventStartTime)}
-											{console.log("event start time local: ", moment(this.state.eventStartTime).utcOffset(0).local().format('LT'))}
 											{!this.state.eventStartTime
 												? `Time`
 												: !this.state.eventEndTime
