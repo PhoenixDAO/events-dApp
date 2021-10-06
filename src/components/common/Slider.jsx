@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Carousel } from "react-bootstrap";
 import { makeStyles } from "@material-ui/core/styles";
+import { drizzleConnect } from "drizzle-react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 import slider1 from "../Images/slider1.svg";
 import slider2 from "../Images/slider2.svg";
 import slider3 from "../Images/slider3.svg";
@@ -34,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
 	carouselCaption: {
 		textAlign:"Left",
 		color: "#ffffff",
+		paddingLeft:"10%",
+		paddingTop:"10%",
+		height: "376px",
 		// paddingLeft:"10%",
 		"& p": {
 			"@media (max-width: 800px)": {
@@ -83,8 +89,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 	carouselDiv:{
 		height:"376px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center",
-		paddingLeft:"10%",
-		paddingTop:"10%"
+		
+	},
+	createEventlink:{
+		textDecoration:"none"
 	}
 }));
 
@@ -102,7 +110,9 @@ const Slider = (props) => {
 			>
 					
 				<Carousel.Item interval={duration} style={{backgroundImage:`url(/images/slider01.jpg)`,}} className={classes.carouselDiv}>
-				<Link to={`${(props.account)?'/createevent':"#"}`}  style={{textDecoration:"none"}}>
+				<Link to={`${(props.accounts[0] && (props.networkId == 1 || props.networkId == 137))?'/createevent':"#"}`}  
+				style={{textDecoration:"none", cursor:`${props.accounts[0] && (props.networkId == 1 || props.networkId == 137)?"pointer":"auto"}`}}
+				>
 					{/* <img
 						className={`d-block slider-image shadow-none ${classes.imageResponsive} img-fluid w-100`}
 						style={{
@@ -113,6 +123,7 @@ const Slider = (props) => {
 						src={"/images/slider01.jpg"}
 						alt="First slide"
 					/> */}
+					<div>
 					<div className={classes.carouselCaption}>
 						<p className={`${classes.title} ${classes.text}`}><strong>
 							Get Valuable <span style={{color:"#77ffe5"}}>NFTs</span>
@@ -122,11 +133,14 @@ const Slider = (props) => {
 						And save your attended events on the blockchain with PhoenixDAO Events dApp.
 						</p>
 					</div>
+					</div>
 						</Link>
 				</Carousel.Item>
 
 				<Carousel.Item interval={duration}  style={{backgroundImage:`url(/images/slider02.jpg)`}} className={classes.carouselDiv}>
-				<Link to={`${(props.account)?'/createevent':"#"}`}  style={{textDecoration:"none"}}>
+				<Link to={`${(props.account)?'/createevent':"#"}`}  
+				style={{textDecoration:"none"}}
+				>
 					{/* <img
 						className={`d-block slider-image shadow-none ${classes.imageResponsive} img-fluid w-100`}
 						style={{
@@ -148,7 +162,9 @@ const Slider = (props) => {
 				</Carousel.Item>
 
 				<Carousel.Item interval={duration}  style={{backgroundImage:`url(/images/slider03.jpg)`}} className={classes.carouselDiv}>
-				<Link to={`${(props.account)?'/createevent':"#"}`}  style={{textDecoration:"none"}}>
+				<Link to={`${(props.account)?'/createevent':"#"}`}  
+				style={{textDecoration:"none"}}
+				>
 					{/* <img
 						className={`d-block slider-image shadow-none ${classes.imageResponsive} img-fluid w-100`}
 						style={{
@@ -176,4 +192,18 @@ const Slider = (props) => {
 	);
 };
 
-export default Slider;
+// export default Slider;
+Slider.contextTypes = {
+	drizzle: PropTypes.object,
+};
+
+const mapStateToProps = (state) => {
+	return {
+		// contracts: state.contracts,
+		accounts: state.accounts,
+		networkId: state.web3.networkId,
+	};
+};
+
+const AppContainer = drizzleConnect(Slider, mapStateToProps);
+export default AppContainer;
