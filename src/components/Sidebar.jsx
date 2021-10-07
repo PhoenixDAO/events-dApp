@@ -91,9 +91,13 @@ class Sidebar extends Component {
 		} else {
 			activeClassName = "nav-item";
 		}
-		if (this.props.networdId &&(this.props.networkId != 137 || this.props.networkId != 1 )){
-			this.setState({openNetworkSnackbar:true});
+		console.log("network Id: ", this.props)
+		if (this.props.networdId != null){
+			if(this.props.networkId != 137 || this.props.networkId != 1 ){
+				this.setState({openNetworkSnackbar:true});
+			}
 		}
+		
 	}
 
 	toggleSidebarClass = (closeOnly) => {
