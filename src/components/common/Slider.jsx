@@ -138,8 +138,8 @@ const Slider = (props) => {
 				</Carousel.Item>
 
 				<Carousel.Item interval={duration}  style={{backgroundImage:`url(/images/slider02.jpg)`}} className={classes.carouselDiv}>
-				<Link to={`${(props.account)?'/createevent':"#"}`}  
-				style={{textDecoration:"none"}}
+				<Link to={`${(props.accounts[0] && (props.networkId == 1 || props.networkId == 137))?'/createevent':"#"}`}  
+				style={{textDecoration:"none", cursor:`${props.accounts[0] && (props.networkId == 1 || props.networkId == 137)?"pointer":"auto"}`}}
 				>
 					{/* <img
 						className={`d-block slider-image shadow-none ${classes.imageResponsive} img-fluid w-100`}
@@ -162,8 +162,8 @@ const Slider = (props) => {
 				</Carousel.Item>
 
 				<Carousel.Item interval={duration}  style={{backgroundImage:`url(/images/slider03.jpg)`}} className={classes.carouselDiv}>
-				<Link to={`${(props.account)?'/createevent':"#"}`}  
-				style={{textDecoration:"none"}}
+				<Link to={`${(props.accounts[0] && (props.networkId == 1 || props.networkId == 137))?'/createevent':"#"}`}  
+				style={{textDecoration:"none", cursor:`${props.accounts[0] && (props.networkId == 1 || props.networkId == 137)?"pointer":"auto"}`}}
 				>
 					{/* <img
 						className={`d-block slider-image shadow-none ${classes.imageResponsive} img-fluid w-100`}

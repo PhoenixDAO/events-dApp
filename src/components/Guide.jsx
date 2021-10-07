@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 		marginBottom: "24px",
 	},
 	menuHeading: {
+		cursor:"pointer",
 		fontSize: "20px",
 		fontWeight: "600",
 		marginTop: "20px",
@@ -43,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
 		},
 	},
 	menuSubHeading: {
+		cursor:"pointer",
 		fontSize: "17px",
 		color: "#4E4E55",
 		"@media (min-width:950px)":{
