@@ -380,11 +380,11 @@ class CreateEvent extends Component {
 										eventDescription.split(" ").length
 									)
 									.join(" ");
-					const message = `The "${eventName}" event is now live on the ${networkType}🔥
-						${eventDesc.replace(/<[^>]*>?/gm, "")}...
-						${this.state.shareUrl}
-						#EventsDapp #${eventName.replace(/\s/g, "")}
-						`;
+									const message = `The "${eventName}" event is now live on the ${networkType}:fire:
+									${eventDesc.replace(/<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g, "")}...
+									${this.state.shareUrl}
+									#EventsDapp #${eventName.replace(/\s/g, "")}
+									`;
 					await userTweet({
 						address: this.props.accounts[0],
 						networkId: this.props.web3.networkId,
