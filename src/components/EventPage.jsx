@@ -228,8 +228,8 @@ const styles = (theme) => ({
 	},
 	clockTime: {
 		"@media (max-width: 900px)": {
-			width:"auto",
-		alignSelf:"flex-start"
+			width: "auto",
+			alignSelf: "flex-start",
 		},
 	},
 	selectWidth: {
@@ -238,15 +238,15 @@ const styles = (theme) => ({
 		whiteSpace: "nowrap",
 		textOverflow: "ellipsis",
 	},
-	eventTimePara:{
-		marginBottom:"0px",
+	eventTimePara: {
+		marginBottom: "0px",
 	},
-	localTime:{
-		float:"right",
+	localTime: {
+		float: "right",
 		fontSize: "12px",
 		fontWeight: "bolder",
 		color: "#6b6b6b",
-	}
+	},
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -1522,73 +1522,135 @@ class EventPage extends Component {
 										<p className={classes.eventHeading}>
 											<ScheduleOutlined /> Time
 										</p>
-										<span style={{display:"table-header-group"}}>
-										<p className={`${classes.eventinfo} ${classes.eventTimePara}`}>
-											{" "}
-											{!this.state.eventStartTime
-												? `Time`
-												: !this.state.eventEndTime
-												? moment(
-														this.state
-															.eventStartTime
-												  )
-												  .utcOffset(0).local().format('LT')
-												: `${moment(
-														this.state
-															.eventStartTime
-												  )
-												  .utcOffset(0).local().format('LT')} - ${moment(
-														this.state.eventEndTime
-												  )
-												  .utcOffset(0).local().format('LT')}`}{" "}
-											Local
-										</p>
-										
-										<p className={classes.localTime} style={{marginBottom:"0px"}}>
-											(
+										<span
+											style={{
+												display: "table-header-group",
+											}}
+										>
+											<p
+												className={`${classes.eventinfo} ${classes.eventTimePara}`}
+											>
+												{" "}
 												{!this.state.eventStartTime
-												? `Time`
-												: !this.state.eventEndTime
-												? moment(
-														this.state
-															.eventStartTime
-												  )
-														.utcOffset(0)
-														.format("hh:mma z")
-												: `${moment(
-														this.state
-															.eventStartTime
-												  )
-														.utcOffset(0)
-														.format(
-															"hh:mma"
-														)} - ${moment(
-														this.state.eventEndTime
-												  )
-														.utcOffset(0)
-														.format("hh:mma z")}`})
-										</p>
+													? `Time`
+													: !this.state.eventEndTime
+													? moment(
+															this.state
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format("LT")
+													: `${moment(
+															this.state
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format(
+																"LT"
+															)} - ${moment(
+															this.state
+																.eventEndTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format(
+																"LT"
+															)}`}{" "}
+												Local
+											</p>
+
+											<p
+												className={classes.localTime}
+												style={{ marginBottom: "0px" }}
+											>
+												(
+												{!this.state.eventStartTime
+													? `Time`
+													: !this.state.eventEndTime
+													? moment(
+															this.state
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.format("hh:mm A z")
+													: `${moment(
+															this.state
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.format(
+																"hh:mm A"
+															)} - ${moment(
+															this.state
+																.eventEndTime
+													  )
+															.utcOffset(0)
+															.format(
+																"hh:mm A z"
+															)}`}
+												)
+											</p>
 										</span>
-										<p className={classes.eventHeading}>
-											<LocationOnOutlined /> Location
-										</p>
-										<p className={classes.eventinfo}>
-											{this.state.blockChainEvent
-												.onsite ? (
-												<a
-													href={`https://www.google.com/maps/search/${locations}`}
-													target="_blank"
-													style={{
-														textDecoration: "none",
-														color: "#212529",
-													}}
+										{this.state.blockChainEvent.onsite ? (
+											<span>
+												<p
+													className={
+														classes.eventHeading
+													}
 												>
-													{locations}
-												</a>
-											) : (
-												locations
-											)}
-										</p>
+													<LocationOnOutlined />{" "}
+													Location
+												</p>
+												<p
+													className={
+														classes.eventinfo
+													}
+												>
+													<a
+														href={`https://www.google.com/maps/search/${locations}`}
+														target="_blank"
+														style={{
+															textDecoration:
+																"none",
+															color: "#212529",
+														}}
+													>
+														{locations}
+													</a>
+												</p>
+											</span>
+										) : (
+											<span>
+												<p
+													className={
+														classes.eventHeading
+													}
+												>
+													<LocationOnOutlined />{" "}
+													Online
+												</p>
+												{locations ? (
+													<p
+														className={
+															classes.eventinfo
+														}
+													>
+														{locations}
+													</p>
+												) : (
+													<p
+														className={
+															classes.eventinfo
+														}
+													>
+														Please Buy the Ticket to
+														get the Link.
+													</p>
+												)}
+											</span>
+										)}
 										<p className={classes.eventHeading}>
 											<PersonOutlined />
 											Organizer

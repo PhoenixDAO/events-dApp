@@ -124,6 +124,7 @@ class App extends Component {
 			openWalletConnected: false,
 			date2: null,
 			isDesktop:null,
+			networkId: null,
 		};
 		this.myRef = React.createRef();
 
@@ -174,6 +175,7 @@ class App extends Component {
 				web3 = new Web3(new Web3.providers.HttpProvider(infura));
 			}
 			const networkId = await web3.eth.net.getId();
+			this.setState({networkId:networkId});
 			if (networkId === GLOBAL_NETWORK_ID) {
 				return networkId;
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
@@ -1506,6 +1508,7 @@ class App extends Component {
 						connect={this.loadBlockchainData}
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
+						networkId = {this.state.networkId}
 					/>
 					<div
 						id="page-content-wrapper"
