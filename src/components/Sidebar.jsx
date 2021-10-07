@@ -91,10 +91,18 @@ class Sidebar extends Component {
 		} else {
 			activeClassName = "nav-item";
 		}
-		console.log("network Id: ", this.props)
-			if(this.props.networkId != 137 || this.props.networkId != 1 ){
+
+		if(this.props.networkId){
+			if(this.props.networkId == 137 ){
+				this.setState({openNetworkSnackbar:false});
+			}
+			else if(this.props.networkId == 1){
+				this.setState({openNetworkSnackbar:false});
+			}
+			else{
 				this.setState({openNetworkSnackbar:true});
 			}
+		}
 		
 		
 	}
