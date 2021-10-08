@@ -98,6 +98,7 @@ class CreateEvent extends Component {
 	}
 
 	onFieldsChange = (f) => {
+		console.log("input field change", this.state.fields);
 		this.setState({ fields: { ...this.state.fields, ...f } });
 	};
 
@@ -168,8 +169,22 @@ class CreateEvent extends Component {
 			country,
 			state,
 			city,
+			images,
 		} = this.state.fields;
-
+		console.log("images", images);
+		this.state.fields = {
+			...this.state.fields,
+			images: images,
+			eventDescription: eventDescription.replace(
+				/&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g,
+				""
+			),
+		};
+		console.log("this.state.fields", this.state.fields);
+		const fieldString = JSON.stringify(this.state.fields);
+		const name = "eventInfo";
+		var cookie = `${name}=${fieldString}`;
+		document.cookie = cookie;
 		let image0Base64 = image0
 			? (await this.isFileImage(image0))
 				? await this.getBase64(image0)
@@ -363,6 +378,8 @@ class CreateEvent extends Component {
 					}
 				})
 				.then(async (receipt) => {
+					var cookie = `${name}=""`;
+					document.cookie = cookie;
 					const networkType =
 						this.props.web3.networkId == GLOBAL_NETWORK_ID
 							? "Ethereum Mainnet"
@@ -380,8 +397,8 @@ class CreateEvent extends Component {
 										eventDescription.split(" ").length
 									)
 									.join(" ");
-					const message = `The "${eventName}" event is now live on the ${networkType}🔥
-						${eventDesc.replace(/<[^>]*>?/gm, "")}...
+					const message = `The "${eventName}" event is now live on the ${networkType}
+						${eventDesc.replace(/<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g, "")}...
 						${this.state.shareUrl}
 						#EventsDapp #${eventName.replace(/\s/g, "")}
 						`;

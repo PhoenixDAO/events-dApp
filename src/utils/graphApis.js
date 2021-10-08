@@ -195,6 +195,7 @@ export async function getTimeData(owner) {
 	}
 	return newTimeDataArr;
 }
+
 export async function getTodayData(owner, timestamp) {
 	let result = await axios({
 		url: graphURL,
