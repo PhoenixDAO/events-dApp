@@ -5,7 +5,6 @@
     color:#F2F2FD !important;
 }
 
-
 .fc-event-start{
     color:#F2F2FD;
 }
@@ -65,6 +64,7 @@ table {
 
 .fc-event-main-frame,
 .fc-daygrid-event-harness {
+    cursor: pointer;
     background-color: #F2F2FD;
     OVERFLOW: hidden;
     padding: 0px 5px;

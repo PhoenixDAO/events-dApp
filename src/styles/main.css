@@ -2174,16 +2174,24 @@ h4.transactions {
 	}
 }
 
-@media (max-width: 320px) {
+@media (max-width: 350px) {
 	.clock div span {
-		font-size: 13px !important;
+		font-size: 13px;
 	}
 	.clock div p {
-		font-size: 10px !important;
+		font-size: 8px;
+	}
+}
+@media (min-width:350px) and (max-width: 680px) {
+	.clock div span {
+		font-size: 13px ;
+	}
+	.clock div p {
+		font-size: 12px;
 	}
 }
 
-@media (max-width: 1000px) {
+@media (min-width:680px) and (max-width: 1000px) {
 	.clock div {
 		padding: 5px;
 	}

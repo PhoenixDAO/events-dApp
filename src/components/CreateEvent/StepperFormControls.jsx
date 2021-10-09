@@ -166,7 +166,6 @@ console.log("before being changed", initialFormValues);
 export const useFormControls = () => {
 	const [values, setValues] = useState(initialFormValues);
 	const [errors, setErrors] = useState({});
-
 	useEffect(() => {
 		console.log("initial form values", initialFormValues);
 		const fetchData = async () => {

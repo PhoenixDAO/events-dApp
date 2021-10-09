@@ -16,18 +16,18 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-      
+
       - name: Copy a file from s3
         uses: prewk/s3-cp-action@v2
         with:
          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-         source: 's3://events-dapp-modules/node_modules.zip'
+         source: 's3://xord-testing/node-modules/node_modules.zip'
          dest: '.'
-        
+         
       - name: Unzip modules
         run: unzip -o node_modules.zip
-               
+      
       - name: Cache node_modules
         uses: actions/cache@v2.0.0
         with:
@@ -37,10 +37,12 @@ jobs:
             ${{ runner.os }}-node-${{ env.cache-name }}-
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-
+            
       - name: building new build
-        run: npm build
-        
+        run: npm run build
+        env:
+          REACT_APP_TRANSAK_API: ${{ secrets.REACT_APP_TRANSAK_API }}
+      
       - name: give execution permission
         run: chmod +x changes.sh
         
@@ -51,8 +53,8 @@ jobs:
         uses: reggionick/s3-deploy@v3
         with:
           folder: build
-          bucket: 'events-dapp-frontend'
-          bucket-region: 'us-east-1'
+          bucket: 'event-dapp-dev.com'
+          bucket-region: 'ap-south-1'
           delete-removed: true
           no-cache: true
           private: true

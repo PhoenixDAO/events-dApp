@@ -108,6 +108,7 @@ class App extends Component {
 			getPhoenixDAO: "",
 			openSnackbarForNoMetaMask: false,
 			openSnackbarForPendingRequest: false,
+			openNetworkSnackbar : false,
 			disabledStatus: false,
 			eventsContract: {},
 			userDetails: {},
@@ -122,6 +123,7 @@ class App extends Component {
 			eventsAddress: "",
 			openWalletConnected: false,
 			date2: null,
+			isDesktop:null,
 		};
 		this.myRef = React.createRef();
 
@@ -149,6 +151,7 @@ class App extends Component {
 			eventAddress = Open_events_Address_2;
 			phoenixAddress = PhoenixDAO_Testnet_Token_Address_2;
 		} else {
+			this.setState({openNetworkSnackbar: true});
 			console.log("Wrong network address | not supported");
 		}
 		return { eventAddress, phoenixAddress };
@@ -224,6 +227,29 @@ class App extends Component {
 			}
 		}
 		await this.loadBlockchainData();
+		let hasTouchScreen = false;
+		if ("maxTouchPoints" in navigator) {
+		  hasTouchScreen = navigator.maxTouchPoints > 0;
+		} else if ("msMaxTouchPoints" in navigator) {
+		  hasTouchScreen = navigator.msMaxTouchPoints > 0;
+		} else {
+		  const mQ = window.matchMedia && matchMedia("(pointer:coarse)");
+		  if (mQ && mQ.media === "(pointer:coarse)") {
+			hasTouchScreen = !!mQ.matches;
+		  } else if ("orientation" in window) {
+			hasTouchScreen = true;
+		  } else {
+			var UA = navigator.userAgent;
+			hasTouchScreen =
+			  /\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
+			  /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
+		  }
+		}
+		if (hasTouchScreen) {
+			this.setState({isDesktop:false,});
+		} else {
+			this.setState({isDesktop:true,});
+		}
 	}
 
 	componentWillUpdate() {
@@ -382,7 +408,7 @@ class App extends Component {
 		} else {
 			this.setState({
 				errorMessage:
-					"MetaMask is not installed. Please install MetaMask to continue !",
+					"MetaMask is not installed. Please install MetaMask to continue!",
 				openSnackbarForNoMetaMask: true,
 				openSnackbarForPendingRequest: false,
 			});
@@ -391,8 +417,11 @@ class App extends Component {
 	handleSnackbarClose = (number) => {
 		if (number == 1) {
 			this.setState({ openSnackbarForNoMetaMask: false });
-		} else {
+		} else if(number == 2){
 			this.setState({ openSnackbarForPendingRequest: false });
+		}
+		else {
+			this.setState({ openNetworkSnackbar: false });
 		}
 	};
 
@@ -1453,7 +1482,7 @@ class App extends Component {
 				</Switch>
 			);
 		}
-
+		let userAgentString = navigator.userAgent;
 		return (
 			<Router>
 				<div id="wrapper" className="toggled" ref={this.myRef}>
@@ -1512,6 +1541,23 @@ class App extends Component {
 									}
 									handleClose={this.handleSnackbarClose}
 								/> */}
+									<Snackbar
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "center",
+									}}
+									open={this.state.openNetworkSnackbar}
+									message={
+										<span>
+											{/* {" "} */}
+											Please switch to Matic or Ethereum Mainnet
+										</span>
+									}
+									onClose={() => this.handleSnackbarClose(3)}
+									autoHideDuration={5000}
+									key={"top" + "center"}
+									className="snackbar"
+								/>
 								<Snackbar
 									anchorOrigin={{
 										vertical: "top",
@@ -1519,11 +1565,23 @@ class App extends Component {
 									}}
 									open={this.state.openSnackbarForNoMetaMask}
 									message={
+										this.state.isDesktop?
 										<span>
 											{" "}
 											{this.state.errorMessage}
-											{typeof InstallTrigger !==
-											"undefined" ? (
+											{(userAgentString.indexOf("Chrome") > -1)?<a
+											target="_blank"
+											style={{
+												textAlign: "center",
+												color: "blue",
+												opacity: "1",
+											}}
+											href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
+										>
+											{" "}
+											[LINK]
+										</a>:
+											(userAgentString.indexOf("Firefox") > -1) ? (
 												<a
 													target="_blank"
 													style={{
@@ -1536,24 +1594,26 @@ class App extends Component {
 													{" "}
 													[LINK]
 												</a>
-											) : (
-												<a
-													target="_blank"
-													style={{
+											):userAgentString.indexOf("OP") > -1 &&
+											<span>
+												Please use a browser with Metamask Wallet Extension!
+											</span>
+											}
+										</span>:
+										<span>
+											Please use MetaMask Browser. Please install MetaMask from <a style={{
 														textAlign: "center",
 														color: "blue",
 														opacity: "1",
-													}}
-													href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
-												>
-													{" "}
-													[LINK]
-												</a>
-											)}
+													}} href="https://play.google.com/store/apps/details?id=io.metamask&hl=en&gl=US" target="_blank">Google PlayStore</a>/<a style={{
+														textAlign: "center",
+														color: "blue",
+														opacity: "1",
+													}}  href="https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202" target="_blank">Apple AppStore</a> to continue!
 										</span>
 									}
 									onClose={() => this.handleSnackbarClose(1)}
-									autoHideDuration={5000}
+									autoHideDuration={10000}
 									key={"top" + "center"}
 									className="snackbar"
 								/>
