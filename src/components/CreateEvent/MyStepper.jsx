@@ -191,7 +191,7 @@ const MyStepper = ({
 			() => {
 				onStepsChange("inc");
 			},
-			() => handleCreateEvent(() => clearState())
+			() => handleCreateEvent(() => clearState(),values)
 		);
 	};
 
