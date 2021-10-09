@@ -2,13 +2,13 @@
 
 // Ethereum Mainnet
 
-export const PhoenixDAO_Mainnet_Token_Address = '0x38A2fDc11f526Ddd5a607C1F251C065f40fBF2f7';
+// export const PhoenixDAO_Mainnet_Token_Address = '0x38A2fDc11f526Ddd5a607C1F251C065f40fBF2f7';
 
 /*--------------------------------------------------------------------------------------------------------*/
 
 // Rinkeby Testnet
 
-// export const PhoenixDAO_Mainnet_Token_Address = '0x521855AA99a80Cb467A12b1881f05CF9440c7023';
+export const PhoenixDAO_Mainnet_Token_Address = '0x521855AA99a80Cb467A12b1881f05CF9440c7023';
 export const PhoenixDAO_Testnet_Token_ABI =
  [
 	{ inputs: [], stateMutability: "nonpayable", type: "constructor" },

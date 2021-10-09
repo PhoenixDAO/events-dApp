@@ -103,6 +103,7 @@ const TicketsByLocation = (props) => {
 		} else {
 			return props.TicketSales.map((event, index) => (
 				<Grid className={classes.row3}>
+					{console.log("analytics tickets", props)}
 					<Grid className={classes.city}>
 						<div
 							className={classes.highlighter}
