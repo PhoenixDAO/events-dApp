@@ -142,7 +142,7 @@ class CreateEvent extends Component {
 		this.setState({ shareUrl: shareUrl });
 	}
 
-	handleCreateEvent = async (clearStateCb) => {
+	handleCreateEvent = async (clearStateCb, values) => {
 		this.stageUpdater(90);
 
 		let {
@@ -180,8 +180,8 @@ class CreateEvent extends Component {
 				""
 			),
 		};
-		console.log("this.state.fields", this.state.fields);
-		const fieldString = JSON.stringify(this.state.fields);
+		console.log("this.state.fields", values);
+		const fieldString = JSON.stringify(values);
 		const name = "eventInfo";
 		var cookie = `${name}=${fieldString}`;
 		document.cookie = cookie;

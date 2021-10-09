@@ -23,12 +23,11 @@ const getCookie = (name) => {
 	if (parts.length === 2) return parts.pop().split(";").shift();
 };
 
-console.log("cookies stored", getCookie("eventInfo"));
-
 const parsedCookies =
 	getCookie("eventInfo") === undefined || null
 		? {}
 		: JSON.parse(getCookie("eventInfo"));
+
 const initialFormValues = {
 	fullName: parsedCookies.fullName ? parsedCookies.fullName : "",
 	email: parsedCookies.email ? parsedCookies.email : "",
@@ -115,33 +114,39 @@ const initialFormValues = {
 	ticketCategories: [
 		{
 			ticketName:
-				parsedCookies.ticketCategories != null ||
-				parsedCookies.ticketCategories != undefined
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
 					? parsedCookies.ticketCategories[0].ticketName
 					: "",
 			dollarPrice:
-				parsedCookies.ticketCategories != null ||
-				parsedCookies.ticketCategories != undefined
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
 					? parsedCookies.ticketCategories[0].dollarPrice
 					: "0",
 			phnxPrice:
-				parsedCookies.ticketCategories != null ||
-				parsedCookies.ticketCategories != undefined
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
 					? parsedCookies.ticketCategories[0].phnxPrice
 					: "",
 			ticketAvailability:
-				parsedCookies.ticketCategories != null ||
-				parsedCookies.ticketCategories != undefined
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
 					? parsedCookies.ticketCategories[0].ticketAvailability
 					: "unlimited",
 			noOfTickets:
-				parsedCookies.ticketCategories != null ||
-				parsedCookies.ticketCategories != undefined
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
 					? parsedCookies.ticketCategories[0].noOfTickets
 					: "",
 			isShown:
-				parsedCookies.ticketCategories != null ||
-				parsedCookies.ticketCategories != undefined
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
 					? parsedCookies.ticketCategories[0].isShown
 					: false,
 		},
@@ -157,11 +162,13 @@ const initialFormValues = {
 		: false,
 };
 
+console.log("before being changed", initialFormValues);
 export const useFormControls = () => {
 	const [values, setValues] = useState(initialFormValues);
 	const [errors, setErrors] = useState({});
 
 	useEffect(() => {
+		console.log("initial form values", initialFormValues);
 		const fetchData = async () => {
 			const response = await fetch(
 				`https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`
@@ -188,15 +195,15 @@ export const useFormControls = () => {
 
 	useEffect(() => {
 		const img = values.images;
-		const tkt = values.ticketCategories;
-		tkt[0] = {
-			ticketName: "",
-			dollarPrice: "0",
-			phnxPrice: "",
-			ticketAvailability: "unlimited",
-			noOfTickets: "",
-			isShown: false,
-		};
+		// const tkt = values.ticketCategories;
+		// tkt[0] = {
+		// 	ticketName: "",
+		// 	dollarPrice: "0",
+		// 	phnxPrice: "",
+		// 	ticketAvailability: "unlimited",
+		// 	noOfTickets: "",
+		// 	isShown: false,
+		// };
 		img[0] = { name: "" };
 		setValues({
 			...initialFormValues,
@@ -910,10 +917,10 @@ export const useFormControls = () => {
 				}
 			}
 		} else {
-			let eventDateOneDay = eventStartDate;
-			let eventEndDateOneDay = eventEndDate;
-			let eventStartTimeOneday = eventStartTime;
-			let eventEndTimeOneday = eventEndTime;
+			let eventDateOneDay = new Date(eventStartDate);
+			let eventEndDateOneDay = new Date(eventEndDate);
+			let eventStartTimeOneday = new Date(eventStartTime);
+			let eventEndTimeOneday = new Date(eventEndTime);
 			//change date timing
 			eventDateOneDay.setHours(
 				eventStartTimeOneday.getHours(),
