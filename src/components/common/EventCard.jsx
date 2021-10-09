@@ -624,16 +624,11 @@ const EventCard = (props, context) => {
 									className={classes.text}
 									title={
 										!eventEndTime
-											? moment(eventStartTime)
-													.utcOffset(0)
-													.format("hh:mma z")
+											?  moment(eventStartTime)
+										  .utcOffset(0).local().format('LT')
 											: `${moment(eventStartTime)
-													.utcOffset(0)
-													.format(
-														"hh:mma"
-													)} - ${moment(eventEndTime)
-													.utcOffset(0)
-													.format("hh:mma z")}`
+												.utcOffset(0).local().format('LT')} - ${moment(eventEndTime)
+													.utcOffset(0).local().format('LT')}`
 									}
 								>
 									<AccessTime fontSize="small" />{" "}
@@ -645,16 +640,19 @@ const EventCard = (props, context) => {
 									{!eventStartTime
 										? `Time`
 										: !eventEndTime
-										? moment(eventStartTime)
-												.utcOffset(0)
-												.format("hh:mma z")
-										: `${moment(eventStartTime)
-												.utcOffset(0)
-												.format("hh:mma")} - ${moment(
-												eventEndTime
-										  )
-												.utcOffset(0)
-												.format("hh:mma z")}`}
+										? 
+										// moment(eventStartTime)
+										// 		.utcOffset(0)
+										// 		.format("hh:mma z")
+										moment(eventStartTime)
+										  .utcOffset(0).local().format('LT')
+										: `			
+										${moment(eventStartTime)
+											.utcOffset(0).local().format('LT')} - ${moment(eventEndTime)
+												.utcOffset(0).local().format('LT')}
+												`
+												}
+												{" Local"}
 								</Typography>
 
 								<Typography

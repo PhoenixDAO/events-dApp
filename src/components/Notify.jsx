@@ -28,7 +28,7 @@ function Notify({ text, icon, error, link, color, createdEvent, url, hash }) {
 				</div>
 				<div>
 					Transaction{" "}
-					{error && error.code == 4001 ? "Rejected" : "failed"}😥. Try
+					{error && error.code == 4001 ? "Rejected" : "failed"} {" "}😥. Try
 					again later.
 				</div>
 			</div>

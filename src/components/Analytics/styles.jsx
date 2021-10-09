@@ -7,39 +7,60 @@ export const useStyles = makeStyles((theme) => ({
 		padding: "50px",
 		borderRadius: "8px",
 		paddingBottom: "80px",
-		[theme.breakpoints.down("xs")]: {
+		"@media (max-width:800px)": {
 			padding: "10px",
 		},
 	},
 	menuPaper: {
 		maxHeight: "200px",
+		maxWidth:"100px",
+		right: "10% !important",
+	},
+	topicMenuPaper: {
+		maxHeight: "200px",
 		right: "10% !important",
 	},
 	formControls: {
-		"@media (max-width: 600px)": {
-			width: "120px",
-		},
+		"@media (max-width: 760px)": {
+			// paddingInline:"15px",
+			justifyContent: "flex-start",
+			flexFlow:"wrap"
+        },
 		"@media (min-width: 1024px)": {
-			flex: "0 0 20% !important",
-			marginLeft: "5%",
+			justifyContent: "flex-end",
+			// maxWidth: "20% !important",
+			// flex: "0 0 20% !important",
+			// marginLeft: "5%",
 		},
 		justifyContent: "space-around",
-		// alignItems: "center",
+		alignItems: "center",
 		// minWidth: 120,
 		"& .MuiInputBase-formControl": {
-			"@media (max-width: 575px)": {
-				marginLeft: "50px",
-				maxWidth: "100%",
+			"@media (max-width: 475px)": {
+				// marginLeft: "50px",
+				maxWidth: "80%",
 			},
 		},
 		"& .MuiSelect-root.MuiSelect-select": {
 			fontWeight: 700,
 			padding: "10px",
-			paddingRight: "20px",
+			paddingRight: "25px",
 			background: "#fff",
 		},
 		"& option": {
 			padding: "10px",
+		},
+		display:"flex",
+		flexFlow:"nowrap"
+	},
+	sortBy: {
+		// position: "absolute",
+		// left: "-40px",
+		color: "#73727D",
+		fontSize: "18px",
+		paddingRight:"5px",
+		"@media (max-width: 575px)": {
+			// left: "0",
 		},
 	},
 	select: {
@@ -51,11 +72,12 @@ export const useStyles = makeStyles((theme) => ({
 			padding: "10px",
 			paddingRight: "25px !important",
 			"@media (max-width: 600px)": {
-				width: "120px",
+				width: "100%",
+				// maxWidth:"140px"
 			},
 		},
 		[theme.breakpoints.down("xs")]: {
-			width: "auto",
+			width: "100%",
 		},
 	},
 	row: {
@@ -67,6 +89,16 @@ export const useStyles = makeStyles((theme) => ({
 		"@media (max-width: 970px)": {
 			display: "grid",
 		},
+	},
+	topicRow: {
+		display: "flex",
+		// paddingInline:"20px",
+		marginLeft:"0px !important",
+		marginRight:"0px !important",
+		justifyContent: "space-between",
+		width: "100%",
+		alignItems: "center",
+		marginBottom: "25px",
 	},
 	emptyContent: {
 		// padding: "0 !important",
@@ -119,6 +151,10 @@ export const useStyles = makeStyles((theme) => ({
 	heading2: {
 		fontSize: "20px",
 		fontWeight: "700",
+		paddingInline: "0px",
+	},
+	mobilePadding: {
+		padding: "0 20px",
 	},
 	row2: {
 		display: "flex",
@@ -144,6 +180,9 @@ export const useStyles = makeStyles((theme) => ({
 		[theme.breakpoints.down("xs")]: {
 			fontSize: "16px",
 		},
+		"@media (max-width:350px)":{
+			fontSize: "12px",
+		},
 	},
 	ticketSold: {
 		color: "#4E4E55",
@@ -151,6 +190,9 @@ export const useStyles = makeStyles((theme) => ({
 		fontSize: "18px",
 		[theme.breakpoints.down("xs")]: {
 			fontSize: "16px",
+		},
+		"@media (max-width:350px)":{
+			fontSize: "12px",
 		},
 	},
 	row3: {
@@ -192,6 +234,9 @@ export const useStyles = makeStyles((theme) => ({
 	header: {
 		color: "#73727D",
 		fontSize: "18px",
+		"@media (max-width:350px)":{
+			fontSize: "12px",
+		},
 		marginBottom: "15px",
 	},
 	image: {
@@ -238,16 +283,17 @@ export const useStyles = makeStyles((theme) => ({
 			outline: "none",
 		},
 	},
-	sortBy: {
-		position: "absolute",
-		left: "-50px",
-		color: "#73727D",
-		fontSize: "18px",
-		"@media (max-width: 575px)": {
-			left: "0",
-		},
-	},
+	// sortBy: {
+	// 	position: "absolute",
+	// 	left: "-50px",
+	// 	color: "#73727D",
+	// 	fontSize: "18px",
+	// 	"@media (max-width: 575px)": {
+	// 		left: "0",
+	// 	},
+	// },
 	selectWidth: {
-		width: "170px",
+		maxWidth: "170px",
+		width:"75%",
 	},
 }));
