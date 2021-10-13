@@ -58,7 +58,7 @@ class Clock extends Component {
             return (
                 <div className="countdown">
                     <div className="box">
-                        <h5 className="mb-1">This Event Will Close In</h5>
+                        <h5 className="mb-1">Event Begins In</h5>
                     </div>
 
                     <div className="clock">

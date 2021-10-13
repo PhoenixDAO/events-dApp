@@ -1,8 +1,9 @@
 .avatar-name-heading {
 	color: #73727D;
 	margin: 0;
-	font-size: 0.8rem;
+	font-size: 0.9rem;
 	font-weight: 700;
+	padding-bottom:5px;
 }
 
 .avatar-name-inpt {

@@ -321,13 +321,17 @@ class Sidebar extends Component {
 				);
 			} else {
 				message = (
-					<span>
+					<div style={{display:"flex"}}>
+						<div>
 						<img
 							className="switch-img"
 							src="/images/icons/switch.svg"
 						/>
-						Please switch to Matic or Ethereum Mainnet 
-					</span>
+						</div>
+						<div>
+						Please switch to the Matic or Ethereum Mainnet Network
+						</div>
+					</div>
 				);
 			}
 		}
@@ -409,7 +413,7 @@ class Sidebar extends Component {
 						message={
 							<span>
 								{/* {" "} */}
-								Please switch to Matic or Ethereum Mainnet
+								Please switch to the Matic or Ethereum Mainnet Network
 							</span>
 						}
 						onClose={() => this.handleSnackbarClose(3)}

@@ -367,7 +367,7 @@ class App extends Component {
 				}
 			}
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 		}
 	}
 
@@ -1553,7 +1553,7 @@ class App extends Component {
 									message={
 										<span>
 											{/* {" "} */}
-											Please switch to Matic or Ethereum Mainnet
+											Please switch to the Matic or Ethereum Mainnet Network
 										</span>
 									}
 									onClose={() => this.handleSnackbarClose(3)}
