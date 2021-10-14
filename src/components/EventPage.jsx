@@ -205,6 +205,13 @@ const styles = (theme) => ({
 			minWidth: "141px",
 		},
 	},
+	organizerEventLink:{
+		color:"black",
+		textDecoration:"none !important",
+		"&:hover":{
+			color:"black",
+		}
+	},
 	imageDiv: {
 		height: "70vh",
 		paddingBottom:"5px",
@@ -1889,7 +1896,7 @@ class EventPage extends Component {
 											Organizer
 										</p>
 										<p className={classes.eventinfo}>
-											{this.state.organizer}
+											<Link className={classes.organizerEventLink} to={`/upcomingevents/organizer/${(this.state.organizer)&&urlFormatter(this.state.organizer)}/${event_data.owner.substr(event_data.owner.length - 4)}`}>{this.state.organizer}</Link>
 										</p>
 										<p className={classes.eventHeading}>
 											<ConfirmationNumberOutlined />
@@ -2007,6 +2014,7 @@ class EventPage extends Component {
 										marginBottom: "10px",
 									}}
 								/> */}
+								<Link className={classes.organizerEventLink} to={`/upcomingevents/organizer/${(this.state.organizer)&&urlFormatter(this.state.organizer)}/${event_data.owner.substr(event_data.owner.length - 4)}`}>
 								{this.renderImage()}
 								<h3 style={{ fontWeight: "bold" }}>
 									{this.state.organizer}
@@ -2020,6 +2028,7 @@ class EventPage extends Component {
 									event_id={this.props.match.params.id}
 									history={this.props.history}
 								/> */}
+								</Link>
 							</Grid>
 
 							{/* <div className="event-social-share-btns-div">
