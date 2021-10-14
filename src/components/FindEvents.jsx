@@ -660,9 +660,9 @@ class FindEvents extends Component {
 				if(this.props.match.params.ownerId){
 					if(this.state.Events_Blockchain[i].owner.substr(this.state.Events_Blockchain[i].owner.length - 4) == this.props.match.params.ownerId.toLowerCase()){
 						events_list.push(this.state.Events_Blockchain[i]);
-						console.log("organizer event: ",this.state.Events_Blockchain[i].owner.substr(this.state.Events_Blockchain[i].owner.length - 4));
-						console.log("organizer event params: ",this.props.match.params.ownerId.toLowerCase());
-						console.log("organizer event org name: ",this.props.match)
+						// console.log("organizer event: ",this.state.Events_Blockchain[i].owner.substr(this.state.Events_Blockchain[i].owner.length - 4));
+						// console.log("organizer event params: ",this.props.match.params.ownerId.toLowerCase());
+						// console.log("organizer event org name: ",this.props.match)
 					}
 				}
 				else{
@@ -836,10 +836,6 @@ class FindEvents extends Component {
 
 					{/* sticky bar start */}
 					<div className={`${classes.sticky}`}>
-						{console.log(
-							"url find events: ",
-							this.props.match.params
-						)}
 						<Header
 							page="dashboard"
 							searchBar="true"
