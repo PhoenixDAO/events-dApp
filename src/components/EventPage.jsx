@@ -1896,7 +1896,8 @@ class EventPage extends Component {
 											Organizer
 										</p>
 										<p className={classes.eventinfo}>
-											<Link className={classes.organizerEventLink} to={`/upcomingevents/organizer/${(this.state.organizer)&&urlFormatter(this.state.organizer)}/${event_data.owner.substr(event_data.owner.length - 4)}`}>{this.state.organizer}</Link>
+											{(this.state.loaded)?<Link className={classes.organizerEventLink} to={`/upcomingevents/organizer/${(this.state.organizer)&&urlFormatter(this.state.organizer)}/${event_data.owner.substr(event_data.owner.length - 4)}`}>{this.state.organizer}</Link>:
+											<span>{this.state.organizer}</span>}
 										</p>
 										<p className={classes.eventHeading}>
 											<ConfirmationNumberOutlined />
@@ -2014,6 +2015,7 @@ class EventPage extends Component {
 										marginBottom: "10px",
 									}}
 								/> */}
+								{(this.state.loaded)?
 								<Link className={classes.organizerEventLink} to={`/upcomingevents/organizer/${(this.state.organizer)&&urlFormatter(this.state.organizer)}/${event_data.owner.substr(event_data.owner.length - 4)}`}>
 								{this.renderImage()}
 								<h3 style={{ fontWeight: "bold" }}>
@@ -2028,7 +2030,17 @@ class EventPage extends Component {
 									event_id={this.props.match.params.id}
 									history={this.props.history}
 								/> */}
-								</Link>
+								</Link>:
+								<span>
+								{this.renderImage()}
+								<h3 style={{ fontWeight: "bold" }}>
+									{this.state.organizer}
+								</h3>
+								<Grid className={classes.organizerDescription}>
+									{this.state.organizerDetails}
+								</Grid>
+								</span>
+								}
 							</Grid>
 
 							{/* <div className="event-social-share-btns-div">
