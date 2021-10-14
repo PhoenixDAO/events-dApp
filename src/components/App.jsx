@@ -367,7 +367,7 @@ class App extends Component {
 				}
 			}
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 		}
 	}
 
@@ -1006,7 +1006,7 @@ class App extends Component {
 						/>
 						<Route
 							exact
-							path="/event/:id"
+							path="/event/:title/:id"
 							render={(props) => (
 								<EventPage
 									{...props}
@@ -1262,6 +1262,20 @@ class App extends Component {
 					/>
 					<Route
 						exact
+						path="/upcomingevents/organizer/:orgName/:ownerId"
+						render={(props) => (
+							<FindEvents
+								{...props}
+								executeScroll={this.executeScroll}
+								inquire={this.inquireBuy}
+								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
+							/>
+						)}
+					/>
+					<Route
+						exact
 						path="/upcomingevents/:page"
 						render={(props) => (
 							<FindEvents
@@ -1345,7 +1359,7 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/event/:id"
+						path="/event/:title/:id"
 						render={(props) => (
 							<EventPage
 								{...props}
@@ -1553,7 +1567,7 @@ class App extends Component {
 									message={
 										<span>
 											{/* {" "} */}
-											Please switch to Matic or Ethereum Mainnet
+											Please switch to the Matic or Ethereum Mainnet Network
 										</span>
 									}
 									onClose={() => this.handleSnackbarClose(3)}

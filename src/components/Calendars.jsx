@@ -21,6 +21,7 @@ import { getUserDetails } from "../config/serverAPIs";
 import Header from "./common/Header";
 import { getTickets } from "../utils/graphApis";
 import GetGraphApi, { getNetworkId }  from '../config/getGraphApi';
+import { urlFormatter } from "../utils/urlFormatter";
 
 const styles = (theme) => ({
 	content: {
@@ -225,7 +226,7 @@ class Calendars extends Component {
 		//     titleURL = "/event-stat/" + pagetitle + "/" + event_calendar.id;
 		// }
 		// else {
-		let titleURL = `/event/${event_calendar.id}`;
+		let titleURL = `/event/${urlFormatter(event_calendar.title)}/${event_calendar.id}`;
 		this.props.history.push(titleURL);
 	};
 	categoryChange = async (event) => {

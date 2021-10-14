@@ -13,12 +13,15 @@ import {
 	Select,
 	IconButton,
 	MenuItem,
+	Typography,
 } from "@material-ui/core";
 import {
 	ShoppingCartOutlined,
 	ModeCommentOutlined,
 	ContactlessOutlined,
 	Web,
+	Favorite,
+	FavoriteBorder,
 } from "@material-ui/icons";
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
@@ -32,6 +35,12 @@ import {
 	PersonOutlined,
 	ConfirmationNumberOutlined,
 } from "@material-ui/icons";
+import {
+	API_URL,
+	ADD_TO_FAVOURITES,
+	REMOVE_FROM_FAVOURITES,
+	GET_USER_DETAIL
+} from "../config/const";
 import { toast } from "react-toastify";
 // import ApprovalModal from "./approvalModal";
 import ApprovalModal from "./BuyTicket2";
@@ -65,6 +74,7 @@ import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
+import { urlFormatter } from "../utils/urlFormatter";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -97,6 +107,29 @@ const styles = (theme) => ({
 		justifyContent: "space-between",
 		alignItems: "end",
 	},
+	FavoriteIcon: {
+		textAlign: "center",
+		border: "none",
+		backgroundColor: "#fff",
+		fontSize: 15,
+		fontWeight: 500,
+		marginLeft:"auto",
+		marginRight:"5px",
+		display:"block",
+		borderRadius: "50%",
+		cursor:"pointer",
+		width: "32px",
+		height: "32px",
+		position:"absolute",
+		right:"0px",
+		bottom:"4px",
+		"&:focus": {
+			outline: "none",
+		},
+		"&:hover":{
+			backgroundColor: "rgb(227, 226, 245)",
+		}
+	},
 	paper: {
 		padding: theme.spacing(2),
 		textAlign: "center",
@@ -120,12 +153,14 @@ const styles = (theme) => ({
 	},
 	eventDetails: {
 		backgroundColor: "white",
-		borderRadius: "5px",
+		borderRadius:"8px",
 		marginTop: "35px",
+		height:"100%",
 		padding: "30px",
 	},
 	eventinfo: {
 		fontSize: "22px",
+		borderRadius:"8px",
 		fontWeight: "700",
 		wordBreak: "break-word",
 	},
@@ -155,7 +190,7 @@ const styles = (theme) => ({
 		// width: "219px",
 		width: "100%",
 		marginTop: "10px",
-		marginBottom: "10px",
+		marginBottom: "25px",
 		height: "40px",
 		"& .MuiSelect-outlined": {
 			padding: "10px",
@@ -171,14 +206,32 @@ const styles = (theme) => ({
 		},
 	},
 	imageDiv: {
-		paddingTop: "40%",
-		maxHeight: "300px",
+		height: "70vh",
+		paddingBottom:"5px",
+		maxHeight: "400px",
+		minHeight:"300px",
+		borderRadius:"8px",
+		position:"relative",
 		backgroundSize: "cover",
 		mozBackgroundSize: "cover",
 		backgroundPosition: "center",
+		"@media (max-width:1200px)":{
+			height: "40vh",
+			maxHeight:"300px",
+			minHeight:"200px",
+		},
+		"@media (max-width:800px)":{
+			maxHeight:"250px",
+			minHeight:"100px",
+		}
+		,
+		"@media (max-width:400px)":{
+			maxHeight:"150px",
+			minHeight:"100px",
+		}
 	},
 	selectInput: {
-		width: "170px",
+		width: "100%",
 		marginTop: "10px",
 		marginBottom: "10px",
 		height: "40px",
@@ -317,6 +370,8 @@ class EventPage extends Component {
 			disableBuyTicketBtn: false,
 			phnx_price: "",
 			eventExistInContract: false,
+			Icon:false,
+			UserFavoriteEvents: [],
 			allow: 0,
 			loadingApprove: false,
 			loadingPurchase: false,
@@ -328,12 +383,96 @@ class EventPage extends Component {
 		this.loadEventFromBlockchain = this.loadEventFromBlockchain.bind(this);
 		this.goBack = this.goBack.bind(this); // i think you are missing this
 		this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
+		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
+		this.addTofavorite = this.addTofavorite.bind(this);
+		
 	}
 
 	goBack() {
 		this.props.history.goBack();
 	}
 
+	addTofavorite = async (e) => {
+		e.preventDefault();
+		const token = localStorage.getItem("AUTH_TOKEN");
+		try {
+			let payload = {
+				address: this.props.accounts[0],
+				networkId: this.props.networkId,
+				eventId: this.props.match.params.id,
+			};
+
+			//for add to favourite
+			if (!this.state.Icon) {
+				const result = await axios.post(
+					`${API_URL}${ADD_TO_FAVOURITES}`,
+					payload,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				);
+				if (result.status === 200 || result.status === 400) {
+					this.setState({Icon:!this.state.Icon});
+				}
+			}
+			//for remove from favourites
+			else {
+				const result = await axios.post(
+					`${API_URL}${REMOVE_FROM_FAVOURITES}`,
+					payload,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				);
+				if (result.status === 200 || result.status === 400) {
+					this.setState({Icon:!this.state.Icon});
+				}
+				this.props.reloadData();
+			}
+		} catch (error) {
+			if (error.response && error.response.data) {
+			}
+		}
+	};
+
+	getUserFavoritesEvent = async () => {
+		try {
+			const token = localStorage.getItem("AUTH_TOKEN");
+			const get = await axios.post(
+				`${API_URL}${GET_USER_DETAIL}`,
+				{
+					address: this.props.accounts[0],
+					networkId: this.props.networkId,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			this.setState({
+				UserFavoriteEvents: get.data.result.userHldr.favourites,
+			});
+			if(get.data.result.userHldr.favourites.includes(this.props.match.params.id))
+			{
+				this.setState({
+					Icon:true,
+				})
+			}
+			else{
+				this.setState({
+					Icon:false,
+				})
+			}
+			return;
+		} catch (error) {
+			// console.log("check error", error);
+		}
+	};
 	handleCloseAllowBuySnackbar = () => {
 		this.setState({
 			allowBuySnackbar: false,
@@ -1215,6 +1354,8 @@ class EventPage extends Component {
 					/>
 				);
 			} else {
+				if(urlFormatter(this.props.match.params.title) == urlFormatter(this.state.blockChainEvent.name))
+				{
 				let event_data = this.state.blockChainEvent;
 				// to be changed
 				let image = this.getImage();
@@ -1429,6 +1570,29 @@ class EventPage extends Component {
 										src={image}
 										alt="Event"
 									/> */}
+									<Typography
+											className={classes.FavoriteIcon}
+											component="span"
+											onClick={this.addTofavorite}
+										>
+											{this.state.Icon ? (
+												<Favorite
+													fontSize="small"
+													style={{
+														color: "#413AE2",
+														marginTop:"6px",
+													}}
+												/>
+											) : (
+												<FavoriteBorder
+													fontSize="small"
+													style={{
+														color: "#000000",
+														marginTop:"6px",
+													}}
+												/>
+											)}
+										</Typography>
 									<div></div>
 								</Grid>
 								<Grid container>
@@ -1817,6 +1981,7 @@ class EventPage extends Component {
 										className={classes.categoryGrid}
 									>
 										<ModeCommentOutlined />
+										{" "}
 										Topic
 										<div className={classes.eventinfo}>
 											{topic}
@@ -2063,6 +2228,22 @@ class EventPage extends Component {
 					body = <EventNotFound />;
 				}
 			}
+			else{
+				body = (
+					// <div className="text-center mt-5">
+					// 	<span role="img" aria-label="uncorn">
+					// 		🦄
+					// 	</span>{" "}
+					// 	PhoenixDAO Event not found
+					// </div>
+					<EmptyState
+						text="Event doesn't exist... 😔"
+						btnText="Go to Dashboard"
+						url="/upcomingevents/1"
+					/>
+				);
+			}
+			}
 		}
 		return (
 			<div className="event-page-wrapper">
@@ -2072,6 +2253,7 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
+		this.getUserFavoritesEvent();
 		console.log("component start 1, Event page");
 		let buyers = await generateBuyerArr(this.props.match.params.id);
 		console.log("component start 2, Event page", buyers);

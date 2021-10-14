@@ -404,6 +404,7 @@ class CreateEvent extends Component {
 										eventDescription.split(" ").length
 									)
 									.join(" ");
+
 					const message = `The "${eventName}" event is now live on the ${networkType}
 						${eventDesc.replace(/<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g, "")}...
 						${this.state.shareUrl}

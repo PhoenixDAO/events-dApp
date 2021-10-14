@@ -142,7 +142,7 @@ const CustomForm = React.memo((props) => {
 			</div>
 			<div style={{ display: "flex", justifyContent: "center" }}>
 				<div className="frm-single" style={{ width: "76%" }}>
-					<p className="avatar-name-heading">AVATAR NAME</p>
+					<p className="avatar-name-heading">Avatar Name</p>
 					<input
 						className="avatar-name-inpt"
 						onChange={(e) => props.handleName(e.target.value)}

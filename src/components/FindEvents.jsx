@@ -276,7 +276,9 @@ class FindEvents extends Component {
 			this.setState({
 				Events_Blockchain: updatedList,
 			});
-			this.props.history.push("/upcomingevents/" + 1);
+			if(!this.props.match.params.orgName  && !this.props.match.params.ownerId){
+				this.props.history.push("/upcomingevents/" + 1);
+			}
 		}
 	}
 
@@ -366,7 +368,9 @@ class FindEvents extends Component {
 					// 	event_copy: [],
 					// });
 
-					this.props.history.push("/upcomingevents/" + 1);
+					if(!this.props.match.params.orgName && !this.props.match.params.ownerId){
+						this.props.history.push("/upcomingevents/" + 1);
+					}
 
 					setTimeout(() => {
 						this.setState({
@@ -399,7 +403,9 @@ class FindEvents extends Component {
 						});
 					}
 
-					this.props.history.push("/upcomingevents/" + 1);
+					if(!this.props.match.params.orgName && !this.props.match.params.ownerId){
+						this.props.history.push("/upcomingevents/" + 1);
+					}
 
 					setTimeout(() => {
 						this.setState({ loading: false });
@@ -439,7 +445,9 @@ class FindEvents extends Component {
 			}else{
 				window.scroll(0, window.screen.height*0.58);
 			}
-			this.props.history.push("/upcomingevents/" + 1);
+			if(!this.props.match.params.orgName && !this.props.match.params.ownerId){
+				this.props.history.push("/upcomingevents/" + 1);
+			}
 		});
 	};
 
@@ -479,7 +487,9 @@ class FindEvents extends Component {
 
 		const cityName = this.state.cityName;
 		if (cityName) {
-			this.props.history.push("/upcomingevents/" + 1);
+			if(!this.props.match.params.orgName && !this.props.match.params.ownerId){
+				this.props.history.push("/upcomingevents/" + 1);
+			}
 			try {
 				if (cityName) {
 					var filteredEvents = this.state.event_copy_for_loc;
@@ -647,7 +657,17 @@ class FindEvents extends Component {
 				}
 			}
 			if (!skip) {
-				events_list.push(this.state.Events_Blockchain[i]);
+				if(this.props.match.params.orgName && this.props.match.params.ownerId){
+					if(this.state.Events_Blockchain[i].owner.substr(this.state.Events_Blockchain[i].owner.length - 4) == this.props.match.params.ownerId.toLowerCase()){
+						events_list.push(this.state.Events_Blockchain[i]);
+						console.log("organizer event: ",this.state.Events_Blockchain[i].owner.substr(this.state.Events_Blockchain[i].owner.length - 4));
+						console.log("organizer event params: ",this.props.match.params.ownerId.toLowerCase());
+						console.log("organizer event org name: ",this.state.Events_Blockchain)
+					}
+				}
+				else{
+					events_list.push(this.state.Events_Blockchain[i]);
+				}
 			}
 			skip = false;
 		}
@@ -816,10 +836,12 @@ class FindEvents extends Component {
 
 					{/* sticky bar start */}
 					<div className={`${classes.sticky}`}>
+						{console.log("url find events: ", this.props.match.params)}
 						<Header
 							page="dashboard"
 							searchBar="true"
 							title={
+								(!this.props.match.params.orgName  && !this.props.match.params.ownerId)?
 								<div style={{ display: "flex" }}>
 									<img src={roundlogo} alt="phnx logo" />
 									<span>&nbsp;&nbsp;</span>
@@ -828,7 +850,8 @@ class FindEvents extends Component {
 									>
 										PhoenixDAO Events Marketplace
 									</span>
-								</div>
+								</div>:
+								this.props.match.params.orgName
 							}
 							handleSearch={this.updateSearch}
 							search={this.state.search}
@@ -969,11 +992,16 @@ class FindEvents extends Component {
 					<div ref={this.myRef} />
 
 					{/* slider */}
-					<div>
+					{
+					(!this.props.match.params.orgName  && !this.props.match.params.ownerId)&&
+							<div>
 						<div>
 							<Slider />
 						</div>
 					</div>
+						
+	}
+					
 					<br />
 					<br />
 					<br />
