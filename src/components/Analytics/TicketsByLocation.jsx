@@ -79,7 +79,7 @@ const TicketsByLocation = (props) => {
 			// y: 40,
 		},
 	};
-    const chartColors = ["#ACFFE3", "#96A6FF", "#FF8795", "#E8B56B", "#D0A6F2"];
+	const chartColors = ["#ACFFE3", "#96A6FF", "#FF8795", "#E8B56B", "#D0A6F2"];
 	const data2 = {
 		maintainAspectRatio: false,
 		responsive: false,
@@ -103,6 +103,7 @@ const TicketsByLocation = (props) => {
 		} else {
 			return props.TicketSales.map((event, index) => (
 				<Grid className={classes.row3}>
+					{console.log("analytics tickets", props)}
 					<Grid className={classes.city}>
 						<div
 							className={classes.highlighter}

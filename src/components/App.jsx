@@ -1618,15 +1618,7 @@ class App extends Component {
 											}
 										</span>:
 										<span>
-											Please use MetaMask Browser. Please install MetaMask from <a style={{
-														textAlign: "center",
-														color: "blue",
-														opacity: "1",
-													}} href="https://play.google.com/store/apps/details?id=io.metamask&hl=en&gl=US" target="_blank">Google PlayStore</a>/<a style={{
-														textAlign: "center",
-														color: "blue",
-														opacity: "1",
-													}}  href="https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202" target="_blank">Apple AppStore</a> to continue!
+											Please use MetaMask Browser to use this app on mobile. 
 										</span>
 									}
 									onClose={() => this.handleSnackbarClose(1)}

@@ -7,7 +7,7 @@ import Notify from "../Notify";
 import ipfs from "../../utils/ipfs";
 import Loader from "./Loader";
 import Done from "./Done";
-
+import { createdEvent } from "./createdImage.js";
 //revamp
 import MyStepper from "./MyStepper";
 import PreviewEvent from "./PreviewEvent";
@@ -98,6 +98,7 @@ class CreateEvent extends Component {
 	}
 
 	onFieldsChange = (f) => {
+		console.log("input field change", this.state.fields);
 		this.setState({ fields: { ...this.state.fields, ...f } });
 	};
 
@@ -141,7 +142,7 @@ class CreateEvent extends Component {
 		this.setState({ shareUrl: shareUrl });
 	}
 
-	handleCreateEvent = async (clearStateCb) => {
+	handleCreateEvent = async (clearStateCb, values) => {
 		this.stageUpdater(90);
 
 		let {
@@ -168,8 +169,29 @@ class CreateEvent extends Component {
 			country,
 			state,
 			city,
+			images,
 		} = this.state.fields;
-
+		console.log("images", images);
+		this.state.fields = {
+			...this.state.fields,
+			images: images,
+			eventDescription: eventDescription.replace(
+				/&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g,
+				""
+			),
+		};
+		values = {
+			...values,
+			eventDescription: eventDescription.replace(
+				/&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g,
+				""
+			),
+		};
+		console.log("this.state.fields", values);
+		const fieldString = JSON.stringify(values);
+		const name = "eventInfo";
+		var cookie = `${name}=${fieldString}`;
+		document.cookie = cookie;
 		let image0Base64 = image0
 			? (await this.isFileImage(image0))
 				? await this.getBase64(image0)
@@ -321,6 +343,8 @@ class CreateEvent extends Component {
 						this.setState({
 							progressText: 0,
 						});
+						var cookie = `${name}=""`;
+						document.cookie = cookie;
 						toast(
 							<Notify
 								// hash={txhash}
@@ -370,9 +394,9 @@ class CreateEvent extends Component {
 					const eventDesc =
 						eventDescription.split(" ").length >= 15
 							? eventDescription
-									.split(" ")
-									.splice(0, 14)
-									.join(" ")
+								.split(" ")
+								.splice(0, 14)
+								.join(" ")
 							: eventDescription
 									.split(" ")
 									.splice(
@@ -380,11 +404,12 @@ class CreateEvent extends Component {
 										eventDescription.split(" ").length
 									)
 									.join(" ");
-									const message = `The "${eventName}" event is now live on the ${networkType}:fire:
-									${eventDesc.replace(/<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g, "")}...
-									${this.state.shareUrl}
-									#EventsDapp #${eventName.replace(/\s/g, "")}
-									`;
+
+					const message = `The "${eventName}" event is now live on the ${networkType}
+						${eventDesc.replace(/<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g, "")}...
+						${this.state.shareUrl}
+						#EventsDapp #${eventName.replace(/\s/g, "")}
+						`;
 					// await userTweet({
 					// 	address: this.props.accounts[0],
 					// 	networkId: this.props.web3.networkId,
@@ -393,10 +418,7 @@ class CreateEvent extends Component {
 					// });
 				})
 				.catch((error) => {
-					console.log("error", error);
-					console.log("txreceipt", txreceipt);
 					console.log("error.message", error.message);
-					console.log("typeof error", typeof error);
 					if (error !== null) {
 						if (
 							error.message.includes("not mined within 50 blocks")
@@ -573,7 +595,7 @@ class CreateEvent extends Component {
 						error: true,
 						error_text: "Transaction Rejected",
 					},
-					() => {}
+					() => { }
 				);
 			});
 	};

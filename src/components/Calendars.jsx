@@ -499,12 +499,12 @@ class Calendars extends Component {
 								// console.log("moment time: ",arg,arg.event.start, moment().isAfter(arg.event.start))
 								<span>{
 							moment().isBefore(arg.event.start)?
-							<p style={{ color: "#413AE2", fontSize:"12px"}}>
+							<p style={{ color: "#413AE2", fontSize:"12px",fontWeight:700}}>
 								{arg.timeText}
 								<br/>
 								{arg.event._def.title}
 							</p>:
-							<p  style={{ color: "#c2c2c2", fontSize:"12px"}}>
+							<p  style={{ color: "#c2c2c2", fontSize:"12px",fontWeight:700}}>
 								{arg.timeText}
 								<br/>
 								{arg.event._def.title}
