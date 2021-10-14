@@ -180,6 +180,13 @@ class CreateEvent extends Component {
 				""
 			),
 		};
+		values = {
+			...values,
+			eventDescription: eventDescription.replace(
+				/&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g,
+				""
+			),
+		};
 		console.log("this.state.fields", values);
 		const fieldString = JSON.stringify(values);
 		const name = "eventInfo";
