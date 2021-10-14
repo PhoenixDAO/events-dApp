@@ -387,6 +387,8 @@ class CreateEvent extends Component {
 					}
 				})
 				.then(async (receipt) => {
+					var cookie = `${name}=""`;
+					document.cookie = cookie;
 					const networkType =
 						this.props.web3.networkId == GLOBAL_NETWORK_ID
 							? "Ethereum Mainnet"
@@ -404,7 +406,6 @@ class CreateEvent extends Component {
 										eventDescription.split(" ").length
 									)
 									.join(" ");
-
 					const message = `The "${eventName}" event is now live on the ${networkType}
 						${eventDesc.replace(/<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g, "")}...
 						${this.state.shareUrl}
