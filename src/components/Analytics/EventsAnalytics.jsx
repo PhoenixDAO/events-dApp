@@ -116,7 +116,7 @@ const EventsAnalytics = (props) => {
                                 src={"/images/icons/create.svg"}
                                 alt="Event Price"
                             />
-                            <Typography className={classes.text}>No. of Events Created</Typography>
+                            <Typography className={classes.text}>Events Created</Typography>
                         </span>
                         <Typography className={classes.text1}>{props.createdEvents}</Typography>
                     </Paper>
@@ -141,7 +141,7 @@ const EventsAnalytics = (props) => {
                                 src={"/images/icons/Events.svg"}
                                 alt="Event Price"
                             />
-                            <Typography className={classes.text}>No. of Tickets bought</Typography>
+                            <Typography className={classes.text}>Tickets bought</Typography>
                         </span>
                         <Typography className={classes.text1}>{props.ticketBought}</Typography>
                     </Paper>
@@ -153,7 +153,7 @@ const EventsAnalytics = (props) => {
                                 src={"/images/icons/favorite.svg"}
                                 alt="Event Price"
                             />
-                            <Typography className={classes.text}>No. of Favourites</Typography>
+                            <Typography className={classes.text}>Favourites</Typography>
                         </span>
                         <Typography className={classes.text1}>{userDetails && userDetails.favourites ? userDetails.favourites.length : "-"}</Typography>
 

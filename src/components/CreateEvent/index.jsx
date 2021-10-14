@@ -7,7 +7,7 @@ import Notify from "../Notify";
 import ipfs from "../../utils/ipfs";
 import Loader from "./Loader";
 import Done from "./Done";
-
+import { createdEvent } from "./createdImage.js";
 //revamp
 import MyStepper from "./MyStepper";
 import PreviewEvent from "./PreviewEvent";
@@ -180,6 +180,13 @@ class CreateEvent extends Component {
 				""
 			),
 		};
+		values = {
+			...values,
+			eventDescription: eventDescription.replace(
+				/&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g,
+				""
+			),
+		};
 		console.log("this.state.fields", values);
 		const fieldString = JSON.stringify(values);
 		const name = "eventInfo";
@@ -336,6 +343,8 @@ class CreateEvent extends Component {
 						this.setState({
 							progressText: 0,
 						});
+						var cookie = `${name}=""`;
+						document.cookie = cookie;
 						toast(
 							<Notify
 								// hash={txhash}
@@ -387,9 +396,9 @@ class CreateEvent extends Component {
 					const eventDesc =
 						eventDescription.split(" ").length >= 15
 							? eventDescription
-									.split(" ")
-									.splice(0, 14)
-									.join(" ")
+								.split(" ")
+								.splice(0, 14)
+								.join(" ")
 							: eventDescription
 									.split(" ")
 									.splice(
@@ -402,18 +411,15 @@ class CreateEvent extends Component {
 						${this.state.shareUrl}
 						#EventsDapp #${eventName.replace(/\s/g, "")}
 						`;
-					await userTweet({
-						address: this.props.accounts[0],
-						networkId: this.props.web3.networkId,
-						base64Image: image0Base64,
-						message: message,
-					});
+					// await userTweet({
+					// 	address: this.props.accounts[0],
+					// 	networkId: this.props.web3.networkId,
+					// 	base64Image: image0Base64,
+					// 	message: message,
+					// });
 				})
 				.catch((error) => {
-					console.log("error", error);
-					console.log("txreceipt", txreceipt);
 					console.log("error.message", error.message);
-					console.log("typeof error", typeof error);
 					if (error !== null) {
 						if (
 							error.message.includes("not mined within 50 blocks")
@@ -590,7 +596,7 @@ class CreateEvent extends Component {
 						error: true,
 						error_text: "Transaction Rejected",
 					},
-					() => {}
+					() => { }
 				);
 			});
 	};

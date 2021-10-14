@@ -34,16 +34,18 @@ const useStyles = makeStyles((theme) => ({
 		marginBottom: "24px",
 	},
 	menuHeading: {
+		cursor:"pointer",
 		fontSize: "20px",
 		fontWeight: "600",
 		marginTop: "20px",
-		marginBottom: "20px",
 		"@media (min-width:950px)":{
 			fontSize:"18px",
 		},
 	},
 	menuSubHeading: {
+		cursor:"pointer",
 		fontSize: "17px",
+		marginBottom:"0px",
 		color: "#4E4E55",
 		"@media (min-width:950px)":{
 			fontSize:"15px",

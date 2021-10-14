@@ -31,16 +31,19 @@ const useStyles = makeStyles((theme) => ({
 	},
 	menuHeading: {
 		fontSize: "20px",
+		cursor:"pointer",
 		fontWeight: "600",
 		marginTop: "20px",
-		marginBottom: "20px",
+		marginBottom:"0px",
 		"@media (min-width:950px)":{
 			fontSize:"18px",
 		},
 	},
 	menuSubHeading: {
+		cursor:"pointer",
 		fontSize: "17px",
 		color: "#4E4E55",
+		marginBottom:"0px",
 	},
 	hideScroll: {
 		"&::-webkit-scrollbar": {

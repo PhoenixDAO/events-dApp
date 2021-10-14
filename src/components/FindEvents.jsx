@@ -276,7 +276,9 @@ class FindEvents extends Component {
 			this.setState({
 				Events_Blockchain: updatedList,
 			});
-			this.props.history.push("/upcomingevents/" + 1);
+			if(!this.props.match.params.ownerId){
+				this.props.history.push("/upcomingevents/" + 1);
+			}
 		}
 	}
 
@@ -366,7 +368,9 @@ class FindEvents extends Component {
 					// 	event_copy: [],
 					// });
 
-					this.props.history.push("/upcomingevents/" + 1);
+					if( !this.props.match.params.ownerId){
+						this.props.history.push("/upcomingevents/" + 1);
+					}
 
 					setTimeout(() => {
 						this.setState({
@@ -399,7 +403,9 @@ class FindEvents extends Component {
 						});
 					}
 
-					this.props.history.push("/upcomingevents/" + 1);
+					if(!this.props.match.params.ownerId){
+						this.props.history.push("/upcomingevents/" + 1);
+					}
 
 					setTimeout(() => {
 						this.setState({ loading: false });
@@ -439,7 +445,9 @@ class FindEvents extends Component {
 			}else{
 				window.scroll(0, window.screen.height*0.58);
 			}
-			this.props.history.push("/upcomingevents/" + 1);
+			if(!this.props.match.params.ownerId){
+				this.props.history.push("/upcomingevents/" + 1);
+			}
 		});
 	};
 
@@ -479,7 +487,9 @@ class FindEvents extends Component {
 
 		const cityName = this.state.cityName;
 		if (cityName) {
-			this.props.history.push("/upcomingevents/" + 1);
+			if(!this.props.match.params.ownerId){
+				this.props.history.push("/upcomingevents/" + 1);
+			}
 			try {
 				if (cityName) {
 					var filteredEvents = this.state.event_copy_for_loc;
@@ -647,7 +657,17 @@ class FindEvents extends Component {
 				}
 			}
 			if (!skip) {
-				events_list.push(this.state.Events_Blockchain[i]);
+				if(this.props.match.params.ownerId){
+					if(this.state.Events_Blockchain[i].owner.substr(this.state.Events_Blockchain[i].owner.length - 4) == this.props.match.params.ownerId.toLowerCase()){
+						events_list.push(this.state.Events_Blockchain[i]);
+						// console.log("organizer event: ",this.state.Events_Blockchain[i].owner.substr(this.state.Events_Blockchain[i].owner.length - 4));
+						// console.log("organizer event params: ",this.props.match.params.ownerId.toLowerCase());
+						// console.log("organizer event org name: ",this.props.match)
+					}
+				}
+				else{
+					events_list.push(this.state.Events_Blockchain[i]);
+				}
 			}
 			skip = false;
 		}
@@ -819,16 +839,15 @@ class FindEvents extends Component {
 						<Header
 							page="dashboard"
 							searchBar="true"
-							title={
-								<div style={{ display: "flex" }}>
-									<img src={roundlogo} alt="phnx logo" />
-									<span>&nbsp;&nbsp;</span>
-									<span
-										className={classes.mainHeadingStyle}
-									>
-										PhoenixDAO Events Marketplace
-									</span>
-								</div>
+							title={<div style={{ display: "flex" }}>
+										<img src={roundlogo} alt="phnx logo" />
+										<span>&nbsp;&nbsp;</span>
+										<span
+											className={classes.mainHeadingStyle}
+										>
+											PhoenixDAO Events Marketplace
+										</span>
+									</div>
 							}
 							handleSearch={this.updateSearch}
 							search={this.state.search}
@@ -880,7 +899,7 @@ class FindEvents extends Component {
 								<Grid item>SearchBar</Grid>
 								<Grid item>Connect Wallet</Grid>
 							</Grid> */}
-						<br className={classes.LargeScreenBreakLine}/>
+						<br className={classes.LargeScreenBreakLine} />
 
 						{/* tabs */}
 						<div>
@@ -962,22 +981,31 @@ class FindEvents extends Component {
 						</div>
 					</div>
 					{/* sticky bar ends */}
-					<br />
-					<br />
+					{!this.props.match.params.ownerId && (
+							<span>
+								<br />
+								<br />
+							</span>
+						)}
 
 					{/* scrollToTop while click on pagination */}
 					<div ref={this.myRef} />
 
 					{/* slider */}
-					<div>
-						<div>
-							<Slider />
-						</div>
-					</div>
+					{!this.props.match.params.ownerId && (
+							<div>
+								<div>
+									<Slider />
+								</div>
+							</div>
+						)}
+					{!this.props.match.params.ownerId && (
+							<span>
+								<br />
+								<br />
+							</span>
+						)}
 					<br />
-					<br />
-					<br />
-
 					{this.state.pageTitle === "Near Your Location" ? (
 						<NearToYou getCityName={this.getCityName} />
 					) : null}
@@ -987,7 +1015,7 @@ class FindEvents extends Component {
 							className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}
 						>
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
-								{this.state.pageTitle}
+								{(!this.props.match.params.orgName)?this.state.pageTitle:this.props.match.params.orgName + "'s Events" }
 							</h2>
 							<FormControl
 								variant="outlined"

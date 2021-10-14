@@ -124,6 +124,7 @@ class App extends Component {
 			openWalletConnected: false,
 			date2: null,
 			isDesktop:null,
+			networkId: null,
 		};
 		this.myRef = React.createRef();
 
@@ -174,6 +175,7 @@ class App extends Component {
 				web3 = new Web3(new Web3.providers.HttpProvider(infura));
 			}
 			const networkId = await web3.eth.net.getId();
+			this.setState({networkId:networkId});
 			if (networkId === GLOBAL_NETWORK_ID) {
 				return networkId;
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
@@ -365,7 +367,7 @@ class App extends Component {
 				}
 			}
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 		}
 	}
 
@@ -1004,7 +1006,7 @@ class App extends Component {
 						/>
 						<Route
 							exact
-							path="/event/:id"
+							path="/event/:title/:id"
 							render={(props) => (
 								<EventPage
 									{...props}
@@ -1260,6 +1262,20 @@ class App extends Component {
 					/>
 					<Route
 						exact
+						path="/upcomingevents/organizer/:orgName/:ownerId"
+						render={(props) => (
+							<FindEvents
+								{...props}
+								executeScroll={this.executeScroll}
+								inquire={this.inquireBuy}
+								disabledStatus={this.state.disabledStatus}
+								toggleDisabling={this.toggleDisabling}
+								eventsContract={this.state.eventsContract}
+							/>
+						)}
+					/>
+					<Route
+						exact
 						path="/upcomingevents/:page"
 						render={(props) => (
 							<FindEvents
@@ -1343,7 +1359,7 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/event/:id"
+						path="/event/:title/:id"
 						render={(props) => (
 							<EventPage
 								{...props}
@@ -1506,6 +1522,7 @@ class App extends Component {
 						connect={this.loadBlockchainData}
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
+						networkId = {this.state.networkId}
 					/>
 					<div
 						id="page-content-wrapper"
@@ -1550,7 +1567,7 @@ class App extends Component {
 									message={
 										<span>
 											{/* {" "} */}
-											Please switch to Matic or Ethereum Mainnet
+											Please switch to the Matic or Ethereum Mainnet Network
 										</span>
 									}
 									onClose={() => this.handleSnackbarClose(3)}
@@ -1601,15 +1618,7 @@ class App extends Component {
 											}
 										</span>:
 										<span>
-											Please use MetaMask Browser. Please install MetaMask from <a style={{
-														textAlign: "center",
-														color: "blue",
-														opacity: "1",
-													}} href="https://play.google.com/store/apps/details?id=io.metamask&hl=en&gl=US" target="_blank">Google PlayStore</a>/<a style={{
-														textAlign: "center",
-														color: "blue",
-														opacity: "1",
-													}}  href="https://apps.apple.com/us/app/metamask-blockchain-wallet/id1438144202" target="_blank">Apple AppStore</a> to continue!
+											Please use MetaMask Browser to use this app on mobile. 
 										</span>
 									}
 									onClose={() => this.handleSnackbarClose(1)}

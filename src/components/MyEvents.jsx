@@ -499,7 +499,7 @@ class MyEvents extends Component {
 								}
 								className="page-link"
 							>
-								{i} am
+								{i}
 							</Link>
 						</li>
 					);

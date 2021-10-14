@@ -167,7 +167,6 @@ export const useFormControls = () => {
 	const [values, setValues] = useState(initialFormValues);
 	const [errors, setErrors] = useState({});
 	useEffect(() => {
-		console.log("initial form values", initialFormValues);
 		const fetchData = async () => {
 			const response = await fetch(
 				`https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`

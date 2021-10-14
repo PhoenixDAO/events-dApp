@@ -16,6 +16,7 @@ import EventCard from "./common/EventCard.jsx";
 import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Loading from "./Loading";
 import SkeletonLayout from "./common/SkeletonLayout";
+import { urlFormatter } from "../utils/urlFormatter";
 
 var QRCode = require("qrcode.react");
 
@@ -383,7 +384,7 @@ class Ticket extends Component {
 				.split(" ")
 				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 				.join(" ");
-			let titleURL = `/event/${this.state.eventId}`;
+			let titleURL = `/event/${urlFormatter(event_data.name)}/${this.state.eventId}`;
 			// let myEventStatURL = "/event-stat/" + pagetitle + "/" + ticket_data[0];
 			let myEvent = false;
 			if (event_data.owner.toLowerCase() == this.account.toLowerCase()) {
