@@ -17,62 +17,156 @@ const PostContactForm = async (values, successCallback, errorCallback) => {
 	else errorCallback();
 };
 
-const initialFormValues = {
-	fullName: "",
-	email: "",
-	message: "",
-	formSubmitted: false,
-	success: false,
-	//1st_stepper
-	eventName: "",
-	eventOrganizer: "",
-	eventTime: "onedayevent",
-	eventDate: null,
-	eventStartTime: null,
-	eventEndTime: null,
-	eventStartDate: null,
-	eventEndDate: null,
-	//2nd_stepper
-	eventType: "physical",
-	eventTopic: "",
-	eventLocation: "",
-	eventLink: "",
-	country: { id: "", name: "" },
-	state: { id: "", name: "" },
-	city: { id: "", name: "" },
-	images: [{ name: "" }],
-	//3rd_stepper
-	eventCategory: "free",
-	restrictWallet: false,
-	ticketIndex: 0,
-	ticketName: "",
-	dollarPrice: "0",
-	phnxPrice: "",
-	ticketAvailability: "unlimited",
-	noOfTickets: "",
-	isCompleted: false,
-	ticketCategories: [
-		{
-			ticketName: "",
-			dollarPrice: "0",
-			phnxPrice: "",
-			ticketAvailability: "unlimited",
-			noOfTickets: "",
-			isShown: false,
-		},
-	],
-	token: false, // false means free
-	PhoenixDAO_market: {},
-	//4th_stepper
-	eventDescription: "",
-	termsAndConditions: false,
+const getCookie = (name) => {
+	const value = `; ${document.cookie}`;
+	const parts = value.split(`; ${name}=`);
+	if (parts.length === 2) return parts.pop().split(";").shift();
 };
 
+const parsedCookies =
+	getCookie("eventInfo") === undefined || null
+		? {}
+		: JSON.parse(getCookie("eventInfo"));
+
+const initialFormValues = {
+	fullName: parsedCookies.fullName ? parsedCookies.fullName : "",
+	email: parsedCookies.email ? parsedCookies.email : "",
+	message: parsedCookies.message ? parsedCookies.message : "",
+	formSubmitted: parsedCookies.formSubmitted
+		? parsedCookies.formSubmitted
+		: false,
+	success: parsedCookies.success ? parsedCookies.success : false,
+	//1st_stepper
+	eventName: parsedCookies.eventName ? parsedCookies.eventName : "",
+	eventOrganizer: parsedCookies.eventOrganizer
+		? parsedCookies.eventOrganizer
+		: "",
+	eventTime: parsedCookies.eventTime
+		? parsedCookies.eventTime
+		: "onedayevent",
+	eventDate: parsedCookies.eventDate ? parsedCookies.eventDate : null,
+	eventStartTime: parsedCookies.eventStartTime
+		? parsedCookies.eventStartTime
+		: null,
+	eventEndTime: parsedCookies.eventEndTime
+		? parsedCookies.eventEndTime
+		: null,
+	eventStartDate: parsedCookies.eventStartDate
+		? parsedCookies.eventStartDate
+		: null,
+	eventEndDate: parsedCookies.eventEndDate
+		? parsedCookies.eventEndDate
+		: null,
+	//2nd_stepper
+	eventType: parsedCookies.eventType ? parsedCookies.eventType : "physical",
+	eventTopic: parsedCookies.eventTopic ? parsedCookies.eventTopic : "",
+	eventLocation: parsedCookies.eventLocation
+		? parsedCookies.eventLocation
+		: "",
+	eventLink: parsedCookies.eventLink ? parsedCookies.eventLink : "",
+	country: {
+		id:
+			parsedCookies.country == null || parsedCookies.country == undefined
+				? ""
+				: parsedCookies.country.id,
+		name:
+			parsedCookies.country == null || parsedCookies.country == undefined
+				? ""
+				: parsedCookies.country.name,
+	},
+	state: {
+		id:
+			parsedCookies.state == null || parsedCookies.state == undefined
+				? ""
+				: parsedCookies.state.id,
+		name:
+			parsedCookies.state == null || parsedCookies.state == undefined
+				? ""
+				: parsedCookies.state.name,
+	},
+	city: {
+		id:
+			parsedCookies.city == null || parsedCookies.city === undefined
+				? ""
+				: parsedCookies.city.id,
+		name:
+			parsedCookies.city == null || parsedCookies.city == undefined
+				? ""
+				: parsedCookies.city.name,
+	},
+	images: [{ name: "" }],
+	//3rd_stepper
+	eventCategory: parsedCookies.eventCategory
+		? parsedCookies.eventCategory
+		: "free",
+	restrictWallet: parsedCookies.restrictWallet
+		? parsedCookies.restrictWallet
+		: false,
+	ticketIndex: parsedCookies.ticketIndex ? parsedCookies.ticketIndex : 0,
+	ticketName: parsedCookies.ticketName ? parsedCookies.ticketName : "",
+	dollarPrice: parsedCookies.dollarPrice ? parsedCookies.dollarPrice : "0",
+	phnxPrice: parsedCookies.phnxPrice ? parsedCookies.phnxPrice : "",
+	ticketAvailability: parsedCookies.ticketAvailability
+		? parsedCookies.ticketAvailability
+		: "unlimited",
+	noOfTickets: parsedCookies.noOfTickets ? parsedCookies.noOfTickets : "",
+	isCompleted: parsedCookies.isCompleted ? parsedCookies.isCompleted : false,
+	ticketCategories: [
+		{
+			ticketName:
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
+					? parsedCookies.ticketCategories[0].ticketName
+					: "",
+			dollarPrice:
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
+					? parsedCookies.ticketCategories[0].dollarPrice
+					: "0",
+			phnxPrice:
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
+					? parsedCookies.ticketCategories[0].phnxPrice
+					: "",
+			ticketAvailability:
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
+					? parsedCookies.ticketCategories[0].ticketAvailability
+					: "unlimited",
+			noOfTickets:
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
+					? parsedCookies.ticketCategories[0].noOfTickets
+					: "",
+			isShown:
+				parsedCookies.ticketCategories != null &&
+				parsedCookies.ticketCategories != undefined &&
+				parsedCookies.ticketCategories.length > 0
+					? parsedCookies.ticketCategories[0].isShown
+					: false,
+		},
+	],
+	token: parsedCookies.token ? parsedCookies.token : false, // false means free
+	PhoenixDAO_market: parsedCookies.PhoenixDAO_market,
+	//4th_stepper
+	eventDescription: parsedCookies.eventDescription
+		? parsedCookies.eventDescription
+		: "",
+	termsAndConditions: parsedCookies.termsAndConditions
+		? parsedCookies.termsAndConditions
+		: false,
+};
+
+console.log("before being changed", initialFormValues);
 export const useFormControls = () => {
 	const [values, setValues] = useState(initialFormValues);
 	const [errors, setErrors] = useState({});
 	useEffect(() => {
-
 		const fetchData = async () => {
 			const response = await fetch(
 				`https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`
@@ -99,15 +193,15 @@ export const useFormControls = () => {
 
 	useEffect(() => {
 		const img = values.images;
-		const tkt = values.ticketCategories;
-		tkt[0] = {
-			ticketName: "",
-			dollarPrice: "0",
-			phnxPrice: "",
-			ticketAvailability: "unlimited",
-			noOfTickets: "",
-			isShown: false,
-		};
+		// const tkt = values.ticketCategories;
+		// tkt[0] = {
+		// 	ticketName: "",
+		// 	dollarPrice: "0",
+		// 	phnxPrice: "",
+		// 	ticketAvailability: "unlimited",
+		// 	noOfTickets: "",
+		// 	isShown: false,
+		// };
 		img[0] = { name: "" };
 		setValues({
 			...initialFormValues,
@@ -454,23 +548,21 @@ export const useFormControls = () => {
 			});
 		} else if (name === "state") {
 			geonames.children({ geonameId: value.id }).then((res) => {
-			if (res.totalResultsCount) {
-			setValues({
-				...values,
-				[name]: value,
-				city: { id: "", name: "" },
+				if (res.totalResultsCount) {
+					setValues({
+						...values,
+						[name]: value,
+						city: { id: "", name: "" },
+					});
+				} else {
+					setValues({
+						...values,
+						[name]: value,
+						city: { id: "", name: " " },
+					});
+				}
 			});
-		}
-			else{
-				setValues({
-					...values,
-					[name]: value,
-					city: { id: "", name: " " },
-				});
-			}
-			})
-		}
-		 else {
+		} else {
 			setValues({
 				...values,
 				[name]: value,
@@ -772,9 +864,13 @@ export const useFormControls = () => {
 		} = fieldValues;
 
 		if (eventTime === "onedayevent") {
-			let eventDateOneDay = eventDate;
-			let eventStartTimeOneday = eventStartTime;
-			let eventEndTimeOneday = eventEndTime;
+			let eventDateOneDay = new Date(eventDate);
+			let eventStartTimeOneday = new Date(eventStartTime);
+			let eventEndTimeOneday = new Date(eventEndTime);
+
+			console.log("eventDateOneDay", eventDateOneDay);
+			console.log("eventStartTimeOneday", eventStartTimeOneday);
+			console.log("eventEndTimeOneday", eventEndTimeOneday);
 
 			eventDateOneDay.setHours(
 				eventStartTimeOneday.getHours(),
@@ -819,10 +915,10 @@ export const useFormControls = () => {
 				}
 			}
 		} else {
-			let eventDateOneDay = eventStartDate;
-			let eventEndDateOneDay = eventEndDate;
-			let eventStartTimeOneday = eventStartTime;
-			let eventEndTimeOneday = eventEndTime;
+			let eventDateOneDay = new Date(eventStartDate);
+			let eventEndDateOneDay = new Date(eventEndDate);
+			let eventStartTimeOneday = new Date(eventStartTime);
+			let eventEndTimeOneday = new Date(eventEndTime);
 			//change date timing
 			eventDateOneDay.setHours(
 				eventStartTimeOneday.getHours(),
