@@ -343,6 +343,8 @@ class CreateEvent extends Component {
 						this.setState({
 							progressText: 0,
 						});
+						var cookie = `${name}=""`;
+						document.cookie = cookie;
 						toast(
 							<Notify
 								// hash={txhash}
@@ -385,8 +387,6 @@ class CreateEvent extends Component {
 					}
 				})
 				.then(async (receipt) => {
-					var cookie = `${name}=""`;
-					document.cookie = cookie;
 					const networkType =
 						this.props.web3.networkId == GLOBAL_NETWORK_ID
 							? "Ethereum Mainnet"
