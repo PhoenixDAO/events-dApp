@@ -72,6 +72,7 @@ import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
+import { urlFormatter } from "../utils/urlFormatter";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -1303,6 +1304,8 @@ class EventPage extends Component {
 					/>
 				);
 			} else {
+				if(urlFormatter(this.props.match.params.title) == urlFormatter(this.state.blockChainEvent.name))
+				{
 				let event_data = this.state.blockChainEvent;
 				// to be changed
 				let image = this.getImage();
@@ -2155,6 +2158,22 @@ class EventPage extends Component {
 				} else {
 					body = <EventNotFound />;
 				}
+			}
+			else{
+				body = (
+					// <div className="text-center mt-5">
+					// 	<span role="img" aria-label="uncorn">
+					// 		🦄
+					// 	</span>{" "}
+					// 	PhoenixDAO Event not found
+					// </div>
+					<EmptyState
+						text="Event doesn't exist... 😔"
+						btnText="Go to Dashboard"
+						url="/upcomingevents/1"
+					/>
+				);
+			}
 			}
 		}
 

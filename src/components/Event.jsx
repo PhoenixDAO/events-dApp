@@ -8,6 +8,7 @@ import {
 } from "../config/phoenixDAOcontract_testnet.js";
 
 import ipfs from "../utils/ipfs";
+import {urlFormatter} from "../utils/urlFormatter";
 
 import { API_URL, REPORT_EVENT, GET_USER_DETAIL } from "../config/const";
 import axios from "axios";
@@ -560,7 +561,7 @@ class Event extends Component {
 				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 				.join(" ");
 
-			let titleURL = `/event/${this.props.id}`;
+			let titleURL = `/event/${urlFormatter(event_data.name)}/${this.props.id}`;
 			let myEventStatURL =
 				"/event-stat/" + pagetitle + "/" + this.props.id;
 			let myEvent = false;
