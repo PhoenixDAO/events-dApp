@@ -342,7 +342,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
                 ${moment(eventEndDate).format("Do MMM, YYYY")}
                 `},{" "}
                 
-               {moment(time,"hh:mm A", false).utcOffset(0).format("hh:mma z")}
+               {moment(time,"hh:mm A", false).utcOffset(0).format("hh:mm A z")}
                   </Typography>
                 </div>
                 </Grid>

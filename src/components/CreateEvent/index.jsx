@@ -7,7 +7,7 @@ import Notify from "../Notify";
 import ipfs from "../../utils/ipfs";
 import Loader from "./Loader";
 import Done from "./Done";
-
+import { createdEvent } from "./createdImage.js";
 //revamp
 import MyStepper from "./MyStepper";
 import PreviewEvent from "./PreviewEvent";
@@ -65,7 +65,7 @@ class CreateEvent extends Component {
 			stage: 0,
 			title: null,
 			error: false,
-			error_text: "Transaction Rejectesd",
+			error_text: "Transaction Rejected",
 			ipfs: null,
 			fileImg: null,
 			data: {
@@ -394,9 +394,9 @@ class CreateEvent extends Component {
 					const eventDesc =
 						eventDescription.split(" ").length >= 15
 							? eventDescription
-									.split(" ")
-									.splice(0, 14)
-									.join(" ")
+								.split(" ")
+								.splice(0, 14)
+								.join(" ")
 							: eventDescription
 									.split(" ")
 									.splice(
@@ -417,10 +417,7 @@ class CreateEvent extends Component {
 					// });
 				})
 				.catch((error) => {
-					console.log("error", error);
-					console.log("txreceipt", txreceipt);
 					console.log("error.message", error.message);
-					console.log("typeof error", typeof error);
 					if (error !== null) {
 						if (
 							error.message.includes("not mined within 50 blocks")
@@ -597,7 +594,7 @@ class CreateEvent extends Component {
 						error: true,
 						error_text: "Transaction Rejected",
 					},
-					() => {}
+					() => { }
 				);
 			});
 	};
@@ -730,7 +727,6 @@ class CreateEvent extends Component {
 			body = (
 				<div className="row">
 					<div className="col-xl-8 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-						<br />
 						<br />
 						<MyStepper
 							handleCreateEvent={this.handleCreateEvent}

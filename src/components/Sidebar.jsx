@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 import Web3 from "web3";
-import Snackbar from "./Snackbar";
+import { Snackbar } from "@material-ui/core";
+import { drizzleConnect } from "drizzle-react";
+import CustomizedSnackbars from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import {
 	Menu,
@@ -53,12 +55,14 @@ class Sidebar extends Component {
 			loading: false,
 			networkId: false,
 			openWallet: false,
+			openNetworkSnackbar: false,
+			networkIdNumber: 0,
 		};
-		this.connectToMetaMask = this.connectToMetaMask.bind(this);
+		// this.connectToMetaMask = this.connectToMetaMask.bind(this);
 	}
 
 	async componentDidMount() {
-		this.toggleSidebarClass((window.innerWidth>450)?false:true);
+		this.toggleSidebarClass(window.innerWidth > 450 ? false : true);
 		await this.getNetworkId();
 	}
 
@@ -81,12 +85,26 @@ class Sidebar extends Component {
 		var isActive = this.context.router.route.location.pathname;
 		var activeClassName = "";
 		var linkLocation = this.props.to;
-
+		
 		if (isActive == linkLocation) {
 			activeClassName = "nav-item active";
 		} else {
 			activeClassName = "nav-item";
 		}
+
+		if(this.props.networkId){
+			if(this.props.networkId == 137 ){
+				this.setState({openNetworkSnackbar:false});
+			}
+			else if(this.props.networkId == 1){
+				this.setState({openNetworkSnackbar:false});
+			}
+			else{
+				this.setState({openNetworkSnackbar:true});
+			}
+		}
+		
+		
 	}
 
 	toggleSidebarClass = (closeOnly) => {
@@ -121,35 +139,38 @@ class Sidebar extends Component {
 				"sidebar-open";
 		}
 	};
-	async connectToMetaMask() {
-		if (window.ethereum && window.ethereum.isMetaMask) {
-			let web3 = new Web3(window.ethereum);
-			try {
-				const a = await window.ethereum.enable();
-			} catch (e) {
-				if ((e.code = -32002)) {
-					this.setState({
-						errorMessage:
-							"Connection request already pending. Please check MetaMask !",
-						openSnackbarForPendingRequest: false,
-						openSnackbarForPendingRequest: true,
-					});
-				}
-			}
-		} else {
-			this.setState({
-				errorMessage:
-					"MetaMask is not installed. Please install MetaMask to continue !",
-				openSnackbarForPendingRequest: true,
-				openSnackbarForPendingRequest: false,
-			});
-		}
-	}
+	// async connectToMetaMask() {
+	// 	if (window.ethereum && window.ethereum.isMetaMask) {
+	// 		let web3 = new Web3(window.ethereum);
+	// 		try {
+	// 			const a = await window.ethereum.enable();
+	// 		} catch (e) {
+	// 			if ((e.code = -32002)) {
+	// 				this.setState({
+	// 					errorMessage:
+	// 						"Connection request already pending. Please check MetaMask !",
+	// 					openSnackbarForPendingRequest: false,
+	// 					openSnackbarForPendingRequest: true,
+	// 				});
+	// 			}
+	// 		}
+	// 	} else {
+	// 		this.setState({
+	// 			errorMessage:
+	// 				"MetaMask is not installed. Please install MetaMask to continue !",
+	// 			openSnackbarForPendingRequest: true,
+	// 			openSnackbarForPendingRequest: false,
+	// 		});
+	// 	}
+	// }
 	handleSnackbarClose = (number) => {
 		if (number == 1) {
+			this.setState({ openSnackbarForNoMetaMask: false });
+		} else if(number == 2){
 			this.setState({ openSnackbarForPendingRequest: false });
-		} else {
-			this.setState({ openSnackbarForPendingRequest: false });
+		}
+		else {
+			this.setState({ openNetworkSnackbar: false });
 		}
 	};
 
@@ -254,7 +275,9 @@ class Sidebar extends Component {
 				});
 			}
 			const networkId = await web3.eth.net.getId();
-
+			this.setState({
+				networkIdNumber: networkId,
+			});
 			this.setState({
 				loading: false,
 			});
@@ -366,18 +389,34 @@ class Sidebar extends Component {
 		) {
 			return (
 				<React.Fragment>
-					<Snackbar
+					{/* <CustomizedSnackbars
 						open={this.state.openSnackbarForPendingRequest}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(1)}
-					/>
+					/> */}
 					<Snackbar2
 						style={{ zIndex: "9999999 !important" }}
 						open={this.state.openSnackbarForPendingRequest}
 						message={this.state.errorMessage}
 						handleClose={() => this.handleSnackbarClose(2)}
 					/>
-
+					<Snackbar
+						anchorOrigin={{
+							vertical: "top",
+							horizontal: "center",
+						}}
+						open={this.state.openNetworkSnackbar}
+						message={
+							<span>
+								{/* {" "} */}
+								Please switch to Matic or Ethereum Mainnet
+							</span>
+						}
+						onClose={() => this.handleSnackbarClose(3)}
+						autoHideDuration={5000}
+						key={"top" + "center"}
+						className="snackbar"
+					/>
 					<div
 						id="sidebar-wrapper"
 						className="my-sidebar sidebar-closed"
@@ -593,8 +632,7 @@ class Sidebar extends Component {
 							>
 								<div className="imageHolder">
 									<a
-										aria-label="Homepage"
-										target="blank"
+										target="_blank"
 										title="Telegram"
 										href="https://t.me/PHNXDAO"
 									>
@@ -606,8 +644,7 @@ class Sidebar extends Component {
 								</div>
 								<div className="imageHolder">
 									<a
-										aria-label="Homepage"
-										target="blank"
+										target="_blank"
 										title="Twitter"
 										href="https://twitter.com/phnxdao"
 									>
@@ -619,8 +656,7 @@ class Sidebar extends Component {
 								</div>
 								<div className="imageHolder">
 									<a
-										aria-label="Homepage"
-										target="blank"
+										target="_blank"
 										title="GitHub"
 										href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
 									>
@@ -631,14 +667,27 @@ class Sidebar extends Component {
 									</a>
 								</div>
 							</ul>
-							<span className="toggleHidden suggestion" style={{	whiteSpace:"pre-wrap"}}>
-								Kindly give us your feedback(s) <span><a style={{
-									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
-									textDecoration: "underline",
-									// display: "flex",
-									// alignItems: "center",
-								}} href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform" target="_blank">here</a>
-							</span>
+							<span
+								className="toggleHidden suggestion"
+								style={{ whiteSpace: "pre-wrap" }}
+							>
+								Kindly give us your feedback{" "}
+								<span>
+									<a
+										style={{
+											color: "#413ae2",
+											textDecoration: "underline",
+											color: "rgb(65, 58, 226)",
+											textDecoration: "underline",
+											// display: "flex",
+											// alignItems: "center",
+										}}
+										href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform"
+										target="_blank"
+									>
+										here
+									</a>
+								</span>
 							</span>
 						</div>
 					</div>
@@ -979,7 +1028,6 @@ class Sidebar extends Component {
 										<span className="toggleHidden">
 											Terms and Conditions
 										</span>
-
 									</NavLink>
 								</li>
 
@@ -994,7 +1042,6 @@ class Sidebar extends Component {
 							>
 								<div className="imageHolder">
 									<a
-										aria-label="Homepage"
 										target="blank"
 										title="Telegram"
 										href="https://t.me/PHNXDAO"
@@ -1004,7 +1051,6 @@ class Sidebar extends Component {
 								</div>
 								<div className="imageHolder">
 									<a
-										aria-label="Homepage"
 										target="blank"
 										title="Twitter"
 										href="https://twitter.com/phnxdao"
@@ -1014,7 +1060,6 @@ class Sidebar extends Component {
 								</div>
 								<div className="imageHolder">
 									<a
-										aria-label="Homepage"
 										target="blank"
 										title="GitHub"
 										href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
@@ -1024,14 +1069,20 @@ class Sidebar extends Component {
 								</div>
 							</ul>
 							{/* <div className="toggleHidden suggestion"> */}
+							{(this.state.networkIdNumber === 137)&&<span className="toggleHidden suggestion PolygonLink"  style={{	whiteSpace:"pre-wrap", marginTop:"20px", marginBottom:"20px"}}>
+								<a href="https://macncheese.finance/matic-polygon-mainnet-faucet.php" target="_blank">🏃‍♂️ Matic(Polygon) Mainnet Faucet - Get Free Matic on Layer2</a>
+							</span>}
 							<span className="toggleHidden suggestion"  style={{	whiteSpace:"pre-wrap"}} >
-								Kindly give us your feedback(s) <span>
+								Kindly give us your feedback<span> {" "}
 								<a style={{
-									color: "#413ae2", ctextDecoration: "underline", color: "rgb(65, 58, 226)",
+									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
 									textDecoration: "underline",
-									// display: "flex",
-									// alignItems: "center", 
-								}} href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform" target="_blank">here</a>
+										}}
+										href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform"
+										target="_blank"
+									>
+										here
+									</a>
 								</span>
 							</span>
 							{/* </div> */}

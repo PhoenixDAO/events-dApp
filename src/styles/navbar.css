@@ -19,6 +19,14 @@
 #sidebar-wrapper.my-sidebar a:hover {
 	text-decoration: underline;
 }
+.PolygonLink a {
+	color: #413ae2 !important;
+	text-decoration: none;
+}
+
+.PolygonLink a:hover {
+	text-decoration: none !important;
+}
 #sidebar-wrapper.my-sidebar .user-status .user-status-icon i {
 	padding-left: 6px;
 	margin: 12px 7px;
@@ -91,7 +99,7 @@
 }
 
 #sidebar-wrapper.my-sidebar::-webkit-scrollbar {
-	width: 0px;
+	width: 4px;
 }
 #sidebar-wrapper.my-sidebar {
 	z-index: 999 !important;
@@ -194,6 +202,9 @@
 	transition-duration: 1s;
 }
 
+#wrapper.toggled #sidebar-wrapper.sidebar-closed::-webkit-scrollbar {
+	width: 0px;
+}
 #wrapper.toggled #sidebar-wrapper.sidebar-closed .menu {
 	justify-content: center;
 	margin-right: 15px;

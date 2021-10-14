@@ -229,15 +229,25 @@ const styles = (theme) => ({
 		marginTop: "-4px",
 	},
 	clockTime: {
-		// "@media (min-width: 700px)": {
-		// 	width: "55%	!important",
-		// },
+		"@media (max-width: 900px)": {
+			width: "auto",
+			alignSelf: "flex-start",
+		},
 	},
 	selectWidth: {
 		maxWidth: "350px",
 		overflow: "hidden",
 		whiteSpace: "nowrap",
 		textOverflow: "ellipsis",
+	},
+	eventTimePara: {
+		marginBottom: "0px",
+	},
+	localTime: {
+		float: "right",
+		fontSize: "12px",
+		fontWeight: "bolder",
+		color: "#6b6b6b",
 	},
 });
 class EventPage extends Component {
@@ -1199,7 +1209,7 @@ class EventPage extends Component {
 					// 	PhoenixDAO Event not found
 					// </div>
 					<EmptyState
-						text="Event doesn't exist...😔"
+						text="Event doesn't exist... 😔"
 						btnText="Go to Dashboard"
 						url="/upcomingevents/1"
 					/>
@@ -1581,50 +1591,135 @@ class EventPage extends Component {
 										<p className={classes.eventHeading}>
 											<ScheduleOutlined /> Time
 										</p>
-										<p className={classes.eventinfo}>
-											{" "}
-											{!this.state.eventStartTime
-												? `Time`
-												: !this.state.eventEndTime
-												? moment(
-														this.state
-															.eventStartTime
-												  )
-														.utcOffset(0)
-														.format("hh:mma z")
-												: `${moment(
-														this.state
-															.eventStartTime
-												  )
-														.utcOffset(0)
-														.format(
-															"hh:mma"
-														)} - ${moment(
-														this.state.eventEndTime
-												  )
-														.utcOffset(0)
-														.format("hh:mma z")}`}
-										</p>
-										<p className={classes.eventHeading}>
-											<LocationOnOutlined /> Location
-										</p>
-										<p className={classes.eventinfo}>
-											{this.state.blockChainEvent
-												.onsite ? (
-												<a
-													href={`https://www.google.com/maps/place/${locations}`}
-													target="_blank"
-													style={{
-														textDecoration: "none",
-														color: "#212529",
-													}}
+										<span
+											style={{
+												display: "table-header-group",
+											}}
+										>
+											<p
+												className={`${classes.eventinfo} ${classes.eventTimePara}`}
+											>
+												{" "}
+												{!this.state.eventStartTime
+													? `Time`
+													: !this.state.eventEndTime
+													? moment(
+															this.state
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format("LT")
+													: `${moment(
+															this.state
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format(
+																"LT"
+															)} - ${moment(
+															this.state
+																.eventEndTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format(
+																"LT"
+															)}`}{" "}
+												Local
+											</p>
+
+											<p
+												className={classes.localTime}
+												style={{ marginBottom: "0px" }}
+											>
+												(
+												{!this.state.eventStartTime
+													? `Time`
+													: !this.state.eventEndTime
+													? moment(
+															this.state
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.format("hh:mm A z")
+													: `${moment(
+															this.state
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.format(
+																"hh:mm A"
+															)} - ${moment(
+															this.state
+																.eventEndTime
+													  )
+															.utcOffset(0)
+															.format(
+																"hh:mm A z"
+															)}`}
+												)
+											</p>
+										</span>
+										{this.state.blockChainEvent.onsite ? (
+											<span>
+												<p
+													className={
+														classes.eventHeading
+													}
 												>
-													{locations}
-												</a>
-											) : (
-												locations
-											)}
-										</p>
+													<LocationOnOutlined />{" "}
+													Location
+												</p>
+												<p
+													className={
+														classes.eventinfo
+													}
+												>
+													<a
+														href={`https://www.google.com/maps/search/${locations}`}
+														target="_blank"
+														style={{
+															textDecoration:
+																"none",
+															color: "#212529",
+														}}
+													>
+														{locations}
+													</a>
+												</p>
+											</span>
+										) : (
+											<span>
+												<p
+													className={
+														classes.eventHeading
+													}
+												>
+													<LocationOnOutlined />{" "}
+													Online
+												</p>
+												{locations ? (
+													<p
+														className={
+															classes.eventinfo
+														}
+													>
+														{locations}
+													</p>
+												) : (
+													<p
+														className={
+															classes.eventinfo
+														}
+													>
+														Please Buy the Ticket to
+														get the Link.
+													</p>
+												)}
+											</span>
+										)}
 										<p className={classes.eventHeading}>
 											<PersonOutlined />
 											Organizer
@@ -1731,6 +1826,7 @@ class EventPage extends Component {
 										<SocialMedia
 											shareUrl={this.state.shareUrl}
 											disabled={false}
+											eventTitle={event_data.name}
 										/>
 									</Grid>
 								</Grid>
