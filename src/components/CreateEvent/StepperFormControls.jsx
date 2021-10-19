@@ -17,155 +17,284 @@ const PostContactForm = async (values, successCallback, errorCallback) => {
 	else errorCallback();
 };
 
-const getCookie = (name) => {
-	const value = `; ${document.cookie}`;
-	const parts = value.split(`; ${name}=`);
-	if (parts.length === 2) return parts.pop().split(";").shift();
-};
 
-const parsedCookies =
-	getCookie("eventInfo") === undefined || null
-		? {}
-		: JSON.parse(getCookie("eventInfo"));
 
-const initialFormValues = {
-	fullName: parsedCookies.fullName ? parsedCookies.fullName : "",
-	email: parsedCookies.email ? parsedCookies.email : "",
-	message: parsedCookies.message ? parsedCookies.message : "",
-	formSubmitted: parsedCookies.formSubmitted
-		? parsedCookies.formSubmitted
-		: false,
-	success: parsedCookies.success ? parsedCookies.success : false,
-	//1st_stepper
-	eventName: parsedCookies.eventName ? parsedCookies.eventName : "",
-	eventOrganizer: parsedCookies.eventOrganizer
-		? parsedCookies.eventOrganizer
-		: "",
-	eventTime: parsedCookies.eventTime
-		? parsedCookies.eventTime
-		: "onedayevent",
-	eventDate: parsedCookies.eventDate ? parsedCookies.eventDate : null,
-	eventStartTime: parsedCookies.eventStartTime
-		? parsedCookies.eventStartTime
-		: null,
-	eventEndTime: parsedCookies.eventEndTime
-		? parsedCookies.eventEndTime
-		: null,
-	eventStartDate: parsedCookies.eventStartDate
-		? parsedCookies.eventStartDate
-		: null,
-	eventEndDate: parsedCookies.eventEndDate
-		? parsedCookies.eventEndDate
-		: null,
-	//2nd_stepper
-	eventType: parsedCookies.eventType ? parsedCookies.eventType : "physical",
-	eventTopic: parsedCookies.eventTopic ? parsedCookies.eventTopic : "",
-	eventLocation: parsedCookies.eventLocation
-		? parsedCookies.eventLocation
-		: "",
-	eventLink: parsedCookies.eventLink ? parsedCookies.eventLink : "",
-	country: {
-		id:
-			parsedCookies.country == null || parsedCookies.country == undefined
-				? ""
-				: parsedCookies.country.id,
-		name:
-			parsedCookies.country == null || parsedCookies.country == undefined
-				? ""
-				: parsedCookies.country.name,
-	},
-	state: {
-		id:
-			parsedCookies.state == null || parsedCookies.state == undefined
-				? ""
-				: parsedCookies.state.id,
-		name:
-			parsedCookies.state == null || parsedCookies.state == undefined
-				? ""
-				: parsedCookies.state.name,
-	},
-	city: {
-		id:
-			parsedCookies.city == null || parsedCookies.city === undefined
-				? ""
-				: parsedCookies.city.id,
-		name:
-			parsedCookies.city == null || parsedCookies.city == undefined
-				? ""
-				: parsedCookies.city.name,
-	},
-	images: [{ name: "" }],
-	//3rd_stepper
-	eventCategory: parsedCookies.eventCategory
-		? parsedCookies.eventCategory
-		: "free",
-	restrictWallet: parsedCookies.restrictWallet
-		? parsedCookies.restrictWallet
-		: false,
-	ticketIndex: parsedCookies.ticketIndex ? parsedCookies.ticketIndex : 0,
-	ticketName: parsedCookies.ticketName ? parsedCookies.ticketName : "",
-	dollarPrice: parsedCookies.dollarPrice ? parsedCookies.dollarPrice : "0",
-	phnxPrice: parsedCookies.phnxPrice ? parsedCookies.phnxPrice : "",
-	ticketAvailability: parsedCookies.ticketAvailability
-		? parsedCookies.ticketAvailability
-		: "unlimited",
-	noOfTickets: parsedCookies.noOfTickets ? parsedCookies.noOfTickets : "",
-	isCompleted: parsedCookies.isCompleted ? parsedCookies.isCompleted : false,
-	ticketCategories: [
-		{
-			ticketName:
-				parsedCookies.ticketCategories != null &&
-				parsedCookies.ticketCategories != undefined &&
-				parsedCookies.ticketCategories.length > 0
-					? parsedCookies.ticketCategories[0].ticketName
-					: "",
-			dollarPrice:
-				parsedCookies.ticketCategories != null &&
-				parsedCookies.ticketCategories != undefined &&
-				parsedCookies.ticketCategories.length > 0
-					? parsedCookies.ticketCategories[0].dollarPrice
-					: "0",
-			phnxPrice:
-				parsedCookies.ticketCategories != null &&
-				parsedCookies.ticketCategories != undefined &&
-				parsedCookies.ticketCategories.length > 0
-					? parsedCookies.ticketCategories[0].phnxPrice
-					: "",
-			ticketAvailability:
-				parsedCookies.ticketCategories != null &&
-				parsedCookies.ticketCategories != undefined &&
-				parsedCookies.ticketCategories.length > 0
-					? parsedCookies.ticketCategories[0].ticketAvailability
-					: "unlimited",
-			noOfTickets:
-				parsedCookies.ticketCategories != null &&
-				parsedCookies.ticketCategories != undefined &&
-				parsedCookies.ticketCategories.length > 0
-					? parsedCookies.ticketCategories[0].noOfTickets
-					: "",
-			isShown:
-				parsedCookies.ticketCategories != null &&
-				parsedCookies.ticketCategories != undefined &&
-				parsedCookies.ticketCategories.length > 0
-					? parsedCookies.ticketCategories[0].isShown
-					: false,
-		},
-	],
-	token: parsedCookies.token ? parsedCookies.token : false, // false means free
-	PhoenixDAO_market: parsedCookies.PhoenixDAO_market,
-	//4th_stepper
-	eventDescription: parsedCookies.eventDescription
-		? parsedCookies.eventDescription
-		: "",
-	termsAndConditions: parsedCookies.termsAndConditions
-		? parsedCookies.termsAndConditions
-		: false,
-};
-
-console.log("before being changed", initialFormValues);
+// const initialFormValues= {
+// 	fullName: parsedCookies.fullName && typeof(parsedCookies.fullName) !='undefined' ? parsedCookies.fullName : "",
+// 	email: parsedCookies.email && typeof(parsedCookies.email) !='undefined' ? parsedCookies.email : "",
+// 	message: parsedCookies.message && typeof(parsedCookies.message) !='undefined' ? parsedCookies.message : "",
+// 	formSubmitted: parsedCookies.formSubmitted
+// 	 && typeof(parsedCookies.formSubmitted) !='undefined'	? parsedCookies.formSubmitted
+// 		: false,
+// 	success: parsedCookies.success && typeof(parsedCookies.success) !='undefined' ? parsedCookies.success : false,
+// 	//1st_stepper
+// 	eventName: parsedCookies.eventName && typeof(parsedCookies.eventName) !='undefined' ? parsedCookies.eventName : "",
+// 	eventOrganizer: parsedCookies.eventOrganizer
+// 	 && typeof(parsedCookies.eventOrganizer) !='undefined'	? parsedCookies.eventOrganizer
+// 		: "",
+// 	eventTime: parsedCookies.eventTime
+// 	 && typeof(parsedCookies.eventTime) !='undefined'	? parsedCookies.eventTime
+// 		: "onedayevent",
+// 	eventDate: parsedCookies.eventDate && typeof(parsedCookies.eventDate) !='undefined' ? parsedCookies.eventDate : null,
+// 	eventStartTime: parsedCookies.eventStartTime
+// 	 && typeof(parsedCookies.eventStartTime) !='undefined'	? parsedCookies.eventStartTime
+// 		: null,
+// 	eventEndTime: parsedCookies.eventEndTime
+// 	 && typeof(parsedCookies.eventEndTime) !='undefined'	? parsedCookies.eventEndTime
+// 		: null,
+// 	eventStartDate: parsedCookies.eventStartDate
+// 	 && typeof(parsedCookies.eventStartDate) !='undefined'	? parsedCookies.eventStartDate
+// 		: null,
+// 	eventEndDate: parsedCookies.eventEndDate
+// 	 && typeof(parsedCookies.eventEndDate) !='undefined'	? parsedCookies.eventEndDate
+// 		: null,
+// 	//2nd_stepper
+// 	eventType: parsedCookies.eventType && typeof(parsedCookies.eventType) !='undefined' ? parsedCookies.eventType : "physical",
+// 	eventTopic: parsedCookies.eventTopic && typeof(parsedCookies.eventTopic) !='undefined' ? parsedCookies.eventTopic : "",
+// 	eventLocation: parsedCookies.eventLocation
+// 	 && typeof(parsedCookies.eventLocation) !='undefined'	? parsedCookies.eventLocation
+// 		: "",
+// 	eventLink: parsedCookies.eventLink && typeof(parsedCookies.eventLink) !='undefined' ? parsedCookies.eventLink : "",
+// 	country: {
+// 		id: parsedCookies.country == null && typeof(parsedCookies.country) != 'undefined'
+// 			 && typeof(parsedCookies.country) !='undefined'	? ""
+// 				: parsedCookies.country.id,
+// 		name:
+// 			parsedCookies.country == null && typeof(parsedCookies.country) != 'undefined'
+// 			 && typeof(parsedCookies.country) !='undefined'	? ""
+// 				: parsedCookies.country.name,
+// 	},
+// 	state: {
+// 		id:
+// 			parsedCookies.state == null && typeof(parsedCookies.state) != 'undefined'
+// 			 && typeof(parsedCookies.state) !='undefined'	? ""
+// 				: parsedCookies.state.id,
+// 		name:
+// 			parsedCookies.state == null && typeof(parsedCookies.state) != 'undefined'
+// 			 && typeof(parsedCookies.state) !='undefined'	? ""
+// 				: parsedCookies.state.name,
+// 	},
+// 	city: {
+// 		id:
+// 			parsedCookies.city == null && typeof(parsedCookies.city )!= 'undefined'
+// 			 && typeof(parsedCookies.city) !='undefined'	? ""
+// 				: parsedCookies.city.id,
+// 		name:
+// 			parsedCookies.city == null && typeof(parsedCookies.city) != 'undefined'
+// 			 && typeof(parsedCookies.city) !='undefined'	? ""
+// 				: parsedCookies.city.name,
+// 	},
+// 	images: [{ name: "" }],
+// 	//3rd_stepper
+// 	eventCategory: parsedCookies.eventCategory
+// 	 && typeof(parsedCookies.eventCategory) !='undefined'	? parsedCookies.eventCategory
+// 		: "free",
+// 	restrictWallet: parsedCookies.restrictWallet
+// 	 && typeof(parsedCookies.restrictWallet) !='undefined'	? parsedCookies.restrictWallet
+// 		: false,
+// 	ticketIndex: parsedCookies.ticketIndex && typeof(parsedCookies.ticketIndex) !='undefined' ? parsedCookies.ticketIndex : 0,
+// 	ticketName: parsedCookies.ticketName && typeof(parsedCookies.ticketName) !='undefined' ? parsedCookies.ticketName : "",
+// 	dollarPrice: parsedCookies.dollarPrice && typeof(parsedCookies.dollarPrice) !='undefined' ? parsedCookies.dollarPrice : "0",
+// 	phnxPrice: parsedCookies.phnxPrice && typeof(parsedCookies.phnxPrice) !='undefined' ? parsedCookies.phnxPrice : "",
+// 	ticketAvailability: parsedCookies.ticketAvailability
+// 	 && typeof(parsedCookies.ticketAvailability) !='undefined'	? parsedCookies.ticketAvailability
+// 		: "unlimited",
+// 	noOfTickets: parsedCookies.noOfTickets && parsedCookies.noOfTickets !=undefined ? parsedCookies.noOfTickets : "",
+// 	isCompleted: parsedCookies.isCompleted && parsedCookies.isCompleted !=undefined ? parsedCookies.isCompleted : false,
+// 	ticketCategories: [
+// 		{
+// 			ticketName:
+// 				parsedCookies.ticketCategories != null &&
+// 				parsedCookies.ticketCategories != undefined &&
+// 				parsedCookies.ticketCategories.length > 0	? parsedCookies.ticketCategories[0].ticketName
+// 					: "",
+// 			dollarPrice:
+// 				parsedCookies.ticketCategories != null &&
+// 				parsedCookies.ticketCategories != undefined &&
+// 				parsedCookies.ticketCategories.length > 0	? parsedCookies.ticketCategories[0].dollarPrice
+// 					: "0",
+// 			phnxPrice:
+// 				parsedCookies.ticketCategories != null &&
+// 				parsedCookies.ticketCategories != undefined &&
+// 				parsedCookies.ticketCategories.length > 0? parsedCookies.ticketCategories[0].phnxPrice
+// 					: "",
+// 			ticketAvailability:
+// 				parsedCookies.ticketCategories != null &&
+// 				parsedCookies.ticketCategories != undefined &&
+// 				parsedCookies.ticketCategories.length > 0	? parsedCookies.ticketCategories[0].ticketAvailability
+// 					: "unlimited",
+// 			noOfTickets:
+// 				parsedCookies.ticketCategories != null &&
+// 				parsedCookies.ticketCategories != undefined &&
+// 				parsedCookies.ticketCategories.length > 0	? parsedCookies.ticketCategories[0].noOfTickets
+// 					: "",
+// 			isShown:
+// 				parsedCookies.ticketCategories != null &&
+// 				parsedCookies.ticketCategories != undefined &&
+// 				parsedCookies.ticketCategories.length > 0 ? parsedCookies.ticketCategories[0].isShown
+// 					: false,
+// 		},
+// 	],
+// 	token: parsedCookies.token && parsedCookies.token !=undefined ? parsedCookies.token : false, // false means free
+// 	PhoenixDAO_market: parsedCookies.PhoenixDAO_market,
+// 	//4th_stepper
+// 	eventDescription: parsedCookies.eventDescription
+// 	 && parsedCookies.eventDescription !=undefined	? parsedCookies.eventDescription
+// 		: "",
+// 	termsAndConditions: parsedCookies.termsAndConditions
+// 	 && parsedCookies.termsAndConditions !=undefined	? parsedCookies.termsAndConditions
+// 		: false,
+// };
 export const useFormControls = () => {
+	const getCookie = (name) => {
+		const value = `; ${document.cookie}`;
+		const parts = value.split(`; ${name}=`);
+		// console.log("before being changed parts", parts);
+		if (parts.length === 2) return parts.pop().split(";").shift();
+	};
+	
+	const parsedCookies =
+		getCookie("eventInfo") === undefined || null
+			? {}
+			: JSON.parse(getCookie("eventInfo"));
+	
+		
+	const initialFormValues= {
+		fullName: parsedCookies.fullName ? parsedCookies.fullName : "",
+		email: parsedCookies.email ? parsedCookies.email : "",
+		message: parsedCookies.message ? parsedCookies.message : "",
+		formSubmitted: parsedCookies.formSubmitted
+			? parsedCookies.formSubmitted
+			: false,
+		success: parsedCookies.success ? parsedCookies.success : false,
+		//1st_stepper
+		eventName: parsedCookies.eventName ? parsedCookies.eventName : "",
+		eventOrganizer: parsedCookies.eventOrganizer
+			? parsedCookies.eventOrganizer
+			: "",
+		eventTime: parsedCookies.eventTime
+			? parsedCookies.eventTime
+			: "onedayevent",
+		eventDate: parsedCookies.eventDate ? parsedCookies.eventDate : null,
+		eventStartTime: parsedCookies.eventStartTime
+			? parsedCookies.eventStartTime
+			: null,
+		eventEndTime: parsedCookies.eventEndTime
+			? parsedCookies.eventEndTime
+			: null,
+		eventStartDate: parsedCookies.eventStartDate
+			? parsedCookies.eventStartDate
+			: null,
+		eventEndDate: parsedCookies.eventEndDate
+			? parsedCookies.eventEndDate
+			: null,
+		//2nd_stepper
+		eventType: parsedCookies.eventType ? parsedCookies.eventType : "physical",
+		eventTopic: parsedCookies.eventTopic ? parsedCookies.eventTopic : "",
+		eventLocation: parsedCookies.eventLocation
+			? parsedCookies.eventLocation
+			: "",
+		eventLink: parsedCookies.eventLink ? parsedCookies.eventLink : "",
+		country: {
+			id:
+				parsedCookies.country == null || parsedCookies.country == undefined
+					? ""
+					: parsedCookies.country.id,
+			name:
+				parsedCookies.country == null || parsedCookies.country == undefined
+					? ""
+					: parsedCookies.country.name,
+		},
+		state: {
+			id:
+				parsedCookies.state == null || parsedCookies.state == undefined
+					? ""
+					: parsedCookies.state.id,
+			name:
+				parsedCookies.state == null || parsedCookies.state == undefined
+					? ""
+					: parsedCookies.state.name,
+		},
+		city: {
+			id:
+				parsedCookies.city == null || parsedCookies.city === undefined
+					? ""
+					: parsedCookies.city.id,
+			name:
+				parsedCookies.city == null || parsedCookies.city == undefined
+					? ""
+					: parsedCookies.city.name,
+		},
+		images: [{ name: "" }],
+		//3rd_stepper
+		eventCategory: parsedCookies.eventCategory
+			? parsedCookies.eventCategory
+			: "free",
+		restrictWallet: parsedCookies.restrictWallet
+			? parsedCookies.restrictWallet
+			: false,
+		ticketIndex: parsedCookies.ticketIndex ? parsedCookies.ticketIndex : 0,
+		ticketName: parsedCookies.ticketName ? parsedCookies.ticketName : "",
+		dollarPrice: parsedCookies.dollarPrice ? parsedCookies.dollarPrice : "0",
+		phnxPrice: parsedCookies.phnxPrice ? parsedCookies.phnxPrice : "",
+		ticketAvailability: parsedCookies.ticketAvailability
+			? parsedCookies.ticketAvailability
+			: "unlimited",
+		noOfTickets: parsedCookies.noOfTickets ? parsedCookies.noOfTickets : "",
+		isCompleted: parsedCookies.isCompleted ? parsedCookies.isCompleted : false,
+		ticketCategories: [
+			{
+				ticketName:
+					parsedCookies.ticketCategories != null &&
+					parsedCookies.ticketCategories != undefined &&
+					parsedCookies.ticketCategories.length > 0
+						? parsedCookies.ticketCategories[0].ticketName
+						: "",
+				dollarPrice:
+					parsedCookies.ticketCategories != null &&
+					parsedCookies.ticketCategories != undefined &&
+					parsedCookies.ticketCategories.length > 0
+						? parsedCookies.ticketCategories[0].dollarPrice
+						: "0",
+				phnxPrice:
+					parsedCookies.ticketCategories != null &&
+					parsedCookies.ticketCategories != undefined &&
+					parsedCookies.ticketCategories.length > 0
+						? parsedCookies.ticketCategories[0].phnxPrice
+						: "",
+				ticketAvailability:
+					parsedCookies.ticketCategories != null &&
+					parsedCookies.ticketCategories != undefined &&
+					parsedCookies.ticketCategories.length > 0
+						? parsedCookies.ticketCategories[0].ticketAvailability
+						: "unlimited",
+				noOfTickets:
+					parsedCookies.ticketCategories != null &&
+					parsedCookies.ticketCategories != undefined &&
+					parsedCookies.ticketCategories.length > 0
+						? parsedCookies.ticketCategories[0].noOfTickets
+						: "",
+				isShown:
+					parsedCookies.ticketCategories != null &&
+					parsedCookies.ticketCategories != undefined &&
+					parsedCookies.ticketCategories.length > 0
+						? parsedCookies.ticketCategories[0].isShown
+						: false,
+			},
+		],
+		token: parsedCookies.token ? parsedCookies.token : false, // false means free
+		PhoenixDAO_market: parsedCookies.PhoenixDAO_market,
+		//4th_stepper
+		eventDescription: parsedCookies.eventDescription
+			? parsedCookies.eventDescription
+			: "",
+		termsAndConditions: parsedCookies.termsAndConditions
+			? parsedCookies.termsAndConditions
+			: false,
+	};
 	const [values, setValues] = useState(initialFormValues);
 	const [errors, setErrors] = useState({});
+	console.log("input values", values);
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(
@@ -328,14 +457,23 @@ export const useFormControls = () => {
 				: "This field is required.";
 
 		if ("dollarPrice" in fieldValues)
+		{
 			temp.dollarPrice = fieldValues.dollarPrice
 				? ""
 				: "This field is required.";
+				if(temp.dollarPrice == ""){
+					temp.phnxPrice = "";
+				}
+		}
 
-		if ("phnxPrice" in fieldValues)
+		if ("phnxPrice" in fieldValues){
 			temp.phnxPrice = fieldValues.phnxPrice
 				? ""
 				: "This field is required.";
+			if(temp.phnxPrice == ""){
+				temp.dollarPrice = "";
+			}
+		}
 
 		if ("noOfTickets" in fieldValues)
 			temp.noOfTickets = fieldValues.noOfTickets
@@ -701,6 +839,8 @@ export const useFormControls = () => {
 			let PHNX = dollarToPhnx(value);
 			ticketCategories[index]["dollarPrice"] = USD;
 			ticketCategories[index]["phnxPrice"] = PHNX;
+				validate({ ["phnxPrice"]: PHNX })
+					validate({ ["dollarPrice"]: USD });
 			setValues({
 				...values,
 				ticketCategories: [...ticketCategories],
@@ -708,10 +848,6 @@ export const useFormControls = () => {
 				phnxPrice: PHNX,
 				token: true,
 			});
-			validate({ ["dollarPrice"]: USD });
-			setTimeout(() => {
-				validate({ ["phnxPrice"]: PHNX });
-			}, 100);
 		} else if (name === "phnxPrice") {
 			if (value.length > 16) {
 				return;
@@ -720,6 +856,10 @@ export const useFormControls = () => {
 			let PHNX = value;
 			ticketCategories[index]["dollarPrice"] = USD;
 			ticketCategories[index]["phnxPrice"] = PHNX;
+				// console.log("dollar price: ",USD)
+				validate({ ["dollarPrice"]: USD })
+					// console.log("phnx price: ",PHNX)
+					validate({ ["phnxPrice"]: PHNX });
 			setValues({
 				...values,
 				ticketCategories: [...ticketCategories],
@@ -727,10 +867,6 @@ export const useFormControls = () => {
 				phnxPrice: PHNX,
 				token: true,
 			});
-			validate({ ["phnxPrice"]: PHNX });
-			setTimeout(() => {
-				validate({ ["dollarPrice"]: USD });
-			}, 100);
 		} else {
 			ticketCategories[index][name] = value;
 			setValues({
@@ -866,11 +1002,11 @@ export const useFormControls = () => {
 		if (eventTime === "onedayevent") {
 			let eventDateOneDay = new Date(eventDate);
 			let eventStartTimeOneday = new Date(eventStartTime);
-			let eventEndTimeOneday = new Date(eventEndTime);
+			let eventEndTimeOneday = eventEndTime==null?eventEndTime:new Date(eventEndTime);
 
-			console.log("eventDateOneDay", eventDateOneDay);
-			console.log("eventStartTimeOneday", eventStartTimeOneday);
-			console.log("eventEndTimeOneday", eventEndTimeOneday);
+			// console.log("eventDateOneDay", eventDateOneDay);
+			// console.log("eventStartTimeOneday", eventStartTimeOneday);
+			// console.log("eventEndTimeOneday", eventEndTimeOneday);
 
 			eventDateOneDay.setHours(
 				eventStartTimeOneday.getHours(),
