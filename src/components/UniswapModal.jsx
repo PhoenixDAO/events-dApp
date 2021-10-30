@@ -1,20 +1,34 @@
 import React, { Component } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
+import { withStyles } from "@material-ui/core/styles";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
-
+const useStyles = (theme) => ({
+	root: {
+		"& .MuiPaper-root":{
+		width: "62vh !important",
+		height:"100% !important",
+		}
+	},
+	
+});
 class UniswapModal extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			open: this.props.open,
 		};
+		console.log("this.props",props);
+
 	}
 
+	
 	render() {
+		const { classes } = this.props;
+
 		return (
 			<Dialog
 				open={this.props.open}
@@ -23,7 +37,7 @@ class UniswapModal extends Component {
 				onClose={this.props.handleClose}
 				aria-labelledby="alert-dialog-slide-title"
 				aria-describedby="alert-dialog-slide-description"
-				style={{ maxWidth: "100%" }}
+				className={classes.root}
 			>
                 <i
                   className="fa fa-times fa-1x"
@@ -36,8 +50,8 @@ class UniswapModal extends Component {
                 ></i>
 
 				<iframe
-					// src="https://app.uniswap.org/#/swap?outputCurrency=0xfe1b6ABc39E46cEc54d275efB4b29B33be176c2A"
-					src="https://quickswap.exchange/#/swap?inputCurrency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&outputCurrency=0x92c59f1cc9a322670cca29594e4d994d48bdfd36"
+					src={this.props.link}
+					// src="https://quickswap.exchange/#/swap?inputCurrency=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&outputCurrency=0x92c59f1cc9a322670cca29594e4d994d48bdfd36"
 					height="660px"
 					width="100%"
                     className="frame"
@@ -47,7 +61,6 @@ class UniswapModal extends Component {
 						display: "block",
 						maxWidth: "900px",
 						overflow:"auto",
-						marginTop:"-30px",
 					}}
 					id="myId"
 				/>
@@ -57,4 +70,4 @@ class UniswapModal extends Component {
 		);
 	}
 }
-export default UniswapModal;
+export default withStyles(useStyles)(UniswapModal);

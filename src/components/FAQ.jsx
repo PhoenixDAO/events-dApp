@@ -192,6 +192,7 @@ const FAQ = (props) => {
 
 				<AllQuestionsOnAccordianCards />
 			</Grid>
+			
 		</div>
 	);
 };
