@@ -77,8 +77,7 @@
 		"webpack-cli": "^4.2.0"
 	},
 	"scripts": {
-		"start": "npm install -g serve; serve -s build",
-     	"heroku-postbuild": "npm run build",
+		"start": "react-app-rewired start --config-overrides settings/start.js",
 		"build": "webpack --config settings/build.js --progress",
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d build/app"
