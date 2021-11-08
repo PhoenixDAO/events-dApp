@@ -1,5 +1,4 @@
 {
-	"engines" : { "node" : ">=14.18.1" },
 	"homepage": "https://janmoomoo.github.io/events-dapp/",
 	"name": "open-ticket",
 	"version": "1.0.0",
