@@ -15,7 +15,7 @@ jobs:
       - name: Set up nodejs 14 LTS
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '12'
 
       - name: Copy a file from s3
         uses: prewk/s3-cp-action@v2
@@ -49,8 +49,8 @@ jobs:
       - name: Run script
         run: ./changes.sh
 
-      - name: Add remote origin
-        run: git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/phoenixdao-events-dapp.git
-        
-      - name: Deploy backend to heroku
-        run: git push --force heroku `git subtree split --prefix server HEAD`:master  
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "phoenixdao-events-dapp" #Must be unique in Heroku
+          heroku_email: "arham.tahir@xord.com"
