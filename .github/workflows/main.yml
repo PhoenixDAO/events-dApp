@@ -53,7 +53,7 @@ jobs:
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "phoenixdao-events-dapp" #Must be unique in Heroku
-          heroku_email: "arham.tahir@xord.com"  
+          heroku_email: "arham.tahir@xord.com"
           
 #       - name: Deploy to S3
 #         uses: reggionick/s3-deploy@v3
