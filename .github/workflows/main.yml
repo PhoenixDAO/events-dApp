@@ -48,13 +48,19 @@ jobs:
         
       - name: Run script
         run: ./changes.sh
-        
-      - name: Deploy to S3
-        uses: reggionick/s3-deploy@v3
+
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
-          folder: build
-          bucket: 'event-dapp-dev.com'
-          bucket-region: 'ap-south-1'
-          delete-removed: true
-          no-cache: true
-          private: true
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "phoenixdao-events-dapp" #Must be unique in Heroku
+          heroku_email: "arham.tahir@xord.com"  
+          
+#       - name: Deploy to S3
+#         uses: reggionick/s3-deploy@v3
+#         with:
+#           folder: build
+#           bucket: 'event-dapp-dev.com'
+#           bucket-region: 'ap-south-1'
+#           delete-removed: true
+#           no-cache: true
+#           private: true
