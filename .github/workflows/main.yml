@@ -69,4 +69,5 @@ jobs:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
           projectId: phoenix-events-ad618
-        
+          channelId: live
+
