@@ -485,12 +485,70 @@ class EventPreviewPage extends Component {
 									<p className={classes.eventHeading}>
 										<ScheduleOutlined /> Time
 									</p>
-									<p className={classes.eventinfo}>
-										{" "}
-										{moment(
-											this.props.eventStartTime
-										).format("LT")}
-									</p>
+									<p
+												className={`${classes.eventinfo} ${classes.eventTimePara}`}
+											>
+												{" "}
+												{!this.props.eventStartTime
+													? `Time`
+													: !this.props.eventEndTime
+													? moment(
+															this.props
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format("LT")
+													: `${moment(
+															this.props
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format(
+																"LT"
+															)} - ${moment(
+															this.props
+																.eventEndTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format(
+																"LT"
+															)}`}{" "}
+												Local
+											</p>
+											<p
+												className={classes.localTime}
+												style={{ marginBottom: "0px" }}
+											>
+												(
+												{!this.props.eventStartTime
+													? `Time`
+													: !this.props.eventEndTime
+													? moment(
+															this.props
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.format("hh:mm A z")
+													: `${moment(
+															this.props
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.format(
+																"hh:mm A"
+															)} - ${moment(
+															this.props
+																.eventEndTime
+													  )
+															.utcOffset(0)
+															.format(
+																"hh:mm A z"
+															)}`}
+												)
+											</p>
 									<p className={classes.eventHeading}>
 										<LocationOnOutlined /> Location
 									</p>
