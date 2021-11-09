@@ -78,8 +78,13 @@
 	},
 	"scripts": {
 		"start": "react-app-rewired start --config-overrides settings/start.js",
+		"heroku-postbuild": "npm run build",
 		"build": "webpack --config settings/build.js --progress",
 		"predeploy": "npm run build",
 		"deploy": "gh-pages -d build/app"
-	}
+	},
+	"engines": {
+		"npm": "6.14.15",
+		"node": "14.18.1"
+	 }
 }
