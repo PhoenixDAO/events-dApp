@@ -73,6 +73,7 @@ font-family: "Aeonik";
 
 .acc-copy-img {
 	width: 100%;
+	cursor: pointer;
 }
 
 .acc-form-prt {

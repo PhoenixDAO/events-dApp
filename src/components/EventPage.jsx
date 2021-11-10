@@ -406,7 +406,7 @@ class EventPage extends Component {
 			eventExistInContract: false,
 			Icon:false,
 			UserFavoriteEvents: [],
-			allow: 0,
+			allow: null,
 			loadingApprove: false,
 			loadingPurchase: false,
 		};
@@ -616,6 +616,7 @@ class EventPage extends Component {
 					});
 					this.updateIPFS();
 					const networkId = await getNetworkId();
+					this.priceCalculation(0);
 					if (networkId) {
 						await updateEventViews({
 							eventId: graphEvents.data.data.events[0].eventId,
@@ -638,7 +639,7 @@ class EventPage extends Component {
 							);
 						}
 					}
-					this.priceCalculation(0);
+										
 				} else {
 					throw "event not found";
 				}

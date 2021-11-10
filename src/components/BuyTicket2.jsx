@@ -398,7 +398,7 @@ const ApprovalModal = (props) => {
 						style={{ marginTop: "10px", width: "100%" }}
 						className={classes.send}
 						onClick={props.giveApproval}
-						disabled={props.loadingApprove || props.allow != 0}
+						disabled={props.loadingApprove || props.allow != 0 || props.allow == null}
 					>
 						{props.loadingApprove ? (
 							<CircularProgress
@@ -417,7 +417,7 @@ const ApprovalModal = (props) => {
 						color="primary"
 						style={{ marginTop: "20px", width: "100%" }}
 						className={classes.send}
-						disabled={props.loadingPurchase || props.allow == 0}
+						disabled={props.loadingPurchase || props.allow == 0  || props.allow == null}
 						onClick={props.inquire}
 						// onClick={buyTicket}
 					>
