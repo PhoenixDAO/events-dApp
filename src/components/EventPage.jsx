@@ -406,7 +406,7 @@ class EventPage extends Component {
 			eventExistInContract: false,
 			Icon:false,
 			UserFavoriteEvents: [],
-			allow: 0,
+			allow: null,
 			loadingApprove: false,
 			loadingPurchase: false,
 		};

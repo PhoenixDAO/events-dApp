@@ -22,6 +22,7 @@
 	border-radius: 50%;
 	height: 90px;
 	width: 90px;
+	cursor: pointer;
 	margin: 0 auto;
 	display: flex;
 	align-items: center;
