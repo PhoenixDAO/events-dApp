@@ -221,7 +221,7 @@ export default function ShareModal({
 
 					<Grid lg={12} item className={classes.SocialMediaDiv}>
 						<SocialMedia
-							shareUrl={shareUrl}
+							shareUrl={URL}
 							disabled={false}
 							eventTitle={eventTitle}
 						/>
