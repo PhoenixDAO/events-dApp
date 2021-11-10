@@ -368,6 +368,16 @@ export const useFormControls = () => {
 				: "This field is required.";
 
 		if ("eventDate" in fieldValues) {
+			let eventStartTimeOneday = new Date(fieldValues.eventStartTime);
+			var today = new Date();
+						today.setHours(today.getHours() + 3);
+			if (eventStartTimeOneday <= today) {
+							temp.eventStartTime = "Event should be after 3 Hours.";
+							// console.log("name ==> eventStartTime")
+						}
+						else{
+							temp.eventStartTime = "";
+						}
 			temp.eventDate = fieldValues.eventDate
 				? ""
 				: "This field is required.";
@@ -393,6 +403,16 @@ export const useFormControls = () => {
 				: "Invalid Time Format";
 
 		if ("eventStartDate" in fieldValues) {
+			let eventStartTimeOneday = new Date(fieldValues.eventStartTime);
+			var today = new Date();
+						today.setHours(today.getHours() + 3);
+			if (eventStartTimeOneday <= today) {
+							temp.eventStartTime = "Event should be after 3 Hours.";
+							// console.log("name ==> eventStartTime")
+						}
+						else{
+							temp.eventStartTime = "";
+						}
 			temp.eventStartDate = fieldValues.eventStartDate
 				? ""
 				: "This field is required.";
@@ -661,6 +681,7 @@ export const useFormControls = () => {
 			...values,
 			[name]: value,
 		});
+		// console.log("name ==> ", name)
 		validate({ [name]: value });
 	};
 

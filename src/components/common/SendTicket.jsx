@@ -237,6 +237,7 @@ export default function sendTicket({
 									variant="outlined"
 									error={errorAddress || error}
 									helperText={
+										address==""?"Please Enter Wallet Address":
 										errorAddress
 											? "Invalid account address"
 											: error

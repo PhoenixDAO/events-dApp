@@ -321,6 +321,7 @@ class FindEvents extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain(filter) {
+		this.setState({search:""});
 		const graphURL = await GetGraphApi();
 
 		await axios({
@@ -483,7 +484,7 @@ class FindEvents extends Component {
 	};
 
 	findNearToYouEvents = async () => {
-		this.setState({ loading: true });
+		this.setState({ loading: true, search:"" });
 
 		const cityName = this.state.cityName;
 		if (cityName) {

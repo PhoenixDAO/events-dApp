@@ -3,6 +3,9 @@ import roundlogo from "../Images/roundlogo.svg";
 import transakSDK from "@transak/transak-sdk";
 import { GLOBAL_NETWORK_ID, transakApi } from "../../config/const";
 import { Link } from "react-router-dom";
+import UniswapModal from "../UniswapModal";
+import { setActiveLink } from "react-scroll/modules/mixins/scroller";
+
 const BuyPhoenixModal = (props) => {
 	const settings = {
 		apiKey: transakApi, // Your API Key
@@ -17,6 +20,8 @@ const BuyPhoenixModal = (props) => {
 		//  network: chainId,
 	};
 	const transak = new transakSDK(settings);
+	const [openUni, setOpenUniswap] = useState(false);
+	const [link, setLink] = useState("");
 
 	useEffect(() => {
 		transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, (orderData) => {
@@ -29,25 +34,45 @@ const BuyPhoenixModal = (props) => {
 		props.handleClose();
 		props.openTransak();
 	};
+	
+	const UniswaphandleClose = () => {
+		setOpenUniswap(false);
 
+		};
+	const openUniswap =  () =>{
+		setOpenUniswap(true);
+		props.handleClose();
+		setLink("https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x38a2fdc11f526ddd5a607c1f251c065f40fbf2f7");
+
+
+	}
+	const openquickswap =  () =>{
+		setOpenUniswap(true);
+		setLink("https://quickswap.exchange/#/swap?outputCurrency=0x92c59f1cc9a322670cca29594e4d994d48bdfd36");
+		props.handleClose();
+
+	}
 	const buyPhnxManager = [
 		{
 			img: "/images/transak.svg",
 			name: "Transak",
 			coming: false,
-			onclick: true,
+			transak: true,
 		},
 		{
 			img: "/images/QuickSwap.svg",
 			name: "Quickswap",
 			coming: true,
-			onclick: false,
+			onclick: true,
+			quickswap:true,
+			link:"https://quickswap.exchange/#/swap?outputCurrency=0x92c59f1cc9a322670cca29594e4d994d48bdfd36"
 		},
 		{
 			img: "/images/Uniswap.svg",
 			name: "Uniswap",
 			coming: true,
-			onclick: false,
+			uniswap: true,
+			onclick:true
 		},
 		{
 			img: "/images/coinbase.svg",
@@ -59,9 +84,9 @@ const BuyPhoenixModal = (props) => {
 		return (
 			<div
 				className="wallets-single"
-				onClick={data.onclick ? openTransak : null}
+				onClick={data.uniswap? openUniswap: data.quickswap? openquickswap: null}
 				style={data.onclick ? { cursor: "pointer" } : null}
-			>
+			>				
 				<div className="wallets-first">
 					<div className="wallets-img-hldr">
 						<img className="wallets-img" src={data.img} />
@@ -87,6 +112,11 @@ const BuyPhoenixModal = (props) => {
 	});
 	return (
 		<div className="">
+				<UniswapModal
+					open={openUni}
+					handleClose={UniswaphandleClose}
+					link={link}
+				/>
 			<div className="wallets-head">
 				<div>
 					<img

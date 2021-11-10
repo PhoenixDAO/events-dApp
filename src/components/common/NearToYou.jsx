@@ -48,6 +48,7 @@ const NearToYou = ({ getCityName }) => {
 		if (crd) {
 			let lat = crd.latitude;
 			let lng = crd.longitude;
+			// REACT_APP_HERE_API_KEY is required to get the location from user
 			let apikey = process.env.REACT_APP_HERE_API_KEY;
 			const get = await axios.get(
 				`https://places.ls.hereapi.com/places/v1/discover/search?at=${lat},${lng}&q=${lat},${lng}&apikey=${apikey}`

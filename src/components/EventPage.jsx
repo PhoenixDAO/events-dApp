@@ -212,6 +212,18 @@ const styles = (theme) => ({
 			color:"black",
 		}
 	},
+	buy: {
+		// marginLeft: "13px",
+		fontWeight: 700,
+		width: "100%",
+		height: "45px",
+		backgroundColor: "#413AE2",
+		// [theme.breakpoints.down("xs")]: {
+		// 	// marginLeft: "0px",
+		// 	// marginTop: "20px",
+		// 	width: "160px",
+		// },
+	},
 	imageDiv: {
 		height: "70vh",
 		paddingBottom:"5px",
@@ -264,14 +276,6 @@ const styles = (theme) => ({
 		width: "80%",
 		marginBottom: "80px",
 	},
-	row: {
-		marginTop: "40px",
-	},
-	eventDescriptionFont: {
-		"& .RichTextEditor__root___2QXK-": {
-			fontFamily: "sans-serif",
-		},
-	},
 	heading: {
 		borderBottom: "1px solid #E4E4E7",
 		fontWeight: "700",
@@ -279,6 +283,16 @@ const styles = (theme) => ({
 		paddingBottom: "10px",
 		marginBottom: "20px",
 	},
+	row: {
+		marginTop: "40px",
+		paddingBottom:"60px",
+	},
+	eventDescriptionFont: {
+		"& .RichTextEditor__root___2QXK-": {
+			fontFamily: "sans-serif",
+		},
+	},
+
 	avatar: {
 		display: "inline-block",
 		marginBottom: "10px",
@@ -309,6 +323,19 @@ const styles = (theme) => ({
 		fontWeight: "bolder",
 		color: "#6b6b6b",
 	},
+	transactionPagination:{
+		width:"100%",
+	},
+	TransactionImage:{
+		height:"40px",
+		width:"40px",
+		objectFit:"cover",
+		borderRadius:"50%",
+		"@media (max-width):500px":{
+			height:"30px",
+			width:"30px"
+		}
+	}	
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -1186,8 +1213,35 @@ class EventPage extends Component {
 		return locations;
 	};
 
-	onChangePage(pageTransactions) {
+	onChangePage = async (pageTransactions) => {
+		const networkId = await getNetworkId();
+		if (networkId) {
+		pageTransactions.map(async (user, Index)=>{
+			try{
+			let result = await getUser({address: user.address, networkId:networkId});
+			if(result){
+			user.ImageDetails = result.result.result.userHldr;
+			// user.avatarCustom = result.result.result.userHldr.avatarCustom;
+			// user.avatarNumber = result.result.result.userHldr.avatarNumber;
+			// user.avatarIPFSHash = result
+			if (result.result.result.userHldr.avatarCustom) {
+				await ipfs.get(result.result.result.userHldr.avatar).then((file) => {
+					let data = JSON.parse(file[0].content.toString());
+					user.avatarImage = data.image0;
+					// this.setState({ pageTransactions });
+				});
+			}
+			else{
+				user.avartarImage = "";
+				this.setState({ pageTransactions });
+			}
+			console.log("value: result")
+		}
+	}
+	catch(err){
 		this.setState({ pageTransactions });
+	}
+		})}
 	}
 
 	handleCloseSnackbar() {
@@ -1495,9 +1549,11 @@ class EventPage extends Component {
 								date={event_date}
 								eventStartDate={this.state.eventStartDate}
 								eventTime={this.state.eventTime}
+								eventStartTime = {this.state.eventStartTime}
 								eventDate={this.state.eventDate}
 								eventEndDate={this.state.eventEndDate}
 								phnx_price={this.state.phnx_price}
+								eventEndTime={this.state.eventEndTime}
 								dollar_price={this.state.dollar_price}
 								allowance={this.allowance}
 								allow={this.state.allow}
@@ -1578,28 +1634,28 @@ class EventPage extends Component {
 										alt="Event"
 									/> */}
 									<Typography
-											className={classes.FavoriteIcon}
-											component="span"
-											onClick={this.addTofavorite}
-										>
-											{this.state.Icon ? (
-												<Favorite
-													fontSize="small"
-													style={{
-														color: "#413AE2",
-														marginTop:"6px",
-													}}
-												/>
-											) : (
-												<FavoriteBorder
-													fontSize="small"
-													style={{
-														color: "#000000",
-														marginTop:"6px",
-													}}
-												/>
-											)}
-										</Typography>
+										className={classes.FavoriteIcon}
+										component="span"
+										onClick={this.addTofavorite}
+									>
+										{this.state.Icon ? (
+											<Favorite
+												fontSize="small"
+												style={{
+													color: "#413AE2",
+													marginTop: "6px",
+												}}
+											/>
+										) : (
+											<FavoriteBorder
+												fontSize="small"
+												style={{
+													color: "#000000",
+													marginTop: "6px",
+												}}
+											/>
+										)}
+									</Typography>
 									<div></div>
 								</Grid>
 								<Grid container>
@@ -1896,8 +1952,28 @@ class EventPage extends Component {
 											Organizer
 										</p>
 										<p className={classes.eventinfo}>
-											{(this.state.loaded)?<Link className={classes.organizerEventLink} to={`/upcomingevents/organizer/${(this.state.organizer)&&urlFormatter(this.state.organizer)}/${event_data.owner.substr(event_data.owner.length - 4)}`}>{this.state.organizer}</Link>:
-											<span>{this.state.organizer}</span>}
+											{this.state.loaded ? (
+												<Link
+													className={
+														classes.organizerEventLink
+													}
+													to={`/upcomingevents/organizer/${
+														this.state.organizer &&
+														urlFormatter(
+															this.state.organizer
+														)
+													}/${event_data.owner.substr(
+														event_data.owner
+															.length - 4
+													)}`}
+												>
+													{this.state.organizer}
+												</Link>
+											) : (
+												<span>
+													{this.state.organizer}
+												</span>
+											)}
 										</p>
 										<p className={classes.eventHeading}>
 											<ConfirmationNumberOutlined />
@@ -1913,52 +1989,113 @@ class EventPage extends Component {
 											}
 											/{max_seats}
 										</p>
+										<div style={{paddingTop:"20px"}}>
+											<Button
+												variant="contained"
+												color="primary"
+												style={{ marginBottom: "10px" }}
+												className={classes.buy}
+												onClick={() =>
+													this.allowBuy()
+														? this.handleClickOpen()
+														: null
+												}
+												disabled={
+													disabled ||
+													this.props.disabledStatus ||
+													this.state.disabledBuying
+												}
+											>
+												<ShoppingCartOutlined
+													style={{
+														marginRight: "10px",
+													}}
+												/>
+												{buttonText}
+											</Button>
+										</div>
 									</Grid>
 								</Grid>
-								<Grid container className={classes.row}>
+								<Grid container className={`${classes.heading} ${classes.row} `}>
 									<div className="new-transaction-wrapper">
 										<h2 className={classes.heading}>
 											Ticket Purchases
 										</h2>
 										{this.state.load && <Loading />}
+										{console.log(
+											"value: ",
+											this.state.pageTransactions
+										)}
 										<Grid container lg={12}>
 											{this.state.pageTransactions.map(
 												(sold, index) => (
-													<p
-														className="sold_text col-md-12"
-														key={index}
+													<Grid
+														xl={6}
+														lg={6}
+														md={6}
+														sm={12}
+														xs={12}
 													>
-														<a
-															href={
-																explorerWithAddress +
-																sold.address
+														<div style={{display:"flex"}}>
+														{sold.ImageDetails && ( 
+															<div style={{paddingTop:"10px"}}>
+																<img
+																src={
+																	sold
+																		.ImageDetails
+																		.avatarCustom
+																		?sold.avatarImage
+																		: this.imageData(
+																				sold
+																					.ImageDetails
+																					.avatarNumber
+																		  )
+																}
+															className={
+																classes.TransactionImage
 															}
-															target="blank"
+															/>
+															</div>
+														)}
+														<div>
+														<p
+															className="sold_text col-md-12"
+															key={index}
 														>
-															{sold.address.slice(
-																0,
-																10
-															) + "... "}
-														</a>{" "}
-														has{" "}
-														<a
-														// href={
-														// 	explorerWithTX +
-														// 	sold.transactionHash
-														// }
-														// target="blank"
-														>
-															bought
-														</a>{" "}
-														{" " + sold.count}{" "}
-														{sold.count > 1
-															? "tickets"
-															: "ticket"}{" "}
-														for this event.{" "}
-														{/* <strong>
+															<a
+																href={
+																	explorerWithAddress +
+																	sold.address
+																}
+																target="blank"
+															>
+																{sold.address.slice(
+																	0,
+																	10
+																) + "... "}
+															</a>{" "}
+															has{" "}
+															<a
+															// href={
+															// 	explorerWithTX +
+															// 	sold.transactionHash
+															// }
+															// target="blank"
+															>
+																bought
+															</a>{" "}
+															{" " + sold.count}{" "}
+															{sold.count > 1
+																? "tickets"
+																: "ticket"}{" "}
+															for this event.{" "}
+															{/* <strong>
 														{event_data[0]}
 													</strong> */}
-													</p>
+														</p>
+														</div>
+														</div>
+													</Grid>
 												)
 											)}
 										</Grid>
@@ -1969,12 +2106,14 @@ class EventPage extends Component {
 											</p>
 										)}
 									</div>
-									<div className="pagination">
+									<div
+										className={`pagination ${classes.transactionPagination}`}
+									>
 										<JwPagination
 											items={this.state.soldTicket}
 											onChangePage={this.onChangePage}
-											maxPages={5}
-											pageSize={5}
+											maxPages={20}
+											pageSize={6}
 											styles={customStyles}
 										/>
 									</div>
@@ -1988,9 +2127,7 @@ class EventPage extends Component {
 										xs={7}
 										className={classes.categoryGrid}
 									>
-										<ModeCommentOutlined />
-										{" "}
-										Topic
+										<ModeCommentOutlined /> Topic
 										<div className={classes.eventinfo}>
 											{topic}
 										</div>
@@ -2015,32 +2152,49 @@ class EventPage extends Component {
 										marginBottom: "10px",
 									}}
 								/> */}
-								{(this.state.loaded)?
-								<Link className={classes.organizerEventLink} to={`/upcomingevents/organizer/${(this.state.organizer)&&urlFormatter(this.state.organizer)}/${event_data.owner.substr(event_data.owner.length - 4)}`}>
-								{this.renderImage()}
-								<h3 style={{ fontWeight: "bold" }}>
-									{this.state.organizer}
-								</h3>
-								<Grid className={classes.organizerDescription}>
-									{this.state.organizerDetails}
-								</Grid>
-								{/* <CheckUser
+								{this.state.loaded ? (
+									<Link
+										className={classes.organizerEventLink}
+										to={`/upcomingevents/organizer/${
+											this.state.organizer &&
+											urlFormatter(this.state.organizer)
+										}/${event_data.owner.substr(
+											event_data.owner.length - 4
+										)}`}
+									>
+										{this.renderImage()}
+										<h3 style={{ fontWeight: "bold" }}>
+											{this.state.organizer}
+										</h3>
+										<Grid
+											className={
+												classes.organizerDescription
+											}
+										>
+											{this.state.organizerDetails}
+										</Grid>
+										{/* <CheckUser
 									blockChainEvent={this.state.blockChainEvent}
 									disabledStatus={disabled}
 									event_id={this.props.match.params.id}
 									history={this.props.history}
 								/> */}
-								</Link>:
-								<span>
-								{this.renderImage()}
-								<h3 style={{ fontWeight: "bold" }}>
-									{this.state.organizer}
-								</h3>
-								<Grid className={classes.organizerDescription}>
-									{this.state.organizerDetails}
-								</Grid>
-								</span>
-								}
+									</Link>
+								) : (
+									<span>
+										{this.renderImage()}
+										<h3 style={{ fontWeight: "bold" }}>
+											{this.state.organizer}
+										</h3>
+										<Grid
+											className={
+												classes.organizerDescription
+											}
+										>
+											{this.state.organizerDetails}
+										</Grid>
+									</span>
+								)}
 							</Grid>
 
 							{/* <div className="event-social-share-btns-div">

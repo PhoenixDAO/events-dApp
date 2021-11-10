@@ -32,6 +32,15 @@ const useStyles = makeStyles((theme) => ({
 	bannerImage: {
 		paddingInline: "50px",
 	},
+	buyTicketModal:{
+		"& .MuiDialog-paper":{
+			boxShadow: "0px 10px 20px 10px rgba(0, 0, 0, 0.1)",
+			borderRadius:"20px",
+			"@media (min-width:500px)":{
+				padding:"20px",
+			}
+		},
+	},
 	header: {
 		justifyContent: "center",
 		alignItems: "center",
@@ -70,7 +79,12 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: 700,
 		width: "100%",
 		height: "45px",
+		borderRadius:"8px",
 		backgroundColor: "#413AE2",
+		fontSize: "0.875rem",
+		"@media (max-width:400px)":{
+			fontSize:"0.635rem",
+		},
 		[theme.breakpoints.down("xs")]: {
 			marginLeft: "0px",
 			marginTop: "20px",
@@ -184,6 +198,14 @@ const useStyles = makeStyles((theme) => ({
 	contentOverflow: {
 		overflow: "visible",
 	},
+	lineSpacing:{
+		paddingTop:"15px"
+	},
+	subHeading:{
+		fontWeight:"500",
+		fontSize:"15px",
+		color:"#73727D"
+	}
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -219,7 +241,9 @@ const ApprovalModal = (props) => {
 			onClose={props.handleClose}
 			aria-labelledby="alert-dialog-slide-title"
 			aria-describedby="alert-dialog-slide-description"
+			className={classes.buyTicketModal}
 		>
+			<div >
 			<DialogTitle
 				id="customized-dialog-title"
 				className={classes.header}
@@ -228,14 +252,21 @@ const ApprovalModal = (props) => {
 				<span style={{ fontSize: "20px" }}>PhoenixDAO</span>
 				<Typography
 					gutterBottom
-					className={classes.eventTitle}
+					className={`${classes.eventTitle} ${classes.lineSpacing}`}
 					style={{
 						color: "#73727D",
-						fontWeight: "500",
+						fontWeight: "700",
 						textAlign: "center",
-						paddingInline: "20px",
+						lineHeight: "20px",
+						color:"#413AE2",
+						fontSize:"32px"
 					}}
-				></Typography>
+				>
+					Buy Ticket
+				</Typography>
+				<Typography className={`${classes.lineSpacing} ${classes.subHeading}`}>
+					You're about to purchase this ticket
+				</Typography>
 			</DialogTitle>
 			<DialogContent className={classes.contentOverflow}>
 				<div className={classes.eventHolder}>
@@ -281,9 +312,34 @@ const ApprovalModal = (props) => {
                 ${moment(props.eventEndDate).format("Do MMM, YYYY")}
                 `}
 									,{" "}
-									{moment(props.time, "hh:mm A", false)
-										.utcOffset(0)
-										.format("hh:mma z")}
+									{!props.eventStartTime
+													? `Time`
+													: !props.eventEndTime
+													? moment(
+															props
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format("LT")
+													: `${moment(
+															props
+																.eventStartTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format(
+																"LT"
+															)} - ${moment(
+															props
+																.eventEndTime
+													  )
+															.utcOffset(0)
+															.local()
+															.format(
+																"LT"
+															)}`}{" "}
+												Local
 								</Typography>
 							</div>
 						</Grid>
@@ -329,7 +385,7 @@ const ApprovalModal = (props) => {
 				<Grid
 					item
 					style={{
-						paddingBottom: "60px",
+						// paddingBottom: "60px",
 						paddingLeft: "8px",
 						paddingRight: "8px",
 						width: "100%",
@@ -384,6 +440,7 @@ const ApprovalModal = (props) => {
 					</Button>
 				</Grid>
 			</DialogActions>
+			</div>
 		</Dialog>
 	);
 };

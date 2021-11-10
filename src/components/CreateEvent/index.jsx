@@ -132,13 +132,13 @@ class CreateEvent extends Component {
 		});
 	}
 
-	async getEventURL() {
+	async getEventURL(eventName) {
 		let eventCount = await this.props.eventsContract.methods
 			.getEventsCount()
 			.call();
 		eventCount = Number(eventCount) + 1;
 		var base_url = window.location.origin;
-		const shareUrl = `${base_url}/event/${eventCount}`;
+		const shareUrl = `${base_url}/event/${eventName}/${eventCount}`;
 		this.setState({ shareUrl: shareUrl });
 	}
 
@@ -300,7 +300,7 @@ class CreateEvent extends Component {
 			});
 
 			this.onFlamingStepsChange();
-			await this.getEventURL();
+			await this.getEventURL(eventName);
 
 			let infura;
 			let txreceipt;

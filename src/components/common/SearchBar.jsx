@@ -43,6 +43,7 @@ const SearchBar = (props) => {
 				props.connect && classes.textFieldMargin
 			)}
 			id="input-with-icon-textfield"
+			value={props.search}
 			variant="outlined"
 			placeholder="Search for events"
 			size="medium"
