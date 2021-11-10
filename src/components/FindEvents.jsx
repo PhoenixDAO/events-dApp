@@ -421,7 +421,7 @@ class FindEvents extends Component {
 	//Search Active Events By Name
 	updateSearch = (value) => {
 		let filteredEvents = this.state.event_copy;
-		this.setState({ value }, () => {
+		this.setState({ value, search:value }, () => {
 			try {
 				if (this.state.value !== "") {
 					filteredEvents = filteredEvents.filter((event) => {
