@@ -39,7 +39,9 @@ import {
 	API_URL,
 	ADD_TO_FAVOURITES,
 	REMOVE_FROM_FAVOURITES,
-	GET_USER_DETAIL
+	GET_USER_DETAIL,
+	etherscanMainnetAddress,
+	etherscanRinkbyAddress
 } from "../config/const";
 import { toast } from "react-toastify";
 // import ApprovalModal from "./approvalModal";
@@ -121,8 +123,8 @@ const styles = (theme) => ({
 		width: "32px",
 		height: "32px",
 		position:"absolute",
-		right:"0px",
-		bottom:"4px",
+		right:"4px",
+		bottom:"7px",
 		"&:focus": {
 			outline: "none",
 		},
@@ -393,6 +395,7 @@ class EventPage extends Component {
 			open3: false,
 			open3Message: "",
 			avatarCustom: "",
+			networkId:null,
 			avatarId: 1,
 			avatar: 0,
 			blockChainEvent: {},
@@ -409,6 +412,7 @@ class EventPage extends Component {
 			allow: null,
 			loadingApprove: false,
 			loadingPurchase: false,
+			boughtTicket:0,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -543,7 +547,6 @@ class EventPage extends Component {
 				.events(this.props.match.params.id)
 				.call()
 				.then((data) => {
-					console.log("events received", data);
 					if (data.name) {
 						this.setState({
 							eventExistInContract: true,
@@ -616,6 +619,7 @@ class EventPage extends Component {
 					});
 					this.updateIPFS();
 					const networkId = await getNetworkId();
+					this.setState({networkId:networkId});
 					this.priceCalculation(0);
 					if (networkId) {
 						await updateEventViews({
@@ -1056,6 +1060,7 @@ class EventPage extends Component {
 				await this.allowance();
 				this.setState({
 					loadingApprove: false,
+					boughtTicket:this.state.boughtTicket+1
 				});
 			})
 			.on("error", (error) => {
@@ -1229,14 +1234,13 @@ class EventPage extends Component {
 				await ipfs.get(result.result.result.userHldr.avatar).then((file) => {
 					let data = JSON.parse(file[0].content.toString());
 					user.avatarImage = data.image0;
-					// this.setState({ pageTransactions });
 				});
+				this.setState({ pageTransactions });
 			}
 			else{
 				user.avartarImage = "";
 				this.setState({ pageTransactions });
 			}
-			console.log("value: result")
 		}
 	}
 	catch(err){
@@ -1543,6 +1547,7 @@ class EventPage extends Component {
 							/>
 							<ApprovalModal
 								open={this.state.open}
+								buttonText={buttonText}
 								handleClose={this.handleClose}
 								giveApproval={this.giveApproval}
 								image={image}
@@ -1591,7 +1596,7 @@ class EventPage extends Component {
 								disabled={
 									disabled ||
 									this.props.disabledStatus ||
-									this.state.disabledBuying
+									this.state.disabledBuying || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
 								}
 								title={event_data.name}
 								buttonText={buttonText}
@@ -1982,10 +1987,10 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{
-												event_data.catTktQuantitySold[
+												(parseInt(event_data.catTktQuantitySold[
 													this.state
 														.selectedCategoryIndex
-												]
+												]) +this.state.boughtTicket).toString()
 												// event_data.tktTotalQuantitySold
 											}
 											/{max_seats}
@@ -2005,6 +2010,7 @@ class EventPage extends Component {
 													disabled ||
 													this.props.disabledStatus ||
 													this.state.disabledBuying
+													|| (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
 												}
 											>
 												<ShoppingCartOutlined
@@ -2023,10 +2029,6 @@ class EventPage extends Component {
 											Ticket Purchases
 										</h2>
 										{this.state.load && <Loading />}
-										{console.log(
-											"value: ",
-											this.state.pageTransactions
-										)}
 										<Grid container lg={12}>
 											{this.state.pageTransactions.map(
 												(sold, index) => (
@@ -2039,7 +2041,7 @@ class EventPage extends Component {
 													>
 														<div style={{display:"flex"}}>
 														{sold.ImageDetails && ( 
-															<div style={{paddingTop:"10px"}}>
+															<div style={{paddingTop:"12px"}}>
 																<img
 																src={
 																	sold
@@ -2065,7 +2067,7 @@ class EventPage extends Component {
 														>
 															<a
 																href={
-																	explorerWithAddress +
+																	this.state.networkId == 137? explorerWithAddress:this.state.networkId == 1?etherscanMainnetAddress:etherscanRinkbyAddress +
 																	sold.address
 																}
 																target="blank"

@@ -366,6 +366,7 @@ class CreateEvent extends Component {
 							if (receipt) {
 								toast(
 									<Notify
+									networkId = {network}
 										text={
 											"Transaction successful!\nYou can check event now."
 										}

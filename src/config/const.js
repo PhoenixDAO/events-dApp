@@ -83,6 +83,11 @@ export const GET_MESSAGE = "user/getMessage";
 export const LOGIN_METAMASK = "user/loginUserWithMetamask";
 export const TWEET = "user/tweet";
 export const explorerWithTX = "https://explorer-mainnet.maticvigil.com/tx/";
+export const etherscanRinkbyTX = "https://rinkeby.etherscan.io/tx/";
+export const etherscanMainnetTX = "https://etherscan.io/tx/";
+export const etherscanRinkbyAddress = "https://rinkeby.etherscan.io/address/";
+export const etherscanMainnetAddress = "https://etherscan.io/address/";
+
 export const explorerWithAddress =
 	"https://explorer-mainnet.maticvigil.com/address/";
 // export const explorerWithTX = "https://rinkeby.etherscan.io/tx/";

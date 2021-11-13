@@ -62,7 +62,7 @@ const BuyPhoenixModal = (props) => {
 		{
 			img: "/images/QuickSwap.svg",
 			name: "Quickswap",
-			coming: true,
+			coming: false,
 			onclick: true,
 			quickswap:true,
 			link:"https://quickswap.exchange/#/swap?outputCurrency=0x92c59f1cc9a322670cca29594e4d994d48bdfd36"
@@ -70,14 +70,14 @@ const BuyPhoenixModal = (props) => {
 		{
 			img: "/images/Uniswap.svg",
 			name: "Uniswap",
-			coming: true,
+			coming: false,
 			uniswap: true,
 			onclick:true
 		},
 		{
 			img: "/images/coinbase.svg",
 			name: "Coinbase Wallet",
-			coming: true,
+			coming: false,
 			onclick: false,
 		},
 	].map((data) => {

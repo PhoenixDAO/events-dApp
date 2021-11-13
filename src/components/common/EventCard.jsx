@@ -264,6 +264,7 @@ const EventCard = (props, context) => {
 	const [Icon, setIcon] = useState(false);
 	const [open, setOpen] = useState(false);
 	const [open2, setOpen2] = useState(false);
+	const [sendAddress, setSendAddress] = useState("");
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState("");
 	// changeIcon(favoriteEvent);
 	const handleClickOpen = (e) => {
@@ -271,13 +272,16 @@ const EventCard = (props, context) => {
 		e.preventDefault();
 	};
 	const handleClose = () => {
+		setSendAddress("");
 		setOpen(false);
 	};
 	const handleClickOpen2 = (e) => {
+		setSendAddress("");
 		setOpen2(true);
 		e.preventDefault();
 	};
 	const handleClose2 = () => {
+		setSendAddress("");
 		setOpen2(false);
 	};
 
@@ -372,6 +376,8 @@ const EventCard = (props, context) => {
 				sendTicket2={sendTicket2}
 				eventId={eventId}
 				open={open2}
+				sendAddress={sendAddress}
+				setSendAddress = {setSendAddress}
 				handleClose={handleClose2}
 				eventTitle={event_data.name}
 			/>
