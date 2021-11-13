@@ -1238,7 +1238,6 @@ class EventPage extends Component {
 				user.avartarImage = "";
 				this.setState({ pageTransactions });
 			}
-			console.log("value: result")
 		}
 	}
 	catch(err){
@@ -2026,10 +2025,6 @@ class EventPage extends Component {
 											Ticket Purchases
 										</h2>
 										{this.state.load && <Loading />}
-										{console.log(
-											"value: ",
-											this.state.pageTransactions
-										)}
 										<Grid container lg={12}>
 											{this.state.pageTransactions.map(
 												(sold, index) => (

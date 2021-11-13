@@ -55,19 +55,19 @@ const Wallet = () => {
 		{
 			img: "/images/ledgerwallet.svg",
 			name: "Ledger",
-			coming: false,
+			coming: true,
 			onclick: false,
 		},
 		{
 			img: "/images/connectwallet.svg",
 			name: "Wallet Connect",
-			coming: false,
+			coming: true,
 			onclick: false,
 		},
 		{
 			img: "/images/coinbasewallet.svg",
 			name: "Coinbase Wallet",
-			coming: false,
+			coming: true,
 			onclick: false,
 		},
 	].map((data) => {

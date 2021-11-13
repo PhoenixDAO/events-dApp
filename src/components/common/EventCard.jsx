@@ -277,7 +277,6 @@ const EventCard = (props, context) => {
 	};
 	const handleClickOpen2 = (e) => {
 		setSendAddress("");
-		console.log("Send Address: ",sendAddress)
 		setOpen2(true);
 		e.preventDefault();
 	};

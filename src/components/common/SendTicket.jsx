@@ -185,11 +185,9 @@ export default function sendTicket({
 			// setAddress("");
 			handleClose();
 		}
-		console.log("Send Address: ",errorAddress)
 	};
 	return (
 		<div>
-			{console.log("Send Address: ",sendAddress)}
 			{/* {console.log("Send Address: Pure",address)} */}
 			<Dialog
 				onClose={handleClose}
