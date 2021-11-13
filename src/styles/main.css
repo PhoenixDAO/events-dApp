@@ -13,7 +13,11 @@
 	font-family: "AeonikReg";
 	src: url("../custom-font/Aeonik/Aeonik-Regular.otf");
 }
-
+@media screen and (min-width: 1000px){
+	iframe#myId {
+		width: 100% !important;
+	}
+}
 /* @font-face {
 	font-family: "Aeonik Air";
 	src: url("../fonts/Aeonik/Aeonik-AirItalic.woff2") format("woff2"),

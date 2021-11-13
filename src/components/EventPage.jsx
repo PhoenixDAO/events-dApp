@@ -39,7 +39,9 @@ import {
 	API_URL,
 	ADD_TO_FAVOURITES,
 	REMOVE_FROM_FAVOURITES,
-	GET_USER_DETAIL
+	GET_USER_DETAIL,
+	etherscanMainnetAddress,
+	etherscanRinkbyAddress
 } from "../config/const";
 import { toast } from "react-toastify";
 // import ApprovalModal from "./approvalModal";
@@ -121,8 +123,8 @@ const styles = (theme) => ({
 		width: "32px",
 		height: "32px",
 		position:"absolute",
-		right:"0px",
-		bottom:"4px",
+		right:"4px",
+		bottom:"7px",
 		"&:focus": {
 			outline: "none",
 		},
@@ -393,6 +395,7 @@ class EventPage extends Component {
 			open3: false,
 			open3Message: "",
 			avatarCustom: "",
+			networkId:null,
 			avatarId: 1,
 			avatar: 0,
 			blockChainEvent: {},
@@ -544,7 +547,6 @@ class EventPage extends Component {
 				.events(this.props.match.params.id)
 				.call()
 				.then((data) => {
-					console.log("events received", data);
 					if (data.name) {
 						this.setState({
 							eventExistInContract: true,
@@ -617,6 +619,7 @@ class EventPage extends Component {
 					});
 					this.updateIPFS();
 					const networkId = await getNetworkId();
+					this.setState({networkId:networkId});
 					this.priceCalculation(0);
 					if (networkId) {
 						await updateEventViews({
@@ -1231,8 +1234,8 @@ class EventPage extends Component {
 				await ipfs.get(result.result.result.userHldr.avatar).then((file) => {
 					let data = JSON.parse(file[0].content.toString());
 					user.avatarImage = data.image0;
-					// this.setState({ pageTransactions });
 				});
+				this.setState({ pageTransactions });
 			}
 			else{
 				user.avartarImage = "";
@@ -1593,7 +1596,7 @@ class EventPage extends Component {
 								disabled={
 									disabled ||
 									this.props.disabledStatus ||
-									this.state.disabledBuying
+									this.state.disabledBuying || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
 								}
 								title={event_data.name}
 								buttonText={buttonText}
@@ -2007,6 +2010,7 @@ class EventPage extends Component {
 													disabled ||
 													this.props.disabledStatus ||
 													this.state.disabledBuying
+													|| (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
 												}
 											>
 												<ShoppingCartOutlined
@@ -2063,7 +2067,7 @@ class EventPage extends Component {
 														>
 															<a
 																href={
-																	explorerWithAddress +
+																	this.state.networkId == 137? explorerWithAddress:this.state.networkId == 1?etherscanMainnetAddress:etherscanRinkbyAddress +
 																	sold.address
 																}
 																target="blank"
