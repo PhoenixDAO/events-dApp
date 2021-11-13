@@ -434,7 +434,7 @@ const ApprovalModal = (props) => {
 								<ShoppingCartOutlined
 									style={{ marginRight: "10px" }}
 								/>
-								Purchase ticket
+								{props.buttonText && props.buttonText==" Get Ticket"?props.buttonText:"Purchase Ticket"}
 							</div>
 						)}
 					</Button>

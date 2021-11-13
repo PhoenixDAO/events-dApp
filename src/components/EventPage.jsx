@@ -409,6 +409,7 @@ class EventPage extends Component {
 			allow: null,
 			loadingApprove: false,
 			loadingPurchase: false,
+			boughtTicket:0,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -1056,6 +1057,7 @@ class EventPage extends Component {
 				await this.allowance();
 				this.setState({
 					loadingApprove: false,
+					boughtTicket:this.state.boughtTicket+1
 				});
 			})
 			.on("error", (error) => {
@@ -1543,6 +1545,7 @@ class EventPage extends Component {
 							/>
 							<ApprovalModal
 								open={this.state.open}
+								buttonText={buttonText}
 								handleClose={this.handleClose}
 								giveApproval={this.giveApproval}
 								image={image}
@@ -1982,10 +1985,10 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{
-												event_data.catTktQuantitySold[
+												(parseInt(event_data.catTktQuantitySold[
 													this.state
 														.selectedCategoryIndex
-												]
+												]) +this.state.boughtTicket).toString()
 												// event_data.tktTotalQuantitySold
 											}
 											/{max_seats}
@@ -2039,7 +2042,7 @@ class EventPage extends Component {
 													>
 														<div style={{display:"flex"}}>
 														{sold.ImageDetails && ( 
-															<div style={{paddingTop:"10px"}}>
+															<div style={{paddingTop:"12px"}}>
 																<img
 																src={
 																	sold

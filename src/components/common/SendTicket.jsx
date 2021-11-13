@@ -159,30 +159,38 @@ const DialogActions = withStyles((theme) => ({
 export default function sendTicket({
 	handleClose,
 	open,
+	sendAddress,
+	setSendAddress,
 	eventTitle,
 	sendTicket2,
 	eventId,
 }) {
-	const [address, setAddress] = useState("");
+	// const [address, setAddress] = useState(sendAddress);
 	const classes = useStyles();
 	const { handleSubmit, control, register } = useForm();
 	const [errorAddress, setErrorAddress] = useState(false);
 
 	const accountChange = (event) => {
-		setAddress(event.target.value);
+		// setAddress(event.target.value);
+		setSendAddress(event.target.value);
 	};
 	const send = () => {
-		const isaddress = Web3.utils.isAddress(address);
+		const isaddress = Web3.utils.isAddress(sendAddress);
 		if (!isaddress) {
 			setErrorAddress(true);
 		}
 		else {
-			sendTicket2(address, eventId);
+			setErrorAddress(false);
+			sendTicket2(sendAddress, eventId);
+			// setAddress("");
 			handleClose();
 		}
+		console.log("Send Address: ",errorAddress)
 	};
 	return (
 		<div>
+			{console.log("Send Address: ",sendAddress)}
+			{/* {console.log("Send Address: Pure",address)} */}
 			<Dialog
 				onClose={handleClose}
 				aria-labelledby="customized-dialog-title"
@@ -233,16 +241,16 @@ export default function sendTicket({
 								<TextField
 									id="outlined-helperText"
 									label=""
-									value={address}
+									value={sendAddress}
 									variant="outlined"
-									error={errorAddress || error}
+									error={(!Web3.utils.isAddress(sendAddress)) && sendAddress.length>0}
 									helperText={
-										address==""?"Please Enter Wallet Address":
-										errorAddress
+										sendAddress==""?"Please Enter Wallet Address":
+										!Web3.utils.isAddress(sendAddress)
 											? "Invalid account address"
 											: error
 											? error.message
-											: null
+											: ""
 									}
 									onChange={(e) => {
 										onChange(e);
@@ -271,6 +279,7 @@ export default function sendTicket({
 						style={{ marginRight: "10px" }}
 						className={classes.send}
 						onClick={send}
+						disabled={!Web3.utils.isAddress(sendAddress)}
 					>
 						<Send
 							style={{ marginRight: "7px", fontSize: "19px" }}
