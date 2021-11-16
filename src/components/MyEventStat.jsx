@@ -553,7 +553,7 @@ this.props.toggleDisabling();
 							}
 						);
 						this.setState({ deleted: true });
-						this.props.history.push("/upcomingevents/1");
+						this.props.history.push("/allevents/1");
 					}
 				}
 			})

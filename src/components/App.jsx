@@ -992,7 +992,7 @@ class App extends Component {
 						/>
 						<Route
 							exact
-							path="/upcomingevents/:page"
+							path="/allevents/:page"
 							render={(props) => (
 								<FindEvents
 									{...props}
@@ -1156,7 +1156,7 @@ class App extends Component {
 		// 			/>
 		// 			<Route
 		// 				exact
-		// 				path="/upcomingevents/:page"
+		// 				path="/allevents/:page"
 		// 				render={(props) => (
 		// 					<FindEvents
 		// 						{...props}
@@ -1262,7 +1262,7 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/upcomingevents/organizer/:orgName/:ownerId"
+						path="/allevents/organizer/:orgName/:ownerId"
 						render={(props) => (
 							<FindEvents
 								{...props}
@@ -1276,7 +1276,7 @@ class App extends Component {
 					/>
 					<Route
 						exact
-						path="/upcomingevents/:page"
+						path="/allevents/:page"
 						render={(props) => (
 							<FindEvents
 								{...props}
@@ -1695,7 +1695,7 @@ class App extends Component {
 
 							<Route
 								exact
-								path="/upcomingevents/:page"
+								path="/allevents/:page"
 								render={(props) => <TravallaBannerFooter />}
 							/>
 

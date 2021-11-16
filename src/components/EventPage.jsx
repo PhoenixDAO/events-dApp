@@ -1518,7 +1518,7 @@ class EventPage extends Component {
 					<EmptyState
 						text="The event is being processed and will be available with in 10-15 minutes"
 						btnText="Go to Dashboard"
-						url="/upcomingevents/1"
+						url="/allevents/1"
 					/>
 				);
 			} else if (
@@ -1536,7 +1536,7 @@ class EventPage extends Component {
 						<EmptyState
 							text={`Event doesn't exist... 😔`}
 							btnText="Go to Dashboard"
-							url="/upcomingevents/1"
+							url="/allevents/1"
 						/>
 					);
 				}
@@ -1553,7 +1553,7 @@ class EventPage extends Component {
 							MetaMask wallet to ensure you’re on the ${(this.state.alternateEventPresent==1 ? "Ethereum":"")} ${this.state.alternateEventPresent==137 ? "Matic":""} ${this.state.alternateEventPresent==4 ? "Rinkby":""} Network.
 							Both Matic and Ethereum events are currently supported.`}
 							btnText="Go to Dashboard"
-							url="/upcomingevents/1"
+							url="/allevents/1"
 						/>
 					);
 				}
@@ -2103,7 +2103,7 @@ class EventPage extends Component {
 													className={
 														classes.organizerEventLink
 													}
-													to={`/upcomingevents/organizer/${
+													to={`/allevents/organizer/${
 														this.state.organizer &&
 														urlFormatter(
 															this.state.organizer
@@ -2298,7 +2298,7 @@ class EventPage extends Component {
 								{this.state.loaded ? (
 									<Link
 										className={classes.organizerEventLink}
-										to={`/upcomingevents/organizer/${
+										to={`/allevents/organizer/${
 											this.state.organizer &&
 											urlFormatter(this.state.organizer)
 										}/${event_data.owner.substr(
@@ -2561,7 +2561,7 @@ class EventPage extends Component {
 								: `Event doesn't exist... 😔\n Loading Events on other networks`
 							: `Event doesn't exist... 😔`}
 						btnText="Go to Dashboard"
-						url="/upcomingevents/1"
+						url="/allevents/1"
 					/>
 				);
 			}

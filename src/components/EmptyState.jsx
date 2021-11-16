@@ -49,7 +49,7 @@ const EmptyState = props => {
     const classes = useStyles();
     // const [text, setText] = useState("This is text")
     // const [btnText, setBtnText] = useState("Go to btn")
-    // const [url, setUrl] = useState("/upcomingevents/1");
+    // const [url, setUrl] = useState("/allevents/1");
 
 	const { text, btnText, url } = props;
 	// return (
