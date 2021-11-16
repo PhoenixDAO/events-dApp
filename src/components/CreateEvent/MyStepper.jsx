@@ -1726,7 +1726,7 @@ const MyStepper = ({
 										color: "#413AE2",
 									}}
 								>
-									Hurray!, Event Published
+									Hurray! Event Published
 								</p>
 								<p>
 									Notice: Your event will be displayed in

@@ -652,8 +652,15 @@ export const useFormControls = () => {
 				}
 			} else {
 				// multiple ticket type event
-				const isValid = ticketCategories[0].isShown;
-				return isValid;
+				if(ticketCategories.length == 1){
+					const isValid = ticketCategories[0].isShown;
+					return isValid;
+				}
+				else{
+					const isValid = ticketCategories.map((ticketCategory)=>{
+						return ticketCategory.isShown})
+					return new Set(isValid).size ==1;
+				}
 			}
 		} else if (activeStep === 3) {
 			const isValid =

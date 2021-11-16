@@ -711,7 +711,9 @@ const EventCard = (props, context) => {
 										className={classes.text}
 									>
 										PHNX Revenue:{" "}
-										{pricingFormatter(
+										{Web3.utils.fromWei(
+												event_data.eventRevenueInPhnx
+											)=="0"?"0 PHNX":pricingFormatter(
 											Web3.utils.fromWei(
 												event_data.eventRevenueInPhnx
 											),
@@ -728,7 +730,9 @@ const EventCard = (props, context) => {
 										style={{ marginBottom: "20px" }}
 									>
 										Dollar Revenue:{" "}
-										{pricingFormatter(
+										{Web3.utils.fromWei(
+												event_data.eventRevenueInDollar.toString()
+											)=="0"?"$0":pricingFormatter(
 											Web3.utils.fromWei(
 												event_data.eventRevenueInDollar.toString()
 											),
