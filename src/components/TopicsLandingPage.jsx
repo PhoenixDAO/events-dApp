@@ -242,7 +242,7 @@ class TopicsLandingPage extends Component {
 		// 			links.push(
 		// 				<li className={"page-item " + active} key={i}>
 		// 					<Link
-		// 						to={"/upcomingevents/" + i}
+		// 						to={"/allevents/" + i}
 		// 						className="page-link"
 		// 					>
 		// 						{i}

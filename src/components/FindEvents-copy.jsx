@@ -367,7 +367,7 @@ class FindEventsTest extends Component {
 				Events_Blockchain: filteredEvents,
 				// active_length: filteredEvents.length,
 			});
-			this.props.history.push("/upcomingevents/" + 1);
+			this.props.history.push("/allevents/" + 1);
 		});
 	};
 
@@ -815,7 +815,7 @@ class FindEventsTest extends Component {
 						links.push(
 							<li className={"page-item " + active} key={i}>
 								<Link
-									to={"/upcomingevents/" + i}
+									to={"/allevents/" + i}
 									onClick={() =>
 										this.setState({
 											prevPath: currentPage,
@@ -841,7 +841,7 @@ class FindEventsTest extends Component {
 						links.push(
 							<li className={"page-item " + active} key={i}>
 								<Link
-									to={"/upcomingevents/" + i}
+									to={"/allevents/" + i}
 									onClick={() =>
 										this.setState({
 											prevPath: currentPage,
@@ -867,7 +867,7 @@ class FindEventsTest extends Component {
 						links.push(
 							<li className={"page-item " + active} key={i}>
 								<Link
-									to={"/upcomingevents/" + i}
+									to={"/allevents/" + i}
 									onClick={() =>
 										this.setState({
 											prevPath: currentPage,

@@ -41,7 +41,9 @@ import {
 	REMOVE_FROM_FAVOURITES,
 	GET_USER_DETAIL,
 	etherscanMainnetAddress,
-	etherscanRinkbyAddress
+	etherscanRinkbyAddress,
+	graphURLV1,
+	graphURLV2
 } from "../config/const";
 import { toast } from "react-toastify";
 // import ApprovalModal from "./approvalModal";
@@ -413,6 +415,8 @@ class EventPage extends Component {
 			loadingApprove: false,
 			loadingPurchase: false,
 			boughtTicket:0,
+			alternateEventPresent:null,
+			alternateEventLoading:false,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -423,6 +427,7 @@ class EventPage extends Component {
 		this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
 		this.addTofavorite = this.addTofavorite.bind(this);
+		this.EventsOnDifferentNetworkExist = this.EventsOnDifferentNetworkExist.bind(this);
 		
 	}
 
@@ -547,20 +552,119 @@ class EventPage extends Component {
 				.events(this.props.match.params.id)
 				.call()
 				.then((data) => {
+					// console.log("hello: event exist name", data.name)
 					if (data.name) {
-						this.setState({
-							eventExistInContract: true,
-						});
-					} else {
-						this.setState({
-							eventExistInContract: false,
-						});
-					}
+							if(this.props.match.params.title == urlFormatter(data.name)){
+							this.setState({
+								eventExistInContract: true,
+							});
+						}else{
+							this.setState({
+								eventExistInContract: false,
+							});
+						}
+						} else {
+							this.setState({
+								eventExistInContract: false,
+							});
+						}
 				})
 				.catch((err) => console.log("Err in checkblockchain", err));
 		}
 	}
+
+	async EventsOnDifferentNetworkExist(){
+		this.setState({alternateEventLoading:true});
+		let web3 = window.web3;
+		let ethereum = window.ethereum;
+		let graphURL = "";
+	const alternateNetworkId = [1,137,4];
+	alternateNetworkId.map(async (netId)=>{
+		// console.log("hello: condition",netId,this.state.networkId,netId == this.state.networkId)
+		try {
+			// let networkId = await getNetworkId();
+			if (netId === GLOBAL_NETWORK_ID) {
+				graphURL = graphURLV1;
+			} else if (netId === GLOBAL_NETWORK_ID_2) {
+				graphURL = graphURLV2;
+			} else {
+				graphURL = graphURLV2;
+			}
+		} catch (err) {
+			// console.log("alternate event error: ",err)
+		}
+		// console.log("hello: graph URL: ", graphURL);
+		if(netId == this.state.networkId){
+			console.log("hello event exist on 1",false.toString());
+			return false;
+		}
+		else{
+			await axios({
+				url: graphURL,
+				method: "post",
+				data: {
+					query: `
+				  {
+					events(where : {eventId: "${this.props.match.params.id}"}) {
+						id
+						eventId
+						owner
+						name
+						topic
+						location
+						city
+						ipfsHash
+						tktLimited
+						tktTotalQuantity
+						tktTotalQuantitySold
+						oneTimeBuy
+						token
+						time
+						onsite
+						catTktQuantity
+						catTktQuantitySold	
+						categories
+						prices
+						eventRevenueInDollar
+						eventRevenueInPhnx
+					}
+				  }
+				  `,
+				},
+			})
+				.then(async (graphEvents) => {
+					if (graphEvents.data.data.events.length > 0) {
+						this.setState({alternateEventPresent:netId});
+						this.setState({
+							blockChainEvent: {},
+							blockChainEventLoaded: true,
+						});
+						// console.log("hello: alternate state: ",this.state.alternateEventPresent);
+					}
+					else{
+						this.setState({alternateEventPresent:null});
+						this.setState({
+							blockChainEvent: {},
+							blockChainEventLoaded: true,
+						});
+						// console.log("hello: alternate state: ",this.state.alternateEventPresent);
+					}
+				})
+				.catch((err) => {
+					this.setState({
+						blockChainEvent: {},
+						blockChainEventLoaded: true,
+					});
+				});
+			// return console.log("event exist on 2",netId,await this.EventsOnDifferentNetworkExist(netId).toString(), this.state.alternateEventPresent);
+		}
+	})
+	this.setState({alternateEventLoading:false});
+
+	}
 	async loadEventFromBlockchain() {
+		const networkId = await getNetworkId();
+		this.setState({networkId:networkId});
 		// const web3 = new Web3(
 		// 	new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
 		// );
@@ -611,41 +715,55 @@ class EventPage extends Component {
 		})
 			.then(async (graphEvents) => {
 				if (graphEvents.data.data.events.length > 0) {
-					this.setState({
-						blockChainEvent: graphEvents.data.data.events[0],
-						blockChainEventLoaded: true,
-						load: false,
-						oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
-					});
-					this.updateIPFS();
-					const networkId = await getNetworkId();
-					this.setState({networkId:networkId});
-					this.priceCalculation(0);
-					if (networkId) {
-						await updateEventViews({
-							eventId: graphEvents.data.data.events[0].eventId,
-							address: graphEvents.data.data.events[0].owner,
-							networkId: networkId,
+					// console.log("hello: event exists ", graphEvents.data.data.events)
+					// console.log("hello: event url is title",this.props.match.params.title )
+					// console.log("hello: event url is title",urlFormatter(graphEvents.data.data.events[0].name) )
+					if(this.props.match.params.title == urlFormatter(graphEvents.data.data.events[0].name)){
+						this.setState({
+							blockChainEvent: graphEvents.data.data.events[0],
+							blockChainEventLoaded: true,
+							load: false,
+							oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 						});
-
-						const userDetails = await getUser({
-							address: graphEvents.data.data.events[0].owner,
-							networkId: networkId,
-						});
-						if (!userDetails.error) {
-							this.setState({
-								organizerDetails:
-									userDetails.result.result.userHldr
-										.organizerDetails,
+						this.updateIPFS();
+						
+						this.priceCalculation(0);
+						if (networkId) {
+							await updateEventViews({
+								eventId: graphEvents.data.data.events[0].eventId,
+								address: graphEvents.data.data.events[0].owner,
+								networkId: networkId,
 							});
-							this.provideImage(
-								userDetails.result.result.userHldr
-							);
+	
+							const userDetails = await getUser({
+								address: graphEvents.data.data.events[0].owner,
+								networkId: networkId,
+							});
+							if (!userDetails.error) {
+								this.setState({
+									organizerDetails:
+										userDetails.result.result.userHldr
+											.organizerDetails,
+								});
+								this.provideImage(
+									userDetails.result.result.userHldr
+								);
+							}
 						}
+							
 					}
-										
+					else{
+						this.setState({
+							blockChainEvent: {},
+							blockChainEventLoaded: true,
+						});
+						await this.EventsOnDifferentNetworkExist();
+					}
+								
 				} else {
-					throw "event not found";
+					await this.EventsOnDifferentNetworkExist();
+					// console.log("hello: the result are",this.state.alternateEventPresent)
+					// throw "event not found";
 				}
 			})
 			.catch((err) => {
@@ -935,7 +1053,7 @@ class EventPage extends Component {
 		}
 	};
 
-	handleClickOpen2 = async () => {
+	handleClickOpen = async () => {
 		if (
 			this.props.networkId != GLOBAL_NETWORK_ID &&
 			this.props.networkId != GLOBAL_NETWORK_ID_2
@@ -974,7 +1092,7 @@ class EventPage extends Component {
 							disableBuyTicketBtn: result,
 						});
 						if (!result) {
-							this.setState({ open2: true });
+							this.setState({ open: true });
 						}
 					}
 				}
@@ -996,7 +1114,7 @@ class EventPage extends Component {
 						disableBuyTicketBtn: result,
 					});
 					if (!result) {
-						this.setState({ open2: true });
+						this.setState({ open: true });
 					}
 				}
 			}
@@ -1005,7 +1123,7 @@ class EventPage extends Component {
 	handleCloseSnackbar() {
 		this.setState({ open3: false, open3Message: "" });
 	}
-	handleClickOpen = () => {
+	handleClickOpen2 = () => {
 		this.setState({ open: true });
 	};
 
@@ -1387,6 +1505,7 @@ class EventPage extends Component {
 
 	render() {
 		const { classes } = this.props;
+		// console.log("hello: Event NAme",this.state.blockChainEvent)
 
 		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
@@ -1399,26 +1518,46 @@ class EventPage extends Component {
 					<EmptyState
 						text="The event is being processed and will be available with in 10-15 minutes"
 						btnText="Go to Dashboard"
-						url="/upcomingevents/1"
+						url="/allevents/1"
 					/>
 				);
 			} else if (
 				this.state.blockChainEvent === undefined ||
 				Object.keys(this.state.blockChainEvent).length === 0
 			) {
-				body = (
-					// <div className="text-center mt-5">
-					// 	<span role="img" aria-label="uncorn">
-					// 		🦄
-					// 	</span>{" "}
-					// 	PhoenixDAO Event not found
-					// </div>
-					<EmptyState
-						text="Event doesn't exist... 😔"
-						btnText="Go to Dashboard"
-						url="/upcomingevents/1"
-					/>
-				);
+				if(this.state.alternateEventPresent == null){
+					body = (
+						// <div className="text-center mt-5">
+						// 	<span role="img" aria-label="uncorn">
+						// 		🦄
+						// 	</span>{" "}
+						// 	PhoenixDAO Event not found
+						// </div>
+						<EmptyState
+							text={`Event doesn't exist... 😔`}
+							btnText="Go to Dashboard"
+							url="/allevents/1"
+						/>
+					);
+				}
+				else{
+					body = (
+						// <div className="text-center mt-5">
+						// 	<span role="img" aria-label="uncorn">
+						// 		🦄
+						// 	</span>{" "}
+						// 	PhoenixDAO Event not found
+						// </div>
+						<EmptyState
+							text={ `We cannot find your event, please check your
+							MetaMask wallet to ensure you’re on the ${(this.state.alternateEventPresent==1 ? "Ethereum":"")} ${this.state.alternateEventPresent==137 ? "Matic":""} ${this.state.alternateEventPresent==4 ? "Rinkby":""} Network.
+							Both Matic and Ethereum events are currently supported.`}
+							btnText="Go to Dashboard"
+							url="/allevents/1"
+						/>
+					);
+				}
+			
 			} else {
 				if(urlFormatter(this.props.match.params.title) == urlFormatter(this.state.blockChainEvent.name))
 				{
@@ -1596,7 +1735,8 @@ class EventPage extends Component {
 								disabled={
 									disabled ||
 									this.props.disabledStatus ||
-									this.state.disabledBuying || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
+									this.state.disabledBuying 
+									// || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
 								}
 								title={event_data.name}
 								buttonText={buttonText}
@@ -1963,7 +2103,7 @@ class EventPage extends Component {
 													className={
 														classes.organizerEventLink
 													}
-													to={`/upcomingevents/organizer/${
+													to={`/allevents/organizer/${
 														this.state.organizer &&
 														urlFormatter(
 															this.state.organizer
@@ -2010,7 +2150,7 @@ class EventPage extends Component {
 													disabled ||
 													this.props.disabledStatus ||
 													this.state.disabledBuying
-													|| (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
+													// || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
 												}
 											>
 												<ShoppingCartOutlined
@@ -2158,7 +2298,7 @@ class EventPage extends Component {
 								{this.state.loaded ? (
 									<Link
 										className={classes.organizerEventLink}
-										to={`/upcomingevents/organizer/${
+										to={`/allevents/organizer/${
 											this.state.organizer &&
 											urlFormatter(this.state.organizer)
 										}/${event_data.owner.substr(
@@ -2415,9 +2555,13 @@ class EventPage extends Component {
 					// 	PhoenixDAO Event not found
 					// </div>
 					<EmptyState
-						text="Event doesn't exist... 😔"
+						text={this.state.alternateEventLoading
+							? this.state.alternateEventPresent
+								? `Event doesn't exist on this Network... 😔\n This Event Exists on ${(this.state.alternateEventPresent==1 && "Ethereum")} ${this.state.alternateEventPresent==137 && "Matic"} ${this.state.alternateEventPresent==4 && "Rinkby"}`
+								: `Event doesn't exist... 😔\n Loading Events on other networks`
+							: `Event doesn't exist... 😔`}
 						btnText="Go to Dashboard"
-						url="/upcomingevents/1"
+						url="/allevents/1"
 					/>
 				);
 			}
@@ -2441,7 +2585,7 @@ class EventPage extends Component {
 		await this.loadEventFromBlockchain();
 		await this.initApproveMethod();
 		await this.checkUserTicketLocation();
-		if (this.props.accounts[0]) {
+		if (this.props.accounts[0] && this.props.eventsAddress) {
 			await this.allowance();
 			await this.checkUserBalance();
 		}

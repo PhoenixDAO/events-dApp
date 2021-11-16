@@ -242,46 +242,51 @@ export const useFormControls = () => {
 			: "unlimited",
 		noOfTickets: parsedCookies.noOfTickets ? parsedCookies.noOfTickets : "",
 		isCompleted: parsedCookies.isCompleted ? parsedCookies.isCompleted : false,
-		ticketCategories: [
-			{
-				ticketName:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].ticketName
-						: "",
-				dollarPrice:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].dollarPrice
-						: "0",
-				phnxPrice:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].phnxPrice
-						: "",
-				ticketAvailability:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].ticketAvailability
-						: "unlimited",
-				noOfTickets:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].noOfTickets
-						: "",
-				isShown:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].isShown
-						: false,
-			},
-		],
+		ticketCategories:(parsedCookies.ticketCategories != null &&
+		parsedCookies.ticketCategories != undefined &&
+		parsedCookies.ticketCategories.length > 0)
+			? parsedCookies.ticketCategories
+			: "",
+		// ticketCategories: [
+		// 	{
+		// 		ticketName:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].ticketName
+		// 				: "",
+		// 		dollarPrice:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].dollarPrice
+		// 				: "0",
+		// 		phnxPrice:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].phnxPrice
+		// 				: "",
+		// 		ticketAvailability:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].ticketAvailability
+		// 				: "unlimited",
+		// 		noOfTickets:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].noOfTickets
+		// 				: "",
+		// 		isShown:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].isShown
+		// 				: false,
+		// 	},
+		// ],
 		token: parsedCookies.token ? parsedCookies.token : false, // false means free
 		PhoenixDAO_market: parsedCookies.PhoenixDAO_market,
 		//4th_stepper
@@ -294,7 +299,6 @@ export const useFormControls = () => {
 	};
 	const [values, setValues] = useState(initialFormValues);
 	const [errors, setErrors] = useState({});
-	console.log("input values", values);
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(
@@ -613,7 +617,13 @@ export const useFormControls = () => {
 					!errors["image0"] &&
 					image0 &&
 					eventTopic;
-				return isValid;
+					let allImages = true;
+					if(images.length>0){
+						allImages = images.slice(0,3).map((image)=>{
+							return image.name !="";
+						})
+					}
+					return isValid && new Set(allImages).size ==1;
 			} else {
 				const isValid =
 					!errors["eventLink"] &&
@@ -621,7 +631,14 @@ export const useFormControls = () => {
 					!errors["image0"] &&
 					image0 &&
 					eventTopic;
-				return isValid;
+					let allImages = true;
+					if(images.length>0){
+						allImages = images.slice(0,3).map((image)=>{
+							return image.name !="";
+						})
+					}
+				return isValid && new Set(allImages).size ==1;
+				// return isValid;
 			}
 		} else if (activeStep === 2) {
 			if (eventCategory === "free") {
@@ -653,8 +670,15 @@ export const useFormControls = () => {
 				}
 			} else {
 				// multiple ticket type event
-				const isValid = ticketCategories[0].isShown;
-				return isValid;
+				if(ticketCategories.length == 1){
+					const isValid = ticketCategories[0].isShown;
+					return isValid;
+				}
+				else{
+					const isValid = ticketCategories.map((ticketCategory)=>{
+						return ticketCategory.isShown})
+					return new Set(isValid).size ==1;
+				}
 			}
 		} else if (activeStep === 3) {
 			const isValid =
@@ -1075,7 +1099,7 @@ export const useFormControls = () => {
 			let eventDateOneDay = new Date(eventStartDate);
 			let eventEndDateOneDay = new Date(eventEndDate);
 			let eventStartTimeOneday = new Date(eventStartTime);
-			let eventEndTimeOneday = new Date(eventEndTime);
+			let eventEndTimeOneday = eventEndTime==null?eventEndTime:new Date(eventEndTime);;
 			//change date timing
 			eventDateOneDay.setHours(
 				eventStartTimeOneday.getHours(),

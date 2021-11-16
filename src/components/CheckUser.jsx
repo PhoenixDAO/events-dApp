@@ -129,7 +129,7 @@ class CheckUser extends Component {
 					pauseOnHover: true,
 				}
 			);
-			this.props.history.push("/upcomingevents/1");
+			this.props.history.push("/allevents/1");
 			this.setState({
 				loading: false,
 			});
@@ -150,7 +150,7 @@ class CheckUser extends Component {
 					}
 				);
 			}
-			this.props.history.push("/upcomingevents/1");
+			this.props.history.push("/allevents/1");
 			this.setState({
 				loading: false,
 			});

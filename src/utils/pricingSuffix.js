@@ -3,7 +3,7 @@ import Skeleton from '@material-ui/lab/Skeleton';
 
 export function pricingFormatter(num, currencyType) {
 	if (typeof num === "string" && currencyType == "$") {
-		if (num == "" || num == "0" || num == "$0") {
+		if (num == "" || num == "0" || num == "$0" || num == "0.00000") {
 			return null;
 		}
 		if (num.includes("$")) {
@@ -15,6 +15,7 @@ export function pricingFormatter(num, currencyType) {
 		if (
 			num == "FREE" ||
 			num == "0.000000" ||
+			num == "0.00000"||
 			num == "0.000000PHNX" ||
 			num == "0.000" ||
 			num == "0.000PHNX"

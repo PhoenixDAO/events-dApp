@@ -277,7 +277,7 @@ class FindEvents extends Component {
 				Events_Blockchain: updatedList,
 			});
 			if(!this.props.match.params.ownerId){
-				this.props.history.push("/upcomingevents/" + 1);
+				this.props.history.push("/allevents/" + 1);
 			}
 		}
 	}
@@ -370,7 +370,7 @@ class FindEvents extends Component {
 					// });
 
 					if( !this.props.match.params.ownerId){
-						this.props.history.push("/upcomingevents/" + 1);
+						this.props.history.push("/allevents/" + 1);
 					}
 
 					setTimeout(() => {
@@ -405,7 +405,7 @@ class FindEvents extends Component {
 					}
 
 					if(!this.props.match.params.ownerId){
-						this.props.history.push("/upcomingevents/" + 1);
+						this.props.history.push("/allevents/" + 1);
 					}
 
 					setTimeout(() => {
@@ -447,7 +447,7 @@ class FindEvents extends Component {
 				window.scroll(0, window.screen.height*0.58);
 			}
 			if(!this.props.match.params.ownerId){
-				this.props.history.push("/upcomingevents/" + 1);
+				this.props.history.push("/allevents/" + 1);
 			}
 		});
 	};
@@ -489,7 +489,7 @@ class FindEvents extends Component {
 		const cityName = this.state.cityName;
 		if (cityName) {
 			if(!this.props.match.params.ownerId){
-				this.props.history.push("/upcomingevents/" + 1);
+				this.props.history.push("/allevents/" + 1);
 			}
 			try {
 				if (cityName) {
@@ -710,7 +710,7 @@ class FindEvents extends Component {
 					links.push(
 						<li className={"page-item " + active} key={i}>
 							<Link
-								to={"/upcomingevents/" + i}
+								to={"/allevents/" + i}
 								onClick={() =>
 									this.setState({
 										prevPath: currentPage,
@@ -735,7 +735,7 @@ class FindEvents extends Component {
 					links.push(
 						<li className={"page-item " + active} key={i}>
 							<Link
-								to={"/upcomingevents/" + i}
+								to={"/allevents/" + i}
 								onClick={() =>
 									this.setState({
 										prevPath: currentPage,
@@ -764,7 +764,7 @@ class FindEvents extends Component {
 					links.push(
 						<li className={"page-item " + active} key={i}>
 							<Link
-								to={"/upcomingevents/" + i}
+								to={"/allevents/" + i}
 								onClick={() =>
 									this.setState({
 										prevPath: currentPage,

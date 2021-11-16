@@ -26,6 +26,7 @@ import BuyPhoenixModal from "./BuyPhoenixModal";
 const useStyles = makeStyles((theme) => ({
 	buy: {
 		marginLeft: "13px",
+		marginTop:"10px",
 		fontWeight: 700,
 		width: "180px",
 		height: "45px",

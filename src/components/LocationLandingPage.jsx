@@ -92,7 +92,7 @@ class LocationLandingPage extends Component {
             let active = i === currentPage ? 'active' : '';
             links.push(
               <li className={"page-item " + active} key={i}>
-                <Link to={"/upcomingevents/" + i} className="page-link">{i}</Link>
+                <Link to={"/allevents/" + i} className="page-link">{i}</Link>
               </li>
             );
           }
