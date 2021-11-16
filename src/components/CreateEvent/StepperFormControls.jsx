@@ -242,46 +242,51 @@ export const useFormControls = () => {
 			: "unlimited",
 		noOfTickets: parsedCookies.noOfTickets ? parsedCookies.noOfTickets : "",
 		isCompleted: parsedCookies.isCompleted ? parsedCookies.isCompleted : false,
-		ticketCategories: [
-			{
-				ticketName:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].ticketName
-						: "",
-				dollarPrice:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].dollarPrice
-						: "0",
-				phnxPrice:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].phnxPrice
-						: "",
-				ticketAvailability:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].ticketAvailability
-						: "unlimited",
-				noOfTickets:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].noOfTickets
-						: "",
-				isShown:
-					parsedCookies.ticketCategories != null &&
-					parsedCookies.ticketCategories != undefined &&
-					parsedCookies.ticketCategories.length > 0
-						? parsedCookies.ticketCategories[0].isShown
-						: false,
-			},
-		],
+		ticketCategories:(parsedCookies.ticketCategories != null &&
+		parsedCookies.ticketCategories != undefined &&
+		parsedCookies.ticketCategories.length > 0)
+			? parsedCookies.ticketCategories
+			: "",
+		// ticketCategories: [
+		// 	{
+		// 		ticketName:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].ticketName
+		// 				: "",
+		// 		dollarPrice:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].dollarPrice
+		// 				: "0",
+		// 		phnxPrice:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].phnxPrice
+		// 				: "",
+		// 		ticketAvailability:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].ticketAvailability
+		// 				: "unlimited",
+		// 		noOfTickets:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].noOfTickets
+		// 				: "",
+		// 		isShown:
+		// 			parsedCookies.ticketCategories != null &&
+		// 			parsedCookies.ticketCategories != undefined &&
+		// 			parsedCookies.ticketCategories.length > 0
+		// 				? parsedCookies.ticketCategories[0].isShown
+		// 				: false,
+		// 	},
+		// ],
 		token: parsedCookies.token ? parsedCookies.token : false, // false means free
 		PhoenixDAO_market: parsedCookies.PhoenixDAO_market,
 		//4th_stepper
@@ -612,7 +617,13 @@ export const useFormControls = () => {
 					!errors["image0"] &&
 					image0 &&
 					eventTopic;
-				return isValid;
+					let allImages = true;
+					if(images.length>0){
+						allImages = images.slice(0,3).map((image)=>{
+							return image.name !="";
+						})
+					}
+					return isValid && new Set(allImages).size ==1;
 			} else {
 				const isValid =
 					!errors["eventLink"] &&
@@ -620,7 +631,14 @@ export const useFormControls = () => {
 					!errors["image0"] &&
 					image0 &&
 					eventTopic;
-				return isValid;
+					let allImages = true;
+					if(images.length>0){
+						allImages = images.slice(0,3).map((image)=>{
+							return image.name !="";
+						})
+					}
+				return isValid && new Set(allImages).size ==1;
+				// return isValid;
 			}
 		} else if (activeStep === 2) {
 			if (eventCategory === "free") {
