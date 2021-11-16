@@ -294,7 +294,6 @@ export const useFormControls = () => {
 	};
 	const [values, setValues] = useState(initialFormValues);
 	const [errors, setErrors] = useState({});
-	console.log("input values", values);
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch(
@@ -1075,7 +1074,7 @@ export const useFormControls = () => {
 			let eventDateOneDay = new Date(eventStartDate);
 			let eventEndDateOneDay = new Date(eventEndDate);
 			let eventStartTimeOneday = new Date(eventStartTime);
-			let eventEndTimeOneday = new Date(eventEndTime);
+			let eventEndTimeOneday = eventEndTime==null?eventEndTime:new Date(eventEndTime);;
 			//change date timing
 			eventDateOneDay.setHours(
 				eventStartTimeOneday.getHours(),

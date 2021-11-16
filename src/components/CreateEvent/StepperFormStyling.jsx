@@ -429,7 +429,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	imageSelectBtnStyle: {
 		padding: "15px 25px",
-		background: "#FFF9E5",
+		background: "#413ae20d",
 		left: "13px",
 		textTransform: "capitalize",
 	},

@@ -34,6 +34,14 @@ const useStyles = makeStyles((theme) => ({
 	},
 	title: {
 		fontFamily: "'Aeonik', sans-serif",
+		color:"#4E4E55",
+		"@media (max-width:500px)":{
+			width:"100%",
+			fontSize:"1.3em",
+		},
+		width:"80%",
+		marginLeft:"auto",
+		marginRight:"auto"
 	},
 }));
 
