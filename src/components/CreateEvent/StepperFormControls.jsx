@@ -246,7 +246,7 @@ export const useFormControls = () => {
 		parsedCookies.ticketCategories != undefined &&
 		parsedCookies.ticketCategories.length > 0)
 			? parsedCookies.ticketCategories
-			: "",
+			: [""],
 		// ticketCategories: [
 		// 	{
 		// 		ticketName:
