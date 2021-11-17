@@ -229,6 +229,7 @@ class FindEvents extends Component {
 			latitude: "",
 			longitude: "",
 			cityName: "Unknown",
+			findNearEvents:[],
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -420,36 +421,70 @@ class FindEvents extends Component {
 
 	//Search Active Events By Name
 	updateSearch = (value) => {
-		let filteredEvents = this.state.event_copy;
-		this.setState({ value, search:value }, () => {
-			try {
-				if (this.state.value !== "") {
-					filteredEvents = filteredEvents.filter((event) => {
-						return (
-							event.name
-								.toLowerCase()
-								.search(this.state.value.toLowerCase()) !== -1
-						);
-					});
-				} else {
-					filteredEvents = this.state.event_copy;
+		if(this.state.pageTitle == "Near Your Location"){
+			let filteredEvents = this.state.Events_Blockchain;
+			this.setState({ value, search:value }, () => {
+				try {
+					if (this.state.value !== "") {
+						filteredEvents = filteredEvents.filter((event) => {
+							return (
+								event.name
+									.toLowerCase()
+									.search(this.state.value.toLowerCase()) !== -1
+							);
+						});
+					} else {
+						filteredEvents = this.state.findNearEvents;
+					}
+				} catch (e) {
+					console.log(e);
 				}
-			} catch (e) {
-				console.log(e);
-			}
-			this.setState({
-				Events_Blockchain: filteredEvents,
-				// active_length: filteredEvents.length,
+				this.setState({		
+					Events_Blockchain: filteredEvents,
+					// active_length: filteredEvents.length,
+				});
+				if((window.screen.height/window.screen.width)<1){
+					window.scroll(0, window.screen.height * 0.5);			
+				}else{
+					window.scroll(0, window.screen.height*0.58);
+				}
+				if(!this.props.match.params.ownerId){
+					this.props.history.push("/allevents/" + 1);
+				}
 			});
-			if((window.screen.height/window.screen.width)<1){
-				window.scroll(0, window.screen.height * 0.5);			
-			}else{
-				window.scroll(0, window.screen.height*0.58);
-			}
-			if(!this.props.match.params.ownerId){
-				this.props.history.push("/allevents/" + 1);
-			}
-		});
+		}
+		else{
+			let filteredEvents = this.state.event_copy;
+			this.setState({ value, search:value }, () => {
+				try {
+					if (this.state.value !== "") {
+						filteredEvents = filteredEvents.filter((event) => {
+							return (
+								event.name
+									.toLowerCase()
+									.search(this.state.value.toLowerCase()) !== -1
+							);
+						});
+					} else {
+						filteredEvents = this.state.event_copy;
+					}
+				} catch (e) {
+					console.log(e);
+				}
+				this.setState({
+					Events_Blockchain: filteredEvents,
+					// active_length: filteredEvents.length,
+				});
+				if((window.screen.height/window.screen.width)<1){
+					window.scroll(0, window.screen.height * 0.5);			
+				}else{
+					window.scroll(0, window.screen.height*0.58);
+				}
+				if(!this.props.match.params.ownerId){
+					this.props.history.push("/allevents/" + 1);
+				}
+			});
+		}
 	};
 
 	//Sort Active Events By Date(Newest/Oldest)
@@ -504,6 +539,7 @@ class FindEvents extends Component {
 					this.setState({
 						Events_Blockchain: filteredEvents,
 						// event_copy: filteredEvents,
+						findNearEvents:filteredEvents
 					});
 					setTimeout(() => {
 						this.setState({ loading: false });

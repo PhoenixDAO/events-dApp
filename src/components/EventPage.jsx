@@ -595,7 +595,7 @@ class EventPage extends Component {
 		}
 		// console.log("hello: graph URL: ", graphURL);
 		if(netId == this.state.networkId){
-			console.log("hello event exist on 1",false.toString());
+			// console.log("hello event exist on 1",false.toString());
 			return false;
 		}
 		else{
@@ -2575,6 +2575,7 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
+		if(parseInt(this.props.match.params.id)){
 		this.getUserFavoritesEvent();
 		console.log("component start 1, Event page");
 		let buyers = await generateBuyerArr(this.props.match.params.id);
@@ -2596,6 +2597,13 @@ class EventPage extends Component {
 		this._isMounted = true;
 		// this.updateIPFS();
 		// this.loadblockhain();
+	}
+	else{
+		this.setState({
+			blockChainEvent: {},
+			blockChainEventLoaded: true,
+		});
+	}
 	}
 
 	geoFindMe = async () => {
