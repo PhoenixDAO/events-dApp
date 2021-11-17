@@ -42,6 +42,7 @@ jobs:
         run: npm run build
         env:
           REACT_APP_TRANSAK_API: ${{ secrets.REACT_APP_TRANSAK_API }}
+          REACT_APP_HERE_API_KEY: ${{ secrets.REACT_APP_HERE_API_KEY }}
       
       - name: give execution permission
         run: chmod +x changes.sh
