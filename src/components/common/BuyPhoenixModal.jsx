@@ -78,7 +78,7 @@ const BuyPhoenixModal = (props) => {
 		{
 			img: "/images/coinbase.svg",
 			name: "Coinbase Wallet",
-			coming: false,
+			coming: true,
 			onclick: false,
 		},
 	].map((data) => {
