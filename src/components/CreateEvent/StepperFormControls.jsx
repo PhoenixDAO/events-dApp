@@ -246,7 +246,46 @@ export const useFormControls = () => {
 		parsedCookies.ticketCategories != undefined &&
 		parsedCookies.ticketCategories.length > 0)
 			? parsedCookies.ticketCategories
-			: [""],
+			:  [
+				{
+					ticketName:
+						parsedCookies.ticketCategories != null &&
+						parsedCookies.ticketCategories != undefined &&
+						parsedCookies.ticketCategories.length > 0
+							? parsedCookies.ticketCategories[0].ticketName
+							: "",
+					dollarPrice:
+						parsedCookies.ticketCategories != null &&
+						parsedCookies.ticketCategories != undefined &&
+						parsedCookies.ticketCategories.length > 0
+							? parsedCookies.ticketCategories[0].dollarPrice
+							: "0",
+					phnxPrice:
+						parsedCookies.ticketCategories != null &&
+						parsedCookies.ticketCategories != undefined &&
+						parsedCookies.ticketCategories.length > 0
+							? parsedCookies.ticketCategories[0].phnxPrice
+							: "",
+					ticketAvailability:
+						parsedCookies.ticketCategories != null &&
+						parsedCookies.ticketCategories != undefined &&
+						parsedCookies.ticketCategories.length > 0
+							? parsedCookies.ticketCategories[0].ticketAvailability
+							: "unlimited",
+					noOfTickets:
+						parsedCookies.ticketCategories != null &&
+						parsedCookies.ticketCategories != undefined &&
+						parsedCookies.ticketCategories.length > 0
+							? parsedCookies.ticketCategories[0].noOfTickets
+							: "",
+					isShown:
+						parsedCookies.ticketCategories != null &&
+						parsedCookies.ticketCategories != undefined &&
+						parsedCookies.ticketCategories.length > 0
+							? parsedCookies.ticketCategories[0].isShown
+							: false,
+				},
+			],
 		// ticketCategories: [
 		// 	{
 		// 		ticketName:
