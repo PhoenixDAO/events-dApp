@@ -21,7 +21,7 @@ class UniswapModal extends Component {
 		this.state = {
 			open: this.props.open,
 		};
-		console.log("this.props",props);
+		// console.log("this.props",props);
 
 	}
 

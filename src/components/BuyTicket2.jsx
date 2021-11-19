@@ -231,7 +231,7 @@ const ApprovalModal = (props) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(props.open);
 	useEffect(() => {
-		console.log("allowance", props.allow);
+		// console.log("allowance", props.allow);
 	}, [props.open]);
 	return (
 		<Dialog
