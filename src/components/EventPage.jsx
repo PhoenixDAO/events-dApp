@@ -569,7 +569,10 @@ class EventPage extends Component {
 							});
 						}
 				})
-				.catch((err) => console.log("Err in checkblockchain", err));
+				.catch((err) => 
+				{
+					// console.log("Err in checkblockchain", err)
+			});
 		}
 	}
 
@@ -1049,7 +1052,7 @@ class EventPage extends Component {
 				),
 			});
 		} catch (err) {
-			console.log("err", err);
+			// console.log("err", err);
 		}
 	};
 
@@ -1315,7 +1318,7 @@ class EventPage extends Component {
 				);
 			}
 		} catch (err) {
-			console.log("err while buying", err);
+			// console.log("err while buying", err);
 		}
 	};
 
@@ -2577,9 +2580,9 @@ class EventPage extends Component {
 	async componentDidMount() {
 		if(parseInt(this.props.match.params.id)){
 		this.getUserFavoritesEvent();
-		console.log("component start 1, Event page");
+		// console.log("component start 1, Event page");
 		let buyers = await generateBuyerArr(this.props.match.params.id);
-		console.log("component start 2, Event page", buyers);
+		// console.log("component start 2, Event page", buyers);
 		this.setState({ soldTicket: buyers });
 		await this.getPhoenixDAOMarketValue();
 		await this.checkBlockchainEvent();

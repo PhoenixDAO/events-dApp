@@ -195,12 +195,12 @@ class App extends Component {
 			);
 			const { eventAddress, phoenixAddress } =
 				await this.contractAddressProviders();
-			console.log(
-				"Open events",
-				Open_events_ABI,
-				"eventAddress",
-				eventAddress
-			);
+			// console.log(
+			// 	"Open events",
+			// 	Open_events_ABI,
+			// 	"eventAddress",
+			// 	eventAddress
+			// );
 			const openEvents = await new web3.eth.Contract(
 				Open_events_ABI,
 				eventAddress
