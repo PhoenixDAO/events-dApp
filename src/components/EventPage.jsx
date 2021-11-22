@@ -1162,7 +1162,7 @@ class EventPage extends Component {
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
 					toast(
-						<Notify
+						<Notify networkId={this.props.networkId} 
 							hash={hash}
 							text={
 								"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
@@ -1188,7 +1188,7 @@ class EventPage extends Component {
 				if (error !== null) {
 					this.setState({ disabledBuying: false });
 					txerror = error;
-					toast(<Notify error={error} message={txerror.message} />, {
+					toast(<Notify error={error} networkId={this.props.networkId}  message={txerror.message} />, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -1206,7 +1206,7 @@ class EventPage extends Component {
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
 			toast(
-				<Notify
+				<Notify networkId={this.props.networkId} 
 					hash={receipt.transactionHash}
 					icon="fas fa-check-circle fa-3x"
 					color="#413AE2"

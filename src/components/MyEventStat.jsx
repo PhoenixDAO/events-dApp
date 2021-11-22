@@ -415,7 +415,7 @@ this.props.toggleDisabling();
 			.send({ from: this.account })
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
-					toast(<Notify hash={hash} />, {
+					toast(<Notify  networkId={this.props.networkId} hash={hash} />, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -430,7 +430,7 @@ this.props.toggleDisabling();
 					txerror = error;
 					this.props.toggleDisabling();
 					toast(
-						<Notify error={error} message={txerror.message} />,
+						<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
 						{
 							position: "bottom-right",
 							autoClose: true,
@@ -443,7 +443,7 @@ this.props.toggleDisabling();
 	onConfirmation(confirmationNumber, receipt) {
 		this.props.toggleDisabling();
 		if (confirmationNumber == 0 && receipt.status == true) {
-			toast(<Notify hash={receipt.transactionHash} icon="fas fa-check-circle fa-3x"
+			toast(<Notify networkId={this.props.networkId}  hash={receipt.transactionHash} icon="fas fa-check-circle fa-3x"
 			color="#413AE2" />, {
 				position: "bottom-right",
 				autoClose: true,
@@ -521,7 +521,7 @@ this.props.toggleDisabling();
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
 					toast(
-						<Notify
+						<Notify networkId={this.props.networkId} 
 							hash={hash}
 							text="Deleting your event..."
 							icon="fas fa-trash fa-3x"
@@ -542,7 +542,7 @@ this.props.toggleDisabling();
 					txconfirmed = confirmationNumber;
 					if (txconfirmed == 0 && txreceipt.status == true) {
 						toast(
-							<Notify
+							<Notify networkId={this.props.networkId} 
 								hash={txreceipt.transactionHash}
 								text="your event has been deleted."
 							/>,
@@ -562,7 +562,7 @@ this.props.toggleDisabling();
 				if (error !== null) {
 					txerror = error;
 					toast(
-						<Notify error={error} message={txerror.message} />,
+						<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
 						{
 							position: "bottom-right",
 							autoClose: true,
@@ -1469,6 +1469,7 @@ const mapStateToProps = (state) => {
 		contracts: state.contracts,
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
+		networkId: state.web3.networkId,
 	};
 };
 

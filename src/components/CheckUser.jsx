@@ -118,7 +118,7 @@ class CheckUser extends Component {
 			);
 			// console.log("Consoleee notify report response",report)
 			toast(
-				<Notify
+				<Notify networkId={this.props.networkId} 
 					text="Report successful!"
 					icon="fas fa-thumbs-down fa-3x"
 					color="#413AE2"
@@ -138,7 +138,7 @@ class CheckUser extends Component {
 			if (error.response && error.response.data) {
 				// console.log("Consoleee notify report response error.response.data",error.response.data)
 				toast(
-					<Notify
+					<Notify networkId={this.props.networkId} 
 						text={error.response.data.responseMessage + "!"}
 						icon="fas fa-exclamation-circle fa-3x"
 						color="#F43C3C"
@@ -371,6 +371,7 @@ const mapStateToProps = (state) => {
 		contracts: state.contracts,
 		accounts: state.accounts,
 		web3: state.web3,
+		networkId: state.web3.networkId,
 	};
 };
 

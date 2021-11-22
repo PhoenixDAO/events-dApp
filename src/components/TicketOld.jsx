@@ -198,7 +198,7 @@ class Ticket extends Component {
 				.send({ from: this.props.accounts[0] })
 				.on("transactionHash", (transactionHash) => {
 					if (transactionHash !== null) {
-						toast(<NotifySending hash={transactionHash} />, {
+						toast(<NotifySending networkId={this.props.networkId}  hash={transactionHash} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -231,7 +231,7 @@ class Ticket extends Component {
 				.on("error", (error) => {
 					if (error !== null) {
 						txerror = error;
-						toast(<Notify error={error} message={txerror.message} />, {
+						toast(<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />, {
 							position: "bottom-right",
 							autoClose: true,
 							pauseOnHover: true,
@@ -601,6 +601,7 @@ const mapStateToProps = (state) => {
 	return {
 		contracts: state.contracts,
 		accounts: state.accounts,
+		networkId: state.web3.networkId,
 	};
 };
 
