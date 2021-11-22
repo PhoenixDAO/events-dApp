@@ -1088,7 +1088,7 @@ class EventPage extends Component {
 								balance
 							),
 						});
-						this.handleClickOpen();
+						this.handleClickOpen2();
 					} else {
 						const result = await this.checkUserBalance();
 						this.setState({
