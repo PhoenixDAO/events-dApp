@@ -204,7 +204,7 @@ const ConfirmPurchase = (props) => {
 							<TextField
 								id="event-id"
 								fullWidth
-								type="number"
+								type="text"
 								variant="outlined"
 								value={value}
 								error={errorId || error}
@@ -217,10 +217,14 @@ const ConfirmPurchase = (props) => {
 								}
 								// helperText={error ? error.message : null}
 								onChange={(e) => {
-									onChange(e);
-									setText("");
-									seterrorId(false);
-									setEventId(e.target.value);
+										let input = e.target.value ;
+										if( !input || ( input[input.length-1].match('[0-9]') && input[0].match('[1-9]')) ){
+											onChange(e);
+											console.log("value: ", e.target.value)
+											setText("");
+											seterrorId(false);
+											setEventId(e.target.value);
+										}
 								}}
 							// inputProps={{ pattern: "[0-9]{1,15}" }}
 							/>
