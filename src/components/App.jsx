@@ -471,7 +471,7 @@ class App extends Component {
 			);
 		} else {
 			toast(
-				<Notify text="😓 Wrong Network, Please Connect to Ethereum or Matic Mainnet ." />,
+				<Notify networkId={this.props.networkId}  text="😓 Wrong Network, Please Connect to Ethereum or Matic Mainnet ." />,
 				{
 					position: "bottom-right",
 					autoClose: true,
@@ -496,6 +496,7 @@ class App extends Component {
 
 						toast(
 							<Notify
+							networkId={this.props.networkId} 
 								hash={hash}
 								text="Preparing your ticket... 🚀"
 								icon="fa fa-ticket-alt"
@@ -540,7 +541,7 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -580,6 +581,7 @@ class App extends Component {
 					if (hash !== null) {
 						toast(
 							<Notify
+							networkId={this.props.networkId} 
 								hash={hash}
 								text={
 									"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
@@ -600,6 +602,7 @@ class App extends Component {
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
 								<Notify
+								networkId={this.props.networkId} 
 									text={
 										"Transaction successfull!\nYou can buy a ticket now."
 									}
@@ -625,7 +628,7 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -645,6 +648,7 @@ class App extends Component {
 					if (hash !== null) {
 						toast(
 							<Notify
+							networkId={this.props.networkId} 
 								hash={hash}
 								text="Preparing your ticket... 🚀"
 								icon="fa fa-ticket-alt fa-3x"
@@ -698,7 +702,7 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -728,7 +732,7 @@ class App extends Component {
 							done: true,
 						});
 						toast(
-							<Notify
+							<Notify networkId={this.props.networkId} 
 								icon="fas fa-edit"
 								hash={hash}
 								text={
@@ -751,7 +755,7 @@ class App extends Component {
 						txconfirmed = confirmationNumber;
 						if (txconfirmed == 1 && txreceipt.status == true) {
 							toast(
-								<Notify
+								<Notify networkId={this.props.networkId} 
 									hash={txreceipt.transactionHash}
 									createdEvent={
 										type === "create"
@@ -781,7 +785,7 @@ class App extends Component {
 						txerror = error;
 						this.setState({ error: true });
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -815,7 +819,7 @@ class App extends Component {
 							done: true,
 						});
 						toast(
-							<Notify
+							<Notify networkId={this.props.networkId} 
 								hash={hash}
 								text={
 									"Request for 10,000 PHNX\nYour token request has been sent"
@@ -836,7 +840,7 @@ class App extends Component {
 
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
-								<Notify
+								<Notify networkId={this.props.networkId} 
 									text="10,000 PHNX recieved! Check your balance here."
 									hash={txreceipt.transactionHash}
 								/>,
@@ -854,7 +858,7 @@ class App extends Component {
 						txerror = error;
 						this.setState({ error: true });
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -1723,6 +1727,7 @@ const mapStateToProps = (state) => {
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
 		transactions: state.transactions,
+		networkId: state.web3.networkId,
 		// contracts: state.contracts,
 	};
 };

@@ -279,7 +279,7 @@ class Event extends Component {
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
 					toast(
-						<Notify
+						<Notify networkId={this.props.networkId} 
 							hash={hash}
 							text={
 								"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
@@ -323,7 +323,7 @@ class Event extends Component {
 				if (error !== null) {
 					txerror = error;
 					this.props.toggleBuying();
-					toast(<Notify error={error} message={txerror.message} />, {
+					toast(<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -342,7 +342,7 @@ class Event extends Component {
 		if (confirmationNumber === 0 && receipt.status) {
 			this.props.toggleBuying();
 			toast(
-				<Notify
+				<Notify networkId={this.props.networkId} 
 					hash={receipt.transactionHash}
 					icon="fas fa-check-circle fa-3x"
 					text="Transaction successful! You can buy a ticket now."
@@ -657,6 +657,7 @@ const mapStateToProps = (state) => {
 		accounts: state.accounts,
 		transactionStack: state.transactionStack,
 		web3: state.web3,
+		networkId: state.web3.networkId,
 	};
 };
 

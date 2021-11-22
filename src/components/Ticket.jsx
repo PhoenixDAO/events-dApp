@@ -208,7 +208,7 @@ class Ticket extends Component {
 				.on("transactionHash", (transactionHash) => {
 					if (transactionHash !== null) {
 						toast(
-							<Notify
+							<Notify networkId={this.props.networkId} 
 								hash={transactionHash}
 								icon="fas fa-check-circle fa-3x"
 								color="#413AE2"
@@ -233,7 +233,7 @@ class Ticket extends Component {
 							txreceiptApproved.status == true
 						) {
 							toast(
-								<Notify
+								<Notify networkId={this.props.networkId} 
 									hash={txreceiptApproved.transactionHash}
 									icon="fas fa-check-circle fa-3x"
 									color="#413AE2"
@@ -254,7 +254,7 @@ class Ticket extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify error={error} message={txerror.message} />,
+							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -554,6 +554,7 @@ const mapStateToProps = (state) => {
 	return {
 		// contracts: state.contracts,
 		accounts: state.accounts,
+		networkId: state.web3.networkId,
 	};
 };
 
