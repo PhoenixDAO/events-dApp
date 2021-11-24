@@ -348,21 +348,27 @@ const Analytics = (props, context) => {
 						style={{ textAlign: "end" }}
 					>
 						{revenueCategory == "eventRevenueInPhnx"
-							? pricingFormatter(
+							?((
+								event.eventRevenueInPhnx /
+								1000000000000000000
+							).toFixed(3)==0.000 ?"0 PHNX": pricingFormatter(
 									(
 										event.eventRevenueInPhnx /
 										1000000000000000000
 									).toFixed(3) + " PHNX",
 									"PHNX"
 							  )
-							: pricingFormatter(
+							): ((
+								event.eventRevenueInDollar /
+								1000000000000000000
+							).toFixed(3)==0.000?"$0":pricingFormatter(
 									"$" +
 										(
 											event.eventRevenueInDollar /
 											1000000000000000000
 										).toFixed(3),
 									"$"
-							  )}
+							  ))}
 					</Grid>
 				</Grid>
 			));

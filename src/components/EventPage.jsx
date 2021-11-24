@@ -581,7 +581,7 @@ class EventPage extends Component {
 		let web3 = window.web3;
 		let ethereum = window.ethereum;
 		let graphURL = "";
-	const alternateNetworkId = [1,137,4];
+	const alternateNetworkId = [1,137];
 	alternateNetworkId.map(async (netId)=>{
 		// console.log("hello: condition",netId,this.state.networkId,netId == this.state.networkId)
 		try {
@@ -1110,7 +1110,7 @@ class EventPage extends Component {
 							balance
 						),
 					});
-					this.handleClickOpen();
+					this.handleClickOpen2();
 				} else {
 					const result = await this.checkUserBalance();
 					this.setState({
@@ -1553,7 +1553,7 @@ class EventPage extends Component {
 						// </div>
 						<EmptyState
 							text={ `We cannot find your event, please check your
-							MetaMask wallet to ensure you’re on the ${(this.state.alternateEventPresent==1 ? "Ethereum":"")} ${this.state.alternateEventPresent==137 ? "Matic":""} ${this.state.alternateEventPresent==4 ? "Rinkby":""} Network.
+							MetaMask wallet to ensure you’re on the ${(this.state.alternateEventPresent==1 ? "Ethereum":"")} ${this.state.alternateEventPresent==137 ? "Matic":""} Network.
 							Both Matic and Ethereum events are currently supported.`}
 							btnText="Go to Dashboard"
 							url="/allevents/1"
