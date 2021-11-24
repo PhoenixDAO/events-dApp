@@ -222,6 +222,14 @@ const styles = (theme) => ({
 		width: "100%",
 		height: "45px",
 		backgroundColor: "#413AE2",
+		"&.MuiButton-root":{
+			lineHeight:"18px"
+		},
+		[theme.breakpoints.down("xs")]: {
+			"&.MuiButton-root":{
+				padding:"0px 10px"
+			},
+		},
 		// [theme.breakpoints.down("xs")]: {
 		// 	// marginLeft: "0px",
 		// 	// marginTop: "20px",
@@ -339,7 +347,13 @@ const styles = (theme) => ({
 			height:"30px",
 			width:"30px"
 		}
-	}	
+	},
+	TicketPurchasesExportDiv:{
+		display:"flex"
+	},
+exportButtonDiv:{
+	marginLeft:"auto"
+}
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -428,6 +442,7 @@ class EventPage extends Component {
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
 		this.addTofavorite = this.addTofavorite.bind(this);
 		this.EventsOnDifferentNetworkExist = this.EventsOnDifferentNetworkExist.bind(this);
+		this.handleExportCSV = this.handleExportCSV.bind(this);
 		
 	}
 
@@ -1055,6 +1070,23 @@ class EventPage extends Component {
 			// console.log("err", err);
 		}
 	};
+	handleExportCSV = () =>{
+let data = ["buyers",];
+this.state.soldTicket.map((transaction)=>{
+	data.push(transaction.address)
+})
+
+  var csvContent = '';
+data.forEach(function(infoArray, index) {
+  csvContent += index < data.length ? infoArray + '\n' : infoArray;
+});
+let link = document.createElement('a');
+link.setAttribute('href',  'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
+link.setAttribute('download', `${urlFormatter(this.state.blockChainEvent.name)}.csv`);
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+	}
 
 	handleClickOpen = async () => {
 		if (
@@ -2168,9 +2200,22 @@ class EventPage extends Component {
 								</Grid>
 								<Grid container className={`${classes.heading} ${classes.row} `}>
 									<div className="new-transaction-wrapper">
+										<div className={classes.TicketPurchasesExportDiv}>
+											<div>
 										<h2 className={classes.heading}>
 											Ticket Purchases
 										</h2>
+										</div>
+										<div className={classes.exportButtonDiv}>
+											{this.state.soldTicket.length == 0?"":<Button variant="contained"
+												color="primary"
+												style={{ marginBottom: "10px" }}
+												className={classes.buy}
+												id="download"
+												onClick={this.handleExportCSV}
+												>Export CSV</Button>}
+										</div>
+										</div>
 										{this.state.load && <Loading />}
 										<Grid container lg={12}>
 											{this.state.pageTransactions.map(
