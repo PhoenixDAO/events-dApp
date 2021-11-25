@@ -111,25 +111,16 @@ const ConfirmPurchase = (props) => {
 		if (prevPath == -1) {
 			props.executeScroll();
 		}
+		if('methods' in props.eventsContract){
 		const loadGraphData = async () => {
-			const graphURL = await GetGraphApi();
-	
-			let result = await axios({
-				url: graphURL,
-				method: "post",
-				data: {
-					query: `
-			{
-			  events(first:1000){
-				eventId
-			  }
-			}
-			`,
-				},
-			});
-			setLength(result.data.data.events.length);
+			const eventLengthContract = await props.eventsContract.methods
+		.getEventsCount()
+		.call();
+		setLength(eventLengthContract);
 		}
+		
 		loadGraphData();
+	}
 	}, []);
 	
 	const checkTickets = async () => {
@@ -138,7 +129,6 @@ const ConfirmPurchase = (props) => {
 		// 	.call();
 
 
-		const buyers = await generateBuyerArr(eventId);
 		const isaddress = Web3.utils.isAddress(address);
 		let error = parseInt(eventId) > parseInt(eventlength)
 		if (error) {
@@ -147,6 +137,7 @@ const ConfirmPurchase = (props) => {
 		if (!isaddress) {
 			setErrorAddress(true);
 		}
+		const buyers = await generateBuyerArr(eventId);
 		if (isaddress && !error) {
 			const isowner = buyers.find((element) => {
 				return element.address.toLowerCase() == address.toLowerCase();
