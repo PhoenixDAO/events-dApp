@@ -105,22 +105,31 @@ const ConfirmPurchase = (props) => {
 	const [errorAddress, setErrorAddress] = useState(false);
 	const [errorId, seterrorId] = useState(false);
 	const [prevPath, setPrevPath] = useState(-1);
-	const [eventlength, setLength] = useState(0);
+	const [events, setEvents] = useState(null);
 
-	useEffect( () => {
+	useEffect(() => {
 		if (prevPath == -1) {
 			props.executeScroll();
 		}
-		if('methods' in props.eventsContract){
 		const loadGraphData = async () => {
-			const eventLengthContract = await props.eventsContract.methods
-		.getEventsCount()
-		.call();
-		setLength(eventLengthContract);
+			const graphURL = await GetGraphApi();
+	
+			let result = await axios({
+				url: graphURL,
+				method: "post",
+				data: {
+					query: `
+			{
+			  events(first:1000){
+				eventId
+			  }
+			}
+			`,
+				},
+			});
+			setEvents(result.data.data.events);
 		}
-		
 		loadGraphData();
-	}
 	}, []);
 	
 	const checkTickets = async () => {
@@ -130,15 +139,23 @@ const ConfirmPurchase = (props) => {
 
 
 		const isaddress = Web3.utils.isAddress(address);
-		let error = parseInt(eventId) > parseInt(eventlength)
-		if (error) {
+		// let error = parseInt(eventId) > parseInt(events.length)
+		let error = events.filter((element) => {
+			// console.log("hello filter: ",parseInt(element.eventId) == parseInt(eventId.eventId), parseInt(element.eventId), parseInt(eventId))
+			return parseInt(element.eventId) == parseInt(eventId);
+		});
+
+		// console.log("hello error",events, error)
+
+		if (error.length == 0) {
 			seterrorId(true);
 		}
 		if (!isaddress) {
 			setErrorAddress(true);
 		}
 		const buyers = await generateBuyerArr(eventId);
-		if (isaddress && !error) {
+		if (isaddress && error.length != 0) {
+			// console.log("hello buyers", buyers)
 			const isowner = buyers.find((element) => {
 				return element.address.toLowerCase() == address.toLowerCase();
 			});
@@ -195,7 +212,7 @@ const ConfirmPurchase = (props) => {
 							<TextField
 								id="event-id"
 								fullWidth
-								type="text"
+								type="number"
 								variant="outlined"
 								value={value}
 								error={errorId || error}
@@ -208,14 +225,10 @@ const ConfirmPurchase = (props) => {
 								}
 								// helperText={error ? error.message : null}
 								onChange={(e) => {
-										let input = e.target.value ;
-										if( !input || ( input[input.length-1].match('[0-9]') && input[0].match('[1-9]')) ){
-											onChange(e);
-											console.log("value: ", e.target.value)
-											setText("");
-											seterrorId(false);
-											setEventId(e.target.value);
-										}
+									onChange(e);
+									setText("");
+									seterrorId(false);
+									setEventId(e.target.value);
 								}}
 							// inputProps={{ pattern: "[0-9]{1,15}" }}
 							/>
