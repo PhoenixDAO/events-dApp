@@ -39,7 +39,7 @@ function Notify({ text, icon, error, link, color, createdEvent, url, hash, netwo
 				<div>
 					<i className={icon} style={{ color: color }}></i>
 				</div>
-				<a href={networkId == 137? explorerWithTX:networkId == 1?etherscanMainnetTX:etherscanRinkbyTX + hash} title={hash} target="blank">
+				<a href={networkId == 137? explorerWithTX+hash:networkId == 1?etherscanMainnetTX+hash:etherscanRinkbyTX + hash} title={hash} target="blank">
 					<div style={{ whiteSpace: "break-spaces", justifyContent: "center", alignItems: "center" }}>{text}</div>
 				</a>
 				{url ?
