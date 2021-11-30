@@ -2206,7 +2206,7 @@ document.body.removeChild(link);
 											Ticket Purchases
 										</h2>
 										</div>
-										<div className={classes.exportButtonDiv}>
+										{/* <div className={classes.exportButtonDiv}>
 											{this.state.soldTicket.length == 0?"":<Button variant="contained"
 												color="primary"
 												style={{ marginBottom: "10px" }}
@@ -2214,7 +2214,7 @@ document.body.removeChild(link);
 												id="download"
 												onClick={this.handleExportCSV}
 												>Export CSV</Button>}
-										</div>
+										</div> */}
 										</div>
 										{this.state.load && <Loading />}
 										<Grid container lg={12}>
