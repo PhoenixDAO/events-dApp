@@ -3,7 +3,7 @@ name: Development Workflow
 on:
   push:
     branches:
-      - dev-design
+      - devdesign
 jobs:
   deploy:
     runs-on: ubuntu-latest
