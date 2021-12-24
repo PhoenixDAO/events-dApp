@@ -11,7 +11,7 @@ GetGraphApi().then((data) => {
 async function getResult(eventId) {
 	try {
 		const graphURL = await GetGraphApi();
-		console.log("get ticket", graphURL);
+		// console.log("get ticket", graphURL);
 		let result = await axios({
 			url: graphURL,
 			method: "post",
@@ -27,14 +27,14 @@ async function getResult(eventId) {
 		});
 		return result.data.data.tickets;
 	} catch (err) {
-		console.log("error while fetching tickets", err);
+		// console.log("error while fetching tickets", err);
 	}
 }
 export async function generateBuyerArr(eventId) {
-	console.log("generate buyer called", eventId);
+	// console.log("generate buyer called", eventId);
 	let buyersListJson = {};
 	let ticketArr = await getResult(eventId);
-	console.log("ticketsArr", ticketArr);
+	// console.log("ticketsArr", ticketArr);
 	ticketArr.forEach((tktObj) => {
 		// creating json
 		if (buyersListJson[tktObj.buyer] == null) {

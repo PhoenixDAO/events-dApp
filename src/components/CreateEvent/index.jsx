@@ -132,13 +132,13 @@ class CreateEvent extends Component {
 		});
 	}
 
-	async getEventURL() {
+	async getEventURL(eventName) {
 		let eventCount = await this.props.eventsContract.methods
 			.getEventsCount()
 			.call();
 		eventCount = Number(eventCount) + 1;
 		var base_url = window.location.origin;
-		const shareUrl = `${base_url}/event/${eventCount}`;
+		const shareUrl = `${base_url}/event/${eventName}/${eventCount}`;
 		this.setState({ shareUrl: shareUrl });
 	}
 
@@ -289,7 +289,7 @@ class CreateEvent extends Component {
 
 		if (!hash[0].hash) {
 			this.onHandleTxReject();
-			toast(<Notify error={"error"} message={"IPFS problem!"} />, {
+			toast(<Notify networkId={this.props.networkId}  error={"error"} networkId={this.props.networkId} message={"IPFS problem!"} />, {
 				position: "bottom-right",
 				autoClose: true,
 				pauseOnHover: true,
@@ -300,7 +300,7 @@ class CreateEvent extends Component {
 			});
 
 			this.onFlamingStepsChange();
-			await this.getEventURL();
+			await this.getEventURL(eventName);
 
 			let infura;
 			let txreceipt;
@@ -346,9 +346,10 @@ class CreateEvent extends Component {
 						var cookie = `${name}=""`;
 						document.cookie = cookie;
 						toast(
-							<Notify
+							<Notify networkId={this.props.networkId} 
 								// hash={txhash}
 								icon="fas fa-edit fa-2x"
+								networkId={this.props.networkId} 
 								text={"Preparing your event... 🚀"}
 								color="#413AE2"
 							/>,
@@ -365,7 +366,8 @@ class CreateEvent extends Component {
 							);
 							if (receipt) {
 								toast(
-									<Notify
+									<Notify networkId={this.props.networkId} 
+									networkId={this.props.networkId} 
 										text={
 											"Transaction successful!\nYou can check event now."
 										}
@@ -411,12 +413,12 @@ class CreateEvent extends Component {
 						${this.state.shareUrl}
 						#EventsDapp #${eventName.replace(/\s/g, "")}
 						`;
-					// await userTweet({
-					// 	address: this.props.accounts[0],
-					// 	networkId: this.props.web3.networkId,
-					// 	base64Image: image0Base64,
-					// 	message: message,
-					// });
+					await userTweet({
+						address: this.props.accounts[0],
+						networkId: this.props.web3.networkId,
+						base64Image: image0Base64,
+						message: message,
+					});
 				})
 				.catch((error) => {
 					console.log("error.message", error.message);
@@ -432,7 +434,8 @@ class CreateEvent extends Component {
 									);
 								if (receipt) {
 									toast(
-										<Notify
+										<Notify networkId={this.props.networkId} 
+										networkId={this.props.networkId} 
 											text={
 												"Transaction successful!\nYou can check event now."
 											}
@@ -454,7 +457,8 @@ class CreateEvent extends Component {
 						} else {
 							this.onHandleTxReject();
 							toast(
-								<Notify
+								<Notify networkId={this.props.networkId} 
+								networkId={this.props.networkId} 
 									error={error}
 									message={error.message}
 								/>,
@@ -808,6 +812,7 @@ const mapStateToProps = (state) => {
 		transactionStack: state.transactionStack,
 		accounts: state.accounts,
 		web3: state.web3,
+		networkId: state.web3.networkId,
 	};
 };
 

@@ -32,6 +32,7 @@ export default function BodyTextEditor({
 			"BLOCK_TYPE_BUTTONS",
 			"BLOCK_TYPE_DROPDOWN",
 			"HISTORY_BUTTONS",
+			'LINK_BUTTONS',
 		],
 		INLINE_STYLE_BUTTONS: [
 			{ label: "Bold", style: "BOLD", className: "custom-css-class" },

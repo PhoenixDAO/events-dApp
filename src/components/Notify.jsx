@@ -1,9 +1,9 @@
 import React from "react";
 import makeBlockie from "ethereum-blockies-base64";
-import { explorerWithTX, explorerWithAddress } from "../config/const";
+import { explorerWithTX, explorerWithAddress, etherscanRinkbyTX, etherscanMainnetTX } from "../config/const";
 import { Link } from "react-router-dom";
 
-function Notify({ text, icon, error, link, color, createdEvent, url, hash }) {
+function Notify({ text, icon, error, link, color, createdEvent, url, hash, networkId }) {
 	let titleURL = "";
 	if (createdEvent) {
 		let rawTitle = createdEvent.name;
@@ -39,7 +39,7 @@ function Notify({ text, icon, error, link, color, createdEvent, url, hash }) {
 				<div>
 					<i className={icon} style={{ color: color }}></i>
 				</div>
-				<a href={explorerWithTX + hash} title={hash} target="blank">
+				<a href={networkId == 137? explorerWithTX+hash:networkId == 1?etherscanMainnetTX+hash:etherscanRinkbyTX + hash} title={hash} target="blank">
 					<div style={{ whiteSpace: "break-spaces", justifyContent: "center", alignItems: "center" }}>{text}</div>
 				</a>
 				{url ?

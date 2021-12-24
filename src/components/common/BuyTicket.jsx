@@ -299,6 +299,7 @@ export default function BuyTicket({ handleClose, open, eventTitle, image, eventT
 
   const classes = useStyles();
   const buyTicket = () => {
+	  console.log("just chane");
     buy();
     handleClose();
   }

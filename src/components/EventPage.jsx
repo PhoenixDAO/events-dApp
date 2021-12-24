@@ -39,7 +39,11 @@ import {
 	API_URL,
 	ADD_TO_FAVOURITES,
 	REMOVE_FROM_FAVOURITES,
-	GET_USER_DETAIL
+	GET_USER_DETAIL,
+	etherscanMainnetAddress,
+	etherscanRinkbyAddress,
+	graphURLV1,
+	graphURLV2
 } from "../config/const";
 import { toast } from "react-toastify";
 // import ApprovalModal from "./approvalModal";
@@ -121,8 +125,8 @@ const styles = (theme) => ({
 		width: "32px",
 		height: "32px",
 		position:"absolute",
-		right:"0px",
-		bottom:"4px",
+		right:"4px",
+		bottom:"7px",
 		"&:focus": {
 			outline: "none",
 		},
@@ -212,6 +216,26 @@ const styles = (theme) => ({
 			color:"black",
 		}
 	},
+	buy: {
+		// marginLeft: "13px",
+		fontWeight: 700,
+		width: "100%",
+		height: "45px",
+		backgroundColor: "#413AE2",
+		"&.MuiButton-root":{
+			lineHeight:"18px"
+		},
+		[theme.breakpoints.down("xs")]: {
+			"&.MuiButton-root":{
+				padding:"0px 10px"
+			},
+		},
+		// [theme.breakpoints.down("xs")]: {
+		// 	// marginLeft: "0px",
+		// 	// marginTop: "20px",
+		// 	width: "160px",
+		// },
+	},
 	imageDiv: {
 		height: "70vh",
 		paddingBottom:"5px",
@@ -264,14 +288,6 @@ const styles = (theme) => ({
 		width: "80%",
 		marginBottom: "80px",
 	},
-	row: {
-		marginTop: "40px",
-	},
-	eventDescriptionFont: {
-		"& .RichTextEditor__root___2QXK-": {
-			fontFamily: "sans-serif",
-		},
-	},
 	heading: {
 		borderBottom: "1px solid #E4E4E7",
 		fontWeight: "700",
@@ -279,6 +295,16 @@ const styles = (theme) => ({
 		paddingBottom: "10px",
 		marginBottom: "20px",
 	},
+	row: {
+		marginTop: "40px",
+		paddingBottom:"60px",
+	},
+	eventDescriptionFont: {
+		"& .RichTextEditor__root___2QXK-": {
+			fontFamily: "sans-serif",
+		},
+	},
+
 	avatar: {
 		display: "inline-block",
 		marginBottom: "10px",
@@ -309,6 +335,25 @@ const styles = (theme) => ({
 		fontWeight: "bolder",
 		color: "#6b6b6b",
 	},
+	transactionPagination:{
+		width:"100%",
+	},
+	TransactionImage:{
+		height:"40px",
+		width:"40px",
+		objectFit:"cover",
+		borderRadius:"50%",
+		"@media (max-width):500px":{
+			height:"30px",
+			width:"30px"
+		}
+	},
+	TicketPurchasesExportDiv:{
+		display:"flex"
+	},
+exportButtonDiv:{
+	marginLeft:"auto"
+}
 });
 class EventPage extends Component {
 	constructor(props, context) {
@@ -366,6 +411,7 @@ class EventPage extends Component {
 			open3: false,
 			open3Message: "",
 			avatarCustom: "",
+			networkId:null,
 			avatarId: 1,
 			avatar: 0,
 			blockChainEvent: {},
@@ -379,9 +425,12 @@ class EventPage extends Component {
 			eventExistInContract: false,
 			Icon:false,
 			UserFavoriteEvents: [],
-			allow: 0,
+			allow: null,
 			loadingApprove: false,
 			loadingPurchase: false,
+			boughtTicket:0,
+			alternateEventPresent:null,
+			alternateEventLoading:false,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -392,6 +441,8 @@ class EventPage extends Component {
 		this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
 		this.addTofavorite = this.addTofavorite.bind(this);
+		this.EventsOnDifferentNetworkExist = this.EventsOnDifferentNetworkExist.bind(this);
+		this.handleExportCSV = this.handleExportCSV.bind(this);
 		
 	}
 
@@ -516,21 +567,122 @@ class EventPage extends Component {
 				.events(this.props.match.params.id)
 				.call()
 				.then((data) => {
-					console.log("events received", data);
+					// console.log("hello: event exist name", data.name)
 					if (data.name) {
-						this.setState({
-							eventExistInContract: true,
-						});
-					} else {
-						this.setState({
-							eventExistInContract: false,
-						});
-					}
+							if(this.props.match.params.title == urlFormatter(data.name)){
+							this.setState({
+								eventExistInContract: true,
+							});
+						}else{
+							this.setState({
+								eventExistInContract: false,
+							});
+						}
+						} else {
+							this.setState({
+								eventExistInContract: false,
+							});
+						}
 				})
-				.catch((err) => console.log("Err in checkblockchain", err));
+				.catch((err) => 
+				{
+					// console.log("Err in checkblockchain", err)
+			});
 		}
 	}
+
+	async EventsOnDifferentNetworkExist(){
+		this.setState({alternateEventLoading:true});
+		let web3 = window.web3;
+		let ethereum = window.ethereum;
+		let graphURL = "";
+	const alternateNetworkId = [1,137];
+	alternateNetworkId.map(async (netId)=>{
+		// console.log("hello: condition",netId,this.state.networkId,netId == this.state.networkId)
+		try {
+			// let networkId = await getNetworkId();
+			if (netId === GLOBAL_NETWORK_ID) {
+				graphURL = graphURLV1;
+			} else if (netId === GLOBAL_NETWORK_ID_2) {
+				graphURL = graphURLV2;
+			} else {
+				graphURL = graphURLV2;
+			}
+		} catch (err) {
+			// console.log("alternate event error: ",err)
+		}
+		// console.log("hello: graph URL: ", graphURL);
+		if(netId == this.state.networkId){
+			// console.log("hello event exist on 1",false.toString());
+			return false;
+		}
+		else{
+			await axios({
+				url: graphURL,
+				method: "post",
+				data: {
+					query: `
+				  {
+					events(where : {eventId: "${this.props.match.params.id}"}) {
+						id
+						eventId
+						owner
+						name
+						topic
+						location
+						city
+						ipfsHash
+						tktLimited
+						tktTotalQuantity
+						tktTotalQuantitySold
+						oneTimeBuy
+						token
+						time
+						onsite
+						catTktQuantity
+						catTktQuantitySold	
+						categories
+						prices
+						eventRevenueInDollar
+						eventRevenueInPhnx
+					}
+				  }
+				  `,
+				},
+			})
+				.then(async (graphEvents) => {
+					if (graphEvents.data.data.events.length > 0) {
+						this.setState({alternateEventPresent:netId});
+						this.setState({
+							blockChainEvent: {},
+							blockChainEventLoaded: true,
+						});
+						// console.log("hello: alternate state: ",this.state.alternateEventPresent);
+					}
+					else{
+						this.setState({alternateEventPresent:null});
+						this.setState({
+							blockChainEvent: {},
+							blockChainEventLoaded: true,
+						});
+						// console.log("hello: alternate state: ",this.state.alternateEventPresent);
+					}
+				})
+				.catch((err) => {
+					this.setState({
+						blockChainEvent: {},
+						blockChainEventLoaded: true,
+					});
+				});
+			// return console.log("event exist on 2",netId,await this.EventsOnDifferentNetworkExist(netId).toString(), this.state.alternateEventPresent);
+		}
+	})
+	this.setState({alternateEventLoading:false});
+
+	}
 	async loadEventFromBlockchain() {
+		const networkId = await getNetworkId();
+		this.setState({networkId:networkId});
 		// const web3 = new Web3(
 		// 	new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
 		// );
@@ -581,39 +733,55 @@ class EventPage extends Component {
 		})
 			.then(async (graphEvents) => {
 				if (graphEvents.data.data.events.length > 0) {
-					this.setState({
-						blockChainEvent: graphEvents.data.data.events[0],
-						blockChainEventLoaded: true,
-						load: false,
-						oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
-					});
-					this.updateIPFS();
-					const networkId = await getNetworkId();
-					if (networkId) {
-						await updateEventViews({
-							eventId: graphEvents.data.data.events[0].eventId,
-							address: graphEvents.data.data.events[0].owner,
-							networkId: networkId,
+					// console.log("hello: event exists ", graphEvents.data.data.events)
+					// console.log("hello: event url is title",this.props.match.params.title )
+					// console.log("hello: event url is title",urlFormatter(graphEvents.data.data.events[0].name) )
+					if(this.props.match.params.title == urlFormatter(graphEvents.data.data.events[0].name)){
+						this.setState({
+							blockChainEvent: graphEvents.data.data.events[0],
+							blockChainEventLoaded: true,
+							load: false,
+							oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
 						});
-
-						const userDetails = await getUser({
-							address: graphEvents.data.data.events[0].owner,
-							networkId: networkId,
-						});
-						if (!userDetails.error) {
-							this.setState({
-								organizerDetails:
-									userDetails.result.result.userHldr
-										.organizerDetails,
+						this.updateIPFS();
+						
+						this.priceCalculation(0);
+						if (networkId) {
+							await updateEventViews({
+								eventId: graphEvents.data.data.events[0].eventId,
+								address: graphEvents.data.data.events[0].owner,
+								networkId: networkId,
 							});
-							this.provideImage(
-								userDetails.result.result.userHldr
-							);
+	
+							const userDetails = await getUser({
+								address: graphEvents.data.data.events[0].owner,
+								networkId: networkId,
+							});
+							if (!userDetails.error) {
+								this.setState({
+									organizerDetails:
+										userDetails.result.result.userHldr
+											.organizerDetails,
+								});
+								this.provideImage(
+									userDetails.result.result.userHldr
+								);
+							}
 						}
+							
 					}
-					this.priceCalculation(0);
+					else{
+						this.setState({
+							blockChainEvent: {},
+							blockChainEventLoaded: true,
+						});
+						await this.EventsOnDifferentNetworkExist();
+					}
+								
 				} else {
-					throw "event not found";
+					await this.EventsOnDifferentNetworkExist();
+					// console.log("hello: the result are",this.state.alternateEventPresent)
+					// throw "event not found";
 				}
 			})
 			.catch((err) => {
@@ -899,11 +1067,28 @@ class EventPage extends Component {
 				),
 			});
 		} catch (err) {
-			console.log("err", err);
+			// console.log("err", err);
 		}
 	};
+	handleExportCSV = () =>{
+let data = ["buyers",];
+this.state.soldTicket.map((transaction)=>{
+	data.push(transaction.address)
+})
 
-	handleClickOpen2 = async () => {
+  var csvContent = '';
+data.forEach(function(infoArray, index) {
+  csvContent += index < data.length ? infoArray + '\n' : infoArray;
+});
+let link = document.createElement('a');
+link.setAttribute('href',  'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
+link.setAttribute('download', `${urlFormatter(this.state.blockChainEvent.name)}.csv`);
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+	}
+
+	handleClickOpen = async () => {
 		if (
 			this.props.networkId != GLOBAL_NETWORK_ID &&
 			this.props.networkId != GLOBAL_NETWORK_ID_2
@@ -935,14 +1120,14 @@ class EventPage extends Component {
 								balance
 							),
 						});
-						this.handleClickOpen();
+						this.handleClickOpen2();
 					} else {
 						const result = await this.checkUserBalance();
 						this.setState({
 							disableBuyTicketBtn: result,
 						});
 						if (!result) {
-							this.setState({ open2: true });
+							this.setState({ open: true });
 						}
 					}
 				}
@@ -957,14 +1142,14 @@ class EventPage extends Component {
 							balance
 						),
 					});
-					this.handleClickOpen();
+					this.handleClickOpen2();
 				} else {
 					const result = await this.checkUserBalance();
 					this.setState({
 						disableBuyTicketBtn: result,
 					});
 					if (!result) {
-						this.setState({ open2: true });
+						this.setState({ open: true });
 					}
 				}
 			}
@@ -973,7 +1158,7 @@ class EventPage extends Component {
 	handleCloseSnackbar() {
 		this.setState({ open3: false, open3Message: "" });
 	}
-	handleClickOpen = () => {
+	handleClickOpen2 = () => {
 		this.setState({ open: true });
 	};
 
@@ -1009,7 +1194,7 @@ class EventPage extends Component {
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
 					toast(
-						<Notify
+						<Notify networkId={this.props.networkId} 
 							hash={hash}
 							text={
 								"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
@@ -1028,13 +1213,14 @@ class EventPage extends Component {
 				await this.allowance();
 				this.setState({
 					loadingApprove: false,
+					boughtTicket:this.state.boughtTicket+1
 				});
 			})
 			.on("error", (error) => {
 				if (error !== null) {
 					this.setState({ disabledBuying: false });
 					txerror = error;
-					toast(<Notify error={error} message={txerror.message} />, {
+					toast(<Notify error={error} networkId={this.props.networkId}  message={txerror.message} />, {
 						position: "bottom-right",
 						autoClose: true,
 						pauseOnHover: true,
@@ -1052,7 +1238,7 @@ class EventPage extends Component {
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
 			toast(
-				<Notify
+				<Notify networkId={this.props.networkId} 
 					hash={receipt.transactionHash}
 					icon="fas fa-check-circle fa-3x"
 					color="#413AE2"
@@ -1164,7 +1350,7 @@ class EventPage extends Component {
 				);
 			}
 		} catch (err) {
-			console.log("err while buying", err);
+			// console.log("err while buying", err);
 		}
 	};
 
@@ -1186,8 +1372,34 @@ class EventPage extends Component {
 		return locations;
 	};
 
-	onChangePage(pageTransactions) {
+	onChangePage = async (pageTransactions) => {
+		const networkId = await getNetworkId();
+		if (networkId) {
+		pageTransactions.map(async (user, Index)=>{
+			try{
+			let result = await getUser({address: user.address, networkId:networkId});
+			if(result){
+			user.ImageDetails = result.result.result.userHldr;
+			// user.avatarCustom = result.result.result.userHldr.avatarCustom;
+			// user.avatarNumber = result.result.result.userHldr.avatarNumber;
+			// user.avatarIPFSHash = result
+			if (result.result.result.userHldr.avatarCustom) {
+				await ipfs.get(result.result.result.userHldr.avatar).then((file) => {
+					let data = JSON.parse(file[0].content.toString());
+					user.avatarImage = data.image0;
+				});
+				this.setState({ pageTransactions });
+			}
+			else{
+				user.avartarImage = "";
+				this.setState({ pageTransactions });
+			}
+		}
+	}
+	catch(err){
 		this.setState({ pageTransactions });
+	}
+		})}
 	}
 
 	handleCloseSnackbar() {
@@ -1328,6 +1540,7 @@ class EventPage extends Component {
 
 	render() {
 		const { classes } = this.props;
+		// console.log("hello: Event NAme",this.state.blockChainEvent)
 
 		let body = <SkeletonEvent />;
 		if (this.state.blockChainEventLoaded) {
@@ -1340,26 +1553,46 @@ class EventPage extends Component {
 					<EmptyState
 						text="The event is being processed and will be available with in 10-15 minutes"
 						btnText="Go to Dashboard"
-						url="/upcomingevents/1"
+						url="/allevents/1"
 					/>
 				);
 			} else if (
 				this.state.blockChainEvent === undefined ||
 				Object.keys(this.state.blockChainEvent).length === 0
 			) {
-				body = (
-					// <div className="text-center mt-5">
-					// 	<span role="img" aria-label="uncorn">
-					// 		🦄
-					// 	</span>{" "}
-					// 	PhoenixDAO Event not found
-					// </div>
-					<EmptyState
-						text="Event doesn't exist... 😔"
-						btnText="Go to Dashboard"
-						url="/upcomingevents/1"
-					/>
-				);
+				if(this.state.alternateEventPresent == null){
+					body = (
+						// <div className="text-center mt-5">
+						// 	<span role="img" aria-label="uncorn">
+						// 		🦄
+						// 	</span>{" "}
+						// 	PhoenixDAO Event not found
+						// </div>
+						<EmptyState
+							text={`Event doesn't exist... 😔`}
+							btnText="Go to Dashboard"
+							url="/allevents/1"
+						/>
+					);
+				}
+				else{
+					body = (
+						// <div className="text-center mt-5">
+						// 	<span role="img" aria-label="uncorn">
+						// 		🦄
+						// 	</span>{" "}
+						// 	PhoenixDAO Event not found
+						// </div>
+						<EmptyState
+							text={ `We cannot find your event, please check your
+							MetaMask wallet to ensure you’re on the ${(this.state.alternateEventPresent==1 ? "Ethereum":"")} ${this.state.alternateEventPresent==137 ? "Matic":""} Network.
+							Both Matic and Ethereum events are currently supported.`}
+							btnText="Go to Dashboard"
+							url="/allevents/1"
+						/>
+					);
+				}
+			
 			} else {
 				if(urlFormatter(this.props.match.params.title) == urlFormatter(this.state.blockChainEvent.name))
 				{
@@ -1488,6 +1721,7 @@ class EventPage extends Component {
 							/>
 							<ApprovalModal
 								open={this.state.open}
+								buttonText={buttonText}
 								handleClose={this.handleClose}
 								giveApproval={this.giveApproval}
 								image={image}
@@ -1495,9 +1729,11 @@ class EventPage extends Component {
 								date={event_date}
 								eventStartDate={this.state.eventStartDate}
 								eventTime={this.state.eventTime}
+								eventStartTime = {this.state.eventStartTime}
 								eventDate={this.state.eventDate}
 								eventEndDate={this.state.eventEndDate}
 								phnx_price={this.state.phnx_price}
+								eventEndTime={this.state.eventEndTime}
 								dollar_price={this.state.dollar_price}
 								allowance={this.allowance}
 								allow={this.state.allow}
@@ -1534,7 +1770,8 @@ class EventPage extends Component {
 								disabled={
 									disabled ||
 									this.props.disabledStatus ||
-									this.state.disabledBuying
+									this.state.disabledBuying 
+									// || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
 								}
 								title={event_data.name}
 								buttonText={buttonText}
@@ -1578,28 +1815,28 @@ class EventPage extends Component {
 										alt="Event"
 									/> */}
 									<Typography
-											className={classes.FavoriteIcon}
-											component="span"
-											onClick={this.addTofavorite}
-										>
-											{this.state.Icon ? (
-												<Favorite
-													fontSize="small"
-													style={{
-														color: "#413AE2",
-														marginTop:"6px",
-													}}
-												/>
-											) : (
-												<FavoriteBorder
-													fontSize="small"
-													style={{
-														color: "#000000",
-														marginTop:"6px",
-													}}
-												/>
-											)}
-										</Typography>
+										className={classes.FavoriteIcon}
+										component="span"
+										onClick={this.addTofavorite}
+									>
+										{this.state.Icon ? (
+											<Favorite
+												fontSize="small"
+												style={{
+													color: "#413AE2",
+													marginTop: "6px",
+												}}
+											/>
+										) : (
+											<FavoriteBorder
+												fontSize="small"
+												style={{
+													color: "#000000",
+													marginTop: "6px",
+												}}
+											/>
+										)}
+									</Typography>
 									<div></div>
 								</Grid>
 								<Grid container>
@@ -1896,8 +2133,28 @@ class EventPage extends Component {
 											Organizer
 										</p>
 										<p className={classes.eventinfo}>
-											{(this.state.loaded)?<Link className={classes.organizerEventLink} to={`/upcomingevents/organizer/${(this.state.organizer)&&urlFormatter(this.state.organizer)}/${event_data.owner.substr(event_data.owner.length - 4)}`}>{this.state.organizer}</Link>:
-											<span>{this.state.organizer}</span>}
+											{this.state.loaded ? (
+												<Link
+													className={
+														classes.organizerEventLink
+													}
+													to={`/allevents/organizer/${
+														this.state.organizer &&
+														urlFormatter(
+															this.state.organizer
+														)
+													}/${event_data.owner.substr(
+														event_data.owner
+															.length - 4
+													)}`}
+												>
+													{this.state.organizer}
+												</Link>
+											) : (
+												<span>
+													{this.state.organizer}
+												</span>
+											)}
 										</p>
 										<p className={classes.eventHeading}>
 											<ConfirmationNumberOutlined />
@@ -1905,60 +2162,131 @@ class EventPage extends Component {
 										</p>
 										<p className={classes.eventinfo}>
 											{
-												event_data.catTktQuantitySold[
+												(parseInt(event_data.catTktQuantitySold[
 													this.state
 														.selectedCategoryIndex
-												]
+												]) +this.state.boughtTicket).toString()
 												// event_data.tktTotalQuantitySold
 											}
 											/{max_seats}
 										</p>
+										<div style={{paddingTop:"20px"}}>
+											<Button
+												variant="contained"
+												color="primary"
+												style={{ marginBottom: "10px" }}
+												className={classes.buy}
+												onClick={() =>
+													this.allowBuy()
+														? this.handleClickOpen()
+														: null
+												}
+												disabled={
+													disabled ||
+													this.props.disabledStatus ||
+													this.state.disabledBuying
+													// || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
+												}
+											>
+												<ShoppingCartOutlined
+													style={{
+														marginRight: "10px",
+													}}
+												/>
+												{buttonText}
+											</Button>
+										</div>
 									</Grid>
 								</Grid>
-								<Grid container className={classes.row}>
+								<Grid container className={`${classes.heading} ${classes.row} `}>
 									<div className="new-transaction-wrapper">
+										<div className={classes.TicketPurchasesExportDiv}>
+											<div>
 										<h2 className={classes.heading}>
 											Ticket Purchases
 										</h2>
+										</div>
+										{/* <div className={classes.exportButtonDiv}>
+											{this.state.soldTicket.length == 0?"":<Button variant="contained"
+												color="primary"
+												style={{ marginBottom: "10px" }}
+												className={classes.buy}
+												id="download"
+												onClick={this.handleExportCSV}
+												>Export CSV</Button>}
+										</div> */}
+										</div>
 										{this.state.load && <Loading />}
 										<Grid container lg={12}>
 											{this.state.pageTransactions.map(
 												(sold, index) => (
-													<p
-														className="sold_text col-md-12"
-														key={index}
+													<Grid
+														xl={6}
+														lg={6}
+														md={6}
+														sm={12}
+														xs={12}
 													>
-														<a
-															href={
-																explorerWithAddress +
-																sold.address
+														<div style={{display:"flex"}}>
+														{sold.ImageDetails && ( 
+															<div style={{paddingTop:"12px"}}>
+																<img
+																src={
+																	sold
+																		.ImageDetails
+																		.avatarCustom
+																		?sold.avatarImage
+																		: this.imageData(
+																				sold
+																					.ImageDetails
+																					.avatarNumber
+																		  )
+																}
+															className={
+																classes.TransactionImage
 															}
-															target="blank"
+															/>
+															</div>
+														)}
+														<div>
+														<p
+															className="sold_text col-md-12"
+															key={index}
 														>
-															{sold.address.slice(
-																0,
-																10
-															) + "... "}
-														</a>{" "}
-														has{" "}
-														<a
-														// href={
-														// 	explorerWithTX +
-														// 	sold.transactionHash
-														// }
-														// target="blank"
-														>
-															bought
-														</a>{" "}
-														{" " + sold.count}{" "}
-														{sold.count > 1
-															? "tickets"
-															: "ticket"}{" "}
-														for this event.{" "}
-														{/* <strong>
+															<a
+																href={
+																	this.state.networkId == 137? explorerWithAddress:this.state.networkId == 1?etherscanMainnetAddress:etherscanRinkbyAddress +
+																	sold.address
+																}
+																target="blank"
+															>
+																{sold.address.slice(
+																	0,
+																	10
+																) + "... "}
+															</a>{" "}
+															has{" "}
+															<a
+															// href={
+															// 	explorerWithTX +
+															// 	sold.transactionHash
+															// }
+															// target="blank"
+															>
+																bought
+															</a>{" "}
+															{" " + sold.count}{" "}
+															{sold.count > 1
+																? "tickets"
+																: "ticket"}{" "}
+															for this event.{" "}
+															{/* <strong>
 														{event_data[0]}
 													</strong> */}
-													</p>
+														</p>
+														</div>
+														</div>
+													</Grid>
 												)
 											)}
 										</Grid>
@@ -1969,12 +2297,14 @@ class EventPage extends Component {
 											</p>
 										)}
 									</div>
-									<div className="pagination">
+									<div
+										className={`pagination ${classes.transactionPagination}`}
+									>
 										<JwPagination
 											items={this.state.soldTicket}
 											onChangePage={this.onChangePage}
-											maxPages={5}
-											pageSize={5}
+											maxPages={20}
+											pageSize={6}
 											styles={customStyles}
 										/>
 									</div>
@@ -1988,9 +2318,7 @@ class EventPage extends Component {
 										xs={7}
 										className={classes.categoryGrid}
 									>
-										<ModeCommentOutlined />
-										{" "}
-										Topic
+										<ModeCommentOutlined /> Topic
 										<div className={classes.eventinfo}>
 											{topic}
 										</div>
@@ -2015,32 +2343,49 @@ class EventPage extends Component {
 										marginBottom: "10px",
 									}}
 								/> */}
-								{(this.state.loaded)?
-								<Link className={classes.organizerEventLink} to={`/upcomingevents/organizer/${(this.state.organizer)&&urlFormatter(this.state.organizer)}/${event_data.owner.substr(event_data.owner.length - 4)}`}>
-								{this.renderImage()}
-								<h3 style={{ fontWeight: "bold" }}>
-									{this.state.organizer}
-								</h3>
-								<Grid className={classes.organizerDescription}>
-									{this.state.organizerDetails}
-								</Grid>
-								{/* <CheckUser
+								{this.state.loaded ? (
+									<Link
+										className={classes.organizerEventLink}
+										to={`/allevents/organizer/${
+											this.state.organizer &&
+											urlFormatter(this.state.organizer)
+										}/${event_data.owner.substr(
+											event_data.owner.length - 4
+										)}`}
+									>
+										{this.renderImage()}
+										<h3 style={{ fontWeight: "bold" }}>
+											{this.state.organizer}
+										</h3>
+										<Grid
+											className={
+												classes.organizerDescription
+											}
+										>
+											{this.state.organizerDetails}
+										</Grid>
+										{/* <CheckUser
 									blockChainEvent={this.state.blockChainEvent}
 									disabledStatus={disabled}
 									event_id={this.props.match.params.id}
 									history={this.props.history}
 								/> */}
-								</Link>:
-								<span>
-								{this.renderImage()}
-								<h3 style={{ fontWeight: "bold" }}>
-									{this.state.organizer}
-								</h3>
-								<Grid className={classes.organizerDescription}>
-									{this.state.organizerDetails}
-								</Grid>
-								</span>
-								}
+									</Link>
+								) : (
+									<span>
+										{this.renderImage()}
+										<h3 style={{ fontWeight: "bold" }}>
+											{this.state.organizer}
+										</h3>
+										<Grid
+											className={
+												classes.organizerDescription
+											}
+										>
+											{this.state.organizerDetails}
+										</Grid>
+									</span>
+								)}
 							</Grid>
 
 							{/* <div className="event-social-share-btns-div">
@@ -2258,9 +2603,13 @@ class EventPage extends Component {
 					// 	PhoenixDAO Event not found
 					// </div>
 					<EmptyState
-						text="Event doesn't exist... 😔"
+						text={this.state.alternateEventLoading
+							? this.state.alternateEventPresent
+								? `Event doesn't exist on this Network... 😔\n This Event Exists on ${(this.state.alternateEventPresent==1 && "Ethereum")} ${this.state.alternateEventPresent==137 && "Matic"} ${this.state.alternateEventPresent==4 && "Rinkby"}`
+								: `Event doesn't exist... 😔\n Loading Events on other networks`
+							: `Event doesn't exist... 😔`}
 						btnText="Go to Dashboard"
-						url="/upcomingevents/1"
+						url="/allevents/1"
 					/>
 				);
 			}
@@ -2274,17 +2623,18 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
+		if(parseInt(this.props.match.params.id)){
 		this.getUserFavoritesEvent();
-		console.log("component start 1, Event page");
+		// console.log("component start 1, Event page");
 		let buyers = await generateBuyerArr(this.props.match.params.id);
-		console.log("component start 2, Event page", buyers);
+		// console.log("component start 2, Event page", buyers);
 		this.setState({ soldTicket: buyers });
 		await this.getPhoenixDAOMarketValue();
 		await this.checkBlockchainEvent();
 		await this.loadEventFromBlockchain();
 		await this.initApproveMethod();
 		await this.checkUserTicketLocation();
-		if (this.props.accounts[0]) {
+		if (this.props.accounts[0] && this.props.eventsAddress) {
 			await this.allowance();
 			await this.checkUserBalance();
 		}
@@ -2295,6 +2645,13 @@ class EventPage extends Component {
 		this._isMounted = true;
 		// this.updateIPFS();
 		// this.loadblockhain();
+	}
+	else{
+		this.setState({
+			blockChainEvent: {},
+			blockChainEventLoaded: true,
+		});
+	}
 	}
 
 	geoFindMe = async () => {

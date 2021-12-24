@@ -68,7 +68,12 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
+<<<<<<< HEAD:.github/workflows/devdesign.yml
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV_DESIGN }}"
           projectId: phoenix-events-ad618
+=======
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          projectId: event-dao-dapp
+>>>>>>> 89d9480f15a4e2bc45bbc51fda530693605bb845:.github/workflows/designing.yml
           channelId: live
 

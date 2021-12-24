@@ -229,6 +229,7 @@ class FindEvents extends Component {
 			latitude: "",
 			longitude: "",
 			cityName: "Unknown",
+			findNearEvents:[],
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -277,7 +278,7 @@ class FindEvents extends Component {
 				Events_Blockchain: updatedList,
 			});
 			if(!this.props.match.params.ownerId){
-				this.props.history.push("/upcomingevents/" + 1);
+				this.props.history.push("/allevents/" + 1);
 			}
 		}
 	}
@@ -321,6 +322,7 @@ class FindEvents extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain(filter) {
+		this.setState({search:""});
 		const graphURL = await GetGraphApi();
 
 		await axios({
@@ -369,7 +371,7 @@ class FindEvents extends Component {
 					// });
 
 					if( !this.props.match.params.ownerId){
-						this.props.history.push("/upcomingevents/" + 1);
+						this.props.history.push("/allevents/" + 1);
 					}
 
 					setTimeout(() => {
@@ -404,7 +406,7 @@ class FindEvents extends Component {
 					}
 
 					if(!this.props.match.params.ownerId){
-						this.props.history.push("/upcomingevents/" + 1);
+						this.props.history.push("/allevents/" + 1);
 					}
 
 					setTimeout(() => {
@@ -419,36 +421,70 @@ class FindEvents extends Component {
 
 	//Search Active Events By Name
 	updateSearch = (value) => {
-		let filteredEvents = this.state.event_copy;
-		this.setState({ value }, () => {
-			try {
-				if (this.state.value !== "") {
-					filteredEvents = filteredEvents.filter((event) => {
-						return (
-							event.name
-								.toLowerCase()
-								.search(this.state.value.toLowerCase()) !== -1
-						);
-					});
-				} else {
-					filteredEvents = this.state.event_copy;
+		if(this.state.pageTitle == "Near Your Location"){
+			let filteredEvents = this.state.Events_Blockchain;
+			this.setState({ value, search:value }, () => {
+				try {
+					if (this.state.value !== "") {
+						filteredEvents = filteredEvents.filter((event) => {
+							return (
+								event.name
+									.toLowerCase()
+									.search(this.state.value.toLowerCase()) !== -1
+							);
+						});
+					} else {
+						filteredEvents = this.state.findNearEvents;
+					}
+				} catch (e) {
+					console.log(e);
 				}
-			} catch (e) {
-				console.log(e);
-			}
-			this.setState({
-				Events_Blockchain: filteredEvents,
-				// active_length: filteredEvents.length,
+				this.setState({		
+					Events_Blockchain: filteredEvents,
+					// active_length: filteredEvents.length,
+				});
+				if((window.screen.height/window.screen.width)<1){
+					window.scroll(0, window.screen.height * 0.5);			
+				}else{
+					window.scroll(0, window.screen.height*0.58);
+				}
+				if(!this.props.match.params.ownerId){
+					this.props.history.push("/allevents/" + 1);
+				}
 			});
-			if((window.screen.height/window.screen.width)<1){
-				window.scroll(0, window.screen.height * 0.5);			
-			}else{
-				window.scroll(0, window.screen.height*0.58);
-			}
-			if(!this.props.match.params.ownerId){
-				this.props.history.push("/upcomingevents/" + 1);
-			}
-		});
+		}
+		else{
+			let filteredEvents = this.state.event_copy;
+			this.setState({ value, search:value }, () => {
+				try {
+					if (this.state.value !== "") {
+						filteredEvents = filteredEvents.filter((event) => {
+							return (
+								event.name
+									.toLowerCase()
+									.search(this.state.value.toLowerCase()) !== -1
+							);
+						});
+					} else {
+						filteredEvents = this.state.event_copy;
+					}
+				} catch (e) {
+					console.log(e);
+				}
+				this.setState({
+					Events_Blockchain: filteredEvents,
+					// active_length: filteredEvents.length,
+				});
+				if((window.screen.height/window.screen.width)<1){
+					window.scroll(0, window.screen.height * 0.5);			
+				}else{
+					window.scroll(0, window.screen.height*0.58);
+				}
+				if(!this.props.match.params.ownerId){
+					this.props.history.push("/allevents/" + 1);
+				}
+			});
+		}
 	};
 
 	//Sort Active Events By Date(Newest/Oldest)
@@ -483,12 +519,12 @@ class FindEvents extends Component {
 	};
 
 	findNearToYouEvents = async () => {
-		this.setState({ loading: true });
+		this.setState({ loading: true, search:"" });
 
 		const cityName = this.state.cityName;
 		if (cityName) {
 			if(!this.props.match.params.ownerId){
-				this.props.history.push("/upcomingevents/" + 1);
+				this.props.history.push("/allevents/" + 1);
 			}
 			try {
 				if (cityName) {
@@ -503,6 +539,7 @@ class FindEvents extends Component {
 					this.setState({
 						Events_Blockchain: filteredEvents,
 						// event_copy: filteredEvents,
+						findNearEvents:filteredEvents
 					});
 					setTimeout(() => {
 						this.setState({ loading: false });
@@ -709,7 +746,7 @@ class FindEvents extends Component {
 					links.push(
 						<li className={"page-item " + active} key={i}>
 							<Link
-								to={"/upcomingevents/" + i}
+								to={"/allevents/" + i}
 								onClick={() =>
 									this.setState({
 										prevPath: currentPage,
@@ -734,7 +771,7 @@ class FindEvents extends Component {
 					links.push(
 						<li className={"page-item " + active} key={i}>
 							<Link
-								to={"/upcomingevents/" + i}
+								to={"/allevents/" + i}
 								onClick={() =>
 									this.setState({
 										prevPath: currentPage,
@@ -763,7 +800,7 @@ class FindEvents extends Component {
 					links.push(
 						<li className={"page-item " + active} key={i}>
 							<Link
-								to={"/upcomingevents/" + i}
+								to={"/allevents/" + i}
 								onClick={() =>
 									this.setState({
 										prevPath: currentPage,

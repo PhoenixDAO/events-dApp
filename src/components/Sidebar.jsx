@@ -441,12 +441,12 @@ class Sidebar extends Component {
 							<ul className="nav flex-column">
 								<li>
 									<NavLink
-										to="/upcomingevents/1"
+										to="/allevents/1"
 										className="nav-link"
 										activeClassName="nav-link-active"
 										isActive={() =>
 											this.context.router.route.location.pathname.split(
-												"/upcomingevents/"
+												"/allevents/"
 											).length > 1 ||
 											this.context.router.route.location.pathname.split(
 												"/event/"
@@ -738,12 +738,12 @@ class Sidebar extends Component {
 							<ul className="nav flex-column">
 								<li>
 									<NavLink
-										to="/upcomingevents/1"
+										to="/allevents/1"
 										className="nav-link"
 										activeClassName="nav-link-active"
 										isActive={() =>
 											this.context.router.route.location.pathname.split(
-												"/upcomingevents/"
+												"/allevents/"
 											).length > 1 ||
 											this.context.router.route.location.pathname.split(
 												"/event/"

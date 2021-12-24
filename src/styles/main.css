@@ -13,7 +13,11 @@
 	font-family: "AeonikReg";
 	src: url("../custom-font/Aeonik/Aeonik-Regular.otf");
 }
-
+@media screen and (min-width: 1000px){
+	iframe#myId {
+		width: 100% !important;
+	}
+}
 /* @font-face {
 	font-family: "Aeonik Air";
 	src: url("../fonts/Aeonik/Aeonik-AirItalic.woff2") format("woff2"),
@@ -418,6 +422,8 @@ input[type="number"] {
 	position: sticky;
 	z-index: 3;
 	top: 0;
+	padding-bottom:5px;
+	background-color: #F2F2FD;
 }
 .header3 {
 	/* display: flex; */
@@ -1919,6 +1925,7 @@ body,
 	padding-top: 15px;
 	padding-bottom: 0px;
 	text-align: left;
+	font-weight:700;
 	font-size: 14px;
 	overflow: hidden;
 	min-height: 70px;

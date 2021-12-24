@@ -105,9 +105,9 @@ const ConfirmPurchase = (props) => {
 	const [errorAddress, setErrorAddress] = useState(false);
 	const [errorId, seterrorId] = useState(false);
 	const [prevPath, setPrevPath] = useState(-1);
-	const [eventlength, setLength] = useState(0);
+	const [events, setEvents] = useState(null);
 
-	useEffect( () => {
+	useEffect(() => {
 		if (prevPath == -1) {
 			props.executeScroll();
 		}
@@ -127,7 +127,7 @@ const ConfirmPurchase = (props) => {
 			`,
 				},
 			});
-			setLength(result.data.data.events.length);
+			setEvents(result.data.data.events);
 		}
 		loadGraphData();
 	}, []);
@@ -138,16 +138,24 @@ const ConfirmPurchase = (props) => {
 		// 	.call();
 
 
-		const buyers = await generateBuyerArr(eventId);
 		const isaddress = Web3.utils.isAddress(address);
-		let error = parseInt(eventId) > parseInt(eventlength)
-		if (error) {
+		// let error = parseInt(eventId) > parseInt(events.length)
+		let error = events.filter((element) => {
+			// console.log("hello filter: ",parseInt(element.eventId) == parseInt(eventId.eventId), parseInt(element.eventId), parseInt(eventId))
+			return parseInt(element.eventId) == parseInt(eventId);
+		});
+
+		// console.log("hello error",events, error)
+
+		if (error.length == 0) {
 			seterrorId(true);
 		}
 		if (!isaddress) {
 			setErrorAddress(true);
 		}
-		if (isaddress && !error) {
+		const buyers = await generateBuyerArr(eventId);
+		if (isaddress && error.length != 0) {
+			// console.log("hello buyers", buyers)
 			const isowner = buyers.find((element) => {
 				return element.address.toLowerCase() == address.toLowerCase();
 			});

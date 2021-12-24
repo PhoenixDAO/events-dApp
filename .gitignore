@@ -1,7 +1,11 @@
 #folders
 node_modules
 build
+.github
+.firebase
 .env
+firebase.json
+.firebaserc
 
 #files
 yarn-error.log

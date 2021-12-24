@@ -58,11 +58,12 @@ const BuyPhoenixModal = (props) => {
 			name: "Transak",
 			coming: false,
 			transak: true,
+			onclick:true,
 		},
 		{
 			img: "/images/QuickSwap.svg",
 			name: "Quickswap",
-			coming: true,
+			coming: false,
 			onclick: true,
 			quickswap:true,
 			link:"https://quickswap.exchange/#/swap?outputCurrency=0x92c59f1cc9a322670cca29594e4d994d48bdfd36"
@@ -70,7 +71,7 @@ const BuyPhoenixModal = (props) => {
 		{
 			img: "/images/Uniswap.svg",
 			name: "Uniswap",
-			coming: true,
+			coming: false,
 			uniswap: true,
 			onclick:true
 		},
@@ -84,7 +85,7 @@ const BuyPhoenixModal = (props) => {
 		return (
 			<div
 				className="wallets-single"
-				onClick={data.uniswap? openUniswap: data.quickswap? openquickswap: null}
+				onClick={data.uniswap? openUniswap: data.quickswap? openquickswap:data.transak?openTransak: null}
 				style={data.onclick ? { cursor: "pointer" } : null}
 			>				
 				<div className="wallets-first">
