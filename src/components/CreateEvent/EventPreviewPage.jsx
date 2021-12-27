@@ -215,6 +215,32 @@ const styles = (theme) => ({
 			width: "auto",
 		},
 	},
+	imageDiv: {
+		// height: "70vh",
+		paddingBottom:"5px",
+		// maxHeight: "400px",
+		// minHeight:"300px",
+		paddingTop:"37.037%",
+		borderRadius:"8px",
+		position:"relative",
+		backgroundSize: "cover",
+		mozBackgroundSize: "cover",
+		backgroundPosition: "center",
+		"@media (max-width:1200px)":{
+			// height: "40vh",
+			// maxHeight:"300px",
+			// minHeight:"200px",
+		},
+		"@media (max-width:800px)":{
+			// maxHeight:"250px",
+			// minHeight:"100px",
+		}
+		,
+		"@media (max-width:400px)":{
+			// maxHeight:"150px",
+			// minHeight:"100px",
+		}
+	},
 });
 class EventPreviewPage extends Component {
 	constructor(props) {
@@ -225,6 +251,7 @@ class EventPreviewPage extends Component {
 			topic: "",
 			ticketIndex: 0,
 		};
+		console.log("hello props: ",props)
 		this.getOrganizerDetails = this.getOrganizerDetails.bind(this);
 		this._topicRemovedDashes = this._topicRemovedDashes.bind(this);
 	}
@@ -301,21 +328,39 @@ class EventPreviewPage extends Component {
 								</div>
 							</Grid>
 							<br />
-							<Grid lg={12}>
+							{/* <Grid lg={12}>
 								<img
 									className="card-img-top event-image"
 									alt={eventpreviewplaceholder}
 									height="324"
 									style={{ borderRadius: 12 }}
+									// image change will be here
 									src={
-										!this.props.image0
+										!this.props.image1
 											? eventpreviewplaceholder
 											: URL.createObjectURL(
-													this.props.image0
+													this.props.image1
 											  )
 									}
 								/>
-							</Grid>
+							</Grid> */}
+								<Grid
+									lg={12}
+									style={{
+										backgroundImage: `url("${!this.props.image1
+											? eventpreviewplaceholder
+											: URL.createObjectURL(
+													this.props.image1
+											  )}")`,
+									}}
+									className={classes.imageDiv}
+								>
+									{/* <img
+										className="card-img-top event-image"
+										src={image}
+										alt="Event"
+									/> */}
+								</Grid>
 							<Grid container>
 								<Grid
 									lg={9}
