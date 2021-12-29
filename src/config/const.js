@@ -71,9 +71,9 @@ export const GLOBAL_NETWORK_ID = 4;
 export const GLOBAL_NETWORK_ID_2 = 137;
 
 // export const API_URL = "https://events.server.pehchan.me/";
-export const API_URL = "https://events-api.phoenixdao.io/";
+// export const API_URL = "https://events-api.phoenixdao.io/";
 //"https://phoenix-event-dapp-backend-tst.herokuapp.com/";
-// export const API_URL = "http://localhost:5000/";
+export const API_URL = "http://localhost:5000/";
 
 export const REPORT_EVENT = "event/report";
 export const GET_USER_DETAIL = "user/details";

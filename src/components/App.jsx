@@ -938,6 +938,7 @@ class App extends Component {
 	};
 
 	handleSignMessage = async (publicAddress, message) => {
+		console.log('Public addrress sign ==>>', publicAddress.toLowerCase(),' mesg =>', message)
 		try {
 			// utf8ToHex
 			// sha3
@@ -948,12 +949,16 @@ class App extends Component {
 			// 	console.log
 			// );
 			let msg = await web3.utils.utf8ToHex(message)
+			console.log('msg utf8ToHex ==>>', msg)
 			const sign = await web3.eth.personal.sign(
 				msg,
-				publicAddress,
+				publicAddress.toLowerCase(),
 				console.log
 			);
 			console.log('res of sign', sign)
+
+			// let decrypt = await web3.eth.personal.ecRecover(message, sign)
+			// console.log('decryption sign ==>>', decrypt )
 			return sign;
 		} catch (err) {
 			console.log('Err at handleSignMessage', err)
