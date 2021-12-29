@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import SocialMedia from "./common/SocialMedia";
@@ -931,6 +931,10 @@ class EventPage extends Component {
 		this.updateIPFS();
 	}
 
+	// componentDidUpdate(){
+	// 	console.log('this.state.blockChainEvent ==>>> ',this.state.blockChainEvent)
+	// }
+
 	async getPhoenixDAOMarketValue() {
 		fetch(
 			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
@@ -957,6 +961,7 @@ class EventPage extends Component {
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
 							if (!this.isCancelled) {
+								console.log('this.state.blockChainEvent ==>>> ',this.state.blockChainEvent)
 								this.setState({
 									loading: false,
 									loaded: true,

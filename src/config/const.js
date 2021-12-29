@@ -50,7 +50,6 @@ export const INFURA_WEB_URL =
 export const graphURLV1 =
 	"https://api.thegraph.com/subgraphs/name/musfirazia/eventsdapp";
 
-
 // Ethereum mainnet
 // export const INFURA_URL =
 // 	"https://mainnet.infura.io/v3/3c62e62341b34568a512b8917a59ad63";
@@ -75,6 +74,7 @@ export const GLOBAL_NETWORK_ID_2 = 137;
 export const API_URL = "https://events-api.phoenixdao.io/";
 //"https://phoenix-event-dapp-backend-tst.herokuapp.com/";
 // export const API_URL = "http://localhost:5000/";
+
 export const REPORT_EVENT = "event/report";
 export const GET_USER_DETAIL = "user/details";
 export const GET_USER_EXIST_DETAIL = "user/detailsExist";

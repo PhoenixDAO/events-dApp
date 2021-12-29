@@ -25,6 +25,7 @@ async function getResult(eventId) {
         `,
 			},
 		});
+		console.log("hello 2 , ", result.data.data);
 		return result.data.data.tickets;
 	} catch (err) {
 		// console.log("error while fetching tickets", err);
@@ -46,6 +47,7 @@ export async function generateBuyerArr(eventId) {
 	for (const [key, value] of Object.entries(buyersListJson)) {
 		buyer.push({ address: key, count: value });
 	}
+	console.log("hello ", buyer);
 	return buyer;
 }
 // get Ticket sold by location
