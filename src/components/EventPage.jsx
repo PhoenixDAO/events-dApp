@@ -237,28 +237,29 @@ const styles = (theme) => ({
 		// },
 	},
 	imageDiv: {
-		height: "70vh",
+		// height: "70vh",
 		paddingBottom:"5px",
-		maxHeight: "400px",
-		minHeight:"300px",
+		// maxHeight: "400px",
+		// minHeight:"300px",
+		paddingTop:"37.037%",
 		borderRadius:"8px",
 		position:"relative",
 		backgroundSize: "cover",
 		mozBackgroundSize: "cover",
 		backgroundPosition: "center",
 		"@media (max-width:1200px)":{
-			height: "40vh",
-			maxHeight:"300px",
-			minHeight:"200px",
+			// height: "40vh",
+			// maxHeight:"300px",
+			// minHeight:"200px",
 		},
 		"@media (max-width:800px)":{
-			maxHeight:"250px",
-			minHeight:"100px",
+			// maxHeight:"250px",
+			// minHeight:"100px",
 		}
 		,
 		"@media (max-width:400px)":{
-			maxHeight:"150px",
-			minHeight:"100px",
+			// maxHeight:"150px",
+			// minHeight:"100px",
 		}
 	},
 	selectInput: {
@@ -1024,7 +1025,8 @@ class EventPage extends Component {
 	getImage = () => {
 		let image = "/images/loading_image_ipfs.png";
 		if (this.state.ipfs_problem) image = "/images/problem_ipfs.png";
-		if (this.state.image !== null) image = this.state.image;
+		// below this image will be image1 which will be taken as cover image always
+		if (this.state.image1 !== null) image = this.state.image1;
 		return image;
 	};
 

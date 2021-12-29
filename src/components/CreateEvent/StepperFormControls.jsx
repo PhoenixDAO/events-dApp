@@ -225,7 +225,7 @@ export const useFormControls = () => {
 					? ""
 					: parsedCookies.city.name,
 		},
-		images: [{ name: "" }],
+		images: [{ name: "" },{name:""}],
 		//3rd_stepper
 		eventCategory: parsedCookies.eventCategory
 			? parsedCookies.eventCategory

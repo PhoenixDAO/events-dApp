@@ -606,7 +606,7 @@ const MyStepper = ({
 										<br />
 
 										<label className={classes.label}>
-											COVER IMAGE {index + 1}
+										{index === 0 ? (`Event Image`):(`COVER IMAGE ${index}`)}
 										</label>
 										<div style={{ position: "relative" }}>
 											<TextField
@@ -659,10 +659,16 @@ const MyStepper = ({
 													}
 												>
 													Max: 3 Pictures. Not greater
-													than 5MB (Recommended 1000px
-													* 1000px)
+													than 5MB (Recommended 16:9 ratio picture)
 												</p>
-											) : (
+											) : index === 1 ?(<p
+												className={
+													classes.imageMaxStyle
+												}
+											>
+												Event page Cover Image should not greater than
+												than 5MB (Recommended 21:8 ratio picture)
+											</p>): (
 												<button
 													className={
 														classes.deleteImageButton
