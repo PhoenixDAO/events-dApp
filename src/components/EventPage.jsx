@@ -631,6 +631,7 @@ class EventPage extends Component {
 						name
 						topic
 						location
+						isPHNX
 						city
 						ipfsHash
 						tktLimited
@@ -712,6 +713,7 @@ class EventPage extends Component {
 					name
 					topic
 					location
+					isPHNX
 					city
 					ipfsHash
 					tktLimited
@@ -734,7 +736,7 @@ class EventPage extends Component {
 		})
 			.then(async (graphEvents) => {
 				if (graphEvents.data.data.events.length > 0) {
-					// console.log("hello: event exists ", graphEvents.data.data.events)
+					console.log("hello: event exists ", graphEvents.data.data.events)
 					// console.log("hello: event url is title",this.props.match.params.title )
 					// console.log("hello: event url is title",urlFormatter(graphEvents.data.data.events[0].name) )
 					if(this.props.match.params.title == urlFormatter(graphEvents.data.data.events[0].name)){
@@ -998,24 +1000,48 @@ class EventPage extends Component {
 	};
 	priceCalculation = (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
-		let phnx_price = event_data.prices.map((price) => {
-			// return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
-			// 	2
-			// );
-			return (
-				Web3.utils.fromWei(price.toString()) /
-				this.state.PhoenixDAO_market.usd
-			).toFixed(3);
-		});
+		if(event_data.isPHNX){
+			let dollar_price = event_data.prices.map((price) => {
+				// return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
+				// 	2
+				// );
+				return (
+					Web3.utils.fromWei(price.toString()) *
+					this.state.PhoenixDAO_market.usd
+				).toFixed(3);
+			});
+			let phnx_price = Web3.utils.fromWei(
+				event_data.prices[categoryIndex].toString()
+				);
+				console.log("dollar_price: ", dollar_price,phnx_price)
+			let priceInPhnx = event_data.token
+				? phnx_price + "PHNX"
+				: "FREE";
+			let priceInDollar = event_data.token ? "$" + dollar_price[categoryIndex] : "";
+			this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
 
-		let dollar_price = Web3.utils.fromWei(
-			event_data.prices[categoryIndex].toString()
-		);
-		let priceInPhnx = event_data.token
-			? phnx_price[categoryIndex] + "PHNX"
-			: "FREE";
-		let priceInDollar = event_data.token ? "$" + dollar_price : "";
-		this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
+		}
+		else{
+			let phnx_price = event_data.prices.map((price) => {
+				// return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
+				// 	2
+				// );
+				return (
+					Web3.utils.fromWei(price.toString()) /
+					this.state.PhoenixDAO_market.usd
+				).toFixed(3);
+			});
+	
+			let dollar_price = Web3.utils.fromWei(
+				event_data.prices[categoryIndex].toString()
+			);
+			console.log("dollar_price: ", dollar_price,phnx_price)
+			let priceInPhnx = event_data.token
+				? phnx_price[categoryIndex] + "PHNX"
+				: "FREE";
+			let priceInDollar = event_data.token ? "$" + dollar_price : "";
+			this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
+		}
 	};
 	getImage = () => {
 		let image = "/images/loading_image_ipfs.png";
