@@ -47,8 +47,11 @@ export const INFURA_WEB_URL =
 	"wss://rinkeby.infura.io/ws/v3/388c2e54484b4d90a0a54aa9238f1db7";
 // export const graphURLV1 =
 // 	"https://api.thegraph.com/subgraphs/name/hakeemullahjan/eventcheck";
-export const graphURLV1 =
-	"https://api.thegraph.com/subgraphs/name/musfirazia/eventsdapp";
+// previous rinkeby contract graph api address without isphnx field
+// export const graphURLV1 =
+// 	"https://api.thegraph.com/subgraphs/name/musfirazia/eventsdapp";
+	export const graphURLV1 =
+	"https://api.thegraph.com/subgraphs/name/ijlal-ishaq/phnx-events-dapp";
 
 
 // Ethereum mainnet

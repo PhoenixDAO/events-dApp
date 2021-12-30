@@ -27,6 +27,7 @@ import {
 	GLOBAL_NETWORK_ID_2,
 } from "../../config/const.js";
 import { userTweet } from "../../config/serverAPIs";
+import { urlFormatter } from "../../utils/urlFormatter";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -138,7 +139,7 @@ class CreateEvent extends Component {
 			.call();
 		eventCount = Number(eventCount) + 1;
 		var base_url = window.location.origin;
-		const shareUrl = `${base_url}/event/${eventName}/${eventCount}`;
+		const shareUrl = `${base_url}/event/${urlFormatter(eventName)}/${eventCount}`;
 		this.setState({ shareUrl: shareUrl });
 	}
 
@@ -152,6 +153,7 @@ class CreateEvent extends Component {
 			eventCategory,
 			eventLocation,
 			eventLink,
+			isPHNX,
 			restrictWallet: oneTimeBuy,
 			ticketCategories, // categories: ticketCategories,
 			token, //false means free
@@ -231,10 +233,20 @@ class CreateEvent extends Component {
 
 		for (var i = 0; i < ticketCategories.length; i++) {
 			categories.push(ticketCategories[i].ticketName);
-			prices.push(
-				Web3.utils.toWei(ticketCategories[i].dollarPrice.toString())
-			);
-
+			// we should send phoenix price instead of dollar price
+			console.log("hello prices", ticketCategories)
+			if(isPHNX){
+				prices.push(
+					Web3.utils.toWei(ticketCategories[i].phnxPrice.toString())
+				);
+				console.log("hello prices",prices)
+			}else{
+				prices.push(
+					Web3.utils.toWei(ticketCategories[i].dollarPrice.toString())
+				);
+				console.log("hello prices",prices)
+			}
+			
 			tktQntySold.push("0");
 
 			ticketLimited.push(
@@ -311,12 +323,12 @@ class CreateEvent extends Component {
 				infura = INFURA_URL_2;
 			}
 			const web3 = new Web3(infura);
-
 			this.props.eventsContract.methods
 				.createEvent([
 					oneTimeBuy,
 					token, // false means free
 					onsite, // true means event is onsite
+					isPHNX,
 					this.props.accounts[0], //owner
 					time.toString(), //time
 					totalQuantity.toString(), //totalQuantity

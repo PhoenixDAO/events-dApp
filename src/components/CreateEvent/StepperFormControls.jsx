@@ -233,6 +233,9 @@ export const useFormControls = () => {
 		restrictWallet: parsedCookies.restrictWallet
 			? parsedCookies.restrictWallet
 			: false,
+			isPHNX: parsedCookies.isPHNX
+			? parsedCookies.isPHNX
+			: false,
 		ticketIndex: parsedCookies.ticketIndex ? parsedCookies.ticketIndex : 0,
 		ticketName: parsedCookies.ticketName ? parsedCookies.ticketName : "",
 		dollarPrice: parsedCookies.dollarPrice ? parsedCookies.dollarPrice : "0",
@@ -607,6 +610,7 @@ export const useFormControls = () => {
 			eventCategory,
 			ticketIndex,
 			restrictWallet,
+			isPHNX,
 			ticketCategories,
 			ticketAvailability,
 			phnxPrice,
