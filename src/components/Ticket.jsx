@@ -289,6 +289,7 @@ class Ticket extends Component {
 							owner
 							name
 							topic
+							isPHNX
 							location
 							city
 							ipfsHash
