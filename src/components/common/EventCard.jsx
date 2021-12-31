@@ -646,6 +646,64 @@ const EventCard = (props, context) => {
 									))}
 									{/* {console.log("price",event_data.name, dollar_price, typeof(dollar_price))} */}
 								</Typography>
+
+              {/* <FormControl
+								variant="outlined"
+								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
+							>
+								<Typography
+									ref={this.eventRef}
+									variant="div"
+									className={`${classes.sortBy}`}
+								>
+									Sort:
+								</Typography>
+								<Select
+									labelId="demo-simple-select-outlined-label"
+									id="demo-simple-select-outlined"
+									fullWidth
+									value={this.state.category}
+									onChange={this.categoryChange}
+									displayEmpty
+									className={classes.menuPaper}
+									MenuProps={{
+										classes: {
+											paper: classes.menuPaper,
+										},
+										getContentAnchorEl: null,
+										anchorOrigin: {
+											vertical: "bottom",
+											horizontal: "left",
+										},
+									}}
+								>
+									<MenuItem
+										value="All Events"
+										style={{
+											fontFamily: "'Aeonik', sans-serif",
+										}}
+									>
+										All Events
+									</MenuItem>
+									<MenuItem
+										value="Trending Events"
+										style={{
+											fontFamily: "'Aeonik', sans-serif",
+										}}
+									>
+										Trending Events
+									</MenuItem>
+									<MenuItem
+										value="populartopics"
+										style={{
+											fontFamily: "'Aeonik', sans-serif",
+										}}
+									>
+										Popular Topics
+									</MenuItem>
+								</Select>
+							</FormControl> */}
+
 								{/* ? `Starting from ${prices[0]} PHNX` : prices[0]} */}
 
 								{/* <div className={classes.eventinfo}>
