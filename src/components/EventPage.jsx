@@ -1077,23 +1077,31 @@ class EventPage extends Component {
 			// console.log("err", err);
 		}
 	};
-	handleExportCSV = () =>{
-let data = ["buyers",];
-this.state.soldTicket.map((transaction)=>{
-	data.push(transaction.address)
-})
 
-  var csvContent = '';
-data.forEach(function(infoArray, index) {
-  csvContent += index < data.length ? infoArray + '\n' : infoArray;
-});
-let link = document.createElement('a');
-link.setAttribute('href',  'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
-link.setAttribute('download', `${urlFormatter(this.state.blockChainEvent.name)}.csv`);
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
+	handleExportCSV = () => {
+    let data = ["buyers",];
+    this.state.soldTicket.map((transaction)=>{
+      data.push(transaction.address)
+    })
+
+    var csvContent = '';
+    data.forEach(function(infoArray, index) {
+      csvContent += index < data.length ? infoArray + '\n' : infoArray;
+    });
+    let link = document.createElement('a');
+    link.setAttribute('href',  'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
+    link.setAttribute('download', `${urlFormatter(this.state.blockChainEvent.name)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 	}
+
+  handleValidateUserFirstBuy = async (address, eventId) => {
+    let res = await this.props.phnxContract.methods
+    .getTicketOwner(address, eventId)
+    .call();
+    return res
+  }
 
 	handleClickOpen = async () => {
 		if (
@@ -1106,7 +1114,14 @@ document.body.removeChild(link);
 			});
 		} else {
 			// this.setState({ open2: true });
-			if (this.state.oneTimeBuy) {
+			if (this.state.oneTimeBuy) { // This is check for one time buy (onetimebuy)
+        try{
+          console.log('Arguments for getTicketOwner ==>>>> 1=> ',this.props.accounts[0].toLowerCase(), ' 2=> ',  this.state.blockChainEvent.eventId)
+          let res = await this.handleValidateUserFirstBuy(this.props.accounts[0].toLowerCase(), this.state.blockChainEvent.eventId)
+          console.log('Res of handleValidateUserFirstBuy() ==>>>', res)
+        }catch(e){
+          console.log('Errr at handleValidateUserFirstBuy', e)
+        }
 				let buyers = this.state.soldTicket;
 				const account = this.props.accounts[0];
 				if (this.userExists(buyers, account)) {
