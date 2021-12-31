@@ -1123,7 +1123,14 @@ class EventPage extends Component {
 	}
 
   handleValidateUserFirstBuy = async (address, eventId) => {
-    let res = await this.props.phnxContract.methods
+    const web3 = new Web3(
+      		new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
+      	);
+    const eventContract = await new web3.eth.Contract(
+      Open_events_ABI,
+      Open_events_Address
+    );
+    let res = await eventContract.methods
     .getTicketOwner(address, eventId)
     .call();
     return res
@@ -1141,16 +1148,18 @@ class EventPage extends Component {
 		} else {
 			// this.setState({ open2: true });
 			if (this.state.oneTimeBuy) { // This is check for one time buy (onetimebuy)
-        try{
-          console.log('Arguments for getTicketOwner ==>>>> 1=> ',this.props.accounts[0].toLowerCase(), ' 2=> ',  this.state.blockChainEvent.eventId)
-          let res = await this.handleValidateUserFirstBuy(this.props.accounts[0].toLowerCase(), this.state.blockChainEvent.eventId)
-          console.log('Res of handleValidateUserFirstBuy() ==>>>', res)
-        }catch(e){
-          console.log('Errr at handleValidateUserFirstBuy', e)
-        }
+        let result = await this.handleValidateUserFirstBuy(this.props.accounts[0].toLowerCase(), this.state.blockChainEvent.eventId)
+        // try{
+        //   console.log('Arguments for handleValidateUserFirstBuy ==>>>> 1=> ',this.props.accounts[0].toLowerCase(), ' 2=> ',  this.state.blockChainEvent.eventId)
+        //   let res = await this.handleValidateUserFirstBuy(this.props.accounts[0].toLowerCase(), this.state.blockChainEvent.eventId)
+        //   console.log('Res of handleValidateUserFirstBuy() ==>>>', res)
+        // }catch(e){
+        //   console.log('Errr at handleValidateUserFirstBuy', e)
+        // }
+		// return
 				let buyers = this.state.soldTicket;
 				const account = this.props.accounts[0];
-				if (this.userExists(buyers, account)) {
+				if (this.userExists(buyers, account) || result) {
 					// alert("One time buy");
 					this.setState({
 						open3: true,
