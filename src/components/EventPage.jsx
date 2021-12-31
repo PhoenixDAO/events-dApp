@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import SocialMedia from "./common/SocialMedia";
@@ -934,10 +934,6 @@ class EventPage extends Component {
 		this.updateIPFS();
 	}
 
-	// componentDidUpdate(){
-	// 	console.log('this.state.blockChainEvent ==>>> ',this.state.blockChainEvent)
-	// }
-
 	async getPhoenixDAOMarketValue() {
 		fetch(
 			"https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture"
@@ -964,7 +960,6 @@ class EventPage extends Component {
 						.then((file) => {
 							let data = JSON.parse(file[0].content.toString());
 							if (!this.isCancelled) {
-								console.log('this.state.blockChainEvent ==>>> ',this.state.blockChainEvent)
 								this.setState({
 									loading: false,
 									loaded: true,
@@ -1103,38 +1098,23 @@ class EventPage extends Component {
 			// console.log("err", err);
 		}
 	};
+	handleExportCSV = () =>{
+let data = ["buyers",];
+this.state.soldTicket.map((transaction)=>{
+	data.push(transaction.address)
+})
 
-	handleExportCSV = () => {
-    let data = ["buyers",];
-    this.state.soldTicket.map((transaction)=>{
-      data.push(transaction.address)
-    })
-
-    var csvContent = '';
-    data.forEach(function(infoArray, index) {
-      csvContent += index < data.length ? infoArray + '\n' : infoArray;
-    });
-    let link = document.createElement('a');
-    link.setAttribute('href',  'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
-    link.setAttribute('download', `${urlFormatter(this.state.blockChainEvent.name)}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  var csvContent = '';
+data.forEach(function(infoArray, index) {
+  csvContent += index < data.length ? infoArray + '\n' : infoArray;
+});
+let link = document.createElement('a');
+link.setAttribute('href',  'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
+link.setAttribute('download', `${urlFormatter(this.state.blockChainEvent.name)}.csv`);
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
 	}
-
-  handleValidateUserFirstBuy = async (address, eventId) => {
-    const web3 = new Web3(
-      		new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
-      	);
-    const eventContract = await new web3.eth.Contract(
-      Open_events_ABI,
-      Open_events_Address
-    );
-    let res = await eventContract.methods
-    .getTicketOwner(address, eventId)
-    .call();
-    return res
-  }
 
 	handleClickOpen = async () => {
 		if (
@@ -1147,19 +1127,10 @@ class EventPage extends Component {
 			});
 		} else {
 			// this.setState({ open2: true });
-			if (this.state.oneTimeBuy) { // This is check for one time buy (onetimebuy)
-        let result = await this.handleValidateUserFirstBuy(this.props.accounts[0].toLowerCase(), this.state.blockChainEvent.eventId)
-        // try{
-        //   console.log('Arguments for handleValidateUserFirstBuy ==>>>> 1=> ',this.props.accounts[0].toLowerCase(), ' 2=> ',  this.state.blockChainEvent.eventId)
-        //   let res = await this.handleValidateUserFirstBuy(this.props.accounts[0].toLowerCase(), this.state.blockChainEvent.eventId)
-        //   console.log('Res of handleValidateUserFirstBuy() ==>>>', res)
-        // }catch(e){
-        //   console.log('Errr at handleValidateUserFirstBuy', e)
-        // }
-		// return
+			if (this.state.oneTimeBuy) {
 				let buyers = this.state.soldTicket;
 				const account = this.props.accounts[0];
-				if (this.userExists(buyers, account) || result) {
+				if (this.userExists(buyers, account)) {
 					// alert("One time buy");
 					this.setState({
 						open3: true,
@@ -1270,7 +1241,6 @@ class EventPage extends Component {
 				await this.allowance();
 				this.setState({
 					loadingApprove: false,
-					boughtTicket:this.state.boughtTicket+1
 				});
 			})
 			.on("error", (error) => {
@@ -1379,6 +1349,9 @@ class EventPage extends Component {
 					async () => {
 						// let temp = await this.allowance();
 						if ((await this.allowance()) == 0) {
+              this.setState({
+                boughtTicket:this.state.boughtTicket+1
+              });
 							this.handleClickOpen();
 						} else {
 							await this.props.inquire(
@@ -2217,12 +2190,10 @@ class EventPage extends Component {
 											<ConfirmationNumberOutlined />
 											Tickets Bought
 										</p>
-										<p className={classes.eventinfo}>
-											{
-												(parseInt(event_data.catTktQuantitySold[
-													this.state
-														.selectedCategoryIndex
-												]) +this.state.boughtTicket).toString()
+										<p className={classes.eventinfo}>									
+{
+												(parseInt(event_data.tktTotalQuantitySold) +this.state.boughtTicket).toString()
+												// event_data.tktTotalQuantitySold
 												// event_data.tktTotalQuantitySold
 											}
 											/{max_seats}
