@@ -607,7 +607,7 @@ const MyStepper = ({
 										<br />
 
 										<label className={classes.label}>
-										{index === 0 ? (`Event Image`):(`COVER IMAGE ${index}`)}
+										{index === 0 ? (`EVENT IMAGE`):(`COVER IMAGE ${index}`)}
 										</label>
 										<div style={{ position: "relative" }}>
 											<TextField
@@ -1548,6 +1548,7 @@ const MyStepper = ({
 									</span>
 								}
 							/>
+							{(eventCategory !== "free" )&&
 							<FormControlLabel
 								control={
 									<Checkbox
@@ -1572,7 +1573,7 @@ const MyStepper = ({
 										Would you like to fix phnx price? otherwise you will be paid with respect to dollar price
 									</span>
 								}
-							/>
+							/>}
 						</div>
 					</React.Fragment>
 				);
