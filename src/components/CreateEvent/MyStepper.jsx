@@ -110,6 +110,7 @@ const MyStepper = ({
 		eventCategory,
 		ticketIndex,
 		restrictWallet,
+		isPHNX,
 		ticketCategories,
 		isCompleted,
 		//4th_stepper
@@ -1544,6 +1545,31 @@ const MyStepper = ({
 										className={classes.restrictWalletLabel}
 									>
 										Restrict Wallet Address to one Ticket
+									</span>
+								}
+							/>
+							<FormControlLabel
+								control={
+									<Checkbox
+										icon={<img src={uncheckedIcon} />}
+										checkedIcon={<img src={checkedIcon} />}
+										checked={!!isPHNX}
+										onChange={(e) => {
+											handlePickerValue({
+												name: "isPHNX",
+												value: !isPHNX,
+											});
+										}}
+										name="isPHNX"
+										id="isPHNX"
+										color="primary"
+									/>
+								}
+								label={
+									<span
+										className={classes.restrictWalletLabel}
+									>
+										Would you like to fix phnx price? otherwise you will be paid with respect to dollar price
 									</span>
 								}
 							/>

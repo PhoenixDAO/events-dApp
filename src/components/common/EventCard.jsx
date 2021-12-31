@@ -25,6 +25,8 @@ import {
 	Grid,
 	Typography,
 	Link,
+	Select,
+	MenuItem,
 } from "@material-ui/core";
 import {
 	DateRange,
@@ -189,6 +191,9 @@ const useStyles = makeStyles((theme) => ({
 	priceAlignment: {
 		textAlign: "end",
 	},
+	menuPaper: {
+		maxHeight: "200px",
+	},
 	dateWidthMobile: {
 		"@media (max-width:450px)": {
 			maxWidth: "80%",
@@ -342,15 +347,31 @@ const EventCard = (props, context) => {
 			})
 			.catch(console.log);
 	};
-
-	let phnx_price = event_data.prices.map((price) => {
+	console.log("phnx price coingecko: ",event_data.prices)
+	let dollar_price = "";
+	let phnx_price = "";
+	if(event_data.isPHNX){
+		 dollar_price = event_data.prices.map((price) => {
+			return (
+				Web3.utils.fromWei(price.toString()) *
+				PhoenixDAO_market.usd
+			).toFixed(3);
+		});
+		 phnx_price = Web3.utils.fromWei(event_data.prices[0].toString());
+		 console.log("phnx price coingecko: ",phnx_price, dollar_price)
+	}
+	else{
+		 phnx_price = event_data.prices.map((price) => {
 		// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
 		return (
 			Web3.utils.fromWei(price.toString()) / PhoenixDAO_market.usd
-		).toFixed(3);
-	});
-	// let dollar_price = event_data.prices[0] / 1000000;
-	let dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
+			).toFixed(3);
+		});
+		//  dollar_price = event_data.prices[0] / 1000000;
+		dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
+		console.log("phnx price coingecko: ",phnx_price, dollar_price)
+	}
+	
 
 	const checkExpiry = () => {
 		if (props.checkExpiry || props.selectedTab) {
@@ -508,7 +529,65 @@ const EventCard = (props, context) => {
 								>
 									{!event_data.token ? (
 										"Free"
-									) : phnx_price.length === 1 ? (
+									) : (event_data.isPHNX)?(
+									dollar_price.length === 1 ? (
+										<div className={classes.priceAlignment}>
+											<p
+												title={phnx_price + " PHNX"}
+												style={{
+													fontFamily:
+														'"Aeonik", sans-serif',
+												}}
+											>
+												{pricingFormatter(
+													phnx_price,
+													"PHNX"
+												)}
+											</p>
+											<p
+												className={classes.starting}
+												title={"$" + dollar_price[0]}
+											>
+												{" "}
+												{pricingFormatter(
+													dollar_price[0],
+													"$"
+												)}
+											</p>
+										</div>
+									) : (
+										<div className={classes.priceAlignment}>
+											<p
+												className={classes.starting}
+												title={phnx_price}
+											>
+												Starting from
+											</p>
+											<p
+												title={phnx_price + " PHNX"}
+												style={{
+													fontFamily:
+														'"Aeonik", sans-serif',
+												}}
+											>
+												{pricingFormatter(
+													phnx_price,
+													"PHNX"
+												)}
+											</p>
+											<p
+												className={classes.starting}
+												title={"$" + dollar_price[0]}
+											>
+												{" "}
+												{pricingFormatter(
+													dollar_price[0],
+													"$"
+												)}
+											</p>
+										</div>
+									))
+									:(phnx_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
 											<p
 												title={phnx_price[0] + " PHNX"}
@@ -548,7 +627,6 @@ const EventCard = (props, context) => {
 														'"Aeonik", sans-serif',
 												}}
 											>
-												{/* {phnx_price[0]} */}
 												{pricingFormatter(
 													phnx_price[0],
 													"PHNX"
@@ -565,7 +643,7 @@ const EventCard = (props, context) => {
 												)}
 											</p>
 										</div>
-									)}
+									))}
 									{/* {console.log("price",event_data.name, dollar_price, typeof(dollar_price))} */}
 								</Typography>
 
