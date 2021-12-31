@@ -51,7 +51,7 @@ export const INFURA_WEB_URL =
 // export const graphURLV1 =
 // 	"https://api.thegraph.com/subgraphs/name/musfirazia/eventsdapp";
 	export const graphURLV1 =
-	"https://api.thegraph.com/subgraphs/name/ijlal-ishaq/phnx-events-dapp";
+	"https://api.thegraph.com/subgraphs/name/ijlal-ishaq/phnx-app";
 
 // Ethereum mainnet
 // export const INFURA_URL =
