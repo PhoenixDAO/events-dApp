@@ -180,6 +180,7 @@ class MyEvents extends Component {
                             eventId
                             owner
                             name
+							isPHNX
                             topic
                             location
 							city
@@ -260,6 +261,7 @@ class MyEvents extends Component {
 							eventId
 							owner
 							name
+							isPHNX
 							topic
 							location
 							city

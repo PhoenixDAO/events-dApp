@@ -194,6 +194,7 @@ class Favorites extends Component {
 					owner
 					name
 					topic
+					isPHNX
 					location
 					city
 					ipfsHash
