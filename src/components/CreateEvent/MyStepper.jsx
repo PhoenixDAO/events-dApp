@@ -1569,7 +1569,7 @@ const MyStepper = ({
 									<span
 										className={classes.restrictWalletLabel}
 									>
-										Would you like to fix phnx price? otherwise you will be paid with respect to dollar price
+										Would you like to fix PHNX price? Otherwise you will be paid with respect to dollar price
 									</span>
 								}
 							/>}
