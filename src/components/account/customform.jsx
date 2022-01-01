@@ -20,7 +20,7 @@ const CustomForm = React.memo((props) => {
 			setFile(e.target.files);
 			setErrorFile("");
 		} else {
-			setErrorFile("File should be be less then 3mb!");
+			setErrorFile("File should be be less than 3MB!");
 		}
 	};
 

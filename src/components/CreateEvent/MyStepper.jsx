@@ -659,8 +659,7 @@ const MyStepper = ({
 														classes.imageMaxStyle
 													}
 												>
-													Max: 3 Pictures. Not greater
-													than 5MB (Recommended 16:9 ratio picture)
+													Event Card Image should not be greater than 5MB (Recommended 16:9 ratio picture)
 												</p>
 											) : index === 1 ?(<p
 												className={
