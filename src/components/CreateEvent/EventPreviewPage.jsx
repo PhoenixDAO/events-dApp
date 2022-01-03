@@ -220,7 +220,7 @@ const styles = (theme) => ({
 		paddingBottom:"5px",
 		// maxHeight: "400px",
 		// minHeight:"300px",
-		paddingTop:"37.037%",
+		paddingTop:"36.037%",
 		borderRadius:"8px",
 		position:"relative",
 		backgroundSize: "cover",

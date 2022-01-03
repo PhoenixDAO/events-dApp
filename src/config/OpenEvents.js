@@ -9,7 +9,8 @@
 // RINKEBY TESTNET
 // export const Open_events_Address = "0xa8b9A1dA93B4a96d9D0a464f6897A9A7D20c9874";
 // export const Open_events_Address = "0xC9eE8Eab00c8C4662A71C1E336790C882C396bF9";
-export const Open_events_Address = "0x332B99cf442a28Bdc1Db74c05e7BF9D5c4a582bE";
+// export const Open_events_Address = "0x332B99cf442a28Bdc1Db74c05e7BF9D5c4a582bE";
+export const Open_events_Address = "0x96E60b646DcDE6CEd921A8F10d2B69f359Ed50bb";
 
 //Ethereum mainnet
 // export const Open_events_Address = "0xf48E0D934B505C80b6dD3ef4d178D7c8fB83f566";
