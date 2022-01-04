@@ -18,6 +18,7 @@ import {
 	GLOBAL_NETWORK_ID_2,
 	INFURA_URL,
 	INFURA_URL_2,
+  networkArray
 } from "../../config/const";
 
 // import { useHistory } from "react-router-dom";
@@ -25,7 +26,7 @@ const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
 	const [organizer, setOrganizer] = useState("");
 	const [avatarCustom, setAvatarCustom] = useState(false);
-	const [alternateCurrency, setAlternateCurrency] = useState("Dollar");
+	const [alternateCurrency, setAlternateCurrency] = useState(null);
 	const [avatar, setAvatar] = useState("");
 	const [nextForm, setNextForm] = useState(false);
 	const orgref = useRef(null);
@@ -35,6 +36,7 @@ const DetailForm = (props) => {
 	const [ipfsImage, setIpfsImage] = useState("");
 	const [loading, setLoading] = useState(false);
 	// const history = useHistory();
+
 	useEffect(() => {
 		// console.log("this.props.userDetails", props.userDetails);
 		provideImage();
@@ -232,8 +234,15 @@ const DetailForm = (props) => {
 		setAvatarNumber(value);
 	};
 
+  useEffect(()=>{
+    if(props.networkId){
+      setAlternateCurrency({tokenName:'usdt', chainId: props.networkId})
+    }
+  },[props.networkId])
+
 	const updateUserInfo = async (e) => {
 		e.preventDefault();
+    console.log('alternateCurrency =>> ', alternateCurrency)
 		setLoading(true);
 		const detail = await updateUserDetails({
 			address: props.account,
@@ -275,13 +284,24 @@ const DetailForm = (props) => {
 	// 	// }
 	// };
 
-	const currency = [
-		{ name: "Dollar", flag: "" },
-		{ name: "Euro", flag: "" },
-		{ name: "British Pound", flag: "" },
-	].map((data) => {
-		return <option value={data.name}>{data.name}</option>;
-	});
+  useEffect(()=>{
+    if(props.userDetails){
+      console.log('UserDetails ,=>>', props.userDetails)
+    }
+  },[props.userDetails])
+
+  useEffect(()=>{
+    console.log('alternateCurrency =>> ', alternateCurrency)
+  },[alternateCurrency])
+
+	// const currency = [
+	// 	{ name: "USDT", flag: "" },
+	// 	{ name: "PHNX", flag: "" },
+	// 	{ name: "MATIC", flag: "" },
+  //   { name: "ETHER", flag: "" },
+	// ].map((data) => {
+	// 	return <option value={data.name}>{data.name}</option>;
+	// });
 
 	return (
 		<div className="dtl-hldr">
@@ -333,22 +353,28 @@ const DetailForm = (props) => {
 							</div>
 						</div>
 					</div>
-					{/* <div className="acc-form-prt">
+					<div className="acc-form-prt">
 						<div className="frm-single">
 							<p className="acc-inpt-heading">
-								ALTERNATIVE CURRENCY
+								DEFAULT CURRENCY
 							</p>
 							<select
 								className="acc-inpt acc-select"
-								onChange={(e) =>
-									setAlternateCurrency(e.target.value)
+								onChange={(e) => {
+                    setAlternateCurrency({tokenName: e.target.value, chainId: props.networkId});
+                    // console.log('e.target.value =>', e.currentTarget.value);
+                    // console.log('e.target.value =>', e.target.value);
+                  }
 								}
-								value={alternateCurrency}
+								value={alternateCurrency && alternateCurrency.tokenName}
 							>
-								{currency}
+								{[...networkArray[props.networkId == 137 ? 0 : 1].networks].map((data) => {
+                  return <option value={data.tokenName}>{data.tokenName}</option>;
+                })}
 							</select>
 						</div>
-					</div> */}
+					</div>
+          {/* <p>{alternateCurrency} {props.networkId}</p> */}
 					<div className="acc-form-prt" style={{ marginTop: "40px" }}>
 						<div>
 							<h6 className="org-heading">Organizer details</h6>

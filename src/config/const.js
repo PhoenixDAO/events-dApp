@@ -40,6 +40,27 @@
 // export const explorerWithAddress ="https://explorer-mumbai.maticvigil.com/address/"
 // export const graphURL="https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp2"
 
+export const networkArray = [
+	{
+		chainName: "Polygon",
+		chainId: 137,
+		networks: [
+			{ tokenName: "phnx", chainId: 137 },
+			{ tokenName: "matic", chainId: 137 },
+			{ tokenName: "usdt", chainId: 137 },
+		],
+	},
+	{
+		chainName: "ethereum",
+		chainId: 1,
+		networks: [
+			{ tokenName: "phnx", chainId: 1 },
+			{ tokenName: "ether", chainId: 1 },
+			{ tokenName: "usdt", chainId: 1 },
+		],
+	},
+];
+
 //Rinkeby
 export const INFURA_URL =
 	"https://rinkeby.infura.io/v3/388c2e54484b4d90a0a54aa9238f1db7";
@@ -74,9 +95,9 @@ export const GLOBAL_NETWORK_ID = 4;
 export const GLOBAL_NETWORK_ID_2 = 137;
 
 // export const API_URL = "https://events.server.pehchan.me/";
-export const API_URL = "https://events-api.phoenixdao.io/";
+// export const API_URL = "https://events-api.phoenixdao.io/";
 //"https://phoenix-event-dapp-backend-tst.herokuapp.com/";
-// export const API_URL = "http://localhost:5000/";
+export const API_URL = "http://localhost:5000/";
 
 export const REPORT_EVENT = "event/report";
 export const GET_USER_DETAIL = "user/details";
