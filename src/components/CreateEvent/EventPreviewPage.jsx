@@ -33,6 +33,7 @@ import {
 import { getUserDetails } from "../../config/serverAPIs";
 import RichTextEditor from "react-rte";
 import { pricingFormatter } from "../../utils/pricingSuffix";
+import PriceSelectBox from "../common/PriceSelectBox";
 
 var moment = require("moment");
 
@@ -111,6 +112,7 @@ const styles = (theme) => ({
 		fontSize: "22px",
 		fontWeight: "700",
 		color: "#413AE2",
+		display:"flex"
 	},
 	categoryGrid: {
 		backgroundColor: "white",
@@ -480,14 +482,16 @@ class EventPreviewPage extends Component {
 												? "Free"
 												: this.props.ticketCategories
 														.length > 0
-												? pricingFormatter(
-														this.props
-															.ticketCategories[
-															this.state
-																.ticketIndex
-														]["phnxPrice"],
-														"PHNX"
-												  )
+												?
+												<PriceSelectBox token="phnx" value={pricingFormatter(
+													this.props
+														.ticketCategories[
+														this.state
+															.ticketIndex
+													]["phnxPrice"],
+													"PHNX"
+											  )} isEventPage={true} />
+												
 												: ""}
 											{/* PHNX */}
 										</span>

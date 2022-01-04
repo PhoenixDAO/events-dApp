@@ -79,6 +79,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
 import { urlFormatter } from "../utils/urlFormatter";
+import PriceSelectBox from "./common/PriceSelectBox";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -172,6 +173,7 @@ const styles = (theme) => ({
 		fontSize: "22px",
 		fontWeight: "700",
 		color: "#413AE2",
+		display:"flex",
 		wordBreak: "break-word",
 		// textTransform:"uppercase"
 	},
@@ -1896,11 +1898,11 @@ document.body.removeChild(link);
 										className={classes.eventDetails}
 									>
 										<p className={classes.ticketPrice}>
-											<img
+											{/* <img
 												src={"/images/phoenixdao.svg"}
 												className="event_price-image"
 												alt="Event Price"
-											/>
+											/> */}
 											TICKET PRICE
 										</p>
 										{ticketPrices && (
@@ -1987,10 +1989,14 @@ document.body.removeChild(link);
 												className={classes.PhnxPrice}
 												title={this.state.phnx_price}
 											>
-												{pricingFormatter(
+												{/* {pricingFormatter(
 													this.state.phnx_price,
 													"PHNX"
-												)}
+												)} */}
+												<PriceSelectBox token="phnx" value={pricingFormatter(
+													this.state.phnx_price,
+													"PHNX"
+												)} isEventPage={true} />
 											</span>
 											<div
 												style={{

@@ -50,19 +50,19 @@ function formatting(num, type) {
 		}
 	} else {
 		if (num > 999 && num < 1000000) {
-			return roundingPrice(num, 1000) + "K " + type;
+			return roundingPrice(num, 1000) + "K ";
 		} else if (num > 999999 && num < 1000000000) {
-			return roundingPrice(num, 1000000) + "M " + type;
+			return roundingPrice(num, 1000000) + "M ";
 		} else if (num > 999999999 && num < 1000000000000) {
-			return roundingPrice(num, 1000000000) + "B " + type;
+			return roundingPrice(num, 1000000000) + "B ";
 		} else if (num > 999999999999 && num < 1000000000000000) {
-			return roundingPrice(num, 1000000000000) + "T " + type;
+			return roundingPrice(num, 1000000000000) + "T ";
 		} else if (num < 999) {
-			return roundingPrice(num * 1000000, 1000000) + " " + type;
+			return roundingPrice(num * 1000000, 1000000) + " ";
 		} else if (num > 999999999999999) {
-			return roundingPrice(num, 1000000000000000) + "P " + type;
+			return roundingPrice(num, 1000000000000000) + "P ";
 		} else {
-			return roundingPrice(num, 1) + " " + type;
+			return roundingPrice(num, 1) + " ";
 		}
 	}
 }
