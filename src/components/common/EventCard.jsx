@@ -27,6 +27,7 @@ import {
 	Link,
 	Select,
 	MenuItem,
+	FormControl,
 } from "@material-ui/core";
 import {
 	DateRange,
@@ -41,6 +42,7 @@ import {
 
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
+import PriceSelectBox from "./PriceSelectBox";
 var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
@@ -173,6 +175,9 @@ const useStyles = makeStyles((theme) => ({
 		"& p": {
 			marginBottom: "0px",
 		},
+		"@media (max-width:1000px)":{
+			maxWidth: "45.33%",
+		},
 		minHeight: "71px",
 		textAlign: "end",
 	},
@@ -217,6 +222,9 @@ const useStyles = makeStyles((theme) => ({
 		// /* For landscape layouts only */
 		// WebkitLineClamp: "3",
 		// 	}
+		"@media (max-width:1000px)":{
+			maxWidth: "55.33%",
+		},
 	},
 	cardMainDetails: {
 		display: "flex",
@@ -525,25 +533,29 @@ const EventCard = (props, context) => {
 								<Typography
 									className={classes.price}
 									variant="body1"
-									component="h2"
+									component="div"
 								>
 									{!event_data.token ? (
 										"Free"
 									) : (event_data.isPHNX)?(
 									dollar_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
-											<p
+											 {/* <p
 												title={phnx_price + " PHNX"}
 												style={{
 													fontFamily:
 														'"Aeonik", sans-serif',
 												}}
-											>
+											>												
 												{pricingFormatter(
 													phnx_price,
 													"PHNX"
-												)}
-											</p>
+												)}		
+											</p> */}
+											<PriceSelectBox token="phnx" value={pricingFormatter(
+													phnx_price,
+													"PHNX"
+												)} />
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price[0]}
@@ -553,7 +565,8 @@ const EventCard = (props, context) => {
 													dollar_price[0],
 													"$"
 												)}
-											</p>
+											</p>		
+
 										</div>
 									) : (
 										<div className={classes.priceAlignment}>
@@ -563,7 +576,7 @@ const EventCard = (props, context) => {
 											>
 												Starting from
 											</p>
-											<p
+											{/* <p
 												title={phnx_price + " PHNX"}
 												style={{
 													fontFamily:
@@ -574,7 +587,11 @@ const EventCard = (props, context) => {
 													phnx_price,
 													"PHNX"
 												)}
-											</p>
+											</p> */}
+											<PriceSelectBox token="phnx" value={pricingFormatter(
+													phnx_price,
+													"PHNX"
+												)} />
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price[0]}
@@ -589,7 +606,7 @@ const EventCard = (props, context) => {
 									))
 									:(phnx_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
-											<p
+											{/* <p
 												title={phnx_price[0] + " PHNX"}
 												style={{
 													fontFamily:
@@ -600,7 +617,11 @@ const EventCard = (props, context) => {
 													phnx_price[0],
 													"PHNX"
 												)}
-											</p>
+											</p> */}
+											<PriceSelectBox token="phnx" value={pricingFormatter(
+													phnx_price[0],
+													"PHNX"
+												)} />
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price}
@@ -620,7 +641,7 @@ const EventCard = (props, context) => {
 											>
 												Starting from
 											</p>
-											<p
+											{/* <p
 												title={phnx_price[0] + " PHNX"}
 												style={{
 													fontFamily:
@@ -631,7 +652,11 @@ const EventCard = (props, context) => {
 													phnx_price[0],
 													"PHNX"
 												)}
-											</p>
+											</p> */}
+											<PriceSelectBox token="phnx" value={pricingFormatter(
+													phnx_price[0],
+													"PHNX"
+												)} />
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price}
