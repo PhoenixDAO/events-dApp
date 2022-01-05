@@ -268,6 +268,7 @@ const DetailForm = (props) => {
 				}
 			}
 		} else {
+      console.log('User detailss ==>>>> ',detail)
 			props.setUserDetails(detail.result);
 			props.history.push("/");
 			// window.location.reload();
@@ -285,8 +286,15 @@ const DetailForm = (props) => {
 	// };
 
   useEffect(()=>{
-    if(props.userDetails){
-      console.log('UserDetails ,=>>', props.userDetails)
+    if(
+      props.userDetails && 
+      props.userDetails.result && 
+      props.userDetails.result.result && 
+      props.userDetails.result.result.userHldr && 
+      props.userDetails.result.result.userHldr
+      ) {
+      console.log('UserDetails ,=>>', props.userDetails.result.result.userHldr.alternateCurrency)
+      setAlternateCurrency(props.userDetails.result.result.userHldr.alternateCurrency)
     }
   },[props.userDetails])
 
@@ -361,10 +369,8 @@ const DetailForm = (props) => {
 							<select
 								className="acc-inpt acc-select"
 								onChange={(e) => {
-                    setAlternateCurrency({tokenName: e.target.value, chainId: props.networkId});
-                    // console.log('e.target.value =>', e.currentTarget.value);
-                    // console.log('e.target.value =>', e.target.value);
-                  }
+									  setAlternateCurrency({tokenName: e.target.value, chainId: props.networkId});
+								  }
 								}
 								value={alternateCurrency && alternateCurrency.tokenName}
 							>
