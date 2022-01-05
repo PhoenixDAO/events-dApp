@@ -28,11 +28,11 @@ export default function BodyTextEditor({
 		// Optionally specify the groups to display (displayed in the order listed).
 		display: [
 			"IMAGE_BUTTON",
+			'LINK_BUTTONS',
 			"INLINE_STYLE_BUTTONS",
 			"BLOCK_TYPE_BUTTONS",
 			"BLOCK_TYPE_DROPDOWN",
 			"HISTORY_BUTTONS",
-			'LINK_BUTTONS',
 		],
 		INLINE_STYLE_BUTTONS: [
 			{ label: "Bold", style: "BOLD", className: "custom-css-class" },

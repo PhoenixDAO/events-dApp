@@ -1,0 +1,25 @@
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g filter="url(#filter0_i_8415_14122)">
+<circle cx="10" cy="10" r="10" fill="white"/>
+</g>
+<circle cx="10" cy="10" r="9.6" stroke="#DEDEDE" stroke-width="0.8"/>
+<g clip-path="url(#clip0_8415_14122)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M6.51393 5.547L4.50825 9.75994C4.50061 9.77561 4.4982 9.79332 4.50134 9.81046C4.50449 9.8276 4.51304 9.84329 4.52575 9.85522L9.94262 15.0459C9.95801 15.0607 9.9785 15.0689 9.99982 15.0689C10.0211 15.0689 10.0416 15.0607 10.057 15.0459L15.4739 9.85555C15.4866 9.84361 15.4952 9.82793 15.4983 9.81078C15.5014 9.79364 15.499 9.77594 15.4914 9.76027L13.4857 5.54732C13.4792 5.53317 13.4688 5.52119 13.4557 5.5128C13.4426 5.50441 13.4274 5.49997 13.4118 5.50001H6.58847C6.57284 5.49981 6.55748 5.50414 6.54425 5.51248C6.53103 5.52082 6.5205 5.53281 6.51393 5.547Z" fill="#50AF95"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M10.6955 10.1925C10.6566 10.1955 10.4557 10.2074 10.0075 10.2074C9.65098 10.2074 9.39788 10.1968 9.30908 10.1925C7.93145 10.1319 6.90317 9.89212 6.90317 9.605C6.90317 9.31787 7.93145 9.07838 9.30908 9.0168V9.9537C9.39917 9.96018 9.65714 9.97541 10.0136 9.97541C10.4414 9.97541 10.6556 9.95759 10.6942 9.95402V9.01745C12.0689 9.0787 13.0949 9.31852 13.0949 9.605C13.0949 9.89148 12.0692 10.1313 10.6942 10.1922L10.6955 10.1925ZM10.6955 8.92055V8.08218H12.614V6.80371H7.39057V8.08218H9.30876V8.92023C7.74964 8.99185 6.57715 9.30069 6.57715 9.67078C6.57715 10.0409 7.74964 10.3494 9.30876 10.4213V13.1079H10.6951V10.4204C12.2507 10.3487 13.4212 10.0402 13.4212 9.67046C13.4212 9.30069 12.2517 8.99217 10.6951 8.92023L10.6955 8.92055Z" fill="white"/>
+</g>
+<defs>
+<filter id="filter0_i_8415_14122" x="0" y="0" width="20" height="23.2" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feOffset dy="3.2"/>
+<feGaussianBlur stdDeviation="1.6"/>
+<feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0"/>
+<feBlend mode="normal" in2="shape" result="effect1_innerShadow_8415_14122"/>
+</filter>
+<clipPath id="clip0_8415_14122">
+<rect width="11" height="9.56889" fill="white" transform="translate(4.5 5.5)"/>
+</clipPath>
+</defs>
+</svg>
