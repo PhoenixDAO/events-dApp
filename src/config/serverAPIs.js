@@ -168,7 +168,10 @@ export const updateUserDetails = async ({
 		);
 		return { result: result.data.result, error: false };
 	} catch (err) {
-		return { error: true, message: err };
+		return {
+			error: true,
+			message: err,
+		};
 	}
 };
 

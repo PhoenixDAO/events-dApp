@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../common/Header";
 import DetailForm from "./detailform";
+
 const AccountDetail = (props) => {
 	const goBack = () => {
 		props.history.goBack();
