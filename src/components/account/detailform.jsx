@@ -35,6 +35,7 @@ const DetailForm = (props) => {
 	const [avatarNumber, setAvatarNumber] = useState(0);
 	const [ipfsImage, setIpfsImage] = useState("");
 	const [loading, setLoading] = useState(false);
+  const [noDefaultCurrency, setNoDefaultCurrency] = useState(false)
 	// const history = useHistory();
 
 	useEffect(() => {
@@ -242,7 +243,7 @@ const DetailForm = (props) => {
 
 	const updateUserInfo = async (e) => {
 		e.preventDefault();
-    console.log('alternateCurrency =>> ', alternateCurrency)
+    // console.log('alternateCurrency =>> ', alternateCurrency)
 		setLoading(true);
 		const detail = await updateUserDetails({
 			address: props.account,
@@ -285,16 +286,25 @@ const DetailForm = (props) => {
 	// 	// }
 	// };
 
-  useEffect(()=>{
+  useEffect(()=> {
     if(
       props.userDetails && 
       props.userDetails.result && 
       props.userDetails.result.result && 
-      props.userDetails.result.result.userHldr && 
-      props.userDetails.result.result.userHldr
+      props.userDetails.result.result.userHldr 
       ) {
       console.log('UserDetails ,=>>', props.userDetails.result.result.userHldr.alternateCurrency)
-      setAlternateCurrency(props.userDetails.result.result.userHldr.alternateCurrency)
+      let defaultCurr = props.userDetails.result.result.userHldr.alternateCurrency;
+      if(typeof defaultCurr == 'string') {
+        if(defaultCurr === 'Dollar' || defaultCurr === 'usd') {
+          setAlternateCurrency({ tokenName: "usdt", chainId: props.networkId })
+        }
+      } else if(typeof defaultCurr == 'string' && defaultCurr.length < 1){
+        setAlternateCurrency({ tokenName: "usdt", chainId: props.networkId })
+        setNoDefaultCurrency(true)
+      } else if(typeof defaultCurr == 'object') {
+        setAlternateCurrency(props.userDetails.result.result.userHldr.alternateCurrency)
+      }
     }
   },[props.userDetails])
 
@@ -375,8 +385,8 @@ const DetailForm = (props) => {
 								value={alternateCurrency && alternateCurrency.tokenName}
 							>
 								{[...networkArray[props.networkId == 137 ? 0 : 1].networks].map((data) => {
-                  return <option value={data.tokenName}>{data.tokenName}</option>;
-                })}
+									return <option value={data.tokenName}>{data.tokenName}</option>;
+								})}
 							</select>
 						</div>
 					</div>

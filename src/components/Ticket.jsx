@@ -6,12 +6,10 @@ import { Link } from "react-router-dom";
 import "../styles/Ticket.css";
 import ipfs from "../utils/ipfs";
 import Notify from "./Notify";
-import { API_URL, REPORT_EVENT } from "../config/const";
+import { API_URL, REPORT_EVENT, GetEthPrice, GetPhnxPrice, GetMaticPrice, GetUsdtPrice } from "../config/const";
 import axios from "axios";
-import { INFURA_WEB_URL } from "../config/const.js";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { explorerWithAddress } from "../config/const";
 import EventCard from "./common/EventCard.jsx";
 import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Loading from "./Loading";
@@ -60,10 +58,40 @@ class Ticket extends Component {
 			eventType: null,
 			eventDescription: null,
 			eventLocation: null,
+			tokenPrices: {phnx: '', eth: '', matic: '', usdt: ''}
 		};
 		this.isCancelled = false;
 		this.sendTicket = this.sendTicket.bind(this);
 	}
+
+	GetPrices = async () => {
+		console.log('resEthPrice.data.thereum.usd1')
+			try {
+			  let resEthPrice = await GetEthPrice()
+		  if(resEthPrice) {
+			// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
+			this.setState({tokenPrices: {...this.state.tokenPrices, eth: resEthPrice.data.ethereum.usd}})
+		  }
+			  let resPhnxPrice = await GetPhnxPrice()
+		  if(resPhnxPrice){
+			// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
+			this.setState({tokenPrices: {...this.state.tokenPrices, phnx: resPhnxPrice.data.phoenixdao.usd}})
+		  }
+			  let resMaticPrice = await GetMaticPrice()
+		  if(resMaticPrice){
+			// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
+			this.setState({tokenPrices: {...this.state.tokenPrices, matic: resMaticPrice.data[`matic-network`].usd}})
+		  }
+			  let resUsdtPrice = await GetUsdtPrice()
+		  if(resUsdtPrice){
+			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+			this.setState({tokenPrices: {...this.state.tokenPrices, usdt: resUsdtPrice.data.tether.usd}})
+		  }
+			} catch(e) {
+			  console.error('Err at GetPrices =>>', e)
+			}
+		}
+
 	async componentWillMount() {
 		let ticket = await this.props.eventsContract.methods
 			.getTicket(this.props.id)
@@ -484,6 +512,7 @@ class Ticket extends Component {
 					eventType={this.state.eventType}
 					eventDescription={this.state.eventDescription}
 					eventLocation={this.state.eventLocation}
+          tokenPrices={this.state.tokenPrices}
 				/>
 				// <div className="card w-100">
 				// 	<div className="card-header">
@@ -537,9 +566,9 @@ class Ticket extends Component {
 
 	componentDidMount() {
 		this.updateIPFS();
-
 		this.updateEvent();
 		this.filterHideEvent();
+    this.GetPrices()
 	}
 
 	componentWillUnmount() {

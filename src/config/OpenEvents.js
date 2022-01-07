@@ -10,7 +10,7 @@
 // export const Open_events_Address = "0xa8b9A1dA93B4a96d9D0a464f6897A9A7D20c9874";
 // export const Open_events_Address = "0xC9eE8Eab00c8C4662A71C1E336790C882C396bF9";
 // export const Open_events_Address = "0x332B99cf442a28Bdc1Db74c05e7BF9D5c4a582bE";
-export const Open_events_Address = "0x96E60b646DcDE6CEd921A8F10d2B69f359Ed50bb";
+export const Open_events_Address = "0xD319aB222eCaB46a4362dE5D0af5bb8fEfEA5d35";
 
 //Ethereum mainnet
 // export const Open_events_Address = "0xf48E0D934B505C80b6dD3ef4d178D7c8fB83f566";
@@ -300,10 +300,10 @@ export const Open_events_ABI = [
 		type: "event",
 	},
 	{
-		inputs: [],
-		name: "USDT",
-		outputs: [{ internalType: "address", name: "", type: "address" }],
-		stateMutability: "view",
+		inputs: [{ internalType: "address", name: "_token", type: "address" }],
+		name: "addtoWhiteList",
+		outputs: [],
+		stateMutability: "nonpayable",
 		type: "function",
 	},
 	{
@@ -347,6 +347,7 @@ export const Open_events_ABI = [
 				name: "_buyTicket",
 				type: "tuple",
 			},
+			{ internalType: "address", name: "token", type: "address" },
 		],
 		name: "buyTicket",
 		outputs: [],
@@ -586,6 +587,13 @@ export const Open_events_ABI = [
 		type: "function",
 	},
 	{
+		inputs: [{ internalType: "address", name: "_token", type: "address" }],
+		name: "isWhiteListedToken",
+		outputs: [{ internalType: "bool", name: "", type: "bool" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
 		inputs: [],
 		name: "name",
 		outputs: [{ internalType: "string", name: "", type: "string" }],
@@ -724,6 +732,13 @@ export const Open_events_ABI = [
 		name: "transferOwnership",
 		outputs: [],
 		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [{ internalType: "address", name: "", type: "address" }],
+		name: "whiteListedToken",
+		outputs: [{ internalType: "bool", name: "", type: "bool" }],
+		stateMutability: "view",
 		type: "function",
 	},
 ];
