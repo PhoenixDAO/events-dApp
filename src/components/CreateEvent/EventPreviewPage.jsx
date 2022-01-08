@@ -34,6 +34,7 @@ import { getUserDetails } from "../../config/serverAPIs";
 import RichTextEditor from "react-rte";
 import { pricingFormatter } from "../../utils/pricingSuffix";
 import PriceSelectBox from "../common/PriceSelectBox";
+import { GetEthPrice, GetPhnxPrice, GetMaticPrice, GetUsdtPrice} from '../../config/const'
 
 var moment = require("moment");
 
@@ -252,10 +253,39 @@ class EventPreviewPage extends Component {
 			organizerDetails: "",
 			topic: "",
 			ticketIndex: 0,
+      tokenPrices: {phnx: '', eth: '', matic: '', usdt: ''}
 		};
 		console.log("hello props: ",props)
 		this.getOrganizerDetails = this.getOrganizerDetails.bind(this);
 		this._topicRemovedDashes = this._topicRemovedDashes.bind(this);
+	}
+
+  GetPrices = async () => {
+    console.log('resEthPrice.data.thereum.usd1')
+		try {
+		  let resEthPrice = await GetEthPrice()
+      if(resEthPrice) {
+        // console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
+        this.setState({tokenPrices: {...this.state.tokenPrices, eth: resEthPrice.data.ethereum.usd}})
+      }
+		  let resPhnxPrice = await GetPhnxPrice()
+      if(resPhnxPrice){
+        // console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
+        this.setState({tokenPrices: {...this.state.tokenPrices, phnx: resPhnxPrice.data.phoenixdao.usd}})
+      }
+		  let resMaticPrice = await GetMaticPrice()
+      if(resMaticPrice){
+        // console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
+        this.setState({tokenPrices: {...this.state.tokenPrices, matic: resMaticPrice.data[`matic-network`].usd}})
+      }
+		  let resUsdtPrice = await GetUsdtPrice()
+      if(resUsdtPrice){
+        // console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+        this.setState({tokenPrices: {...this.state.tokenPrices, usdt: resUsdtPrice.data.tether.usd}})
+      }
+		} catch(e) {
+		  console.error('Err at GetPrices =>>', e)
+		}
 	}
 
 	_topicRemovedDashes() {
@@ -421,10 +451,6 @@ class EventPreviewPage extends Component {
 											variant="outlined"
 											className={classes.ticketSelect}
 										>
-											{console.log(
-												"ticket name",
-												this.state.ticketPrices
-											)}
 											<Select
 												// native
 												value={this.state.ticketIndex}
@@ -721,6 +747,7 @@ class EventPreviewPage extends Component {
 	async componentDidMount() {
 		this.getOrganizerDetails();
 		this._topicRemovedDashes();
+    this.GetPrices()
 	}
 }
 

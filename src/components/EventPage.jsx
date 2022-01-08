@@ -43,7 +43,8 @@ import {
 	etherscanMainnetAddress,
 	etherscanRinkbyAddress,
 	graphURLV1,
-	graphURLV2
+	graphURLV2,
+	networkArray
 } from "../config/const";
 import { toast } from "react-toastify";
 // import ApprovalModal from "./approvalModal";
@@ -56,11 +57,7 @@ import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
 import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
-import {
-	INFURA_WEB_URL,
-	explorerWithTX,
-	explorerWithAddress,
-} from "../config/const.js";
+import {explorerWithAddress, GetEthPrice, GetPhnxPrice, GetMaticPrice, GetUsdtPrice } from "../config/const.js";
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import BuyTicket from "./common/BuyTicket";
@@ -72,11 +69,9 @@ import {
 import Header from "./common/Header";
 import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
-import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
 import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
-import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
 import { urlFormatter } from "../utils/urlFormatter";
 import PriceSelectBox from "./common/PriceSelectBox";
@@ -360,16 +355,6 @@ exportButtonDiv:{
 });
 class EventPage extends Component {
 	constructor(props, context) {
-		// try {
-		// 	var contractConfig = {
-		// 		contractName: "PHNX",
-		// 		web3Contract: new context.drizzle.web3.eth.Contract(
-		// 			PhoenixDAO_Testnet_Token_ABI,
-		// 			PhoenixDAO_Mainnet_Token_Address
-		// 		),
-		// 	};
-		// 	context.drizzle.addContract(contractConfig);
-		// } catch (e) { }
 		super(props);
 		// this.contracts = context.drizzle.contracts;
 		this.account = this.props.accounts[0];
@@ -434,6 +419,9 @@ class EventPage extends Component {
 			boughtTicket:0,
 			alternateEventPresent:null,
 			alternateEventLoading:false,
+			tokenPrices: {phnx: '', eth: '', matic: '', usdt: ''},
+			selectedToken : { tokenName: networkArray[0].networks[0].tokenName, chainId: 4, image: networkArray[0].networks[0].image }
+
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -448,6 +436,34 @@ class EventPage extends Component {
 		this.handleExportCSV = this.handleExportCSV.bind(this);
 		
 	}
+
+	GetPrices = async () => {
+		console.log('resEthPrice.data.thereum.usd1')
+			try {
+			  let resEthPrice = await GetEthPrice()
+		  if(resEthPrice) {
+			// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
+			this.setState({tokenPrices: {...this.state.tokenPrices, eth: resEthPrice.data.ethereum.usd}})
+		  }
+			  let resPhnxPrice = await GetPhnxPrice()
+		  if(resPhnxPrice){
+			// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
+			this.setState({tokenPrices: {...this.state.tokenPrices, phnx: resPhnxPrice.data.phoenixdao.usd}})
+		  }
+			  let resMaticPrice = await GetMaticPrice()
+		  if(resMaticPrice){
+			// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
+			this.setState({tokenPrices: {...this.state.tokenPrices, matic: resMaticPrice.data[`matic-network`].usd}})
+		  }
+			  let resUsdtPrice = await GetUsdtPrice()
+		  if(resUsdtPrice){
+			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+			this.setState({tokenPrices: {...this.state.tokenPrices, usdt: resUsdtPrice.data.tether.usd}})
+		  }
+			} catch(e) {
+			  console.error('Err at GetPrices =>>', e)
+			}
+		}
 
 	goBack() {
 		this.props.history.goBack();
@@ -1024,25 +1040,51 @@ class EventPage extends Component {
 
 		}
 		else{
-			let phnx_price = event_data.prices.map((price) => {
-				// return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
-				// 	2
-				// );
-				return (
-					Web3.utils.fromWei(price.toString()) /
-					this.state.PhoenixDAO_market.usd
-				).toFixed(3);
-			});
-	
-			let dollar_price = Web3.utils.fromWei(
-				event_data.prices[categoryIndex].toString()
-			);
-			console.log("dollar_price: ", dollar_price,phnx_price)
+			let phnx_price = 0;
+			let dollar_price = 0;
+			console.log("here")
+			if(this.state.selectedToken.tokenName == "usdt") {
+				// let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.usdt)
+				// return tokenPric;
+					  phnx_price = event_data.prices.map((price) => {
+						  // return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
+				  // console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+						  return (
+							  Web3.utils.fromWei(price.toString()) / this.state.tokenPrices.usdt
+							  ).toFixed(3);
+						  });
+				  }else if(this.state.selectedToken.tokenName == "ether") {
+					phnx_price = event_data.prices.map((price) => {
+				// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
+				//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
+				if(Web3.utils.fromWei(price.toString()) / this.state.tokenPrices.eth > 0.1) {
+				  return (Web3.utils.fromWei(price.toString()) / this.state.tokenPrices.eth).toFixed(3)
+				} else {
+				  return  Web3.utils.fromWei(price.toString()) / this.state.tokenPrices.eth
+				}
+				  })
+			}
+				  else{
+					  phnx_price = event_data.prices.map((price) => {
+						  // return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
+						  // 	2
+						  // );
+						  return (
+							  Web3.utils.fromWei(price.toString()) /
+							  this.state.PhoenixDAO_market.usd
+						  ).toFixed(3);
+					  });
+			  
+					  dollar_price = Web3.utils.fromWei(
+						  event_data.prices[categoryIndex].toString()
+					  );
+				  }
 			let priceInPhnx = event_data.token
 				? phnx_price[categoryIndex] + "PHNX"
 				: "FREE";
 			let priceInDollar = event_data.token ? "$" + dollar_price : "";
 			this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
+			
 		}
 	};
 	getImage = () => {
@@ -1341,8 +1383,10 @@ document.body.removeChild(link);
 						buyticket: this.props.eventsContract.methods.buyTicket([
 							this.props.match.params.id,
 							this.state.selectedCategoryIndex,
-							geoFindUser, //"Sydney",
-						]),
+							geoFindUser,
+							 //"Sydney",
+							 //below is weth address hard coded
+						],"0xc778417E063141139Fce010982780140Aa0cD5Ab"),
 						approve: this.props.phnxContract.methods.approve(
 							this.props.eventsAddress,
 							balance
@@ -1553,7 +1597,12 @@ document.body.removeChild(link);
 			}
 		}
 	};
-
+handleSelectedTokenState = async(result) =>{
+console.log("ether_price ??",result);
+this.setState({selectedToken:result}, ()=>{
+	this.priceCalculation(this.state.selectedCategoryIndex)
+})
+}
 	checkUserTicketLocation = async () => {
 		const eventId = this.props.match.params.id;
 		const users = await generateBuyerArr(eventId);
@@ -1993,7 +2042,7 @@ document.body.removeChild(link);
 													this.state.phnx_price,
 													"PHNX"
 												)} */}
-												<PriceSelectBox token="phnx" value={pricingFormatter(
+												<PriceSelectBox selectedToken={this.state.selectedToken} setSelectedToken={this.handleSelectedTokenState} token="phnx" value={pricingFormatter(
 													this.state.phnx_price,
 													"PHNX"
 												)} isEventPage={true} />
@@ -2679,6 +2728,7 @@ document.body.removeChild(link);
 		this._isMounted = true;
 		// this.updateIPFS();
 		// this.loadblockhain();
+		this.GetPrices()
 	}
 	else{
 		this.setState({

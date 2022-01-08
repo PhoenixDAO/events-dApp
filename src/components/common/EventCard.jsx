@@ -43,6 +43,8 @@ import {
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
 import PriceSelectBox from "./PriceSelectBox";
+import { networkArray } from "../../config/const";
+
 var moment = require("moment");
 
 const useStyles = makeStyles((theme) => ({
@@ -266,11 +268,13 @@ const EventCard = (props, context) => {
 		eventType,
 		eventDescription,
 		eventLocation,
+		tokenPrices
 	} = props;
 
 	useEffect(() => {
 		setIcon(favoriteEvent);
 		getPhoenixDAOMarketValue();
+		console.log('tokenPrices ==>>>>', tokenPrices)
 	}, [favoriteEvent]);
 
 	const classes = useStyles();
@@ -279,6 +283,7 @@ const EventCard = (props, context) => {
 	const [open2, setOpen2] = useState(false);
 	const [sendAddress, setSendAddress] = useState("");
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState("");
+	const [selectedToken, setSelectedToken] = useState({ tokenName: networkArray[0].networks[0].tokenName, chainId: 4, image: networkArray[0].networks[0].image })  // default value
 	// changeIcon(favoriteEvent);
 	const handleClickOpen = (e) => {
 		setOpen(true);
@@ -344,6 +349,7 @@ const EventCard = (props, context) => {
 			}
 		}
 	};
+
 	//get market cap & dollar value of PhoenixDAO
 	const getPhoenixDAOMarketValue = async () => {
 		fetch(
@@ -355,9 +361,9 @@ const EventCard = (props, context) => {
 			})
 			.catch(console.log);
 	};
-	console.log("phnx price coingecko: ",event_data.prices)
+	// console.log("phnx price coingecko: ",event_data.prices)
 	let dollar_price = "";
-	let phnx_price = "";
+	let token_price = "";
 	if(event_data.isPHNX){
 		 dollar_price = event_data.prices.map((price) => {
 			return (
@@ -365,19 +371,67 @@ const EventCard = (props, context) => {
 				PhoenixDAO_market.usd
 			).toFixed(3);
 		});
-		 phnx_price = Web3.utils.fromWei(event_data.prices[0].toString());
-		 console.log("phnx price coingecko: ",phnx_price, dollar_price)
+		 token_price = Web3.utils.fromWei(event_data.prices[0].toString());
+		//  console.log("phnx price coingecko: ",phnx_price, dollar_price)
 	}
 	else{
-		 phnx_price = event_data.prices.map((price) => {
-		// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
-		return (
-			Web3.utils.fromWei(price.toString()) / PhoenixDAO_market.usd
-			).toFixed(3);
-		});
+		console.log('selectedToken => ', selectedToken)
+    console.log('event_data => ', event_data,"token prices", tokenPrices)
+		if(selectedToken.tokenName == "usdt") {
+      // let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.usdt)
+      // return tokenPric;
+			token_price = event_data.prices.map((price) => {
+				// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
+        // console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+				return (
+					Web3.utils.fromWei(price.toString()) / tokenPrices.usdt
+					).toFixed(3);
+				});
+		}
+		else if(selectedToken.tokenName == "phnx") {
+      // let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.phnx)
+      // return tokenPric;
+			token_price = event_data.prices.map((price) => {
+		   return (
+			   Web3.utils.fromWei(price.toString()) / tokenPrices.phnx
+			   ).toFixed(3);
+		   });
+		}
+		else if(selectedToken.tokenName == "ether") {
+			token_price = event_data.prices.map((price) => {
+        // return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
+        //  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
+        if(Web3.utils.fromWei(price.toString()) / tokenPrices.eth > 0.1) {
+          return (Web3.utils.fromWei(price.toString()) / tokenPrices.eth).toFixed(3)
+        } else {
+          return  Web3.utils.fromWei(price.toString()) / tokenPrices.eth
+        }
+		  })
+    } else if(selectedToken.tokenName == "matic") {
+      // let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.matic)
+      // return tokenPric;
+			token_price = event_data.prices.map((price) => {
+		   // return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
+      //  console.log('matic_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.matic)
+		   return (
+			   Web3.utils.fromWei(price.toString()) / tokenPrices.matic
+			   ).toFixed(3);
+		   });
+		}
+		else {
+      // let tokenPric = Number(event_data.prices[0]) / Number(tokenPrices.usdt)
+      // return tokenPric;
+			token_price = event_data.prices.map((price) => {
+				// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
+        // console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+				return (
+					Web3.utils.fromWei(price.toString()) / tokenPrices.usdt
+					).toFixed(3);
+				});
+		}
 		//  dollar_price = event_data.prices[0] / 1000000;
 		dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
-		console.log("phnx price coingecko: ",phnx_price, dollar_price)
+		// console.log("phnx price coingecko: ",phnx_price, dollar_price)
 	}
 	
 
@@ -540,22 +594,22 @@ const EventCard = (props, context) => {
 									) : (event_data.isPHNX)?(
 									dollar_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
-											 {/* <p
-												title={phnx_price + " PHNX"}
+											 <p
+												title={token_price + " PHNX"}
 												style={{
 													fontFamily:
 														'"Aeonik", sans-serif',
 												}}
 											>												
 												{pricingFormatter(
-													phnx_price,
+													token_price,
 													"PHNX"
 												)}		
-											</p> */}
-											<PriceSelectBox token="phnx" value={pricingFormatter(
-													phnx_price,
+											</p>
+											{/* <PriceSelectBox token="phnx" value={pricingFormatter(
+													token_price,
 													"PHNX"
-												)} />
+												)} setSelectedToken={setSelectedToken} selectedToken={selectedToken} /> */}
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price[0]}
@@ -572,26 +626,26 @@ const EventCard = (props, context) => {
 										<div className={classes.priceAlignment}>
 											<p
 												className={classes.starting}
-												title={phnx_price}
+												title={token_price}
 											>
 												Starting from
 											</p>
-											{/* <p
-												title={phnx_price + " PHNX"}
+											<p
+												title={token_price + " PHNX"}
 												style={{
 													fontFamily:
 														'"Aeonik", sans-serif',
 												}}
 											>
 												{pricingFormatter(
-													phnx_price,
+													token_price,
 													"PHNX"
 												)}
-											</p> */}
-											<PriceSelectBox token="phnx" value={pricingFormatter(
-													phnx_price,
+											</p>
+											{/* <PriceSelectBox token="phnx" value={pricingFormatter(
+													token_price,
 													"PHNX"
-												)} />
+												)}  setSelectedToken={setSelectedToken} selectedToken={selectedToken} /> */}
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price[0]}
@@ -604,7 +658,7 @@ const EventCard = (props, context) => {
 											</p>
 										</div>
 									))
-									:(phnx_price.length === 1 ? (
+									:(token_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
 											{/* <p
 												title={phnx_price[0] + " PHNX"}
@@ -618,10 +672,16 @@ const EventCard = (props, context) => {
 													"PHNX"
 												)}
 											</p> */}
-											<PriceSelectBox token="phnx" value={pricingFormatter(
-													phnx_price[0],
+											<PriceSelectBox 
+												token="phnx" 
+												value={pricingFormatter(
+													token_price[0],
 													"PHNX"
-												)} />
+												)} 
+												setSelectedToken={setSelectedToken} 
+												selectedToken={selectedToken}
+												// defaultToken={defaultToken}
+											/>
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price}
@@ -637,26 +697,30 @@ const EventCard = (props, context) => {
 										<div className={classes.priceAlignment}>
 											<p
 												className={classes.starting}
-												title={phnx_price[0]}
+												title={token_price[0]}
 											>
 												Starting from
 											</p>
 											{/* <p
-												title={phnx_price[0] + " PHNX"}
+												title={token_price[0] + " PHNX"}
 												style={{
 													fontFamily:
 														'"Aeonik", sans-serif',
 												}}
 											>
 												{pricingFormatter(
-													phnx_price[0],
+													token_price[0],
 													"PHNX"
 												)}
 											</p> */}
-											<PriceSelectBox token="phnx" value={pricingFormatter(
-													phnx_price[0],
+											<PriceSelectBox 
+                      token="phnx" 
+                      value={pricingFormatter(
+                        token_price[0],
 													"PHNX"
-												)} />
+												)}  setSelectedToken={setSelectedToken} 
+                        selectedToken={selectedToken} 
+                      />
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price}

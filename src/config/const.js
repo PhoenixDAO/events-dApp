@@ -40,23 +40,48 @@
 // export const explorerWithAddress ="https://explorer-mumbai.maticvigil.com/address/"
 // export const graphURL="https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp2"
 
+import PhnxPriceLogo from "../components/Images/phnxPriceLogo.svg";
+// import SolanaPriceLogo from "../components/Images/solanaPriceLogo.svg";
+import EthPriceLogo from "../components/Images/ethPriceLogo.svg";
+import MaticPriceLogo from "../components/Images/maticPriceLogo.svg";
+import TetherPriceLogo from "../components/Images/tetherPriceLogo.svg";
+
+import axios from "axios";
+export const PhnxPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+export const EthPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=Ethereum&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+export const MaticPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+export const UsdtPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=Tether&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+
+export const GetPhnxPrice = () => {
+	return axios.get(PhnxPriceApiCoingecko);
+};
+export const GetEthPrice = () => {
+	return axios.get(EthPriceApiCoingecko);
+};
+export const GetMaticPrice = () => {
+	return axios.get(MaticPriceApiCoingecko);
+};
+export const GetUsdtPrice = () => {
+	return axios.get(UsdtPriceApiCoingecko);
+};
+
 export const networkArray = [
 	{
 		chainName: "Polygon",
 		chainId: 137,
 		networks: [
-			{ tokenName: "phnx", chainId: 137 },
-			{ tokenName: "matic", chainId: 137 },
-			{ tokenName: "usdt", chainId: 137 },
+			{ tokenName: "phnx", chainId: 137, image: PhnxPriceLogo },
+			{ tokenName: "matic", chainId: 137, image: MaticPriceLogo },
+			{ tokenName: "usdt", chainId: 137, image: TetherPriceLogo },
 		],
 	},
 	{
 		chainName: "ethereum",
 		chainId: 1,
 		networks: [
-			{ tokenName: "phnx", chainId: 1 },
-			{ tokenName: "ether", chainId: 1 },
-			{ tokenName: "usdt", chainId: 1 },
+			{ tokenName: "phnx", chainId: 1, image: PhnxPriceLogo },
+			{ tokenName: "ether", chainId: 1, image: EthPriceLogo },
+			{ tokenName: "usdt", chainId: 1, image: TetherPriceLogo },
 		],
 	},
 ];
