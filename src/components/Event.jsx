@@ -7,9 +7,17 @@ import {
 } from "../config/phoenixDAOcontract_testnet.js";
 
 import ipfs from "../utils/ipfs";
-import {urlFormatter} from "../utils/urlFormatter";
+import { urlFormatter } from "../utils/urlFormatter";
 
-import { API_URL, REPORT_EVENT, GET_USER_DETAIL, GetEthPrice, GetPhnxPrice, GetMaticPrice, GetUsdtPrice } from "../config/const";
+import { API_URL, REPORT_EVENT, GET_USER_DETAIL } from "../config/const";
+import {
+	GetEthPrice,
+	GetPhnxPrice,
+	GetMaticPrice,
+	GetUsdtPrice,
+	GetWethPrice,
+	GetUsdcPrice,
+} from "../services/Services";
 import axios from "axios";
 import Loading from "./Loading";
 // import eventTopics from "../config/topics.json";
@@ -91,45 +99,95 @@ class Event extends Component {
 			eventType: null,
 			eventDescription: null,
 			eventLocation: null,
-      tokenPrices: {phnx: '', eth: '', matic: '', usdt: ''},
-      userDetail: null
+			tokenPrices: {
+				phnx: "",
+				eth: "",
+				matic: "",
+				usdt: "",
+				weth: "",
+				usdc: "",
+			},
+			userDetail: null,
 		};
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
 		this.isCancelled = false;
 		this.giveApproval = this.giveApproval.bind(this);
-    this.GetPrices = this.GetPrices.bind(this)
+		this.GetPrices = this.GetPrices.bind(this);
 	}
 	GetPrices = async () => {
-    console.log('resEthPrice.data.thereum.usd1')
+		console.log("resEthPrice.data.thereum.usd1");
 		try {
-		  let resEthPrice = await GetEthPrice()
-      if(resEthPrice) {
-        // console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
-        this.setState({tokenPrices: {...this.state.tokenPrices, eth: resEthPrice.data.ethereum.usd}})
-      }
-		  let resPhnxPrice = await GetPhnxPrice()
-      if(resPhnxPrice){
-        // console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
-        this.setState({tokenPrices: {...this.state.tokenPrices, phnx: resPhnxPrice.data.phoenixdao.usd}})
-      }
-		  let resMaticPrice = await GetMaticPrice()
-      if(resMaticPrice){
-        // console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
-        this.setState({tokenPrices: {...this.state.tokenPrices, matic: resMaticPrice.data[`matic-network`].usd}})
-      }
-		  let resUsdtPrice = await GetUsdtPrice()
-      if(resUsdtPrice){
-        // console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-        this.setState({tokenPrices: {...this.state.tokenPrices, usdt: resUsdtPrice.data.tether.usd}})
-      }
-		} catch(e) {
-		  console.error('Err at GetPrices =>>', e)
+			let resEthPrice = await GetEthPrice();
+			if (resEthPrice) {
+				// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						eth: resEthPrice.data.ethereum.usd,
+					},
+				});
+			}
+			let resPhnxPrice = await GetPhnxPrice();
+			if (resPhnxPrice) {
+				// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						phnx: resPhnxPrice.data.phoenixdao.usd,
+					},
+				});
+			}
+			let resMaticPrice = await GetMaticPrice();
+			if (resMaticPrice) {
+				// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						matic: resMaticPrice.data[`matic-network`].usd,
+					},
+				});
+			}
+			let resUsdtPrice = await GetUsdtPrice();
+			if (resUsdtPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						usdt: resUsdtPrice.data.tether.usd,
+					},
+				});
+			}
+			let resWethPrice = await GetWethPrice();
+			if (resWethPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						weth: resWethPrice.data.weth.usd,
+					},
+				});
+			}
+			let resUsdcPrice = await GetUsdcPrice();
+			if (resUsdcPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						usdc: resUsdcPrice.data[`usd-coin`].usd,
+					},
+				});
+			}
+		} catch (e) {
+			console.error("Err at GetPrices =>>", e);
 		}
-    
-   let res = await getUserDetails({address: this.props.address, networkId: this.props.networkId});
-   console.log('res of getUserDetails =>>>>>', res)
-   this.setState({userDetail: res})
-	}
+
+		let res = await getUserDetails({
+			address: this.props.address,
+			networkId: this.props.networkId,
+		});
+		console.log("res of getUserDetails =>>>>>", res);
+		this.setState({ userDetail: res });
+	};
 
 	handleClickOpen = () => {
 		this.setState({ open: true });
@@ -308,7 +366,8 @@ class Event extends Component {
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
 					toast(
-						<Notify networkId={this.props.networkId} 
+						<Notify
+							networkId={this.props.networkId}
 							hash={hash}
 							text={
 								"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
@@ -352,11 +411,18 @@ class Event extends Component {
 				if (error !== null) {
 					txerror = error;
 					this.props.toggleBuying();
-					toast(<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />, {
-						position: "bottom-right",
-						autoClose: true,
-						pauseOnHover: true,
-					});
+					toast(
+						<Notify
+							networkId={this.props.networkId}
+							error={error}
+							message={txerror.message}
+						/>,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
 					// this.afterApprove()
 					this.setState({ disabledStatus: false });
 				}
@@ -371,7 +437,8 @@ class Event extends Component {
 		if (confirmationNumber === 0 && receipt.status) {
 			this.props.toggleBuying();
 			toast(
-				<Notify networkId={this.props.networkId} 
+				<Notify
+					networkId={this.props.networkId}
 					hash={receipt.transactionHash}
 					icon="fas fa-check-circle fa-3x"
 					text="Transaction successful! You can buy a ticket now."
@@ -496,7 +563,9 @@ class Event extends Component {
 			let image = this.getImage();
 			let description = this.getDescription();
 			let locations = this.getLocation();
-			let buttonText = this.state.eventData.token ? "Buy Ticket" : "Get Ticket";
+			let buttonText = this.state.eventData.token
+				? "Buy Ticket"
+				: "Get Ticket";
 			let time = this.getTime();
 			// let freeEvent = "";
 			// if (!event_data.token) {
@@ -590,13 +659,16 @@ class Event extends Component {
 				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 				.join(" ");
 
-			let titleURL = `/event/${urlFormatter(this.state.eventData.name)}/${this.props.id}`;
+			let titleURL = `/event/${urlFormatter(this.state.eventData.name)}/${
+				this.props.id
+			}`;
 			let myEventStatURL =
 				"/event-stat/" + pagetitle + "/" + this.props.id;
 			let myEvent = false;
 			if (
 				this.account !== undefined &&
-				this.state.eventData.owner.toLowerCase() == this.account.toLowerCase()
+				this.state.eventData.owner.toLowerCase() ==
+					this.account.toLowerCase()
 			) {
 				myEvent = true;
 			}
@@ -634,7 +706,7 @@ class Event extends Component {
 							eventDescription={this.state.eventDescription}
 							eventLocation={this.state.eventLocation}
 							selectedTab={this.props.selectedTab}
-              tokenPrices={this.state.tokenPrices}
+							tokenPrices={this.state.tokenPrices}
 						/>
 					)}
 					{/* new card */}
@@ -659,7 +731,7 @@ class Event extends Component {
 		this.filterHideEvent();
 		this.updateIPFS();
 		this.getUserFavoritesEvent();
-    this.GetPrices()
+		this.GetPrices();
 	}
 
 	componentDidUpdate() {

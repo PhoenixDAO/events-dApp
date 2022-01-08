@@ -15,8 +15,8 @@ import {
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 // import PhnxPriceLogo from "../Images/phnxPriceLogo.svg";
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import {networkArray} from '../../config/const'
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import { RinkbeyNetworkArray } from "../../config/const";
 
 const useStyles = makeStyles((theme) => ({
 	menuPaper: {
@@ -38,11 +38,13 @@ const useStyles = makeStyles((theme) => ({
 		textAlign: "end",
 		fontFamily: "'Aeonik', sans-serif",
 	},
-	PhnxPriceEventPage:{fontSize: "22px",
-	fontWeight: "700",
-	color: "#413AE2",
-	display:"flex",
-	wordBreak: "break-word",},
+	PhnxPriceEventPage: {
+		fontSize: "22px",
+		fontWeight: "700",
+		color: "#413AE2",
+		display: "flex",
+		wordBreak: "break-word",
+	},
 	menuItem: {
 		flex: "none",
 	},
@@ -51,7 +53,10 @@ const useStyles = makeStyles((theme) => ({
 // function PriceSelectBox({ value, token, isEventPage }) {
 function PriceSelectBox(props) {
 	const classes = useStyles();
-	const [price, setPrice] = React.useState({token: props.token, amount: props.value});
+	const [price, setPrice] = React.useState({
+		token: props.token,
+		amount: props.value,
+	});
 	// const tokenList = [
 	// 	{
 	// 		image: PhnxPriceLogo,
@@ -77,118 +82,167 @@ function PriceSelectBox(props) {
 	const [open, setOpen] = React.useState(false);
 	const anchorRef = React.useRef(null);
 
-	
 	const handleToggle = () => {
 		setOpen((prevOpen) => !prevOpen);
-	  };
-	
-	  const handleClose = (event) => {
+	};
+
+	const handleClose = (event) => {
 		if (anchorRef.current && anchorRef.current.contains(event.target)) {
-		  return;
+			return;
 		}
-	
+
 		setOpen(false);
-	  };
-	  
-  function handleListKeyDown(event) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      setOpen(false);
-    }
-  }
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
-    }
+	};
 
-    prevOpen.current = open;
-  }, [open]);
+	function handleListKeyDown(event) {
+		if (event.key === "Tab") {
+			event.preventDefault();
+			setOpen(false);
+		}
+	}
+	const prevOpen = React.useRef(open);
+	React.useEffect(() => {
+		if (prevOpen.current === true && open === false) {
+			anchorRef.current.focus();
+		}
 
-  React.useEffect(() => {
-    if(props.value){
-		  setPrice({token: props.token, amount: props.value})
-	  }
-  }, [props.value]);
+		prevOpen.current = open;
+	}, [open]);
 
-  const handleChangeInPrice = (event) =>{
-	  event.preventDefault();
-	  let {myValue} = event.currentTarget.dataset;
-    if(myValue){
-      [...networkArray[props.networkId == 137 ? 0 : 1].networks].map((v, i)=> {
-        if(v.tokenName == myValue){
-            props.setSelectedToken(v)
-        }
-      })
-    }
-    // props.setSelectedToken(myValue)
-    // console.log("hello: ", myValue)
-	//   use myValue for change in currency
-	// and according to the return value from coingecko setPrice
-  }
+	React.useEffect(() => {
+		if (props.value) {
+			setPrice({ token: props.token, amount: props.value });
+		}
+	}, [props.value]);
+
+	const handleChangeInPrice = (event) => {
+		event.preventDefault();
+		let { myValue } = event.currentTarget.dataset;
+		if (myValue) {
+			[
+				...RinkbeyNetworkArray[props.networkId == 137 ? 0 : 1].networks,
+			].map((v, i) => {
+				if (v.tokenName == myValue) {
+					props.setSelectedToken(v);
+				}
+			});
+		}
+		// props.setSelectedToken(myValue)
+		// console.log("hello: ", myValue)
+		//   use myValue for change in currency
+		// and according to the return value from coingecko setPrice
+	};
 	return (
 		<div>
-			<div style={{display:"flex", justifyContent:"right"}}>
-        <Button
-          ref={anchorRef}
-          aria-controls={open ? 'menu-list-grow' : undefined}
-          aria-haspopup="true"
-		      onTouchStart={(event) => event.stopPropagation()}
-			  	onMouseDown={(event) => event.stopPropagation()}
-          		value={"phnx"}
-				  onClick={(event) => {
-					// Prevent CardActionArea Click
-					event.preventDefault();
-					handleToggle(event)
-				  }}
-				  className={(props.isEventPage)?classes.PhnxPriceEventPage:classes.PhnxPrice}
-        >
-        <img
-          src={props.selectedToken && props.selectedToken.image}
-          style={{ height: props.isEventPage ? "25px": "20px", marginRight:"4px" }}
-        /> 
-          {`${price.amount}` }
-		  <ArrowDropDownIcon style={{ color: "rgba(0, 0, 0, 0.7)" }} />
-        </Button>
-        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition style={{zIndex:"1331"}}>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                {[...networkArray[props.networkId == 137 ? 0 : 1].networks].map((data) => {
-                  return (<MenuItem
-                      value={data.tokenName}
-                      data-my-value={data.tokenName}
-                      onTouchStart={(event) => event.stopPropagation()}
-                      onMouseDown={(event) => event.stopPropagation()}
-                      onClick={(event) => {
-                        // Prevent CardActionArea Click
-                        handleChangeInPrice(event)
-                        handleToggle(event)
-                      }}
-                    >
-                    <ListItemIcon className={classes.networkIcon}>
-                      <img
-                        src={data.image}
-                        style={{ height: "20px" }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText className={classes.menuItem}>
-                      {data.tokenName}
-                    </ListItemText>
-                  </MenuItem>)
-                })}
-                </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </div>
+			<div style={{ display: "flex", justifyContent: "right" }}>
+				<Button
+					ref={anchorRef}
+					aria-controls={open ? "menu-list-grow" : undefined}
+					aria-haspopup="true"
+					onTouchStart={(event) => event.stopPropagation()}
+					onMouseDown={(event) => event.stopPropagation()}
+					value={"phnx"}
+					onClick={(event) => {
+						// Prevent CardActionArea Click
+						event.preventDefault();
+						handleToggle(event);
+					}}
+					className={
+						props.isEventPage
+							? classes.PhnxPriceEventPage
+							: classes.PhnxPrice
+					}
+				>
+					<img
+						src={props.selectedToken && props.selectedToken.image}
+						style={{
+							height: props.isEventPage ? "25px" : "20px",
+							marginRight: "4px",
+						}}
+					/>
+					{`${price.amount}`}
+					<ArrowDropDownIcon
+						style={{ color: "rgba(0, 0, 0, 0.7)" }}
+					/>
+				</Button>
+				<Popper
+					open={open}
+					anchorEl={anchorRef.current}
+					role={undefined}
+					transition
+					style={{ zIndex: "1331" }}
+				>
+					{({ TransitionProps, placement }) => (
+						<Grow
+							{...TransitionProps}
+							style={{
+								transformOrigin:
+									placement === "bottom"
+										? "center top"
+										: "center bottom",
+							}}
+						>
+							<Paper>
+								<ClickAwayListener onClickAway={handleClose}>
+									<MenuList
+										autoFocusItem={open}
+										id="menu-list-grow"
+										onKeyDown={handleListKeyDown}
+									>
+										{[
+											...RinkbeyNetworkArray[
+												props.networkId == 137 ? 0 : 1
+											].networks,
+										].map((data) => {
+											return (
+												<MenuItem
+													value={data.tokenName}
+													data-my-value={
+														data.tokenName
+													}
+													onTouchStart={(event) =>
+														event.stopPropagation()
+													}
+													onMouseDown={(event) =>
+														event.stopPropagation()
+													}
+													onClick={(event) => {
+														// Prevent CardActionArea Click
+														handleChangeInPrice(
+															event
+														);
+														handleToggle(event);
+													}}
+												>
+													<ListItemIcon
+														className={
+															classes.networkIcon
+														}
+													>
+														<img
+															src={data.image}
+															style={{
+																height: "20px",
+															}}
+														/>
+													</ListItemIcon>
+													<ListItemText
+														className={
+															classes.menuItem
+														}
+													>
+														{data.tokenName}
+													</ListItemText>
+												</MenuItem>
+											);
+										})}
+									</MenuList>
+								</ClickAwayListener>
+							</Paper>
+						</Grow>
+					)}
+				</Popper>
+			</div>
 			{/* <Select
 				labelId="demo-simple-select-outlined-label"
 				id="demo-simple-select-outlined"

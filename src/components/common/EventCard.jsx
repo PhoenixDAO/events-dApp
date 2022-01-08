@@ -9,9 +9,6 @@ import {
 	ADD_TO_FAVOURITES,
 	REMOVE_FROM_FAVOURITES,
 } from "../../config/const";
-import { toast } from "react-toastify";
-
-import Notify from "../Notify";
 import axios from "axios";
 import Web3 from "web3";
 
@@ -43,7 +40,7 @@ import {
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
 import PriceSelectBox from "./PriceSelectBox";
-import { networkArray } from "../../config/const";
+import { RinkbeyNetworkArray } from "../../config/const";
 
 var moment = require("moment");
 
@@ -95,8 +92,8 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		color: "#4E4E55",
 		fontSize: 17,
-		"@media (min-width:765px) and (max-width:900px)":{
-		fontSize: "13px",
+		"@media (min-width:765px) and (max-width:900px)": {
+			fontSize: "13px",
 		},
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
@@ -104,14 +101,13 @@ const useStyles = makeStyles((theme) => ({
 			outline: "none",
 		},
 	},
-	cardActionIcon:{
+	cardActionIcon: {
 		marginRight: "7px",
 		fontSize: "19px",
-		"@media (min-width:765px) and (max-width:900px)":{
+		"@media (min-width:765px) and (max-width:900px)": {
 			marginRight: "3px",
-		fontSize: "15px",
-		}
-
+			fontSize: "15px",
+		},
 	},
 	sendTicket: {
 		"&:hover": {
@@ -124,9 +120,9 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		color: "#4E4E55",
 		fontSize: 17,
-		"@media (min-width:765px) and (max-width:900px)":{
+		"@media (min-width:765px) and (max-width:900px)": {
 			fontSize: "13px",
-			},
+		},
 		fontWeight: 500,
 		"&:focus": {
 			outline: "none",
@@ -177,7 +173,7 @@ const useStyles = makeStyles((theme) => ({
 		"& p": {
 			marginBottom: "0px",
 		},
-		"@media (max-width:1000px)":{
+		"@media (max-width:1000px)": {
 			maxWidth: "45.33%",
 		},
 		minHeight: "71px",
@@ -224,7 +220,7 @@ const useStyles = makeStyles((theme) => ({
 		// /* For landscape layouts only */
 		// WebkitLineClamp: "3",
 		// 	}
-		"@media (max-width:1000px)":{
+		"@media (max-width:1000px)": {
 			maxWidth: "55.33%",
 		},
 	},
@@ -268,13 +264,13 @@ const EventCard = (props, context) => {
 		eventType,
 		eventDescription,
 		eventLocation,
-		tokenPrices
+		tokenPrices,
 	} = props;
 
 	useEffect(() => {
 		setIcon(favoriteEvent);
 		getPhoenixDAOMarketValue();
-		console.log('tokenPrices ==>>>>', tokenPrices)
+		console.log("tokenPrices ==>>>>", tokenPrices);
 	}, [favoriteEvent]);
 
 	const classes = useStyles();
@@ -283,7 +279,11 @@ const EventCard = (props, context) => {
 	const [open2, setOpen2] = useState(false);
 	const [sendAddress, setSendAddress] = useState("");
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState("");
-	const [selectedToken, setSelectedToken] = useState({ tokenName: networkArray[0].networks[0].tokenName, chainId: 4, image: networkArray[0].networks[0].image })  // default value
+	const [selectedToken, setSelectedToken] = useState({
+		tokenName: RinkbeyNetworkArray[0].networks[0].tokenName,
+		chainId: 4,
+		image: RinkbeyNetworkArray[0].networks[0].image,
+	}); // default value
 	// changeIcon(favoriteEvent);
 	const handleClickOpen = (e) => {
 		setOpen(true);
@@ -364,76 +364,90 @@ const EventCard = (props, context) => {
 	// console.log("phnx price coingecko: ",event_data.prices)
 	let dollar_price = "";
 	let token_price = "";
-	if(event_data.isPHNX){
-		 dollar_price = event_data.prices.map((price) => {
+	if (event_data.isPHNX) {
+		dollar_price = event_data.prices.map((price) => {
 			return (
-				Web3.utils.fromWei(price.toString()) *
-				PhoenixDAO_market.usd
+				Web3.utils.fromWei(price.toString()) * PhoenixDAO_market.usd
 			).toFixed(3);
 		});
-		 token_price = Web3.utils.fromWei(event_data.prices[0].toString());
+		token_price = Web3.utils.fromWei(event_data.prices[0].toString());
 		//  console.log("phnx price coingecko: ",phnx_price, dollar_price)
-	}
-	else{
-		console.log('selectedToken => ', selectedToken)
-    console.log('event_data => ', event_data,"token prices", tokenPrices)
-		if(selectedToken.tokenName == "usdt") {
-      // let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.usdt)
-      // return tokenPric;
+	} else {
+		console.log("selectedToken => ", selectedToken);
+		console.log("event_data => ", event_data, "token prices", tokenPrices);
+		if (selectedToken.tokenName == "usdt") {
 			token_price = event_data.prices.map((price) => {
-				// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
-        // console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+				// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
 				return (
 					Web3.utils.fromWei(price.toString()) / tokenPrices.usdt
+				).toFixed(3);
+			});
+		} else if (selectedToken.tokenName == "usdc") {
+			token_price = event_data.prices.map((price) => {
+				// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+				return (
+					Web3.utils.fromWei(price.toString()) / tokenPrices.usdc
+				).toFixed(3);
+			});
+		} else if (selectedToken.tokenName == "phnx") {
+			// let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.phnx)
+			// return tokenPric;
+			token_price = event_data.prices.map((price) => {
+				return (
+					Web3.utils.fromWei(price.toString()) / tokenPrices.phnx
+				).toFixed(3);
+			});
+		} else if (selectedToken.tokenName == "ether") {
+			token_price = event_data.prices.map((price) => {
+				//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
+				if (
+					Web3.utils.fromWei(price.toString()) / tokenPrices.eth >
+					0.1
+				) {
+					return (
+						Web3.utils.fromWei(price.toString()) / tokenPrices.eth
 					).toFixed(3);
-				});
-		}
-		else if(selectedToken.tokenName == "phnx") {
-      // let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.phnx)
-      // return tokenPric;
+				} else {
+					return (
+						Web3.utils.fromWei(price.toString()) / tokenPrices.eth
+					);
+				}
+			});
+		} else if (selectedToken.tokenName == "weth") {
 			token_price = event_data.prices.map((price) => {
-		   return (
-			   Web3.utils.fromWei(price.toString()) / tokenPrices.phnx
-			   ).toFixed(3);
-		   });
-		}
-		else if(selectedToken.tokenName == "ether") {
+				//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
+				if (
+					Web3.utils.fromWei(price.toString()) / tokenPrices.weth >
+					0.1
+				) {
+					return (
+						Web3.utils.fromWei(price.toString()) / tokenPrices.weth
+					).toFixed(3);
+				} else {
+					return (
+						Web3.utils.fromWei(price.toString()) / tokenPrices.weth
+					);
+				}
+			});
+		} else if (selectedToken.tokenName == "matic") {
 			token_price = event_data.prices.map((price) => {
-        // return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
-        //  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
-        if(Web3.utils.fromWei(price.toString()) / tokenPrices.eth > 0.1) {
-          return (Web3.utils.fromWei(price.toString()) / tokenPrices.eth).toFixed(3)
-        } else {
-          return  Web3.utils.fromWei(price.toString()) / tokenPrices.eth
-        }
-		  })
-    } else if(selectedToken.tokenName == "matic") {
-      // let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.matic)
-      // return tokenPric;
+				//  console.log('matic_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.matic)
+				return (
+					Web3.utils.fromWei(price.toString()) / tokenPrices.matic
+				).toFixed(3);
+			});
+		} else {
 			token_price = event_data.prices.map((price) => {
-		   // return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
-      //  console.log('matic_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.matic)
-		   return (
-			   Web3.utils.fromWei(price.toString()) / tokenPrices.matic
-			   ).toFixed(3);
-		   });
-		}
-		else {
-      // let tokenPric = Number(event_data.prices[0]) / Number(tokenPrices.usdt)
-      // return tokenPric;
-			token_price = event_data.prices.map((price) => {
-				// return ((price / 1000000) / PhoenixDAO_market.usd).toFixed(6);
-        // console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+				// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
 				return (
 					Web3.utils.fromWei(price.toString()) / tokenPrices.usdt
-					).toFixed(3);
-				});
+				).toFixed(3);
+			});
 		}
 		//  dollar_price = event_data.prices[0] / 1000000;
 		dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
 		// console.log("phnx price coingecko: ",phnx_price, dollar_price)
 	}
-	
 
 	const checkExpiry = () => {
 		if (props.checkExpiry || props.selectedTab) {
@@ -460,7 +474,7 @@ const EventCard = (props, context) => {
 				eventId={eventId}
 				open={open2}
 				sendAddress={sendAddress}
-				setSendAddress = {setSendAddress}
+				setSendAddress={setSendAddress}
 				handleClose={handleClose2}
 				eventTitle={event_data.name}
 			/>
@@ -591,74 +605,89 @@ const EventCard = (props, context) => {
 								>
 									{!event_data.token ? (
 										"Free"
-									) : (event_data.isPHNX)?(
-									dollar_price.length === 1 ? (
-										<div className={classes.priceAlignment}>
-											 <p
-												title={token_price + " PHNX"}
-												style={{
-													fontFamily:
-														'"Aeonik", sans-serif',
-												}}
-											>												
-												{pricingFormatter(
-													token_price,
-													"PHNX"
-												)}		
-											</p>
-											{/* <PriceSelectBox token="phnx" value={pricingFormatter(
+									) : event_data.isPHNX ? (
+										dollar_price.length === 1 ? (
+											<div
+												className={
+													classes.priceAlignment
+												}
+											>
+												<p
+													title={
+														token_price + " PHNX"
+													}
+													style={{
+														fontFamily:
+															'"Aeonik", sans-serif',
+													}}
+												>
+													{pricingFormatter(
+														token_price,
+														"PHNX"
+													)}
+												</p>
+												{/* <PriceSelectBox token="phnx" value={pricingFormatter(
 													token_price,
 													"PHNX"
 												)} setSelectedToken={setSelectedToken} selectedToken={selectedToken} /> */}
-											<p
-												className={classes.starting}
-												title={"$" + dollar_price[0]}
+												<p
+													className={classes.starting}
+													title={
+														"$" + dollar_price[0]
+													}
+												>
+													{" "}
+													{pricingFormatter(
+														dollar_price[0],
+														"$"
+													)}
+												</p>
+											</div>
+										) : (
+											<div
+												className={
+													classes.priceAlignment
+												}
 											>
-												{" "}
-												{pricingFormatter(
-													dollar_price[0],
-													"$"
-												)}
-											</p>		
-
-										</div>
-									) : (
-										<div className={classes.priceAlignment}>
-											<p
-												className={classes.starting}
-												title={token_price}
-											>
-												Starting from
-											</p>
-											<p
-												title={token_price + " PHNX"}
-												style={{
-													fontFamily:
-														'"Aeonik", sans-serif',
-												}}
-											>
-												{pricingFormatter(
-													token_price,
-													"PHNX"
-												)}
-											</p>
-											{/* <PriceSelectBox token="phnx" value={pricingFormatter(
+												<p
+													className={classes.starting}
+													title={token_price}
+												>
+													Starting from
+												</p>
+												<p
+													title={
+														token_price + " PHNX"
+													}
+													style={{
+														fontFamily:
+															'"Aeonik", sans-serif',
+													}}
+												>
+													{pricingFormatter(
+														token_price,
+														"PHNX"
+													)}
+												</p>
+												{/* <PriceSelectBox token="phnx" value={pricingFormatter(
 													token_price,
 													"PHNX"
 												)}  setSelectedToken={setSelectedToken} selectedToken={selectedToken} /> */}
-											<p
-												className={classes.starting}
-												title={"$" + dollar_price[0]}
-											>
-												{" "}
-												{pricingFormatter(
-													dollar_price[0],
-													"$"
-												)}
-											</p>
-										</div>
-									))
-									:(token_price.length === 1 ? (
+												<p
+													className={classes.starting}
+													title={
+														"$" + dollar_price[0]
+													}
+												>
+													{" "}
+													{pricingFormatter(
+														dollar_price[0],
+														"$"
+													)}
+												</p>
+											</div>
+										)
+									) : token_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
 											{/* <p
 												title={phnx_price[0] + " PHNX"}
@@ -672,13 +701,15 @@ const EventCard = (props, context) => {
 													"PHNX"
 												)}
 											</p> */}
-											<PriceSelectBox 
-												token="phnx" 
+											<PriceSelectBox
+												token="phnx"
 												value={pricingFormatter(
 													token_price[0],
 													"PHNX"
-												)} 
-												setSelectedToken={setSelectedToken} 
+												)}
+												setSelectedToken={
+													setSelectedToken
+												}
 												selectedToken={selectedToken}
 												// defaultToken={defaultToken}
 											/>
@@ -713,14 +744,17 @@ const EventCard = (props, context) => {
 													"PHNX"
 												)}
 											</p> */}
-											<PriceSelectBox 
-                      token="phnx" 
-                      value={pricingFormatter(
-                        token_price[0],
+											<PriceSelectBox
+												token="phnx"
+												value={pricingFormatter(
+													token_price[0],
 													"PHNX"
-												)}  setSelectedToken={setSelectedToken} 
-                        selectedToken={selectedToken} 
-                      />
+												)}
+												setSelectedToken={
+													setSelectedToken
+												}
+												selectedToken={selectedToken}
+											/>
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price}
@@ -732,11 +766,11 @@ const EventCard = (props, context) => {
 												)}
 											</p>
 										</div>
-									))}
+									)}
 									{/* {console.log("price",event_data.name, dollar_price, typeof(dollar_price))} */}
 								</Typography>
 
-              {/* <FormControl
+								{/* <FormControl
 								variant="outlined"
 								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
 							>
@@ -855,11 +889,19 @@ const EventCard = (props, context) => {
 									className={classes.text}
 									title={
 										!eventEndTime
-											?  moment(eventStartTime)
-										  .utcOffset(0).local().format('LT')
+											? moment(eventStartTime)
+													.utcOffset(0)
+													.local()
+													.format("LT")
 											: `${moment(eventStartTime)
-												.utcOffset(0).local().format('LT')} - ${moment(eventEndTime)
-													.utcOffset(0).local().format('LT')}`
+													.utcOffset(0)
+													.local()
+													.format("LT")} - ${moment(
+													eventEndTime
+											  )
+													.utcOffset(0)
+													.local()
+													.format("LT")}`
 									}
 								>
 									<AccessTime fontSize="small" />{" "}
@@ -871,19 +913,22 @@ const EventCard = (props, context) => {
 									{!eventStartTime
 										? `Time`
 										: !eventEndTime
-										? 
-										// moment(eventStartTime)
-										// 		.utcOffset(0)
-										// 		.format("hh:mma z")
-										moment(eventStartTime)
-										  .utcOffset(0).local().format('LT')
+										? // moment(eventStartTime)
+										  // 		.utcOffset(0)
+										  // 		.format("hh:mma z")
+										  moment(eventStartTime)
+												.utcOffset(0)
+												.local()
+												.format("LT")
 										: `			
-										${moment(eventStartTime)
-											.utcOffset(0).local().format('LT')} - ${moment(eventEndTime)
-												.utcOffset(0).local().format('LT')}
-												`
-												}
-												{" Local"}
+										${moment(eventStartTime).utcOffset(0).local().format("LT")} - ${moment(
+												eventEndTime
+										  )
+												.utcOffset(0)
+												.local()
+												.format("LT")}
+												`}
+									{" Local"}
 								</Typography>
 
 								<Typography
@@ -937,13 +982,15 @@ const EventCard = (props, context) => {
 									>
 										PHNX Revenue:{" "}
 										{Web3.utils.fromWei(
-												event_data.eventRevenueInPhnx
-											)=="0"?"0 PHNX":pricingFormatter(
-											Web3.utils.fromWei(
-												event_data.eventRevenueInPhnx
-											),
-											"PHNX"
-										)}{" "}
+											event_data.eventRevenueInPhnx
+										) == "0"
+											? "0 PHNX"
+											: pricingFormatter(
+													Web3.utils.fromWei(
+														event_data.eventRevenueInPhnx
+													),
+													"PHNX"
+											  )}{" "}
 										{/* PHNX */}
 									</Typography>
 									<Typography
@@ -956,13 +1003,15 @@ const EventCard = (props, context) => {
 									>
 										Dollar Revenue:{" "}
 										{Web3.utils.fromWei(
-												event_data.eventRevenueInDollar.toString()
-											)=="0"?"$0":pricingFormatter(
-											Web3.utils.fromWei(
-												event_data.eventRevenueInDollar.toString()
-											),
-											"$"
-										)}
+											event_data.eventRevenueInDollar.toString()
+										) == "0"
+											? "$0"
+											: pricingFormatter(
+													Web3.utils.fromWei(
+														event_data.eventRevenueInDollar.toString()
+													),
+													"$"
+											  )}
 									</Typography>
 									<Divider />
 									<Button
@@ -980,48 +1029,47 @@ const EventCard = (props, context) => {
 									</Button>
 								</Grid>
 							) : // For my ticket page
-								ticket ? (
-									<Grid item className={classes.row}>
-										<Button
-											className={classes.shareButton}
-											onClick={handleClickOpen}
-											disabled={checkExpiry()}
-										>
-											<LaunchSharp
+							ticket ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+										disabled={checkExpiry()}
+									>
+										<LaunchSharp
 											className={classes.cardActionIcon}
-											/>{" "}
-											Share Event
-										</Button>
-										<Button
-											className={classes.sendTicket}
-											onClick={handleClickOpen2}
-											disabled={checkExpiry()}
-										>
-											<Send
+										/>{" "}
+										Share Event
+									</Button>
+									<Button
+										className={classes.sendTicket}
+										onClick={handleClickOpen2}
+										disabled={checkExpiry()}
+									>
+										<Send
 											className={classes.cardActionIcon}
-											/>{" "}
-											Send Ticket
-										</Button>
-									</Grid>
-								) : // For my Favorite page
-									myFavorites ? (
-										<Grid item className={classes.row}>
-											<Button
-												className={classes.shareButton}
-												onClick={handleClickOpen}
-												disabled={checkExpiry()}
-
-											>
-												<LaunchSharp
-												style={{
-													marginRight: "7px",
-													fontSize: "19px",
-												}}
-												/>{" "}
-												Share Event
-											</Button>
-										</Grid>
-									) : null}
+										/>{" "}
+										Send Ticket
+									</Button>
+								</Grid>
+							) : // For my Favorite page
+							myFavorites ? (
+								<Grid item className={classes.row}>
+									<Button
+										className={classes.shareButton}
+										onClick={handleClickOpen}
+										disabled={checkExpiry()}
+									>
+										<LaunchSharp
+											style={{
+												marginRight: "7px",
+												fontSize: "19px",
+											}}
+										/>{" "}
+										Share Event
+									</Button>
+								</Grid>
+							) : null}
 						</CardContent>
 					</CardActionArea>
 				</Link>
