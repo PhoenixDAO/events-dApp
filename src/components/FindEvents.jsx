@@ -336,6 +336,7 @@ class FindEvents extends Component {
 					  eventId
 					  owner
 					  name
+					  isPHNX
 					  topic
 					  location
 					  city

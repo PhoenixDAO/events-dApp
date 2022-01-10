@@ -110,6 +110,7 @@ const MyStepper = ({
 		eventCategory,
 		ticketIndex,
 		restrictWallet,
+		isPHNX,
 		ticketCategories,
 		isCompleted,
 		//4th_stepper
@@ -606,7 +607,7 @@ const MyStepper = ({
 										<br />
 
 										<label className={classes.label}>
-											COVER IMAGE {index + 1}
+										{index === 0 ? (`EVENT IMAGE`):(`COVER IMAGE ${index}`)}
 										</label>
 										<div style={{ position: "relative" }}>
 											<TextField
@@ -658,11 +659,16 @@ const MyStepper = ({
 														classes.imageMaxStyle
 													}
 												>
-													Max: 3 Pictures. Not greater
-													than 5MB (Recommended 1000px
-													* 1000px)
+													Event Card Image should not be greater than 5MB (Recommended 16:9 ratio picture)
 												</p>
-											) : (
+											) : index === 1 ?(<p
+												className={
+													classes.imageMaxStyle
+												}
+											>
+												Event page Cover Image should not greater than
+												than 5MB (Recommended 21:9 ratio picture)
+											</p>): (
 												<button
 													className={
 														classes.deleteImageButton
@@ -1541,6 +1547,32 @@ const MyStepper = ({
 									</span>
 								}
 							/>
+							{(eventCategory !== "free" )&&
+							<FormControlLabel
+								control={
+									<Checkbox
+										icon={<img src={uncheckedIcon} />}
+										checkedIcon={<img src={checkedIcon} />}
+										checked={!!isPHNX}
+										onChange={(e) => {
+											handlePickerValue({
+												name: "isPHNX",
+												value: !isPHNX,
+											});
+										}}
+										name="isPHNX"
+										id="isPHNX"
+										color="primary"
+									/>
+								}
+								label={
+									<span
+										className={classes.restrictWalletLabel}
+									>
+										Would you like to fix PHNX price? Otherwise you will be paid with respect to dollar price
+									</span>
+								}
+							/>}
 						</div>
 					</React.Fragment>
 				);

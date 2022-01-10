@@ -408,23 +408,6 @@ class TopicsLandingPage extends Component {
 											Trending Topics
 										</MenuItem>
 									</Select>
-									{/* <Select
-										native
-										value={this.state.category}
-										onChange={this.handleChangeCategory}
-										MenuProps={{
-											classes: {
-												paper: classes.dropdownStyle,
-											},
-										}}
-									>
-										<option aria-label="None" value="all">
-											All Topics
-										</option>
-										<option value="tickets">
-											Trending Topics
-										</option>
-									</Select> */}
 								</FormControl>
 							</div>
 

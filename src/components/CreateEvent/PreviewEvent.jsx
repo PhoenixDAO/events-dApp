@@ -191,6 +191,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 		eventTime, //oneday/moreday event
 		eventType,
 		image0,
+		image1,
 		eventDescription,
 		city,
 		country,
@@ -458,6 +459,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 								Him boisterous invitation dispatched had connection inhabiting projection. By mutual an mr danger garret edward an. Diverted as strictly exertion addition no disposal by stanhill. This call wife do so sigh no gate felt. You and abode spite order get. Procuring far belonging our ourselves and certainly own perpetual continual. It elsewhere of sometimes or my certainty. Lain no as five or at high. Everything travelling set how law literature. 
 								belonging our ourselves and certainly own perpetual continual. It elsewhere of sometimes or my certainty. Lain no as five or at high. Everything travelling set how law literature. "
 						image0={image0}
+						image1={image1}
 						eventName={eventName}
 						eventStartTime={eventStartTime}
 						eventOrganizer={

@@ -1,16 +1,23 @@
 import React, { Component } from "react";
 import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
-// import { Link } from "react-router-dom";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Mainnet_Token_Address,
 } from "../config/phoenixDAOcontract_testnet.js";
 
 import ipfs from "../utils/ipfs";
-import {urlFormatter} from "../utils/urlFormatter";
+import { urlFormatter } from "../utils/urlFormatter";
 
 import { API_URL, REPORT_EVENT, GET_USER_DETAIL } from "../config/const";
+import {
+	GetEthPrice,
+	GetPhnxPrice,
+	GetMaticPrice,
+	GetUsdtPrice,
+	GetWethPrice,
+	GetUsdcPrice,
+} from "../services/Services";
 import axios from "axios";
 import Loading from "./Loading";
 // import eventTopics from "../config/topics.json";
@@ -25,13 +32,13 @@ import Slide from "@material-ui/core/Slide";
 
 import Notify from "./Notify";
 import ApprovalModal from "./approvalModal";
-
 import { toast } from "react-toastify";
 
 //eventCard
 import EventCard from "./common/EventCard";
 import SkeletonLayout from "./common/SkeletonLayout.jsx";
 import { getNetworkId } from "../config/getGraphApi.js";
+import { getUserDetails } from "../config/serverAPIs.js";
 
 var moment = require("moment");
 
@@ -41,7 +48,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 class Event extends Component {
 	// _isMounted = false;
-
 	constructor(props, context) {
 		try {
 			var contractConfig = {
@@ -55,9 +61,6 @@ class Event extends Component {
 		} catch (e) {}
 		super(props);
 		this.contracts = this.props.eventsContract;
-		// this.event = this.contracts["DaoEvents"].methods.events.cacheCall(
-		// 	this.props.id
-		// );
 		this.organizerName = "qwerty";
 		this.account = this.props.accounts[0];
 		this.state = {
@@ -96,11 +99,100 @@ class Event extends Component {
 			eventType: null,
 			eventDescription: null,
 			eventLocation: null,
+			tokenPrices: {
+				phnx: "",
+				eth: "",
+				matic: "",
+				usdt: "",
+				weth: "",
+				usdc: "",
+			},
+			userDetail: null,
 		};
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
 		this.isCancelled = false;
 		this.giveApproval = this.giveApproval.bind(this);
+		this.GetPrices = this.GetPrices.bind(this);
 	}
+	GetPrices = async () => {
+		console.log("resEthPrice.data.thereum.usd1");
+		try {
+			let resEthPrice = await GetEthPrice();
+			if (resEthPrice) {
+				// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						eth: resEthPrice.data.ethereum.usd,
+					},
+				});
+			}
+			let resPhnxPrice = await GetPhnxPrice();
+			if (resPhnxPrice) {
+				// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						phnx: resPhnxPrice.data.phoenixdao.usd,
+					},
+				});
+			}
+			let resMaticPrice = await GetMaticPrice();
+			if (resMaticPrice) {
+				// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						matic: resMaticPrice.data[`matic-network`].usd,
+					},
+				});
+			}
+			let resUsdtPrice = await GetUsdtPrice();
+			if (resUsdtPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						usdt: resUsdtPrice.data.tether.usd,
+					},
+				});
+			}
+			let resWethPrice = await GetWethPrice();
+			if (resWethPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						weth: resWethPrice.data.weth.usd,
+					},
+				});
+			}
+			let resUsdcPrice = await GetUsdcPrice();
+			if (resUsdcPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						usdc: resUsdcPrice.data[`usd-coin`].usd,
+					},
+				});
+			}
+		} catch (e) {
+			console.error("Err at GetPrices =>>", e);
+		}
+		console.log(
+			"this.props.networkId =>>>",
+			this.props.networkId,
+			"this.props.accounts =>>>",
+			this.props.accounts[0]
+		);
+		let res = await getUserDetails({
+			address: this.props.accounts[0],
+			networkId: this.props.networkId,
+		});
+		console.log("res of getUserDetails =>>>>>", res);
+		this.setState({ userDetail: res });
+	};
 
 	handleClickOpen = () => {
 		this.setState({ open: true });
@@ -279,7 +371,8 @@ class Event extends Component {
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
 					toast(
-						<Notify networkId={this.props.networkId} 
+						<Notify
+							networkId={this.props.networkId}
 							hash={hash}
 							text={
 								"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
@@ -323,11 +416,18 @@ class Event extends Component {
 				if (error !== null) {
 					txerror = error;
 					this.props.toggleBuying();
-					toast(<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />, {
-						position: "bottom-right",
-						autoClose: true,
-						pauseOnHover: true,
-					});
+					toast(
+						<Notify
+							networkId={this.props.networkId}
+							error={error}
+							message={txerror.message}
+						/>,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
 					// this.afterApprove()
 					this.setState({ disabledStatus: false });
 				}
@@ -342,7 +442,8 @@ class Event extends Component {
 		if (confirmationNumber === 0 && receipt.status) {
 			this.props.toggleBuying();
 			toast(
-				<Notify networkId={this.props.networkId} 
+				<Notify
+					networkId={this.props.networkId}
 					hash={receipt.transactionHash}
 					icon="fas fa-check-circle fa-3x"
 					text="Transaction successful! You can buy a ticket now."
@@ -460,14 +561,16 @@ class Event extends Component {
 			// 	"undefined" &&
 			// this.props.contracts["DaoEvents"].events[this.event].value
 		) {
-			let event_data = this.state.eventData;
+			// let event_data = this.state.eventData;
 			// let event_data = this.props.contracts["DaoEvents"].events[
 			// 	this.event
 			// ].value;
 			let image = this.getImage();
 			let description = this.getDescription();
 			let locations = this.getLocation();
-			let buttonText = event_data.token ? "Buy Ticket" : "Get Ticket";
+			let buttonText = this.state.eventData.token
+				? "Buy Ticket"
+				: "Get Ticket";
 			let time = this.getTime();
 			// let freeEvent = "";
 			// if (!event_data.token) {
@@ -475,13 +578,13 @@ class Event extends Component {
 			// }
 			// if (event_data.token !== undefined) {
 			let symbol = "PhoenixDAO.png";
-			let date = new Date(parseInt(event_data.time, 10) * 1000);
+			let date = new Date(parseInt(this.state.eventData.time, 10) * 1000);
 			// console.log("this.props.eventData",parseInt(event_data.time, 10))
 
 			// to be changed at the moment kept to first category
 			// let max_seats = event_data.limited ? event_data.seats : "∞"; // limited to tktLimited(array) and seats to tktTotalQuantity
-			let max_seats = event_data.tktLimited[0]
-				? event_data.catTktQuantity[0]
+			let max_seats = this.state.eventData.tktLimited[0]
+				? this.state.eventData.catTktQuantity[0]
 				: "∞";
 
 			let disabled = false;
@@ -508,8 +611,8 @@ class Event extends Component {
 				!reported &&
 				// to be changed at the moment kept because not being on event cards
 				// event_data.limited &&
-				Number(event_data.tktTotalQuantitySold) >=
-					Number(event_data.tktTotalQuantity)
+				Number(this.state.eventData.tktTotalQuantitySold) >=
+					Number(this.state.eventData.tktTotalQuantity)
 			) {
 				sold = true;
 				disabled = true;
@@ -529,7 +632,7 @@ class Event extends Component {
 			}
 			let badge = "";
 
-			if (event_data.tktTotalQuantitySold >= 2) {
+			if (this.state.eventData.tktTotalQuantitySold >= 2) {
 				badge = (
 					<img
 						src="/images/fire.png"
@@ -539,7 +642,7 @@ class Event extends Component {
 				);
 			}
 
-			let rawTopic = event_data.topic;
+			let rawTopic = this.state.eventData.topic;
 
 			var topicRemovedDashes = rawTopic;
 			topicRemovedDashes = topicRemovedDashes.replace(/-/g, " ");
@@ -550,8 +653,8 @@ class Event extends Component {
 				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 				.join(" ");
 
-			let topicURL = "/topic/" + event_data.topic + "/1";
-			let rawTitle = event_data.name;
+			let topicURL = "/topic/" + this.state.eventData.topic + "/1";
+			let rawTitle = this.state.eventData.name;
 			var titleRemovedSpaces = rawTitle;
 			titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
 
@@ -561,13 +664,16 @@ class Event extends Component {
 				.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
 				.join(" ");
 
-			let titleURL = `/event/${urlFormatter(event_data.name)}/${this.props.id}`;
+			let titleURL = `/event/${urlFormatter(this.state.eventData.name)}/${
+				this.props.id
+			}`;
 			let myEventStatURL =
 				"/event-stat/" + pagetitle + "/" + this.props.id;
 			let myEvent = false;
 			if (
 				this.account !== undefined &&
-				event_data.owner.toLowerCase() == this.account.toLowerCase()
+				this.state.eventData.owner.toLowerCase() ==
+					this.account.toLowerCase()
 			) {
 				myEvent = true;
 			}
@@ -581,7 +687,7 @@ class Event extends Component {
 						<SkeletonLayout />
 					) : (
 						<EventCard
-							event_data={event_data}
+							event_data={this.state.eventData}
 							date={date}
 							image={image}
 							myEvent={this.props.myEvents}
@@ -605,6 +711,8 @@ class Event extends Component {
 							eventDescription={this.state.eventDescription}
 							eventLocation={this.state.eventLocation}
 							selectedTab={this.props.selectedTab}
+							tokenPrices={this.state.tokenPrices}
+							userDetails={this.state.userDetail}
 						/>
 					)}
 					{/* new card */}
@@ -624,11 +732,12 @@ class Event extends Component {
 		);
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
 		// this._isMounted = true;
 		this.filterHideEvent();
 		this.updateIPFS();
 		this.getUserFavoritesEvent();
+		this.GetPrices();
 	}
 
 	componentDidUpdate() {

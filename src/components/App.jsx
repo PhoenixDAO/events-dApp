@@ -33,6 +33,8 @@ import Snackbar1 from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar from "@material-ui/core/Snackbar";
 
+// Hiii 
+
 import {
 	INFURA_URL,
 	INFURA_WEB_URL,
@@ -918,10 +920,11 @@ class App extends Component {
 			const publicAddress = await web3.eth.getAccounts();
 			const networkId = await this.getNetworkId();
 			const message = await getMessage();
+			// console.log('message ==>>', message)
 			const sign = await this.handleSignMessage(
 				publicAddress[0],
 				message.result.result
-			);
+			);	
 			const userData = await loginWithMetaMask({
 				publicAddress: publicAddress[0],
 				networkId: networkId,
@@ -935,13 +938,31 @@ class App extends Component {
 	};
 
 	handleSignMessage = async (publicAddress, message) => {
+		// console.log('Public addrress sign ==>>', publicAddress.toLowerCase(),' mesg =>', message)
 		try {
-			const sign = await web3.eth.sign(
-				web3.utils.sha3(message),
-				publicAddress
+			// utf8ToHex
+			// sha3
+			// let msg = await web3.utils.sha3(message)
+			// const sign = await web3.eth.sign(
+			// 	msg,
+			// 	publicAddress,
+			// 	console.log
+			// );
+			let msg = await web3.utils.utf8ToHex(message)
+			// console.log('msg utf8ToHex ==>>', msg)
+			const sign = await web3.eth.personal.sign(
+				msg,
+				publicAddress.toLowerCase(),
+				console.log
 			);
+			// console.log('res of sign', sign)
+
+			// let decrypt = await web3.eth.personal.ecRecover(message, sign)
+			// console.log('decryption sign ==>>', decrypt )
 			return sign;
-		} catch (err) {}
+		} catch (err) {
+			console.log('Err at handleSignMessage', err)
+		}
 	};
 
 	setUserDetails = (userDetails) => {

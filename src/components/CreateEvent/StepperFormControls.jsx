@@ -225,13 +225,16 @@ export const useFormControls = () => {
 					? ""
 					: parsedCookies.city.name,
 		},
-		images: [{ name: "" }],
+		images: [{ name: "" },{name:""}],
 		//3rd_stepper
 		eventCategory: parsedCookies.eventCategory
 			? parsedCookies.eventCategory
 			: "free",
 		restrictWallet: parsedCookies.restrictWallet
 			? parsedCookies.restrictWallet
+			: false,
+			isPHNX: parsedCookies.isPHNX
+			? parsedCookies.isPHNX
 			: false,
 		ticketIndex: parsedCookies.ticketIndex ? parsedCookies.ticketIndex : 0,
 		ticketName: parsedCookies.ticketName ? parsedCookies.ticketName : "",
@@ -607,6 +610,7 @@ export const useFormControls = () => {
 			eventCategory,
 			ticketIndex,
 			restrictWallet,
+			isPHNX,
 			ticketCategories,
 			ticketAvailability,
 			phnxPrice,
