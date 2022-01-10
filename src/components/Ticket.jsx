@@ -23,6 +23,7 @@ import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Loading from "./Loading";
 import SkeletonLayout from "./common/SkeletonLayout";
 import { urlFormatter } from "../utils/urlFormatter";
+import { getUserDetails } from "../config/serverAPIs";
 
 var QRCode = require("qrcode.react");
 
@@ -74,6 +75,7 @@ class Ticket extends Component {
 				weth: "",
 				usdc: "",
 			},
+			userDetails: null,
 		};
 		this.isCancelled = false;
 		this.sendTicket = this.sendTicket.bind(this);
@@ -145,6 +147,27 @@ class Ticket extends Component {
 			}
 		} catch (e) {
 			console.error("Err at GetPrices =>>", e);
+		}
+	};
+
+	handleGetUserDetails = async () => {
+		// console.log(
+		// 	"this.props.networkId =>>>",
+		// 	this.props.networkId,
+		// 	"this.props.accounts =>>>",
+		// 	this.props.accounts[0]
+		// );
+		if (this.props.networkId && this.props.accounts) {
+			const response = await getUserDetails({
+				address: this.props.accounts[0],
+				networkId: this.props.networkId,
+			});
+			console.log("Resp of handleGetUserDetails ==>>>> ", response);
+			if (!response.error) {
+				this.setState({
+					userDetails: response,
+				});
+			}
 		}
 	};
 
@@ -576,6 +599,7 @@ class Ticket extends Component {
 					eventDescription={this.state.eventDescription}
 					eventLocation={this.state.eventLocation}
 					tokenPrices={this.state.tokenPrices}
+					userDetails={this.state.userDetails}
 				/>
 				// <div className="card w-100">
 				// 	<div className="card-header">
@@ -632,6 +656,7 @@ class Ticket extends Component {
 		this.updateEvent();
 		this.filterHideEvent();
 		this.GetPrices();
+		this.handleGetUserDetails();
 	}
 
 	componentWillUnmount() {

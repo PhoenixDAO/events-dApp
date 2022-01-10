@@ -2135,27 +2135,31 @@ class EventPage extends Component {
 														this.state.phnx_price
 													}
 												>
-													{/* {pricingFormatter(
-													this.state.phnx_price,
-													"PHNX"
-												)} */}
-													<PriceSelectBox
-														selectedToken={
-															this.state
-																.selectedToken
-														}
-														setSelectedToken={
-															this
-																.handleSelectedTokenState
-														}
-														token="phnx"
-														value={pricingFormatter(
+													{this.state.isPHNX &&
+														pricingFormatter(
 															this.state
 																.phnx_price,
 															"PHNX"
 														)}
-														isEventPage={true}
-													/>
+													{!this.state.isPHNX && (
+														<PriceSelectBox
+															selectedToken={
+																this.state
+																	.selectedToken
+															}
+															setSelectedToken={
+																this
+																	.handleSelectedTokenState
+															}
+															token="phnx"
+															value={pricingFormatter(
+																this.state
+																	.phnx_price,
+																"PHNX"
+															)}
+															isEventPage={true}
+														/>
+													)}
 												</span>
 												<div
 													style={{

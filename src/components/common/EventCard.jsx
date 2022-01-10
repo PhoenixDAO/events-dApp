@@ -11,6 +11,7 @@ import {
 } from "../../config/const";
 import axios from "axios";
 import Web3 from "web3";
+import { base64ToBlob } from "../../services/Services";
 
 import {
 	Card,
@@ -280,10 +281,74 @@ const EventCard = (props, context) => {
 	const [sendAddress, setSendAddress] = useState("");
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState("");
 	const [selectedToken, setSelectedToken] = useState({
-		tokenName: RinkbeyNetworkArray[0].networks[0].tokenName,
-		chainId: 4,
-		image: RinkbeyNetworkArray[0].networks[0].image,
-	}); // default value
+		tokenName: "",
+		chainId: "",
+		image: "",
+	});
+
+	var atob = require("atob");
+
+	useEffect(() => {
+		if (props.userDetails && props.userDetails.result) {
+			// var atob = require("atob");
+			// console.log(
+			// 	"userDetailsssss => ",
+			// 	props.userDetails.result.result.userHldr.alternateCurrency
+			// );
+			let defaultCurr =
+				props.userDetails.result.result.userHldr.alternateCurrency;
+			if (typeof defaultCurr == "string") {
+				if (defaultCurr === "Dollar" || defaultCurr === "usd") {
+					setSelectedToken({
+						tokenName: "usdt",
+						chainId: props.networkId,
+						image: RinkbeyNetworkArray[0].networks[2].image,
+					});
+				}
+			}
+			if (typeof defaultCurr == "object") {
+				let propsTokenName =
+					props.userDetails.result.result.userHldr.alternateCurrency
+						.tokenName;
+				console.log("propsTokenName =>>", propsTokenName);
+				setSelectedToken({
+					...props.userDetails.result.result.userHldr
+						.alternateCurrency,
+					image: RinkbeyNetworkArray[
+						props.networkId == 137 ? 0 : 1
+					].networks.map((v, i) => {
+						if (propsTokenName == ("" | "Dollar" | "usd")) {
+							console.log(
+								"Condition 1 image =>> propsTokenName",
+								propsTokenName,
+								"RinkbeyImage ==>>> ",
+								RinkbeyNetworkArray[0].networks[0].image
+							);
+							return RinkbeyNetworkArray[0].networks[0].image;
+						}
+						if (v.tokenName == propsTokenName) {
+							console.log(
+								"Condition 2 image =>> propsTokenName",
+								propsTokenName,
+								"RinkbeyImage ==>>> ",
+								v.image.slice(5, 14)
+								// atob(v.image.slice(22))
+							);
+
+							// return atob(v.image.slice(22));
+							return base64ToBlob(v.image);
+						}
+					}),
+				});
+			}
+		}
+	}, [props.userDetails]);
+
+	// const [selectedToken, setSelectedToken] = useState({
+	// 	tokenName: RinkbeyNetworkArray[0].networks[0].tokenName,
+	// 	chainId: 4,
+	// 	image: RinkbeyNetworkArray[0].networks[0].image,
+	// }); // default value
 	// changeIcon(favoriteEvent);
 	const handleClickOpen = (e) => {
 		setOpen(true);

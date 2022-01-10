@@ -180,9 +180,14 @@ class Event extends Component {
 		} catch (e) {
 			console.error("Err at GetPrices =>>", e);
 		}
-
+		console.log(
+			"this.props.networkId =>>>",
+			this.props.networkId,
+			"this.props.accounts =>>>",
+			this.props.accounts[0]
+		);
 		let res = await getUserDetails({
-			address: this.props.address,
+			address: this.props.accounts[0],
 			networkId: this.props.networkId,
 		});
 		console.log("res of getUserDetails =>>>>>", res);
@@ -707,6 +712,7 @@ class Event extends Component {
 							eventLocation={this.state.eventLocation}
 							selectedTab={this.props.selectedTab}
 							tokenPrices={this.state.tokenPrices}
+							userDetails={this.state.userDetail}
 						/>
 					)}
 					{/* new card */}
