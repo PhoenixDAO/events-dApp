@@ -40,23 +40,125 @@
 // export const explorerWithAddress ="https://explorer-mumbai.maticvigil.com/address/"
 // export const graphURL="https://api.thegraph.com/subgraphs/name/mudassir45/events-dapp2"
 
-export const networkArray = [
+import PhnxPriceLogo from "../components/Images/phnxPriceLogo.svg";
+// import SolanaPriceLogo from "../components/Images/solanaPriceLogo.svg";
+import EthPriceLogo from "../components/Images/ethPriceLogo.svg";
+import MaticPriceLogo from "../components/Images/maticPriceLogo.svg";
+import TetherPriceLogo from "../components/Images/tetherPriceLogo.svg";
+import WethPriceLogo from "../components/Images/WethLogo.png";
+import UsdcPriceLogo from "../components/Images/usdcLogo.webp";
+
+export const PhnxPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+export const EthPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=Ethereum&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+export const MaticPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+export const UsdtPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=Tether&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+export const UsdcPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=usd-coin&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+export const WethtPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=weth&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+
+export const RinkbeyNetworkArray = [
 	{
 		chainName: "Polygon",
 		chainId: 137,
 		networks: [
-			{ tokenName: "phnx", chainId: 137 },
-			{ tokenName: "matic", chainId: 137 },
-			{ tokenName: "usdt", chainId: 137 },
+			{
+				tokenName: "phnx",
+				chainId: 137,
+				image: PhnxPriceLogo,
+				tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+			},
+			{
+				tokenName: "matic",
+				chainId: 137,
+				image: MaticPriceLogo,
+				tokenAddress: "",
+			},
+			{
+				tokenName: "usdt",
+				chainId: 137,
+				image: TetherPriceLogo,
+				tokenAddress: "0x0cEbA92298b655C827D224D33461B4A1F9C418a6",
+			},
+			{
+				tokenName: "usdc",
+				chainId: 137,
+				image: UsdcPriceLogo,
+				tokenAddress: "0xeb8f08a975Ab53E34D8a0330E0D34de942C95926",
+			},
+			{
+				tokenName: "weth",
+				chainId: 137,
+				image: WethPriceLogo,
+				tokenAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+			},
+			// {
+			// 	tokenName: "tusdt",
+			// 	chainId: 137,
+			// 	image: TetherPriceLogo,
+			// 	tokenAddress: "0xd92e713d051c37ebb2561803a3b5fbabc4962431",
+			// },
 		],
 	},
 	{
 		chainName: "ethereum",
 		chainId: 1,
 		networks: [
-			{ tokenName: "phnx", chainId: 1 },
-			{ tokenName: "ether", chainId: 1 },
-			{ tokenName: "usdt", chainId: 1 },
+			{
+				tokenName: "phnx",
+				chainId: 1,
+				image: PhnxPriceLogo,
+				tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+			},
+			{
+				tokenName: "ether",
+				chainId: 1,
+				image: EthPriceLogo,
+				tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+			},
+			{
+				tokenName: "usdt",
+				chainId: 1,
+				image: TetherPriceLogo,
+				tokenAddress: "0x0cEbA92298b655C827D224D33461B4A1F9C418a6",
+			},
+			{
+				tokenName: "usdc",
+				chainId: 1,
+				image: UsdcPriceLogo,
+				tokenAddress: "0xeb8f08a975Ab53E34D8a0330E0D34de942C95926",
+			},
+			{
+				tokenName: "weth",
+				chainId: 1,
+				image: WethPriceLogo,
+				tokenAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+			},
+			// {
+			// 	tokenName: "tusdt",
+			// 	chainId: 137,
+			// 	image: TetherPriceLogo,
+			// 	tokenAddress: "0xd92e713d051c37ebb2561803a3b5fbabc4962431",
+			// },
+		],
+	},
+];
+
+export const MainNetworkArray = [
+	{
+		chainName: "Polygon",
+		chainId: 137,
+		networks: [
+			{ tokenName: "phnx", chainId: 137, image: PhnxPriceLogo },
+			{ tokenName: "matic", chainId: 137, image: MaticPriceLogo },
+			{ tokenName: "usdt", chainId: 137, image: TetherPriceLogo },
+		],
+	},
+	{
+		chainName: "ethereum",
+		chainId: 1,
+		networks: [
+			{ tokenName: "phnx", chainId: 1, image: PhnxPriceLogo },
+			{ tokenName: "ether", chainId: 1, image: EthPriceLogo },
+			{ tokenName: "usdt", chainId: 1, image: TetherPriceLogo },
 		],
 	},
 ];

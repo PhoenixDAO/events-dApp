@@ -43,7 +43,8 @@ import {
 	etherscanMainnetAddress,
 	etherscanRinkbyAddress,
 	graphURLV1,
-	graphURLV2
+	graphURLV2,
+	RinkbeyNetworkArray,
 } from "../config/const";
 import { toast } from "react-toastify";
 // import ApprovalModal from "./approvalModal";
@@ -56,11 +57,15 @@ import EventNotFound from "./EventNotFound";
 import Clock from "./Clock";
 import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
+import { explorerWithAddress } from "../config/const.js";
 import {
-	INFURA_WEB_URL,
-	explorerWithTX,
-	explorerWithAddress,
-} from "../config/const.js";
+	GetPhnxPrice,
+	GetEthPrice,
+	GetMaticPrice,
+	GetUsdtPrice,
+	GetWethPrice,
+	GetUsdcPrice,
+} from "../services/Services";
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
 import BuyTicket from "./common/BuyTicket";
@@ -72,11 +77,9 @@ import {
 import Header from "./common/Header";
 import { generateBuyerArr } from "../utils/graphApis";
 import RichTextEditor from "react-rte";
-import BodyTextEditor from "./common/BodyTextEditor";
 import SkeletonEvent from "./common/SkeletonEvent";
 import GetGraphApi, { getNetworkId } from "../config/getGraphApi";
 import Snackbar from "@material-ui/core/Snackbar";
-import PageNotFound from "./PageNotFound";
 import EmptyState from "./EmptyState";
 import { urlFormatter } from "../utils/urlFormatter";
 import PriceSelectBox from "./common/PriceSelectBox";
@@ -118,22 +121,22 @@ const styles = (theme) => ({
 		backgroundColor: "#fff",
 		fontSize: 15,
 		fontWeight: 500,
-		marginLeft:"auto",
-		marginRight:"5px",
-		display:"block",
+		marginLeft: "auto",
+		marginRight: "5px",
+		display: "block",
 		borderRadius: "50%",
-		cursor:"pointer",
+		cursor: "pointer",
 		width: "32px",
 		height: "32px",
-		position:"absolute",
-		right:"4px",
-		bottom:"7px",
+		position: "absolute",
+		right: "4px",
+		bottom: "7px",
 		"&:focus": {
 			outline: "none",
 		},
-		"&:hover":{
+		"&:hover": {
 			backgroundColor: "rgb(227, 226, 245)",
-		}
+		},
 	},
 	paper: {
 		padding: theme.spacing(2),
@@ -158,14 +161,14 @@ const styles = (theme) => ({
 	},
 	eventDetails: {
 		backgroundColor: "white",
-		borderRadius:"8px",
+		borderRadius: "8px",
 		marginTop: "35px",
-		height:"100%",
+		height: "100%",
 		padding: "30px",
 	},
 	eventinfo: {
 		fontSize: "22px",
-		borderRadius:"8px",
+		borderRadius: "8px",
 		fontWeight: "700",
 		wordBreak: "break-word",
 	},
@@ -173,7 +176,7 @@ const styles = (theme) => ({
 		fontSize: "22px",
 		fontWeight: "700",
 		color: "#413AE2",
-		display:"flex",
+		display: "flex",
 		wordBreak: "break-word",
 		// textTransform:"uppercase"
 	},
@@ -211,12 +214,12 @@ const styles = (theme) => ({
 			minWidth: "141px",
 		},
 	},
-	organizerEventLink:{
-		color:"black",
-		textDecoration:"none !important",
-		"&:hover":{
-			color:"black",
-		}
+	organizerEventLink: {
+		color: "black",
+		textDecoration: "none !important",
+		"&:hover": {
+			color: "black",
+		},
 	},
 	buy: {
 		// marginLeft: "13px",
@@ -224,12 +227,12 @@ const styles = (theme) => ({
 		width: "100%",
 		height: "45px",
 		backgroundColor: "#413AE2",
-		"&.MuiButton-root":{
-			lineHeight:"18px"
+		"&.MuiButton-root": {
+			lineHeight: "18px",
 		},
 		[theme.breakpoints.down("xs")]: {
-			"&.MuiButton-root":{
-				padding:"0px 10px"
+			"&.MuiButton-root": {
+				padding: "0px 10px",
 			},
 		},
 		// [theme.breakpoints.down("xs")]: {
@@ -240,29 +243,28 @@ const styles = (theme) => ({
 	},
 	imageDiv: {
 		// height: "70vh",
-		paddingBottom:"5px",
+		paddingBottom: "5px",
 		// maxHeight: "400px",
 		// minHeight:"300px",
-		paddingTop:"36.037%",
-		borderRadius:"8px",
-		position:"relative",
+		paddingTop: "36.037%",
+		borderRadius: "8px",
+		position: "relative",
 		backgroundSize: "cover",
 		mozBackgroundSize: "cover",
 		backgroundPosition: "center",
-		"@media (max-width:1200px)":{
+		"@media (max-width:1200px)": {
 			// height: "40vh",
 			// maxHeight:"300px",
 			// minHeight:"200px",
 		},
-		"@media (max-width:800px)":{
+		"@media (max-width:800px)": {
 			// maxHeight:"250px",
 			// minHeight:"100px",
-		}
-		,
-		"@media (max-width:400px)":{
+		},
+		"@media (max-width:400px)": {
 			// maxHeight:"150px",
 			// minHeight:"100px",
-		}
+		},
 	},
 	selectInput: {
 		width: "100%",
@@ -300,7 +302,7 @@ const styles = (theme) => ({
 	},
 	row: {
 		marginTop: "40px",
-		paddingBottom:"60px",
+		paddingBottom: "60px",
 	},
 	eventDescriptionFont: {
 		"& .RichTextEditor__root___2QXK-": {
@@ -338,38 +340,28 @@ const styles = (theme) => ({
 		fontWeight: "bolder",
 		color: "#6b6b6b",
 	},
-	transactionPagination:{
-		width:"100%",
+	transactionPagination: {
+		width: "100%",
 	},
-	TransactionImage:{
-		height:"40px",
-		width:"40px",
-		objectFit:"cover",
-		borderRadius:"50%",
-		"@media (max-width):500px":{
-			height:"30px",
-			width:"30px"
-		}
+	TransactionImage: {
+		height: "40px",
+		width: "40px",
+		objectFit: "cover",
+		borderRadius: "50%",
+		"@media (max-width):500px": {
+			height: "30px",
+			width: "30px",
+		},
 	},
-	TicketPurchasesExportDiv:{
-		display:"flex"
+	TicketPurchasesExportDiv: {
+		display: "flex",
 	},
-exportButtonDiv:{
-	marginLeft:"auto"
-}
+	exportButtonDiv: {
+		marginLeft: "auto",
+	},
 });
 class EventPage extends Component {
 	constructor(props, context) {
-		// try {
-		// 	var contractConfig = {
-		// 		contractName: "PHNX",
-		// 		web3Contract: new context.drizzle.web3.eth.Contract(
-		// 			PhoenixDAO_Testnet_Token_ABI,
-		// 			PhoenixDAO_Mainnet_Token_Address
-		// 		),
-		// 	};
-		// 	context.drizzle.addContract(contractConfig);
-		// } catch (e) { }
 		super(props);
 		// this.contracts = context.drizzle.contracts;
 		this.account = this.props.accounts[0];
@@ -414,7 +406,7 @@ class EventPage extends Component {
 			open3: false,
 			open3Message: "",
 			avatarCustom: "",
-			networkId:null,
+			networkId: null,
 			avatarId: 1,
 			avatar: 0,
 			blockChainEvent: {},
@@ -426,14 +418,20 @@ class EventPage extends Component {
 			disableBuyTicketBtn: false,
 			phnx_price: "",
 			eventExistInContract: false,
-			Icon:false,
+			Icon: false,
 			UserFavoriteEvents: [],
 			allow: null,
 			loadingApprove: false,
 			loadingPurchase: false,
-			boughtTicket:0,
-			alternateEventPresent:null,
-			alternateEventLoading:false,
+			boughtTicket: 0,
+			alternateEventPresent: null,
+			alternateEventLoading: false,
+			tokenPrices: { phnx: "", eth: "", matic: "", usdt: "" },
+			selectedToken: {
+				tokenName: RinkbeyNetworkArray[0].networks[0].tokenName,
+				chainId: 4,
+				image: RinkbeyNetworkArray[0].networks[0].image,
+			},
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -444,10 +442,74 @@ class EventPage extends Component {
 		this.handleCloseSnackbar = this.handleCloseSnackbar.bind(this);
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
 		this.addTofavorite = this.addTofavorite.bind(this);
-		this.EventsOnDifferentNetworkExist = this.EventsOnDifferentNetworkExist.bind(this);
+		this.EventsOnDifferentNetworkExist =
+			this.EventsOnDifferentNetworkExist.bind(this);
 		this.handleExportCSV = this.handleExportCSV.bind(this);
-		
 	}
+
+	GetPrices = async () => {
+		console.log("resEthPrice.data.thereum.usd1");
+		try {
+			let resEthPrice = await GetEthPrice();
+			if (resEthPrice) {
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						eth: resEthPrice.data.ethereum.usd,
+					},
+				});
+			}
+			let resPhnxPrice = await GetPhnxPrice();
+			if (resPhnxPrice) {
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						phnx: resPhnxPrice.data.phoenixdao.usd,
+					},
+				});
+			}
+			let resMaticPrice = await GetMaticPrice();
+			if (resMaticPrice) {
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						matic: resMaticPrice.data[`matic-network`].usd,
+					},
+				});
+			}
+			let resUsdtPrice = await GetUsdtPrice();
+			if (resUsdtPrice) {
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						usdt: resUsdtPrice.data.tether.usd,
+					},
+				});
+			}
+			let resWethPrice = await GetWethPrice();
+			if (resWethPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						weth: resWethPrice.data.weth.usd,
+					},
+				});
+			}
+			let resUsdcPrice = await GetUsdcPrice();
+			if (resUsdcPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						usdc: resUsdcPrice.data[`usd-coin`].usd,
+					},
+				});
+			}
+		} catch (e) {
+			console.error("Err at GetPrices =>>", e);
+		}
+	};
 
 	goBack() {
 		this.props.history.goBack();
@@ -475,7 +537,7 @@ class EventPage extends Component {
 					}
 				);
 				if (result.status === 200 || result.status === 400) {
-					this.setState({Icon:!this.state.Icon});
+					this.setState({ Icon: !this.state.Icon });
 				}
 			}
 			//for remove from favourites
@@ -490,7 +552,7 @@ class EventPage extends Component {
 					}
 				);
 				if (result.status === 200 || result.status === 400) {
-					this.setState({Icon:!this.state.Icon});
+					this.setState({ Icon: !this.state.Icon });
 				}
 				this.props.reloadData();
 			}
@@ -518,16 +580,18 @@ class EventPage extends Component {
 			this.setState({
 				UserFavoriteEvents: get.data.result.userHldr.favourites,
 			});
-			if(get.data.result.userHldr.favourites.includes(this.props.match.params.id))
-			{
+			if (
+				get.data.result.userHldr.favourites.includes(
+					this.props.match.params.id
+				)
+			) {
 				this.setState({
-					Icon:true,
-				})
-			}
-			else{
+					Icon: true,
+				});
+			} else {
 				this.setState({
-					Icon:false,
-				})
+					Icon: false,
+				});
 			}
 			return;
 		} catch (error) {
@@ -572,59 +636,60 @@ class EventPage extends Component {
 				.then((data) => {
 					// console.log("hello: event exist name", data.name)
 					if (data.name) {
-							if(this.props.match.params.title == urlFormatter(data.name)){
+						if (
+							this.props.match.params.title ==
+							urlFormatter(data.name)
+						) {
 							this.setState({
 								eventExistInContract: true,
 							});
-						}else{
-							this.setState({
-								eventExistInContract: false,
-							});
-						}
 						} else {
 							this.setState({
 								eventExistInContract: false,
 							});
 						}
+					} else {
+						this.setState({
+							eventExistInContract: false,
+						});
+					}
 				})
-				.catch((err) => 
-				{
+				.catch((err) => {
 					// console.log("Err in checkblockchain", err)
-			});
+				});
 		}
 	}
 
-	async EventsOnDifferentNetworkExist(){
-		this.setState({alternateEventLoading:true});
+	async EventsOnDifferentNetworkExist() {
+		this.setState({ alternateEventLoading: true });
 		let web3 = window.web3;
 		let ethereum = window.ethereum;
 		let graphURL = "";
-	const alternateNetworkId = [1,137];
-	alternateNetworkId.map(async (netId)=>{
-		// console.log("hello: condition",netId,this.state.networkId,netId == this.state.networkId)
-		try {
-			// let networkId = await getNetworkId();
-			if (netId === GLOBAL_NETWORK_ID) {
-				graphURL = graphURLV1;
-			} else if (netId === GLOBAL_NETWORK_ID_2) {
-				graphURL = graphURLV2;
-			} else {
-				graphURL = graphURLV2;
+		const alternateNetworkId = [1, 137];
+		alternateNetworkId.map(async (netId) => {
+			// console.log("hello: condition",netId,this.state.networkId,netId == this.state.networkId)
+			try {
+				// let networkId = await getNetworkId();
+				if (netId === GLOBAL_NETWORK_ID) {
+					graphURL = graphURLV1;
+				} else if (netId === GLOBAL_NETWORK_ID_2) {
+					graphURL = graphURLV2;
+				} else {
+					graphURL = graphURLV2;
+				}
+			} catch (err) {
+				// console.log("alternate event error: ",err)
 			}
-		} catch (err) {
-			// console.log("alternate event error: ",err)
-		}
-		// console.log("hello: graph URL: ", graphURL);
-		if(netId == this.state.networkId){
-			// console.log("hello event exist on 1",false.toString());
-			return false;
-		}
-		else{
-			await axios({
-				url: graphURL,
-				method: "post",
-				data: {
-					query: `
+			// console.log("hello: graph URL: ", graphURL);
+			if (netId == this.state.networkId) {
+				// console.log("hello event exist on 1",false.toString());
+				return false;
+			} else {
+				await axios({
+					url: graphURL,
+					method: "post",
+					data: {
+						query: `
 				  {
 					events(where : {eventId: "${this.props.match.params.id}"}) {
 						id
@@ -652,41 +717,39 @@ class EventPage extends Component {
 					}
 				  }
 				  `,
-				},
-			})
-				.then(async (graphEvents) => {
-					if (graphEvents.data.data.events.length > 0) {
-						this.setState({alternateEventPresent:netId});
-						this.setState({
-							blockChainEvent: {},
-							blockChainEventLoaded: true,
-						});
-						// console.log("hello: alternate state: ",this.state.alternateEventPresent);
-					}
-					else{
-						this.setState({alternateEventPresent:null});
-						this.setState({
-							blockChainEvent: {},
-							blockChainEventLoaded: true,
-						});
-						// console.log("hello: alternate state: ",this.state.alternateEventPresent);
-					}
+					},
 				})
-				.catch((err) => {
-					this.setState({
-						blockChainEvent: {},
-						blockChainEventLoaded: true,
+					.then(async (graphEvents) => {
+						if (graphEvents.data.data.events.length > 0) {
+							this.setState({ alternateEventPresent: netId });
+							this.setState({
+								blockChainEvent: {},
+								blockChainEventLoaded: true,
+							});
+							// console.log("hello: alternate state: ",this.state.alternateEventPresent);
+						} else {
+							this.setState({ alternateEventPresent: null });
+							this.setState({
+								blockChainEvent: {},
+								blockChainEventLoaded: true,
+							});
+							// console.log("hello: alternate state: ",this.state.alternateEventPresent);
+						}
+					})
+					.catch((err) => {
+						this.setState({
+							blockChainEvent: {},
+							blockChainEventLoaded: true,
+						});
 					});
-				});
-			// return console.log("event exist on 2",netId,await this.EventsOnDifferentNetworkExist(netId).toString(), this.state.alternateEventPresent);
-		}
-	})
-	this.setState({alternateEventLoading:false});
-
+				// return console.log("event exist on 2",netId,await this.EventsOnDifferentNetworkExist(netId).toString(), this.state.alternateEventPresent);
+			}
+		});
+		this.setState({ alternateEventLoading: false });
 	}
 	async loadEventFromBlockchain() {
 		const networkId = await getNetworkId();
-		this.setState({networkId:networkId});
+		this.setState({ networkId: networkId });
 		// const web3 = new Web3(
 		// 	new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
 		// );
@@ -738,26 +801,34 @@ class EventPage extends Component {
 		})
 			.then(async (graphEvents) => {
 				if (graphEvents.data.data.events.length > 0) {
-					console.log("hello: event exists ", graphEvents.data.data.events)
+					console.log(
+						"hello: event exists ",
+						graphEvents.data.data.events
+					);
 					// console.log("hello: event url is title",this.props.match.params.title )
 					// console.log("hello: event url is title",urlFormatter(graphEvents.data.data.events[0].name) )
-					if(this.props.match.params.title == urlFormatter(graphEvents.data.data.events[0].name)){
+					if (
+						this.props.match.params.title ==
+						urlFormatter(graphEvents.data.data.events[0].name)
+					) {
 						this.setState({
 							blockChainEvent: graphEvents.data.data.events[0],
 							blockChainEventLoaded: true,
 							load: false,
-							oneTimeBuy: graphEvents.data.data.events[0].oneTimeBuy,
+							oneTimeBuy:
+								graphEvents.data.data.events[0].oneTimeBuy,
 						});
 						this.updateIPFS();
-						
+
 						this.priceCalculation(0);
 						if (networkId) {
 							await updateEventViews({
-								eventId: graphEvents.data.data.events[0].eventId,
+								eventId:
+									graphEvents.data.data.events[0].eventId,
 								address: graphEvents.data.data.events[0].owner,
 								networkId: networkId,
 							});
-	
+
 							const userDetails = await getUser({
 								address: graphEvents.data.data.events[0].owner,
 								networkId: networkId,
@@ -773,16 +844,13 @@ class EventPage extends Component {
 								);
 							}
 						}
-							
-					}
-					else{
+					} else {
 						this.setState({
 							blockChainEvent: {},
 							blockChainEventLoaded: true,
 						});
 						await this.EventsOnDifferentNetworkExist();
 					}
-								
 				} else {
 					await this.EventsOnDifferentNetworkExist();
 					// console.log("hello: the result are",this.state.alternateEventPresent)
@@ -1002,11 +1070,8 @@ class EventPage extends Component {
 	};
 	priceCalculation = (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
-		if(event_data.isPHNX){
+		if (event_data.isPHNX) {
 			let dollar_price = event_data.prices.map((price) => {
-				// return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
-				// 	2
-				// );
 				return (
 					Web3.utils.fromWei(price.toString()) *
 					this.state.PhoenixDAO_market.usd
@@ -1014,35 +1079,67 @@ class EventPage extends Component {
 			});
 			let phnx_price = Web3.utils.fromWei(
 				event_data.prices[categoryIndex].toString()
-				);
-				console.log("dollar_price: ", dollar_price,phnx_price)
-			let priceInPhnx = event_data.token
-				? phnx_price + "PHNX"
-				: "FREE";
-			let priceInDollar = event_data.token ? "$" + dollar_price[categoryIndex] : "";
-			this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
-
-		}
-		else{
-			let phnx_price = event_data.prices.map((price) => {
-				// return (price / 1000000 / this.state.PhoenixDAO_market.usd).toFixed(
-				// 	2
-				// );
-				return (
-					Web3.utils.fromWei(price.toString()) /
-					this.state.PhoenixDAO_market.usd
-				).toFixed(3);
-			});
-	
-			let dollar_price = Web3.utils.fromWei(
-				event_data.prices[categoryIndex].toString()
 			);
-			console.log("dollar_price: ", dollar_price,phnx_price)
+			console.log("dollar_price: ", dollar_price, phnx_price);
+			let priceInPhnx = event_data.token ? phnx_price + "PHNX" : "FREE";
+			let priceInDollar = event_data.token
+				? "$" + dollar_price[categoryIndex]
+				: "";
+			this.setState({
+				dollar_price: priceInDollar,
+				phnx_price: priceInPhnx,
+			});
+		} else {
+			let phnx_price = 0;
+			let dollar_price = 0;
+			console.log("here");
+			if (this.state.selectedToken.tokenName == "usdt") {
+				phnx_price = event_data.prices.map((price) => {
+					// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+					return (
+						Web3.utils.fromWei(price.toString()) /
+						this.state.tokenPrices.usdt
+					).toFixed(3);
+				});
+			} else if (this.state.selectedToken.tokenName == "ether") {
+				phnx_price = event_data.prices.map((price) => {
+					//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
+					if (
+						Web3.utils.fromWei(price.toString()) /
+							this.state.tokenPrices.eth >
+						0.1
+					) {
+						return (
+							Web3.utils.fromWei(price.toString()) /
+							this.state.tokenPrices.eth
+						).toFixed(3);
+					} else {
+						return (
+							Web3.utils.fromWei(price.toString()) /
+							this.state.tokenPrices.eth
+						);
+					}
+				});
+			} else {
+				phnx_price = event_data.prices.map((price) => {
+					return (
+						Web3.utils.fromWei(price.toString()) /
+						this.state.PhoenixDAO_market.usd
+					).toFixed(3);
+				});
+
+				dollar_price = Web3.utils.fromWei(
+					event_data.prices[categoryIndex].toString()
+				);
+			}
 			let priceInPhnx = event_data.token
 				? phnx_price[categoryIndex] + "PHNX"
 				: "FREE";
 			let priceInDollar = event_data.token ? "$" + dollar_price : "";
-			this.setState({ dollar_price: priceInDollar, phnx_price: priceInPhnx });
+			this.setState({
+				dollar_price: priceInDollar,
+				phnx_price: priceInPhnx,
+			});
 		}
 	};
 	getImage = () => {
@@ -1100,23 +1197,29 @@ class EventPage extends Component {
 			// console.log("err", err);
 		}
 	};
-	handleExportCSV = () =>{
-let data = ["buyers",];
-this.state.soldTicket.map((transaction)=>{
-	data.push(transaction.address)
-})
+	handleExportCSV = () => {
+		let data = ["buyers"];
+		this.state.soldTicket.map((transaction) => {
+			data.push(transaction.address);
+		});
 
-  var csvContent = '';
-data.forEach(function(infoArray, index) {
-  csvContent += index < data.length ? infoArray + '\n' : infoArray;
-});
-let link = document.createElement('a');
-link.setAttribute('href',  'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent));
-link.setAttribute('download', `${urlFormatter(this.state.blockChainEvent.name)}.csv`);
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-	}
+		var csvContent = "";
+		data.forEach(function (infoArray, index) {
+			csvContent += index < data.length ? infoArray + "\n" : infoArray;
+		});
+		let link = document.createElement("a");
+		link.setAttribute(
+			"href",
+			"data:text/csv;charset=utf-8," + encodeURIComponent(csvContent)
+		);
+		link.setAttribute(
+			"download",
+			`${urlFormatter(this.state.blockChainEvent.name)}.csv`
+		);
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	};
 
 	handleClickOpen = async () => {
 		if (
@@ -1224,7 +1327,8 @@ document.body.removeChild(link);
 			.on("transactionHash", (hash) => {
 				if (hash !== null) {
 					toast(
-						<Notify networkId={this.props.networkId} 
+						<Notify
+							networkId={this.props.networkId}
 							hash={hash}
 							text={
 								"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
@@ -1249,11 +1353,18 @@ document.body.removeChild(link);
 				if (error !== null) {
 					this.setState({ disabledBuying: false });
 					txerror = error;
-					toast(<Notify error={error} networkId={this.props.networkId}  message={txerror.message} />, {
-						position: "bottom-right",
-						autoClose: true,
-						pauseOnHover: true,
-					});
+					toast(
+						<Notify
+							error={error}
+							networkId={this.props.networkId}
+							message={txerror.message}
+						/>,
+						{
+							position: "bottom-right",
+							autoClose: true,
+							pauseOnHover: true,
+						}
+					);
 					// this.afterApprove()
 					this.setState({ disabledStatus: false });
 				}
@@ -1267,7 +1378,8 @@ document.body.removeChild(link);
 		if (confirmationNumber == 0 && receipt.status == true) {
 			this.setState({ disabledBuying: false });
 			toast(
-				<Notify networkId={this.props.networkId} 
+				<Notify
+					networkId={this.props.networkId}
 					hash={receipt.transactionHash}
 					icon="fas fa-check-circle fa-3x"
 					color="#413AE2"
@@ -1338,11 +1450,16 @@ document.body.removeChild(link);
 						fee: this.state.blockChainEvent[2],
 						token: this.state.blockChainEvent[3],
 						openEvents_address: Open_events_Address,
-						buyticket: this.props.eventsContract.methods.buyTicket([
-							this.props.match.params.id,
-							this.state.selectedCategoryIndex,
-							geoFindUser, //"Sydney",
-						]),
+						buyticket: this.props.eventsContract.methods.buyTicket(
+							[
+								this.props.match.params.id,
+								this.state.selectedCategoryIndex,
+								geoFindUser,
+								//"Sydney",
+								//below is weth address hard coded
+							],
+							"0xc778417E063141139Fce010982780140Aa0cD5Ab"
+						),
 						approve: this.props.phnxContract.methods.approve(
 							this.props.eventsAddress,
 							balance
@@ -1351,9 +1468,9 @@ document.body.removeChild(link);
 					async () => {
 						// let temp = await this.allowance();
 						if ((await this.allowance()) == 0) {
-              this.setState({
-                boughtTicket:this.state.boughtTicket+1
-              });
+							this.setState({
+								boughtTicket: this.state.boughtTicket + 1,
+							});
 							this.handleClickOpen();
 						} else {
 							await this.props.inquire(
@@ -1407,32 +1524,38 @@ document.body.removeChild(link);
 	onChangePage = async (pageTransactions) => {
 		const networkId = await getNetworkId();
 		if (networkId) {
-		pageTransactions.map(async (user, Index)=>{
-			try{
-			let result = await getUser({address: user.address, networkId:networkId});
-			if(result){
-			user.ImageDetails = result.result.result.userHldr;
-			// user.avatarCustom = result.result.result.userHldr.avatarCustom;
-			// user.avatarNumber = result.result.result.userHldr.avatarNumber;
-			// user.avatarIPFSHash = result
-			if (result.result.result.userHldr.avatarCustom) {
-				await ipfs.get(result.result.result.userHldr.avatar).then((file) => {
-					let data = JSON.parse(file[0].content.toString());
-					user.avatarImage = data.image0;
-				});
-				this.setState({ pageTransactions });
-			}
-			else{
-				user.avartarImage = "";
-				this.setState({ pageTransactions });
-			}
+			pageTransactions.map(async (user, Index) => {
+				try {
+					let result = await getUser({
+						address: user.address,
+						networkId: networkId,
+					});
+					if (result) {
+						user.ImageDetails = result.result.result.userHldr;
+						// user.avatarCustom = result.result.result.userHldr.avatarCustom;
+						// user.avatarNumber = result.result.result.userHldr.avatarNumber;
+						// user.avatarIPFSHash = result
+						if (result.result.result.userHldr.avatarCustom) {
+							await ipfs
+								.get(result.result.result.userHldr.avatar)
+								.then((file) => {
+									let data = JSON.parse(
+										file[0].content.toString()
+									);
+									user.avatarImage = data.image0;
+								});
+							this.setState({ pageTransactions });
+						} else {
+							user.avartarImage = "";
+							this.setState({ pageTransactions });
+						}
+					}
+				} catch (err) {
+					this.setState({ pageTransactions });
+				}
+			});
 		}
-	}
-	catch(err){
-		this.setState({ pageTransactions });
-	}
-		})}
-	}
+	};
 
 	handleCloseSnackbar() {
 		this.setState({ open3: false, open3Message: "" });
@@ -1553,7 +1676,12 @@ document.body.removeChild(link);
 			}
 		}
 	};
-
+	handleSelectedTokenState = async (result) => {
+		console.log("ether_price ??", result);
+		this.setState({ selectedToken: result }, () => {
+			this.priceCalculation(this.state.selectedCategoryIndex);
+		});
+	};
 	checkUserTicketLocation = async () => {
 		const eventId = this.props.match.params.id;
 		const users = await generateBuyerArr(eventId);
@@ -1592,7 +1720,7 @@ document.body.removeChild(link);
 				this.state.blockChainEvent === undefined ||
 				Object.keys(this.state.blockChainEvent).length === 0
 			) {
-				if(this.state.alternateEventPresent == null){
+				if (this.state.alternateEventPresent == null) {
 					body = (
 						// <div className="text-center mt-5">
 						// 	<span role="img" aria-label="uncorn">
@@ -1606,8 +1734,7 @@ document.body.removeChild(link);
 							url="/allevents/1"
 						/>
 					);
-				}
-				else{
+				} else {
 					body = (
 						// <div className="text-center mt-5">
 						// 	<span role="img" aria-label="uncorn">
@@ -1616,359 +1743,374 @@ document.body.removeChild(link);
 						// 	PhoenixDAO Event not found
 						// </div>
 						<EmptyState
-							text={ `We cannot find your event, please check your
-							MetaMask wallet to ensure you’re on the ${(this.state.alternateEventPresent==1 ? "Ethereum":"")} ${this.state.alternateEventPresent==137 ? "Matic":""} Network.
+							text={`We cannot find your event, please check your
+							MetaMask wallet to ensure you’re on the ${
+								this.state.alternateEventPresent == 1
+									? "Ethereum"
+									: ""
+							} ${
+								this.state.alternateEventPresent == 137
+									? "Matic"
+									: ""
+							} Network.
 							Both Matic and Ethereum events are currently supported.`}
 							btnText="Go to Dashboard"
 							url="/allevents/1"
 						/>
 					);
 				}
-			
 			} else {
-				if(urlFormatter(this.props.match.params.title) == urlFormatter(this.state.blockChainEvent.name))
-				{
-				let event_data = this.state.blockChainEvent;
-				// to be changed
-				let image = this.getImage();
-				let description = this.getDescription();
-				let locations = event_data.onsite
-					? event_data.location
-					: this.state.locationEvent;
-				let buttonText = event_data.token
-					? " Buy Ticket"
-					: " Get Ticket";
-				let symbol = event_data.token
-					? "PhoenixDAO.svg"
-					: "PhoenixDAO.svg";
-				// let price = this.context.drizzle.web3.utils.fromWei(
-				// 	event_data.prices[this.state.selectedCategoryIndex]
-				// );
-				let date = new Date(parseInt(event_data.time, 10) * 1000);
-
-				let max_seats = event_data.tktLimited[
-					this.state.selectedCategoryIndex
-				]
-					? event_data.catTktQuantity[
-							this.state.selectedCategoryIndex
-					  ]
-					: "∞";
-
-				let disabled = false;
-				let disabledStatus;
-				// let sold = true;
-
 				if (
-					event_data.tktLimited[this.state.selectedCategoryIndex] &&
-					Number(
-						event_data.catTktQuantitySold[
+					urlFormatter(this.props.match.params.title) ==
+					urlFormatter(this.state.blockChainEvent.name)
+				) {
+					let event_data = this.state.blockChainEvent;
+					// to be changed
+					let image = this.getImage();
+					let description = this.getDescription();
+					let locations = event_data.onsite
+						? event_data.location
+						: this.state.locationEvent;
+					let buttonText = event_data.token
+						? " Buy Ticket"
+						: " Get Ticket";
+					let symbol = event_data.token
+						? "PhoenixDAO.svg"
+						: "PhoenixDAO.svg";
+					// let price = this.context.drizzle.web3.utils.fromWei(
+					// 	event_data.prices[this.state.selectedCategoryIndex]
+					// );
+					let date = new Date(parseInt(event_data.time, 10) * 1000);
+
+					let max_seats = event_data.tktLimited[
+						this.state.selectedCategoryIndex
+					]
+						? event_data.catTktQuantity[
+								this.state.selectedCategoryIndex
+						  ]
+						: "∞";
+
+					let disabled = false;
+					let disabledStatus;
+					// let sold = true;
+
+					if (
+						event_data.tktLimited[
 							this.state.selectedCategoryIndex
-						]
-					) >=
+						] &&
 						Number(
-							event_data.catTktQuantity[
+							event_data.catTktQuantitySold[
 								this.state.selectedCategoryIndex
 							]
-						)
-				) {
-					// disabled = true;
-					// disabledStatus = (
-					// 	<span>
-					// 		<span role="img" aria-label="alert">
-					// 			⚠️
-					// 		</span>{" "}
-					// 		No more tickets
-					// 	</span>
-					// );
-					// buttonText = " Sold Out";
-				}
+						) >=
+							Number(
+								event_data.catTktQuantity[
+									this.state.selectedCategoryIndex
+								]
+							)
+					) {
+						// disabled = true;
+						// disabledStatus = (
+						// 	<span>
+						// 		<span role="img" aria-label="alert">
+						// 			⚠️
+						// 		</span>{" "}
+						// 		No more tickets
+						// 	</span>
+						// );
+						// buttonText = " Sold Out";
+					}
 
-				// if (date.getTime() < new Date().getTime()) {
-				// 	disabled = true;
-				// 	disabledStatus = (
-				// 		<span>
-				// 			<span role="img" aria-label="alert">
-				// 				⚠️
-				// 			</span>{" "}
-				// 			This event has already ended.s
-				// 		</span>
-				// 	);
-				// }
+					// if (date.getTime() < new Date().getTime()) {
+					// 	disabled = true;
+					// 	disabledStatus = (
+					// 		<span>
+					// 			<span role="img" aria-label="alert">
+					// 				⚠️
+					// 			</span>{" "}
+					// 			This event has already ended.s
+					// 		</span>
+					// 	);
+					// }
 
-				// if (this.state.active_length <= 0) {
-				// 	sold = false;
-				// }
+					// if (this.state.active_length <= 0) {
+					// 	sold = false;
+					// }
 
-				let myEvent = false;
-				if (event_data.owner === this.account) {
-					myEvent = true;
-				}
+					let myEvent = false;
+					if (event_data.owner === this.account) {
+						myEvent = true;
+					}
 
-				let rawTopic = event_data.topic;
+					let rawTopic = event_data.topic;
 
-				var topicRemovedDashes = rawTopic;
-				topicRemovedDashes = topicRemovedDashes.replace(/-/g, " ");
+					var topicRemovedDashes = rawTopic;
+					topicRemovedDashes = topicRemovedDashes.replace(/-/g, " ");
 
-				var topic = topicRemovedDashes
-					.toLowerCase()
-					.split(" ")
-					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-					.join(" ");
-				//Friendly URL Title
-				let rawTitle = event_data.name;
-				var titleRemovedSpaces = rawTitle;
-				titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
+					var topic = topicRemovedDashes
+						.toLowerCase()
+						.split(" ")
+						.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+						.join(" ");
+					//Friendly URL Title
+					let rawTitle = event_data.name;
+					var titleRemovedSpaces = rawTitle;
+					titleRemovedSpaces = titleRemovedSpaces.replace(/ /g, "-");
 
-				var pagetitle = titleRemovedSpaces
-					.toLowerCase()
-					.split(" ")
-					.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-					.join(" ");
-				let event_date = date.toLocaleDateString();
-				let time = date.toLocaleTimeString([], {
-					hour: "2-digit",
-					minute: "2-digit",
-				});
-				// event_data.categories
-				let ticketPrices =
-					event_data.token && event_data.categories.length > 1;
-				if (this.props.match.params.id == event_data.eventId) {
-					body = (
-						<Grid>
-							<BuyTicket
-								open={this.state.open2}
-								handleClose={this.handleClose2}
-								image={image}
-								eventTitle={event_data.name}
-								date={event_date}
-								time={time}
-								date2={date}
-								buy={this.inquire}
-								buttonText={buttonText}
-								eventTime={this.state.eventTime}
-								eventDate={this.state.eventDate}
-								eventEndDate={this.state.eventEndDate}
-								phnx_price={this.state.phnx_price}
-								dollar_price={this.state.dollar_price}
-							/>
-							<ApprovalModal
-								open={this.state.open}
-								buttonText={buttonText}
-								handleClose={this.handleClose}
-								giveApproval={this.giveApproval}
-								image={image}
-								eventTitle={event_data.name}
-								date={event_date}
-								eventStartDate={this.state.eventStartDate}
-								eventTime={this.state.eventTime}
-								eventStartTime = {this.state.eventStartTime}
-								eventDate={this.state.eventDate}
-								eventEndDate={this.state.eventEndDate}
-								phnx_price={this.state.phnx_price}
-								eventEndTime={this.state.eventEndTime}
-								dollar_price={this.state.dollar_price}
-								allowance={this.allowance}
-								allow={this.state.allow}
-								inquire={this.inquire}
-								loadingApprove={this.state.loadingApprove}
-								loadingPurchase={this.state.loadingPurchase}
-							/>
-							<Snackbar
-								anchorOrigin={{
-									vertical: "top",
-									horizontal: "center",
-								}}
-								open={this.state.open3}
-								onClose={this.handleCloseSnackbar}
-								message={this.state.open3Message}
-								autoHideDuration={3000}
-								key={"top" + "center"}
-								className="snackbar"
-							/>
-
-							<Snackbar
-								anchorOrigin={{
-									vertical: "top",
-									horizontal: "center",
-								}}
-								open={this.state.disableBuyTicketBtn}
-								onClose={this.handleCloseSnackbar4}
-								message="You do not have enough PHNX token to buy the ticket"
-								autoHideDuration={3000}
-								key={"top" + "center"}
-								className="snackbar"
-							/>
-							<Header
-								disabled={
-									disabled ||
-									this.props.disabledStatus ||
-									this.state.disabledBuying 
-									// || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
-								}
-								title={event_data.name}
-								buttonText={buttonText}
-								goBack={this.goBack}
-								page="event"
-								buyTicket={true}
-								handleClickOpen={this.handleClickOpen}
-								allowBuy={this.allowBuy}
-							/>
-							<Grid
-								style={{
-									marginBottom: "40px",
-									marginTop: "25px",
-								}}
-							>
-								<label className="pl-2 small">
-									{disabledStatus}
-								</label>
-
-								<br />
-								{myEvent === true && (
-									<Link
-										to={
-											"/event-stat/" +
-											pagetitle +
-											"/" +
-											this.props.match.params.id
-										}
-									></Link>
-								)}
-								<Grid
-									lg={12}
-									style={{
-										backgroundImage: `url("${image}")`,
+					var pagetitle = titleRemovedSpaces
+						.toLowerCase()
+						.split(" ")
+						.map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+						.join(" ");
+					let event_date = date.toLocaleDateString();
+					let time = date.toLocaleTimeString([], {
+						hour: "2-digit",
+						minute: "2-digit",
+					});
+					// event_data.categories
+					let ticketPrices =
+						event_data.token && event_data.categories.length > 1;
+					if (this.props.match.params.id == event_data.eventId) {
+						body = (
+							<Grid>
+								<BuyTicket
+									open={this.state.open2}
+									handleClose={this.handleClose2}
+									image={image}
+									eventTitle={event_data.name}
+									date={event_date}
+									time={time}
+									date2={date}
+									buy={this.inquire}
+									buttonText={buttonText}
+									eventTime={this.state.eventTime}
+									eventDate={this.state.eventDate}
+									eventEndDate={this.state.eventEndDate}
+									phnx_price={this.state.phnx_price}
+									dollar_price={this.state.dollar_price}
+								/>
+								<ApprovalModal
+									open={this.state.open}
+									buttonText={buttonText}
+									handleClose={this.handleClose}
+									giveApproval={this.giveApproval}
+									image={image}
+									eventTitle={event_data.name}
+									date={event_date}
+									eventStartDate={this.state.eventStartDate}
+									eventTime={this.state.eventTime}
+									eventStartTime={this.state.eventStartTime}
+									eventDate={this.state.eventDate}
+									eventEndDate={this.state.eventEndDate}
+									phnx_price={this.state.phnx_price}
+									eventEndTime={this.state.eventEndTime}
+									dollar_price={this.state.dollar_price}
+									allowance={this.allowance}
+									allow={this.state.allow}
+									inquire={this.inquire}
+									loadingApprove={this.state.loadingApprove}
+									loadingPurchase={this.state.loadingPurchase}
+								/>
+								<Snackbar
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "center",
 									}}
-									className={classes.imageDiv}
+									open={this.state.open3}
+									onClose={this.handleCloseSnackbar}
+									message={this.state.open3Message}
+									autoHideDuration={3000}
+									key={"top" + "center"}
+									className="snackbar"
+								/>
+
+								<Snackbar
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "center",
+									}}
+									open={this.state.disableBuyTicketBtn}
+									onClose={this.handleCloseSnackbar4}
+									message="You do not have enough PHNX token to buy the ticket"
+									autoHideDuration={3000}
+									key={"top" + "center"}
+									className="snackbar"
+								/>
+								<Header
+									disabled={
+										disabled ||
+										this.props.disabledStatus ||
+										this.state.disabledBuying
+										// || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
+									}
+									title={event_data.name}
+									buttonText={buttonText}
+									goBack={this.goBack}
+									page="event"
+									buyTicket={true}
+									handleClickOpen={this.handleClickOpen}
+									allowBuy={this.allowBuy}
+								/>
+								<Grid
+									style={{
+										marginBottom: "40px",
+										marginTop: "25px",
+									}}
 								>
-									{/* <img
+									<label className="pl-2 small">
+										{disabledStatus}
+									</label>
+
+									<br />
+									{myEvent === true && (
+										<Link
+											to={
+												"/event-stat/" +
+												pagetitle +
+												"/" +
+												this.props.match.params.id
+											}
+										></Link>
+									)}
+									<Grid
+										lg={12}
+										style={{
+											backgroundImage: `url("${image}")`,
+										}}
+										className={classes.imageDiv}
+									>
+										{/* <img
 										className="card-img-top event-image"
 										src={image}
 										alt="Event"
 									/> */}
-									<Typography
-										className={classes.FavoriteIcon}
-										component="span"
-										onClick={this.addTofavorite}
-									>
-										{this.state.Icon ? (
-											<Favorite
-												fontSize="small"
-												style={{
-													color: "#413AE2",
-													marginTop: "6px",
-												}}
-											/>
-										) : (
-											<FavoriteBorder
-												fontSize="small"
-												style={{
-													color: "#000000",
-													marginTop: "6px",
-												}}
-											/>
-										)}
-									</Typography>
-									<div></div>
-								</Grid>
-								<Grid container>
-									<Grid
-										lg={9}
-										md={7}
-										sm={12}
-										xs={12}
-										className={classes.description}
-									>
-										<Grid container>{description}</Grid>
-										<Grid
-											container
-											className={classes.clockTime}
+										<Typography
+											className={classes.FavoriteIcon}
+											component="span"
+											onClick={this.addTofavorite}
 										>
-											<Clock
-												deadline={date}
-												event_unix={event_data.time}
-											/>
-										</Grid>
+											{this.state.Icon ? (
+												<Favorite
+													fontSize="small"
+													style={{
+														color: "#413AE2",
+														marginTop: "6px",
+													}}
+												/>
+											) : (
+												<FavoriteBorder
+													fontSize="small"
+													style={{
+														color: "#000000",
+														marginTop: "6px",
+													}}
+												/>
+											)}
+										</Typography>
+										<div></div>
 									</Grid>
-									<Grid
-										lg={3}
-										md={5}
-										sm={12}
-										xs={12}
-										className={classes.eventDetails}
-									>
-										<p className={classes.ticketPrice}>
-											{/* <img
+									<Grid container>
+										<Grid
+											lg={9}
+											md={7}
+											sm={12}
+											xs={12}
+											className={classes.description}
+										>
+											<Grid container>{description}</Grid>
+											<Grid
+												container
+												className={classes.clockTime}
+											>
+												<Clock
+													deadline={date}
+													event_unix={event_data.time}
+												/>
+											</Grid>
+										</Grid>
+										<Grid
+											lg={3}
+											md={5}
+											sm={12}
+											xs={12}
+											className={classes.eventDetails}
+										>
+											<p className={classes.ticketPrice}>
+												{/* <img
 												src={"/images/phoenixdao.svg"}
 												className="event_price-image"
 												alt="Event Price"
 											/> */}
-											TICKET PRICE
-										</p>
-										{ticketPrices && (
-											<FormControl
-												variant="outlined"
-												className={classes.ticketSelect}
-											>
-												<Select
-													// native
-													value={
-														this.state
-															.selectedCategoryIndex
-													}
-													onChange={
-														this
-															.handleCategoryChange
-													}
-													inputProps={{
-														name: "age",
-														id: "outlined-age-native-simple",
-													}}
-													MenuProps={{
-														classes: {
-															paper: classes.menuPaper,
-														},
-														getContentAnchorEl:
-															null,
-														anchorOrigin: {
-															vertical: "bottom",
-															horizontal: "left",
-														},
-													}}
+												TICKET PRICE
+											</p>
+											{ticketPrices && (
+												<FormControl
+													variant="outlined"
 													className={
-														classes.selectInput
+														classes.ticketSelect
 													}
 												>
-													{event_data.categories
-														.length > 1
-														? event_data.categories.map(
-																(
-																	category,
-																	i
-																) => (
-																	<MenuItem
-																		value={
-																			i
-																		}
-																		style={{
-																			fontFamily:
-																				"'Aeonik', sans-serif",
-																		}}
-																	>
-																		<span
-																			className={
-																				classes.selectWidth
+													<Select
+														// native
+														value={
+															this.state
+																.selectedCategoryIndex
+														}
+														onChange={
+															this
+																.handleCategoryChange
+														}
+														inputProps={{
+															name: "age",
+															id: "outlined-age-native-simple",
+														}}
+														MenuProps={{
+															classes: {
+																paper: classes.menuPaper,
+															},
+															getContentAnchorEl:
+																null,
+															anchorOrigin: {
+																vertical:
+																	"bottom",
+																horizontal:
+																	"left",
+															},
+														}}
+														className={
+															classes.selectInput
+														}
+													>
+														{event_data.categories
+															.length > 1
+															? event_data.categories.map(
+																	(
+																		category,
+																		i
+																	) => (
+																		<MenuItem
+																			value={
+																				i
 																			}
+																			style={{
+																				fontFamily:
+																					"'Aeonik', sans-serif",
+																			}}
 																		>
-																			{
-																				category
-																			}
-																		</span>
-																	</MenuItem>
-																)
-														  )
-														: ""}
-													{/* <option
+																			<span
+																				className={
+																					classes.selectWidth
+																				}
+																			>
+																				{
+																					category
+																				}
+																			</span>
+																		</MenuItem>
+																	)
+															  )
+															: ""}
+														{/* <option
 													aria-label="None"
 													value=""
 												/>
@@ -1981,266 +2123,322 @@ document.body.removeChild(link);
 												<option value={30}>
 													Golden Ticket
 												</option> */}
-												</Select>
-											</FormControl>
-										)}
-										<div className={classes.eventinfo}>
-											<span
-												className={classes.PhnxPrice}
-												title={this.state.phnx_price}
-											>
-												{/* {pricingFormatter(
-													this.state.phnx_price,
-													"PHNX"
-												)} */}
-												<PriceSelectBox token="phnx" value={pricingFormatter(
-													this.state.phnx_price,
-													"PHNX"
-												)} isEventPage={true} />
-											</span>
-											<div
-												style={{
-													color: "#56555D",
-													fontSize: "14px",
-												}}
-												title={this.state.dollar_price}
-											>
-												{pricingFormatter(
-													this.state.dollar_price,
-													"$"
-												)}
+													</Select>
+												</FormControl>
+											)}
+											<div className={classes.eventinfo}>
+												<span
+													className={
+														classes.PhnxPrice
+													}
+													title={
+														this.state.phnx_price
+													}
+												>
+													{this.state.isPHNX &&
+														pricingFormatter(
+															this.state
+																.phnx_price,
+															"PHNX"
+														)}
+													{!this.state.isPHNX && (
+														<PriceSelectBox
+															selectedToken={
+																this.state
+																	.selectedToken
+															}
+															setSelectedToken={
+																this
+																	.handleSelectedTokenState
+															}
+															token="phnx"
+															value={pricingFormatter(
+																this.state
+																	.phnx_price,
+																"PHNX"
+															)}
+															isEventPage={true}
+														/>
+													)}
+												</span>
+												<div
+													style={{
+														color: "#56555D",
+														fontSize: "14px",
+													}}
+													title={
+														this.state.dollar_price
+													}
+												>
+													{pricingFormatter(
+														this.state.dollar_price,
+														"$"
+													)}
+												</div>
 											</div>
-										</div>
 
-										<p className={classes.eventHeading}>
-											{" "}
-											<CalendarTodayOutlined /> Date
-										</p>
-										<p className={classes.eventinfo}>
-											{" "}
-											{/* {event_date} */}
-											{!this.state.eventTime
-												? `Date`
-												: this.state.eventTime ===
-												  "onedayevent"
-												? moment(
-														this.state.eventDate
-												  ).format("Do MMM, YYYY")
-												: `
+											<p className={classes.eventHeading}>
+												{" "}
+												<CalendarTodayOutlined /> Date
+											</p>
+											<p className={classes.eventinfo}>
+												{" "}
+												{/* {event_date} */}
+												{!this.state.eventTime
+													? `Date`
+													: this.state.eventTime ===
+													  "onedayevent"
+													? moment(
+															this.state.eventDate
+													  ).format("Do MMM, YYYY")
+													: `
 							${moment(this.state.eventStartDate).format("Do MMM")}
 							-
 							${moment(this.state.eventEndDate).format("Do MMM, YYYY")}
 							`}
-										</p>
-										<p className={classes.eventHeading}>
-											<ScheduleOutlined /> Time
-										</p>
-										<span
-											style={{
-												display: "table-header-group",
-											}}
-										>
-											<p
-												className={`${classes.eventinfo} ${classes.eventTimePara}`}
-											>
-												{" "}
-												{!this.state.eventStartTime
-													? `Time`
-													: !this.state.eventEndTime
-													? moment(
-															this.state
-																.eventStartTime
-													  )
-															.utcOffset(0)
-															.local()
-															.format("LT")
-													: `${moment(
-															this.state
-																.eventStartTime
-													  )
-															.utcOffset(0)
-															.local()
-															.format(
-																"LT"
-															)} - ${moment(
-															this.state
-																.eventEndTime
-													  )
-															.utcOffset(0)
-															.local()
-															.format(
-																"LT"
-															)}`}{" "}
-												Local
 											</p>
+											<p className={classes.eventHeading}>
+												<ScheduleOutlined /> Time
+											</p>
+											<span
+												style={{
+													display:
+														"table-header-group",
+												}}
+											>
+												<p
+													className={`${classes.eventinfo} ${classes.eventTimePara}`}
+												>
+													{" "}
+													{!this.state.eventStartTime
+														? `Time`
+														: !this.state
+																.eventEndTime
+														? moment(
+																this.state
+																	.eventStartTime
+														  )
+																.utcOffset(0)
+																.local()
+																.format("LT")
+														: `${moment(
+																this.state
+																	.eventStartTime
+														  )
+																.utcOffset(0)
+																.local()
+																.format(
+																	"LT"
+																)} - ${moment(
+																this.state
+																	.eventEndTime
+														  )
+																.utcOffset(0)
+																.local()
+																.format(
+																	"LT"
+																)}`}{" "}
+													Local
+												</p>
 
-											<p
-												className={classes.localTime}
-												style={{ marginBottom: "0px" }}
-											>
-												(
-												{!this.state.eventStartTime
-													? `Time`
-													: !this.state.eventEndTime
-													? moment(
-															this.state
-																.eventStartTime
-													  )
-															.utcOffset(0)
-															.format("hh:mm A z")
-													: `${moment(
-															this.state
-																.eventStartTime
-													  )
-															.utcOffset(0)
-															.format(
-																"hh:mm A"
-															)} - ${moment(
-															this.state
+												<p
+													className={
+														classes.localTime
+													}
+													style={{
+														marginBottom: "0px",
+													}}
+												>
+													(
+													{!this.state.eventStartTime
+														? `Time`
+														: !this.state
 																.eventEndTime
-													  )
-															.utcOffset(0)
-															.format(
-																"hh:mm A z"
-															)}`}
-												)
-											</p>
-										</span>
-										{this.state.blockChainEvent.onsite ? (
-											<span>
-												<p
-													className={
-														classes.eventHeading
-													}
-												>
-													<LocationOnOutlined />{" "}
-													Location
-												</p>
-												<p
-													className={
-														classes.eventinfo
-													}
-												>
-													<a
-														href={`https://www.google.com/maps/search/${locations}`}
-														target="_blank"
-														style={{
-															textDecoration:
-																"none",
-															color: "#212529",
-														}}
-													>
-														{locations}
-													</a>
+														? moment(
+																this.state
+																	.eventStartTime
+														  )
+																.utcOffset(0)
+																.format(
+																	"hh:mm A z"
+																)
+														: `${moment(
+																this.state
+																	.eventStartTime
+														  )
+																.utcOffset(0)
+																.format(
+																	"hh:mm A"
+																)} - ${moment(
+																this.state
+																	.eventEndTime
+														  )
+																.utcOffset(0)
+																.format(
+																	"hh:mm A z"
+																)}`}
+													)
 												</p>
 											</span>
-										) : (
-											<span>
-												<p
-													className={
-														classes.eventHeading
-													}
-												>
-													<LocationOnOutlined />{" "}
-													Online
-												</p>
-												{locations ? (
+											{this.state.blockChainEvent
+												.onsite ? (
+												<span>
+													<p
+														className={
+															classes.eventHeading
+														}
+													>
+														<LocationOnOutlined />{" "}
+														Location
+													</p>
 													<p
 														className={
 															classes.eventinfo
 														}
 													>
-														{locations}
+														<a
+															href={`https://www.google.com/maps/search/${locations}`}
+															target="_blank"
+															style={{
+																textDecoration:
+																	"none",
+																color: "#212529",
+															}}
+														>
+															{locations}
+														</a>
 													</p>
-												) : (
-													<p
-														className={
-															classes.eventinfo
-														}
-													>
-														Please Buy the Ticket to
-														get the Link.
-													</p>
-												)}
-											</span>
-										)}
-										<p className={classes.eventHeading}>
-											<PersonOutlined />
-											Organizer
-										</p>
-										<p className={classes.eventinfo}>
-											{this.state.loaded ? (
-												<Link
-													className={
-														classes.organizerEventLink
-													}
-													to={`/allevents/organizer/${
-														this.state.organizer &&
-														urlFormatter(
-															this.state.organizer
-														)
-													}/${event_data.owner.substr(
-														event_data.owner
-															.length - 4
-													)}`}
-												>
-													{this.state.organizer}
-												</Link>
+												</span>
 											) : (
 												<span>
-													{this.state.organizer}
+													<p
+														className={
+															classes.eventHeading
+														}
+													>
+														<LocationOnOutlined />{" "}
+														Online
+													</p>
+													{locations ? (
+														<p
+															className={
+																classes.eventinfo
+															}
+														>
+															{locations}
+														</p>
+													) : (
+														<p
+															className={
+																classes.eventinfo
+															}
+														>
+															Please Buy the
+															Ticket to get the
+															Link.
+														</p>
+													)}
 												</span>
 											)}
-										</p>
-										<p className={classes.eventHeading}>
-											<ConfirmationNumberOutlined />
-											Tickets Bought
-										</p>
-										<p className={classes.eventinfo}>									
-{
-												(parseInt(event_data.tktTotalQuantitySold) +this.state.boughtTicket).toString()
-												// event_data.tktTotalQuantitySold
-												// event_data.tktTotalQuantitySold
-											}
-											/{max_seats}
-										</p>
-										<div style={{paddingTop:"20px"}}>
-											<Button
-												variant="contained"
-												color="primary"
-												style={{ marginBottom: "10px" }}
-												className={classes.buy}
-												onClick={() =>
-													this.allowBuy()
-														? this.handleClickOpen()
-														: null
+											<p className={classes.eventHeading}>
+												<PersonOutlined />
+												Organizer
+											</p>
+											<p className={classes.eventinfo}>
+												{this.state.loaded ? (
+													<Link
+														className={
+															classes.organizerEventLink
+														}
+														to={`/allevents/organizer/${
+															this.state
+																.organizer &&
+															urlFormatter(
+																this.state
+																	.organizer
+															)
+														}/${event_data.owner.substr(
+															event_data.owner
+																.length - 4
+														)}`}
+													>
+														{this.state.organizer}
+													</Link>
+												) : (
+													<span>
+														{this.state.organizer}
+													</span>
+												)}
+											</p>
+											<p className={classes.eventHeading}>
+												<ConfirmationNumberOutlined />
+												Tickets Bought
+											</p>
+											<p className={classes.eventinfo}>
+												{
+													(
+														parseInt(
+															event_data.tktTotalQuantitySold
+														) +
+														this.state.boughtTicket
+													).toString()
+													// event_data.tktTotalQuantitySold
+													// event_data.tktTotalQuantitySold
 												}
-												disabled={
-													disabled ||
-													this.props.disabledStatus ||
-													this.state.disabledBuying
-													// || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
+												/{max_seats}
+											</p>
+											<div style={{ paddingTop: "20px" }}>
+												<Button
+													variant="contained"
+													color="primary"
+													style={{
+														marginBottom: "10px",
+													}}
+													className={classes.buy}
+													onClick={() =>
+														this.allowBuy()
+															? this.handleClickOpen()
+															: null
+													}
+													disabled={
+														disabled ||
+														this.props
+															.disabledStatus ||
+														this.state
+															.disabledBuying
+														// || (this.props.accounts[0]&&this.state.pageTransactions.filter(e =>{ return  e.address==this.props.accounts[0].toLowerCase() }) && this.state.oneTimeBuy)
+													}
+												>
+													<ShoppingCartOutlined
+														style={{
+															marginRight: "10px",
+														}}
+													/>
+													{buttonText}
+												</Button>
+											</div>
+										</Grid>
+									</Grid>
+									<Grid
+										container
+										className={`${classes.heading} ${classes.row} `}
+									>
+										<div className="new-transaction-wrapper">
+											<div
+												className={
+													classes.TicketPurchasesExportDiv
 												}
 											>
-												<ShoppingCartOutlined
-													style={{
-														marginRight: "10px",
-													}}
-												/>
-												{buttonText}
-											</Button>
-										</div>
-									</Grid>
-								</Grid>
-								<Grid container className={`${classes.heading} ${classes.row} `}>
-									<div className="new-transaction-wrapper">
-										<div className={classes.TicketPurchasesExportDiv}>
-											<div>
-										<h2 className={classes.heading}>
-											Ticket Purchases
-										</h2>
-										</div>
-										{/* <div className={classes.exportButtonDiv}>
+												<div>
+													<h2
+														className={
+															classes.heading
+														}
+													>
+														Ticket Purchases
+													</h2>
+												</div>
+												{/* <div className={classes.exportButtonDiv}>
 											{this.state.soldTicket.length == 0?"":<Button variant="contained"
 												color="primary"
 												style={{ marginBottom: "10px" }}
@@ -2249,180 +2447,214 @@ document.body.removeChild(link);
 												onClick={this.handleExportCSV}
 												>Export CSV</Button>}
 										</div> */}
-										</div>
-										{this.state.load && <Loading />}
-										<Grid container lg={12}>
-											{this.state.pageTransactions.map(
-												(sold, index) => (
-													<Grid
-														xl={6}
-														lg={6}
-														md={6}
-														sm={12}
-														xs={12}
-													>
-														<div style={{display:"flex"}}>
-														{sold.ImageDetails && ( 
-															<div style={{paddingTop:"12px"}}>
-																<img
-																src={
-																	sold
-																		.ImageDetails
-																		.avatarCustom
-																		?sold.avatarImage
-																		: this.imageData(
+											</div>
+											{this.state.load && <Loading />}
+											<Grid container lg={12}>
+												{this.state.pageTransactions.map(
+													(sold, index) => (
+														<Grid
+															xl={6}
+															lg={6}
+															md={6}
+															sm={12}
+															xs={12}
+														>
+															<div
+																style={{
+																	display:
+																		"flex",
+																}}
+															>
+																{sold.ImageDetails && (
+																	<div
+																		style={{
+																			paddingTop:
+																				"12px",
+																		}}
+																	>
+																		<img
+																			src={
 																				sold
 																					.ImageDetails
-																					.avatarNumber
-																		  )
-																}
-															className={
-																classes.TransactionImage
-															}
-															/>
-															</div>
-														)}
-														<div>
-														<p
-															className="sold_text col-md-12"
-															key={index}
-														>
-															<a
-																href={
-																	this.state.networkId == 137? explorerWithAddress:this.state.networkId == 1?etherscanMainnetAddress:etherscanRinkbyAddress +
-																	sold.address
-																}
-																target="blank"
-															>
-																{sold.address.slice(
-																	0,
-																	10
-																) + "... "}
-															</a>{" "}
-															has{" "}
-															<a
-															// href={
-															// 	explorerWithTX +
-															// 	sold.transactionHash
-															// }
-															// target="blank"
-															>
-																bought
-															</a>{" "}
-															{" " + sold.count}{" "}
-															{sold.count > 1
-																? "tickets"
-																: "ticket"}{" "}
-															for this event.{" "}
-															{/* <strong>
+																					.avatarCustom
+																					? sold.avatarImage
+																					: this.imageData(
+																							sold
+																								.ImageDetails
+																								.avatarNumber
+																					  )
+																			}
+																			className={
+																				classes.TransactionImage
+																			}
+																		/>
+																	</div>
+																)}
+																<div>
+																	<p
+																		className="sold_text col-md-12"
+																		key={
+																			index
+																		}
+																	>
+																		<a
+																			href={
+																				this
+																					.state
+																					.networkId ==
+																				137
+																					? explorerWithAddress
+																					: this
+																							.state
+																							.networkId ==
+																					  1
+																					? etherscanMainnetAddress
+																					: etherscanRinkbyAddress +
+																					  sold.address
+																			}
+																			target="blank"
+																		>
+																			{sold.address.slice(
+																				0,
+																				10
+																			) +
+																				"... "}
+																		</a>{" "}
+																		has{" "}
+																		<a
+																		// href={
+																		// 	explorerWithTX +
+																		// 	sold.transactionHash
+																		// }
+																		// target="blank"
+																		>
+																			bought
+																		</a>{" "}
+																		{" " +
+																			sold.count}{" "}
+																		{sold.count >
+																		1
+																			? "tickets"
+																			: "ticket"}{" "}
+																		for this
+																		event.{" "}
+																		{/* <strong>
 														{event_data[0]}
 													</strong> */}
-														</p>
-														</div>
-														</div>
-													</Grid>
-												)
+																	</p>
+																</div>
+															</div>
+														</Grid>
+													)
+												)}
+											</Grid>
+											{this.state.soldTicket.length ==
+												0 && (
+												<p className="sold_text col-md-12 no-tickets">
+													There are currently no
+													purchases of this Event.
+												</p>
 											)}
-										</Grid>
-										{this.state.soldTicket.length == 0 && (
-											<p className="sold_text col-md-12 no-tickets">
-												There are currently no purchases
-												of this Event.
-											</p>
-										)}
-									</div>
-									<div
-										className={`pagination ${classes.transactionPagination}`}
-									>
-										<JwPagination
-											items={this.state.soldTicket}
-											onChangePage={this.onChangePage}
-											maxPages={20}
-											pageSize={6}
-											styles={customStyles}
-										/>
-									</div>
-								</Grid>
-
-								<Grid container className={classes.socialDiv}>
-									<Grid
-										lg={3}
-										md={4}
-										sm={3}
-										xs={7}
-										className={classes.categoryGrid}
-									>
-										<ModeCommentOutlined /> Topic
-										<div className={classes.eventinfo}>
-											{topic}
+										</div>
+										<div
+											className={`pagination ${classes.transactionPagination}`}
+										>
+											<JwPagination
+												items={this.state.soldTicket}
+												onChangePage={this.onChangePage}
+												maxPages={20}
+												pageSize={6}
+												styles={customStyles}
+											/>
 										</div>
 									</Grid>
-									<Grid lg={9} md={8} sm={9} xs={11}>
-										<SocialMedia
-											shareUrl={this.state.shareUrl}
-											disabled={false}
-											eventTitle={event_data.name}
-										/>
+
+									<Grid
+										container
+										className={classes.socialDiv}
+									>
+										<Grid
+											lg={3}
+											md={4}
+											sm={3}
+											xs={7}
+											className={classes.categoryGrid}
+										>
+											<ModeCommentOutlined /> Topic
+											<div className={classes.eventinfo}>
+												{topic}
+											</div>
+										</Grid>
+										<Grid lg={9} md={8} sm={9} xs={11}>
+											<SocialMedia
+												shareUrl={this.state.shareUrl}
+												disabled={false}
+												eventTitle={event_data.name}
+											/>
+										</Grid>
 									</Grid>
 								</Grid>
-							</Grid>
-							<Grid
-								alignItems="center"
-								className={classes.organizerDetails}
-							>
-								{/* <Avatar
+								<Grid
+									alignItems="center"
+									className={classes.organizerDetails}
+								>
+									{/* <Avatar
 									src="/images/icons/user.svg"
 									style={{
 										display: "inline-block",
 										marginBottom: "10px",
 									}}
 								/> */}
-								{this.state.loaded ? (
-									<Link
-										className={classes.organizerEventLink}
-										to={`/allevents/organizer/${
-											this.state.organizer &&
-											urlFormatter(this.state.organizer)
-										}/${event_data.owner.substr(
-											event_data.owner.length - 4
-										)}`}
-									>
-										{this.renderImage()}
-										<h3 style={{ fontWeight: "bold" }}>
-											{this.state.organizer}
-										</h3>
-										<Grid
+									{this.state.loaded ? (
+										<Link
 											className={
-												classes.organizerDescription
+												classes.organizerEventLink
 											}
+											to={`/allevents/organizer/${
+												this.state.organizer &&
+												urlFormatter(
+													this.state.organizer
+												)
+											}/${event_data.owner.substr(
+												event_data.owner.length - 4
+											)}`}
 										>
-											{this.state.organizerDetails}
-										</Grid>
-										{/* <CheckUser
+											{this.renderImage()}
+											<h3 style={{ fontWeight: "bold" }}>
+												{this.state.organizer}
+											</h3>
+											<Grid
+												className={
+													classes.organizerDescription
+												}
+											>
+												{this.state.organizerDetails}
+											</Grid>
+											{/* <CheckUser
 									blockChainEvent={this.state.blockChainEvent}
 									disabledStatus={disabled}
 									event_id={this.props.match.params.id}
 									history={this.props.history}
 								/> */}
-									</Link>
-								) : (
-									<span>
-										{this.renderImage()}
-										<h3 style={{ fontWeight: "bold" }}>
-											{this.state.organizer}
-										</h3>
-										<Grid
-											className={
-												classes.organizerDescription
-											}
-										>
-											{this.state.organizerDetails}
-										</Grid>
-									</span>
-								)}
-							</Grid>
+										</Link>
+									) : (
+										<span>
+											{this.renderImage()}
+											<h3 style={{ fontWeight: "bold" }}>
+												{this.state.organizer}
+											</h3>
+											<Grid
+												className={
+													classes.organizerDescription
+												}
+											>
+												{this.state.organizerDetails}
+											</Grid>
+										</span>
+									)}
+								</Grid>
 
-							{/* <div className="event-social-share-btns-div">
+								{/* <div className="event-social-share-btns-div">
 									<EmailShareButton
 										url={shareUrl}
 										title={title}
@@ -2603,50 +2835,63 @@ document.body.removeChild(link);
 							
 							</div>
 								*/}
-							{/* <CheckUser
+								{/* <CheckUser
 								blockChainEvent={this.state.blockChainEvent}
 								disabledStatus={disabled}
 								event_id={this.props.match.params.id}
 								history={this.props.history}
 							/> */}
 
-							<Snackbar
-								anchorOrigin={{
-									vertical: "top",
-									horizontal: "center",
-								}}
-								open={this.state.allowBuySnackbar}
-								onClose={this.handleCloseAllowBuySnackbar}
-								message={this.state.SnackbarMessage}
-								autoHideDuration={3000}
-								key={"top" + "center"}
-								className="snackbar"
-							/>
-						</Grid>
-					);
+								<Snackbar
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "center",
+									}}
+									open={this.state.allowBuySnackbar}
+									onClose={this.handleCloseAllowBuySnackbar}
+									message={this.state.SnackbarMessage}
+									autoHideDuration={3000}
+									key={"top" + "center"}
+									className="snackbar"
+								/>
+							</Grid>
+						);
+					} else {
+						body = <EventNotFound />;
+					}
 				} else {
-					body = <EventNotFound />;
+					body = (
+						// <div className="text-center mt-5">
+						// 	<span role="img" aria-label="uncorn">
+						// 		🦄
+						// 	</span>{" "}
+						// 	PhoenixDAO Event not found
+						// </div>
+						<EmptyState
+							text={
+								this.state.alternateEventLoading
+									? this.state.alternateEventPresent
+										? `Event doesn't exist on this Network... 😔\n This Event Exists on ${
+												this.state
+													.alternateEventPresent ==
+													1 && "Ethereum"
+										  } ${
+												this.state
+													.alternateEventPresent ==
+													137 && "Matic"
+										  } ${
+												this.state
+													.alternateEventPresent ==
+													4 && "Rinkby"
+										  }`
+										: `Event doesn't exist... 😔\n Loading Events on other networks`
+									: `Event doesn't exist... 😔`
+							}
+							btnText="Go to Dashboard"
+							url="/allevents/1"
+						/>
+					);
 				}
-			}
-			else{
-				body = (
-					// <div className="text-center mt-5">
-					// 	<span role="img" aria-label="uncorn">
-					// 		🦄
-					// 	</span>{" "}
-					// 	PhoenixDAO Event not found
-					// </div>
-					<EmptyState
-						text={this.state.alternateEventLoading
-							? this.state.alternateEventPresent
-								? `Event doesn't exist on this Network... 😔\n This Event Exists on ${(this.state.alternateEventPresent==1 && "Ethereum")} ${this.state.alternateEventPresent==137 && "Matic"} ${this.state.alternateEventPresent==4 && "Rinkby"}`
-								: `Event doesn't exist... 😔\n Loading Events on other networks`
-							: `Event doesn't exist... 😔`}
-						btnText="Go to Dashboard"
-						url="/allevents/1"
-					/>
-				);
-			}
 			}
 		}
 		return (
@@ -2657,35 +2902,35 @@ document.body.removeChild(link);
 	}
 
 	async componentDidMount() {
-		if(parseInt(this.props.match.params.id)){
-		this.getUserFavoritesEvent();
-		// console.log("component start 1, Event page");
-		let buyers = await generateBuyerArr(this.props.match.params.id);
-		// console.log("component start 2, Event page", buyers);
-		this.setState({ soldTicket: buyers });
-		await this.getPhoenixDAOMarketValue();
-		await this.checkBlockchainEvent();
-		await this.loadEventFromBlockchain();
-		await this.initApproveMethod();
-		await this.checkUserTicketLocation();
-		if (this.props.accounts[0] && this.props.eventsAddress) {
-			await this.allowance();
-			await this.checkUserBalance();
+		if (parseInt(this.props.match.params.id)) {
+			this.getUserFavoritesEvent();
+			// console.log("component start 1, Event page");
+			let buyers = await generateBuyerArr(this.props.match.params.id);
+			// console.log("component start 2, Event page", buyers);
+			this.setState({ soldTicket: buyers });
+			await this.getPhoenixDAOMarketValue();
+			await this.checkBlockchainEvent();
+			await this.loadEventFromBlockchain();
+			await this.initApproveMethod();
+			await this.checkUserTicketLocation();
+			if (this.props.accounts[0] && this.props.eventsAddress) {
+				await this.allowance();
+				await this.checkUserBalance();
+			}
+			window.scroll({
+				top: 0,
+				behavior: "smooth",
+			});
+			this._isMounted = true;
+			// this.updateIPFS();
+			// this.loadblockhain();
+			this.GetPrices();
+		} else {
+			this.setState({
+				blockChainEvent: {},
+				blockChainEventLoaded: true,
+			});
 		}
-		window.scroll({
-			top: 0,
-			behavior: "smooth",
-		});
-		this._isMounted = true;
-		// this.updateIPFS();
-		// this.loadblockhain();
-	}
-	else{
-		this.setState({
-			blockChainEvent: {},
-			blockChainEventLoaded: true,
-		});
-	}
 	}
 
 	geoFindMe = async () => {

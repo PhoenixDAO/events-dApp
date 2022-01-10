@@ -34,6 +34,14 @@ import { getUserDetails } from "../../config/serverAPIs";
 import RichTextEditor from "react-rte";
 import { pricingFormatter } from "../../utils/pricingSuffix";
 import PriceSelectBox from "../common/PriceSelectBox";
+import {
+	GetEthPrice,
+	GetPhnxPrice,
+	GetMaticPrice,
+	GetUsdtPrice,
+	GetWethPrice,
+	GetUsdcPrice,
+} from "../../services/Services";
 
 var moment = require("moment");
 
@@ -112,7 +120,7 @@ const styles = (theme) => ({
 		fontSize: "22px",
 		fontWeight: "700",
 		color: "#413AE2",
-		display:"flex"
+		display: "flex",
 	},
 	categoryGrid: {
 		backgroundColor: "white",
@@ -187,7 +195,7 @@ const styles = (theme) => ({
 	},
 	previewPadding: {
 		paddingRight: "50px",
-		paddingTop:"0px !important",
+		paddingTop: "0px !important",
 		paddingLeft: "50px",
 		"@media (max-width: 500px)": {
 			paddingLeft: "20px",
@@ -219,29 +227,28 @@ const styles = (theme) => ({
 	},
 	imageDiv: {
 		// height: "70vh",
-		paddingBottom:"5px",
+		paddingBottom: "5px",
 		// maxHeight: "400px",
 		// minHeight:"300px",
-		paddingTop:"36.037%",
-		borderRadius:"8px",
-		position:"relative",
+		paddingTop: "36.037%",
+		borderRadius: "8px",
+		position: "relative",
 		backgroundSize: "cover",
 		mozBackgroundSize: "cover",
 		backgroundPosition: "center",
-		"@media (max-width:1200px)":{
+		"@media (max-width:1200px)": {
 			// height: "40vh",
 			// maxHeight:"300px",
 			// minHeight:"200px",
 		},
-		"@media (max-width:800px)":{
+		"@media (max-width:800px)": {
 			// maxHeight:"250px",
 			// minHeight:"100px",
-		}
-		,
-		"@media (max-width:400px)":{
+		},
+		"@media (max-width:400px)": {
 			// maxHeight:"150px",
 			// minHeight:"100px",
-		}
+		},
 	},
 });
 class EventPreviewPage extends Component {
@@ -252,11 +259,80 @@ class EventPreviewPage extends Component {
 			organizerDetails: "",
 			topic: "",
 			ticketIndex: 0,
+			tokenPrices: { phnx: "", eth: "", matic: "", usdt: "" },
 		};
-		console.log("hello props: ",props)
+		console.log("hello props: ", props);
 		this.getOrganizerDetails = this.getOrganizerDetails.bind(this);
 		this._topicRemovedDashes = this._topicRemovedDashes.bind(this);
 	}
+
+	GetPrices = async () => {
+		console.log("resEthPrice.data.thereum.usd1");
+		try {
+			let resEthPrice = await GetEthPrice();
+			if (resEthPrice) {
+				// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						eth: resEthPrice.data.ethereum.usd,
+					},
+				});
+			}
+			let resPhnxPrice = await GetPhnxPrice();
+			if (resPhnxPrice) {
+				// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						phnx: resPhnxPrice.data.phoenixdao.usd,
+					},
+				});
+			}
+			let resMaticPrice = await GetMaticPrice();
+			if (resMaticPrice) {
+				// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						matic: resMaticPrice.data[`matic-network`].usd,
+					},
+				});
+			}
+			let resUsdtPrice = await GetUsdtPrice();
+			if (resUsdtPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						usdt: resUsdtPrice.data.tether.usd,
+					},
+				});
+			}
+			let resWethPrice = await GetWethPrice();
+			if (resWethPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						weth: resWethPrice.data.weth.usd,
+					},
+				});
+			}
+			let resUsdcPrice = await GetUsdcPrice();
+			if (resUsdcPrice) {
+				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				this.setState({
+					tokenPrices: {
+						...this.state.tokenPrices,
+						usdc: resUsdcPrice.data[`usd-coin`].usd,
+					},
+				});
+			}
+		} catch (e) {
+			console.error("Err at GetPrices =>>", e);
+		}
+	};
 
 	_topicRemovedDashes() {
 		let rawTopic = this.props.eventTopic;
@@ -346,23 +422,25 @@ class EventPreviewPage extends Component {
 									}
 								/>
 							</Grid> */}
-								<Grid
-									lg={12}
-									style={{
-										backgroundImage: `url("${!this.props.image1
+							<Grid
+								lg={12}
+								style={{
+									backgroundImage: `url("${
+										!this.props.image1
 											? eventpreviewplaceholder
 											: URL.createObjectURL(
 													this.props.image1
-											  )}")`,
-									}}
-									className={classes.imageDiv}
-								>
-									{/* <img
+											  )
+									}")`,
+								}}
+								className={classes.imageDiv}
+							>
+								{/* <img
 										className="card-img-top event-image"
 										src={image}
 										alt="Event"
 									/> */}
-								</Grid>
+							</Grid>
 							<Grid container>
 								<Grid
 									lg={9}
@@ -396,7 +474,12 @@ class EventPreviewPage extends Component {
 										className={classes.clockTime}
 									>
 										<Clock
-											deadline={(this.props.eventTime=="onedayevent")?this.props.eventDate:this.props.eventStartDate}
+											deadline={
+												this.props.eventTime ==
+												"onedayevent"
+													? this.props.eventDate
+													: this.props.eventStartDate
+											}
 											event_unix={this.props.eventTime}
 										/>
 									</Grid>
@@ -421,10 +504,6 @@ class EventPreviewPage extends Component {
 											variant="outlined"
 											className={classes.ticketSelect}
 										>
-											{console.log(
-												"ticket name",
-												this.state.ticketPrices
-											)}
 											<Select
 												// native
 												value={this.state.ticketIndex}
@@ -478,21 +557,25 @@ class EventPreviewPage extends Component {
 
 									<div className={classes.eventinfo}>
 										<span className={classes.PhnxPrice}>
-											{!this.props.token
-												? "Free"
-												: this.props.ticketCategories
-														.length > 0
-												?
-												<PriceSelectBox token="phnx" value={pricingFormatter(
-													this.props
-														.ticketCategories[
-														this.state
-															.ticketIndex
-													]["phnxPrice"],
-													"PHNX"
-											  )} isEventPage={true} />
-												
-												: ""}
+											{!this.props.token ? (
+												"Free"
+											) : this.props.ticketCategories
+													.length > 0 ? (
+												<PriceSelectBox
+													token="phnx"
+													value={pricingFormatter(
+														this.props
+															.ticketCategories[
+															this.state
+																.ticketIndex
+														]["phnxPrice"],
+														"PHNX"
+													)}
+													isEventPage={true}
+												/>
+											) : (
+												""
+											)}
 											{/* PHNX */}
 										</span>
 										<div
@@ -535,69 +618,53 @@ class EventPreviewPage extends Component {
 										<ScheduleOutlined /> Time
 									</p>
 									<p
-												className={`${classes.eventinfo} ${classes.eventTimePara}`}
-											>
-												{" "}
-												{!this.props.eventStartTime
-													? `Time`
-													: !this.props.eventEndTime
-													? moment(
-															this.props
-																.eventStartTime
-													  )
-															.utcOffset(0)
-															.local()
-															.format("LT")
-													: `${moment(
-															this.props
-																.eventStartTime
-													  )
-															.utcOffset(0)
-															.local()
-															.format(
-																"LT"
-															)} - ${moment(
-															this.props
-																.eventEndTime
-													  )
-															.utcOffset(0)
-															.local()
-															.format(
-																"LT"
-															)}`}{" "}
-												Local
-											</p>
-											<p
-												className={classes.localTime}
-												style={{ marginBottom: "0px" }}
-											>
-												(
-												{!this.props.eventStartTime
-													? `Time`
-													: !this.props.eventEndTime
-													? moment(
-															this.props
-																.eventStartTime
-													  )
-															.utcOffset(0)
-															.format("hh:mm A z")
-													: `${moment(
-															this.props
-																.eventStartTime
-													  )
-															.utcOffset(0)
-															.format(
-																"hh:mm A"
-															)} - ${moment(
-															this.props
-																.eventEndTime
-													  )
-															.utcOffset(0)
-															.format(
-																"hh:mm A z"
-															)}`}
-												)
-											</p>
+										className={`${classes.eventinfo} ${classes.eventTimePara}`}
+									>
+										{" "}
+										{!this.props.eventStartTime
+											? `Time`
+											: !this.props.eventEndTime
+											? moment(this.props.eventStartTime)
+													.utcOffset(0)
+													.local()
+													.format("LT")
+											: `${moment(
+													this.props.eventStartTime
+											  )
+													.utcOffset(0)
+													.local()
+													.format("LT")} - ${moment(
+													this.props.eventEndTime
+											  )
+													.utcOffset(0)
+													.local()
+													.format("LT")}`}{" "}
+										Local
+									</p>
+									<p
+										className={classes.localTime}
+										style={{ marginBottom: "0px" }}
+									>
+										(
+										{!this.props.eventStartTime
+											? `Time`
+											: !this.props.eventEndTime
+											? moment(this.props.eventStartTime)
+													.utcOffset(0)
+													.format("hh:mm A z")
+											: `${moment(
+													this.props.eventStartTime
+											  )
+													.utcOffset(0)
+													.format(
+														"hh:mm A"
+													)} - ${moment(
+													this.props.eventEndTime
+											  )
+													.utcOffset(0)
+													.format("hh:mm A z")}`}
+										)
+									</p>
 									<p className={classes.eventHeading}>
 										<LocationOnOutlined /> Location
 									</p>
@@ -721,6 +788,7 @@ class EventPreviewPage extends Component {
 	async componentDidMount() {
 		this.getOrganizerDetails();
 		this._topicRemovedDashes();
+		this.GetPrices();
 	}
 }
 
