@@ -3,8 +3,6 @@ import { drizzleConnect } from "drizzle-react";
 import PropTypes from "prop-types";
 import SocialMedia from "./common/SocialMedia";
 import { pricingFormatter } from "../utils/pricingSuffix";
-import { makeStyles } from "@material-ui/core/styles";
-
 import {
 	Button,
 	Grid,
@@ -83,6 +81,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import EmptyState from "./EmptyState";
 import { urlFormatter } from "../utils/urlFormatter";
 import PriceSelectBox from "./common/PriceSelectBox";
+import { CheckTokenAllowance, GiveAllowance } from "../services/Services";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -431,6 +430,7 @@ class EventPage extends Component {
 				tokenName: RinkbeyNetworkArray[0].networks[0].tokenName,
 				chainId: 4,
 				image: RinkbeyNetworkArray[0].networks[0].image,
+				tokenAddress: RinkbeyNetworkArray[0].networks[0].tokenAddress,
 			},
 		};
 		this.isCancelled = false;
@@ -1243,7 +1243,12 @@ class EventPage extends Component {
 							"This event is restricted to one wallet address, you can't buy it again.",
 					});
 				} else {
-					if ((await this.allowance()) == 0) {
+					if (
+						(await CheckTokenAllowance(
+							this.props.accounts[0],
+							this.state.selectedToken.tokenAddress
+						)) == 0
+					) {
 						let balance = await this.props.phnxContract.methods
 							.totalSupply()
 							.call();
@@ -1265,15 +1270,37 @@ class EventPage extends Component {
 					}
 				}
 			} else {
-				if ((await this.allowance()) == 0) {
-					let balance = await this.props.phnxContract.methods
-						.totalSupply()
-						.call();
+				// if ((await this.allowance()) == 0) {
+				if (
+					(await CheckTokenAllowance(
+						this.props.accounts[0],
+						this.state.selectedToken.tokenAddress
+					)) == 0
+				) {
+					console.log("Coming here ifffff");
+					let approval = await GiveAllowance(
+						this.props.accounts[0],
+						this.state.selectedToken.tokenAddress
+					);
+					console.log("Coming here ifffff approval", approval);
+					// let balance = await this.props.phnxContract.methods
+					// 	.totalSupply()
+					// 	.call();
+					// console.log(
+					// 	"phnxContract.methods.approve =>> ",
+					// 	this.props.phnxContract.methods.approve(
+					// 		this.props.eventsAddress,
+					// 		balance
+					// 	)
+					// );
+					// this.setState({
+					// 	approve: this.props.phnxContract.methods.approve(
+					// 		this.props.eventsAddress,
+					// 		balance
+					// 	),
+					// });
 					this.setState({
-						approve: this.props.phnxContract.methods.approve(
-							this.props.eventsAddress,
-							balance
-						),
+						approve: approval,
 					});
 					this.handleClickOpen2();
 				} else {
@@ -1430,6 +1457,7 @@ class EventPage extends Component {
 				this.setState({
 					loadingPurchase: true,
 				});
+
 				let event_data = this.state.blockChainEvent;
 				let date2 = new Date(parseInt(event_data.time, 10) * 1000);
 
@@ -1458,16 +1486,27 @@ class EventPage extends Component {
 								//"Sydney",
 								//below is weth address hard coded
 							],
-							"0xc778417E063141139Fce010982780140Aa0cD5Ab"
+							this.state.selectedToken.tokenAddress
+							// "0xc778417E063141139Fce010982780140Aa0cD5Ab" // this is token address in which we buy, it should be dynamic
 						),
-						approve: this.props.phnxContract.methods.approve(
-							this.props.eventsAddress,
-							balance
+						// approve: this.props.phnxContract.methods.approve(
+						// 	this.props.eventsAddress,
+						// 	balance
+						// ),
+						approve: await CheckTokenAllowance(
+							this.props.accounts[0],
+							this.state.selectedToken.tokenAddress
 						),
 					},
 					async () => {
 						// let temp = await this.allowance();
-						if ((await this.allowance()) == 0) {
+						// if ((await this.allowance()) == 0) {
+						if (
+							(await CheckTokenAllowance(
+								this.props.accounts[0],
+								this.state.selectedToken.tokenAddress
+							)) == 0
+						) {
 							this.setState({
 								boughtTicket: this.state.boughtTicket + 1,
 							});
@@ -1893,7 +1932,14 @@ class EventPage extends Component {
 									open={this.state.open}
 									buttonText={buttonText}
 									handleClose={this.handleClose}
-									giveApproval={this.giveApproval}
+									// giveApproval={this.giveApproval}
+									giveApproval={async () =>
+										await GiveAllowance(
+											this.props.accounts[0],
+											this.state.selectedToken
+												.tokenAddress
+										)
+									}
 									image={image}
 									eventTitle={event_data.name}
 									date={event_date}
@@ -2914,7 +2960,11 @@ class EventPage extends Component {
 			await this.initApproveMethod();
 			await this.checkUserTicketLocation();
 			if (this.props.accounts[0] && this.props.eventsAddress) {
-				await this.allowance();
+				// await this.allowance();
+				await CheckTokenAllowance(
+					this.props.accounts[0],
+					this.state.selectedToken.tokenAddress
+				);
 				await this.checkUserBalance();
 			}
 			window.scroll({
