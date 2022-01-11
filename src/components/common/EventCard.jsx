@@ -336,7 +336,8 @@ const EventCard = (props, context) => {
 							);
 
 							// return atob(v.image.slice(22));
-							return base64ToBlob(v.image);
+							// return base64ToBlob(v.image);
+							return v.image;
 						}
 					}),
 				});
