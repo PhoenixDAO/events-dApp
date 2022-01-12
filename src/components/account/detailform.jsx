@@ -240,6 +240,8 @@ const DetailForm = (props) => {
 			setAlternateCurrency({
 				tokenName: "usdt",
 				chainId: props.networkId,
+				// image: RinkbeyNetworkArray[0].networks[0].image,
+				// tokenAddress: RinkbeyNetworkArray[0].networks[0].image
 			});
 		}
 	}, [props.networkId]);

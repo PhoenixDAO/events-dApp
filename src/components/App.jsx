@@ -33,7 +33,7 @@ import Snackbar1 from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar from "@material-ui/core/Snackbar";
 
-// Hiii 
+// Hiii
 
 import {
 	INFURA_URL,
@@ -77,6 +77,7 @@ let ethereum = window.ethereum;
 let web3 = window.web3;
 const items = ["slide1.png", "slide2.png", "slide3.png", "slide4.png"];
 const randomBG = items[Math.floor(Math.random() * items.length)];
+
 class App extends Component {
 	constructor(props, context) {
 		super(props);
@@ -110,7 +111,7 @@ class App extends Component {
 			getPhoenixDAO: "",
 			openSnackbarForNoMetaMask: false,
 			openSnackbarForPendingRequest: false,
-			openNetworkSnackbar : false,
+			openNetworkSnackbar: false,
 			disabledStatus: false,
 			eventsContract: {},
 			userDetails: {},
@@ -125,7 +126,7 @@ class App extends Component {
 			eventsAddress: "",
 			openWalletConnected: false,
 			date2: null,
-			isDesktop:null,
+			isDesktop: null,
 			networkId: null,
 		};
 		this.myRef = React.createRef();
@@ -154,7 +155,7 @@ class App extends Component {
 			eventAddress = Open_events_Address_2;
 			phoenixAddress = PhoenixDAO_Testnet_Token_Address_2;
 		} else {
-			this.setState({openNetworkSnackbar: true});
+			this.setState({ openNetworkSnackbar: true });
 			console.log("Wrong network address | not supported");
 		}
 		return { eventAddress, phoenixAddress };
@@ -177,7 +178,7 @@ class App extends Component {
 				web3 = new Web3(new Web3.providers.HttpProvider(infura));
 			}
 			const networkId = await web3.eth.net.getId();
-			this.setState({networkId:networkId});
+			this.setState({ networkId: networkId });
 			if (networkId === GLOBAL_NETWORK_ID) {
 				return networkId;
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
@@ -233,26 +234,26 @@ class App extends Component {
 		await this.loadBlockchainData();
 		let hasTouchScreen = false;
 		if ("maxTouchPoints" in navigator) {
-		  hasTouchScreen = navigator.maxTouchPoints > 0;
+			hasTouchScreen = navigator.maxTouchPoints > 0;
 		} else if ("msMaxTouchPoints" in navigator) {
-		  hasTouchScreen = navigator.msMaxTouchPoints > 0;
+			hasTouchScreen = navigator.msMaxTouchPoints > 0;
 		} else {
-		  const mQ = window.matchMedia && matchMedia("(pointer:coarse)");
-		  if (mQ && mQ.media === "(pointer:coarse)") {
-			hasTouchScreen = !!mQ.matches;
-		  } else if ("orientation" in window) {
-			hasTouchScreen = true;
-		  } else {
-			var UA = navigator.userAgent;
-			hasTouchScreen =
-			  /\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
-			  /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
-		  }
+			const mQ = window.matchMedia && matchMedia("(pointer:coarse)");
+			if (mQ && mQ.media === "(pointer:coarse)") {
+				hasTouchScreen = !!mQ.matches;
+			} else if ("orientation" in window) {
+				hasTouchScreen = true;
+			} else {
+				var UA = navigator.userAgent;
+				hasTouchScreen =
+					/\b(BlackBerry|webOS|iPhone|IEMobile)\b/i.test(UA) ||
+					/\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA);
+			}
 		}
 		if (hasTouchScreen) {
-			this.setState({isDesktop:false,});
+			this.setState({ isDesktop: false });
 		} else {
-			this.setState({isDesktop:true,});
+			this.setState({ isDesktop: true });
 		}
 	}
 
@@ -421,10 +422,9 @@ class App extends Component {
 	handleSnackbarClose = (number) => {
 		if (number == 1) {
 			this.setState({ openSnackbarForNoMetaMask: false });
-		} else if(number == 2){
+		} else if (number == 2) {
 			this.setState({ openSnackbarForPendingRequest: false });
-		}
-		else {
+		} else {
 			this.setState({ openNetworkSnackbar: false });
 		}
 	};
@@ -473,7 +473,10 @@ class App extends Component {
 			);
 		} else {
 			toast(
-				<Notify networkId={this.props.networkId}  text="😓 Wrong Network, Please Connect to Ethereum or Matic Mainnet ." />,
+				<Notify
+					networkId={this.props.networkId}
+					text="😓 Wrong Network, Please Connect to Ethereum or Matic Mainnet ."
+				/>,
 				{
 					position: "bottom-right",
 					autoClose: true,
@@ -495,10 +498,9 @@ class App extends Component {
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
 						this.setState({ disabledStatus: true });
-
 						toast(
 							<Notify
-							networkId={this.props.networkId} 
+								networkId={this.props.networkId}
 								hash={hash}
 								text="Preparing your ticket... 🚀"
 								icon="fa fa-ticket-alt"
@@ -519,19 +521,6 @@ class App extends Component {
 							txconfirmedApproved == 0 &&
 							txreceiptApproved.status == true
 						) {
-							// toast(
-							// 	<Notify
-							// 		hash={txreceiptApproved.transactionHash}
-							// 		text="Ticket purchase successful!"
-							// 		icon="fa-ticket-alt"
-							// 		link="Check out your TICKET here"
-							// 	/>,
-							// 	{
-							// 		position: "bottom-right",
-							// 		autoClose: true,
-							// 		pauseOnHover: true,
-							// 	}
-							// );
 							this.setState({
 								disabledStatus: false,
 								purchased: true,
@@ -543,7 +532,11 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
+							<Notify
+								networkId={this.props.networkId}
+								error={error}
+								message={txerror.message}
+							/>,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -583,7 +576,7 @@ class App extends Component {
 					if (hash !== null) {
 						toast(
 							<Notify
-							networkId={this.props.networkId} 
+								networkId={this.props.networkId}
 								hash={hash}
 								text={
 									"Transaction sent!\nOnce Your approval is confirmed, you will be able to buy a ticket."
@@ -604,7 +597,7 @@ class App extends Component {
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
 								<Notify
-								networkId={this.props.networkId} 
+									networkId={this.props.networkId}
 									text={
 										"Transaction successfull!\nYou can buy a ticket now."
 									}
@@ -630,7 +623,11 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
+							<Notify
+								networkId={this.props.networkId}
+								error={error}
+								message={txerror.message}
+							/>,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -650,7 +647,7 @@ class App extends Component {
 					if (hash !== null) {
 						toast(
 							<Notify
-							networkId={this.props.networkId} 
+								networkId={this.props.networkId}
 								hash={hash}
 								text="Preparing your ticket... 🚀"
 								icon="fa fa-ticket-alt fa-3x"
@@ -704,7 +701,11 @@ class App extends Component {
 					if (error !== null) {
 						txerror = error;
 						toast(
-							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
+							<Notify
+								networkId={this.props.networkId}
+								error={error}
+								message={txerror.message}
+							/>,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -734,7 +735,8 @@ class App extends Component {
 							done: true,
 						});
 						toast(
-							<Notify networkId={this.props.networkId} 
+							<Notify
+								networkId={this.props.networkId}
 								icon="fas fa-edit"
 								hash={hash}
 								text={
@@ -757,7 +759,8 @@ class App extends Component {
 						txconfirmed = confirmationNumber;
 						if (txconfirmed == 1 && txreceipt.status == true) {
 							toast(
-								<Notify networkId={this.props.networkId} 
+								<Notify
+									networkId={this.props.networkId}
 									hash={txreceipt.transactionHash}
 									createdEvent={
 										type === "create"
@@ -787,7 +790,11 @@ class App extends Component {
 						txerror = error;
 						this.setState({ error: true });
 						toast(
-							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
+							<Notify
+								networkId={this.props.networkId}
+								error={error}
+								message={txerror.message}
+							/>,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -821,7 +828,8 @@ class App extends Component {
 							done: true,
 						});
 						toast(
-							<Notify networkId={this.props.networkId} 
+							<Notify
+								networkId={this.props.networkId}
 								hash={hash}
 								text={
 									"Request for 10,000 PHNX\nYour token request has been sent"
@@ -842,7 +850,8 @@ class App extends Component {
 
 						if (txconfirmed == 0 && txreceipt.status == true) {
 							toast(
-								<Notify networkId={this.props.networkId} 
+								<Notify
+									networkId={this.props.networkId}
 									text="10,000 PHNX recieved! Check your balance here."
 									hash={txreceipt.transactionHash}
 								/>,
@@ -860,7 +869,11 @@ class App extends Component {
 						txerror = error;
 						this.setState({ error: true });
 						toast(
-							<Notify networkId={this.props.networkId}  error={error} message={txerror.message} />,
+							<Notify
+								networkId={this.props.networkId}
+								error={error}
+								message={txerror.message}
+							/>,
 							{
 								position: "bottom-right",
 								autoClose: true,
@@ -924,7 +937,7 @@ class App extends Component {
 			const sign = await this.handleSignMessage(
 				publicAddress[0],
 				message.result.result
-			);	
+			);
 			const userData = await loginWithMetaMask({
 				publicAddress: publicAddress[0],
 				networkId: networkId,
@@ -948,7 +961,7 @@ class App extends Component {
 			// 	publicAddress,
 			// 	console.log
 			// );
-			let msg = await web3.utils.utf8ToHex(message)
+			let msg = await web3.utils.utf8ToHex(message);
 			// console.log('msg utf8ToHex ==>>', msg)
 			const sign = await web3.eth.personal.sign(
 				msg,
@@ -961,7 +974,7 @@ class App extends Component {
 			// console.log('decryption sign ==>>', decrypt )
 			return sign;
 		} catch (err) {
-			console.log('Err at handleSignMessage', err)
+			console.log("Err at handleSignMessage", err);
 		}
 	};
 
@@ -1547,7 +1560,7 @@ class App extends Component {
 						connect={this.loadBlockchainData}
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
-						networkId = {this.state.networkId}
+						networkId={this.state.networkId}
 					/>
 					<div
 						id="page-content-wrapper"
@@ -1583,7 +1596,7 @@ class App extends Component {
 									}
 									handleClose={this.handleSnackbarClose}
 								/> */}
-									<Snackbar
+								<Snackbar
 									anchorOrigin={{
 										vertical: "top",
 										horizontal: "center",
@@ -1592,7 +1605,8 @@ class App extends Component {
 									message={
 										<span>
 											{/* {" "} */}
-											Please switch to the Matic or Ethereum Mainnet Network
+											Please switch to the Matic or
+											Ethereum Mainnet Network
 										</span>
 									}
 									onClose={() => this.handleSnackbarClose(3)}
@@ -1607,44 +1621,58 @@ class App extends Component {
 									}}
 									open={this.state.openSnackbarForNoMetaMask}
 									message={
-										this.state.isDesktop?
-										<span>
-											{" "}
-											{this.state.errorMessage}
-											{(userAgentString.indexOf("Chrome") > -1)?<a
-											target="_blank"
-											style={{
-												textAlign: "center",
-												color: "blue",
-												opacity: "1",
-											}}
-											href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
-										>
-											{" "}
-											[LINK]
-										</a>:
-											(userAgentString.indexOf("Firefox") > -1) ? (
-												<a
-													target="_blank"
-													style={{
-														textAlign: "center",
-														color: "blue",
-														opacity: "1",
-													}}
-													href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"
-												>
-													{" "}
-													[LINK]
-												</a>
-											):userAgentString.indexOf("OP") > -1 &&
+										this.state.isDesktop ? (
 											<span>
-												Please use a browser with Metamask Wallet Extension!
+												{" "}
+												{this.state.errorMessage}
+												{userAgentString.indexOf(
+													"Chrome"
+												) > -1 ? (
+													<a
+														target="_blank"
+														style={{
+															textAlign: "center",
+															color: "blue",
+															opacity: "1",
+														}}
+														href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
+													>
+														{" "}
+														[LINK]
+													</a>
+												) : userAgentString.indexOf(
+														"Firefox"
+												  ) > -1 ? (
+													<a
+														target="_blank"
+														style={{
+															textAlign: "center",
+															color: "blue",
+															opacity: "1",
+														}}
+														href="https://addons.mozilla.org/en-US/firefox/addon/ether-metamask/"
+													>
+														{" "}
+														[LINK]
+													</a>
+												) : (
+													userAgentString.indexOf(
+														"OP"
+													) > -1 && (
+														<span>
+															Please use a browser
+															with Metamask Wallet
+															Extension!
+														</span>
+													)
+												)}
 											</span>
-											}
-										</span>:
-										<span>
-											Please use MetaMask Browser to use this app on mobile. 
-										</span>
+										) : (
+											<span>
+												Please use MetaMask Browser to
+												use this app on mobile.
+											</span>
+										)
 									}
 									onClose={() => this.handleSnackbarClose(1)}
 									autoHideDuration={10000}

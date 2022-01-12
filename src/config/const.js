@@ -48,12 +48,41 @@ import TetherPriceLogo from "../components/Images/tetherPriceLogo.svg";
 import WethPriceLogo from "../components/Images/WethLogo.png";
 import UsdcPriceLogo from "../components/Images/usdcLogo.webp";
 
+import { WethAbi_Testnet } from "../services/tokenABIs/WethAbi";
+import { UsdcAbi_Testnet } from "../services/tokenABIs/UsdcAbi";
+import { UsdtAbi_Testnet } from "../services/tokenABIs/UsdtAbi";
+import { MaticAbi_testnet } from "../services/tokenABIs/MaticAbi";
+import { PhnxAbi_Testnet } from "../services/tokenABIs/PhnxAbi";
+
 export const PhnxPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
 export const EthPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=Ethereum&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
 export const MaticPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=matic-network&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
 export const UsdtPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=Tether&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
 export const UsdcPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=usd-coin&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
 export const WethtPriceApiCoingecko = `https://api.coingecko.com/api/v3/simple/price?ids=weth&vs_currencies=usd&include_market_cap=true&include_24hr_change=ture&include_last_updated_at=ture`;
+
+export const TokensListRinkbey = [
+	{
+		address: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+		abi: PhnxAbi_Testnet,
+	},
+	{
+		address: "0xe6b8a5cf854791412c1f6efc7caf629f5df1c747",
+		abi: MaticAbi_testnet,
+	},
+	{
+		address: "0x0cEbA92298b655C827D224D33461B4A1F9C418a6",
+		abi: UsdtAbi_Testnet,
+	},
+	{
+		address: "0xeb8f08a975Ab53E34D8a0330E0D34de942C95926",
+		abi: UsdcAbi_Testnet,
+	},
+	{
+		address: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+		abi: WethAbi_Testnet,
+	},
+];
 
 export const RinkbeyNetworkArray = [
 	{
@@ -197,9 +226,9 @@ export const GLOBAL_NETWORK_ID = 4;
 export const GLOBAL_NETWORK_ID_2 = 137;
 
 // export const API_URL = "https://events.server.pehchan.me/";
-// export const API_URL = "https://events-api.phoenixdao.io/";
+export const API_URL = "https://events-api.phoenixdao.io/";
 //"https://phoenix-event-dapp-backend-tst.herokuapp.com/";
-export const API_URL = "http://localhost:5000/";
+// export const API_URL = "http://localhost:5000/";
 
 export const REPORT_EVENT = "event/report";
 export const GET_USER_DETAIL = "user/details";
