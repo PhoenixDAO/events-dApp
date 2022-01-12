@@ -82,6 +82,7 @@ import EmptyState from "./EmptyState";
 import { urlFormatter } from "../utils/urlFormatter";
 import PriceSelectBox from "./common/PriceSelectBox";
 import { CheckTokenAllowance, GiveAllowance } from "../services/Services";
+import { Open_events_Address_2 } from "../config/OpenEvents";
 
 let numeral = require("numeral");
 var moment = require("moment");
@@ -488,7 +489,10 @@ class EventPage extends Component {
 			}
 			let resWethPrice = await GetWethPrice();
 			if (resWethPrice) {
-				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+				console.log(
+					"resUsdtPrice.data.tether.usd",
+					resUsdtPrice.data.tether.usd
+				);
 				this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
@@ -1188,9 +1192,13 @@ class EventPage extends Component {
 				.totalSupply()
 				.call();
 			this.setState({
-				approve: this.props.phnxContract.methods.approve(
-					this.props.eventsAddress,
-					balance
+				// approve: this.props.phnxContract.methods.approve(
+				// 	this.props.eventsAddress,
+				// 	balance
+				// ),
+				approve: await GiveAllowance(
+					this.props.accounts[0],
+					this.state.selectedToken.tokenAddress
 				),
 			});
 		} catch (err) {
@@ -1253,9 +1261,13 @@ class EventPage extends Component {
 							.totalSupply()
 							.call();
 						this.setState({
-							approve: this.props.phnxContract.methods.approve(
-								this.props.eventsAddress,
-								balance
+							// approve: this.props.phnxContract.methods.approve(
+							// 	this.props.eventsAddress,
+							// 	balance
+							// ),
+							approve: await GiveAllowance(
+								this.props.accounts[0],
+								this.state.selectedToken.tokenAddress
 							),
 						});
 						this.handleClickOpen2();
@@ -1270,13 +1282,13 @@ class EventPage extends Component {
 					}
 				}
 			} else {
-				// if ((await this.allowance()) == 0) {
-				if (
-					(await CheckTokenAllowance(
-						this.props.accounts[0],
-						this.state.selectedToken.tokenAddress
-					)) == 0
-				) {
+				if ((await this.allowance()) == 0) {
+					// if (
+					// 	(await CheckTokenAllowance(
+					// 		this.props.accounts[0],
+					// 		this.state.selectedToken.tokenAddress
+					// 	)) == 0
+					// ) {
 					console.log("Coming here ifffff");
 					let approval = await GiveAllowance(
 						this.props.accounts[0],
@@ -1333,10 +1345,22 @@ class EventPage extends Component {
 		this.priceCalculation(event.target.value);
 	};
 
+	// allowance = async () => {
+	// 	let a = await this.props.phnxContract.methods
+	// 		.allowance(this.props.accounts[0], this.props.eventsAddress)
+	// 		.call();
+	// 	this.setState({
+	// 		allow: a,
+	// 	});
+	// 	return a;
+	// };
 	allowance = async () => {
-		let a = await this.props.phnxContract.methods
-			.allowance(this.props.accounts[0], this.props.eventsAddress)
-			.call();
+		console.log("this.props.eventsAddress +>", this.props.eventsAddress);
+		let a = await CheckTokenAllowance(
+			this.props.accounts[0],
+			this.state.selectedToken.tokenAddress
+		);
+		console.log("allowance at this.allowance", a);
 		this.setState({
 			allow: a,
 		});
@@ -1372,6 +1396,10 @@ class EventPage extends Component {
 			.on("confirmation", async (confirmationNumber, receipt) => {
 				this.onConfirmation(confirmationNumber, receipt);
 				await this.allowance();
+				// await CheckTokenAllowance(
+				// 	this.props.accounts[0],
+				// 	this.state.selectedToken.tokenAddress
+				// );
 				this.setState({
 					loadingApprove: false,
 				});
@@ -1493,20 +1521,24 @@ class EventPage extends Component {
 						// 	this.props.eventsAddress,
 						// 	balance
 						// ),
-						approve: await CheckTokenAllowance(
+						// approve: await CheckTokenAllowance(
+						// 	this.props.accounts[0],
+						// 	this.state.selectedToken.tokenAddress
+						// ),
+						approve: await GiveAllowance(
 							this.props.accounts[0],
 							this.state.selectedToken.tokenAddress
 						),
 					},
 					async () => {
 						// let temp = await this.allowance();
-						// if ((await this.allowance()) == 0) {
-						if (
-							(await CheckTokenAllowance(
-								this.props.accounts[0],
-								this.state.selectedToken.tokenAddress
-							)) == 0
-						) {
+						if ((await this.allowance()) == 0) {
+							// if (
+							// 	(await CheckTokenAllowance(
+							// 		this.props.accounts[0],
+							// 		this.state.selectedToken.tokenAddress
+							// 	)) == 0
+							// ) {
 							this.setState({
 								boughtTicket: this.state.boughtTicket + 1,
 							});
@@ -1932,14 +1964,14 @@ class EventPage extends Component {
 									open={this.state.open}
 									buttonText={buttonText}
 									handleClose={this.handleClose}
-									// giveApproval={this.giveApproval}
-									giveApproval={async () =>
-										await GiveAllowance(
-											this.props.accounts[0],
-											this.state.selectedToken
-												.tokenAddress
-										)
-									}
+									giveApproval={this.giveApproval}
+									// giveApproval={async () =>
+									// 	await GiveAllowance(
+									// 		this.props.accounts[0],
+									// 		this.state.selectedToken
+									// 			.tokenAddress
+									// 	)
+									// }
 									image={image}
 									eventTitle={event_data.name}
 									date={event_date}
@@ -1977,7 +2009,7 @@ class EventPage extends Component {
 									}}
 									open={this.state.disableBuyTicketBtn}
 									onClose={this.handleCloseSnackbar4}
-									message="You do not have enough PHNX token to buy the ticket"
+									message={`You do not have enough ${this.state.selectedToken.tokenName} token to buy the ticket`}
 									autoHideDuration={3000}
 									key={"top" + "center"}
 									className="snackbar"
@@ -2960,11 +2992,11 @@ class EventPage extends Component {
 			await this.initApproveMethod();
 			await this.checkUserTicketLocation();
 			if (this.props.accounts[0] && this.props.eventsAddress) {
-				// await this.allowance();
-				await CheckTokenAllowance(
-					this.props.accounts[0],
-					this.state.selectedToken.tokenAddress
-				);
+				await this.allowance();
+				// await CheckTokenAllowance(
+				// 	this.props.accounts[0],
+				// 	this.state.selectedToken.tokenAddress
+				// );
 				await this.checkUserBalance();
 			}
 			window.scroll({
