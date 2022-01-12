@@ -18,7 +18,7 @@ import {
 	GLOBAL_NETWORK_ID_2,
 	INFURA_URL,
 	INFURA_URL_2,
-  networkArray
+	RinkbeyNetworkArray,
 } from "../../config/const";
 
 // import { useHistory } from "react-router-dom";
@@ -35,7 +35,7 @@ const DetailForm = (props) => {
 	const [avatarNumber, setAvatarNumber] = useState(0);
 	const [ipfsImage, setIpfsImage] = useState("");
 	const [loading, setLoading] = useState(false);
-  const [noDefaultCurrency, setNoDefaultCurrency] = useState(false)
+	const [noDefaultCurrency, setNoDefaultCurrency] = useState(false);
 	// const history = useHistory();
 
 	useEffect(() => {
@@ -121,7 +121,7 @@ const DetailForm = (props) => {
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
 				return networkId;
 			} else {
-				console.log("network id not suported")
+				console.log("network id not suported");
 			}
 			return null;
 		} catch (err) {
@@ -235,15 +235,31 @@ const DetailForm = (props) => {
 		setAvatarNumber(value);
 	};
 
-  useEffect(()=>{
-    if(props.networkId){
-      setAlternateCurrency({tokenName:'usdt', chainId: props.networkId})
-    }
-  },[props.networkId])
+	useEffect(() => {
+		if (props.networkId) {
+			setAlternateCurrency({
+				tokenName: "usdt",
+				chainId: props.networkId,
+				image: RinkbeyNetworkArray[0].networks[0].image,
+				// tokenAddress: RinkbeyNetworkArray[0].networks[0].image
+			});
+		}
+	}, [props.networkId]);
 
 	const updateUserInfo = async (e) => {
 		e.preventDefault();
-    // console.log('alternateCurrency =>> ', alternateCurrency)
+		// console.log('alternateCurrency =>> ', alternateCurrency)
+		console.log("UpdateUserInfo form atv detailform", {
+			address: props.account,
+			networkId: props.networkId,
+			name: name, //we need to change this when the design is finalised
+			organizerDetails: organizer,
+			avatarCustom: avatarCustom, //we need to change this when the design is finalised
+			avatarNumber: avatarNumber, //we need to change this when the design is finalised
+			avatar: avatar,
+			alternateCurrency: alternateCurrency,
+		});
+		// return;
 		setLoading(true);
 		const detail = await updateUserDetails({
 			address: props.account,
@@ -269,7 +285,7 @@ const DetailForm = (props) => {
 				}
 			}
 		} else {
-      console.log('User detailss ==>>>> ',detail)
+			console.log("User detailss ==>>>> ", detail);
 			props.setUserDetails(detail.result);
 			props.history.push("/");
 			// window.location.reload();
@@ -286,37 +302,52 @@ const DetailForm = (props) => {
 	// 	// }
 	// };
 
-  useEffect(()=> {
-    if(
-      props.userDetails && 
-      props.userDetails.result && 
-      props.userDetails.result.result && 
-      props.userDetails.result.result.userHldr 
-      ) {
-      console.log('UserDetails ,=>>', props.userDetails.result.result.userHldr.alternateCurrency)
-      let defaultCurr = props.userDetails.result.result.userHldr.alternateCurrency;
-      if(typeof defaultCurr == 'string') {
-        if(defaultCurr === 'Dollar' || defaultCurr === 'usd') {
-          setAlternateCurrency({ tokenName: "usdt", chainId: props.networkId })
-        }
-      } else if(typeof defaultCurr == 'string' && defaultCurr.length < 1){
-        setAlternateCurrency({ tokenName: "usdt", chainId: props.networkId })
-        setNoDefaultCurrency(true)
-      } else if(typeof defaultCurr == 'object') {
-        setAlternateCurrency(props.userDetails.result.result.userHldr.alternateCurrency)
-      }
-    }
-  },[props.userDetails])
+	useEffect(() => {
+		if (
+			props.userDetails &&
+			props.userDetails.result &&
+			props.userDetails.result.result &&
+			props.userDetails.result.result.userHldr
+		) {
+			console.log(
+				"UserDetails ,=>>",
+				props.userDetails.result.result.userHldr.alternateCurrency
+			);
+			let defaultCurr =
+				props.userDetails.result.result.userHldr.alternateCurrency;
+			if (typeof defaultCurr == "string") {
+				if (defaultCurr === "Dollar" || defaultCurr === "usd") {
+					setAlternateCurrency({
+						tokenName: "usdt",
+						chainId: props.networkId,
+					});
+				}
+			} else if (
+				typeof defaultCurr == "string" &&
+				defaultCurr.length < 1
+			) {
+				setAlternateCurrency({
+					tokenName: "usdt",
+					chainId: props.networkId,
+				});
+				setNoDefaultCurrency(true);
+			} else if (typeof defaultCurr == "object") {
+				setAlternateCurrency(
+					props.userDetails.result.result.userHldr.alternateCurrency
+				);
+			}
+		}
+	}, [props.userDetails]);
 
-  useEffect(()=>{
-    console.log('alternateCurrency =>> ', alternateCurrency)
-  },[alternateCurrency])
+	useEffect(() => {
+		console.log("alternateCurrency =>> ", alternateCurrency);
+	}, [alternateCurrency]);
 
 	// const currency = [
 	// 	{ name: "USDT", flag: "" },
 	// 	{ name: "PHNX", flag: "" },
 	// 	{ name: "MATIC", flag: "" },
-  //   { name: "ETHER", flag: "" },
+	//   { name: "ETHER", flag: "" },
 	// ].map((data) => {
 	// 	return <option value={data.name}>{data.name}</option>;
 	// });
@@ -329,9 +360,18 @@ const DetailForm = (props) => {
 					className="banner"
 					src="/images/accountDetails.jpg"
 				/>
-				<div className="acc-av-hldr" style={{backgroundImage:`url(${renderImage()})`, height: "70px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center"}}>
+				<div
+					className="acc-av-hldr"
+					style={{
+						backgroundImage: `url(${renderImage()})`,
+						height: "70px",
+						backgroundSize: "cover",
+						mozBackgroundSize: "cover",
+						backgroundPosition: "center",
+					}}
+				>
 					{/* {renderImage()} */}
-					</div>
+				</div>
 				<div className="acc-title-hlder">
 					<p className="acc-title"> {name} </p>
 					<div className="redirect-img-hldr" onClick={handleOpen}>
@@ -373,24 +413,35 @@ const DetailForm = (props) => {
 					</div>
 					<div className="acc-form-prt">
 						<div className="frm-single">
-							<p className="acc-inpt-heading">
-								DEFAULT CURRENCY
-							</p>
+							<p className="acc-inpt-heading">DEFAULT CURRENCY</p>
 							<select
 								className="acc-inpt acc-select"
 								onChange={(e) => {
-									  setAlternateCurrency({tokenName: e.target.value, chainId: props.networkId});
-								  }
+									setAlternateCurrency({
+										tokenName: e.target.value,
+										chainId: props.networkId,
+									});
+								}}
+								value={
+									alternateCurrency &&
+									alternateCurrency.tokenName
 								}
-								value={alternateCurrency && alternateCurrency.tokenName}
 							>
-								{[...networkArray[props.networkId == 137 ? 0 : 1].networks].map((data) => {
-									return <option value={data.tokenName}>{data.tokenName}</option>;
+								{[
+									...RinkbeyNetworkArray[
+										props.networkId == 137 ? 0 : 1
+									].networks,
+								].map((data) => {
+									return (
+										<option value={data.tokenName}>
+											{data.tokenName}
+										</option>
+									);
 								})}
 							</select>
 						</div>
 					</div>
-          {/* <p>{alternateCurrency} {props.networkId}</p> */}
+					{/* <p>{alternateCurrency} {props.networkId}</p> */}
 					<div className="acc-form-prt" style={{ marginTop: "40px" }}>
 						<div>
 							<h6 className="org-heading">Organizer details</h6>
