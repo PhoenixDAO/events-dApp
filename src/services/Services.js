@@ -50,7 +50,7 @@ export const GetWethPrice = () => {
 // 	return { eventAddress, phoenixAddress };
 // };
 
-const initTokenContract = async (tokenAddress) => {
+export const initTokenContract = async (tokenAddress) => {
 	const web3 = new Web3(window.ethereum);
 	let idx = 0;
 	let tokenAbi = TokensListRinkbey.map((v, i) => {

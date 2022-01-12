@@ -81,7 +81,11 @@ import Snackbar from "@material-ui/core/Snackbar";
 import EmptyState from "./EmptyState";
 import { urlFormatter } from "../utils/urlFormatter";
 import PriceSelectBox from "./common/PriceSelectBox";
-import { CheckTokenAllowance, GiveAllowance } from "../services/Services";
+import {
+	CheckTokenAllowance,
+	GiveAllowance,
+	initTokenContract,
+} from "../services/Services";
 import { Open_events_Address_2 } from "../config/OpenEvents";
 
 let numeral = require("numeral");
@@ -416,7 +420,8 @@ class EventPage extends Component {
 			SnackbarMessage: "",
 			locationEvent: "",
 			disableBuyTicketBtn: false,
-			phnx_price: "",
+			// phnx_price: "",
+			token_price: "",
 			eventExistInContract: false,
 			Icon: false,
 			UserFavoriteEvents: [],
@@ -1081,32 +1086,49 @@ class EventPage extends Component {
 					this.state.PhoenixDAO_market.usd
 				).toFixed(3);
 			});
-			let phnx_price = Web3.utils.fromWei(
+			let token_price = Web3.utils.fromWei(
 				event_data.prices[categoryIndex].toString()
 			);
-			console.log("dollar_price: ", dollar_price, phnx_price);
-			let priceInPhnx = event_data.token ? phnx_price + "PHNX" : "FREE";
+			console.log("dollar_price: ", dollar_price, token_price);
+			let priceInPhnx = event_data.token ? token_price + "PHNX" : "FREE";
 			let priceInDollar = event_data.token
 				? "$" + dollar_price[categoryIndex]
 				: "";
 			this.setState({
 				dollar_price: priceInDollar,
-				phnx_price: priceInPhnx,
+				token_price: priceInPhnx,
 			});
 		} else {
-			let phnx_price = 0;
+			let token_price = 0;
 			let dollar_price = 0;
 			console.log("here");
 			if (this.state.selectedToken.tokenName == "usdt") {
-				phnx_price = event_data.prices.map((price) => {
+				token_price = event_data.prices.map((price) => {
 					// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
 					return (
 						Web3.utils.fromWei(price.toString()) /
 						this.state.tokenPrices.usdt
 					).toFixed(3);
 				});
+			} else if (this.state.selectedToken.tokenName == "usdc") {
+				token_price = event_data.prices.map((price) => {
+					// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+					return (
+						Web3.utils.fromWei(price.toString()) /
+						this.state.tokenPrices.usdc
+					).toFixed(3);
+				});
+			} else if (this.state.selectedToken.tokenName == "phnx") {
+				// let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.phnx)
+				// return tokenPric;
+				token_price = event_data.prices.map((price) => {
+					return (
+						Web3.utils.fromWei(price.toString()) /
+						this.state.tokenPrices.phnx
+					).toFixed(3);
+				});
 			} else if (this.state.selectedToken.tokenName == "ether") {
-				phnx_price = event_data.prices.map((price) => {
+				token_price = event_data.prices.map((price) => {
 					//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
 					if (
 						Web3.utils.fromWei(price.toString()) /
@@ -1124,8 +1146,35 @@ class EventPage extends Component {
 						);
 					}
 				});
+			} else if (this.state.selectedToken.tokenName == "weth") {
+				token_price = event_data.prices.map((price) => {
+					//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
+					if (
+						Web3.utils.fromWei(price.toString()) /
+							this.state.tokenPrices.weth >
+						0.1
+					) {
+						return (
+							Web3.utils.fromWei(price.toString()) /
+							this.state.tokenPrices.weth
+						).toFixed(3);
+					} else {
+						return (
+							Web3.utils.fromWei(price.toString()) /
+							this.state.tokenPrices.weth
+						);
+					}
+				});
+			} else if (this.state.selectedToken.tokenName == "matic") {
+				token_price = event_data.prices.map((price) => {
+					//  console.log('matic_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.matic)
+					return (
+						Web3.utils.fromWei(price.toString()) /
+						this.state.tokenPrices.matic
+					).toFixed(3);
+				});
 			} else {
-				phnx_price = event_data.prices.map((price) => {
+				token_price = event_data.prices.map((price) => {
 					return (
 						Web3.utils.fromWei(price.toString()) /
 						this.state.PhoenixDAO_market.usd
@@ -1137,12 +1186,12 @@ class EventPage extends Component {
 				);
 			}
 			let priceInPhnx = event_data.token
-				? phnx_price[categoryIndex] + "PHNX"
+				? token_price[categoryIndex] + "PHNX"
 				: "FREE";
 			let priceInDollar = event_data.token ? "$" + dollar_price : "";
 			this.setState({
 				dollar_price: priceInDollar,
-				phnx_price: priceInPhnx,
+				token_price: priceInPhnx,
 			});
 		}
 	};
@@ -1188,9 +1237,13 @@ class EventPage extends Component {
 
 	initApproveMethod = async () => {
 		try {
-			let balance = await this.props.phnxContract.methods
-				.totalSupply()
-				.call();
+			// let balance = await this.props.phnxContract.methods
+			// 	.totalSupply()
+			// 	.call();
+			let tokenContract = await initTokenContract(
+				this.state.selectedToken.tokenAddress
+			);
+			let balance = await tokenContract.methods.totalSupply().call();
 			this.setState({
 				// approve: this.props.phnxContract.methods.approve(
 				// 	this.props.eventsAddress,
@@ -1257,9 +1310,15 @@ class EventPage extends Component {
 							this.state.selectedToken.tokenAddress
 						)) == 0
 					) {
-						let balance = await this.props.phnxContract.methods
+						let tokenContract = await initTokenContract(
+							this.state.selectedToken.tokenAddress
+						);
+						let balance = await tokenContract.methods
 							.totalSupply()
 							.call();
+						// let balance = await this.props.phnxContract.methods
+						// 	.totalSupply()
+						// 	.call();
 						this.setState({
 							// approve: this.props.phnxContract.methods.approve(
 							// 	this.props.eventsAddress,
@@ -1457,11 +1516,16 @@ class EventPage extends Component {
 			networkId === GLOBAL_NETWORK_ID ||
 			networkId === GLOBAL_NETWORK_ID_2
 		) {
-			let balance = await this.props.phnxContract.methods
-				.balanceOf(this.props.accounts[0])
-				.call();
+			// let balance = await this.props.phnxContract.methods
+			// 	.balanceOf(this.props.accounts[0])
+			// 	.call();
+			let tokenContract = await initTokenContract(
+				this.state.selectedToken.tokenAddress
+			);
+			let balance = await tokenContract.methods.totalSupply().call();
+
 			balance = Web3.utils.fromWei(balance.toString());
-			if (balance < Number(this.state.phnx_price.split("PHNX")[0])) {
+			if (balance < Number(this.state.token_price.split("PHNX")[0])) {
 				return true;
 			} else {
 				this.setState({
@@ -1489,9 +1553,13 @@ class EventPage extends Component {
 				let event_data = this.state.blockChainEvent;
 				let date2 = new Date(parseInt(event_data.time, 10) * 1000);
 
-				let balance = await this.props.phnxContract.methods
-					.totalSupply()
-					.call();
+				// let balance = await this.props.phnxContract.methods
+				// 	.totalSupply()
+				// 	.call();
+				let tokenContract = await initTokenContract(
+					this.state.selectedToken.tokenAddress
+				);
+				let balance = await tokenContract.methods.totalSupply().call();
 				let date = new Date(
 					parseInt(this.state.blockChainEvent.time, 10) * 1000
 				);
@@ -1556,7 +1624,7 @@ class EventPage extends Component {
 								this.state.eventEndDate,
 								this.state.image,
 								this.state.blockChainEvent.name,
-								this.state.phnx_price,
+								this.state.token_price,
 								this.state.dollar_price,
 								time,
 								date2
@@ -1749,6 +1817,7 @@ class EventPage extends Component {
 	};
 	handleSelectedTokenState = async (result) => {
 		console.log("ether_price ??", result);
+		console.log("hello");
 		this.setState({ selectedToken: result }, () => {
 			this.priceCalculation(this.state.selectedCategoryIndex);
 		});
@@ -1957,7 +2026,7 @@ class EventPage extends Component {
 									eventTime={this.state.eventTime}
 									eventDate={this.state.eventDate}
 									eventEndDate={this.state.eventEndDate}
-									phnx_price={this.state.phnx_price}
+									phnx_price={this.state.token_price}
 									dollar_price={this.state.dollar_price}
 								/>
 								<ApprovalModal
@@ -1980,7 +2049,7 @@ class EventPage extends Component {
 									eventStartTime={this.state.eventStartTime}
 									eventDate={this.state.eventDate}
 									eventEndDate={this.state.eventEndDate}
-									phnx_price={this.state.phnx_price}
+									phnx_price={this.state.token_price}
 									eventEndTime={this.state.eventEndTime}
 									dollar_price={this.state.dollar_price}
 									allowance={this.allowance}
@@ -2210,13 +2279,13 @@ class EventPage extends Component {
 														classes.PhnxPrice
 													}
 													title={
-														this.state.phnx_price
+														this.state.token_price
 													}
 												>
 													{this.state.isPHNX &&
 														pricingFormatter(
 															this.state
-																.phnx_price,
+																.token_price,
 															"PHNX"
 														)}
 													{!this.state.isPHNX && (
@@ -2232,7 +2301,7 @@ class EventPage extends Component {
 															token="phnx"
 															value={pricingFormatter(
 																this.state
-																	.phnx_price,
+																	.token_price,
 																"PHNX"
 															)}
 															isEventPage={true}
