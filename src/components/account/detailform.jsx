@@ -240,7 +240,7 @@ const DetailForm = (props) => {
 			setAlternateCurrency({
 				tokenName: "usdt",
 				chainId: props.networkId,
-				image: RinkbeyNetworkArray[0].networks[0].image,
+				// image: RinkbeyNetworkArray[0].networks[0].image,
 				// tokenAddress: RinkbeyNetworkArray[0].networks[0].image
 			});
 		}
@@ -249,17 +249,6 @@ const DetailForm = (props) => {
 	const updateUserInfo = async (e) => {
 		e.preventDefault();
 		// console.log('alternateCurrency =>> ', alternateCurrency)
-		console.log("UpdateUserInfo form atv detailform", {
-			address: props.account,
-			networkId: props.networkId,
-			name: name, //we need to change this when the design is finalised
-			organizerDetails: organizer,
-			avatarCustom: avatarCustom, //we need to change this when the design is finalised
-			avatarNumber: avatarNumber, //we need to change this when the design is finalised
-			avatar: avatar,
-			alternateCurrency: alternateCurrency,
-		});
-		// return;
 		setLoading(true);
 		const detail = await updateUserDetails({
 			address: props.account,
