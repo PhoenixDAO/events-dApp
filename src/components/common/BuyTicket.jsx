@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
 			fontFamily: "Aeonik",
 			textTransform: "capitalize",
 		},
+		"& .MuiDialog-paper":{
+			boxShadow: "0px 10px 20px 10px rgba(0, 0, 0, 0.1)",
+			borderRadius:"20px",
+		},
 	},
 	bannerImage: {
 		paddingInline: "50px",
@@ -242,7 +246,7 @@ const styles = (theme) => ({
 		position: "absolute",
 		right: theme.spacing(1),
 		top: theme.spacing(1),
-		color: theme.palette.grey[500],
+		color: "#4E4E55",
 		"&:focus": {
 			outline: "none",
 		},
