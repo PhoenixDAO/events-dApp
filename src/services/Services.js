@@ -1,7 +1,8 @@
 import axios from "axios";
 import Web3 from "web3";
 import { TokensListRinkbey } from "../config/const";
-import { toast } from "react-toastify";
+import { Open_events_Address } from "../config/OpenEvents";
+// import { toast } from "react-toastify";
 // import Notify from "../components/common/Notify";
 // import { RinkbeyNetworkArray } from "../config/const";
 import {
@@ -58,25 +59,27 @@ const initTokenContract = async (tokenAddress) => {
 			return v.abi;
 		}
 	});
-	// console.log("arguments at initTokenContract", tokenAbi[idx], tokenAddress);
+	console.log("arguments at initTokenContract", tokenAbi[idx], tokenAddress);
 	try {
 		const TOKEN = await new web3.eth.Contract(tokenAbi[idx], tokenAddress);
-		// console.log("init contract TOKEN =>", TOKEN);
+		console.log("init contract TOKEN =>", TOKEN);
 		return TOKEN;
 	} catch (err) {
 		console.log("Err in contract init =>", err);
 	}
 };
-
+// Open_events_Address
 export const CheckTokenAllowance = async (account, tokenAddress) => {
 	if (account && tokenAddress) {
+		console.log("this.props.eventsAddress +> 2", Open_events_Address);
 		console.log("account, tokenAddress ==>>> ", account, tokenAddress);
 		try {
 			const Contract = await initTokenContract(
 				tokenAddress.toLowerCase()
 			);
 			const allowance = await Contract.methods
-				.allowance(account.toLowerCase(), tokenAddress.toLowerCase())
+				// .allowance(account.toLowerCase(), tokenAddress.toLowerCase())
+				.allowance(account.toLowerCase(), Open_events_Address)
 				.call();
 			console.log("allowance CheckTokenAllowance =>> ", allowance);
 			return allowance;
@@ -90,7 +93,8 @@ export const GiveAllowance = async (account, tokenAddress) => {
 	if (account && tokenAddress) {
 		const Contract = await initTokenContract(tokenAddress);
 		let balance = await Contract.methods.totalSupply().call();
-		let approval = Contract.methods.approve(account, balance);
+		// let approval = Contract.methods.approve(account, balance);
+		let approval = Contract.methods.approve(Open_events_Address, balance);
 		return approval;
 	}
 	// let balance = await this.props.phnxContract.methods
