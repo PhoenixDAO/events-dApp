@@ -634,42 +634,42 @@ class Sidebar extends Component {
 								className="grid toggleHidden"
 								style={{ maxWidth: "250px" }}
 							>
-								<div className="imageHolder">
 									<a
 										target="_blank"
 										title="Telegram"
 										href="https://t.me/PHNXDAO"
 									>
+								<div className="imageHolder">
 										<img
 											src="/images/icons/telegram.svg"
 											alt="telegram"
 										/>
-									</a>
 								</div>
-								<div className="imageHolder">
+									</a>
 									<a
 										target="_blank"
 										title="Twitter"
 										href="https://twitter.com/phnxdao"
 									>
+								<div className="imageHolder">
 										<img
 											src="/images/icons/twitter.svg"
 											alt="twitter"
 										/>
-									</a>
 								</div>
-								<div className="imageHolder">
+									</a>
 									<a
 										target="_blank"
 										title="GitHub"
 										href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
 									>
+								<div className="imageHolder">
 										<img
 											src="/images/icons/github.svg"
 											alt="github"
 										/>
-									</a>
 								</div>
+									</a>
 							</ul>
 							<span
 								className="toggleHidden suggestion"
@@ -1044,33 +1044,34 @@ class Sidebar extends Component {
 								className="grid toggleHidden"
 								style={{ maxWidth: "250px" }}
 							>
-								<div className="imageHolder">
 									<a
-										target="blank"
-										title="Telegram"
-										href="https://t.me/PHNXDAO"
+									target="blank"
+									title="Telegram"
+									href="https://t.me/PHNXDAO"
 									>
-										<img src="/images/icons/telegram.svg" />
-									</a>
-								</div>
 								<div className="imageHolder">
+									
+										<img src="/images/icons/telegram.svg" />
+								</div>
+									</a>
 									<a
 										target="blank"
 										title="Twitter"
 										href="https://twitter.com/phnxdao"
 									>
-										<img src="/images/icons/twitter.svg" />
-									</a>
-								</div>
 								<div className="imageHolder">
+										<img src="/images/icons/twitter.svg" />
+								</div>
+									</a>
 									<a
 										target="blank"
 										title="GitHub"
 										href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
 									>
+								<div className="imageHolder">
 										<img src="/images/icons/github.svg" />
-									</a>
 								</div>
+									</a>
 							</ul>
 							{/* <div className="toggleHidden suggestion"> */}
 							{(this.state.networkIdNumber === 137)&&<span className="toggleHidden suggestion PolygonLink"  style={{	whiteSpace:"pre-wrap", marginTop:"20px", marginBottom:"20px"}}>

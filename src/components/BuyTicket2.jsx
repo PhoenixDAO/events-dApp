@@ -9,10 +9,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { ShoppingCartOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { pricingFormatter } from "../utils/pricingSuffix";
+import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import roundlogo from "./Images/roundlogo.svg";
-import { CircularProgress, Grid, Typography } from "@material-ui/core";
+import { CircularProgress, Grid, IconButton, Typography } from "@material-ui/core";
 
 var moment = require("moment");
 const useStyles = makeStyles((theme) => ({
@@ -205,7 +206,15 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight:"500",
 		fontSize:"15px",
 		color:"#73727D"
-	}
+	},closeButton: {
+		position: "absolute",
+		right: theme.spacing(1),
+		top: theme.spacing(1),
+		color: "#4E4E55",
+		"&:focus": {
+			outline: "none",
+		},
+	},
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -243,6 +252,13 @@ const ApprovalModal = (props) => {
 			aria-describedby="alert-dialog-slide-description"
 			className={classes.buyTicketModal}
 		>
+			<IconButton
+					aria-label="close"
+					className={classes.closeButton}
+					onClick={props.handleClose}
+				>
+					<CloseIcon />
+				</IconButton>
 			<div >
 			<DialogTitle
 				id="customized-dialog-title"
