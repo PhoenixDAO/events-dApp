@@ -10,7 +10,8 @@
 // export const Open_events_Address = "0xa8b9A1dA93B4a96d9D0a464f6897A9A7D20c9874";
 // export const Open_events_Address = "0xC9eE8Eab00c8C4662A71C1E336790C882C396bF9";
 // export const Open_events_Address = "0x332B99cf442a28Bdc1Db74c05e7BF9D5c4a582bE";
-export const Open_events_Address = "0xD319aB222eCaB46a4362dE5D0af5bb8fEfEA5d35";
+// export const Open_events_Address = "0xD319aB222eCaB46a4362dE5D0af5bb8fEfEA5d35";
+export const Open_events_Address = "0x17F27530C8C574fb677D4e77aa797bc9c5922397";
 
 //Ethereum mainnet
 // export const Open_events_Address = "0xf48E0D934B505C80b6dD3ef4d178D7c8fB83f566";
@@ -96,7 +97,7 @@ export const Open_events_ABI = [
 					{ internalType: "bool", name: "oneTimeBuy", type: "bool" },
 					{ internalType: "bool", name: "token", type: "bool" },
 					{ internalType: "bool", name: "onsite", type: "bool" },
-					{ internalType: "bool", name: "isPHNX", type: "bool" },
+					{ internalType: "bool", name: "isInCrypto", type: "bool" },
 					{ internalType: "address", name: "owner", type: "address" },
 					{ internalType: "uint256", name: "time", type: "uint256" },
 					{
@@ -270,6 +271,18 @@ export const Open_events_ABI = [
 				name: "owner",
 				type: "address",
 			},
+			{
+				indexed: false,
+				internalType: "address",
+				name: "token",
+				type: "address",
+			},
+			{
+				indexed: false,
+				internalType: "bool",
+				name: "isInCrypto",
+				type: "bool",
+			},
 		],
 		name: "SoldTicketDetails2",
 		type: "event",
@@ -300,7 +313,26 @@ export const Open_events_ABI = [
 		type: "event",
 	},
 	{
-		inputs: [{ internalType: "address", name: "_token", type: "address" }],
+		inputs: [
+			{
+				components: [
+					{
+						internalType: "address",
+						name: "tokenAddress",
+						type: "address",
+					},
+					{ internalType: "uint8", name: "chainId", type: "uint8" },
+					{
+						internalType: "string",
+						name: "identifier",
+						type: "string",
+					},
+				],
+				internalType: "struct IDaoEventsV2.WhiteListedToken",
+				name: "_tokenDetails",
+				type: "tuple",
+			},
+		],
 		name: "addtoWhiteList",
 		outputs: [],
 		stateMutability: "nonpayable",
@@ -368,7 +400,7 @@ export const Open_events_ABI = [
 					{ internalType: "bool", name: "oneTimeBuy", type: "bool" },
 					{ internalType: "bool", name: "token", type: "bool" },
 					{ internalType: "bool", name: "onsite", type: "bool" },
-					{ internalType: "bool", name: "isPHNX", type: "bool" },
+					{ internalType: "bool", name: "isInCrypto", type: "bool" },
 					{ internalType: "address", name: "owner", type: "address" },
 					{ internalType: "uint256", name: "time", type: "uint256" },
 					{
@@ -451,7 +483,7 @@ export const Open_events_ABI = [
 			{ internalType: "bool", name: "oneTimeBuy", type: "bool" },
 			{ internalType: "bool", name: "token", type: "bool" },
 			{ internalType: "bool", name: "onsite", type: "bool" },
-			{ internalType: "bool", name: "isPHNX", type: "bool" },
+			{ internalType: "bool", name: "isInCrypto", type: "bool" },
 			{ internalType: "address", name: "owner", type: "address" },
 			{ internalType: "uint256", name: "time", type: "uint256" },
 			{ internalType: "uint256", name: "totalQuantity", type: "uint256" },
@@ -577,6 +609,85 @@ export const Open_events_ABI = [
 		type: "function",
 	},
 	{
+		inputs: [{ internalType: "address", name: "_token", type: "address" }],
+		name: "getTokenByAddress",
+		outputs: [
+			{
+				components: [
+					{
+						internalType: "address",
+						name: "tokenAddress",
+						type: "address",
+					},
+					{ internalType: "uint8", name: "chainId", type: "uint8" },
+					{
+						internalType: "string",
+						name: "identifier",
+						type: "string",
+					},
+				],
+				internalType: "struct IDaoEventsV2.WhiteListedToken",
+				name: "tokenDetails",
+				type: "tuple",
+			},
+			{ internalType: "uint8", name: "index", type: "uint8" },
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [{ internalType: "uint8", name: "_chainId", type: "uint8" }],
+		name: "getTokenByChainId",
+		outputs: [
+			{
+				components: [
+					{
+						internalType: "address",
+						name: "tokenAddress",
+						type: "address",
+					},
+					{ internalType: "uint8", name: "chainId", type: "uint8" },
+					{
+						internalType: "string",
+						name: "identifier",
+						type: "string",
+					},
+				],
+				internalType: "struct IDaoEventsV2.WhiteListedToken",
+				name: "tokenDetails",
+				type: "tuple",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "getWhiteListedTokensList",
+		outputs: [
+			{
+				components: [
+					{
+						internalType: "address",
+						name: "tokenAddress",
+						type: "address",
+					},
+					{ internalType: "uint8", name: "chainId", type: "uint8" },
+					{
+						internalType: "string",
+						name: "identifier",
+						type: "string",
+					},
+				],
+				internalType: "struct IDaoEventsV2.WhiteListedToken[]",
+				name: "",
+				type: "tuple[]",
+			},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
 		inputs: [
 			{ internalType: "address", name: "owner", type: "address" },
 			{ internalType: "address", name: "operator", type: "address" },
@@ -587,9 +698,18 @@ export const Open_events_ABI = [
 		type: "function",
 	},
 	{
-		inputs: [{ internalType: "address", name: "_token", type: "address" }],
-		name: "isWhiteListedToken",
+		inputs: [
+			{ internalType: "address", name: "_tokenAddress", type: "address" },
+		],
+		name: "isWhiteListed",
 		outputs: [{ internalType: "bool", name: "", type: "bool" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "multisigWallet",
+		outputs: [{ internalType: "address", name: "", type: "address" }],
 		stateMutability: "view",
 		type: "function",
 	},
@@ -715,6 +835,13 @@ export const Open_events_ABI = [
 		type: "function",
 	},
 	{
+		inputs: [],
+		name: "tokensLength",
+		outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
 		inputs: [
 			{ internalType: "address", name: "from", type: "address" },
 			{ internalType: "address", name: "to", type: "address" },
@@ -735,14 +862,17 @@ export const Open_events_ABI = [
 		type: "function",
 	},
 	{
-		inputs: [{ internalType: "address", name: "", type: "address" }],
-		name: "whiteListedToken",
-		outputs: [{ internalType: "bool", name: "", type: "bool" }],
+		inputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+		name: "whiteListedTokens",
+		outputs: [
+			{ internalType: "address", name: "tokenAddress", type: "address" },
+			{ internalType: "uint8", name: "chainId", type: "uint8" },
+			{ internalType: "string", name: "identifier", type: "string" },
+		],
 		stateMutability: "view",
 		type: "function",
 	},
 ];
-
 /*------------------------------------------------------------------------------------------------- */
 
 //Matic mainnet
