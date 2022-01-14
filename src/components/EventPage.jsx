@@ -1519,13 +1519,27 @@ class EventPage extends Component {
 			// let balance = await this.props.phnxContract.methods
 			// 	.balanceOf(this.props.accounts[0])
 			// 	.call();
-			let tokenContract = await initTokenContract(
-				this.state.selectedToken.tokenAddress
-			);
-			let balance = await tokenContract.methods.totalSupply().call();
-
+			let balance = 0;
+			if (this.state.selectedToken.tokenName == "ether") {
+				const web3 = new Web3(window.ethereum);
+				balance = await web3.eth.getBalance(this.props.accounts[0]);
+			} else {
+				let tokenContract = await initTokenContract(
+					this.state.selectedToken.tokenAddress
+				);
+				balance = await tokenContract.methods
+					.balanceOf(this.props.accounts[0])
+					.call();
+			}
 			balance = Web3.utils.fromWei(balance.toString());
-			if (balance < Number(this.state.token_price.split("PHNX")[0])) {
+			console.log(
+				`checkUserBalance of ${this.state.selectedToken.tokenName}`,
+				balance
+			);
+			if (
+				Number(balance) <
+				Number(this.state.token_price.split("PHNX")[0])
+			) {
 				return true;
 			} else {
 				this.setState({
@@ -1556,10 +1570,19 @@ class EventPage extends Component {
 				// let balance = await this.props.phnxContract.methods
 				// 	.totalSupply()
 				// 	.call();
-				let tokenContract = await initTokenContract(
-					this.state.selectedToken.tokenAddress
-				);
-				let balance = await tokenContract.methods.totalSupply().call();
+				let balance = 0;
+				if (this.state.selectedToken.tokenName == "ether") {
+					const web3 = new Web3(window.ethereum);
+					balance = await web3.eth.getBalance(this.props.accounts[0]);
+				} else {
+					let tokenContract = await initTokenContract(
+						this.state.selectedToken.tokenAddress
+					);
+					balance = await tokenContract.methods
+						.balanceOf(this.props.accounts[0])
+						.call();
+				}
+				console.log("balance:", balance);
 				let date = new Date(
 					parseInt(this.state.blockChainEvent.time, 10) * 1000
 				);
@@ -1569,6 +1592,11 @@ class EventPage extends Component {
 					minute: "2-digit",
 				});
 				const geoFindUser = await this.geoFindMe();
+				// console.log("createEventDataa =>", [
+				// 	this.props.match.params.id,
+				// 	this.state.selectedCategoryIndex,
+				// 	geoFindUser,
+				// ]);
 				this.setState(
 					{
 						fee: this.state.blockChainEvent[2],
@@ -1612,6 +1640,7 @@ class EventPage extends Component {
 							});
 							this.handleClickOpen();
 						} else {
+							// if (this.state.selectedToken.tokenName != "ether") {
 							await this.props.inquire(
 								this.props.id,
 								this.state.fee,
@@ -1629,6 +1658,7 @@ class EventPage extends Component {
 								time,
 								date2
 							);
+							// }
 							this.setState({
 								loadingPurchase: false,
 							});
