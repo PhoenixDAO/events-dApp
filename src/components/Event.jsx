@@ -120,7 +120,7 @@ class Event extends Component {
 			let resEthPrice = await GetEthPrice();
 			if (resEthPrice) {
 				// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
-				this.setState({
+await 				this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						eth: resEthPrice.data.ethereum.usd,
@@ -130,7 +130,7 @@ class Event extends Component {
 			let resPhnxPrice = await GetPhnxPrice();
 			if (resPhnxPrice) {
 				// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						phnx: resPhnxPrice.data.phoenixdao.usd,
@@ -140,7 +140,7 @@ class Event extends Component {
 			let resMaticPrice = await GetMaticPrice();
 			if (resMaticPrice) {
 				// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						matic: resMaticPrice.data[`matic-network`].usd,
@@ -150,7 +150,7 @@ class Event extends Component {
 			let resUsdtPrice = await GetUsdtPrice();
 			if (resUsdtPrice) {
 				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						usdt: resUsdtPrice.data.tether.usd,
@@ -160,7 +160,7 @@ class Event extends Component {
 			let resWethPrice = await GetWethPrice();
 			if (resWethPrice) {
 				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						weth: resWethPrice.data.weth.usd,
@@ -170,7 +170,7 @@ class Event extends Component {
 			let resUsdcPrice = await GetUsdcPrice();
 			if (resUsdcPrice) {
 				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						usdc: resUsdcPrice.data[`usd-coin`].usd,
@@ -734,10 +734,10 @@ class Event extends Component {
 
 	async componentDidMount() {
 		// this._isMounted = true;
-		this.filterHideEvent();
-		this.updateIPFS();
-		this.getUserFavoritesEvent();
-		this.GetPrices();
+		await this.GetPrices();
+		await this.filterHideEvent();
+		await this.updateIPFS();
+		await this.getUserFavoritesEvent();
 	}
 
 	componentDidUpdate() {
