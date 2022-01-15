@@ -63,6 +63,11 @@ import {
 	GetUsdtPrice,
 	GetWethPrice,
 	GetUsdcPrice,
+	CheckTokenAllowance,
+	GiveAllowance,
+	initTokenContract,
+	GetWhiteListedToken,
+	GetTokenPrices,
 } from "../services/Services";
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
@@ -81,11 +86,6 @@ import Snackbar from "@material-ui/core/Snackbar";
 import EmptyState from "./EmptyState";
 import { urlFormatter } from "../utils/urlFormatter";
 import PriceSelectBox from "./common/PriceSelectBox";
-import {
-	CheckTokenAllowance,
-	GiveAllowance,
-	initTokenContract,
-} from "../services/Services";
 import { Open_events_Address_2 } from "../config/OpenEvents";
 
 let numeral = require("numeral");
@@ -3079,6 +3079,8 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
+		await GetWhiteListedToken();
+		await GetTokenPrices();
 		if (parseInt(this.props.match.params.id)) {
 			this.getUserFavoritesEvent();
 			// console.log("component start 1, Event page");
