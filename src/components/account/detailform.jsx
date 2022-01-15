@@ -135,7 +135,7 @@ const DetailForm = (props) => {
 			const publicAddress = await web3.eth.getAccounts();
 			const networkId = await getNetworkId();
 			const message = await getMessage();
-			const sign = await handleSignMessage(
+			const sign = await props.handleSignMessage(
 				publicAddress[0],
 				message.result.result
 			);

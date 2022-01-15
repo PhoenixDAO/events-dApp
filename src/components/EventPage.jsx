@@ -21,6 +21,7 @@ import {
 	Favorite,
 	FavoriteBorder,
 } from "@material-ui/icons";
+import PhnxLogo from "./Images/phnxPriceLogo.svg"
 import ipfs from "../utils/ipfs";
 import Web3 from "web3";
 import axios from "axios";
@@ -1088,6 +1089,8 @@ class EventPage extends Component {
 		let event_data = this.state.blockChainEvent;
 		if(event_data.prices){
 		if (event_data.isPHNX) {
+			this.setState({isPHNX: event_data.isPHNX})
+			console.log("event details:",event_data)
 			let dollar_price = event_data.prices.map((price) => {
 				return (
 					Web3.utils.fromWei(price.toString()) *
@@ -2319,12 +2322,39 @@ class EventPage extends Component {
 														this.state.token_price
 													}
 												>
-													{this.state.isPHNX &&
-														pricingFormatter(
+													{/* {this.state.isPHNX &&
+												
+												<><img
+													src={PhnxLogo}
+													style={{
+														height: props.isEventPage ? "25px" : "20px",
+														marginRight: "4px",
+													}}
+												/>
+														{pricingFormatter(
 															this.state
 																.token_price,
 															"PHNX"
-														)}
+														)}</>} */}
+													{(this.state.isPHNX)&&<div
+														className={
+															classes.PhnxPriceEventPage
+														}
+													>
+														<img
+															src={PhnxLogo}
+															style={{
+																height: "25px",
+																marginRight:
+																	"4px",
+															}}
+														/>
+														{`${pricingFormatter(
+															this.state
+																.token_price,
+															"PHNX"
+														)}`}
+													</div>}
 													{!this.state.isPHNX && (
 														<PriceSelectBox
 															selectedToken={
