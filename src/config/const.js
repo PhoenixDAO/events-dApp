@@ -119,12 +119,6 @@ export const RinkbeyNetworkArray = [
 				image: WethPriceLogo,
 				tokenAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
 			},
-			// {
-			// 	tokenName: "tusdt",
-			// 	chainId: 137,
-			// 	image: TetherPriceLogo,
-			// 	tokenAddress: "0xd92e713d051c37ebb2561803a3b5fbabc4962431",
-			// },
 		],
 	},
 	{
@@ -141,7 +135,7 @@ export const RinkbeyNetworkArray = [
 				tokenName: "ether",
 				chainId: 1,
 				image: EthPriceLogo,
-				tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+				tokenAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
 			},
 			{
 				tokenName: "usdt",
@@ -161,15 +155,15 @@ export const RinkbeyNetworkArray = [
 				image: WethPriceLogo,
 				tokenAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
 			},
-			// {
-			// 	tokenName: "tusdt",
-			// 	chainId: 137,
-			// 	image: TetherPriceLogo,
-			// 	tokenAddress: "0xd92e713d051c37ebb2561803a3b5fbabc4962431",
-			// },
 		],
 	},
 ];
+// {
+// 	tokenName: "tusdt",
+// 	chainId: 137,
+// 	image: TetherPriceLogo,
+// 	tokenAddress: "0xd92e713d051c37ebb2561803a3b5fbabc4962431",
+// },
 
 export const MainNetworkArray = [
 	{

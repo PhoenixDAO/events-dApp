@@ -667,7 +667,7 @@ const MyStepper = ({
 												}
 											>
 												Event page Cover Image should not greater than
-												than 5MB (Recommended 21:9 ratio picture)
+												5MB (Recommended 21:9 ratio picture)
 											</p>): (
 												<button
 													className={
