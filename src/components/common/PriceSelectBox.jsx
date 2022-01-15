@@ -141,7 +141,7 @@ function PriceSelectBox(props) {
 					aria-haspopup="true"
 					onTouchStart={(event) => event.stopPropagation()}
 					onMouseDown={(event) => event.stopPropagation()}
-					value={"phnx"}
+					value={props.token}
 					onClick={(event) => {
 						// Prevent CardActionArea Click
 						event.preventDefault();

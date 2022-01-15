@@ -458,39 +458,43 @@ class EventPage extends Component {
 		try {
 			let resEthPrice = await GetEthPrice();
 			if (resEthPrice) {
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						eth: resEthPrice.data.ethereum.usd,
 					},
 				});
+				console.log("price in tokens: ",this.state.tokenPrices)
 			}
 			let resPhnxPrice = await GetPhnxPrice();
 			if (resPhnxPrice) {
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						phnx: resPhnxPrice.data.phoenixdao.usd,
 					},
 				});
+				console.log("price in tokens: ",  resPhnxPrice.data.phoenixdao.usd)
 			}
 			let resMaticPrice = await GetMaticPrice();
 			if (resMaticPrice) {
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						matic: resMaticPrice.data[`matic-network`].usd,
 					},
 				});
+				console.log("price in tokens: ", resMaticPrice.data[`matic-network`].usd)
 			}
 			let resUsdtPrice = await GetUsdtPrice();
 			if (resUsdtPrice) {
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						usdt: resUsdtPrice.data.tether.usd,
 					},
 				});
+				console.log("price in tokens: ",  resUsdtPrice.data.tether.usd)
 			}
 			let resWethPrice = await GetWethPrice();
 			if (resWethPrice) {
@@ -498,23 +502,26 @@ class EventPage extends Component {
 					"resUsdtPrice.data.tether.usd",
 					resUsdtPrice.data.tether.usd
 				);
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						weth: resWethPrice.data.weth.usd,
 					},
 				});
+				console.log("price in tokens: ", resWethPrice.data.weth.usd)
 			}
 			let resUsdcPrice = await GetUsdcPrice();
 			if (resUsdcPrice) {
 				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						usdc: resUsdcPrice.data[`usd-coin`].usd,
 					},
 				});
+				console.log("price in tokens: ", resUsdcPrice.data[`usd-coin`].usd)
 			}
+			await this.priceCalculation(0);
 		} catch (e) {
 			console.error("Err at GetPrices =>>", e);
 		}
@@ -1077,8 +1084,9 @@ class EventPage extends Component {
 			);
 		}
 	};
-	priceCalculation = (categoryIndex) => {
+	priceCalculation = async (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
+		if(event_data.prices){
 		if (event_data.isPHNX) {
 			let dollar_price = event_data.prices.map((price) => {
 				return (
@@ -1101,8 +1109,7 @@ class EventPage extends Component {
 		} else {
 			let token_price = 0;
 			let dollar_price = 0;
-			console.log("here");
-			if (this.state.selectedToken.tokenName == "usdt") {
+			if (this.state.selectedToken.tokenName == "usdt" ) {
 				token_price = event_data.prices.map((price) => {
 					// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
 					return (
@@ -1193,7 +1200,7 @@ class EventPage extends Component {
 				dollar_price: priceInDollar,
 				token_price: priceInPhnx,
 			});
-		}
+		}}
 	};
 	getImage = () => {
 		let image = "/images/loading_image_ipfs.png";
@@ -3087,6 +3094,7 @@ class EventPage extends Component {
 			let buyers = await generateBuyerArr(this.props.match.params.id);
 			// console.log("component start 2, Event page", buyers);
 			this.setState({ soldTicket: buyers });
+			await this.GetPrices();
 			await this.getPhoenixDAOMarketValue();
 			await this.checkBlockchainEvent();
 			await this.loadEventFromBlockchain();
@@ -3107,7 +3115,6 @@ class EventPage extends Component {
 			this._isMounted = true;
 			// this.updateIPFS();
 			// this.loadblockhain();
-			this.GetPrices();
 		} else {
 			this.setState({
 				blockChainEvent: {},
