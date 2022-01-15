@@ -1429,6 +1429,7 @@ class App extends Component {
 								eventsContract={this.state.eventsContract}
 								userDetails={this.state.userDetails}
 								setUserDetails={this.setUserDetails}
+								handleSignMessage={this.handleSignMessage}
 								tokensListContract={
 									this.state.tokensListContract
 								}
