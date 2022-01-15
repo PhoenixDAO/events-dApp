@@ -19,6 +19,7 @@ const AccountDetail = (props) => {
 				userDetails={props.userDetails}
 				setUserDetails={props.setUserDetails}
 				history={props.history}
+				handleSignMessage={props.handleSignMessage}
 			/>
 		</div>
 	);
