@@ -344,6 +344,8 @@ const EventCard = (props, context) => {
 			}
 		}
 	}, [props.userDetails]);
+	
+	console.log('This.props.tokensListContract EventCard', props.tokensListContract)
 
 	// const [selectedToken, setSelectedToken] = useState({
 	// 	tokenName: RinkbeyNetworkArray[0].networks[0].tokenName,
@@ -1150,7 +1152,6 @@ const mapStateToProps = (state) => {
 	return {
 		// contracts: state.contracts,
 		accounts: state.accounts[0],
-
 		networkId: state.web3.networkId,
 	};
 };

@@ -438,6 +438,7 @@ class EventPage extends Component {
 				image: RinkbeyNetworkArray[0].networks[0].image,
 				tokenAddress: RinkbeyNetworkArray[0].networks[0].tokenAddress,
 			},
+			// selectedToken: this.props?.tokensListContract[2]
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -3079,8 +3080,12 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
-		await GetWhiteListedToken();
-		await GetTokenPrices();
+		// await GetWhiteListedToken();
+		// await GetTokenPrices();
+		if(this.props.tokensListContract && this.props.tokensListContract.length >0){
+			this.setState({selectedToken: this.props.tokensListContract[2]})
+			console.log('This.props.tokensListContract EventPage', this.props.tokensListContract[2])
+		}
 		if (parseInt(this.props.match.params.id)) {
 			this.getUserFavoritesEvent();
 			// console.log("component start 1, Event page");

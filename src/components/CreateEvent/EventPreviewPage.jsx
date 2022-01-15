@@ -789,6 +789,7 @@ class EventPreviewPage extends Component {
 		this.getOrganizerDetails();
 		this._topicRemovedDashes();
 		this.GetPrices();
+		console.log('This.props.tokensListContract EventPreviewPage',this.props.tokensListContract)
 	}
 }
 
