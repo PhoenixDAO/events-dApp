@@ -1,6 +1,6 @@
 import axios from "axios";
 import Web3 from "web3";
-import { TokensListRinkbey } from "../config/const";
+// import { TokensListRinkbey } from "../config/const";
 import { Open_events_Address, Open_events_ABI } from "../config/OpenEvents";
 // import { toast } from "react-toastify";
 // import Notify from "../components/common/Notify";
@@ -13,6 +13,7 @@ import {
 	WethtPriceApiCoingecko,
 	UsdcPriceApiCoingecko,
 } from "../config/const";
+import { ERC20_ABI } from "./tokenABIs/ERC20TokenAbi";
 
 export const GetPhnxPrice = () => {
 	return axios.get(PhnxPriceApiCoingecko);
@@ -40,21 +41,16 @@ export const GetTokenDetailApi = (tokenId) => {
 
 // {"weth":{"usd":3225.41},"unipilot":{"usd":7.13},"phoenixdao":{"usd":0.04331988}} Data format of GetTokenPrices
 // API => https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao%2Cunipilot%2Cweth&vs_currencies=usd
-export const GetTokenPrices = async (isPHNX) => {
+export const GetTokenPrices = async () => {
 	let tokensData = await GetWhiteListedToken();
 	let ApiString = `https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao`;
-	// if (!isPHNX) {
 	const developApiString = () => {
 		tokensData.map((v, i) => {
 			ApiString = ApiString + `%2C` + v[2];
 		});
 	};
 	developApiString();
-	// }
-	console.log(
-		"GetTokenPrices result!!!",
-		await axios.get(ApiString + `&vs_currencies=usd`)
-	);
+
 	return await axios.get(ApiString + `&vs_currencies=usd`);
 };
 
@@ -62,14 +58,14 @@ export const GetTokenPrices2 = async () => {
 	let tokensListContract = await GetWhiteListedToken();
 	let newTokensList = [];
 	tokensListContract.map(async (v, i) => {
-		let coingeckoImage = await GetTokenDetailApi(v[2]);
-		// console.log("coingeckoImage oooo", coingeckoImage);
-		coingeckoImage = coingeckoImage.data.image.small;
+		let coingeckoData = await GetTokenDetailApi(v[2]);
+		// console.log("coingeckoImage oooo", coingeckoData);
 		newTokensList.push({
 			tokenName: v[2],
 			chainId: v[1],
-			image: coingeckoImage,
+			image: coingeckoData.data.image.small,
 			tokenAddress: v[0],
+			usdPrice: coingeckoData.data.market_data.current_price.usd,
 		});
 	});
 	console.log("newTokensList ++>>> ", newTokensList);
@@ -108,21 +104,31 @@ export const GetWhiteListedToken = async () => {
 };
 
 export const initTokenContract = async (tokenAddress) => {
-	const web3 = new Web3(window.ethereum);
-	let idx = 0;
-	let tokenAbi = TokensListRinkbey.map((v, i) => {
-		if (tokenAddress.toLowerCase() == v.address.toLowerCase()) {
-			idx = i;
-			return v.abi;
+	if (tokenAddress) {
+		const web3 = new Web3(window.ethereum);
+		// let idx = 0;
+		// let tokenAbi = TokensListRinkbey.map((v, i) => {
+		// 	if (tokenAddress.toLowerCase() == v.address.toLowerCase()) {
+		// 		idx = i;
+		// 		return v.abi;
+		// 	}
+		// });
+		// console.log(
+		// 	"arguments at initTokenContract",
+		// 	tokenAbi[idx],
+		// 	tokenAddress
+		// );
+		try {
+			const TOKEN = await new web3.eth.Contract(
+				// tokenAbi[idx],
+				ERC20_ABI,
+				tokenAddress
+			);
+			console.log("init contract TOKEN =>", TOKEN);
+			return TOKEN;
+		} catch (err) {
+			console.log("Err in contract init =>", err);
 		}
-	});
-	console.log("arguments at initTokenContract", tokenAbi[idx], tokenAddress);
-	try {
-		const TOKEN = await new web3.eth.Contract(tokenAbi[idx], tokenAddress);
-		console.log("init contract TOKEN =>", TOKEN);
-		return TOKEN;
-	} catch (err) {
-		console.log("Err in contract init =>", err);
 	}
 };
 // Open_events_Address

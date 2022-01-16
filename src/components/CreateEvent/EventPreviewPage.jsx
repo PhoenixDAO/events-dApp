@@ -259,80 +259,80 @@ class EventPreviewPage extends Component {
 			organizerDetails: "",
 			topic: "",
 			ticketIndex: 0,
-			tokenPrices: { phnx: "", eth: "", matic: "", usdt: "" },
+			// tokenPrices: { phnx: "", eth: "", matic: "", usdt: "" },
 		};
 		console.log("hello props: ", props);
 		this.getOrganizerDetails = this.getOrganizerDetails.bind(this);
 		this._topicRemovedDashes = this._topicRemovedDashes.bind(this);
 	}
 
-	GetPrices = async () => {
-		console.log("resEthPrice.data.thereum.usd1");
-		try {
-			let resEthPrice = await GetEthPrice();
-			if (resEthPrice) {
-				// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						eth: resEthPrice.data.ethereum.usd,
-					},
-				});
-			}
-			let resPhnxPrice = await GetPhnxPrice();
-			if (resPhnxPrice) {
-				// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						phnx: resPhnxPrice.data.phoenixdao.usd,
-					},
-				});
-			}
-			let resMaticPrice = await GetMaticPrice();
-			if (resMaticPrice) {
-				// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						matic: resMaticPrice.data[`matic-network`].usd,
-					},
-				});
-			}
-			let resUsdtPrice = await GetUsdtPrice();
-			if (resUsdtPrice) {
-				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						usdt: resUsdtPrice.data.tether.usd,
-					},
-				});
-			}
-			let resWethPrice = await GetWethPrice();
-			if (resWethPrice) {
-				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						weth: resWethPrice.data.weth.usd,
-					},
-				});
-			}
-			let resUsdcPrice = await GetUsdcPrice();
-			if (resUsdcPrice) {
-				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						usdc: resUsdcPrice.data[`usd-coin`].usd,
-					},
-				});
-			}
-		} catch (e) {
-			console.error("Err at GetPrices =>>", e);
-		}
-	};
+	// GetPrices = async () => {
+	// 	console.log("resEthPrice.data.thereum.usd1");
+	// 	try {
+	// 		let resEthPrice = await GetEthPrice();
+	// 		if (resEthPrice) {
+	// 			// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					eth: resEthPrice.data.ethereum.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resPhnxPrice = await GetPhnxPrice();
+	// 		if (resPhnxPrice) {
+	// 			// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					phnx: resPhnxPrice.data.phoenixdao.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resMaticPrice = await GetMaticPrice();
+	// 		if (resMaticPrice) {
+	// 			// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					matic: resMaticPrice.data[`matic-network`].usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resUsdtPrice = await GetUsdtPrice();
+	// 		if (resUsdtPrice) {
+	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					usdt: resUsdtPrice.data.tether.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resWethPrice = await GetWethPrice();
+	// 		if (resWethPrice) {
+	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					weth: resWethPrice.data.weth.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resUsdcPrice = await GetUsdcPrice();
+	// 		if (resUsdcPrice) {
+	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					usdc: resUsdcPrice.data[`usd-coin`].usd,
+	// 				},
+	// 			});
+	// 		}
+	// 	} catch (e) {
+	// 		console.error("Err at GetPrices =>>", e);
+	// 	}
+	// };
 
 	_topicRemovedDashes() {
 		let rawTopic = this.props.eventTopic;
@@ -563,6 +563,10 @@ class EventPreviewPage extends Component {
 													.length > 0 ? (
 												<PriceSelectBox
 													token="phnx"
+													tokensListContract={
+														this.props
+															.tokensListContract
+													}
 													value={pricingFormatter(
 														this.props
 															.ticketCategories[
@@ -789,7 +793,10 @@ class EventPreviewPage extends Component {
 		this.getOrganizerDetails();
 		this._topicRemovedDashes();
 		this.GetPrices();
-		console.log('This.props.tokensListContract EventPreviewPage',this.props.tokensListContract)
+		console.log(
+			"This.props.tokensListContract EventPreviewPage",
+			this.props.tokensListContract
+		);
 	}
 }
 
