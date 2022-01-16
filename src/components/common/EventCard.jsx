@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
 import { pricingFormatter } from "../../utils/pricingSuffix";
 import PropTypes from "prop-types";
+import PhnxLogo from "../Images/phnxPriceLogo.svg";
 import { drizzleConnect } from "drizzle-react";
 import {
 	API_URL,
@@ -440,7 +441,16 @@ const EventCard = (props, context) => {
 	let token_price = 0;
 
 	// Dynamic function for price calculation starts
-	if (props.tokensListContract && selectedToken) {
+	if (event_data.isPHNX) {
+		dollar_price = event_data.prices.map((price) => {
+			return (
+				Web3.utils.fromWei(price.toString()) * PhoenixDAO_market.usd
+			).toFixed(3);
+		});
+		token_price = Web3.utils.fromWei(event_data.prices[0].toString());
+		//  console.log("phnx price coingecko: ",phnx_price, dollar_price)
+	} 
+	else if (props.tokensListContract && selectedToken) {
 		let selectedTokenName = selectedToken.tokenName;
 		const TOKENS_LIST = props.tokensListContract;
 		TOKENS_LIST.map((v, i) => {
@@ -471,7 +481,8 @@ const EventCard = (props, context) => {
 				}
 			}
 		});
-		token_price = Web3.utils.fromWei(event_data.prices[0].toString());
+		dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
+		// token_price = Web3.utils.fromWei(event_data.prices[0].toString());
 		// Dynamic function for price calculation Ends
 	}
 
@@ -731,9 +742,17 @@ const EventCard = (props, context) => {
 													}
 													style={{
 														fontFamily:
-															'"Aeonik", sans-serif',
+														'"Aeonik", sans-serif',
 													}}
 												>
+													<img
+																src={PhnxLogo}
+																style={{
+																	height: "25px",
+																	marginRight:
+																		"4px",
+																}}
+															/>
 													{pricingFormatter(
 														token_price,
 														"PHNX"

@@ -792,7 +792,7 @@ class EventPreviewPage extends Component {
 	async componentDidMount() {
 		this.getOrganizerDetails();
 		this._topicRemovedDashes();
-		this.GetPrices();
+		// this.GetPrices();
 		console.log(
 			"This.props.tokensListContract EventPreviewPage",
 			this.props.tokensListContract
