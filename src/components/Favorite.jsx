@@ -299,15 +299,14 @@ class Favorites extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-            const get = await axios.get(
-                `${API_URL}${REPORT_EVENT}/${networkId}`
-            );
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
-		} catch (error) {
-		}
+		} catch (error) {}
 	};
 
 	// filterFavoriteEvent = async () => {
@@ -383,10 +382,16 @@ class Favorites extends Component {
 
 	handleSignMessage = async (publicAddress, message) => {
 		try {
-			const sign = await web3.eth.sign(
-				web3.utils.sha3(message),
-				publicAddress
+			let msg = await web3.utils.utf8ToHex(message);
+			const sign = await web3.eth.personal.sign(
+				msg,
+				publicAddress.toLowerCase(),
+				console.log
 			);
+			// const sign = await web3.eth.sign(
+			// 	web3.utils.sha3(message),
+			// 	publicAddress
+			// );
 			return sign;
 		} catch (err) {
 			console.log(err);
