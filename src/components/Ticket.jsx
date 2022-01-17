@@ -652,6 +652,10 @@ class Ticket extends Component {
 	}
 
 	componentDidMount() {
+		console.log(
+			"tokensListContract at Ticket.jsx",
+			this.props.tokensListContract
+		);
 		this.updateIPFS();
 		this.updateEvent();
 		this.filterHideEvent();

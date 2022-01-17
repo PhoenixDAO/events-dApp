@@ -120,7 +120,7 @@ class Event extends Component {
 			let resEthPrice = await GetEthPrice();
 			if (resEthPrice) {
 				// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
-await 				this.setState({
+				await this.setState({
 					tokenPrices: {
 						...this.state.tokenPrices,
 						eth: resEthPrice.data.ethereum.usd,
@@ -713,6 +713,7 @@ await 				this.setState({
 							selectedTab={this.props.selectedTab}
 							tokenPrices={this.state.tokenPrices}
 							userDetails={this.state.userDetail}
+							tokensListContract={this.props.tokensListContract}
 						/>
 					)}
 					{/* new card */}
@@ -733,6 +734,10 @@ await 				this.setState({
 	}
 
 	async componentDidMount() {
+		console.log(
+			"tokenListContract at Event.jsx",
+			this.props.tokensListContract
+		);
 		// this._isMounted = true;
 		await this.GetPrices();
 		await this.filterHideEvent();

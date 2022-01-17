@@ -85,7 +85,6 @@ class MyTickets extends Component {
 				`,
 			},
 		}).then((graphEvents) => {
-
 			if (
 				graphEvents.data ||
 				graphEvents.data.data !== "undefined" ||
@@ -94,9 +93,8 @@ class MyTickets extends Component {
 				this.setState({
 					blockChainTickets: graphEvents.data.data.tickets,
 					blockChainTicketsCopy: graphEvents.data.data.tickets,
-					blockChainTicketsLoaded: false 
+					blockChainTicketsLoaded: false,
 				});
-			
 			}
 		});
 		// const blockChainTickets = await this.props.eventsContract.methods
@@ -116,15 +114,15 @@ class MyTickets extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-            const get = await axios.get(
-                `${API_URL}${REPORT_EVENT}/${networkId}`
-            );			this.setState({
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
+			this.setState({
 				hideEvent: get.data.result,
 			});
 			// console.log("hide event", this.state.hideEvent);
 			return;
-		} catch (error) {
-		}
+		} catch (error) {}
 	};
 
 	executeScroll = () => this.myRef.current.scrollIntoView();
@@ -363,6 +361,10 @@ class MyTickets extends Component {
 		);
 	}
 	componentDidMount() {
+		console.log(
+			`tokensListContract at MyTickets.jsx`,
+			this.props.tokensListContract
+		);
 		this.loadTicketsFromBlockchain();
 		this.filterHideEvent();
 

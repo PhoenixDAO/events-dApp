@@ -734,6 +734,7 @@ class FindEvents extends Component {
 					ipfs={events_list[i].ipfsHash}
 					eventData={events_list[i]}
 					loading={this.state.loading}
+					tokensListContract={this.props.tokensListContract}
 				/>
 			);
 		}
@@ -1113,58 +1114,6 @@ class FindEvents extends Component {
 									</MenuItem>
 								</Select>
 							</FormControl>
-
-							{/* <FormControl
-								variant="outlined"
-								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
-							>
-								<Typography
-									variant="p"
-									className={`${classes.sortBy}`}
-									>
-									Sort:
-								</Typography>
-
-								<Select
-									native
-									value={this.state.category}
-									onChange={this.categoryChange}
-									className={classes.selectEvent}
-								>
-									<option
-										aria-label="None"
-										value="All Events"
-										style={{ padding: "20px" }}
-									>
-										All Events
-									</option>
-									<option
-										value="Trending Events"
-										style={{ padding: "20px" }}
-									>
-										Trending Events
-									</option>
-									<option
-										value="populartopics"
-										style={{ padding: "20px" }}
-									>
-										Popular Topics
-									</option>
-								</Select>
-							</FormControl> 
-							
-							*/}
-
-							{/* <button
-								className="btn sort_button btn-dark col-lg-2 col-md-3 col-sm-3"
-								value={this.state.value}
-								onClick={this.toggleSortDate}
-								onChange={this.toggleSortDate.bind(this)}
-							>
-								{this.state.isOldestFirst
-									? "Sort: Oldest"
-									: "Sort: Newest"}
-							</button> */}
 						</div>
 
 						<br />
@@ -1239,14 +1188,10 @@ class FindEvents extends Component {
 	}
 
 	async componentDidMount() {
-		// console.log("props", this.props);
-		// let eventCount = await this.props.eventsContract.methods
-		// 	.getEventsCount()
-		// 	.call();
-		// console.log("event contract", this.props.eventsContract);
-		// if (eventCount) {
-		// 	this.setState({ eventCount });
-		// }
+		console.log(
+			`tokensListContract at FindEvents.jsx`,
+			this.props.tokensListContract
+		);
 		GetWhiteListedToken();
 		GetTokenPrices2();
 		this.props.executeScroll({ behavior: "smooth", block: "start" });

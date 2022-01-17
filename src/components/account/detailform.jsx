@@ -18,7 +18,7 @@ import {
 	GLOBAL_NETWORK_ID_2,
 	INFURA_URL,
 	INFURA_URL_2,
-	RinkbeyNetworkArray,
+	// RinkbeyNetworkArray,
 } from "../../config/const";
 
 // import { useHistory } from "react-router-dom";
@@ -38,7 +38,13 @@ const DetailForm = (props) => {
 	const [noDefaultCurrency, setNoDefaultCurrency] = useState(false);
 	// const history = useHistory();
 
+	// useEffect(()=>{},[])
+
 	useEffect(() => {
+		console.log(
+			"This.props.tokenListContract at detailform",
+			props.tokensListContract
+		);
 		// console.log("this.props.userDetails", props.userDetails);
 		provideImage();
 	}, [props.userDetails]);
@@ -236,15 +242,16 @@ const DetailForm = (props) => {
 	};
 
 	useEffect(() => {
-		if (props.networkId) {
-			setAlternateCurrency({
-				tokenName: "usdt",
-				chainId: props.networkId,
-				// image: RinkbeyNetworkArray[0].networks[0].image,
-				// tokenAddress: RinkbeyNetworkArray[0].networks[0].image
-			});
+		if (props.networkId && props.tokensListContract) {
+			// setAlternateCurrency({
+			// 	tokenName: "usdt",
+			// 	chainId: props.networkId,
+			// 	// image: RinkbeyNetworkArray[0].networks[0].image,
+			// 	// tokenAddress: RinkbeyNetworkArray[0].networks[0].image
+			// });
+			setAlternateCurrency(props.tokensListContract[2]);
 		}
-	}, [props.networkId]);
+	}, [props.networkId, props.tokensListContract]);
 
 	const updateUserInfo = async (e) => {
 		e.preventDefault();
@@ -315,10 +322,11 @@ const DetailForm = (props) => {
 				typeof defaultCurr == "string" &&
 				defaultCurr.length < 1
 			) {
-				setAlternateCurrency({
-					tokenName: "usdt",
-					chainId: props.networkId,
-				});
+				setAlternateCurrency(
+					this.props.tokensListContract
+						? this.props.tokensListContract[2]
+						: null
+				);
 				setNoDefaultCurrency(true);
 			} else if (typeof defaultCurr == "object") {
 				setAlternateCurrency(
@@ -416,7 +424,15 @@ const DetailForm = (props) => {
 									alternateCurrency.tokenName
 								}
 							>
-								{[
+								{props.tokensListContract &&
+									props.tokensListContract.map((v, i) => {
+										return (
+											<option value={v.tokenName}>
+												{v.tokenName}
+											</option>
+										);
+									})}
+								{/* {[
 									...RinkbeyNetworkArray[
 										props.networkId == 137 ? 0 : 1
 									].networks,
@@ -426,7 +442,7 @@ const DetailForm = (props) => {
 											{data.tokenName}
 										</option>
 									);
-								})}
+								})} */}
 							</select>
 						</div>
 					</div>

@@ -16,7 +16,7 @@ import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 // import PhnxPriceLogo from "../Images/phnxPriceLogo.svg";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import { RinkbeyNetworkArray } from "../../config/const";
+// import { RinkbeyNetworkArray } from "../../config/const";
 
 const useStyles = makeStyles((theme) => ({
 	menuPaper: {
@@ -57,28 +57,6 @@ function PriceSelectBox(props) {
 		token: props.token,
 		amount: props.value,
 	});
-	// const tokenList = [
-	// 	{
-	// 		image: PhnxPriceLogo,
-	// 		name: "Phoenix (PHNX)",
-	// 	},
-	// 	{
-	// 		image: EthPriceLogo,
-	// 		name: "Ethereum (ETH)",
-	// 	},
-	// 	{
-	// 		image: MaticPriceLogo,
-	// 		name: "Polygon (MATIC)",
-	// 	},
-	// 	{
-	// 		image: TetherPriceLogo,
-	// 		name: "Tether (USDT)",
-	// 	},
-	// 	{
-	// 		image: SolanaPriceLogo,
-	// 		name: "Solana (SOL)",
-	// 	},
-	// ];
 	const [open, setOpen] = React.useState(false);
 	const anchorRef = React.useRef(null);
 
@@ -118,10 +96,17 @@ function PriceSelectBox(props) {
 	const handleChangeInPrice = (event) => {
 		event.preventDefault();
 		let { myValue } = event.currentTarget.dataset;
-		if (myValue) {
-			[
-				...RinkbeyNetworkArray[props.networkId == 137 ? 0 : 1].networks,
-			].map((v, i) => {
+		// if (myValue) {
+		// 	[
+		// 		...RinkbeyNetworkArray[props.networkId == 137 ? 0 : 1].networks,
+		// 	].map((v, i) => {
+		// 		if (v.tokenName == myValue) {
+		// 			props.setSelectedToken(v);
+		// 		}
+		// 	});
+		// }
+		if (myValue && props.tokensListContract) {
+			props.tokensListContract.map((v, i) => {
 				if (v.tokenName == myValue) {
 					props.setSelectedToken(v);
 				}
@@ -189,53 +174,69 @@ function PriceSelectBox(props) {
 										id="menu-list-grow"
 										onKeyDown={handleListKeyDown}
 									>
-										{[
+										{/* {[
 											...RinkbeyNetworkArray[
 												props.networkId == 137 ? 0 : 1
 											].networks,
-										].map((data) => {
-											return (
-												<MenuItem
-													value={data.tokenName}
-													data-my-value={
-														data.tokenName
-													}
-													onTouchStart={(event) =>
-														event.stopPropagation()
-													}
-													onMouseDown={(event) =>
-														event.stopPropagation()
-													}
-													onClick={(event) => {
-														// Prevent CardActionArea Click
-														handleChangeInPrice(
-															event
-														);
-														handleToggle(event);
-													}}
-												>
-													<ListItemIcon
-														className={
-															classes.networkIcon
-														}
-													>
-														<img
-															src={data.image}
-															style={{
-																height: "20px",
+										].map((data) => { */}
+										{props.tokensListContract &&
+											props.tokensListContract.map(
+												(data, i) => {
+													return (
+														<MenuItem
+															value={
+																data.tokenName
+															}
+															data-my-value={
+																data.tokenName
+															}
+															onTouchStart={(
+																event
+															) =>
+																event.stopPropagation()
+															}
+															onMouseDown={(
+																event
+															) =>
+																event.stopPropagation()
+															}
+															onClick={(
+																event
+															) => {
+																// Prevent CardActionArea Click
+																handleChangeInPrice(
+																	event
+																);
+																handleToggle(
+																	event
+																);
 															}}
-														/>
-													</ListItemIcon>
-													<ListItemText
-														className={
-															classes.menuItem
-														}
-													>
-														{data.tokenName}
-													</ListItemText>
-												</MenuItem>
-											);
-										})}
+														>
+															<ListItemIcon
+																className={
+																	classes.networkIcon
+																}
+															>
+																<img
+																	src={
+																		data.image
+																	}
+																	style={{
+																		height: "20px",
+																	}}
+																/>
+															</ListItemIcon>
+															<ListItemText
+																className={
+																	classes.menuItem
+																}
+															>
+																{data.tokenName}
+															</ListItemText>
+														</MenuItem>
+													);
+												}
+											)}
 									</MenuList>
 								</ClickAwayListener>
 							</Paper>
