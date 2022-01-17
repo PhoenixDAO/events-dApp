@@ -231,7 +231,7 @@ function PriceSelectBox(props) {
 																	classes.menuItem
 																}
 															>
-																{data.tokenName}
+																{data.displayName}
 															</ListItemText>
 														</MenuItem>
 													);

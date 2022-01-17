@@ -2136,6 +2136,8 @@ class EventPage extends Component {
 									tokensListContract={
 										this.props.tokensListContract
 									}
+									selectedToken={this.state
+										.selectedToken}
 								/>
 								<ApprovalModal
 									open={this.state.open}
@@ -2161,6 +2163,8 @@ class EventPage extends Component {
 									tokensListContract={
 										this.props.tokensListContract
 									}
+									selectedToken={this.state
+										.selectedToken}
 								/>
 								<Snackbar
 									anchorOrigin={{
@@ -2182,7 +2186,7 @@ class EventPage extends Component {
 										}}
 										open={this.state.disableBuyTicketBtn}
 										onClose={this.handleCloseSnackbar4}
-										message={`You do not have enough ${this.state.selectedToken.tokenName} token to buy the ticket`}
+										message={`You do not have enough ${this.state.selectedToken.displayName} token to buy the ticket`}
 										autoHideDuration={3000}
 										key={"top" + "center"}
 										className="snackbar"

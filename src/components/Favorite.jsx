@@ -477,6 +477,7 @@ class Favorites extends Component {
 						myFavorites={true}
 						reloadData={this.reloadData}
 						loading={this.state.loading}
+						tokensListContract={this.props.tokensListContract}
 					/>
 				);
 			}
