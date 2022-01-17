@@ -6,6 +6,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Clock from "../Clock";
 import SocialMedia from "../common/SocialMedia";
+import Web3 from "web3";
 import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 import {
@@ -259,6 +260,10 @@ class EventPreviewPage extends Component {
 			organizerDetails: "",
 			topic: "",
 			ticketIndex: 0,
+			selectedToken: this.props.tokensListContract
+				? this.props.tokensListContract[2]
+				: null,
+				isPHNX:this.props.isPHNX?this.props.isPHNX:null
 			// tokenPrices: { phnx: "", eth: "", matic: "", usdt: "" },
 		};
 		console.log("hello props: ", props);
@@ -363,9 +368,85 @@ class EventPreviewPage extends Component {
 			}
 		}
 	}
+	priceCalculation = async (categoryIndex) => {
+		let event_data = this.props.fields;
+			if (this.props.isPHNX) {
+				let priceInPhnx = this.props.fields.phnxPrice
+					? this.props.fields.phnxPrice + "PHNX"
+					: "FREE";
+				let priceInDollar = this.props.fields.dollarPrice
+					? "$" + this.props.fields.dollarPrice
+					: "";
+				this.setState({
+					dollar_price: priceInDollar,
+					token_price: priceInPhnx,
+				});
+			} else {
+				let token_price = 0;
+				let dollar_price = 0;
 
+				// Dynamic function for price calculation starts
+				if (this.props.tokensListContract && this.state.selectedToken) {
+					let selectedTokenName = this.state.selectedToken.tokenName;
+					const TOKENS_LIST = this.props.tokensListContract;
+					TOKENS_LIST.map((v, i) => {
+						if (selectedTokenName == v.tokenName) {
+							if (
+								v.tokenName == "weth" ||
+								v.tokenName == "ether"
+							) {
+								token_price = this.props.fields.ticketCategories.map((price) => {
+									if (
+										price.dollarPrice/
+											v.usdPrice >
+										0.1
+									) {
+										return (
+											price.dollarPrice/ v.usdPrice
+										).toFixed(3);
+									} else {
+										return (
+											price.dollarPrice / v.usdPrice
+										);
+									}
+								});
+							} else {
+								token_price = this.props.fields.ticketCategories.map((price) => {
+									return (
+										price.dollarPrice /
+										v.usdPrice
+									).toFixed(3);
+								});
+							}
+						}
+					});
+				}
+				dollar_price = this.props.fields.dollarPrice;
+				// Dynamic function for price calculation Ends
+				let priceInPhnx = event_data.token
+					? token_price[categoryIndex] + "PHNX"
+					: "FREE";
+				let priceInDollar = event_data.token ? "$" + dollar_price : "";
+				this.setState({
+					dollar_price: priceInDollar,
+					token_price: priceInPhnx,
+				});
+				return;
+
+			}
+		
+	};
 	handleCategoryChange = (event) => {
 		this.setState({ ticketIndex: event.target.value });
+		console.log("Event preview: ", event.target.value)
+		this.priceCalculation(event.target.value);
+	};
+	handleSelectedTokenState = async (result) => {
+		console.log("ether_price ??", result);
+		console.log("hello");
+		this.setState({ selectedToken: result }, () => {
+			this.priceCalculation(this.state.ticketIndex);
+		});
 	};
 
 	render() {
@@ -492,11 +573,11 @@ class EventPreviewPage extends Component {
 									className={classes.eventDetails}
 								>
 									<p className={classes.ticketPrice}>
-										<img
+										{/* <img
 											src={"/images/phoenixdao.svg"}
 											className="event_price-image"
 											alt="Event Price"
-										/>
+										/> */}
 										TICKET PRICE
 									</p>
 									{this.props.ticketCategories.length > 1 && (
@@ -561,22 +642,27 @@ class EventPreviewPage extends Component {
 												"Free"
 											) : this.props.ticketCategories
 													.length > 0 ? (
-												<PriceSelectBox
-													token="phnx"
-													tokensListContract={
-														this.props
-															.tokensListContract
-													}
-													value={pricingFormatter(
-														this.props
-															.ticketCategories[
+														<PriceSelectBox
+														tokensListContract={
+															this.props
+																.tokensListContract
+														}
+														selectedToken={
 															this.state
-																.ticketIndex
-														]["phnxPrice"],
-														"PHNX"
-													)}
-													isEventPage={true}
-												/>
+																.selectedToken
+														}
+														setSelectedToken={
+															this
+																.handleSelectedTokenState
+														}
+														token="phnx"
+														value={pricingFormatter(
+															this.state
+																.token_price,
+															"PHNX"
+														)}
+														isEventPage={true}
+													/>
 											) : (
 												""
 											)}
@@ -792,6 +878,7 @@ class EventPreviewPage extends Component {
 	async componentDidMount() {
 		this.getOrganizerDetails();
 		this._topicRemovedDashes();
+		this.priceCalculation(0);
 		// this.GetPrices();
 		console.log(
 			"This.props.tokensListContract EventPreviewPage",

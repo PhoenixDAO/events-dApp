@@ -770,6 +770,10 @@ class CreateEvent extends Component {
 							<PreviewEvent
 								fields={this.state.fields}
 								activeStep={this.state.activeStep}
+								tokensListContract={
+									this.props
+										.tokensListContract
+								}
 							/>
 						</div>
 					</div>
@@ -796,6 +800,10 @@ class CreateEvent extends Component {
 						<PreviewEvent
 							fields={this.state.fields}
 							activeStep={this.state.activeStep}
+							tokensListContract={
+								this.props
+									.tokensListContract
+							}
 						/>
 					</div>
 				</div>
