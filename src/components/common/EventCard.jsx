@@ -455,7 +455,7 @@ const EventCard = (props, context) => {
 		const TOKENS_LIST = props.tokensListContract;
 		TOKENS_LIST.map((v, i) => {
 			if (selectedTokenName == v.tokenName) {
-				if (v.tokenName == "weth" || v.tokenName == "ether") {
+				if (v.tokenName == "weth" || v.tokenName == "ethereum") {
 					token_price = event_data.prices.map((price) => {
 						if (
 							Web3.utils.fromWei(price.toString()) / v.usdPrice >
