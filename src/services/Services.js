@@ -59,8 +59,9 @@ export const GetTokenPrices2 = async () => {
 	let newTokensList = [];
 	tokensListContract.map(async (v, i) => {
 		let coingeckoData = await GetTokenDetailApi(v[2]);
-		// console.log("coingeckoImage oooo", coingeckoData);
+		console.log("coingeckoImage oooo", coingeckoData);
 		newTokensList.push({
+			displayName:coingeckoData.data.name,
 			tokenName: v[2],
 			chainId: v[1],
 			image: coingeckoData.data.image.small,
