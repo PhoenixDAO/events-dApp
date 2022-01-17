@@ -833,6 +833,7 @@ const EventCard = (props, context) => {
 												)}
 											</p> */}
 											<PriceSelectBox
+												isPHNX={event_data.isPHNX}
 												tokensListContract={
 													props.tokensListContract
 												}
@@ -879,6 +880,7 @@ const EventCard = (props, context) => {
 												)}
 											</p> */}
 											<PriceSelectBox
+											isPHNX={event_data.isPHNX}
 												tokensListContract={
 													props.tokensListContract
 												}
