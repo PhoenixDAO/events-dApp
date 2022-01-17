@@ -1136,7 +1136,7 @@ class EventPage extends Component {
 						if (selectedTokenName == v.tokenName) {
 							if (
 								v.tokenName == "weth" ||
-								v.tokenName == "ether"
+								v.tokenName == "ethereum"
 							) {
 								token_price = event_data.prices.map((price) => {
 									if (
