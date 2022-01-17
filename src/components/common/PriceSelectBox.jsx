@@ -145,7 +145,7 @@ function PriceSelectBox(props) {
 							marginRight: "4px",
 						}}
 					/>
-					{`${price.amount}`}
+					{price.amount ? `${price.amount}` : `__`}
 					<ArrowDropDownIcon
 						style={{ color: "rgba(0, 0, 0, 0.7)" }}
 					/>

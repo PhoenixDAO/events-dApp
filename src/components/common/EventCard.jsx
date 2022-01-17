@@ -313,11 +313,12 @@ const EventCard = (props, context) => {
 					props.userDetails.result.result.userHldr.alternateCurrency
 						.tokenName;
 				// console.log("propsTokenName =>>", propsTokenName);
-				props.tokensListContract.map((v, i) => {
-					if (propsTokenName == v.tokenName) {
-						setSelectedToken(props.tokensListContract[i]);
-					}
-				});
+				props.tokensListContract &&
+					props.tokensListContract.map((v, i) => {
+						if (propsTokenName == v.tokenName) {
+							setSelectedToken(props.tokensListContract[i]);
+						}
+					});
 				// setSelectedToken({
 				// 	...props.userDetails.result.result.userHldr
 				// 		.alternateCurrency,
@@ -449,8 +450,7 @@ const EventCard = (props, context) => {
 		});
 		token_price = Web3.utils.fromWei(event_data.prices[0].toString());
 		//  console.log("phnx price coingecko: ",phnx_price, dollar_price)
-	} 
-	else if (props.tokensListContract && selectedToken) {
+	} else if (props.tokensListContract && selectedToken) {
 		let selectedTokenName = selectedToken.tokenName;
 		const TOKENS_LIST = props.tokensListContract;
 		TOKENS_LIST.map((v, i) => {
@@ -742,17 +742,16 @@ const EventCard = (props, context) => {
 													}
 													style={{
 														fontFamily:
-														'"Aeonik", sans-serif',
+															'"Aeonik", sans-serif',
 													}}
 												>
 													<img
-																src={PhnxLogo}
-																style={{
-																	height: "25px",
-																	marginRight:
-																		"4px",
-																}}
-															/>
+														src={PhnxLogo}
+														style={{
+															height: "25px",
+															marginRight: "4px",
+														}}
+													/>
 													{pricingFormatter(
 														token_price,
 														"PHNX"
@@ -907,82 +906,6 @@ const EventCard = (props, context) => {
 									)}
 									{/* {console.log("price",event_data.name, dollar_price, typeof(dollar_price))} */}
 								</Typography>
-
-								{/* <FormControl
-								variant="outlined"
-								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
-							>
-								<Typography
-									ref={this.eventRef}
-									variant="div"
-									className={`${classes.sortBy}`}
-								>
-									Sort:
-								</Typography>
-								<Select
-									labelId="demo-simple-select-outlined-label"
-									id="demo-simple-select-outlined"
-									fullWidth
-									value={this.state.category}
-									onChange={this.categoryChange}
-									displayEmpty
-									className={classes.menuPaper}
-									MenuProps={{
-										classes: {
-											paper: classes.menuPaper,
-										},
-										getContentAnchorEl: null,
-										anchorOrigin: {
-											vertical: "bottom",
-											horizontal: "left",
-										},
-									}}
-								>
-									<MenuItem
-										value="All Events"
-										style={{
-											fontFamily: "'Aeonik', sans-serif",
-										}}
-									>
-										All Events
-									</MenuItem>
-									<MenuItem
-										value="Trending Events"
-										style={{
-											fontFamily: "'Aeonik', sans-serif",
-										}}
-									>
-										Trending Events
-									</MenuItem>
-									<MenuItem
-										value="populartopics"
-										style={{
-											fontFamily: "'Aeonik', sans-serif",
-										}}
-									>
-										Popular Topics
-									</MenuItem>
-								</Select>
-							</FormControl> */}
-
-								{/* ? `Starting from ${prices[0]} PHNX` : prices[0]} */}
-
-								{/* <div className={classes.eventinfo}>
-									<span className={classes.PhnxPrice} >{event_data[3]
-										? numeral(price).format("0.000") + "PHNX"
-										: "FREE"}
-									</span>
-									<div style={{ color: "#56555D", fontSize: "14px" }}>
-										{event_data[3]
-											? "$" + numeral(
-												price *
-												this.state
-													.PhoenixDAO_market
-													.usd
-											).format("0.000")
-											: ""}
-									</div>
-								</div> */}
 							</div>
 							<div>
 								<Typography
