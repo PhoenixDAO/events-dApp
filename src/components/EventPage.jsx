@@ -58,17 +58,9 @@ import JwPagination from "jw-react-pagination";
 import { Link } from "react-router-dom";
 import { explorerWithAddress } from "../config/const.js";
 import {
-	// GetPhnxPrice,
-	// GetEthPrice,
-	// GetMaticPrice,
-	// GetUsdtPrice,
-	// GetWethPrice,
-	// GetUsdcPrice,
 	CheckTokenAllowance,
 	GiveAllowance,
 	initTokenContract,
-	// GetWhiteListedToken,
-	// GetTokenPrices,
 } from "../services/Services";
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";

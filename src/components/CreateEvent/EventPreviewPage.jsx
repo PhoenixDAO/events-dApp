@@ -34,14 +34,6 @@ import { getUserDetails } from "../../config/serverAPIs";
 import RichTextEditor from "react-rte";
 import { pricingFormatter } from "../../utils/pricingSuffix";
 import PriceSelectBox from "../common/PriceSelectBox";
-import {
-	GetEthPrice,
-	GetPhnxPrice,
-	GetMaticPrice,
-	GetUsdtPrice,
-	GetWethPrice,
-	GetUsdcPrice,
-} from "../../services/Services";
 
 var moment = require("moment");
 

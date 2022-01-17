@@ -61,7 +61,7 @@ export const GetTokenPrices2 = async () => {
 		let coingeckoData = await GetTokenDetailApi(v[2]);
 		console.log("coingeckoImage oooo", coingeckoData);
 		newTokensList.push({
-			displayName:coingeckoData.data.name,
+			displayName: coingeckoData.data.name,
 			tokenName: v[2],
 			chainId: v[1],
 			image: coingeckoData.data.image.small,
@@ -71,6 +71,14 @@ export const GetTokenPrices2 = async () => {
 	});
 	console.log("newTokensList ++>>> ", newTokensList);
 	return newTokensList;
+};
+
+export const Increment2Percent = (originalPrice) => {
+	console.log("originalPrice =>", originalPrice);
+	let twoPercent = (2 * originalPrice) / 100;
+	let incrementedValue = Number(originalPrice) + Number(twoPercent);
+	console.log("incrementedValue =>", incrementedValue);
+	return incrementedValue;
 };
 
 // const contractAddressProviders = async () => {
