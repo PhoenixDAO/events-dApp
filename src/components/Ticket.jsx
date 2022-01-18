@@ -600,6 +600,9 @@ class Ticket extends Component {
 					eventLocation={this.state.eventLocation}
 					tokenPrices={this.state.tokenPrices}
 					userDetails={this.state.userDetails}
+					tokensListContract={
+						this.props.tokensListContract
+					}
 				/>
 				// <div className="card w-100">
 				// 	<div className="card-header">
@@ -659,7 +662,6 @@ class Ticket extends Component {
 		this.updateIPFS();
 		this.updateEvent();
 		this.filterHideEvent();
-		this.GetPrices();
 		this.handleGetUserDetails();
 	}
 
