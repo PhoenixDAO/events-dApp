@@ -299,17 +299,16 @@ const EventCard = (props, context) => {
 			let defaultCurr =
 				props.userDetails.result.result.userHldr.alternateCurrency;
 			if (typeof defaultCurr == "string") {
-				if (
-					defaultCurr === "Dollar" ||
-					defaultCurr === "usd" ||
-					defaultCurr === ""
-				) {
+				if (defaultCurr === "Dollar" || defaultCurr === "usd") {
 					// setSelectedToken({
 					// 	tokenName: "usdt",
 					// 	chainId: props.networkId,
 					// 	image: RinkbeyNetworkArray[0].networks[2].image,
 					// });
 					setSelectedToken(props.tokensListContract[1]);
+				}
+				if (defaultCurr === "") {
+					setSelectedToken(props.tokensListContract[0]);
 				}
 			}
 			if (typeof defaultCurr == "object") {

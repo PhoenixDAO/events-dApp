@@ -45,7 +45,7 @@ const DetailForm = (props) => {
 			"This.props.tokenListContract at detailform",
 			props.tokensListContract
 		);
-		// console.log("this.props.userDetails", props.userDetails);
+		// console.log("props.userDetails at detailform", props.userDetails);
 		provideImage();
 	}, [props.userDetails]);
 	const imageData = (index) => {
@@ -241,17 +241,11 @@ const DetailForm = (props) => {
 		setAvatarNumber(value);
 	};
 
-	useEffect(() => {
-		if (props.networkId && props.tokensListContract) {
-			// setAlternateCurrency({
-			// 	tokenName: "usdt",
-			// 	chainId: props.networkId,
-			// 	// image: RinkbeyNetworkArray[0].networks[0].image,
-			// 	// tokenAddress: RinkbeyNetworkArray[0].networks[0].image
-			// });
-			setAlternateCurrency(props.tokensListContract[2]);
-		}
-	}, [props.networkId, props.tokensListContract]);
+	// useEffect(() => {
+	// 	if (props.networkId && props.tokensListContract) {
+	// 		setAlternateCurrency(props.tokensListContract[0]);
+	// 	}
+	// }, [props.networkId, props.tokensListContract]);
 
 	const updateUserInfo = async (e) => {
 		e.preventDefault();
@@ -288,22 +282,13 @@ const DetailForm = (props) => {
 		}
 	};
 
-	// const orgDetails = (e) => {
-	// 	// if (e.target.value.split(" ").length <= 500) {
-	// 	// 	orgref.current.enabled;
-	// 	setOrganizer(e.target.value);
-	// 	// } else {
-	// 	// 	e.preventDefault();
-	// 	// 	console.log("Length of organizer details exceeded");
-	// 	// }
-	// };
-
 	useEffect(() => {
 		if (
 			props.userDetails &&
 			props.userDetails.result &&
 			props.userDetails.result.result &&
-			props.userDetails.result.result.userHldr
+			props.userDetails.result.result.userHldr &&
+			props.tokensListContract
 		) {
 			console.log(
 				"UserDetails ,=>>",
@@ -313,41 +298,40 @@ const DetailForm = (props) => {
 				props.userDetails.result.result.userHldr.alternateCurrency;
 			if (typeof defaultCurr == "string") {
 				if (defaultCurr === "Dollar" || defaultCurr === "usd") {
-					setAlternateCurrency({
-						tokenName: "usdt",
-						chainId: props.networkId,
+					setAlternateCurrency(
+						props.tokensListContract && props.tokensListContract[1]
+					);
+				}
+				if (defaultCurr === "") {
+					props.tokensListContract.map((v, i) => {
+						if (v.tokenName == "phoenixdao") {
+							setAlternateCurrency(props.tokensListContract[i]);
+						}
 					});
 				}
-			} else if (
-				typeof defaultCurr == "string" &&
-				defaultCurr.length < 1
-			) {
-				setAlternateCurrency(
-					this.props.tokensListContract
-						? this.props.tokensListContract[2]
-						: null
-				);
-				setNoDefaultCurrency(true);
-			} else if (typeof defaultCurr == "object") {
+			}
+			// else if (
+			// 	typeof defaultCurr == "string" &&
+			// 	defaultCurr.length < 1
+			// ) {
+			// 	setAlternateCurrency(
+			// 		this.props.tokensListContract
+			// 			? this.props.tokensListContract[0]
+			// 			: null
+			// 	);
+			// 	setNoDefaultCurrency(true);
+			// }
+			else if (typeof defaultCurr == "object") {
 				setAlternateCurrency(
 					props.userDetails.result.result.userHldr.alternateCurrency
 				);
+			} else {
+				setAlternateCurrency(
+					props.tokensListContract && props.tokensListContract[0]
+				);
 			}
 		}
-	}, [props.userDetails]);
-
-	useEffect(() => {
-		console.log("alternateCurrency =>> ", alternateCurrency);
-	}, [alternateCurrency]);
-
-	// const currency = [
-	// 	{ name: "USDT", flag: "" },
-	// 	{ name: "PHNX", flag: "" },
-	// 	{ name: "MATIC", flag: "" },
-	//   { name: "ETHER", flag: "" },
-	// ].map((data) => {
-	// 	return <option value={data.name}>{data.name}</option>;
-	// });
+	}, [props.userDetails, props.tokensListContract]);
 
 	return (
 		<div className="dtl-hldr">

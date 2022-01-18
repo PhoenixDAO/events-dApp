@@ -192,7 +192,7 @@ const MyStepper = ({
 			() => {
 				onStepsChange("inc");
 			},
-			() => handleCreateEvent(() => clearState(),values)
+			() => handleCreateEvent(() => clearState(), values)
 		);
 	};
 
@@ -607,7 +607,9 @@ const MyStepper = ({
 										<br />
 
 										<label className={classes.label}>
-										{index === 0 ? (`EVENT IMAGE`):(`COVER IMAGE ${index}`)}
+											{index === 0
+												? `EVENT IMAGE`
+												: `COVER IMAGE ${index}`}
 										</label>
 										<div style={{ position: "relative" }}>
 											<TextField
@@ -659,16 +661,23 @@ const MyStepper = ({
 														classes.imageMaxStyle
 													}
 												>
-													Event Card Image should not be greater than 5MB (Recommended 16:9 ratio picture)
+													Event Card Image should not
+													be greater than 5MB
+													(Recommended 16:9 ratio
+													picture)
 												</p>
-											) : index === 1 ?(<p
-												className={
-													classes.imageMaxStyle
-												}
-											>
-												Event page Cover Image should not greater than
-												5MB (Recommended 21:9 ratio picture)
-											</p>): (
+											) : index === 1 ? (
+												<p
+													className={
+														classes.imageMaxStyle
+													}
+												>
+													Event page Cover Image
+													should not greater than 5MB
+													(Recommended 21:9 ratio
+													picture)
+												</p>
+											) : (
 												<button
 													className={
 														classes.deleteImageButton
@@ -789,110 +798,112 @@ const MyStepper = ({
 							<br />
 
 							{/* conditonal rendering for event category - free - single_paid - multiple-paid */}
-							<div><div>
-							{(eventCategory !== "free" )&&
-							<FormControl component="fieldset">
-							<label
-								className={
-									classes.label
-								}
-							>FIX TICKET COST
-							</label>
-							<RadioGroup
-								row
-								aria-label="isPHNX"
-								name="isPHNX"
-								id="isPHNX"
-								value={isPHNX}
-								className={
-									classes.radioGroup
-								}
-								onChange={(event) => {
-									handlePickerValue({
+							<div>
+								<div>
+									{
+										eventCategory !== "free" && (
+											<FormControl component="fieldset">
+												<label
+													className={classes.label}
+												>
+													CURRENCY
+												</label>
+												<RadioGroup
+													row
+													aria-label="isPHNX"
+													name="isPHNX"
+													id="isPHNX"
+													value={isPHNX}
+													className={
+														classes.radioGroup
+													}
+													onChange={(event) => {
+														handlePickerValue({
 															name: "isPHNX",
 															value: !isPHNX,
 														});
-								}}
-							>
-								<FormControlLabel
-									value="unlimited"
-									control={
-										<Radio
-										value={false}
-											color="primary"
-											icon={
-												<img
-													src={
-														uncheckedIcon
-													}
-												/>
-											}
-											checkedIcon={
-												<img
-													src={
-														checkedIcon
-													}
-												/>
-											}
-										/>
+													}}
+												>
+													<FormControlLabel
+														value="unlimited"
+														control={
+															<Radio
+																value={false}
+																color="primary"
+																icon={
+																	<img
+																		src={
+																			uncheckedIcon
+																		}
+																	/>
+																}
+																checkedIcon={
+																	<img
+																		src={
+																			checkedIcon
+																		}
+																	/>
+																}
+															/>
+														}
+														label="USD value"
+													/>
+													<FormControlLabel
+														value="limited"
+														control={
+															<Radio
+																color="primary"
+																value={true}
+																icon={
+																	<img
+																		src={
+																			uncheckedIcon
+																		}
+																	/>
+																}
+																checkedIcon={
+																	<img
+																		src={
+																			checkedIcon
+																		}
+																	/>
+																}
+															/>
+														}
+														label="PHNX value"
+													/>
+												</RadioGroup>
+											</FormControl>
+										)
+										// <FormControlLabel
+										// 	control={
+										// 		<Checkbox
+										// 			icon={<img src={uncheckedIcon} />}
+										// 			checkedIcon={<img src={checkedIcon} />}
+										// 			checked={!!isPHNX}
+										// 			onChange={(e) => {
+										// 				handlePickerValue({
+										// 					name: "isPHNX",
+										// 					value: !isPHNX,
+										// 				});
+										// 			}}
+										// 			name="isPHNX"
+										// 			id="isPHNX"
+										// 			color="primary"
+										// 		/>
+										// 	}
+										// 	label={
+										// 		<span
+										// 			className={classes.restrictWalletLabel}
+										// 		>
+										// 			Selecting any other asset other than PHNX will make the user incur a 2% fee on ticket price
+										// 		</span>
+										// 	}
+										// />
 									}
-									label="USD value"
-								/>
-								<FormControlLabel
-									value="limited"
-									control={
-										<Radio
-											color="primary"
-											value={true}
-											icon={
-												<img
-													src={
-														uncheckedIcon
-													}
-												/>
-											}
-											checkedIcon={
-												<img
-													src={
-														checkedIcon
-													}
-												/>
-											}
-										/>
-									}
-									label="PHNX value"
-								/>
-							</RadioGroup>
-						</FormControl>
-							// <FormControlLabel
-							// 	control={
-							// 		<Checkbox
-							// 			icon={<img src={uncheckedIcon} />}
-							// 			checkedIcon={<img src={checkedIcon} />}
-							// 			checked={!!isPHNX}
-							// 			onChange={(e) => {
-							// 				handlePickerValue({
-							// 					name: "isPHNX",
-							// 					value: !isPHNX,
-							// 				});
-							// 			}}
-							// 			name="isPHNX"
-							// 			id="isPHNX"
-							// 			color="primary"
-							// 		/>
-							// 	}
-							// 	label={
-							// 		<span
-							// 			className={classes.restrictWalletLabel}
-							// 		>
-							// 			Selecting any other asset other than PHNX will make the user incur a 2% fee on ticket price
-							// 		</span>
-							// 	}
-							// />
-							}
-							</div>
+								</div>
 								{eventCategory === "free" ? (
-									<div>							
+									<div>
 										<FormControl component="fieldset">
 											<label className={classes.label}>
 												TICKET AVAILABILITY
@@ -1648,7 +1659,6 @@ const MyStepper = ({
 									</span>
 								}
 							/>
-							
 						</div>
 					</React.Fragment>
 				);
