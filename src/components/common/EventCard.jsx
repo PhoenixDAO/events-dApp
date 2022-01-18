@@ -316,13 +316,13 @@ const EventCard = (props, context) => {
 				let propsTokenName =
 					props.userDetails.result.result.userHldr.alternateCurrency
 						.tokenName;
-				// console.log("propsTokenName =>>", propsTokenName);
+				console.log("propsTokenName =>>", propsTokenName);
 				props.tokensListContract &&
 					props.tokensListContract.map((v, i) => {
 						if (propsTokenName == v.tokenName) {
 							setSelectedToken(props.tokensListContract[i]);
 						}
-					});
+					})
 				// setSelectedToken({
 				// 	...props.userDetails.result.result.userHldr
 				// 		.alternateCurrency,
@@ -351,6 +351,13 @@ const EventCard = (props, context) => {
 				// 	}),
 				// });
 			}
+		}
+		else{
+			props.tokensListContract && props.tokensListContract.map((v, i) => {
+				if (v.tokenName == "phoenixdao") {
+					setSelectedToken(props.tokensListContract[i]);
+				}
+			})
 		}
 	}, [props.userDetails]);
 
