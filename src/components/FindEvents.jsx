@@ -42,6 +42,7 @@ import roundlogo from "./Images/roundlogo.svg";
 import ConnectWalletButton from "./common/ConnectWalletButton";
 import SearchBar from "./common/SearchBar";
 import NearToYou from "./common/NearToYou";
+import { GetWhiteListedToken, GetTokenPrices2 } from "../services/Services";
 
 const useStyles = (theme) => ({
 	sticky: {
@@ -96,16 +97,16 @@ const useStyles = (theme) => ({
 	menuPaper: {
 		maxHeight: "200px",
 	},
-	mainHeadingStyle:{
+	mainHeadingStyle: {
 		fontWeight: 900,
 		color: "#1E1E22",
 		marginBottom: "0px",
 	},
-	LargeScreenBreakLine:{
-		display:"block",
-		"@media (max-width: 600px)":{
+	LargeScreenBreakLine: {
+		display: "block",
+		"@media (max-width: 600px)": {
 			display: "none",
-		}
+		},
 	},
 	selectDropDown: {
 		maxHeight: "200px",
@@ -229,7 +230,7 @@ class FindEvents extends Component {
 			latitude: "",
 			longitude: "",
 			cityName: "Unknown",
-			findNearEvents:[],
+			findNearEvents: [],
 		};
 
 		// this.contracts = context.drizzle.contracts;
@@ -277,7 +278,7 @@ class FindEvents extends Component {
 			this.setState({
 				Events_Blockchain: updatedList,
 			});
-			if(!this.props.match.params.ownerId){
+			if (!this.props.match.params.ownerId) {
 				this.props.history.push("/allevents/" + 1);
 			}
 		}
@@ -322,7 +323,7 @@ class FindEvents extends Component {
 
 	//Loads Blockhain Data,
 	async loadBlockchain(filter) {
-		this.setState({search:""});
+		this.setState({ search: "" });
 		const graphURL = await GetGraphApi();
 
 		await axios({
@@ -371,7 +372,7 @@ class FindEvents extends Component {
 					// 	event_copy: [],
 					// });
 
-					if( !this.props.match.params.ownerId){
+					if (!this.props.match.params.ownerId) {
 						this.props.history.push("/allevents/" + 1);
 					}
 
@@ -406,7 +407,7 @@ class FindEvents extends Component {
 						});
 					}
 
-					if(!this.props.match.params.ownerId){
+					if (!this.props.match.params.ownerId) {
 						this.props.history.push("/allevents/" + 1);
 					}
 
@@ -422,16 +423,17 @@ class FindEvents extends Component {
 
 	//Search Active Events By Name
 	updateSearch = (value) => {
-		if(this.state.pageTitle == "Near Your Location"){
+		if (this.state.pageTitle == "Near Your Location") {
 			let filteredEvents = this.state.Events_Blockchain;
-			this.setState({ value, search:value }, () => {
+			this.setState({ value, search: value }, () => {
 				try {
 					if (this.state.value !== "") {
 						filteredEvents = filteredEvents.filter((event) => {
 							return (
 								event.name
 									.toLowerCase()
-									.search(this.state.value.toLowerCase()) !== -1
+									.search(this.state.value.toLowerCase()) !==
+								-1
 							);
 						});
 					} else {
@@ -440,30 +442,30 @@ class FindEvents extends Component {
 				} catch (e) {
 					console.log(e);
 				}
-				this.setState({		
+				this.setState({
 					Events_Blockchain: filteredEvents,
 					// active_length: filteredEvents.length,
 				});
-				if((window.screen.height/window.screen.width)<1){
-					window.scroll(0, window.screen.height * 0.5);			
-				}else{
-					window.scroll(0, window.screen.height*0.58);
+				if (window.screen.height / window.screen.width < 1) {
+					window.scroll(0, window.screen.height * 0.5);
+				} else {
+					window.scroll(0, window.screen.height * 0.58);
 				}
-				if(!this.props.match.params.ownerId){
+				if (!this.props.match.params.ownerId) {
 					this.props.history.push("/allevents/" + 1);
 				}
 			});
-		}
-		else{
+		} else {
 			let filteredEvents = this.state.event_copy;
-			this.setState({ value, search:value }, () => {
+			this.setState({ value, search: value }, () => {
 				try {
 					if (this.state.value !== "") {
 						filteredEvents = filteredEvents.filter((event) => {
 							return (
 								event.name
 									.toLowerCase()
-									.search(this.state.value.toLowerCase()) !== -1
+									.search(this.state.value.toLowerCase()) !==
+								-1
 							);
 						});
 					} else {
@@ -476,12 +478,12 @@ class FindEvents extends Component {
 					Events_Blockchain: filteredEvents,
 					// active_length: filteredEvents.length,
 				});
-				if((window.screen.height/window.screen.width)<1){
-					window.scroll(0, window.screen.height * 0.5);			
-				}else{
-					window.scroll(0, window.screen.height*0.58);
+				if (window.screen.height / window.screen.width < 1) {
+					window.scroll(0, window.screen.height * 0.5);
+				} else {
+					window.scroll(0, window.screen.height * 0.58);
 				}
-				if(!this.props.match.params.ownerId){
+				if (!this.props.match.params.ownerId) {
 					this.props.history.push("/allevents/" + 1);
 				}
 			});
@@ -520,11 +522,11 @@ class FindEvents extends Component {
 	};
 
 	findNearToYouEvents = async () => {
-		this.setState({ loading: true, search:"" });
+		this.setState({ loading: true, search: "" });
 
 		const cityName = this.state.cityName;
 		if (cityName) {
-			if(!this.props.match.params.ownerId){
+			if (!this.props.match.params.ownerId) {
 				this.props.history.push("/allevents/" + 1);
 			}
 			try {
@@ -540,7 +542,7 @@ class FindEvents extends Component {
 					this.setState({
 						Events_Blockchain: filteredEvents,
 						// event_copy: filteredEvents,
-						findNearEvents:filteredEvents
+						findNearEvents: filteredEvents,
 					});
 					setTimeout(() => {
 						this.setState({ loading: false });
@@ -559,18 +561,18 @@ class FindEvents extends Component {
 	};
 
 	filterHideEvent = async () => {
-        try {
-            const networkId = await getNetworkId();
-            const get = await axios.get(
-                `${API_URL}${REPORT_EVENT}/${networkId}`
-            );          this.setState({
-                hideEvent: get.data.result,
-            });
-            // console.log("hide event", this.state.hideEvent);
-            return;
-        } catch (error) {
-        }
-    };
+		try {
+			const networkId = await getNetworkId();
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
+			this.setState({
+				hideEvent: get.data.result,
+			});
+			// console.log("hide event", this.state.hideEvent);
+			return;
+		} catch (error) {}
+	};
 
 	onTabChange = async (event, newValue) => {
 		this.executeEventScroll({
@@ -695,15 +697,18 @@ class FindEvents extends Component {
 				}
 			}
 			if (!skip) {
-				if(this.props.match.params.ownerId){
-					if(this.state.Events_Blockchain[i].owner.substr(this.state.Events_Blockchain[i].owner.length - 4) == this.props.match.params.ownerId.toLowerCase()){
+				if (this.props.match.params.ownerId) {
+					if (
+						this.state.Events_Blockchain[i].owner.substr(
+							this.state.Events_Blockchain[i].owner.length - 4
+						) == this.props.match.params.ownerId.toLowerCase()
+					) {
 						events_list.push(this.state.Events_Blockchain[i]);
 						// console.log("organizer event: ",this.state.Events_Blockchain[i].owner.substr(this.state.Events_Blockchain[i].owner.length - 4));
 						// console.log("organizer event params: ",this.props.match.params.ownerId.toLowerCase());
 						// console.log("organizer event org name: ",this.props.match)
 					}
-				}
-				else{
+				} else {
 					events_list.push(this.state.Events_Blockchain[i]);
 				}
 			}
@@ -729,6 +734,7 @@ class FindEvents extends Component {
 					ipfs={events_list[i].ipfsHash}
 					eventData={events_list[i]}
 					loading={this.state.loading}
+					tokensListContract={this.props.tokensListContract}
 				/>
 			);
 		}
@@ -797,7 +803,7 @@ class FindEvents extends Component {
 					this.executeEventScroll({
 						behavior: "smooth",
 						block: "center",
-					})
+					});
 					links.push(
 						<li className={"page-item " + active} key={i}>
 							<Link
@@ -871,21 +877,19 @@ class FindEvents extends Component {
 							aria-describedby="inputGroup-sizing-sm"
 						/>
 					</div> */}
-
 					{/* sticky bar start */}
 					<div className={`${classes.sticky}`}>
 						<Header
 							page="dashboard"
 							searchBar="true"
-							title={<div style={{ display: "flex" }}>
-										<img src={roundlogo} alt="phnx logo" />
-										<span>&nbsp;&nbsp;</span>
-										<span
-											className={classes.mainHeadingStyle}
-										>
-											PhoenixDAO Events Marketplace
-										</span>
-									</div>
+							title={
+								<div style={{ display: "flex" }}>
+									<img src={roundlogo} alt="phnx logo" />
+									<span>&nbsp;&nbsp;</span>
+									<span className={classes.mainHeadingStyle}>
+										PhoenixDAO Events Marketplace
+									</span>
+								</div>
 							}
 							handleSearch={this.updateSearch}
 							search={this.state.search}
@@ -938,7 +942,6 @@ class FindEvents extends Component {
 								<Grid item>Connect Wallet</Grid>
 							</Grid> */}
 						<br className={classes.LargeScreenBreakLine} />
-
 						{/* tabs */}
 						<div>
 							<div className={classes.root}>
@@ -1020,40 +1023,40 @@ class FindEvents extends Component {
 					</div>
 					{/* sticky bar ends */}
 					{!this.props.match.params.ownerId && (
-							<span>
-								<br />
-								<br />
-							</span>
-						)}
-
+						<span>
+							<br />
+							<br />
+						</span>
+					)}
 					{/* scrollToTop while click on pagination */}
 					<div ref={this.myRef} />
-
 					{/* slider */}
 					{!this.props.match.params.ownerId && (
+						<div>
 							<div>
-								<div>
-									<Slider />
-								</div>
+								<Slider />
 							</div>
-						)}
+						</div>
+					)}
 					{!this.props.match.params.ownerId && (
-							<span>
-								<br />
-								<br />
-							</span>
-						)}
+						<span>
+							<br />
+							<br />
+						</span>
+					)}
 					<br />
 					{this.state.pageTitle === "Near Your Location" ? (
 						<NearToYou getCityName={this.getCityName} />
 					) : null}
-
 					<div>
 						<div
 							className={`row row_mobile dashboard-dropdown-row ${classes.mobilePadding}`}
 						>
 							<h2 className="col-lg-9 col-md-8 col-sm-7 main-title">
-								{(!this.props.match.params.orgName)?this.state.pageTitle:this.props.match.params.orgName + "'s Events" }
+								{!this.props.match.params.orgName
+									? this.state.pageTitle
+									: this.props.match.params.orgName +
+									  "'s Events"}
 							</h2>
 							<FormControl
 								variant="outlined"
@@ -1111,58 +1114,6 @@ class FindEvents extends Component {
 									</MenuItem>
 								</Select>
 							</FormControl>
-
-							{/* <FormControl
-								variant="outlined"
-								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
-							>
-								<Typography
-									variant="p"
-									className={`${classes.sortBy}`}
-									>
-									Sort:
-								</Typography>
-
-								<Select
-									native
-									value={this.state.category}
-									onChange={this.categoryChange}
-									className={classes.selectEvent}
-								>
-									<option
-										aria-label="None"
-										value="All Events"
-										style={{ padding: "20px" }}
-									>
-										All Events
-									</option>
-									<option
-										value="Trending Events"
-										style={{ padding: "20px" }}
-									>
-										Trending Events
-									</option>
-									<option
-										value="populartopics"
-										style={{ padding: "20px" }}
-									>
-										Popular Topics
-									</option>
-								</Select>
-							</FormControl> 
-							
-							*/}
-
-							{/* <button
-								className="btn sort_button btn-dark col-lg-2 col-md-3 col-sm-3"
-								value={this.state.value}
-								onClick={this.toggleSortDate}
-								onChange={this.toggleSortDate.bind(this)}
-							>
-								{this.state.isOldestFirst
-									? "Sort: Oldest"
-									: "Sort: Newest"}
-							</button> */}
 						</div>
 
 						<br />
@@ -1181,7 +1132,6 @@ class FindEvents extends Component {
 							</div>
 						</a> */}
 					</div>
-
 					{/* <div className="topics-wrapper">
 						<h2>
 							<i className="fa fa-calendar-alt"></i> Popular
@@ -1238,14 +1188,12 @@ class FindEvents extends Component {
 	}
 
 	async componentDidMount() {
-		// console.log("props", this.props);
-		// let eventCount = await this.props.eventsContract.methods
-		// 	.getEventsCount()
-		// 	.call();
-		// console.log("event contract", this.props.eventsContract);
-		// if (eventCount) {
-		// 	this.setState({ eventCount });
-		// }
+		console.log(
+			`tokensListContract at FindEvents.jsx`,
+			this.props.tokensListContract
+		);
+		GetWhiteListedToken();
+		GetTokenPrices2();
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
 
 		// this._isMounted = true;

@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
 			fontFamily: "Aeonik",
 			textTransform: "capitalize",
 		},
+		"& .MuiDialog-paper": {
+			boxShadow: "0px 10px 20px 10px rgba(0, 0, 0, 0.1)",
+			borderRadius: "20px",
+		},
 	},
 	bannerImage: {
 		paddingInline: "50px",
@@ -242,7 +246,7 @@ const styles = (theme) => ({
 		position: "absolute",
 		right: theme.spacing(1),
 		top: theme.spacing(1),
-		color: theme.palette.grey[500],
+		color: "#4E4E55",
 		"&:focus": {
 			outline: "none",
 		},
@@ -295,122 +299,227 @@ const DialogActions = withStyles((theme) => ({
 	},
 }))(MuiDialogActions);
 
-export default function BuyTicket({ handleClose, open, eventTitle, image, eventTime, eventStartDate, eventEndDate, eventDate, date, time, phnx_price,dollar_price, buy, buttonText, purchased }) {
-
-  const classes = useStyles();
-  const buyTicket = () => {
-	  console.log("just chane");
-    buy();
-    handleClose();
-  }
-  return (
-    <div >
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" TransitionComponent={Transition} open={open} className={classes.root} >
-        <DialogTitle id="customized-dialog-title" className={classes.header} onClose={handleClose} >
-          <img src={roundlogo} className={classes.logo} alt="phnx logo" />
-          <span style={{ fontSize: "20px" }}>PhoenixDAO</span>
-          {purchased ?
-            <h2 className={classes.TicketPurchase}>
-              Ticket Purchase Successful
-            </h2> :
-            <h2 className={classes.sharelink}>{buttonText}</h2>
-          }
-          <Typography gutterBottom className={classes.eventTitle} style={{ color: "#73727D", fontWeight: "500", textAlign:"center", paddingInline: "20px", }}>
-            {purchased ? null : "You’re about to purchase this ticket"}
-          </Typography>
-
-        </DialogTitle>
-        <DialogContent className={classes.contentOverflow}>
-          <div className={classes.eventHolder}>
-            <Grid className={classes.details}>
-            
-            <Grid lg={2} xl={2} md={2} sm={2} xs={12}>
-              <img src={image} alt={eventTitle} className={classes.eventImage} />
-            </Grid>
-              <Grid xs={12} lg={7} xl={7} md={7} sm={7}  className={classes.gridPadding}>
-                <div>
-                  <Typography gutterBottom className={`${classes.eventTitle} text-truncate`}>
-                    {eventTitle}
-                  </Typography>
-                  <Typography style={{ color: "#73727D", fontSize: "17px",textAlign: "start"}} >
-                    {!eventTime
-                      ? `Date`
-                      : eventTime === "onedayevent"
-                        ? moment(eventDate).format("Do MMM, YYYY")
-                        : `
+export default function BuyTicket({
+	handleClose,
+	open,
+	eventTitle,
+	image,
+	eventTime,
+	eventStartDate,
+	eventEndDate,
+	eventDate,
+	date,
+	time,
+	phnx_price,
+	dollar_price,
+	buy,
+	buttonText,
+	purchased,
+}) {
+	const classes = useStyles();
+	const buyTicket = () => {
+		console.log("just chane");
+		buy();
+		handleClose();
+	};
+	return (
+		<div>
+			<Dialog
+				onClose={handleClose}
+				aria-labelledby="customized-dialog-title"
+				TransitionComponent={Transition}
+				open={open}
+				className={classes.root}
+			>
+				<DialogTitle
+					id="customized-dialog-title"
+					className={classes.header}
+					onClose={handleClose}
+				>
+					<img
+						src={roundlogo}
+						className={classes.logo}
+						alt="phnx logo"
+					/>
+					<span style={{ fontSize: "20px" }}>PhoenixDAO</span>
+					{purchased ? (
+						<h2 className={classes.TicketPurchase}>
+							Ticket Purchase Successful
+						</h2>
+					) : (
+						<h2 className={classes.sharelink}>{buttonText}</h2>
+					)}
+					<Typography
+						gutterBottom
+						className={classes.eventTitle}
+						style={{
+							color: "#73727D",
+							fontWeight: "500",
+							textAlign: "center",
+							paddingInline: "20px",
+						}}
+					>
+						{purchased
+							? null
+							: "You’re about to purchase this ticket"}
+					</Typography>
+				</DialogTitle>
+				<DialogContent className={classes.contentOverflow}>
+					<div className={classes.eventHolder}>
+						<Grid className={classes.details}>
+							<Grid lg={2} xl={2} md={2} sm={2} xs={12}>
+								<img
+									src={image}
+									alt={eventTitle}
+									className={classes.eventImage}
+								/>
+							</Grid>
+							<Grid
+								xs={12}
+								lg={7}
+								xl={7}
+								md={7}
+								sm={7}
+								className={classes.gridPadding}
+							>
+								<div>
+									<Typography
+										gutterBottom
+										className={`${classes.eventTitle} text-truncate`}
+									>
+										{eventTitle}
+									</Typography>
+									<Typography
+										style={{
+											color: "#73727D",
+											fontSize: "17px",
+											textAlign: "start",
+										}}
+									>
+										{!eventTime
+											? `Date`
+											: eventTime === "onedayevent"
+											? moment(eventDate).format(
+													"Do MMM, YYYY"
+											  )
+											: `
                 ${moment(eventStartDate).format("Do MMM")}
                 -
                 ${moment(eventEndDate).format("Do MMM, YYYY")}
-                `},{" "}
-                
-               {moment(time,"hh:mm A", false).utcOffset(0).format("hh:mm A z")}
-                  </Typography>
-                </div>
-                </Grid>
-                <Grid  xs={12} lg={3} xl={3} md={3} sm={3} className={classes.gridPadding}>
-                <div className={classes.priceAlignment}>
-                  <div className={classes.eventinfo}>
-                    <span className={classes.PhnxPrice} title={phnx_price}>
-                      {pricingFormatter(phnx_price, "PHNX")}
-                    </span>
-                    <div style={{ color: "#56555D", fontSize: "14px" }} title={dollar_price}>
-                      {/* {dollar_price} */}
-                      {pricingFormatter(dollar_price, "$")}
-                    </div>
-                  </div>
-                </div>
-                </Grid>
-
-            </Grid>
-
-          </div>
-
-        </DialogContent>
-        <DialogActions className={(purchased)?"":classes.bottomPadding}>
-          {purchased ?
-            <Link to="/mytickets/1" className={classes.link}>
-              <Button
-                variant="contained"
-                color="primary"
-                // style={{ marginRight: "10px" }}
-                className={classes.seeTicket}
-                onClick={handleClose}
-              > See Ticket</Button></Link> :
-            (<Grid item style={{ display: "contents", paddingBottom:
-            '60px' }}>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ marginRight: "10px" }}
-                className={classes.cancel}
-                onClick={handleClose}
-              >
-                <Cancel style={{ marginRight: "7px", fontSize: "19px" }} />
-                Cancel Purchase
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ marginLeft: "10px" }}
-                className={classes.send}
-
-                onClick={buyTicket}
-              >
-                <ShoppingCartOutlined style={{ marginRight: "10px" }} />
-                {buttonText}
-              </Button>
-            </Grid>)}
-        </DialogActions>
-        {
-          purchased ?
-          <div className={classes.bannerImage}>
-          <a href="https://www.travala.com/?ref=phoenixdao" target="_blank">
-            <img src="/images/travalla.jpg" className={classes.image} />
-            </a>
-          </div>
-            : null
-        }
-      </Dialog>
-    </div>
-  );
+                `}
+										,{" "}
+										{moment(time, "hh:mm A", false)
+											.utcOffset(0)
+											.format("hh:mm A z")}
+									</Typography>
+								</div>
+							</Grid>
+							<Grid
+								xs={12}
+								lg={3}
+								xl={3}
+								md={3}
+								sm={3}
+								className={classes.gridPadding}
+							>
+								<div className={classes.priceAlignment}>
+									<div className={classes.eventinfo}>
+										<span
+											className={classes.PhnxPrice}
+											title={phnx_price}
+										>
+											{pricingFormatter(
+												phnx_price,
+												"PHNX"
+											)}
+										</span>
+										<div
+											style={{
+												color: "#56555D",
+												fontSize: "14px",
+											}}
+											title={dollar_price}
+										>
+											{/* {dollar_price} */}
+											{pricingFormatter(
+												dollar_price,
+												"$"
+											)}
+										</div>
+									</div>
+								</div>
+							</Grid>
+						</Grid>
+					</div>
+				</DialogContent>
+				<DialogActions
+					className={purchased ? "" : classes.bottomPadding}
+				>
+					{purchased ? (
+						<Link to="/mytickets/1" className={classes.link}>
+							<Button
+								variant="contained"
+								color="primary"
+								// style={{ marginRight: "10px" }}
+								className={classes.seeTicket}
+								onClick={handleClose}
+							>
+								{" "}
+								See Ticket
+							</Button>
+						</Link>
+					) : (
+						<Grid
+							item
+							style={{
+								display: "contents",
+								paddingBottom: "60px",
+							}}
+						>
+							<Button
+								variant="contained"
+								color="primary"
+								style={{ marginRight: "10px" }}
+								className={classes.cancel}
+								onClick={handleClose}
+							>
+								<Cancel
+									style={{
+										marginRight: "7px",
+										fontSize: "19px",
+									}}
+								/>
+								Cancel Purchase
+							</Button>
+							<Button
+								variant="contained"
+								color="primary"
+								style={{ marginLeft: "10px" }}
+								className={classes.send}
+								onClick={buyTicket}
+							>
+								<ShoppingCartOutlined
+									style={{ marginRight: "10px" }}
+								/>
+								{buttonText}
+							</Button>
+						</Grid>
+					)}
+				</DialogActions>
+				{purchased ? (
+					<div className={classes.bannerImage}>
+						<a
+							href="https://www.travala.com/?ref=phoenixdao"
+							target="_blank"
+						>
+							<img
+								src="/images/travalla.jpg"
+								className={classes.image}
+							/>
+						</a>
+					</div>
+				) : null}
+			</Dialog>
+		</div>
+	);
 }

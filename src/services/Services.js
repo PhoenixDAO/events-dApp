@@ -1,7 +1,7 @@
 import axios from "axios";
 import Web3 from "web3";
-import { TokensListRinkbey } from "../config/const";
-import { Open_events_Address } from "../config/OpenEvents";
+// import { TokensListRinkbey } from "../config/const";
+import { Open_events_Address, Open_events_ABI } from "../config/OpenEvents";
 // import { toast } from "react-toastify";
 // import Notify from "../components/common/Notify";
 // import { RinkbeyNetworkArray } from "../config/const";
@@ -13,6 +13,7 @@ import {
 	WethtPriceApiCoingecko,
 	UsdcPriceApiCoingecko,
 } from "../config/const";
+import { ERC20_ABI } from "./tokenABIs/ERC20TokenAbi";
 
 export const GetPhnxPrice = () => {
 	return axios.get(PhnxPriceApiCoingecko);
@@ -33,6 +34,53 @@ export const GetWethPrice = () => {
 	return axios.get(WethtPriceApiCoingecko);
 };
 
+// for dynamic apis
+export const GetTokenDetailApi = (tokenId) => {
+	return axios.get(`https://api.coingecko.com/api/v3/coins/${tokenId}`);
+};
+
+// {"weth":{"usd":3225.41},"unipilot":{"usd":7.13},"phoenixdao":{"usd":0.04331988}} Data format of GetTokenPrices
+// API => https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao%2Cunipilot%2Cweth&vs_currencies=usd
+export const GetTokenPrices = async () => {
+	let tokensData = await GetWhiteListedToken();
+	let ApiString = `https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao`;
+	const developApiString = () => {
+		tokensData.map((v, i) => {
+			ApiString = ApiString + `%2C` + v[2];
+		});
+	};
+	developApiString();
+
+	return await axios.get(ApiString + `&vs_currencies=usd`);
+};
+
+export const GetTokenPrices2 = async () => {
+	let tokensListContract = await GetWhiteListedToken();
+	let newTokensList = [];
+	tokensListContract.map(async (v, i) => {
+		let coingeckoData = await GetTokenDetailApi(v[2]);
+		console.log("coingeckoImage oooo", coingeckoData);
+		newTokensList.push({
+			displayName: coingeckoData.data.name,
+			tokenName: v[2],
+			chainId: v[1],
+			image: coingeckoData.data.image.small,
+			tokenAddress: v[0],
+			usdPrice: coingeckoData.data.market_data.current_price.usd,
+		});
+	});
+	console.log("newTokensList ++>>> ", newTokensList);
+	return newTokensList;
+};
+
+export const Increment2Percent = (originalPrice) => {
+	console.log("originalPrice =>", originalPrice);
+	let twoPercent = (2 * originalPrice) / 100;
+	let incrementedValue = Number(originalPrice) + Number(twoPercent);
+	console.log("incrementedValue =>", incrementedValue);
+	return incrementedValue;
+};
+
 // const contractAddressProviders = async () => {
 // 	let eventAddress = "";
 // 	let phoenixAddress = "";
@@ -50,22 +98,46 @@ export const GetWethPrice = () => {
 // 	return { eventAddress, phoenixAddress };
 // };
 
-const initTokenContract = async (tokenAddress) => {
+export const GetWhiteListedToken = async () => {
 	const web3 = new Web3(window.ethereum);
-	let idx = 0;
-	let tokenAbi = TokensListRinkbey.map((v, i) => {
-		if (tokenAddress.toLowerCase() == v.address.toLowerCase()) {
-			idx = i;
-			return v.abi;
+	const EventsContract = await new web3.eth.Contract(
+		Open_events_ABI,
+		Open_events_Address
+	);
+	console.log("EventsContract ==>>>", EventsContract);
+	const TokenList = await EventsContract.methods
+		.getWhiteListedTokensList()
+		.call();
+	console.log("WhiteListTokensss ++>>", TokenList);
+	return TokenList;
+};
+
+export const initTokenContract = async (tokenAddress) => {
+	if (tokenAddress) {
+		const web3 = new Web3(window.ethereum);
+		// let idx = 0;
+		// let tokenAbi = TokensListRinkbey.map((v, i) => {
+		// 	if (tokenAddress.toLowerCase() == v.address.toLowerCase()) {
+		// 		idx = i;
+		// 		return v.abi;
+		// 	}
+		// });
+		// console.log(
+		// 	"arguments at initTokenContract",
+		// 	tokenAbi[idx],
+		// 	tokenAddress
+		// );
+		try {
+			const TOKEN = await new web3.eth.Contract(
+				// tokenAbi[idx],
+				ERC20_ABI,
+				tokenAddress
+			);
+			console.log("init contract TOKEN =>", TOKEN);
+			return TOKEN;
+		} catch (err) {
+			console.log("Err in contract init =>", err);
 		}
-	});
-	console.log("arguments at initTokenContract", tokenAbi[idx], tokenAddress);
-	try {
-		const TOKEN = await new web3.eth.Contract(tokenAbi[idx], tokenAddress);
-		console.log("init contract TOKEN =>", TOKEN);
-		return TOKEN;
-	} catch (err) {
-		console.log("Err in contract init =>", err);
 	}
 };
 // Open_events_Address

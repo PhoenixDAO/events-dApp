@@ -469,16 +469,7 @@ class Ticket extends Component {
 				</div>
 			</div>
 		);
-		if (
-			this.state.blockChainEvent !== null &&
-			this.state.eventId != ""
-			// &&
-			// typeof this.props.eventsContract.events[this.event] !==
-			// "undefined"
-		) {
-			// let ticket_data = this.props.eventsContract.getTicket[
-			// 	this.ticket
-			// ].value;
+		if (this.state.blockChainEvent !== null && this.state.eventId != "") {
 			let event_data = this.state.blockChainEvent;
 
 			let reported = false;
@@ -513,68 +504,6 @@ class Ticket extends Component {
 				: "∞";
 			let image = this.getImage();
 
-			// if (this.state.card_tab === 1) {
-			// 	let image = this.getImage();
-			// 	let description = this.getDescription();
-
-			// 	let date = new Date(parseInt(event_data[1], 10) * 1000);
-
-			// 	let timeStatus, timeClass;
-
-			// 	if (date.getTime() < new Date().getTime()) {
-			// 		timeStatus = (
-			// 			<p className="text-center small">
-			// 				<span role="img" aria-label="alert">
-			// 					⚠️
-			// 				</span>{" "}
-			// 				Ticket Expired
-			// 			</p>
-			// 		);
-			// 		timeClass = "text-danger";
-			// 	}
-
-			// } else {
-			// 	let image = this.getImage();
-			// 	let ticket_data = this.props.eventsContract.getTicket[
-			// 		this.ticket
-			// 	].value;
-			// 	let event_data = this.props.eventsContract.events[
-			// 		this.event
-			// 	].value;
-			// 	let warning = this.state.wrong_address ? "is-invalid" : "";
-			// 	let date = new Date(parseInt(event_data[1], 10) * 1000);
-			// 	let max_seats = event_data.limited ? event_data.seats : "∞";
-
-			// 	// card_body = (
-			// 	// 	<div>
-			// 	// 		<div className="card-body">
-			// 	// 			<h5 className="text-center">
-			// 	// 				<b>Send or Transfer Ticket:</b>
-			// 	// 			</h5>
-			// 	// 			<div className="form-group">
-			// 	// 				<label htmlFor="address">
-			// 	// 					Ethereum Address:
-			// 	// 				</label>
-			// 	// 				<input
-			// 	// 					type="text"
-			// 	// 					className={"form-control " + warning}
-			// 	// 					id="address"
-			// 	// 					ref={(input) => (this.address = input)}
-			// 	// 				/>
-			// 	// 			</div>
-			// 	// 			<button
-			// 	// 				className="btn btn-dark"
-			// 	// 				onClick={this.sendTicket}
-			// 	// 				disabled={this.state.disabledStatus}
-			// 	// 			>
-			// 	// 				<i className="fas fa-share-square"></i> Send
-			// 	// 				Ticket
-			// 	// 			</button>
-			// 	// 		</div>
-			// 	// 	</div>
-			// 	// );
-
-			// }
 			body = (
 				<EventCard
 					event_data={event_data}
@@ -600,42 +529,10 @@ class Ticket extends Component {
 					eventLocation={this.state.eventLocation}
 					tokenPrices={this.state.tokenPrices}
 					userDetails={this.state.userDetails}
+					tokensListContract={
+						this.props.tokensListContract
+					}
 				/>
-				// <div className="card w-100">
-				// 	<div className="card-header">
-				// 		<ul className="nav nav-tabs card-header-tabs">
-				// 			<li className="nav-item">
-				// 				<a
-				// 					href=""
-				// 					className={
-				// 						"nav-link " +
-				// 						(this.state.card_tab === 1
-				// 							? "active"
-				// 							: "")
-				// 					}
-				// 					onClick={(e) => this.changeTab(1, e)}
-				// 				>
-				// 					About Event
-				// 				</a>
-				// 			</li>
-				// 			<li className="nav-item">
-				// 				<a
-				// 					href=""
-				// 					className={
-				// 						"nav-link " +
-				// 						(this.state.card_tab === 2
-				// 							? "active"
-				// 							: "")
-				// 					}
-				// 					onClick={(e) => this.changeTab(2, e)}
-				// 				>
-				// 					Manage Ticket
-				// 				</a>
-				// 			</li>
-				// 		</ul>
-				// 	</div>
-				// 	{card_body}
-				// </div>
 			);
 		}
 
@@ -652,10 +549,13 @@ class Ticket extends Component {
 	}
 
 	componentDidMount() {
+		console.log(
+			"tokensListContract at Ticket.jsx",
+			this.props.tokensListContract
+		);
 		this.updateIPFS();
 		this.updateEvent();
 		this.filterHideEvent();
-		this.GetPrices();
 		this.handleGetUserDetails();
 	}
 

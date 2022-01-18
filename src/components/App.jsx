@@ -72,6 +72,7 @@ import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
 import IdentityForm from "./common/AvatarSelector/identityform";
 import DialogueBox from "./common/DialogueBox";
+import { GetTokenPrices2 } from "../services/Services";
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -128,6 +129,7 @@ class App extends Component {
 			date2: null,
 			isDesktop: null,
 			networkId: null,
+			tokensListContract: null,
 		};
 		this.myRef = React.createRef();
 
@@ -224,6 +226,8 @@ class App extends Component {
 		await this.initializeContract();
 	}
 	async componentDidMount() {
+		let res = await GetTokenPrices2();
+		this.setState({ tokensListContract: res });
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
@@ -445,7 +449,8 @@ class App extends Component {
 		phnx_price,
 		dollar_price,
 		time,
-		date
+		date,
+		isEthereum
 	) => {
 		let chainId = await this.getNetworkId();
 		if (
@@ -469,7 +474,7 @@ class App extends Component {
 					time,
 					date2: date,
 				},
-				() => this.buy()
+				() => this.buy(isEthereum, phnx_price)
 			);
 		} else {
 			toast(
@@ -565,7 +570,7 @@ class App extends Component {
 	};
 
 	//Buy Function, Notify listen for transaction status.
-	buy = async () => {
+	buy = async (isEthereum, phnx_price) => {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
@@ -642,7 +647,12 @@ class App extends Component {
 				});
 		} else {
 			this.state.buyticket
-				.send({ from: this.state.account })
+				// .send({ from: this.state.account})
+				.send(
+					isEthereum
+						? { from: this.state.account, value: phnx_price }
+						: { from: this.state.account, value: 0 }
+				)
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
 						toast(
@@ -1015,6 +1025,9 @@ class App extends Component {
 									disabledStatus={this.state.disabledStatus}
 									toggleDisabling={this.toggleDisabling}
 									eventsContract={this.state.eventsContract}
+									tokensListContract={
+										this.state.tokensListContract
+									}
 								/>
 							)}
 						/>
@@ -1025,6 +1038,9 @@ class App extends Component {
 								<ConfirmPurchase
 									eventsContract={this.state.eventsContract}
 									executeScroll={this.executeScroll}
+									tokensListContract={
+										this.state.tokensListContract
+									}
 								/>
 							)}
 						/>
@@ -1039,6 +1055,9 @@ class App extends Component {
 									disabledStatus={this.state.disabledStatus}
 									toggleDisabling={this.toggleDisabling}
 									eventsContract={this.state.eventsContract}
+									tokensListContract={
+										this.state.tokensListContract
+									}
 								/>
 							)}
 						/>
@@ -1056,6 +1075,9 @@ class App extends Component {
 									purchased={this.state.purchased}
 									togglePurchase={this.togglePurchase}
 									eventsAddress={this.state.eventsAddress}
+									tokensListContract={
+										this.state.tokensListContract
+									}
 								/>
 							)}
 						/>
@@ -1067,6 +1089,9 @@ class App extends Component {
 								<WrapperTopicsLandingPage
 									{...props}
 									eventsContract={this.state.eventsContract}
+									tokensListContract={
+										this.state.tokensListContract
+									}
 								/>
 							)}
 						/>
@@ -1078,6 +1103,9 @@ class App extends Component {
 									{...props}
 									disabledStatus={this.state.disabledStatus}
 									inquire={this.inquireBuy}
+									tokensListContract={
+										this.state.tokensListContract
+									}
 								/>
 							)}
 						/>
@@ -1088,6 +1116,9 @@ class App extends Component {
 								<Guide
 									{...props}
 									executeScroll={this.executeScroll}
+									tokensListContract={
+										this.state.tokensListContract
+									}
 								/>
 							)}
 						/>
@@ -1128,6 +1159,9 @@ class App extends Component {
 									disabledStatus={this.state.disabledStatus}
 									toggleDisabling={this.toggleDisabling}
 									eventsContract={this.state.eventsContract}
+									tokensListContract={
+										this.state.tokensListContract
+									}
 								/>
 							)}
 						/>
@@ -1155,6 +1189,9 @@ class App extends Component {
 									disabledStatus={this.state.disabledStatus}
 									toggleDisabling={this.toggleDisabling}
 									eventsContract={this.state.eventsContract}
+									tokensListContract={
+										this.state.tokensListContract
+									}
 								/>
 							)}
 						/>
@@ -1166,6 +1203,9 @@ class App extends Component {
 								<WrapperTopicsLandingPage
 									{...props}
 									eventsContract={this.state.eventsContract}
+									tokensListContract={
+										this.state.tokensListContract
+									}
 								/>
 							)}
 						/>
@@ -1295,6 +1335,9 @@ class App extends Component {
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
 								eventsContract={this.state.eventsContract}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1309,6 +1352,9 @@ class App extends Component {
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
 								eventsContract={this.state.eventsContract}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1323,6 +1369,9 @@ class App extends Component {
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
 								eventsContract={this.state.eventsContract}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1347,6 +1396,9 @@ class App extends Component {
 								{...props}
 								executeScroll={this.executeScroll}
 								eventsContract={this.state.eventsContract}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1365,6 +1417,9 @@ class App extends Component {
 								error={this.state.error}
 								account={this.state.account}
 								eventsContract={this.state.eventsContract}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1380,6 +1435,10 @@ class App extends Component {
 								eventsContract={this.state.eventsContract}
 								userDetails={this.state.userDetails}
 								setUserDetails={this.setUserDetails}
+								handleSignMessage={this.handleSignMessage}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1392,6 +1451,9 @@ class App extends Component {
 								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1409,6 +1471,9 @@ class App extends Component {
 								purchased={this.state.purchased}
 								togglePurchase={this.togglePurchase}
 								eventsAddress={this.state.eventsAddress}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1420,6 +1485,9 @@ class App extends Component {
 								{...props}
 								executeScroll={this.executeScroll}
 								eventsContract={this.state.eventsContract}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1431,6 +1499,9 @@ class App extends Component {
 								{...props}
 								eventsContract={this.state.eventsContract}
 								executeScroll={this.executeScroll}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1442,6 +1513,9 @@ class App extends Component {
 								{...props}
 								disabledStatus={this.state.disabledStatus}
 								inquire={this.inquireBuy}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1453,6 +1527,9 @@ class App extends Component {
 							<WrapperTopicsLandingPage
 								{...props}
 								eventsContract={this.state.eventsContract}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1466,6 +1543,9 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1500,6 +1580,9 @@ class App extends Component {
 							<Guide
 								{...props}
 								executeScroll={this.executeScroll}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1517,7 +1600,12 @@ class App extends Component {
 						exact
 						path="/terms-and-conditions"
 						render={(props) => (
-							<Terms executeScroll={this.executeScroll} />
+							<Terms
+								tokensListContract={
+									this.state.tokensListContract
+								}
+								executeScroll={this.executeScroll}
+							/>
 						)}
 					/>
 					{/* <Route path="*" exact component={EmptyState} /> */}
@@ -1528,6 +1616,9 @@ class App extends Component {
 							<ConfirmPurchase
 								eventsContract={this.state.eventsContract}
 								executeScroll={this.executeScroll}
+								tokensListContract={
+									this.state.tokensListContract
+								}
 							/>
 						)}
 					/>
@@ -1553,6 +1644,7 @@ class App extends Component {
 						eventEndDate={this.state.eventEndDate}
 						phnx_price={this.state.phnx_price}
 						dollar_price={this.state.dollar_price}
+						tokensListContract={this.state.tokensListContract}
 					/>
 					<Sidebar
 						connection={!connecting}
@@ -1561,6 +1653,7 @@ class App extends Component {
 						userDetails={this.state.userDetails}
 						status={this.props.drizzleStatus.initialized}
 						networkId={this.state.networkId}
+						tokensListContract={this.state.tokensListContract}
 					/>
 					<div
 						id="page-content-wrapper"
@@ -1712,6 +1805,9 @@ class App extends Component {
 										}
 										updateUserInfo={this.updateUserInfo}
 										origin={"App"}
+										tokensListContract={
+											this.state.tokensListContract
+										}
 									/>
 								</DialogueBox>
 							</div>

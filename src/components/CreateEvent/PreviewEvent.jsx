@@ -169,7 +169,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function PreviewEvent({ fields, activeStep }) {
+export default function PreviewEvent({ fields, activeStep, tokensListContract }) {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 
@@ -195,6 +195,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 		eventDescription,
 		city,
 		country,
+		isPHNX
 	} = fields;
 
 	const handleClickOpen = () => {
@@ -475,6 +476,7 @@ export default function PreviewEvent({ fields, activeStep }) {
 						eventDate={eventDate}
 						eventStartDate={eventStartDate}
 						eventEndDate={eventEndDate}
+						isPHNX={isPHNX}
 						ticketCategories={
 							ticketCategories ? ticketCategories : []
 						}
@@ -483,6 +485,8 @@ export default function PreviewEvent({ fields, activeStep }) {
 						}
 						city={city ? city.name : ""}
 						country={country ? country.name : ""}
+						tokensListContract={tokensListContract}
+						fields={fields}
 					/>
 					<Button
 						color="primary"

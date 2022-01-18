@@ -18,7 +18,7 @@ import {
 	GLOBAL_NETWORK_ID_2,
 	INFURA_URL,
 	INFURA_URL_2,
-	RinkbeyNetworkArray,
+	// RinkbeyNetworkArray,
 } from "../../config/const";
 
 // import { useHistory } from "react-router-dom";
@@ -38,8 +38,14 @@ const DetailForm = (props) => {
 	const [noDefaultCurrency, setNoDefaultCurrency] = useState(false);
 	// const history = useHistory();
 
+	// useEffect(()=>{},[])
+
 	useEffect(() => {
-		// console.log("this.props.userDetails", props.userDetails);
+		console.log(
+			"This.props.tokenListContract at detailform",
+			props.tokensListContract
+		);
+		// console.log("props.userDetails at detailform", props.userDetails);
 		provideImage();
 	}, [props.userDetails]);
 	const imageData = (index) => {
@@ -135,7 +141,7 @@ const DetailForm = (props) => {
 			const publicAddress = await web3.eth.getAccounts();
 			const networkId = await getNetworkId();
 			const message = await getMessage();
-			const sign = await handleSignMessage(
+			const sign = await props.handleSignMessage(
 				publicAddress[0],
 				message.result.result
 			);
@@ -235,17 +241,6 @@ const DetailForm = (props) => {
 		setAvatarNumber(value);
 	};
 
-	useEffect(() => {
-		if (props.networkId) {
-			setAlternateCurrency({
-				tokenName: "usdt",
-				chainId: props.networkId,
-				// image: RinkbeyNetworkArray[0].networks[0].image,
-				// tokenAddress: RinkbeyNetworkArray[0].networks[0].image
-			});
-		}
-	}, [props.networkId]);
-
 	const updateUserInfo = async (e) => {
 		e.preventDefault();
 		// console.log('alternateCurrency =>> ', alternateCurrency)
@@ -281,22 +276,13 @@ const DetailForm = (props) => {
 		}
 	};
 
-	// const orgDetails = (e) => {
-	// 	// if (e.target.value.split(" ").length <= 500) {
-	// 	// 	orgref.current.enabled;
-	// 	setOrganizer(e.target.value);
-	// 	// } else {
-	// 	// 	e.preventDefault();
-	// 	// 	console.log("Length of organizer details exceeded");
-	// 	// }
-	// };
-
 	useEffect(() => {
 		if (
 			props.userDetails &&
 			props.userDetails.result &&
 			props.userDetails.result.result &&
-			props.userDetails.result.result.userHldr
+			props.userDetails.result.result.userHldr &&
+			props.tokensListContract
 		) {
 			console.log(
 				"UserDetails ,=>>",
@@ -306,40 +292,30 @@ const DetailForm = (props) => {
 				props.userDetails.result.result.userHldr.alternateCurrency;
 			if (typeof defaultCurr == "string") {
 				if (defaultCurr === "Dollar" || defaultCurr === "usd") {
-					setAlternateCurrency({
-						tokenName: "usdt",
-						chainId: props.networkId,
+					setAlternateCurrency(
+						props.tokensListContract && props.tokensListContract[1]
+					);
+				}
+				if (defaultCurr === "") {
+					props.tokensListContract.map((v, i) => {
+						if (v.tokenName == "phoenixdao") {
+							setAlternateCurrency(props.tokensListContract[i]);
+						}
 					});
 				}
-			} else if (
-				typeof defaultCurr == "string" &&
-				defaultCurr.length < 1
-			) {
-				setAlternateCurrency({
-					tokenName: "usdt",
-					chainId: props.networkId,
-				});
-				setNoDefaultCurrency(true);
 			} else if (typeof defaultCurr == "object") {
 				setAlternateCurrency(
 					props.userDetails.result.result.userHldr.alternateCurrency
 				);
+			} else {
+				props.tokensListContract.map((v, i) => {
+					if (v.tokenName == "phoenixdao") {
+						setAlternateCurrency(props.tokensListContract[i]);
+					}
+				});
 			}
 		}
-	}, [props.userDetails]);
-
-	useEffect(() => {
-		console.log("alternateCurrency =>> ", alternateCurrency);
-	}, [alternateCurrency]);
-
-	// const currency = [
-	// 	{ name: "USDT", flag: "" },
-	// 	{ name: "PHNX", flag: "" },
-	// 	{ name: "MATIC", flag: "" },
-	//   { name: "ETHER", flag: "" },
-	// ].map((data) => {
-	// 	return <option value={data.name}>{data.name}</option>;
-	// });
+	}, [props.userDetails, props.tokensListContract]);
 
 	return (
 		<div className="dtl-hldr">
@@ -416,7 +392,15 @@ const DetailForm = (props) => {
 									alternateCurrency.tokenName
 								}
 							>
-								{[
+								{props.tokensListContract &&
+									props.tokensListContract.map((v, i) => {
+										return (
+											<option value={v.tokenName}>
+												{v.tokenName}
+											</option>
+										);
+									})}
+								{/* {[
 									...RinkbeyNetworkArray[
 										props.networkId == 137 ? 0 : 1
 									].networks,
@@ -426,7 +410,7 @@ const DetailForm = (props) => {
 											{data.tokenName}
 										</option>
 									);
-								})}
+								})} */}
 							</select>
 						</div>
 					</div>

@@ -16,7 +16,7 @@ import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 // import PhnxPriceLogo from "../Images/phnxPriceLogo.svg";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import { RinkbeyNetworkArray } from "../../config/const";
+// import { RinkbeyNetworkArray } from "../../config/const";
 
 const useStyles = makeStyles((theme) => ({
 	menuPaper: {
@@ -57,28 +57,6 @@ function PriceSelectBox(props) {
 		token: props.token,
 		amount: props.value,
 	});
-	// const tokenList = [
-	// 	{
-	// 		image: PhnxPriceLogo,
-	// 		name: "Phoenix (PHNX)",
-	// 	},
-	// 	{
-	// 		image: EthPriceLogo,
-	// 		name: "Ethereum (ETH)",
-	// 	},
-	// 	{
-	// 		image: MaticPriceLogo,
-	// 		name: "Polygon (MATIC)",
-	// 	},
-	// 	{
-	// 		image: TetherPriceLogo,
-	// 		name: "Tether (USDT)",
-	// 	},
-	// 	{
-	// 		image: SolanaPriceLogo,
-	// 		name: "Solana (SOL)",
-	// 	},
-	// ];
 	const [open, setOpen] = React.useState(false);
 	const anchorRef = React.useRef(null);
 
@@ -90,7 +68,6 @@ function PriceSelectBox(props) {
 		if (anchorRef.current && anchorRef.current.contains(event.target)) {
 			return;
 		}
-
 		setOpen(false);
 	};
 
@@ -118,10 +95,17 @@ function PriceSelectBox(props) {
 	const handleChangeInPrice = (event) => {
 		event.preventDefault();
 		let { myValue } = event.currentTarget.dataset;
-		if (myValue) {
-			[
-				...RinkbeyNetworkArray[props.networkId == 137 ? 0 : 1].networks,
-			].map((v, i) => {
+		// if (myValue) {
+		// 	[
+		// 		...RinkbeyNetworkArray[props.networkId == 137 ? 0 : 1].networks,
+		// 	].map((v, i) => {
+		// 		if (v.tokenName == myValue) {
+		// 			props.setSelectedToken(v);
+		// 		}
+		// 	});
+		// }
+		if (myValue && props.tokensListContract) {
+			props.tokensListContract.map((v, i) => {
 				if (v.tokenName == myValue) {
 					props.setSelectedToken(v);
 				}
@@ -141,7 +125,7 @@ function PriceSelectBox(props) {
 					aria-haspopup="true"
 					onTouchStart={(event) => event.stopPropagation()}
 					onMouseDown={(event) => event.stopPropagation()}
-					value={"phnx"}
+					value={props.token}
 					onClick={(event) => {
 						// Prevent CardActionArea Click
 						event.preventDefault();
@@ -160,7 +144,14 @@ function PriceSelectBox(props) {
 							marginRight: "4px",
 						}}
 					/>
-					{`${price.amount}`}
+					{/* {price.amount ? `${price.amount}` : `__`} */}
+					{price.amount
+						? props.isPHNX
+							? `${price.amount}`
+							: (Number(price.amount) * 1.02)
+									.toString()
+									.slice(0, 7) // If token is not Phnx it's price will be shown 102%
+						: `__`}
 					<ArrowDropDownIcon
 						style={{ color: "rgba(0, 0, 0, 0.7)" }}
 					/>
@@ -189,53 +180,71 @@ function PriceSelectBox(props) {
 										id="menu-list-grow"
 										onKeyDown={handleListKeyDown}
 									>
-										{[
+										{/* {[
 											...RinkbeyNetworkArray[
 												props.networkId == 137 ? 0 : 1
 											].networks,
-										].map((data) => {
-											return (
-												<MenuItem
-													value={data.tokenName}
-													data-my-value={
-														data.tokenName
-													}
-													onTouchStart={(event) =>
-														event.stopPropagation()
-													}
-													onMouseDown={(event) =>
-														event.stopPropagation()
-													}
-													onClick={(event) => {
-														// Prevent CardActionArea Click
-														handleChangeInPrice(
-															event
-														);
-														handleToggle(event);
-													}}
-												>
-													<ListItemIcon
-														className={
-															classes.networkIcon
-														}
-													>
-														<img
-															src={data.image}
-															style={{
-																height: "20px",
+										].map((data) => { */}
+										{props.tokensListContract &&
+											props.tokensListContract.map(
+												(data, i) => {
+													return (
+														<MenuItem
+															value={
+																data.tokenName
+															}
+															data-my-value={
+																data.tokenName
+															}
+															onTouchStart={(
+																event
+															) =>
+																event.stopPropagation()
+															}
+															onMouseDown={(
+																event
+															) =>
+																event.stopPropagation()
+															}
+															onClick={(
+																event
+															) => {
+																// Prevent CardActionArea Click
+																handleChangeInPrice(
+																	event
+																);
+																handleToggle(
+																	event
+																);
 															}}
-														/>
-													</ListItemIcon>
-													<ListItemText
-														className={
-															classes.menuItem
-														}
-													>
-														{data.tokenName}
-													</ListItemText>
-												</MenuItem>
-											);
-										})}
+														>
+															<ListItemIcon
+																className={
+																	classes.networkIcon
+																}
+															>
+																<img
+																	src={
+																		data.image
+																	}
+																	style={{
+																		height: "20px",
+																	}}
+																/>
+															</ListItemIcon>
+															<ListItemText
+																className={
+																	classes.menuItem
+																}
+															>
+																{
+																	data.displayName
+																}
+															</ListItemText>
+														</MenuItem>
+													);
+												}
+											)}
 									</MenuList>
 								</ClickAwayListener>
 							</Paper>
@@ -243,81 +252,6 @@ function PriceSelectBox(props) {
 					)}
 				</Popper>
 			</div>
-			{/* <Select
-				labelId="demo-simple-select-outlined-label"
-				id="demo-simple-select-outlined"
-				fullWidth
-				// onChange={t}
-				onTouchStart={(event) => event.stopPropagation()}
-				onMouseDown={(event) => event.stopPropagation()}
-				onClick={(event) => {
-					// Prevent CardActionArea Click
-					event.preventDefault();
-				}}
-				displayEmpty
-				disableUnderline
-				className={classes.menuPaper}
-				inputProps={{
-					underline: {
-						"&&&:before": {
-							borderBottom: "none",
-						},
-						"&&:after": {
-							borderBottom: "none",
-						},
-					},
-					className: classes.PhnxPrice,
-				}}
-				MenuProps={{
-					classes: {
-						paper: classes.menuPaper,
-					},
-					getContentAnchorEl: null,
-					anchorOrigin: {
-						vertical: "bottom",
-						horizontal: "left",
-					},
-				}}
-				value={"	"}
-			>
-				<MenuItem
-					value={value}
-					style={{
-						fontFamily: "'Aeonik', sans-serif",
-					}}
-					onTouchStart={(event) => event.stopPropagation()}
-					onMouseDown={(event) => event.stopPropagation()}
-					onClick={(event) => {
-						// Prevent CardActionArea Click
-						event.preventDefault();
-					}}
-				>
-					{value}
-				</MenuItem>
-				{tokenList.map((token) => {
-					return (
-						<MenuItem
-							onTouchStart={(event) => event.stopPropagation()}
-							onMouseDown={(event) => event.stopPropagation()}
-							onClick={(event) => {
-								// Prevent CardActionArea Click
-								event.preventDefault();
-							}}
-							value={token.name}
-						>
-							<ListItemIcon className={classes.networkIcon}>
-								<img
-									src={token.image}
-									style={{ height: "20px" }}
-								/>
-							</ListItemIcon>
-							<ListItemText className={classes.menuItem}>
-								{token.name}
-							</ListItemText>
-						</MenuItem>
-					);
-				})}
-			</Select> */}
 		</div>
 	);
 }

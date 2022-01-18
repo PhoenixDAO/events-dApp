@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
 import { pricingFormatter } from "../../utils/pricingSuffix";
 import PropTypes from "prop-types";
+import PhnxLogo from "../Images/phnxPriceLogo.svg";
 import { drizzleConnect } from "drizzle-react";
 import {
 	API_URL,
@@ -41,7 +42,7 @@ import {
 import ShareModal from "../common/ShareModal";
 import SendTicket from "../common/SendTicket";
 import PriceSelectBox from "./PriceSelectBox";
-import { RinkbeyNetworkArray } from "../../config/const";
+// import { RinkbeyNetworkArray } from "../../config/const";
 
 var moment = require("moment");
 
@@ -254,7 +255,6 @@ const EventCard = (props, context) => {
 		eventId,
 		myFavorites,
 		favoriteEvent,
-		//
 		eventOrganizer,
 		eventDate,
 		eventStartDate,
@@ -269,6 +269,10 @@ const EventCard = (props, context) => {
 	} = props;
 
 	useEffect(() => {
+		console.log(
+			"This.props.tokenListContract at EventCard",
+			props.tokensListContract
+		);
 		setIcon(favoriteEvent);
 		getPhoenixDAOMarketValue();
 		console.log("tokenPrices ==>>>>", tokenPrices);
@@ -280,11 +284,7 @@ const EventCard = (props, context) => {
 	const [open2, setOpen2] = useState(false);
 	const [sendAddress, setSendAddress] = useState("");
 	const [PhoenixDAO_market, setPhoenixDAO_market] = useState("");
-	const [selectedToken, setSelectedToken] = useState({
-		tokenName: "",
-		chainId: "",
-		image: "",
-	});
+	const [selectedToken, setSelectedToken] = useState(null);
 
 	var atob = require("atob");
 
@@ -299,10 +299,24 @@ const EventCard = (props, context) => {
 				props.userDetails.result.result.userHldr.alternateCurrency;
 			if (typeof defaultCurr == "string") {
 				if (defaultCurr === "Dollar" || defaultCurr === "usd") {
-					setSelectedToken({
-						tokenName: "usdt",
-						chainId: props.networkId,
-						image: RinkbeyNetworkArray[0].networks[2].image,
+					// setSelectedToken({
+					// 	tokenName: "usdt",
+					// 	chainId: props.networkId,
+					// 	image: RinkbeyNetworkArray[0].networks[2].image,
+					// });
+					props.tokensListContract.map((v, i) => {
+						if (v.tokenName == "usd-coin") {
+							setSelectedToken(props.tokensListContract[i]);
+						}
+					});
+					setSelectedToken(props.tokensListContract[1]);
+				}
+				if (defaultCurr === "") {
+					// setSelectedToken(props.tokensListContract[0]);
+					props.tokensListContract.map((v, i) => {
+						if (v.tokenName == "phoenixdao") {
+							setSelectedToken(props.tokensListContract[i]);
+						}
 					});
 				}
 			}
@@ -311,39 +325,54 @@ const EventCard = (props, context) => {
 					props.userDetails.result.result.userHldr.alternateCurrency
 						.tokenName;
 				console.log("propsTokenName =>>", propsTokenName);
-				setSelectedToken({
-					...props.userDetails.result.result.userHldr
-						.alternateCurrency,
-					image: RinkbeyNetworkArray[
-						props.networkId == 137 ? 0 : 1
-					].networks.map((v, i) => {
-						if (propsTokenName == ("" | "Dollar" | "usd")) {
-							console.log(
-								"Condition 1 image =>> propsTokenName",
-								propsTokenName,
-								"RinkbeyImage ==>>> ",
-								RinkbeyNetworkArray[0].networks[0].image
-							);
-							return RinkbeyNetworkArray[0].networks[0].image;
+				props.tokensListContract &&
+					props.tokensListContract.map((v, i) => {
+						if (propsTokenName == v.tokenName) {
+							setSelectedToken(props.tokensListContract[i]);
 						}
-						if (v.tokenName == propsTokenName) {
-							console.log(
-								"Condition 2 image =>> propsTokenName",
-								propsTokenName,
-								"RinkbeyImage ==>>> ",
-								v.image.slice(5, 14)
-								// atob(v.image.slice(22))
-							);
-
-							// return atob(v.image.slice(22));
-							// return base64ToBlob(v.image);
-							return v.image;
-						}
-					}),
-				});
+					});
+				// setSelectedToken({
+				// 	...props.userDetails.result.result.userHldr
+				// 		.alternateCurrency,
+				// 	image: RinkbeyNetworkArray[
+				// 		props.networkId == 137 ? 0 : 1
+				// 	].networks.map((v, i) => {
+				// 		if (propsTokenName == ("" | "Dollar" | "usd")) {
+				// 			console.log(
+				// 				"Condition 1 image =>> propsTokenName",
+				// 				propsTokenName,
+				// 				"RinkbeyImage ==>>> ",
+				// 				RinkbeyNetworkArray[0].networks[0].image
+				// 			);
+				// 			return RinkbeyNetworkArray[0].networks[0].image;
+				// 		}
+				// 		if (v.tokenName == propsTokenName) {
+				// 			console.log(
+				// 				"Condition 2 image =>> propsTokenName",
+				// 				propsTokenName,
+				// 				"RinkbeyImage ==>>> ",
+				// 				v.image.slice(5, 14)
+				// 				// atob(v.image.slice(22))
+				// 			);
+				// 			return v.image;
+				// 		}
+				// 	}),
+				// });
 			}
+		} else {
+			props.tokensListContract &&
+				props.tokensListContract.map((v, i) => {
+					if (v.tokenName == "phoenixdao") {
+						setSelectedToken(props.tokensListContract[i]);
+					}
+				});
 		}
 	}, [props.userDetails]);
+
+	// console.log(
+	// 	"This.props.tokensListContract EventCard",
+	// 	props.tokensListContract
+	// );
 
 	// const [selectedToken, setSelectedToken] = useState({
 	// 	tokenName: RinkbeyNetworkArray[0].networks[0].tokenName,
@@ -428,8 +457,10 @@ const EventCard = (props, context) => {
 			.catch(console.log);
 	};
 	// console.log("phnx price coingecko: ",event_data.prices)
-	let dollar_price = "";
-	let token_price = "";
+	let dollar_price = 0;
+	let token_price = 0;
+
+	// Dynamic function for price calculation starts
 	if (event_data.isPHNX) {
 		dollar_price = event_data.prices.map((price) => {
 			return (
@@ -438,82 +469,128 @@ const EventCard = (props, context) => {
 		});
 		token_price = Web3.utils.fromWei(event_data.prices[0].toString());
 		//  console.log("phnx price coingecko: ",phnx_price, dollar_price)
-	} else {
-		console.log("selectedToken => ", selectedToken);
-		console.log("event_data => ", event_data, "token prices", tokenPrices);
-		if (selectedToken.tokenName == "usdt") {
-			token_price = event_data.prices.map((price) => {
-				// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
-				return (
-					Web3.utils.fromWei(price.toString()) / tokenPrices.usdt
-				).toFixed(3);
-			});
-		} else if (selectedToken.tokenName == "usdc") {
-			token_price = event_data.prices.map((price) => {
-				// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
-				return (
-					Web3.utils.fromWei(price.toString()) / tokenPrices.usdc
-				).toFixed(3);
-			});
-		} else if (selectedToken.tokenName == "phnx") {
-			// let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.phnx)
-			// return tokenPric;
-			token_price = event_data.prices.map((price) => {
-				return (
-					Web3.utils.fromWei(price.toString()) / tokenPrices.phnx
-				).toFixed(3);
-			});
-		} else if (selectedToken.tokenName == "ether") {
-			token_price = event_data.prices.map((price) => {
-				//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
-				if (
-					Web3.utils.fromWei(price.toString()) / tokenPrices.eth >
-					0.1
-				) {
-					return (
-						Web3.utils.fromWei(price.toString()) / tokenPrices.eth
-					).toFixed(3);
+	} else if (props.tokensListContract && selectedToken) {
+		let selectedTokenName = selectedToken.tokenName;
+		const TOKENS_LIST = props.tokensListContract;
+		TOKENS_LIST.map((v, i) => {
+			if (selectedTokenName == v.tokenName) {
+				if (v.tokenName == "weth" || v.tokenName == "ethereum") {
+					token_price = event_data.prices.map((price) => {
+						if (
+							Web3.utils.fromWei(price.toString()) / v.usdPrice >
+							0.1
+						) {
+							return (
+								Web3.utils.fromWei(price.toString()) /
+								v.usdPrice
+							).toFixed(3);
+						} else {
+							return (
+								Web3.utils.fromWei(price.toString()) /
+								v.usdPrice
+							);
+						}
+					});
 				} else {
-					return (
-						Web3.utils.fromWei(price.toString()) / tokenPrices.eth
-					);
+					token_price = event_data.prices.map((price) => {
+						return (
+							Web3.utils.fromWei(price.toString()) / v.usdPrice
+						).toFixed(3);
+					});
 				}
-			});
-		} else if (selectedToken.tokenName == "weth") {
-			token_price = event_data.prices.map((price) => {
-				//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
-				if (
-					Web3.utils.fromWei(price.toString()) / tokenPrices.weth >
-					0.1
-				) {
-					return (
-						Web3.utils.fromWei(price.toString()) / tokenPrices.weth
-					).toFixed(3);
-				} else {
-					return (
-						Web3.utils.fromWei(price.toString()) / tokenPrices.weth
-					);
-				}
-			});
-		} else if (selectedToken.tokenName == "matic") {
-			token_price = event_data.prices.map((price) => {
-				//  console.log('matic_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.matic)
-				return (
-					Web3.utils.fromWei(price.toString()) / tokenPrices.matic
-				).toFixed(3);
-			});
-		} else {
-			token_price = event_data.prices.map((price) => {
-				// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
-				return (
-					Web3.utils.fromWei(price.toString()) / tokenPrices.usdt
-				).toFixed(3);
-			});
-		}
-		//  dollar_price = event_data.prices[0] / 1000000;
+			}
+		});
 		dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
-		// console.log("phnx price coingecko: ",phnx_price, dollar_price)
+		// token_price = Web3.utils.fromWei(event_data.prices[0].toString());
+		// Dynamic function for price calculation Ends
 	}
+
+	// dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
+
+	// if (event_data.isPHNX) {
+	// 	dollar_price = event_data.prices.map((price) => {
+	// 		return (
+	// 			Web3.utils.fromWei(price.toString()) * PhoenixDAO_market.usd
+	// 		).toFixed(3);
+	// 	});
+	// 	token_price = Web3.utils.fromWei(event_data.prices[0].toString());
+	// 	//  console.log("phnx price coingecko: ",phnx_price, dollar_price)
+	// } else {
+	// 	console.log("selectedToken => ", selectedToken);
+	// 	console.log("event_data => ", event_data, "token prices", tokenPrices);
+	// 	if (selectedToken.tokenName == "usdt") {
+	// 		token_price = event_data.prices.map((price) => {
+	// 			// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+	// 			return (
+	// 				Web3.utils.fromWei(price.toString()) / tokenPrices.usdt
+	// 			).toFixed(3);
+	// 		});
+	// 	} else if (selectedToken.tokenName == "usdc") {
+	// 		token_price = event_data.prices.map((price) => {
+	// 			// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+	// 			return (
+	// 				Web3.utils.fromWei(price.toString()) / tokenPrices.usdc
+	// 			).toFixed(3);
+	// 		});
+	// 	} else if (selectedToken.tokenName == "phnx") {
+	// 		// let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.phnx)
+	// 		// return tokenPric;
+	// 		token_price = event_data.prices.map((price) => {
+	// 			return (
+	// 				Web3.utils.fromWei(price.toString()) / tokenPrices.phnx
+	// 			).toFixed(3);
+	// 		});
+	// 	} else if (selectedToken.tokenName == "ether") {
+	// 		token_price = event_data.prices.map((price) => {
+	// 			//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
+	// 			if (
+	// 				Web3.utils.fromWei(price.toString()) / tokenPrices.eth >
+	// 				0.1
+	// 			) {
+	// 				return (
+	// 					Web3.utils.fromWei(price.toString()) / tokenPrices.eth
+	// 				).toFixed(3);
+	// 			} else {
+	// 				return (
+	// 					Web3.utils.fromWei(price.toString()) / tokenPrices.eth
+	// 				);
+	// 			}
+	// 		});
+	// 	} else if (selectedToken.tokenName == "weth") {
+	// 		token_price = event_data.prices.map((price) => {
+	// 			//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
+	// 			if (
+	// 				Web3.utils.fromWei(price.toString()) / tokenPrices.weth >
+	// 				0.1
+	// 			) {
+	// 				return (
+	// 					Web3.utils.fromWei(price.toString()) / tokenPrices.weth
+	// 				).toFixed(3);
+	// 			} else {
+	// 				return (
+	// 					Web3.utils.fromWei(price.toString()) / tokenPrices.weth
+	// 				);
+	// 			}
+	// 		});
+	// 	} else if (selectedToken.tokenName == "matic") {
+	// 		token_price = event_data.prices.map((price) => {
+	// 			//  console.log('matic_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.matic)
+	// 			return (
+	// 				Web3.utils.fromWei(price.toString()) / tokenPrices.matic
+	// 			).toFixed(3);
+	// 		});
+	// 	} else {
+	// 		token_price = event_data.prices.map((price) => {
+	// 			// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
+	// 			return (
+	// 				Web3.utils.fromWei(price.toString()) / tokenPrices.usdt
+	// 			).toFixed(3);
+	// 		});
+	// 	}
+	// 	//  dollar_price = event_data.prices[0] / 1000000;
+	// 	dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());
+	// 	// console.log("phnx price coingecko: ",phnx_price, dollar_price)
+	// }
 
 	const checkExpiry = () => {
 		if (props.checkExpiry || props.selectedTab) {
@@ -687,6 +764,13 @@ const EventCard = (props, context) => {
 															'"Aeonik", sans-serif',
 													}}
 												>
+													<img
+														src={PhnxLogo}
+														style={{
+															height: "25px",
+															marginRight: "4px",
+														}}
+													/>
 													{pricingFormatter(
 														token_price,
 														"PHNX"
@@ -768,6 +852,10 @@ const EventCard = (props, context) => {
 												)}
 											</p> */}
 											<PriceSelectBox
+												isPHNX={event_data.isPHNX}
+												tokensListContract={
+													props.tokensListContract
+												}
 												token="phnx"
 												value={pricingFormatter(
 													token_price[0],
@@ -811,6 +899,10 @@ const EventCard = (props, context) => {
 												)}
 											</p> */}
 											<PriceSelectBox
+												isPHNX={event_data.isPHNX}
+												tokensListContract={
+													props.tokensListContract
+												}
 												token="phnx"
 												value={pricingFormatter(
 													token_price[0],
@@ -835,82 +927,6 @@ const EventCard = (props, context) => {
 									)}
 									{/* {console.log("price",event_data.name, dollar_price, typeof(dollar_price))} */}
 								</Typography>
-
-								{/* <FormControl
-								variant="outlined"
-								className={`col-lg-3 col-md-4 col-sm-5 ${classes.formControls}`}
-							>
-								<Typography
-									ref={this.eventRef}
-									variant="div"
-									className={`${classes.sortBy}`}
-								>
-									Sort:
-								</Typography>
-								<Select
-									labelId="demo-simple-select-outlined-label"
-									id="demo-simple-select-outlined"
-									fullWidth
-									value={this.state.category}
-									onChange={this.categoryChange}
-									displayEmpty
-									className={classes.menuPaper}
-									MenuProps={{
-										classes: {
-											paper: classes.menuPaper,
-										},
-										getContentAnchorEl: null,
-										anchorOrigin: {
-											vertical: "bottom",
-											horizontal: "left",
-										},
-									}}
-								>
-									<MenuItem
-										value="All Events"
-										style={{
-											fontFamily: "'Aeonik', sans-serif",
-										}}
-									>
-										All Events
-									</MenuItem>
-									<MenuItem
-										value="Trending Events"
-										style={{
-											fontFamily: "'Aeonik', sans-serif",
-										}}
-									>
-										Trending Events
-									</MenuItem>
-									<MenuItem
-										value="populartopics"
-										style={{
-											fontFamily: "'Aeonik', sans-serif",
-										}}
-									>
-										Popular Topics
-									</MenuItem>
-								</Select>
-							</FormControl> */}
-
-								{/* ? `Starting from ${prices[0]} PHNX` : prices[0]} */}
-
-								{/* <div className={classes.eventinfo}>
-									<span className={classes.PhnxPrice} >{event_data[3]
-										? numeral(price).format("0.000") + "PHNX"
-										: "FREE"}
-									</span>
-									<div style={{ color: "#56555D", fontSize: "14px" }}>
-										{event_data[3]
-											? "$" + numeral(
-												price *
-												this.state
-													.PhoenixDAO_market
-													.usd
-											).format("0.000")
-											: ""}
-									</div>
-								</div> */}
 							</div>
 							<div>
 								<Typography
@@ -1150,7 +1166,6 @@ const mapStateToProps = (state) => {
 	return {
 		// contracts: state.contracts,
 		accounts: state.accounts[0],
-
 		networkId: state.web3.networkId,
 	};
 };

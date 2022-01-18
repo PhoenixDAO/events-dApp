@@ -390,7 +390,6 @@ class TopicLandingPage extends Component {
 			},
 		})
 			.then((graphEvents) => {
-
 				if (!graphEvents.data || graphEvents.data.data == "undefined") {
 					this.setState({
 						loading: false,
@@ -477,10 +476,10 @@ class TopicLandingPage extends Component {
 					filteredEvents = this.state.topic_copy;
 				}
 			} catch (e) {}
-			if((window.screen.height/window.screen.width)<1){
-				window.scroll(0, window.screen.height * 0.5);			
-			}else{
-				window.scroll(0, window.screen.height*0.58);
+			if (window.screen.height / window.screen.width < 1) {
+				window.scroll(0, window.screen.height * 0.5);
+			} else {
+				window.scroll(0, window.screen.height * 0.58);
 			}
 			this.setState({
 				Topic_Events: filteredEvents,
@@ -499,15 +498,14 @@ class TopicLandingPage extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-            const get = await axios.get(
-                `${API_URL}${REPORT_EVENT}/${networkId}`
-            );
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
-		} catch (error) {
-		}
+		} catch (error) {}
 	};
 	//Sort Active Events By Date(Newest/Oldest)
 	toggleSortDate = (e) => {
@@ -571,15 +569,14 @@ class TopicLandingPage extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-            const get = await axios.get(
-                `${API_URL}${REPORT_EVENT}/${networkId}`
-            );
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
-		} catch (error) {
-		}
+		} catch (error) {}
 	};
 
 	onCategoryChange = (e) => {

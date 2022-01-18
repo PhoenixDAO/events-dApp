@@ -139,7 +139,9 @@ class CreateEvent extends Component {
 			.call();
 		eventCount = Number(eventCount) + 1;
 		var base_url = window.location.origin;
-		const shareUrl = `${base_url}/event/${urlFormatter(eventName)}/${eventCount}`;
+		const shareUrl = `${base_url}/event/${urlFormatter(
+			eventName
+		)}/${eventCount}`;
 		this.setState({ shareUrl: shareUrl });
 	}
 
@@ -234,19 +236,19 @@ class CreateEvent extends Component {
 		for (var i = 0; i < ticketCategories.length; i++) {
 			categories.push(ticketCategories[i].ticketName);
 			// we should send phoenix price instead of dollar price
-			console.log("hello prices", ticketCategories)
-			if(isPHNX){
+			console.log("hello prices", ticketCategories);
+			if (isPHNX) {
 				prices.push(
 					Web3.utils.toWei(ticketCategories[i].phnxPrice.toString())
 				);
-				console.log("hello prices",prices)
-			}else{
+				console.log("hello prices", prices);
+			} else {
 				prices.push(
 					Web3.utils.toWei(ticketCategories[i].dollarPrice.toString())
 				);
-				console.log("hello prices",prices)
+				console.log("hello prices", prices);
 			}
-			
+
 			tktQntySold.push("0");
 
 			ticketLimited.push(
@@ -301,11 +303,19 @@ class CreateEvent extends Component {
 
 		if (!hash[0].hash) {
 			this.onHandleTxReject();
-			toast(<Notify networkId={this.props.networkId}  error={"error"} networkId={this.props.networkId} message={"IPFS problem!"} />, {
-				position: "bottom-right",
-				autoClose: true,
-				pauseOnHover: true,
-			});
+			toast(
+				<Notify
+					networkId={this.props.networkId}
+					error={"error"}
+					networkId={this.props.networkId}
+					message={"IPFS problem!"}
+				/>,
+				{
+					position: "bottom-right",
+					autoClose: true,
+					pauseOnHover: true,
+				}
+			);
 		} else {
 			this.setState({
 				progressText: 100,
@@ -323,6 +333,26 @@ class CreateEvent extends Component {
 				infura = INFURA_URL_2;
 			}
 			const web3 = new Web3(infura);
+			console.log("Event form detailssss", [
+				oneTimeBuy,
+				token, // false means free
+				onsite, // true means event is onsite
+				isPHNX,
+				this.props.accounts[0], //owner
+				time.toString(), //time
+				totalQuantity.toString(), //totalQuantity
+				"0", //totalQntySold
+				eventName,
+				eventTopic,
+				location,
+				cityName,
+				hash[0].hash,
+				ticketLimited,
+				tktQnty,
+				prices,
+				tktQntySold,
+				categories,
+			]);
 			this.props.eventsContract.methods
 				.createEvent([
 					oneTimeBuy,
@@ -358,10 +388,11 @@ class CreateEvent extends Component {
 						var cookie = `${name}=""`;
 						document.cookie = cookie;
 						toast(
-							<Notify networkId={this.props.networkId} 
+							<Notify
+								networkId={this.props.networkId}
 								// hash={txhash}
 								icon="fas fa-edit fa-2x"
-								networkId={this.props.networkId} 
+								networkId={this.props.networkId}
 								text={"Preparing your event... 🚀"}
 								color="#413AE2"
 							/>,
@@ -378,8 +409,9 @@ class CreateEvent extends Component {
 							);
 							if (receipt) {
 								toast(
-									<Notify networkId={this.props.networkId} 
-									networkId={this.props.networkId} 
+									<Notify
+										networkId={this.props.networkId}
+										networkId={this.props.networkId}
 										text={
 											"Transaction successful!\nYou can check event now."
 										}
@@ -410,9 +442,9 @@ class CreateEvent extends Component {
 					const eventDesc =
 						eventDescription.split(" ").length >= 15
 							? eventDescription
-								.split(" ")
-								.splice(0, 14)
-								.join(" ")
+									.split(" ")
+									.splice(0, 14)
+									.join(" ")
 							: eventDescription
 									.split(" ")
 									.splice(
@@ -446,8 +478,9 @@ class CreateEvent extends Component {
 									);
 								if (receipt) {
 									toast(
-										<Notify networkId={this.props.networkId} 
-										networkId={this.props.networkId} 
+										<Notify
+											networkId={this.props.networkId}
+											networkId={this.props.networkId}
 											text={
 												"Transaction successful!\nYou can check event now."
 											}
@@ -469,8 +502,9 @@ class CreateEvent extends Component {
 						} else {
 							this.onHandleTxReject();
 							toast(
-								<Notify networkId={this.props.networkId} 
-								networkId={this.props.networkId} 
+								<Notify
+									networkId={this.props.networkId}
+									networkId={this.props.networkId}
 									error={error}
 									message={error.message}
 								/>,
@@ -612,7 +646,7 @@ class CreateEvent extends Component {
 						error: true,
 						error_text: "Transaction Rejected",
 					},
-					() => { }
+					() => {}
 				);
 			});
 	};
@@ -736,6 +770,10 @@ class CreateEvent extends Component {
 							<PreviewEvent
 								fields={this.state.fields}
 								activeStep={this.state.activeStep}
+								tokensListContract={
+									this.props
+										.tokensListContract
+								}
 							/>
 						</div>
 					</div>
@@ -762,6 +800,10 @@ class CreateEvent extends Component {
 						<PreviewEvent
 							fields={this.state.fields}
 							activeStep={this.state.activeStep}
+							tokensListContract={
+								this.props
+									.tokensListContract
+							}
 						/>
 					</div>
 				</div>
