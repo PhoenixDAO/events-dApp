@@ -85,26 +85,22 @@ class Sidebar extends Component {
 		var isActive = this.context.router.route.location.pathname;
 		var activeClassName = "";
 		var linkLocation = this.props.to;
-		
+
 		if (isActive == linkLocation) {
 			activeClassName = "nav-item active";
 		} else {
 			activeClassName = "nav-item";
 		}
 
-		if(this.props.networkId){
-			if(this.props.networkId == 137 ){
-				this.setState({openNetworkSnackbar:false});
-			}
-			else if(this.props.networkId == 1){
-				this.setState({openNetworkSnackbar:false});
-			}
-			else{
-				this.setState({openNetworkSnackbar:true});
+		if (this.props.networkId) {
+			if (this.props.networkId == 137) {
+				this.setState({ openNetworkSnackbar: false });
+			} else if (this.props.networkId == 1) {
+				this.setState({ openNetworkSnackbar: false });
+			} else {
+				this.setState({ openNetworkSnackbar: true });
 			}
 		}
-		
-		
 	}
 
 	toggleSidebarClass = (closeOnly) => {
@@ -166,10 +162,9 @@ class Sidebar extends Component {
 	handleSnackbarClose = (number) => {
 		if (number == 1) {
 			this.setState({ openSnackbarForNoMetaMask: false });
-		} else if(number == 2){
+		} else if (number == 2) {
 			this.setState({ openSnackbarForPendingRequest: false });
-		}
-		else {
+		} else {
 			this.setState({ openNetworkSnackbar: false });
 		}
 	};
@@ -238,7 +233,7 @@ class Sidebar extends Component {
 						height: "40px",
 						objectFit: "cover",
 					}}
-					/>
+				/>
 				// 	<div
 				// 	style={{backgroundImage:`url(${this.state.avatar})`, height: "40px",width: "40px", backgroundSize: "cover", mozBackgroundSize: "cover", backgroundPosition: "center", borderRadius: "50%", border: "1px solid #ceced3"}}
 				// 	// className="bird"
@@ -297,8 +292,7 @@ class Sidebar extends Component {
 				networkId: false,
 			});
 			return;
-		} catch (err) {
-		}
+		} catch (err) {}
 	};
 
 	getWalletError = () => {
@@ -321,15 +315,16 @@ class Sidebar extends Component {
 				);
 			} else {
 				message = (
-					<div style={{display:"flex"}}>
+					<div style={{ display: "flex" }}>
 						<div>
-						<img
-							className="switch-img"
-							src="/images/icons/switch.svg"
-						/>
+							<img
+								className="switch-img"
+								src="/images/icons/switch.svg"
+							/>
 						</div>
 						<div>
-						Please switch to the Matic or Ethereum Mainnet Network
+							Please switch to the Matic or Ethereum Mainnet
+							Network
 						</div>
 					</div>
 				);
@@ -363,9 +358,9 @@ class Sidebar extends Component {
 							to="/accountdetails"
 							style={{ display: "flex", alignItems: "center" }}
 						>
-							<span style={{height: "40px", width:"40px"}}>
-							{this.renderImage()}
-				</span>
+							<span style={{ height: "40px", width: "40px" }}>
+								{this.renderImage()}
+							</span>
 							<span
 								style={{
 									marginLeft: "20px",
@@ -413,7 +408,8 @@ class Sidebar extends Component {
 						message={
 							<span>
 								{/* {" "} */}
-								Please switch to the Matic or Ethereum Mainnet Network
+								Please switch to the Matic or Ethereum Mainnet
+								Network
 							</span>
 						}
 						onClose={() => this.handleSnackbarClose(3)}
@@ -634,42 +630,42 @@ class Sidebar extends Component {
 								className="grid toggleHidden"
 								style={{ maxWidth: "250px" }}
 							>
-									<a
-										target="_blank"
-										title="Telegram"
-										href="https://t.me/PHNXDAO"
-									>
-								<div className="imageHolder">
+								<a
+									target="_blank"
+									title="Telegram"
+									href="https://t.me/PHNXDAO"
+								>
+									<div className="imageHolder">
 										<img
 											src="/images/icons/telegram.svg"
 											alt="telegram"
 										/>
-								</div>
-									</a>
-									<a
-										target="_blank"
-										title="Twitter"
-										href="https://twitter.com/phnxdao"
-									>
-								<div className="imageHolder">
+									</div>
+								</a>
+								<a
+									target="_blank"
+									title="Twitter"
+									href="https://twitter.com/phnxdao"
+								>
+									<div className="imageHolder">
 										<img
 											src="/images/icons/twitter.svg"
 											alt="twitter"
 										/>
-								</div>
-									</a>
-									<a
-										target="_blank"
-										title="GitHub"
-										href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
-									>
-								<div className="imageHolder">
+									</div>
+								</a>
+								<a
+									target="_blank"
+									title="GitHub"
+									href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
+								>
+									<div className="imageHolder">
 										<img
 											src="/images/icons/github.svg"
 											alt="github"
 										/>
-								</div>
-									</a>
+									</div>
+								</a>
 							</ul>
 							<span
 								className="toggleHidden suggestion"
@@ -1044,44 +1040,68 @@ class Sidebar extends Component {
 								className="grid toggleHidden"
 								style={{ maxWidth: "250px" }}
 							>
-									<a
+								<a
 									target="blank"
 									title="Telegram"
 									href="https://t.me/PHNXDAO"
-									>
-								<div className="imageHolder">
-									
+								>
+									<div className="imageHolder">
 										<img src="/images/icons/telegram.svg" />
-								</div>
-									</a>
-									<a
-										target="blank"
-										title="Twitter"
-										href="https://twitter.com/phnxdao"
-									>
-								<div className="imageHolder">
+									</div>
+								</a>
+								<a
+									target="blank"
+									title="Twitter"
+									href="https://twitter.com/phnxdao"
+								>
+									<div className="imageHolder">
 										<img src="/images/icons/twitter.svg" />
-								</div>
-									</a>
-									<a
-										target="blank"
-										title="GitHub"
-										href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
-									>
-								<div className="imageHolder">
+									</div>
+								</a>
+								<a
+									target="blank"
+									title="GitHub"
+									href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
+								>
+									<div className="imageHolder">
 										<img src="/images/icons/github.svg" />
-								</div>
-									</a>
+									</div>
+								</a>
 							</ul>
 							{/* <div className="toggleHidden suggestion"> */}
-							{(this.state.networkIdNumber === 137)&&<span className="toggleHidden suggestion PolygonLink"  style={{	whiteSpace:"pre-wrap", marginTop:"20px", marginBottom:"20px"}}>
-								<a href="https://macncheese.finance/matic-polygon-mainnet-faucet.php" target="_blank">🏃‍♂️ Matic(Polygon) Mainnet Faucet - Get Free Matic on Layer2</a>
-							</span>}
-							<span className="toggleHidden suggestion"  style={{	whiteSpace:"pre-wrap"}} >
-								Kindly give us your feedback<span> {" "}
-								<a style={{
-									color: "#413ae2", textDecoration: "underline", color: "rgb(65, 58, 226)",
-									textDecoration: "underline",
+							{this.state.networkIdNumber === 137 && (
+								<span
+									className="toggleHidden suggestion PolygonLink"
+									style={{
+										whiteSpace: "pre-wrap",
+										marginTop: "20px",
+										marginBottom: "20px",
+									}}
+								>
+									<a
+										href="https://macncheese.finance/matic-polygon-mainnet-faucet.php"
+										target="_blank"
+									>
+										{/* 🏃‍♂️ Matic(Polygon) Mainnet Faucet - Get
+										Free Matic on Layer2 */}
+										Let us cover your transaction fee, click
+										here to claim $MATIC
+									</a>
+								</span>
+							)}
+							<span
+								className="toggleHidden suggestion"
+								style={{ whiteSpace: "pre-wrap" }}
+							>
+								Kindly give us your feedback
+								<span>
+									{" "}
+									<a
+										style={{
+											color: "#413ae2",
+											textDecoration: "underline",
+											color: "rgb(65, 58, 226)",
+											textDecoration: "underline",
 										}}
 										href="https://docs.google.com/forms/d/e/1FAIpQLScujiQe1JAdsLnmE45u5nUKIvEQsxp-J7UCG9DsnyIp1V9n9w/viewform"
 										target="_blank"
