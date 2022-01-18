@@ -1174,6 +1174,7 @@ class EventPage extends Component {
 					? token_price[categoryIndex] + "PHNX"
 					: "FREE";
 				let priceInDollar = event_data.token ? "$" + dollar_price : "";
+				console.log("event page price:", priceInDollar, priceInPhnx)
 				this.setState({
 					dollar_price: priceInDollar,
 					token_price: priceInPhnx,
@@ -1585,8 +1586,36 @@ class EventPage extends Component {
 			this.setState({ disabledStatus: false });
 		}
 	}
-
 	checkUserBalance = async () => {
+		const weiObject = {
+			0:"noether" ,
+			1: "wei",
+			3:"kwei",
+			3:"Kwei",
+			3:"babbage",
+			3:"femtoether",
+			 6:"mwei",
+			 6:"Mwei",
+			 6:"lovelace",
+			 6:"picoether",
+			 9:"gwei",
+			 9:"Gwei",
+			 9:"shannon",
+			 9:"nanoether",
+			 9:"nano",
+			 12:"szabo",
+			 12:"microether",
+			 12:"micro",
+			 15:"finney",
+			 15:"milliether",
+			 15:"milli",
+			 18:"ether",
+			 21:"kether",
+			 21:"grand",
+			 24:"mether",
+			 27:"gether",
+			 30:"tether"
+		  }
 		if (this.props.tokensListContract && this.state.selectedToken) {
 			const networkId = await getNetworkId();
 			if (
@@ -1594,18 +1623,22 @@ class EventPage extends Component {
 				networkId === GLOBAL_NETWORK_ID_2
 			) {
 				let balance = 0;
-				if (this.state.selectedToken.tokenName == "ether") {
+				if (this.state.selectedToken.tokenName == "ethereum") {
 					const web3 = new Web3(window.ethereum);
 					balance = await web3.eth.getBalance(this.props.accounts[0]);
+					balance = Web3.utils.fromWei(balance.toString());
 				} else {
+					console.log("token address", this.state.selectedToken.tokenAddress)
 					let tokenContract = await initTokenContract(
 						(this.state.isPHNX)?PhoenixDAO_Mainnet_Token_Address:this.state.selectedToken.tokenAddress
 					);
 					balance = await tokenContract.methods
 						.balanceOf(this.props.accounts[0])
 						.call();
+						let decimal = await tokenContract.methods.decimals().call();
+						console.log("checkuser", weiObject[`${decimal}`], decimal, typeof(decimal))
+						balance = await Web3.utils.fromWei(balance.toString(),await weiObject[decimal]);
 				}
-				balance = Web3.utils.fromWei(balance.toString());
 				console.log(
 					`checkUserBalance of ${this.state.selectedToken.tokenName}`,
 					balance
@@ -1672,6 +1705,8 @@ class EventPage extends Component {
 				// 	this.state.selectedCategoryIndex,
 				// 	geoFindUser,
 				// ]);
+				console.log("event page price:", this.props.match.params.id,
+				this.state.selectedCategoryIndex, this.state.selectedToken.tokenAddress )
 				this.setState(
 					{
 						fee: this.state.blockChainEvent[2],

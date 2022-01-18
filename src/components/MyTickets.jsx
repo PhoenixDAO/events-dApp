@@ -217,6 +217,9 @@ class MyTickets extends Component {
 					reloadData={this.reloadData}
 					ticketData={Number(ticket_list[i].id)}
 					eventsContract={this.props.eventsContract}
+					tokensListContract={
+						this.props.tokensListContract
+					}
 				/>
 			);
 		}
