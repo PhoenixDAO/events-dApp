@@ -529,6 +529,9 @@ class Ticket extends Component {
 					eventLocation={this.state.eventLocation}
 					tokenPrices={this.state.tokenPrices}
 					userDetails={this.state.userDetails}
+					tokensListContract={
+						this.props.tokensListContract
+					}
 				/>
 			);
 		}
@@ -553,7 +556,6 @@ class Ticket extends Component {
 		this.updateIPFS();
 		this.updateEvent();
 		this.filterHideEvent();
-		this.GetPrices();
 		this.handleGetUserDetails();
 	}
 
