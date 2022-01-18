@@ -449,7 +449,8 @@ class App extends Component {
 		phnx_price,
 		dollar_price,
 		time,
-		date
+		date,
+		isEthereum
 	) => {
 		let chainId = await this.getNetworkId();
 		if (
@@ -473,7 +474,7 @@ class App extends Component {
 					time,
 					date2: date,
 				},
-				() => this.buy()
+				() => this.buy(isEthereum, phnx_price)
 			);
 		} else {
 			toast(
@@ -569,7 +570,7 @@ class App extends Component {
 	};
 
 	//Buy Function, Notify listen for transaction status.
-	buy = async () => {
+	buy = async (isEthereum, phnx_price) => {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
@@ -646,7 +647,12 @@ class App extends Component {
 				});
 		} else {
 			this.state.buyticket
-				.send({ from: this.state.account })
+				// .send({ from: this.state.account})
+				.send(
+					isEthereum
+						? { from: this.state.account, value: phnx_price }
+						: { from: this.state.account, value: 0 }
+				)
 				.on("transactionHash", (hash) => {
 					if (hash !== null) {
 						toast(

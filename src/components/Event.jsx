@@ -5,19 +5,11 @@ import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Mainnet_Token_Address,
 } from "../config/phoenixDAOcontract_testnet.js";
-
+import Web3 from "web3";
 import ipfs from "../utils/ipfs";
 import { urlFormatter } from "../utils/urlFormatter";
 
 import { API_URL, REPORT_EVENT, GET_USER_DETAIL } from "../config/const";
-import {
-	GetEthPrice,
-	GetPhnxPrice,
-	GetMaticPrice,
-	GetUsdtPrice,
-	GetWethPrice,
-	GetUsdcPrice,
-} from "../services/Services";
 import axios from "axios";
 import Loading from "./Loading";
 // import eventTopics from "../config/topics.json";
@@ -99,93 +91,156 @@ class Event extends Component {
 			eventType: null,
 			eventDescription: null,
 			eventLocation: null,
-			tokenPrices: {
-				phnx: "",
-				eth: "",
-				matic: "",
-				usdt: "",
-				weth: "",
-				usdc: "",
-			},
+			tokenPrices: null,
+			selectedToken: this.props.tokensListContract
+				? this.props.tokensListContract[2]
+				: null,
 			userDetail: null,
 		};
 		this.getUserFavoritesEvent = this.getUserFavoritesEvent.bind(this);
 		this.isCancelled = false;
 		this.giveApproval = this.giveApproval.bind(this);
-		this.GetPrices = this.GetPrices.bind(this);
+		// this.GetPrices = this.GetPrices.bind(this);
 	}
-	GetPrices = async () => {
-		console.log("resEthPrice.data.thereum.usd1");
-		try {
-			let resEthPrice = await GetEthPrice();
-			if (resEthPrice) {
-				// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
-				await this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						eth: resEthPrice.data.ethereum.usd,
-					},
-				});
-			}
-			let resPhnxPrice = await GetPhnxPrice();
-			if (resPhnxPrice) {
-				// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
-				await this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						phnx: resPhnxPrice.data.phoenixdao.usd,
-					},
-				});
-			}
-			let resMaticPrice = await GetMaticPrice();
-			if (resMaticPrice) {
-				// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
-				await this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						matic: resMaticPrice.data[`matic-network`].usd,
-					},
-				});
-			}
-			let resUsdtPrice = await GetUsdtPrice();
-			if (resUsdtPrice) {
-				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				await this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						usdt: resUsdtPrice.data.tether.usd,
-					},
-				});
-			}
-			let resWethPrice = await GetWethPrice();
-			if (resWethPrice) {
-				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				await this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						weth: resWethPrice.data.weth.usd,
-					},
-				});
-			}
-			let resUsdcPrice = await GetUsdcPrice();
-			if (resUsdcPrice) {
-				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				await this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						usdc: resUsdcPrice.data[`usd-coin`].usd,
-					},
-				});
-			}
-		} catch (e) {
-			console.error("Err at GetPrices =>>", e);
+	// GetPrices = async () => {
+	// 	console.log("resEthPrice.data.thereum.usd1");
+	// 	try {
+	// 		let resEthPrice = await GetEthPrice();
+	// 		if (resEthPrice) {
+	// 			// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
+	// 			await this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					eth: resEthPrice.data.ethereum.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resPhnxPrice = await GetPhnxPrice();
+	// 		if (resPhnxPrice) {
+	// 			// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
+	// 			await this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					phnx: resPhnxPrice.data.phoenixdao.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resMaticPrice = await GetMaticPrice();
+	// 		if (resMaticPrice) {
+	// 			// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
+	// 			await this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					matic: resMaticPrice.data[`matic-network`].usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resUsdtPrice = await GetUsdtPrice();
+	// 		if (resUsdtPrice) {
+	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+	// 			await this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					usdt: resUsdtPrice.data.tether.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resWethPrice = await GetWethPrice();
+	// 		if (resWethPrice) {
+	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+	// 			await this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					weth: resWethPrice.data.weth.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resUsdcPrice = await GetUsdcPrice();
+	// 		if (resUsdcPrice) {
+	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+	// 			await this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					usdc: resUsdcPrice.data[`usd-coin`].usd,
+	// 				},
+	// 			});
+	// 		}
+	// 	} catch (e) {
+	// 		console.error("Err at GetPrices =>>", e);
+	// 	}
+	// 	console.log(
+	// 		"this.props.networkId =>>>",
+	// 		this.props.networkId,
+	// 		"this.props.accounts =>>>",
+	// 		this.props.accounts[0]
+	// 	);
+	// 	let res = await getUserDetails({
+	// 		address: this.props.accounts[0],
+	// 		networkId: this.props.networkId,
+	// 	});
+	// 	console.log("res of getUserDetails =>>>>>", res);
+	// 	this.setState({ userDetail: res });
+	// };
+
+	handleGetPrices = async () => {
+		let categoryIndex = 0;
+		let token_price = 0;
+		let dollar_price = 0;
+
+		// Dynamic function for price calculation starts
+		if (this.props.tokensListContract && this.state.selectedToken) {
+			let selectedTokenName = this.state.selectedToken.tokenName;
+			const TOKENS_LIST = this.props.tokensListContract;
+			TOKENS_LIST.map((v, i) => {
+				if (selectedTokenName == v.tokenName) {
+					if (v.tokenName == "weth" || v.tokenName == "ethereum") {
+						token_price = this.state.eventData.prices.map(
+							(price) => {
+								if (
+									Web3.utils.fromWei(price.toString()) /
+										v.usdPrice >
+									0.1
+								) {
+									return (
+										Web3.utils.fromWei(price.toString()) /
+										v.usdPrice
+									).toFixed(3);
+								} else {
+									return (
+										Web3.utils.fromWei(price.toString()) /
+										v.usdPrice
+									);
+								}
+							}
+						);
+					} else {
+						token_price = this.state.eventData.prices.map(
+							(price) => {
+								return (
+									Web3.utils.fromWei(price.toString()) /
+									v.usdPrice
+								).toFixed(3);
+							}
+						);
+					}
+				}
+			});
 		}
-		console.log(
-			"this.props.networkId =>>>",
-			this.props.networkId,
-			"this.props.accounts =>>>",
-			this.props.accounts[0]
+		dollar_price = Web3.utils.fromWei(
+			this.state.eventData.prices[categoryIndex].toString()
 		);
+		// Dynamic function for price calculation Ends
+		let priceInPhnx = this.state.eventData.token
+			? token_price[categoryIndex] + "PHNX"
+			: "FREE";
+		let priceInDollar = this.state.eventData.token
+			? "$" + dollar_price
+			: "";
+		this.setState({
+			dollar_price: priceInDollar,
+			token_price: priceInPhnx,
+		});
+
 		let res = await getUserDetails({
 			address: this.props.accounts[0],
 			networkId: this.props.networkId,
@@ -193,7 +248,6 @@ class Event extends Component {
 		console.log("res of getUserDetails =>>>>>", res);
 		this.setState({ userDetail: res });
 	};
-
 	handleClickOpen = () => {
 		this.setState({ open: true });
 	};
@@ -739,7 +793,8 @@ class Event extends Component {
 			this.props.tokensListContract
 		);
 		// this._isMounted = true;
-		await this.GetPrices();
+		// await this.GetPrices();
+		await this.handleGetPrices();
 		await this.filterHideEvent();
 		await this.updateIPFS();
 		await this.getUserFavoritesEvent();
