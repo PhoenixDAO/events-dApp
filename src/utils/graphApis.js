@@ -36,13 +36,14 @@ export async function generateBuyerArr(eventId) {
 	let buyersListJson = {};
 	let ticketArr = await getResult(eventId);
 	// console.log("ticketsArr", ticketArr);
-	ticketArr.forEach((tktObj) => {
-		// creating json
-		if (buyersListJson[tktObj.buyer] == null) {
-			buyersListJson[tktObj.buyer] = Number(0);
-		}
-		buyersListJson[tktObj.buyer] += Number(1);
-	});
+	ticketArr &&
+		ticketArr.forEach((tktObj) => {
+			// creating json
+			if (buyersListJson[tktObj.buyer] == null) {
+				buyersListJson[tktObj.buyer] = Number(0);
+			}
+			buyersListJson[tktObj.buyer] += Number(1);
+		});
 	let buyer = [];
 	for (const [key, value] of Object.entries(buyersListJson)) {
 		buyer.push({ address: key, count: value });
@@ -71,12 +72,13 @@ async function ticketLocation(eventId) {
 export async function generateJSON(eventId) {
 	let jsonData = {};
 	let ticketArr = await ticketLocation(eventId);
-	ticketArr.forEach((tktObj) => {
-		if (jsonData[tktObj.boughtLocation] == null) {
-			jsonData[tktObj.boughtLocation] = Number(0);
-		}
-		jsonData[tktObj.boughtLocation] += Number(1);
-	});
+	ticketArr &&
+		ticketArr.forEach((tktObj) => {
+			if (jsonData[tktObj.boughtLocation] == null) {
+				jsonData[tktObj.boughtLocation] = Number(0);
+			}
+			jsonData[tktObj.boughtLocation] += Number(1);
+		});
 	let ticketSold = [];
 	for (const [key, value] of Object.entries(jsonData)) {
 		ticketSold.push({ location: key, ticketSold: value });
