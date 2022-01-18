@@ -241,12 +241,6 @@ const DetailForm = (props) => {
 		setAvatarNumber(value);
 	};
 
-	// useEffect(() => {
-	// 	if (props.networkId && props.tokensListContract) {
-	// 		setAlternateCurrency(props.tokensListContract[0]);
-	// 	}
-	// }, [props.networkId, props.tokensListContract]);
-
 	const updateUserInfo = async (e) => {
 		e.preventDefault();
 		// console.log('alternateCurrency =>> ', alternateCurrency)
