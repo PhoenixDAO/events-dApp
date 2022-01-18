@@ -309,26 +309,16 @@ const DetailForm = (props) => {
 						}
 					});
 				}
-			}
-			// else if (
-			// 	typeof defaultCurr == "string" &&
-			// 	defaultCurr.length < 1
-			// ) {
-			// 	setAlternateCurrency(
-			// 		this.props.tokensListContract
-			// 			? this.props.tokensListContract[0]
-			// 			: null
-			// 	);
-			// 	setNoDefaultCurrency(true);
-			// }
-			else if (typeof defaultCurr == "object") {
+			} else if (typeof defaultCurr == "object") {
 				setAlternateCurrency(
 					props.userDetails.result.result.userHldr.alternateCurrency
 				);
 			} else {
-				setAlternateCurrency(
-					props.tokensListContract && props.tokensListContract[0]
-				);
+				props.tokensListContract.map((v, i) => {
+					if (v.tokenName == "phoenixdao") {
+						setAlternateCurrency(props.tokensListContract[i]);
+					}
+				});
 			}
 		}
 	}, [props.userDetails, props.tokensListContract]);
