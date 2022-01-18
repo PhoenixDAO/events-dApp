@@ -299,13 +299,17 @@ const EventCard = (props, context) => {
 			let defaultCurr =
 				props.userDetails.result.result.userHldr.alternateCurrency;
 			if (typeof defaultCurr == "string") {
-				if (defaultCurr === "Dollar" || defaultCurr === "usd") {
+				if (
+					defaultCurr === "Dollar" ||
+					defaultCurr === "usd" ||
+					defaultCurr === ""
+				) {
 					// setSelectedToken({
 					// 	tokenName: "usdt",
 					// 	chainId: props.networkId,
 					// 	image: RinkbeyNetworkArray[0].networks[2].image,
 					// });
-					setSelectedToken(props.tokensListContract[2]);
+					setSelectedToken(props.tokensListContract[1]);
 				}
 			}
 			if (typeof defaultCurr == "object") {
@@ -880,7 +884,7 @@ const EventCard = (props, context) => {
 												)}
 											</p> */}
 											<PriceSelectBox
-											isPHNX={event_data.isPHNX}
+												isPHNX={event_data.isPHNX}
 												tokensListContract={
 													props.tokensListContract
 												}

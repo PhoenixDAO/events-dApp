@@ -240,6 +240,13 @@ class Event extends Component {
 			dollar_price: priceInDollar,
 			token_price: priceInPhnx,
 		});
+
+		let res = await getUserDetails({
+			address: this.props.accounts[0],
+			networkId: this.props.networkId,
+		});
+		console.log("res of getUserDetails =>>>>>", res);
+		this.setState({ userDetail: res });
 	};
 	handleClickOpen = () => {
 		this.setState({ open: true });
