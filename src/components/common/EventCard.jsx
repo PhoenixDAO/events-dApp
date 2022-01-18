@@ -255,7 +255,6 @@ const EventCard = (props, context) => {
 		eventId,
 		myFavorites,
 		favoriteEvent,
-		//
 		eventOrganizer,
 		eventDate,
 		eventStartDate,
@@ -305,10 +304,20 @@ const EventCard = (props, context) => {
 					// 	chainId: props.networkId,
 					// 	image: RinkbeyNetworkArray[0].networks[2].image,
 					// });
+					props.tokensListContract.map((v, i) => {
+						if (v.tokenName == "usd-coin") {
+							setSelectedToken(props.tokensListContract[i]);
+						}
+					});
 					setSelectedToken(props.tokensListContract[1]);
 				}
 				if (defaultCurr === "") {
-					setSelectedToken(props.tokensListContract[0]);
+					// setSelectedToken(props.tokensListContract[0]);
+					props.tokensListContract.map((v, i) => {
+						if (v.tokenName == "phoenixdao") {
+							setSelectedToken(props.tokensListContract[i]);
+						}
+					});
 				}
 			}
 			if (typeof defaultCurr == "object") {
