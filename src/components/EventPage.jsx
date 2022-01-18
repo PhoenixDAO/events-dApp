@@ -425,7 +425,8 @@ class EventPage extends Component {
 			boughtTicket: 0,
 			alternateEventPresent: null,
 			alternateEventLoading: false,
-			tokenPrices: { phnx: "", eth: "", matic: "", usdt: "" },
+			// tokenPrices: { phnx: "", eth: "", matic: "", usdt: "" },
+			tokenPrices: null,
 			// selectedToken: {
 			// 	tokenName: RinkbeyNetworkArray[0].networks[0].tokenName,
 			// 	chainId: 4,
@@ -1160,7 +1161,9 @@ class EventPage extends Component {
 						}
 					});
 				}
-				dollar_price = Web3.utils.fromWei(event_data.prices[categoryIndex].toString());
+				dollar_price = Web3.utils.fromWei(
+					event_data.prices[categoryIndex].toString()
+				);
 				// Dynamic function for price calculation Ends
 				let priceInPhnx = event_data.token
 					? token_price[categoryIndex] + "PHNX"
@@ -1374,7 +1377,9 @@ class EventPage extends Component {
 						)) == 0
 					) {
 						let tokenContract = await initTokenContract(
-							(this.state.isPHNX)?PhoenixDAO_Mainnet_Token_Address:this.state.selectedToken.tokenAddress
+							this.state.isPHNX
+								? PhoenixDAO_Mainnet_Token_Address
+								: this.state.selectedToken.tokenAddress
 						);
 						let balance = await tokenContract.methods
 							.totalSupply()
@@ -1389,7 +1394,9 @@ class EventPage extends Component {
 							// ),
 							approve: await GiveAllowance(
 								this.props.accounts[0],
-								(this.state.isPHNX)?PhoenixDAO_Mainnet_Token_Address:this.state.selectedToken.tokenAddress
+								this.state.isPHNX
+									? PhoenixDAO_Mainnet_Token_Address
+									: this.state.selectedToken.tokenAddress
 							),
 						});
 						this.handleClickOpen2();
@@ -1414,7 +1421,9 @@ class EventPage extends Component {
 					console.log("Coming here ifffff");
 					let approval = await GiveAllowance(
 						this.props.accounts[0],
-						(this.state.isPHNX)?PhoenixDAO_Mainnet_Token_Address:this.state.selectedToken.tokenAddress
+						this.state.isPHNX
+							? PhoenixDAO_Mainnet_Token_Address
+							: this.state.selectedToken.tokenAddress
 					);
 					console.log("Coming here ifffff approval", approval);
 					// let balance = await this.props.phnxContract.methods
@@ -1484,7 +1493,9 @@ class EventPage extends Component {
 			);
 			let a = await CheckTokenAllowance(
 				this.props.accounts[0],
-				(this.state.isPHNX)?PhoenixDAO_Mainnet_Token_Address:this.state.selectedToken.tokenAddress
+				this.state.isPHNX
+					? PhoenixDAO_Mainnet_Token_Address
+					: this.state.selectedToken.tokenAddress
 			);
 			console.log("allowance at this.allowance", a);
 			this.setState({
@@ -1586,12 +1597,14 @@ class EventPage extends Component {
 				networkId === GLOBAL_NETWORK_ID_2
 			) {
 				let balance = 0;
-				if (this.state.selectedToken.tokenName == "ether") {
+				if (this.state.selectedToken.tokenName == "ethereum") {
 					const web3 = new Web3(window.ethereum);
 					balance = await web3.eth.getBalance(this.props.accounts[0]);
 				} else {
 					let tokenContract = await initTokenContract(
-						(this.state.isPHNX)?PhoenixDAO_Mainnet_Token_Address:this.state.selectedToken.tokenAddress
+						this.state.isPHNX
+							? PhoenixDAO_Mainnet_Token_Address
+							: this.state.selectedToken.tokenAddress
 					);
 					balance = await tokenContract.methods
 						.balanceOf(this.props.accounts[0])
@@ -1638,12 +1651,14 @@ class EventPage extends Component {
 				// 	.totalSupply()
 				// 	.call();
 				let balance = 0;
-				if (this.state.selectedToken.tokenName == "ether") {
+				if (this.state.selectedToken.tokenName == "ethereum") {
 					const web3 = new Web3(window.ethereum);
 					balance = await web3.eth.getBalance(this.props.accounts[0]);
 				} else {
 					let tokenContract = await initTokenContract(
-						(this.state.isPHNX)?PhoenixDAO_Mainnet_Token_Address:this.state.selectedToken.tokenAddress
+						this.state.isPHNX
+							? PhoenixDAO_Mainnet_Token_Address
+							: this.state.selectedToken.tokenAddress
 					);
 					balance = await tokenContract.methods
 						.balanceOf(this.props.accounts[0])
@@ -1677,7 +1692,9 @@ class EventPage extends Component {
 								//"Sydney",
 								//below is weth address hard coded
 							],
-							(this.state.isPHNX)?PhoenixDAO_Mainnet_Token_Address:this.state.selectedToken.tokenAddress
+							this.state.isPHNX
+								? PhoenixDAO_Mainnet_Token_Address
+								: this.state.selectedToken.tokenAddress
 							// "0xc778417E063141139Fce010982780140Aa0cD5Ab" // this is token address in which we buy, it should be dynamic
 						),
 						// approve: this.props.phnxContract.methods.approve(
@@ -1690,7 +1707,9 @@ class EventPage extends Component {
 						// ),
 						approve: await GiveAllowance(
 							this.props.accounts[0],
-							(this.state.isPHNX)?PhoenixDAO_Mainnet_Token_Address:this.state.selectedToken.tokenAddress
+							this.state.isPHNX
+								? PhoenixDAO_Mainnet_Token_Address
+								: this.state.selectedToken.tokenAddress
 						),
 					},
 					async () => {
@@ -1723,7 +1742,10 @@ class EventPage extends Component {
 								this.state.token_price,
 								this.state.dollar_price,
 								time,
-								date2
+								date2,
+								this.state.selectedToken.tokenName == "ethereum"
+									? true
+									: false
 							);
 							// }
 							this.setState({
@@ -2128,8 +2150,7 @@ class EventPage extends Component {
 									tokensListContract={
 										this.props.tokensListContract
 									}
-									selectedToken={this.state
-										.selectedToken}
+									selectedToken={this.state.selectedToken}
 								/>
 								<ApprovalModal
 									open={this.state.open}
@@ -2155,8 +2176,7 @@ class EventPage extends Component {
 									tokensListContract={
 										this.props.tokensListContract
 									}
-									selectedToken={this.state
-										.selectedToken}
+									selectedToken={this.state.selectedToken}
 								/>
 								<Snackbar
 									anchorOrigin={{
@@ -2443,7 +2463,6 @@ class EventPage extends Component {
 															)}
 															isEventPage={true}
 														/>
-														
 													)}
 												</span>
 												<div
@@ -2455,7 +2474,10 @@ class EventPage extends Component {
 														this.state.dollar_price
 													}
 												>
-													{console.log("dollar price:", this.state.dollar_price)}
+													{console.log(
+														"dollar price:",
+														this.state.dollar_price
+													)}
 													{pricingFormatter(
 														this.state.dollar_price,
 														"$"
