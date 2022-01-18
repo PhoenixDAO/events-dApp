@@ -253,9 +253,9 @@ class EventPreviewPage extends Component {
 			topic: "",
 			ticketIndex: 0,
 			selectedToken: this.props.tokensListContract
-				? this.props.tokensListContract[2]
+				? this.props.tokensListContract[0]
 				: null,
-				isPHNX:this.props.isPHNX?this.props.isPHNX:null
+			isPHNX: this.props.isPHNX ? this.props.isPHNX : null,
 			// tokenPrices: { phnx: "", eth: "", matic: "", usdt: "" },
 		};
 		console.log("hello props: ", props);
@@ -362,75 +362,74 @@ class EventPreviewPage extends Component {
 	}
 	priceCalculation = async (categoryIndex) => {
 		let event_data = this.props.fields;
-			if (this.props.isPHNX) {
-				let priceInPhnx = this.props.fields.phnxPrice
-					? this.props.fields.phnxPrice + "PHNX"
-					: "FREE";
-				let priceInDollar = this.props.fields.dollarPrice
-					? "$" + this.props.fields.dollarPrice
-					: "";
-				this.setState({
-					dollar_price: priceInDollar,
-					token_price: priceInPhnx,
-				});
-			} else {
-				let token_price = 0;
-				let dollar_price = 0;
+		if (this.props.isPHNX) {
+			let priceInPhnx = this.props.fields.phnxPrice
+				? this.props.fields.phnxPrice + "PHNX"
+				: "FREE";
+			let priceInDollar = this.props.fields.dollarPrice
+				? "$" + this.props.fields.dollarPrice
+				: "";
+			this.setState({
+				dollar_price: priceInDollar,
+				token_price: priceInPhnx,
+			});
+		} else {
+			let token_price = 0;
+			let dollar_price = 0;
 
-				// Dynamic function for price calculation starts
-				if (this.props.tokensListContract && this.state.selectedToken) {
-					let selectedTokenName = this.state.selectedToken.tokenName;
-					const TOKENS_LIST = this.props.tokensListContract;
-					TOKENS_LIST.map((v, i) => {
-						if (selectedTokenName == v.tokenName) {
-							if (
-								v.tokenName == "weth" ||
-								v.tokenName == "ether"
-							) {
-								token_price = this.props.fields.ticketCategories.map((price) => {
-									if (
-										price.dollarPrice/
-											v.usdPrice >
-										0.1
-									) {
-										return (
-											price.dollarPrice/ v.usdPrice
-										).toFixed(3);
-									} else {
+			// Dynamic function for price calculation starts
+			if (this.props.tokensListContract && this.state.selectedToken) {
+				let selectedTokenName = this.state.selectedToken.tokenName;
+				const TOKENS_LIST = this.props.tokensListContract;
+				TOKENS_LIST.map((v, i) => {
+					if (selectedTokenName == v.tokenName) {
+						if (v.tokenName == "weth" || v.tokenName == "ether") {
+							token_price =
+								this.props.fields.ticketCategories.map(
+									(price) => {
+										if (
+											price.dollarPrice / v.usdPrice >
+											0.1
+										) {
+											return (
+												price.dollarPrice / v.usdPrice
+											).toFixed(3);
+										} else {
+											return (
+												price.dollarPrice / v.usdPrice
+											);
+										}
+									}
+								);
+						} else {
+							token_price =
+								this.props.fields.ticketCategories.map(
+									(price) => {
 										return (
 											price.dollarPrice / v.usdPrice
-										);
+										).toFixed(3);
 									}
-								});
-							} else {
-								token_price = this.props.fields.ticketCategories.map((price) => {
-									return (
-										price.dollarPrice /
-										v.usdPrice
-									).toFixed(3);
-								});
-							}
+								);
 						}
-					});
-				}
-				dollar_price = this.props.fields.dollarPrice;
-				// Dynamic function for price calculation Ends
-				let priceInPhnx = event_data.token
-					? token_price[categoryIndex] + "PHNX"
-					: "FREE";
-				let priceInDollar = event_data.token ? "$" + dollar_price : "";
-				this.setState({
-					dollar_price: priceInDollar,
-					token_price: priceInPhnx,
+					}
 				});
-				return;
-
 			}
-		
+			dollar_price = this.props.fields.dollarPrice;
+			// Dynamic function for price calculation Ends
+			let priceInPhnx = event_data.token
+				? token_price[categoryIndex] + "PHNX"
+				: "FREE";
+			let priceInDollar = event_data.token ? "$" + dollar_price : "";
+			this.setState({
+				dollar_price: priceInDollar,
+				token_price: priceInPhnx,
+			});
+			return;
+		}
 	};
 	handleCategoryChange = (event) => {
 		this.setState({ ticketIndex: event.target.value });
-		console.log("Event preview: ", event.target.value)
+		console.log("Event preview: ", event.target.value);
 		this.priceCalculation(event.target.value);
 	};
 	handleSelectedTokenState = async (result) => {
@@ -634,27 +633,25 @@ class EventPreviewPage extends Component {
 												"Free"
 											) : this.props.ticketCategories
 													.length > 0 ? (
-														<PriceSelectBox
-														tokensListContract={
-															this.props
-																.tokensListContract
-														}
-														selectedToken={
-															this.state
-																.selectedToken
-														}
-														setSelectedToken={
-															this
-																.handleSelectedTokenState
-														}
-														token="phnx"
-														value={pricingFormatter(
-															this.state
-																.token_price,
-															"PHNX"
-														)}
-														isEventPage={true}
-													/>
+												<PriceSelectBox
+													tokensListContract={
+														this.props
+															.tokensListContract
+													}
+													selectedToken={
+														this.state.selectedToken
+													}
+													setSelectedToken={
+														this
+															.handleSelectedTokenState
+													}
+													token="phnx"
+													value={pricingFormatter(
+														this.state.token_price,
+														"PHNX"
+													)}
+													isEventPage={true}
+												/>
 											) : (
 												""
 											)}
