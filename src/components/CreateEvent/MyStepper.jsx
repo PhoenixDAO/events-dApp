@@ -806,7 +806,7 @@ const MyStepper = ({
 												<label
 													className={classes.label}
 												>
-													CURRENCY
+													FIX TICKET CURRENCY
 												</label>
 												<RadioGroup
 													row
