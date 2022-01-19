@@ -265,7 +265,7 @@ const EventCard = (props, context) => {
 		eventType,
 		eventDescription,
 		eventLocation,
-		tokenPrices,
+		// tokenPrices,
 	} = props;
 
 	useEffect(() => {
@@ -275,7 +275,7 @@ const EventCard = (props, context) => {
 		);
 		setIcon(favoriteEvent);
 		getPhoenixDAOMarketValue();
-		console.log("tokenPrices ==>>>>", tokenPrices);
+		// console.log("tokenPrices ==>>>>", tokenPrices);
 	}, [favoriteEvent]);
 
 	const classes = useStyles();
@@ -290,7 +290,6 @@ const EventCard = (props, context) => {
 
 	useEffect(() => {
 		if (props.userDetails && props.userDetails.result) {
-			// var atob = require("atob");
 			// console.log(
 			// 	"userDetailsssss => ",
 			// 	props.userDetails.result.result.userHldr.alternateCurrency

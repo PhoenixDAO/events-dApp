@@ -32,9 +32,6 @@ import PropTypes from "prop-types";
 import Snackbar1 from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar from "@material-ui/core/Snackbar";
-
-// Hiii
-
 import {
 	INFURA_URL,
 	INFURA_WEB_URL,
@@ -226,7 +223,7 @@ class App extends Component {
 		await this.initializeContract();
 	}
 	async componentDidMount() {
-		let res = await GetTokenPrices2();
+		let res = await GetTokenPrices2(await this.getNetworkId());
 		this.setState({ tokensListContract: res });
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
@@ -574,7 +571,7 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-		if ((await this.allowance()) == 0) {
+		if ((await this.allowance()) == 0 && !isEthereum) {
 			this.state.approve
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
@@ -646,11 +643,12 @@ class App extends Component {
 					}
 				});
 		} else {
+			console.log("buy ticket: ", isEthereum, this.state.account,phnx_price.split("PHNX")[0] * 1.045, await Web3.utils.toWei(Number(phnx_price.split("PHNX")[0] * 1.045).toFixed(7).toString(),"ether"))
 			this.state.buyticket
 				// .send({ from: this.state.account})
 				.send(
 					isEthereum
-						? { from: this.state.account, value: phnx_price }
+						? { from: this.state.account, value:  await Web3.utils.toWei(Number(phnx_price.split("PHNX")[0] * 1.045).toFixed(7).toString(),"ether") }
 						: { from: this.state.account, value: 0 }
 				)
 				.on("transactionHash", (hash) => {
@@ -1075,6 +1073,7 @@ class App extends Component {
 									purchased={this.state.purchased}
 									togglePurchase={this.togglePurchase}
 									eventsAddress={this.state.eventsAddress}
+									userDetails={this.state.userDetails}
 									tokensListContract={
 										this.state.tokensListContract
 									}
@@ -1103,6 +1102,7 @@ class App extends Component {
 									{...props}
 									disabledStatus={this.state.disabledStatus}
 									inquire={this.inquireBuy}
+									userDetails={this.state.userDetails}
 									tokensListContract={
 										this.state.tokensListContract
 									}
@@ -1396,6 +1396,7 @@ class App extends Component {
 								{...props}
 								executeScroll={this.executeScroll}
 								eventsContract={this.state.eventsContract}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1417,6 +1418,7 @@ class App extends Component {
 								error={this.state.error}
 								account={this.state.account}
 								eventsContract={this.state.eventsContract}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1436,6 +1438,7 @@ class App extends Component {
 								userDetails={this.state.userDetails}
 								setUserDetails={this.setUserDetails}
 								handleSignMessage={this.handleSignMessage}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1451,6 +1454,7 @@ class App extends Component {
 								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1471,6 +1475,7 @@ class App extends Component {
 								purchased={this.state.purchased}
 								togglePurchase={this.togglePurchase}
 								eventsAddress={this.state.eventsAddress}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1513,6 +1518,7 @@ class App extends Component {
 								{...props}
 								disabledStatus={this.state.disabledStatus}
 								inquire={this.inquireBuy}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1527,6 +1533,7 @@ class App extends Component {
 							<WrapperTopicsLandingPage
 								{...props}
 								eventsContract={this.state.eventsContract}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1543,6 +1550,7 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
