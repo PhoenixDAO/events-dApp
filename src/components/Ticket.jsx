@@ -7,14 +7,6 @@ import "../styles/Ticket.css";
 import ipfs from "../utils/ipfs";
 import Notify from "./Notify";
 import { API_URL, REPORT_EVENT } from "../config/const";
-import {
-	GetEthPrice,
-	GetPhnxPrice,
-	GetMaticPrice,
-	GetUsdtPrice,
-	GetWethPrice,
-	GetUsdcPrice,
-} from "../services/Services";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,12 +22,6 @@ var QRCode = require("qrcode.react");
 class Ticket extends Component {
 	constructor(props, context) {
 		super(props);
-		// this.contracts = context.drizzle.contracts;
-		// this.web3=new Web3(
-		// 	new Web3.providers.WebsocketProvider(
-		// 		INFURA_WEB_URL
-		// 	)
-		// );
 		this.event = null;
 		this.address = null;
 		this.account = this.props.accounts[0];
@@ -67,88 +53,88 @@ class Ticket extends Component {
 			eventType: null,
 			eventDescription: null,
 			eventLocation: null,
-			tokenPrices: {
-				phnx: "",
-				eth: "",
-				matic: "",
-				usdt: "",
-				weth: "",
-				usdc: "",
-			},
+			// tokenPrices: {
+			// 	phnx: "",
+			// 	eth: "",
+			// 	matic: "",
+			// 	usdt: "",
+			// 	weth: "",
+			// 	usdc: "",
+			// },
 			userDetails: null,
 		};
 		this.isCancelled = false;
 		this.sendTicket = this.sendTicket.bind(this);
 	}
 
-	GetPrices = async () => {
-		console.log("resEthPrice.data.thereum.usd1");
-		try {
-			let resEthPrice = await GetEthPrice();
-			if (resEthPrice) {
-				// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						eth: resEthPrice.data.ethereum.usd,
-					},
-				});
-			}
-			let resPhnxPrice = await GetPhnxPrice();
-			if (resPhnxPrice) {
-				// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						phnx: resPhnxPrice.data.phoenixdao.usd,
-					},
-				});
-			}
-			let resMaticPrice = await GetMaticPrice();
-			if (resMaticPrice) {
-				// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						matic: resMaticPrice.data[`matic-network`].usd,
-					},
-				});
-			}
-			let resUsdtPrice = await GetUsdtPrice();
-			if (resUsdtPrice) {
-				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						usdt: resUsdtPrice.data.tether.usd,
-					},
-				});
-			}
+	// GetPrices = async () => {
+	// 	console.log("resEthPrice.data.thereum.usd1");
+	// 	try {
+	// 		let resEthPrice = await GetEthPrice();
+	// 		if (resEthPrice) {
+	// 			// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					eth: resEthPrice.data.ethereum.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resPhnxPrice = await GetPhnxPrice();
+	// 		if (resPhnxPrice) {
+	// 			// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					phnx: resPhnxPrice.data.phoenixdao.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resMaticPrice = await GetMaticPrice();
+	// 		if (resMaticPrice) {
+	// 			// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					matic: resMaticPrice.data[`matic-network`].usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resUsdtPrice = await GetUsdtPrice();
+	// 		if (resUsdtPrice) {
+	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					usdt: resUsdtPrice.data.tether.usd,
+	// 				},
+	// 			});
+	// 		}
 
-			let resWethPrice = await GetWethPrice();
-			if (resWethPrice) {
-				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						weth: resWethPrice.data.weth.usd,
-					},
-				});
-			}
-			let resUsdcPrice = await GetUsdcPrice();
-			if (resUsdcPrice) {
-				// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-				this.setState({
-					tokenPrices: {
-						...this.state.tokenPrices,
-						usdc: resUsdcPrice.data[`usd-coin`].usd,
-					},
-				});
-			}
-		} catch (e) {
-			console.error("Err at GetPrices =>>", e);
-		}
-	};
+	// 		let resWethPrice = await GetWethPrice();
+	// 		if (resWethPrice) {
+	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					weth: resWethPrice.data.weth.usd,
+	// 				},
+	// 			});
+	// 		}
+	// 		let resUsdcPrice = await GetUsdcPrice();
+	// 		if (resUsdcPrice) {
+	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
+	// 			this.setState({
+	// 				tokenPrices: {
+	// 					...this.state.tokenPrices,
+	// 					usdc: resUsdcPrice.data[`usd-coin`].usd,
+	// 				},
+	// 			});
+	// 		}
+	// 	} catch (e) {
+	// 		console.error("Err at GetPrices =>>", e);
+	// 	}
+	// };
 
 	handleGetUserDetails = async () => {
 		// console.log(
@@ -527,11 +513,9 @@ class Ticket extends Component {
 					eventType={this.state.eventType}
 					eventDescription={this.state.eventDescription}
 					eventLocation={this.state.eventLocation}
-					tokenPrices={this.state.tokenPrices}
-					userDetails={this.state.userDetails}
-					tokensListContract={
-						this.props.tokensListContract
-					}
+					// tokenPrices={this.state.tokenPrices}
+					userDetails={this.props.userDetails}
+					tokensListContract={this.props.tokensListContract}
 				/>
 			);
 		}

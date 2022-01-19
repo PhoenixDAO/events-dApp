@@ -765,7 +765,7 @@ class Event extends Component {
 							eventDescription={this.state.eventDescription}
 							eventLocation={this.state.eventLocation}
 							selectedTab={this.props.selectedTab}
-							tokenPrices={this.state.tokenPrices}
+							// tokenPrices={this.state.tokenPrices}
 							userDetails={this.state.userDetail}
 							tokensListContract={this.props.tokensListContract}
 						/>

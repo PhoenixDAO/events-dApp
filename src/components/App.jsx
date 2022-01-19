@@ -32,9 +32,6 @@ import PropTypes from "prop-types";
 import Snackbar1 from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar from "@material-ui/core/Snackbar";
-
-// Hiii
-
 import {
 	INFURA_URL,
 	INFURA_WEB_URL,
@@ -1104,6 +1101,7 @@ class App extends Component {
 									{...props}
 									disabledStatus={this.state.disabledStatus}
 									inquire={this.inquireBuy}
+									userDetails={this.state.userDetails}
 									tokensListContract={
 										this.state.tokensListContract
 									}
@@ -1397,6 +1395,7 @@ class App extends Component {
 								{...props}
 								executeScroll={this.executeScroll}
 								eventsContract={this.state.eventsContract}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1418,6 +1417,7 @@ class App extends Component {
 								error={this.state.error}
 								account={this.state.account}
 								eventsContract={this.state.eventsContract}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1437,6 +1437,7 @@ class App extends Component {
 								userDetails={this.state.userDetails}
 								setUserDetails={this.setUserDetails}
 								handleSignMessage={this.handleSignMessage}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1452,6 +1453,7 @@ class App extends Component {
 								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1515,6 +1517,7 @@ class App extends Component {
 								{...props}
 								disabledStatus={this.state.disabledStatus}
 								inquire={this.inquireBuy}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1529,6 +1532,7 @@ class App extends Component {
 							<WrapperTopicsLandingPage
 								{...props}
 								eventsContract={this.state.eventsContract}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1545,6 +1549,7 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
