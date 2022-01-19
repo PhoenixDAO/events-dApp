@@ -224,7 +224,7 @@ class App extends Component {
 	}
 	async componentDidMount() {
 		let res = await GetTokenPrices2(await this.getNetworkId());
-		this.setState({ tokensListContract: res });
+		await this.setState({ tokensListContract: res });
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
@@ -643,7 +643,6 @@ class App extends Component {
 					}
 				});
 		} else {
-			console.log("buy ticket: ", isEthereum, this.state.account,phnx_price.split("PHNX")[0] * 1.045, await Web3.utils.toWei(Number(phnx_price.split("PHNX")[0] * 1.045).toFixed(7).toString(),"ether"))
 			this.state.buyticket
 				// .send({ from: this.state.account})
 				.send(
@@ -1063,6 +1062,7 @@ class App extends Component {
 							exact
 							path="/event/:title/:id"
 							render={(props) => (
+								(this.state.tokensListContract)&&
 								<EventPage
 									{...props}
 									inquire={this.inquireBuy}
@@ -1074,7 +1074,7 @@ class App extends Component {
 									togglePurchase={this.togglePurchase}
 									eventsAddress={this.state.eventsAddress}
 									userDetails={this.state.userDetails}
-									tokensListContract={
+									tokensListContract={this.state.tokensListContract&&
 										this.state.tokensListContract
 									}
 								/>
@@ -1465,6 +1465,7 @@ class App extends Component {
 						exact
 						path="/event/:title/:id"
 						render={(props) => (
+							(this.state.tokensListContract) &&
 							<EventPage
 								{...props}
 								inquire={this.inquireBuy}
@@ -1476,7 +1477,7 @@ class App extends Component {
 								togglePurchase={this.togglePurchase}
 								eventsAddress={this.state.eventsAddress}
 								userDetails={this.state.userDetails}
-								tokensListContract={
+								tokensListContract={this.state.tokensListContract&&
 									this.state.tokensListContract
 								}
 							/>
