@@ -237,7 +237,7 @@ class CreateEvent extends Component {
 			categories.push(ticketCategories[i].ticketName);
 			// we should send phoenix price instead of dollar price
 			console.log("hello prices", ticketCategories);
-			if (isPHNX) {
+			if (isPHNX && eventCategory !="free") {
 				prices.push(
 					Web3.utils.toWei(ticketCategories[i].phnxPrice.toString())
 				);
