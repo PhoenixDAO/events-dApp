@@ -684,6 +684,8 @@ class TopicLandingPage extends Component {
 						id={events_list[i].eventId}
 						ipfs={events_list[i].ipfsHash}
 						loading={this.state.loading}
+						userDetails={this.props.userDetails}
+						tokensListContract={this.props.tokensListContract}
 					/>
 				);
 			}
