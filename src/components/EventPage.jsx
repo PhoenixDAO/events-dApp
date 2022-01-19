@@ -1089,6 +1089,7 @@ class EventPage extends Component {
 			);
 		}
 	};
+
 	priceCalculation = async (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
 		if (event_data.prices) {
@@ -1175,6 +1176,7 @@ class EventPage extends Component {
 			}
 		}
 	};
+
 	getImage = () => {
 		let image = "/images/loading_image_ipfs.png";
 		if (this.state.ipfs_problem) image = "/images/problem_ipfs.png";
@@ -1288,7 +1290,8 @@ class EventPage extends Component {
 						(await CheckTokenAllowance(
 							this.props.accounts[0],
 							this.state.selectedToken.tokenAddress
-						)) == 0 || !this.state.selectedToken.tokenName == "ethereum"
+						)) == 0 ||
+						!this.state.selectedToken.tokenName == "ethereum"
 					) {
 						let tokenContract = await initTokenContract(
 							this.state.isPHNX
@@ -1325,7 +1328,10 @@ class EventPage extends Component {
 					}
 				}
 			} else {
-				if ((await this.allowance()) == 0 || !this.state.selectedToken.tokenName == "ethereum") {
+				if (
+					(await this.allowance()) == 0 ||
+					!this.state.selectedToken.tokenName == "ethereum"
+				) {
 					// if (
 					// 	(await CheckTokenAllowance(
 					// 		this.props.accounts[0],
@@ -1405,24 +1411,24 @@ class EventPage extends Component {
 				"this.props.eventsAddress +>",
 				this.props.eventsAddress
 			);
-			if(this.state.selectedToken.tokenName==="ethereum"){
+			if (this.state.selectedToken.tokenName === "ethereum") {
 				this.setState({
 					allow: true,
 				});
 				return true;
-			}else{
+			} else {
 				let a = await CheckTokenAllowance(
 					this.props.accounts[0],
 					this.state.isPHNX
-					? PhoenixDAO_Mainnet_Token_Address
-					: this.state.selectedToken.tokenAddress
-					);
-					console.log("allowance at this.allowance", a);
-					this.setState({
-						allow: a,
-					});
-					return a;
-				}
+						? PhoenixDAO_Mainnet_Token_Address
+						: this.state.selectedToken.tokenAddress
+				);
+				console.log("allowance at this.allowance", a);
+				this.setState({
+					allow: a,
+				});
+				return a;
+			}
 		}
 	};
 
@@ -1677,12 +1683,16 @@ class EventPage extends Component {
 						// 	this.props.accounts[0],
 						// 	this.state.selectedToken.tokenAddress
 						// ),
-						approve: this.state.selectedToken.tokenName =="ethereum"?true:await GiveAllowance(
-							this.props.accounts[0],
-							this.state.isPHNX
-								? PhoenixDAO_Mainnet_Token_Address
-								: this.state.selectedToken.tokenAddress
-						),
+						approve:
+							this.state.selectedToken.tokenName == "ethereum"
+								? true
+								: await GiveAllowance(
+										this.props.accounts[0],
+										this.state.isPHNX
+											? PhoenixDAO_Mainnet_Token_Address
+											: this.state.selectedToken
+													.tokenAddress
+								  ),
 					},
 					async () => {
 						// let temp = await this.allowance();
@@ -1906,6 +1916,7 @@ class EventPage extends Component {
 			}
 		}
 	};
+
 	handleSelectedTokenState = async (result) => {
 		console.log("handleSelectedTokenState EventPage", result);
 		this.setState({ selectedToken: result }, () => {
@@ -1925,6 +1936,70 @@ class EventPage extends Component {
 					break;
 				}
 			}
+		}
+	};
+
+	handleSetSelectedToken = async () => {
+		if (this.props.tokensListContract) {
+			if (this.props.userDetails) {
+				let defaultCurr =
+					this.props.userDetails.result &&
+					this.props.userDetails.result.result.userHldr
+						.alternateCurrency;
+				console.log(
+					"defaultCurrny at EventPage",
+					this.props.tokensListContract
+				);
+				if (typeof defaultCurr == "string") {
+					if (defaultCurr === "Dollar" || defaultCurr === "usd") {
+						this.props.tokensListContract.map((v, i) => {
+							if (v.tokenName == "usd-coin") {
+								this.setState({
+									selectedToken:
+										this.props.tokensListContract[i],
+								});
+							}
+						});
+					}
+					if (defaultCurr === "") {
+						this.props.tokensListContract.map((v, i) => {
+							if (v.tokenName == "phoenixdao") {
+								this.setState({
+									selectedToken:
+										this.props.tokensListContract[i],
+								});
+							}
+						});
+					}
+				} else if (typeof defaultCurr == "object") {
+					this.props.tokensListContract.map((v, i) => {
+						if (v.tokenName == defaultCurr.tokenName) {
+							// console.log("Heyyyyyyyyyyyyyyyyyyyyyyy1");
+							this.setState({
+								selectedToken: this.props.tokensListContract[i],
+							});
+						}
+					});
+				}
+			} else {
+				// console.log("Heyyyyyyyyyyyyyyyyyyyyyyy");
+				this.props.tokensListContract.map((v, i) => {
+					if (v.tokenName == "phoenixdao") {
+						this.setState({
+							selectedToken: this.props.tokensListContract[i],
+						});
+					}
+				});
+			}
+		} else {
+			this.setState({
+				selectedToken: {
+					displayName: "PhoenixDAO",
+					image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
+					tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+					tokenName: "phoenixdao",
+				},
+			});
 		}
 	};
 
@@ -2993,63 +3068,7 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
-		if (this.props.tokensListContract) {
-			if (this.props.userDetails) {
-				let defaultCurr =
-					this.props.userDetails.result &&
-					this.props.userDetails.result.result.userHldr
-						.alternateCurrency;
-				console.log("defaultCurrny at EventPage", defaultCurr);
-				if (typeof defaultCurr == "string") {
-					if (defaultCurr === "Dollar" || defaultCurr === "usd") {
-						this.props.tokensListContract.map((v, i) => {
-							if (v.tokenName == "usd-coin") {
-								this.setState({
-									selectedToken:
-										this.props.userDetails.result.result
-											.userHldr.alternateCurrency,
-								});
-							}
-						});
-					}
-					if (defaultCurr === "") {
-						this.props.tokensListContract.map((v, i) => {
-							if (v.tokenName == "phoenixdao") {
-								this.setState({
-									selectedToken:
-										this.props.tokensListContract[i],
-								});
-							}
-						});
-					}
-				} else if (typeof defaultCurr == "object") {
-					this.props.tokensListContract.map((v, i) => {
-						if (v.tokenName == defaultCurr.tokenName) {
-							this.setState({
-								selectedToken: this.props.tokensListContract[i],
-							});
-						}
-					});
-				}
-			} else {
-				this.props.tokensListContract.map((v, i) => {
-					if (v.tokenName == "phoenixdao") {
-						this.setState({
-							selectedToken: this.props.tokensListContract[i],
-						});
-					}
-				});
-			}
-		} else {
-			this.setState({
-				selectedToken: {
-					displayName: "PhoenixDAO",
-					image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
-					tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
-					tokenName: "phoenixdao",
-				},
-			});
-		}
+		await this.handleSetSelectedToken();
 		if (parseInt(this.props.match.params.id)) {
 			this.getUserFavoritesEvent();
 			// console.log("component start 1, Event page");
@@ -3083,6 +3102,7 @@ class EventPage extends Component {
 				blockChainEventLoaded: true,
 			});
 		}
+		await this.handleSetSelectedToken();
 	}
 
 	geoFindMe = async () => {
@@ -3102,6 +3122,7 @@ class EventPage extends Component {
 
 	componentDidUpdate() {
 		this.updateIPFS();
+		// this.handleSetSelectedToken();
 	}
 
 	componentWillUnmount() {
@@ -3114,6 +3135,7 @@ class EventPage extends Component {
 			await this.checkUserTicketLocation();
 			let buyers = await generateBuyerArr(this.props.match.params.id);
 			this.setState({ soldTicket: buyers });
+			// this.handleSetSelectedToken();
 		}
 	}
 }
