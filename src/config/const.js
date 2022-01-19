@@ -196,8 +196,10 @@ export const INFURA_WEB_URL =
 // previous rinkeby contract graph api address without isphnx field
 // export const graphURLV1 =
 // 	"https://api.thegraph.com/subgraphs/name/musfirazia/eventsdapp";
+// export const graphURLV1 =
+// 	"https://api.thegraph.com/subgraphs/name/ijlal-ishaq/phnx-app";
 export const graphURLV1 =
-	"https://api.thegraph.com/subgraphs/name/ijlal-ishaq/phnx-app";
+	"https://api.thegraph.com/subgraphs/name/zainhasan97-razi/eventsgraph2";
 
 // Ethereum mainnet
 // export const INFURA_URL =

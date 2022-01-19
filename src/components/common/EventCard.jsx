@@ -255,7 +255,6 @@ const EventCard = (props, context) => {
 		eventId,
 		myFavorites,
 		favoriteEvent,
-		//
 		eventOrganizer,
 		eventDate,
 		eventStartDate,
@@ -266,7 +265,7 @@ const EventCard = (props, context) => {
 		eventType,
 		eventDescription,
 		eventLocation,
-		tokenPrices,
+		// tokenPrices,
 	} = props;
 
 	useEffect(() => {
@@ -276,7 +275,7 @@ const EventCard = (props, context) => {
 		);
 		setIcon(favoriteEvent);
 		getPhoenixDAOMarketValue();
-		console.log("tokenPrices ==>>>>", tokenPrices);
+		// console.log("tokenPrices ==>>>>", tokenPrices);
 	}, [favoriteEvent]);
 
 	const classes = useStyles();
@@ -291,7 +290,6 @@ const EventCard = (props, context) => {
 
 	useEffect(() => {
 		if (props.userDetails && props.userDetails.result) {
-			// var atob = require("atob");
 			// console.log(
 			// 	"userDetailsssss => ",
 			// 	props.userDetails.result.result.userHldr.alternateCurrency
@@ -299,17 +297,26 @@ const EventCard = (props, context) => {
 			let defaultCurr =
 				props.userDetails.result.result.userHldr.alternateCurrency;
 			if (typeof defaultCurr == "string") {
-				if (
-					defaultCurr === "Dollar" ||
-					defaultCurr === "usd" ||
-					defaultCurr === ""
-				) {
+				if (defaultCurr === "Dollar" || defaultCurr === "usd") {
 					// setSelectedToken({
 					// 	tokenName: "usdt",
 					// 	chainId: props.networkId,
 					// 	image: RinkbeyNetworkArray[0].networks[2].image,
 					// });
+					props.tokensListContract.map((v, i) => {
+						if (v.tokenName == "usd-coin") {
+							setSelectedToken(props.tokensListContract[i]);
+						}
+					});
 					setSelectedToken(props.tokensListContract[1]);
+				}
+				if (defaultCurr === "") {
+					// setSelectedToken(props.tokensListContract[0]);
+					props.tokensListContract.map((v, i) => {
+						if (v.tokenName == "phoenixdao") {
+							setSelectedToken(props.tokensListContract[i]);
+						}
+					});
 				}
 			}
 			if (typeof defaultCurr == "object") {

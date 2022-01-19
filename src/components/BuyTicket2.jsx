@@ -13,7 +13,12 @@ import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
 import roundlogo from "./Images/roundlogo.svg";
-import { CircularProgress, Grid, IconButton, Typography } from "@material-ui/core";
+import {
+	CircularProgress,
+	Grid,
+	IconButton,
+	Typography,
+} from "@material-ui/core";
 
 var moment = require("moment");
 const useStyles = makeStyles((theme) => ({
@@ -33,13 +38,13 @@ const useStyles = makeStyles((theme) => ({
 	bannerImage: {
 		paddingInline: "50px",
 	},
-	buyTicketModal:{
-		"& .MuiDialog-paper":{
+	buyTicketModal: {
+		"& .MuiDialog-paper": {
 			boxShadow: "0px 10px 20px 10px rgba(0, 0, 0, 0.1)",
-			borderRadius:"20px",
-			"@media (min-width:500px)":{
-				padding:"20px",
-			}
+			borderRadius: "20px",
+			"@media (min-width:500px)": {
+				padding: "20px",
+			},
 		},
 	},
 	header: {
@@ -80,11 +85,11 @@ const useStyles = makeStyles((theme) => ({
 		fontWeight: 700,
 		width: "100%",
 		height: "45px",
-		borderRadius:"8px",
+		borderRadius: "8px",
 		backgroundColor: "#413AE2",
 		fontSize: "0.875rem",
-		"@media (max-width:400px)":{
-			fontSize:"0.635rem",
+		"@media (max-width:400px)": {
+			fontSize: "0.635rem",
 		},
 		[theme.breakpoints.down("xs")]: {
 			marginLeft: "0px",
@@ -194,19 +199,22 @@ const useStyles = makeStyles((theme) => ({
 	priceAlignment: {
 		"@media (min-width: 600px)": {
 			textAlign: "end",
+			display: "flex",
+			justifyContent: "right",
 		},
 	},
 	contentOverflow: {
 		overflow: "visible",
 	},
-	lineSpacing:{
-		paddingTop:"15px"
+	lineSpacing: {
+		paddingTop: "15px",
 	},
-	subHeading:{
-		fontWeight:"500",
-		fontSize:"15px",
-		color:"#73727D"
-	},closeButton: {
+	subHeading: {
+		fontWeight: "500",
+		fontSize: "15px",
+		color: "#73727D",
+	},
+	closeButton: {
 		position: "absolute",
 		right: theme.spacing(1),
 		top: theme.spacing(1),
@@ -240,8 +248,8 @@ const ApprovalModal = (props) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(props.open);
 	useEffect(() => {
-		// console.log("allowance", props.allow);
-	}, [props.open]);
+		console.log("props.selectedToken.image", props.selectedToken);
+	}, [props]);
 	return (
 		<Dialog
 			open={props.open}
@@ -253,209 +261,224 @@ const ApprovalModal = (props) => {
 			className={classes.buyTicketModal}
 		>
 			<IconButton
-					aria-label="close"
-					className={classes.closeButton}
-					onClick={props.handleClose}
-				>
-					<CloseIcon />
-				</IconButton>
-			<div >
-			<DialogTitle
-				id="customized-dialog-title"
-				className={classes.header}
+				aria-label="close"
+				className={classes.closeButton}
+				onClick={props.handleClose}
 			>
-				<img src={roundlogo} className={classes.logo} alt="phnx logo" />
-				<span style={{ fontSize: "20px" }}>PhoenixDAO</span>
-				<Typography
-					gutterBottom
-					className={`${classes.eventTitle} ${classes.lineSpacing}`}
-					style={{
-						color: "#73727D",
-						fontWeight: "700",
-						textAlign: "center",
-						lineHeight: "20px",
-						color:"#413AE2",
-						fontSize:"32px"
-					}}
+				<CloseIcon />
+			</IconButton>
+			<div>
+				<DialogTitle
+					id="customized-dialog-title"
+					className={classes.header}
 				>
-					Buy Ticket
-				</Typography>
-				<Typography className={`${classes.lineSpacing} ${classes.subHeading}`}>
-					You're about to purchase this ticket
-				</Typography>
-			</DialogTitle>
-			<DialogContent className={classes.contentOverflow}>
-				<div className={classes.eventHolder}>
-					<Grid className={classes.details}>
-						<Grid lg={2} xl={2} md={2} sm={2} xs={12}>
-							<img
-								src={props.image}
-								alt={props.eventTitle}
-								className={classes.eventImage}
-							/>
-						</Grid>
-						<Grid
-							xs={12}
-							lg={7}
-							xl={7}
-							md={7}
-							sm={7}
-							className={classes.gridPadding}
-						>
-							<div>
-								<Typography
-									gutterBottom
-									className={`${classes.eventTitle} text-truncate`}
-								>
-									{props.eventTitle}
-								</Typography>
-								<Typography
-									style={{
-										color: "#73727D",
-										fontSize: "17px",
-										textAlign: "start",
-									}}
-								>
-									{!props.eventTime
-										? `Date`
-										: props.eventTime === "onedayevent"
-										? moment(props.eventDate).format(
-												"Do MMM, YYYY"
-										  )
-										: `
+					<img
+						src={roundlogo}
+						className={classes.logo}
+						alt="phnx logo"
+					/>
+					<span style={{ fontSize: "20px" }}>PhoenixDAO</span>
+					<Typography
+						gutterBottom
+						className={`${classes.eventTitle} ${classes.lineSpacing}`}
+						style={{
+							color: "#73727D",
+							fontWeight: "700",
+							textAlign: "center",
+							lineHeight: "20px",
+							color: "#413AE2",
+							fontSize: "32px",
+						}}
+					>
+						Buy Ticket
+					</Typography>
+					<Typography
+						className={`${classes.lineSpacing} ${classes.subHeading}`}
+					>
+						You're about to purchase this ticket
+					</Typography>
+				</DialogTitle>
+				<DialogContent className={classes.contentOverflow}>
+					<div className={classes.eventHolder}>
+						<Grid className={classes.details}>
+							<Grid lg={2} xl={2} md={2} sm={2} xs={12}>
+								<img
+									src={props.image}
+									alt={props.eventTitle}
+									className={classes.eventImage}
+								/>
+							</Grid>
+							<Grid
+								xs={12}
+								lg={7}
+								xl={7}
+								md={7}
+								sm={7}
+								className={classes.gridPadding}
+							>
+								<div>
+									<Typography
+										gutterBottom
+										className={`${classes.eventTitle} text-truncate`}
+									>
+										{props.eventTitle}
+									</Typography>
+									<Typography
+										style={{
+											color: "#73727D",
+											fontSize: "17px",
+											textAlign: "start",
+										}}
+									>
+										{!props.eventTime
+											? `Date`
+											: props.eventTime === "onedayevent"
+											? moment(props.eventDate).format(
+													"Do MMM, YYYY"
+											  )
+											: `
                 ${moment(props.eventStartDate).format("Do MMM")}
                 -
                 ${moment(props.eventEndDate).format("Do MMM, YYYY")}
                 `}
-									,{" "}
-									{!props.eventStartTime
-													? `Time`
-													: !props.eventEndTime
-													? moment(
-															props
-																.eventStartTime
-													  )
-															.utcOffset(0)
-															.local()
-															.format("LT")
-													: `${moment(
-															props
-																.eventStartTime
-													  )
-															.utcOffset(0)
-															.local()
-															.format(
-																"LT"
-															)} - ${moment(
-															props
-																.eventEndTime
-													  )
-															.utcOffset(0)
-															.local()
-															.format(
-																"LT"
-															)}`}{" "}
-												Local
-								</Typography>
-							</div>
-						</Grid>
-						<Grid
-							xs={12}
-							lg={3}
-							xl={3}
-							md={3}
-							sm={3}
-							className={classes.gridPadding}
-						>
-							<div className={classes.priceAlignment}>
-								<div className={classes.eventinfo}>
-									<span
-										className={classes.PhnxPrice}
-										title={props.phnx_price}
-									>
-										{pricingFormatter(
-											props.phnx_price,
-											"PHNX"
-										)}
-									</span>
-									<div
-										style={{
-											color: "#56555D",
-											fontSize: "14px",
-										}}
-										title={props.dollar_price}
-									>
-										{/* {dollar_price} */}
-										{pricingFormatter(
-											props.dollar_price,
-											"$"
-										)}
+										,{" "}
+										{!props.eventStartTime
+											? `Time`
+											: !props.eventEndTime
+											? moment(props.eventStartTime)
+													.utcOffset(0)
+													.local()
+													.format("LT")
+											: `${moment(props.eventStartTime)
+													.utcOffset(0)
+													.local()
+													.format("LT")} - ${moment(
+													props.eventEndTime
+											  )
+													.utcOffset(0)
+													.local()
+													.format("LT")}`}{" "}
+										Local
+									</Typography>
+								</div>
+							</Grid>
+							<Grid
+								xs={12}
+								lg={3}
+								xl={3}
+								md={3}
+								sm={3}
+								className={classes.gridPadding}
+							>
+								<div className={classes.priceAlignment}>
+									{" "}
+									<img
+										src={
+											props.selectedToken &&
+											props.selectedToken.image
+										}
+										className={classes.logo}
+										alt="token logo"
+									/>
+									<div className={classes.eventinfo}>
+										<span
+											className={classes.PhnxPrice}
+											title={props.phnx_price}
+										>
+											{pricingFormatter(
+												props.phnx_price,
+												"PHNX"
+											)}
+										</span>
+										<div
+											style={{
+												color: "#56555D",
+												fontSize: "14px",
+											}}
+											title={props.dollar_price}
+										>
+											{/* {dollar_price} */}
+											{pricingFormatter(
+												props.dollar_price,
+												"$"
+											)}
+										</div>
 									</div>
 								</div>
-							</div>
+							</Grid>
 						</Grid>
-					</Grid>
-				</div>
-			</DialogContent>
-			<DialogActions className={classes.bottomPadding}>
-				<Grid
-					item
-					style={{
-						// paddingBottom: "60px",
-						paddingLeft: "8px",
-						paddingRight: "8px",
-						width: "100%",
-					}}
-					direction="row"
-				>
-					<Button
-						variant="contained"
-						color="primary"
-						style={{ marginTop: "10px", width: "100%" }}
-						className={classes.send}
-						onClick={props.giveApproval}
-						disabled={props.loadingApprove || props.allow != 0 || props.allow == null}
+					</div>
+				</DialogContent>
+				<DialogActions className={classes.bottomPadding}>
+					<Grid
+						item
+						style={{
+							// paddingBottom: "60px",
+							paddingLeft: "8px",
+							paddingRight: "8px",
+							width: "100%",
+						}}
+						direction="row"
 					>
-						{props.loadingApprove ? (
-							<CircularProgress
-								style={{
-									color: "white",
-									width: "15px",
-									height: "15px",
-								}}
-							/>
-						) : (
-							"Allow the PhoenixDao Events marketplace to use your token"
-						)}
-					</Button>
-					<Button
-						variant="contained"
-						color="primary"
-						style={{ marginTop: "20px", width: "100%" }}
-						className={classes.send}
-						disabled={props.loadingPurchase || props.allow == 0  || props.allow == null}
-						onClick={props.inquire}
-						// onClick={buyTicket}
-					>
-						{props.loadingPurchase ? (
-							<CircularProgress
-								style={{
-									color: "white",
-									width: "15px",
-									height: "15px",
-								}}
-							/>
-						) : (
-							<div>
-								<ShoppingCartOutlined
-									style={{ marginRight: "10px" }}
+						<Button
+							variant="contained"
+							color="primary"
+							style={{ marginTop: "10px", width: "100%" }}
+							className={classes.send}
+							onClick={props.giveApproval}
+							disabled={
+								props.loadingApprove ||
+								props.allow != 0 ||
+								props.allow == null
+							}
+						>
+							{props.loadingApprove ? (
+								<CircularProgress
+									style={{
+										color: "white",
+										width: "15px",
+										height: "15px",
+									}}
 								/>
-								{props.buttonText && props.buttonText==" Get Ticket"?props.buttonText:"Purchase Ticket"}
-							</div>
-						)}
-					</Button>
-				</Grid>
-			</DialogActions>
+							) : (
+								"Allow the PhoenixDao Events marketplace to use your token"
+							)}
+						</Button>
+						<Button
+							variant="contained"
+							color="primary"
+							style={{ marginTop: "20px", width: "100%" }}
+							className={classes.send}
+							disabled={
+								props.loadingPurchase ||
+								props.allow == 0 ||
+								props.allow == null
+							}
+							onClick={props.inquire}
+							// onClick={buyTicket}
+						>
+							{props.loadingPurchase ? (
+								<CircularProgress
+									style={{
+										color: "white",
+										width: "15px",
+										height: "15px",
+									}}
+								/>
+							) : (
+								<div>
+									<ShoppingCartOutlined
+										style={{ marginRight: "10px" }}
+									/>
+									{props.buttonText &&
+									props.buttonText == " Get Ticket"
+										? props.buttonText
+										: "Purchase Ticket"}
+								</div>
+							)}
+						</Button>
+					</Grid>
+				</DialogActions>
 			</div>
 		</Dialog>
 	);

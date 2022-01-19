@@ -95,7 +95,7 @@ class MyEvents extends Component {
 			account: [],
 			dateNow: "",
 			prevPath: -1,
-			search:"",
+			search: "",
 			Deleted_Events: [],
 			disabledBuying: false,
 			selectedTab: 0,
@@ -115,7 +115,7 @@ class MyEvents extends Component {
 
 	//Get Blockchain State
 	async loadBlockchain() {
-		this.setState({search:""})
+		this.setState({ search: "" });
 		const graphURL = await GetGraphApi();
 		if (this._isMounted) {
 			this.setState({
@@ -163,7 +163,7 @@ class MyEvents extends Component {
 
 	//Get My Active Events on Blockchain
 	async loadActiveEvents() {
-		this.setState({search:""})
+		this.setState({ search: "" });
 		if (this._isMounted) {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
@@ -243,7 +243,7 @@ class MyEvents extends Component {
 
 	//Get My Concluded Events on Blockchain
 	async loadPastEvents() {
-		this.setState({search:""})
+		this.setState({ search: "" });
 		if (this._isMounted) {
 			this.setState({ MyEvents: [], active_length: 0, loading: true });
 		}
@@ -362,7 +362,7 @@ class MyEvents extends Component {
 
 	//Search for My Events By Name
 	updateSearch = (value) => {
-		this.setState({ value, search:value }, () => {
+		this.setState({ value, search: value }, () => {
 			try {
 				if (this.state.value !== "" && this.state.check.length !== 0) {
 					var filteredEvents = this.state.check;
@@ -454,6 +454,8 @@ class MyEvents extends Component {
 					myEvents={true}
 					loading={this.state.loading}
 					selectedTab={this.state.selectedTab}
+					userDetails={this.state.userDetail}
+					tokensListContract={this.props.tokensListContract}
 				/>
 			);
 		}
@@ -620,6 +622,11 @@ class MyEvents extends Component {
 	}
 
 	componentDidMount() {
+		// console.log("this.state.userDetail at MyEvents", this.state.userDetail);
+		// console.log(
+		// 	"this.props.tokensListContract at MyEvents",
+		// 	this.props.tokensListContract
+		// );
 		if (this.state.prevPath === -1) {
 			this.props.executeScroll({ behavior: "smooth", block: "start" });
 		}

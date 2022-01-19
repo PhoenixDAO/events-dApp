@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
-
 import {
 	Card,
 	CardActionArea,
@@ -14,8 +13,8 @@ import {
 import EventNoteIcon from "@material-ui/icons/EventNote";
 
 const useStyles = makeStyles((theme) => ({
-	root:{
-		height: "100%"
+	root: {
+		height: "100%",
 	},
 	avatar: {
 		backgroundColor: "red",
@@ -26,12 +25,12 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: 17,
 		fontWeight: 500,
 		fontFamily: "'Aeonik', sans-serif",
-		position:"absolute",
+		position: "absolute",
 		bottom: "0px",
 	},
-	topicName:{
+	topicName: {
 		WebkitLineClamp: "2",
-		maxWidth:"100%",
+		maxWidth: "100%",
 		display: "-webkit-box",
 		WebkitBoxOrient: "vertical",
 		overflow: "hidden",
@@ -39,20 +38,26 @@ const useStyles = makeStyles((theme) => ({
 		"@media (min-width: 990px) and (max-width: 1024px)": {
 			/* For landscape layouts only */
 			WebkitLineClamp: "3",
-		  }
+		},
 	},
-	cardHeight:{
-		height:"100%"
+	cardHeight: {
+		height: "100%",
 	},
-	contentPosition:{
-		paddingBottom:"25px",
-		height:"100%"
-	}
+	contentPosition: {
+		paddingBottom: "25px",
+		height: "100%",
+	},
 }));
 
-const TopicCard = ({ image, name, slug, count }) => {
+const TopicCard = ({
+	image,
+	name,
+	slug,
+	count,
+	userDetails,
+	tokensListContract,
+}) => {
 	const classes = useStyles();
-
 	return (
 		<Link
 			underline="none"
@@ -71,12 +76,12 @@ const TopicCard = ({ image, name, slug, count }) => {
 						title={name}
 						className={classes.imagePosition}
 					/>
-					<CardContent className={classes.contentPosition} >
+					<CardContent className={classes.contentPosition}>
 						<Typography
 							variant="h6"
 							component="h2"
 							className={`${classes.topicName} h-100`}
-							title = {name}
+							title={name}
 							style={{
 								color: "#1E1E22",
 								fontSize: 17,
@@ -96,10 +101,7 @@ const TopicCard = ({ image, name, slug, count }) => {
 						>
 							<EventNoteIcon fontSize="small" />{" "}
 							<span>&nbsp;</span>
-							
-							{count} {
-								count == 1 ?" Event" : " Events"
-							}
+							{count} {count == 1 ? " Event" : " Events"}
 						</Typography>
 					</CardContent>
 				</CardActionArea>

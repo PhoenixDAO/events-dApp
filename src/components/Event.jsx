@@ -93,7 +93,7 @@ class Event extends Component {
 			eventLocation: null,
 			tokenPrices: null,
 			selectedToken: this.props.tokensListContract
-				? this.props.tokensListContract[2]
+				? this.props.tokensListContract[0]
 				: null,
 			userDetail: null,
 		};
@@ -765,7 +765,7 @@ class Event extends Component {
 							eventDescription={this.state.eventDescription}
 							eventLocation={this.state.eventLocation}
 							selectedTab={this.props.selectedTab}
-							tokenPrices={this.state.tokenPrices}
+							// tokenPrices={this.state.tokenPrices}
 							userDetails={this.state.userDetail}
 							tokensListContract={this.props.tokensListContract}
 						/>
