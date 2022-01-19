@@ -433,9 +433,7 @@ class EventPage extends Component {
 			// 	image: RinkbeyNetworkArray[0].networks[0].image,
 			// 	tokenAddress: RinkbeyNetworkArray[0].networks[0].tokenAddress,
 			// },
-			selectedToken: this.props.tokensListContract
-				? this.props.tokensListContract[0]
-				: null,
+			selectedToken: null,
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -1174,91 +1172,6 @@ class EventPage extends Component {
 					dollar_price: priceInDollar,
 					token_price: priceInPhnx,
 				});
-				return;
-
-				if (this.state.selectedToken.tokenName == "usdt") {
-					token_price = event_data.prices.map((price) => {
-						// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
-						return (
-							Web3.utils.fromWei(price.toString()) /
-							this.state.tokenPrices.usdt
-						).toFixed(3);
-					});
-				} else if (this.state.selectedToken.tokenName == "usdc") {
-					token_price = event_data.prices.map((price) => {
-						// console.log('usdt_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.usdt)
-						return (
-							Web3.utils.fromWei(price.toString()) /
-							this.state.tokenPrices.usdc
-						).toFixed(3);
-					});
-				} else if (this.state.selectedToken.tokenName == "phnx") {
-					// let tokenPric = Number(Web3.utils.fromWei(event_data.prices[0]).toString()) / Number(tokenPrices.phnx)
-					// return tokenPric;
-					token_price = event_data.prices.map((price) => {
-						return (
-							Web3.utils.fromWei(price.toString()) /
-							this.state.tokenPrices.phnx
-						).toFixed(3);
-					});
-				} else if (this.state.selectedToken.tokenName == "ether") {
-					token_price = event_data.prices.map((price) => {
-						//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
-						if (
-							Web3.utils.fromWei(price.toString()) /
-								this.state.tokenPrices.eth >
-							0.1
-						) {
-							return (
-								Web3.utils.fromWei(price.toString()) /
-								this.state.tokenPrices.eth
-							).toFixed(3);
-						} else {
-							return (
-								Web3.utils.fromWei(price.toString()) /
-								this.state.tokenPrices.eth
-							);
-						}
-					});
-				} else if (this.state.selectedToken.tokenName == "weth") {
-					token_price = event_data.prices.map((price) => {
-						//  console.log('ether_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.eth)
-						if (
-							Web3.utils.fromWei(price.toString()) /
-								this.state.tokenPrices.weth >
-							0.1
-						) {
-							return (
-								Web3.utils.fromWei(price.toString()) /
-								this.state.tokenPrices.weth
-							).toFixed(3);
-						} else {
-							return (
-								Web3.utils.fromWei(price.toString()) /
-								this.state.tokenPrices.weth
-							);
-						}
-					});
-				} else if (this.state.selectedToken.tokenName == "matic") {
-					token_price = event_data.prices.map((price) => {
-						//  console.log('matic_price ??', Web3.utils.fromWei(price.toString()) / tokenPrices.matic)
-						return (
-							Web3.utils.fromWei(price.toString()) /
-							this.state.tokenPrices.matic
-						).toFixed(3);
-					});
-				} else {
-					token_price = event_data.prices.map((price) => {
-						return (
-							Web3.utils.fromWei(price.toString()) /
-							this.state.PhoenixDAO_market.usd
-						).toFixed(3);
-					});
-
-					dollar_price = Web3.utils.fromWei(
-						event_data.prices[categoryIndex].toString()
-					);
-				}
 			}
 		}
 	};
@@ -1673,6 +1586,8 @@ class EventPage extends Component {
 			} else {
 				return false;
 			}
+		} else {
+			return false;
 		}
 	};
 
@@ -1985,8 +1900,7 @@ class EventPage extends Component {
 		}
 	};
 	handleSelectedTokenState = async (result) => {
-		console.log("ether_price ??", result);
-		console.log("hello");
+		console.log("handleSelectedTokenState EventPage", result);
 		this.setState({ selectedToken: result }, () => {
 			this.priceCalculation(this.state.selectedCategoryIndex);
 		});
@@ -3072,20 +2986,10 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
-		// await GetWhiteListedToken();
-		// await GetTokenPrices();
 		if (this.props.tokensListContract) {
-			// 	console.log(
-			// 		"this.props.selectedToken....",
-			// 		this.props.selectedToken
-			// 	);
-			// 	if (this.props.selectedToken) {
-			// 		this.setState({
-			// 			selectedToken: this.props.selectedToken,
-			// 		});
-			// 	} else {
 			if (this.props.userDetails) {
 				let defaultCurr =
+					this.props.userDetails.result &&
 					this.props.userDetails.result.result.userHldr
 						.alternateCurrency;
 				console.log("defaultCurrny at EventPage", defaultCurr);
@@ -3100,7 +3004,6 @@ class EventPage extends Component {
 								});
 							}
 						});
-						// setAlternateCurrency({selectedToken:this.props.tokensListContract[1]});
 					}
 					if (defaultCurr === "") {
 						this.props.tokensListContract.map((v, i) => {
@@ -3113,33 +3016,32 @@ class EventPage extends Component {
 						});
 					}
 				} else if (typeof defaultCurr == "object") {
-					this.setState({
-						selectedToken:
-							this.props.userDetails.result.result.userHldr
-								.alternateCurrency,
+					this.props.tokensListContract.map((v, i) => {
+						if (v.tokenName == defaultCurr.tokenName) {
+							this.setState({
+								selectedToken: this.props.tokensListContract[i],
+							});
+						}
 					});
 				}
-				// else {
-				// 	this.props.tokensListContract.map((v, i) => {
-				// 		if (v.tokenName == "phoenixdao") {
-				// 			this.setState({
-				// 				selectedToken: this.props.tokensListContract[i],
-				// 			});
-				// 		}
-				// 	});
-				// }
+			} else {
 				this.props.tokensListContract.map((v, i) => {
 					if (v.tokenName == "phoenixdao") {
-						// setAlternateCurrency(props.tokensListContract[i]);
 						this.setState({
-							selectedToken:
-								this.props.userDetails.result.result.userHldr
-									.alternateCurrency,
+							selectedToken: this.props.tokensListContract[i],
 						});
 					}
 				});
 			}
-			// }
+		} else {
+			this.setState({
+				selectedToken: {
+					displayName: "PhoenixDAO",
+					image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
+					tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+					tokenName: "phoenixdao",
+				},
+			});
 		}
 		if (parseInt(this.props.match.params.id)) {
 			this.getUserFavoritesEvent();
