@@ -54,8 +54,8 @@ export const GetTokenPrices = async () => {
 	return await axios.get(ApiString + `&vs_currencies=usd`);
 };
 
-export const GetTokenPrices2 = async () => {
-	let tokensListContract = await GetWhiteListedToken();
+export const GetTokenPrices2 = async (netId) => {
+	let tokensListContract = await GetWhiteListedToken(netId);
 	let newTokensList = [];
 	tokensListContract.map(async (v, i) => {
 		let coingeckoData = await GetTokenDetailApi(v[2]);
@@ -69,6 +69,15 @@ export const GetTokenPrices2 = async () => {
 			usdPrice: coingeckoData.data.market_data.current_price.usd,
 		});
 	});
+	// if(netId == 1 || netId == 4)
+	// {
+	// 	tokensListContract.push([...tokensListContract,{chainId: "1"
+	// 	displayName: "Eth"
+	// 	image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147"
+	// 	tokenAddress: ""
+	// 	tokenName: "ethereum"
+	// 	usdPrice: 0.04173026}])
+	// }
 	console.log("newTokensList ++>>> ", newTokensList);
 	return newTokensList;
 };
@@ -98,7 +107,7 @@ export const Increment2Percent = (originalPrice) => {
 // 	return { eventAddress, phoenixAddress };
 // };
 
-export const GetWhiteListedToken = async () => {
+export const GetWhiteListedToken = async (netId) => {
 	const web3 = new Web3(window.ethereum);
 	const EventsContract = await new web3.eth.Contract(
 		Open_events_ABI,
@@ -108,7 +117,10 @@ export const GetWhiteListedToken = async () => {
 	const TokenList = await EventsContract.methods
 		.getWhiteListedTokensList()
 		.call();
-	console.log("WhiteListTokensss ++>>", TokenList);
+		if(netId == 1 || netId == 4){
+			TokenList.push(["0x0000000000000000000000000000000000000000", "1","ethereum"])
+		}
+	console.log("WhiteListTokensss ++>>", TokenList, netId);
 	return TokenList;
 };
 

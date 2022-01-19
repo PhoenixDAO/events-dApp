@@ -1375,7 +1375,7 @@ class EventPage extends Component {
 						(await CheckTokenAllowance(
 							this.props.accounts[0],
 							this.state.selectedToken.tokenAddress
-						)) == 0
+						)) == 0 || !this.state.selectedToken.tokenName == "ethereum"
 					) {
 						let tokenContract = await initTokenContract(
 							this.state.isPHNX
@@ -1412,7 +1412,7 @@ class EventPage extends Component {
 					}
 				}
 			} else {
-				if ((await this.allowance()) == 0) {
+				if ((await this.allowance()) == 0 || !this.state.selectedToken.tokenName == "ethereum") {
 					// if (
 					// 	(await CheckTokenAllowance(
 					// 		this.props.accounts[0],
@@ -1492,17 +1492,24 @@ class EventPage extends Component {
 				"this.props.eventsAddress +>",
 				this.props.eventsAddress
 			);
-			let a = await CheckTokenAllowance(
-				this.props.accounts[0],
-				this.state.isPHNX
+			if(this.state.selectedToken.tokenName==="ethereum"){
+				this.setState({
+					allow: true,
+				});
+				return true;
+			}else{
+				let a = await CheckTokenAllowance(
+					this.props.accounts[0],
+					this.state.isPHNX
 					? PhoenixDAO_Mainnet_Token_Address
 					: this.state.selectedToken.tokenAddress
-			);
-			console.log("allowance at this.allowance", a);
-			this.setState({
-				allow: a,
-			});
-			return a;
+					);
+					console.log("allowance at this.allowance", a);
+					this.setState({
+						allow: a,
+					});
+					return a;
+				}
 		}
 	};
 
@@ -1683,21 +1690,21 @@ class EventPage extends Component {
 				// let balance = await this.props.phnxContract.methods
 				// 	.totalSupply()
 				// 	.call();
-				let balance = 0;
-				if (this.state.selectedToken.tokenName == "ethereum") {
-					const web3 = new Web3(window.ethereum);
-					balance = await web3.eth.getBalance(this.props.accounts[0]);
-				} else {
-					let tokenContract = await initTokenContract(
-						this.state.isPHNX
-							? PhoenixDAO_Mainnet_Token_Address
-							: this.state.selectedToken.tokenAddress
-					);
-					balance = await tokenContract.methods
-						.balanceOf(this.props.accounts[0])
-						.call();
-				}
-				console.log("balance:", balance);
+				// let balance = 0;
+				// if (this.state.selectedToken.tokenName == "ethereum") {
+				// 	const web3 = new Web3(window.ethereum);
+				// 	balance = await web3.eth.getBalance(this.props.accounts[0]);
+				// } else {
+				// 	let tokenContract = await initTokenContract(
+				// 		this.state.isPHNX
+				// 			? PhoenixDAO_Mainnet_Token_Address
+				// 			: this.state.selectedToken.tokenAddress
+				// 	);
+				// 	balance = await tokenContract.methods
+				// 		.balanceOf(this.props.accounts[0])
+				// 		.call();
+				// }
+				// console.log("balance:", balance);
 				let date = new Date(
 					parseInt(this.state.blockChainEvent.time, 10) * 1000
 				);
@@ -1740,7 +1747,7 @@ class EventPage extends Component {
 						// 	this.props.accounts[0],
 						// 	this.state.selectedToken.tokenAddress
 						// ),
-						approve: await GiveAllowance(
+						approve: this.state.selectedToken.tokenName =="ethereum"?true:await GiveAllowance(
 							this.props.accounts[0],
 							this.state.isPHNX
 								? PhoenixDAO_Mainnet_Token_Address
@@ -2167,7 +2174,7 @@ class EventPage extends Component {
 					if (this.props.match.params.id == event_data.eventId) {
 						body = (
 							<Grid>
-								<BuyTicket
+								{/* <BuyTicket
 									open={this.state.open2}
 									handleClose={this.handleClose2}
 									image={image}
@@ -2186,7 +2193,7 @@ class EventPage extends Component {
 										this.props.tokensListContract
 									}
 									selectedToken={this.state.selectedToken}
-								/>
+								/> */}
 								<ApprovalModal
 									open={this.state.open}
 									buttonText={buttonText}

@@ -226,7 +226,7 @@ class App extends Component {
 		await this.initializeContract();
 	}
 	async componentDidMount() {
-		let res = await GetTokenPrices2();
+		let res = await GetTokenPrices2(await this.getNetworkId());
 		this.setState({ tokensListContract: res });
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
@@ -646,11 +646,12 @@ class App extends Component {
 					}
 				});
 		} else {
+			console.log("buy ticket: ", isEthereum, this.state.account,phnx_price.split("PHNX")[0] * 1.045, await Web3.utils.toWei(Number(phnx_price.split("PHNX")[0] * 1.045).toFixed(7).toString(),"ether"))
 			this.state.buyticket
 				// .send({ from: this.state.account})
 				.send(
 					isEthereum
-						? { from: this.state.account, value: phnx_price }
+						? { from: this.state.account, value:  await Web3.utils.toWei(Number(phnx_price.split("PHNX")[0] * 1.045).toFixed(7).toString(),"ether") }
 						: { from: this.state.account, value: 0 }
 				)
 				.on("transactionHash", (hash) => {
