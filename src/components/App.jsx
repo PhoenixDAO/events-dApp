@@ -571,7 +571,7 @@ class App extends Component {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-		if ((await this.allowance()) == 0) {
+		if ((await this.allowance()) == 0 && !isEthereum) {
 			this.state.approve
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
