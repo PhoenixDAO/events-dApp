@@ -3074,15 +3074,72 @@ class EventPage extends Component {
 	async componentDidMount() {
 		// await GetWhiteListedToken();
 		// await GetTokenPrices();
-		if (
-			this.props.tokensListContract &&
-			this.props.tokensListContract.length > 0
-		) {
-			this.setState({ selectedToken: this.props.tokensListContract[0] });
-			console.log(
-				"This.props.tokenListContract EventPage",
-				this.props.tokensListContract[2]
-			);
+		if (this.props.tokensListContract) {
+			// 	console.log(
+			// 		"this.props.selectedToken....",
+			// 		this.props.selectedToken
+			// 	);
+			// 	if (this.props.selectedToken) {
+			// 		this.setState({
+			// 			selectedToken: this.props.selectedToken,
+			// 		});
+			// 	} else {
+			if (this.props.userDetails) {
+				let defaultCurr =
+					this.props.userDetails.result.result.userHldr
+						.alternateCurrency;
+				console.log("defaultCurrny at EventPage", defaultCurr);
+				if (typeof defaultCurr == "string") {
+					if (defaultCurr === "Dollar" || defaultCurr === "usd") {
+						this.props.tokensListContract.map((v, i) => {
+							if (v.tokenName == "usd-coin") {
+								this.setState({
+									selectedToken:
+										this.props.userDetails.result.result
+											.userHldr.alternateCurrency,
+								});
+							}
+						});
+						// setAlternateCurrency({selectedToken:this.props.tokensListContract[1]});
+					}
+					if (defaultCurr === "") {
+						this.props.tokensListContract.map((v, i) => {
+							if (v.tokenName == "phoenixdao") {
+								this.setState({
+									selectedToken:
+										this.props.tokensListContract[i],
+								});
+							}
+						});
+					}
+				} else if (typeof defaultCurr == "object") {
+					this.setState({
+						selectedToken:
+							this.props.userDetails.result.result.userHldr
+								.alternateCurrency,
+					});
+				}
+				// else {
+				// 	this.props.tokensListContract.map((v, i) => {
+				// 		if (v.tokenName == "phoenixdao") {
+				// 			this.setState({
+				// 				selectedToken: this.props.tokensListContract[i],
+				// 			});
+				// 		}
+				// 	});
+				// }
+				this.props.tokensListContract.map((v, i) => {
+					if (v.tokenName == "phoenixdao") {
+						// setAlternateCurrency(props.tokensListContract[i]);
+						this.setState({
+							selectedToken:
+								this.props.userDetails.result.result.userHldr
+									.alternateCurrency,
+						});
+					}
+				});
+			}
+			// }
 		}
 		if (parseInt(this.props.match.params.id)) {
 			this.getUserFavoritesEvent();

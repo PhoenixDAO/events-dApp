@@ -1075,6 +1075,7 @@ class App extends Component {
 									purchased={this.state.purchased}
 									togglePurchase={this.togglePurchase}
 									eventsAddress={this.state.eventsAddress}
+									userDetails={this.state.userDetails}
 									tokensListContract={
 										this.state.tokensListContract
 									}
