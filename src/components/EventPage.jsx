@@ -59,6 +59,7 @@ import { Link } from "react-router-dom";
 import { explorerWithAddress } from "../config/const.js";
 import {
 	CheckTokenAllowance,
+	GetTokenPrices2,
 	GiveAllowance,
 	initTokenContract,
 } from "../services/Services";
@@ -1263,6 +1264,7 @@ class EventPage extends Component {
 	};
 
 	handleClickOpen = async () => {
+		console.log("hello selected: ", this.state.selectedToken)
 		if (
 			this.props.networkId != GLOBAL_NETWORK_ID &&
 			this.props.networkId != GLOBAL_NETWORK_ID_2
@@ -1276,7 +1278,7 @@ class EventPage extends Component {
 			if (this.state.oneTimeBuy) {
 				let buyers = this.state.soldTicket;
 				const account = this.props.accounts[0];
-				if (this.userExists(buyers, account)) {
+				if ((await this.props.eventsContract.methods.getTicketOwner(account,this.props.match.params.id ).call())) {
 					// alert("One time buy");
 					this.setState({
 						open3: true,
@@ -3001,7 +3003,9 @@ class EventPage extends Component {
 	}
 
 	async componentDidMount() {
-		if (this.props.tokensListContract) {
+		if (await this.props.tokensListContract) {
+			console.log("hello selected: ", await this.props.tokensListContract, this.props.userDetails)
+			if(this.props.tokensListContract.length>0){
 			if (this.props.userDetails) {
 				let defaultCurr =
 					this.props.userDetails.result &&
@@ -3040,6 +3044,38 @@ class EventPage extends Component {
 				}
 			} else {
 				this.props.tokensListContract.map((v, i) => {
+					if (v.tokenName == "phoenixdao") {
+						this.setState({
+							selectedToken: this.props.tokensListContract[i],
+						});
+					}
+				});
+			}}
+			else{
+				this.setState({
+					selectedToken: {
+						displayName: "PhoenixDAO",
+						image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
+						tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+						tokenName: "phoenixdao",
+					},
+				});
+				let res = await GetTokenPrices2(await this.props.networkId);
+				console.log("hello selected: ", res)
+				if (this.props.userDetails.result &&
+					this.props.userDetails.result.result.userHldr
+						.alternateCurrency && typeof this.props.userDetails.result.result.userHldr
+						.alternateCurrency == "object") {
+					res&&res.map((v, i) => {
+						if (v.tokenName ==  this.props.userDetails.result.result.userHldr
+							.alternateCurrency.tokenName) {
+							this.setState({
+								selectedToken: res[i],
+							});
+						}
+					});
+				}
+				res&&res.map((v, i) => {
 					if (v.tokenName == "phoenixdao") {
 						this.setState({
 							selectedToken: this.props.tokensListContract[i],

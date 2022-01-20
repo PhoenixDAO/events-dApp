@@ -75,12 +75,13 @@ const Analytics = (props, context) => {
 			setEventNames(props.eventName[0]);
 		}
 	}, [props.eventName]);
-	useEffect(async ()=>{
-		await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd").then((result)=>{
+	useEffect(()=>{
+		(async ()=>{await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd").then((result)=>{
 			setPhnxToUSDValue(result.data.phoenixdao.usd)
 			handleTimeStampChange();
 		}).catch((err)=>{
-		});
+			console.log(err)
+		});})();
 	},[])
 	useEffect(() => {
 		getViewsAndFavourites();

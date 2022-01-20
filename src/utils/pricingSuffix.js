@@ -57,8 +57,11 @@ function formatting(num, type) {
 			return roundingPrice(num, 1000000000) + "B ";
 		} else if (num > 999999999999 && num < 1000000000000000) {
 			return roundingPrice(num, 1000000000000) + "T ";
-		} else if (num < 999) {
-			return roundingPrice(num * 1000000, 1000000) + " ";
+		} else if (num < 999) {		
+			if(num<=0.0001){
+				return roundingPrice(num * 100000000, 100000000) + " ";
+			} 
+			return roundingPrice(num * 100000, 100000) + " ";
 		} else if (num > 999999999999999) {
 			return roundingPrice(num, 1000000000000000) + "P ";
 		} else {
@@ -69,7 +72,7 @@ function formatting(num, type) {
 
 function roundingPrice(num, limit) {
 	return (
-		Math.round((num / limit + Number.EPSILON) * 10000) / 10000 ?
-		Math.round((num / limit + Number.EPSILON) * 10000) / 10000:"- "
+		Math.round((num / limit + Number.EPSILON) * 1000000) / 1000000 ?
+		Math.round((num / limit + Number.EPSILON) * 1000000) / 1000000:"- "
 	);
 }
