@@ -1581,16 +1581,30 @@ class EventPage extends Component {
 					`checkUserBalance of ${this.state.selectedToken.tokenName}`,
 					balance
 				);
-				if (
-					Number(balance) <
-					Number(this.state.token_price.split("PHNX")[0])
-				) {
-					return true;
-				} else {
-					this.setState({
-						disableBuyTicketBtn: false,
-					});
-					return false;
+				if(this.state.isPHNX || this.state.selectedToken.tokenName == "phoenixdao"){		
+					if (
+						Number(balance) <
+						(Number(this.state.token_price.split("PHNX")[0])*1.02)
+					) {
+						return true;
+					} else {
+						this.setState({
+							disableBuyTicketBtn: false,
+						});
+						return false;
+					}
+				}else{
+					if (
+						Number(balance) <
+						Number(this.state.token_price.split("PHNX")[0])
+					) {
+						return true;
+					} else {
+						this.setState({
+							disableBuyTicketBtn: false,
+						});
+						return false;
+					}
 				}
 			} else {
 				return false;
@@ -2410,7 +2424,8 @@ class EventPage extends Component {
 															{`${pricingFormatter(
 																this.state
 																	.token_price,
-																"PHNX"
+																"PHNX",
+																(this.state.isPHNX || this.state.selectedToken.tokenName == "phoenixdao")
 															)}`}
 														</div>
 													)}
@@ -2432,7 +2447,8 @@ class EventPage extends Component {
 															value={pricingFormatter(
 																this.state
 																	.token_price,
-																"PHNX"
+																"PHNX",
+																(this.state.isPHNX || ((this.state.selectedToken)&&this.state.selectedToken.tokenName == "phoenixdao"))
 															)}
 															isEventPage={true}
 														/>
@@ -2444,7 +2460,7 @@ class EventPage extends Component {
 														fontSize: "14px",
 													}}
 													title={
-														this.state.dollar_price
+														(this.state.isPHNX || ((this.state.selectedToken)&&this.state.selectedToken.tokenName == "phoenixdao"))?this.state.dollar_price:Number(this.state.dollar_price)*1.02
 													}
 												>
 													{console.log(
@@ -2453,7 +2469,8 @@ class EventPage extends Component {
 													)}
 													{pricingFormatter(
 														this.state.dollar_price,
-														"$"
+														"$",
+														(this.state.isPHNX || ((this.state.selectedToken)&&this.state.selectedToken.tokenName == "phoenixdao"))
 													)}
 												</div>
 											</div>
