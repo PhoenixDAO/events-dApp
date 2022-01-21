@@ -1188,18 +1188,14 @@ class FindEvents extends Component {
 	}
 
 	async componentDidMount() {
-		console.log(
-			`tokensListContract at FindEvents.jsx`,
-			this.props.tokensListContract
-		);
-		GetWhiteListedToken();
-		GetTokenPrices2();
+		GetWhiteListedToken(this.props.networkId);
+		GetTokenPrices2(this.props.networkId);
 		this.props.executeScroll({ behavior: "smooth", block: "start" });
 
 		// this._isMounted = true;
 		//where: {tktTotalQuantitySold_gte: 0}
 		const query = `orderBy:eventId orderDirection:asc`;
-		this.loadBlockchain(query);
+		await this.loadBlockchain(query);
 		this.filterHideEvent();
 	}
 
