@@ -179,7 +179,8 @@ class Ticket extends Component {
 		if (
 			this.state.loaded === false &&
 			this.state.loading === false &&
-			this.state.blockChainEvent !== null
+			this.state.blockChainEvent !== null &&
+			this.state.blockChainEvent
 		) {
 			this.setState(
 				{
@@ -414,6 +415,7 @@ class Ticket extends Component {
 						blockChainEvent: graphEvents.data.data.events[0],
 						blockChainEventLoaded: true,
 					});
+					console.log("hello ticket: ", graphEvents.data.data.events[0])
 				})
 				.catch((err) => {
 					this.setState({
@@ -455,9 +457,10 @@ class Ticket extends Component {
 				</div>
 			</div>
 		);
-		if (this.state.blockChainEvent !== null && this.state.eventId != "") {
+		if (this.state.blockChainEvent !== null && this.state.eventId != "" && this.state.blockChainEvent) {
 			let event_data = this.state.blockChainEvent;
 
+			console.log("hello ticket: ", this.state.blockChainEvent)
 			let reported = false;
 			for (let j = 0; j < this.state.hideEvent.length; j++) {
 				if (this.state.eventId == this.state.hideEvent[j].id) {

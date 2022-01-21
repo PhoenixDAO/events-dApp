@@ -15,7 +15,7 @@ import JwPagination from "jw-react-pagination";
 
 import CheckUser from "./CheckUser";
 import { Open_events_ABI, Open_events_Address } from "../config/OpenEvents";
-import { explorerWithTX, explorerWithAddress ,graphURL} from "../config/const";
+import { explorerWithTX, explorerWithAddress ,graphURL, GLOBAL_NETWORK_ID} from "../config/const";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	// PhoenixDAO_Testnet_Token_Address,
@@ -108,7 +108,7 @@ class MyEventStat extends Component {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
 					PhoenixDAO_Testnet_Token_ABI,
-					PhoenixDAO_Mainnet_Token_Address
+					props.networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
 				),
 			};
 			context.drizzle.addContract(contractConfig);
@@ -176,7 +176,7 @@ class MyEventStat extends Component {
 		);
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,
-			Open_events_Address
+			this.props.networkId == GLOBAL_NETWORK_ID?Open_events_Address:Open_events_Address_2,
 		);
 		const blockChainEvent= await openEvents.methods.events(this.props.match.params.id).call()
 		this.setState({blockChainEvent:blockChainEvent,blockChainEventLoaded:true})
@@ -195,7 +195,7 @@ class MyEventStat extends Component {
 		);
 		const openEvents = new web3.eth.Contract(
 			Open_events_ABI,
-			Open_events_Address
+			this.props.networkId == GLOBAL_NETWORK_ID?Open_events_Address:Open_events_Address_2,
 		);
 
 		if (this._isMounted) {
