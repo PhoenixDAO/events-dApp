@@ -222,6 +222,11 @@ class App extends Component {
 	async componentWillMount() {
 		await this.initializeContract();
 	}
+
+	handleSetTokenListContract = async () => {
+		let res = await GetTokenPrices2(await this.getNetworkId());
+		this.setState({ tokensListContract: res });
+	};
 	async componentDidMount() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
@@ -230,8 +235,9 @@ class App extends Component {
 				localStorage.removeItem("account");
 			}
 		}
-		let res = await GetTokenPrices2(await this.getNetworkId());
-		await this.setState({ tokensListContract: res });
+		await this.handleSetTokenListContract();
+		// let res = await GetTokenPrices2(await this.getNetworkId());
+		// await this.setState({ tokensListContract: res });
 		await this.loadBlockchainData();
 		let hasTouchScreen = false;
 		if ("maxTouchPoints" in navigator) {
@@ -291,6 +297,40 @@ class App extends Component {
 		this.setState({ open2: false, purchased: false });
 	};
 
+	handleGetUserDetails = async () => {
+		const accounts = await web3.eth.getAccounts();
+		this.setState({ account: accounts[0] });
+		const networkId = await this.getNetworkId();
+		if (accounts[0] && networkId) {
+			const token = localStorage.getItem("AUTH_TOKEN");
+			if (token) {
+				const userChecker = await getUserDetails({
+					address: accounts[0],
+					networkId: networkId,
+				});
+				if (!userChecker.error) {
+					this.setState({
+						userDetails: userChecker,
+						open: userChecker.result.result.userHldr.firstTime,
+					});
+					return;
+				}
+			}
+			const userDetails = await this.authMetaMask();
+			if (!userDetails.error) {
+				this.setState({
+					userDetails: userDetails,
+					open: userDetails.result.result.userHldr.firstTime,
+				});
+				localStorage.removeItem("AUTH_TOKEN");
+				localStorage.setItem(
+					"AUTH_TOKEN",
+					userDetails.result.result.token
+				);
+			}
+		}
+	};
+
 	//Get Account
 	async loadBlockchainData() {
 		try {
@@ -338,37 +378,39 @@ class App extends Component {
 				});
 				const accounts = await web3.eth.getAccounts();
 
-				this.setState({ account: accounts[0] });
-				const networkId = await this.getNetworkId();
-				if (accounts[0] && networkId) {
-					const token = localStorage.getItem("AUTH_TOKEN");
-					if (token) {
-						const userChecker = await getUserDetails({
-							address: accounts[0],
-							networkId: networkId,
-						});
-						if (!userChecker.error) {
-							this.setState({
-								userDetails: userChecker,
-								open: userChecker.result.result.userHldr
-									.firstTime,
-							});
-							return;
-						}
-					}
-					const userDetails = await this.authMetaMask();
-					if (!userDetails.error) {
-						this.setState({
-							userDetails: userDetails,
-							open: userDetails.result.result.userHldr.firstTime,
-						});
-						localStorage.removeItem("AUTH_TOKEN");
-						localStorage.setItem(
-							"AUTH_TOKEN",
-							userDetails.result.result.token
-						);
-					}
-				}
+				await this.handleGetUserDetails(accounts);
+
+				// this.setState({ account: accounts[0] });
+				// const networkId = await this.getNetworkId();
+				// if (accounts[0] && networkId) {
+				// 	const token = localStorage.getItem("AUTH_TOKEN");
+				// 	if (token) {
+				// 		const userChecker = await getUserDetails({
+				// 			address: accounts[0],
+				// 			networkId: networkId,
+				// 		});
+				// 		if (!userChecker.error) {
+				// 			this.setState({
+				// 				userDetails: userChecker,
+				// 				open: userChecker.result.result.userHldr
+				// 					.firstTime,
+				// 			});
+				// 			return;
+				// 		}
+				// 	}
+				// 	const userDetails = await this.authMetaMask();
+				// 	if (!userDetails.error) {
+				// 		this.setState({
+				// 			userDetails: userDetails,
+				// 			open: userDetails.result.result.userHldr.firstTime,
+				// 		});
+				// 		localStorage.removeItem("AUTH_TOKEN");
+				// 		localStorage.setItem(
+				// 			"AUTH_TOKEN",
+				// 			userDetails.result.result.token
+				// 		);
+				// 	}
+				// }
 			}
 		} catch (err) {
 			// console.log(err);
@@ -647,7 +689,15 @@ class App extends Component {
 				// .send({ from: this.state.account})
 				.send(
 					isEthereum
-						? { from: this.state.account, value:  await Web3.utils.toWei(Number(phnx_price.split("PHNX")[0] * 1.045).toFixed(7).toString(),"ether") }
+						? {
+								from: this.state.account,
+								value: await Web3.utils.toWei(
+									Number(phnx_price.split("PHNX")[0] * 1.045)
+										.toFixed(7)
+										.toString(),
+									"ether"
+								),
+						  }
 						: { from: this.state.account, value: 0 }
 				)
 				.on("transactionHash", (hash) => {
@@ -1061,24 +1111,36 @@ class App extends Component {
 						<Route
 							exact
 							path="/event/:title/:id"
-							render={(props) => (
-								(this.state.tokensListContract)&&
-								<EventPage
-									{...props}
-									inquire={this.inquireBuy}
-									disabledStatus={this.state.disabledStatus}
-									toggleDisabling={this.toggleDisabling}
-									eventsContract={this.state.eventsContract}
-									phnxContract={this.state.phnxContract}
-									purchased={this.state.purchased}
-									togglePurchase={this.togglePurchase}
-									eventsAddress={this.state.eventsAddress}
-									userDetails={this.state.userDetails}
-									tokensListContract={this.state.tokensListContract&&
-										this.state.tokensListContract
-									}
-								/>
-							)}
+							render={(props) =>
+								this.state.tokensListContract && (
+									<EventPage
+										{...props}
+										inquire={this.inquireBuy}
+										disabledStatus={
+											this.state.disabledStatus
+										}
+										toggleDisabling={this.toggleDisabling}
+										eventsContract={
+											this.state.eventsContract
+										}
+										phnxContract={this.state.phnxContract}
+										purchased={this.state.purchased}
+										togglePurchase={this.togglePurchase}
+										eventsAddress={this.state.eventsAddress}
+										userDetails={this.state.userDetails}
+										handleGetUserDetails={
+											this.handleGetUserDetails
+										}
+										handleSetTokenListContract={
+											this.handleSetTokenListContract
+										}
+										tokensListContract={
+											// this.state.tokensListContract &&
+											this.state.tokensListContract
+										}
+									/>
+								)
+							}
 						/>
 						<Route
 							exact
@@ -1464,24 +1526,32 @@ class App extends Component {
 					<Route
 						exact
 						path="/event/:title/:id"
-						render={(props) => (
-							(this.state.tokensListContract) &&
-							<EventPage
-								{...props}
-								inquire={this.inquireBuy}
-								disabledStatus={this.state.disabledStatus}
-								toggleDisabling={this.toggleDisabling}
-								eventsContract={this.state.eventsContract}
-								phnxContract={this.state.phnxContract}
-								purchased={this.state.purchased}
-								togglePurchase={this.togglePurchase}
-								eventsAddress={this.state.eventsAddress}
-								userDetails={this.state.userDetails}
-								tokensListContract={this.state.tokensListContract&&
-									this.state.tokensListContract
-								}
-							/>
-						)}
+						render={(props) =>
+							this.state.tokensListContract && (
+								<EventPage
+									{...props}
+									inquire={this.inquireBuy}
+									disabledStatus={this.state.disabledStatus}
+									toggleDisabling={this.toggleDisabling}
+									eventsContract={this.state.eventsContract}
+									phnxContract={this.state.phnxContract}
+									purchased={this.state.purchased}
+									togglePurchase={this.togglePurchase}
+									eventsAddress={this.state.eventsAddress}
+									userDetails={this.state.userDetails}
+									handleGetUserDetails={
+										this.handleGetUserDetails
+									}
+									handleSetTokenListContract={
+										this.handleSetTokenListContract
+									}
+									tokensListContract={
+										// this.state.tokensListContract &&
+										this.state.tokensListContract
+									}
+								/>
+							)
+						}
 					/>
 					<Route
 						exact

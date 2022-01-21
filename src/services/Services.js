@@ -1,7 +1,11 @@
 import axios from "axios";
 import Web3 from "web3";
 // import { TokensListRinkbey } from "../config/const";
-import { Open_events_Address,Open_events_Address_2, Open_events_ABI } from "../config/OpenEvents";
+import {
+	Open_events_Address,
+	Open_events_Address_2,
+	Open_events_ABI,
+} from "../config/OpenEvents";
 import { GLOBAL_NETWORK_ID } from "../config/const.js";
 // import { toast } from "react-toastify";
 // import Notify from "../components/common/Notify";
@@ -43,10 +47,9 @@ export const GetTokenDetailApi = (tokenId) => {
 // {"weth":{"usd":3225.41},"unipilot":{"usd":7.13},"phoenixdao":{"usd":0.04331988}} Data format of GetTokenPrices
 // API => https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao%2Cunipilot%2Cweth&vs_currencies=usd
 
-
 export const GetTokenPrices2 = async (netId) => {
 	let tokensListContract = await GetWhiteListedToken(netId);
-	console.log("token address ", tokensListContract)
+	console.log("token address +++", tokensListContract);
 	let newTokensList = [];
 	tokensListContract.map(async (v, i) => {
 		let coingeckoData = await GetTokenDetailApi(v[2]);
@@ -69,8 +72,12 @@ export const GetTokenPrices2 = async (netId) => {
 	// 	tokenName: "ethereum"
 	// 	usdPrice: 0.04173026}])
 	// }
-	console.log("newTokensList ++>>> ", newTokensList);
-	return newTokensList;
+	console.log("token address +++ newTokensList ++>>> ", newTokensList);
+	if (tokensListContract && newTokensList) {
+		return newTokensList;
+	} else {
+		return;
+	}
 };
 
 export const Increment2Percent = (originalPrice) => {
@@ -102,15 +109,19 @@ export const GetWhiteListedToken = async (netId) => {
 	const web3 = new Web3(window.ethereum);
 	const EventsContract = await new web3.eth.Contract(
 		Open_events_ABI,
-		netId==GLOBAL_NETWORK_ID?Open_events_Address:Open_events_Address_2
+		netId == GLOBAL_NETWORK_ID ? Open_events_Address : Open_events_Address_2
 	);
 	console.log("EventsContract ==>>>", EventsContract);
 	const TokenList = await EventsContract.methods
 		.getWhiteListedTokensList()
 		.call();
-		if(netId == 1 || netId == 4){
-			TokenList.push(["0x0000000000000000000000000000000000000000", "1","ethereum"])
-		}
+	if (netId == 1 || netId == 4) {
+		TokenList.push([
+			"0x0000000000000000000000000000000000000000",
+			"1",
+			"ethereum",
+		]);
+	}
 	console.log("WhiteListTokensss ++>>", TokenList, netId);
 	return TokenList;
 };
