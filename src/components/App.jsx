@@ -223,8 +223,6 @@ class App extends Component {
 		await this.initializeContract();
 	}
 	async componentDidMount() {
-		let res = await GetTokenPrices2(await this.getNetworkId());
-		await this.setState({ tokensListContract: res });
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
@@ -232,6 +230,8 @@ class App extends Component {
 				localStorage.removeItem("account");
 			}
 		}
+		let res = await GetTokenPrices2(await this.getNetworkId());
+		await this.setState({ tokensListContract: res });
 		await this.loadBlockchainData();
 		let hasTouchScreen = false;
 		if ("maxTouchPoints" in navigator) {

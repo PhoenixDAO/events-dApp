@@ -614,6 +614,7 @@ const Analytics = (props, context) => {
 				let liveDollarRevenue = await getPhoenixDAOMarketValue(
 					totalDollarRevenue
 				);
+				console.log("hello analytics: ",graphForDays )
 				setLiveDollarRevenue(liveDollarRevenue);
 				setDollarRevenue(totalDollarRevenue.toFixed(3));
 				setPhnxRevenue(totalPhnxRevenue.toFixed(3));
