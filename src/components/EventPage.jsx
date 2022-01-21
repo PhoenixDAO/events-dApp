@@ -3069,7 +3069,7 @@ class EventPage extends Component {
 					selectedToken: {
 						displayName: "PhoenixDAO",
 						image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
-						tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+						tokenAddress: this.props.networkId==GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2,
 						tokenName: "phoenixdao",
 					},
 				});
@@ -3079,7 +3079,7 @@ class EventPage extends Component {
 				selectedToken: {
 					displayName: "PhoenixDAO",
 					image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
-					tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+					tokenAddress: this.props.networkId==GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2,
 					tokenName: "phoenixdao",
 				},
 			});
