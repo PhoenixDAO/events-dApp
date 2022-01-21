@@ -69,7 +69,7 @@ import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
 import IdentityForm from "./common/AvatarSelector/identityform";
 import DialogueBox from "./common/DialogueBox";
-import { GetTokenPrices2 } from "../services/Services";
+import { CheckTokenAllowance, GetTokenPrices2 } from "../services/Services";
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -203,6 +203,7 @@ class App extends Component {
 			// 	"eventAddress",
 			// 	eventAddress
 			// );
+			console.log("event page price: apps address", phoenixAddress)
 			const openEvents = await new web3.eth.Contract(
 				Open_events_ABI,
 				eventAddress
@@ -447,9 +448,12 @@ class App extends Component {
 		dollar_price,
 		time,
 		date,
-		isEthereum
+		isEthereum,
+		selectedToken
 	) => {
 		let chainId = await this.getNetworkId();
+		console.log(
+			"event page price: apps")
 		if (
 			this.state.account.length !== 0 &&
 			this.props.web3.networkId === (await this.getNetworkId())
@@ -471,7 +475,7 @@ class App extends Component {
 					time,
 					date2: date,
 				},
-				() => this.buy(isEthereum, phnx_price)
+				() => this.buy(isEthereum, phnx_price,selectedToken)
 			);
 		} else {
 			toast(
@@ -562,16 +566,20 @@ class App extends Component {
 			let a = await this.state.phnxContract.methods
 				.allowance(this.state.account, eventAddress)
 				.call();
+				console.log("allowance at this.allowance", a, this.state.account, eventAddress, phoenixAddress)
 			return a;
 		}
 	};
 
 	//Buy Function, Notify listen for transaction status.
-	buy = async (isEthereum, phnx_price) => {
+	buy = async (isEthereum, phnx_price, selectedToken) => {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-		if ((await this.allowance()) == 0 && !isEthereum) {
+		if ((await CheckTokenAllowance(
+			this.props.accounts[0],
+			selectedToken, this.props.networkId
+		)) == 0 && !isEthereum) {
 			this.state.approve
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
