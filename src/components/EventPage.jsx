@@ -1233,7 +1233,8 @@ class EventPage extends Component {
 				// ),
 				approve: await GiveAllowance(
 					this.props.accounts[0],
-					this.state.selectedToken.tokenAddress
+					this.state.selectedToken.tokenAddress,
+					this.props.networkId
 				),
 			});
 		} catch (err) {
@@ -1290,7 +1291,8 @@ class EventPage extends Component {
 					if (
 						(await CheckTokenAllowance(
 							this.props.accounts[0],
-							this.state.selectedToken.tokenAddress
+							this.state.selectedToken.tokenAddress,
+							this.props.networkId
 						)) == 0 || !this.state.selectedToken.tokenName == "ethereum"
 					) {
 						let tokenContract = await initTokenContract(
@@ -1313,7 +1315,8 @@ class EventPage extends Component {
 								this.props.accounts[0],
 								this.state.isPHNX
 									? this.props.networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
-									: this.state.selectedToken.tokenAddress
+									: this.state.selectedToken.tokenAddress,
+									this.props.networkId
 							),
 						});
 						this.handleClickOpen2();
@@ -1340,7 +1343,8 @@ class EventPage extends Component {
 						this.props.accounts[0],
 						this.state.isPHNX
 							? this.props.networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
-							: this.state.selectedToken.tokenAddress
+							: this.state.selectedToken.tokenAddress,
+							this.props.networkId
 					);
 					console.log("Coming here ifffff approval", approval);
 					// let balance = await this.props.phnxContract.methods
@@ -1418,7 +1422,8 @@ class EventPage extends Component {
 					this.props.accounts[0],
 					this.state.isPHNX
 					? this.props.networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
-					: this.state.selectedToken.tokenAddress
+					: this.state.selectedToken.tokenAddress,
+					this.props.networkId
 					);
 					console.log("allowance at this.allowance", a);
 					this.setState({
@@ -1554,10 +1559,6 @@ class EventPage extends Component {
 					balance = await web3.eth.getBalance(this.props.accounts[0]);
 					balance = Web3.utils.fromWei(balance.toString());
 				} else {
-					console.log(
-						"token address",
-						this.state.selectedToken.tokenAddress
-					);
 					let tokenContract = await initTokenContract(
 						this.state.isPHNX
 							? networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
@@ -1700,7 +1701,8 @@ class EventPage extends Component {
 							this.props.accounts[0],
 							this.state.isPHNX
 								?( (this.props.networkId == GLOBAL_NETWORK_ID)?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2)
-								: this.state.selectedToken.tokenAddress
+								: this.state.selectedToken.tokenAddress,
+								this.props.networkId
 						),
 					},
 					async () => {
@@ -1736,7 +1738,10 @@ class EventPage extends Component {
 								date2,
 								this.state.selectedToken.tokenName == "ethereum"
 									? true
-									: false
+									: false,
+									this.state.isPHNX
+								? this.props.networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
+								: this.state.selectedToken.tokenAddress
 							);
 							// }
 							this.setState({
@@ -3029,9 +3034,7 @@ class EventPage extends Component {
 						this.props.tokensListContract.map((v, i) => {
 							if (v.tokenName == "usd-coin") {
 								this.setState({
-									selectedToken:
-										this.props.userDetails.result.result
-											.userHldr.alternateCurrency,
+									selectedToken: this.props.tokensListContract[i],
 								});
 							}
 						});
@@ -3096,7 +3099,7 @@ class EventPage extends Component {
 			await this.loadEventFromBlockchain();
 			await this.initApproveMethod();
 			await this.checkUserTicketLocation();
-			if (this.props.accounts[0] && this.props.eventsAddress) {
+			if (this.props.accounts[0] && this.props.eventsAddress && this.state.selectedToken.tokenAddress) {
 				await this.allowance();
 				// await CheckTokenAllowance(
 				// 	this.props.accounts[0],
