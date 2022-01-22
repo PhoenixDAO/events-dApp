@@ -88,7 +88,7 @@ class CreateEvent extends Component {
 				eventCategory: "free",
 				ticketAvailability: "unlimited",
 			},
-			activeStep: 0,
+			activeStep: 2,
 			activeFlamingStep: 0,
 			progressText: 0,
 			shareUrl: "",
@@ -237,7 +237,7 @@ class CreateEvent extends Component {
 			categories.push(ticketCategories[i].ticketName);
 			// we should send phoenix price instead of dollar price
 			console.log("hello prices", ticketCategories);
-			if (isPHNX && eventCategory !="free") {
+			if (isPHNX && eventCategory != "free") {
 				prices.push(
 					Web3.utils.toWei(ticketCategories[i].phnxPrice.toString())
 				);
@@ -771,8 +771,7 @@ class CreateEvent extends Component {
 								fields={this.state.fields}
 								activeStep={this.state.activeStep}
 								tokensListContract={
-									this.props
-										.tokensListContract
+									this.props.tokensListContract
 								}
 							/>
 						</div>
@@ -800,10 +799,7 @@ class CreateEvent extends Component {
 						<PreviewEvent
 							fields={this.state.fields}
 							activeStep={this.state.activeStep}
-							tokensListContract={
-								this.props
-									.tokensListContract
-							}
+							tokensListContract={this.props.tokensListContract}
 						/>
 					</div>
 				</div>
