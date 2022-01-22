@@ -11,7 +11,12 @@ import PropTypes from "prop-types";
 import IdentityForm from "./identityform";
 import Tooltip from "@material-ui/core/Tooltip";
 import ipfs from "../../utils/ipfs";
-import { CircularProgress, MenuItem, Select, withStyles } from "@material-ui/core";
+import {
+	CircularProgress,
+	MenuItem,
+	Select,
+	withStyles,
+} from "@material-ui/core";
 import Web3 from "web3";
 import {
 	GLOBAL_NETWORK_ID,
@@ -23,19 +28,19 @@ import {
 
 // import { useHistory } from "react-router-dom";
 const useStyles = (theme) => ({
-	detailSelect:{
-		borderRadius:"5px",
-										border:"1px solid #e4e4e4",
-										width: "100%",
-										paddingTop:"5px",
-										paddingBottom:"5px",
-										paddingLeft:"10px",
-										fontSize:"18px",
-										"& .MuiSelect-select:focus":{
-											background:"#fff"
-										}
-	}
-})
+	detailSelect: {
+		borderRadius: "5px",
+		border: "1px solid #e4e4e4",
+		width: "100%",
+		paddingTop: "5px",
+		paddingBottom: "5px",
+		paddingLeft: "10px",
+		fontSize: "18px",
+		"& .MuiSelect-select:focus": {
+			background: "#fff",
+		},
+	},
+});
 const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
 	const [organizer, setOrganizer] = useState("");
@@ -414,7 +419,7 @@ const DetailForm = (props) => {
 											</option>
 										);
 									})} */}
-								{/* {[
+							{/* {[
 									...RinkbeyNetworkArray[
 										props.networkId == 137 ? 0 : 1
 									].networks,
@@ -437,46 +442,46 @@ const DetailForm = (props) => {
 									alternateCurrency &&
 									alternateCurrency.tokenName
 								}
-									labelId="demo-simple-select-outlined-label"
-									id="demo-simple-select-outlined"
-									fullWidth
-									displayEmpty
-									className={classes.detailSelect}
-									style={{
-										borderRadius:"5px",
-										border:"1px solid #e4e4e4",
-										width: "100%",
-										paddingTop:"5px",
-										paddingBottom:"5px",
-										paddingLeft:"10px",
-										fontSize:"18px",
-
-									}}
-									MenuProps={{
-										classes: {
-											paper: {maxHeight:"200px"},
-										},
-										getContentAnchorEl: null,
-										anchorOrigin: {
-											vertical: "bottom",
-											horizontal: "left",
-										},
-									}}
-								>
-										{props.tokensListContract &&
+								labelId="demo-simple-select-outlined-label"
+								id="demo-simple-select-outlined"
+								fullWidth
+								displayEmpty
+								className={classes.detailSelect}
+								style={{
+									borderRadius: "5px",
+									border: "1px solid #e4e4e4",
+									width: "100%",
+									paddingTop: "5px",
+									paddingBottom: "5px",
+									paddingLeft: "10px",
+									fontSize: "18px",
+								}}
+								MenuProps={{
+									classes: {
+										paper: { maxHeight: "200px" },
+									},
+									getContentAnchorEl: null,
+									anchorOrigin: {
+										vertical: "bottom",
+										horizontal: "left",
+									},
+								}}
+							>
+								{props.tokensListContract &&
 									props.tokensListContract.map((v, i) => {
 										return (
 											<MenuItem
-											value={v.tokenName}
-											style={{
-												fontFamily: "'Aeonik', sans-serif",
-											}}
-										>
-										{v.tokenName}
-										</MenuItem>
+												value={v.tokenName}
+												style={{
+													fontFamily:
+														"'Aeonik', sans-serif",
+												}}
+											>
+												{v.displayName}
+											</MenuItem>
 										);
 									})}
-								</Select>
+							</Select>
 						</div>
 					</div>
 					{/* <p>{alternateCurrency} {props.networkId}</p> */}
