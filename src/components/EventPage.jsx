@@ -464,90 +464,6 @@ class EventPage extends Component {
 			this.EventsOnDifferentNetworkExist.bind(this);
 		this.handleExportCSV = this.handleExportCSV.bind(this);
 	}
-
-	// GetPrices = async () => {
-	// 	console.log("resEthPrice.data.thereum.usd1");
-	// 	try {
-	// 		let resEthPrice = await GetEthPrice();
-	// 		if (resEthPrice) {
-	// 			await this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					eth: resEthPrice.data.ethereum.usd,
-	// 				},
-	// 			});
-	// 			console.log("price in tokens: ", this.state.tokenPrices);
-	// 		}
-	// 		let resPhnxPrice = await GetPhnxPrice();
-	// 		if (resPhnxPrice) {
-	// 			await this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					phnx: resPhnxPrice.data.phoenixdao.usd,
-	// 				},
-	// 			});
-	// 			console.log(
-	// 				"price in tokens: ",
-	// 				resPhnxPrice.data.phoenixdao.usd
-	// 			);
-	// 		}
-	// 		let resMaticPrice = await GetMaticPrice();
-	// 		if (resMaticPrice) {
-	// 			await this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					matic: resMaticPrice.data[`matic-network`].usd,
-	// 				},
-	// 			});
-	// 			console.log(
-	// 				"price in tokens: ",
-	// 				resMaticPrice.data[`matic-network`].usd
-	// 			);
-	// 		}
-	// 		let resUsdtPrice = await GetUsdtPrice();
-	// 		if (resUsdtPrice) {
-	// 			await this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					usdt: resUsdtPrice.data.tether.usd,
-	// 				},
-	// 			});
-	// 			console.log("price in tokens: ", resUsdtPrice.data.tether.usd);
-	// 		}
-	// 		let resWethPrice = await GetWethPrice();
-	// 		if (resWethPrice) {
-	// 			console.log(
-	// 				"resUsdtPrice.data.tether.usd",
-	// 				resUsdtPrice.data.tether.usd
-	// 			);
-	// 			await this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					weth: resWethPrice.data.weth.usd,
-	// 				},
-	// 			});
-	// 			console.log("price in tokens: ", resWethPrice.data.weth.usd);
-	// 		}
-	// 		let resUsdcPrice = await GetUsdcPrice();
-	// 		if (resUsdcPrice) {
-	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-	// 			await this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					usdc: resUsdcPrice.data[`usd-coin`].usd,
-	// 				},
-	// 			});
-	// 			console.log(
-	// 				"price in tokens: ",
-	// 				resUsdcPrice.data[`usd-coin`].usd
-	// 			);
-	// 		}
-	// 		await this.priceCalculation(0);
-	// 	} catch (e) {
-	// 		console.error("Err at GetPrices =>>", e);
-	// 	}
-	// };
-
 	goBack() {
 		this.props.history.goBack();
 	}
@@ -1105,6 +1021,7 @@ class EventPage extends Component {
 			);
 		}
 	};
+
 	priceCalculation = async (categoryIndex) => {
 		let event_data = this.state.blockChainEvent;
 		if (event_data.prices) {
@@ -2517,21 +2434,28 @@ class EventPage extends Component {
 																	.handleSelectedTokenState
 															}
 															token="phnx"
-															value={pricingFormatter(
+															value={
 																this.state
-																	.token_price && this.state
-																	.token_price,
-																"PHNX",
-																this.state
-																	.isPHNX ||
-																	(this.state
-																		.selectedToken &&
-																		this
-																			.state
-																			.selectedToken
-																			.tokenName ==
-																			"phoenixdao")
-															)}
+																	.token_price
+																	? pricingFormatter(
+																			this
+																				.state
+																				.token_price,
+																			"PHNX",
+																			this
+																				.state
+																				.isPHNX ||
+																				(this
+																					.state
+																					.selectedToken &&
+																					this
+																						.state
+																						.selectedToken
+																						.tokenName ==
+																						"phoenixdao")
+																	  )
+																	: `--`
+															}
 															isEventPage={true}
 														/>
 													)}
@@ -3111,86 +3035,154 @@ class EventPage extends Component {
 		);
 	}
 
+	// handleSetSelectedToken = async () => {
+	// 	// await this.props.handleGetUserDetais();
+	// 	await this.props.handleSetTokenListContract();
+	// 	console.log("Coming to handleSetSelectedToken");
+	// 	console.log(
+	// 		"handleSetSelectedToken tokenList=>",
+	// 		this.props.tokensListContract,
+	// 		"userDetails",
+	// 		this.props.userDetails
+	// 	);
+	// 	if (this.props.tokensListContract
+	// 		// this.props.tokensListContract.length > 0 &&
+	// 		// this.props.userDetails &&
+	// 		// this.props.userDetails.result &&
+	// 		// this.props.userDetails.result.result
+	// 	) {
+	// 		// if (this.props.userDetails) {
+	// 		// let defaultCurr =
+	// 		// 	this.props.userDetails.result.result.userHldr.alternateCurrency;
+	// 		// console.log("defaultCurrny at EventPage", defaultCurr);
+	// 		console.log(
+	// 			"DefaultCurreencyyy",
+	// 			this.props.userDetails.result.result.userHldr.alternateCurrency
+	// 		);
+	// 		if (
+	// 			typeof this.props.userDetails.result.result.userHldr
+	// 				.alternateCurrency == "string"
+	// 		) {
+	// 			if (
+	// 				this.props.userDetails.result.result.userHldr
+	// 					.alternateCurrency === "Dollar" ||
+	// 				this.props.userDetails.result.result.userHldr
+	// 					.alternateCurrency === "usd"
+	// 			) {
+	// 				this.props.tokensListContract.map((v, i) => {
+	// 					if (v.tokenName == "usd-coin") {
+	// 						this.setState({
+	// 							selectedToken: this.props.tokensListContract[i],
+	// 						});
+	// 					}
+	// 				});
+	// 			}
+	// 			if (
+	// 				this.props.userDetails.result.result.userHldr
+	// 					.alternateCurrency === ""
+	// 			) {
+	// 				this.props.tokensListContract.map((v, i) => {
+	// 					if (v.tokenName == "phoenixdao") {
+	// 						this.setState({
+	// 							selectedToken: this.props.tokensListContract[i],
+	// 						});
+	// 					}
+	// 				});
+	// 			}
+	// 		} else if (
+	// 			typeof this.props.userDetails.result.result.userHldr
+	// 				.alternateCurrency == "object"
+	// 		) {
+	// 			this.props.tokensListContract.map((v, i) => {
+	// 				if (
+	// 					v.tokenName ==
+	// 					this.props.userDetails.result.result.userHldr
+	// 						.alternateCurrency.tokenName
+	// 				) {
+	// 					this.setState({
+	// 						selectedToken: this.props.tokensListContract[i],
+	// 					});
+	// 				}
+	// 			});
+	// 		}
+	// 		// } else {
+	// 		// this.props.tokensListContract.map((v, i) => {
+	// 		// 	if (v.tokenName == "phoenixdao") {
+	// 		// 		this.setState({
+	// 		// 			selectedToken: this.props.tokensListContract[i],
+	// 		// 		});
+	// 		// 	}
+	// 		// });
+	// 		// }
+	// 	} else {
+	// 		this.setState({
+	// 			selectedToken: {
+	// 				displayName: "PhoenixDAO",
+	// 				image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
+	// 				// tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
+	// 				tokenAddress:
+	// 					this.props.networkId == GLOBAL_NETWORK_ID
+	// 						? PhoenixDAO_Mainnet_Token_Address
+	// 						: PhoenixDAO_Testnet_Token_Address_2,
+	// 				tokenName: "phoenixdao",
+	// 			},
+	// 		});
+	// 		// await this.props.handleGetUserDetails();
+	// 	}
+	// };
+
 	handleSetSelectedToken = async () => {
-		// await this.props.handleGetUserDetais();
-		await this.props.handleSetTokenListContract();
-		console.log("Coming to handleSetSelectedToken");
-		console.log(
-			"handleSetSelectedToken tokenList=>",
-			this.props.tokensListContract,
-			"userDetails",
-			this.props.userDetails
-		);
-		if (
-			this.props.tokensListContract.length > 0 &&
-			this.props.userDetails &&
-			this.props.userDetails.result &&
-			this.props.userDetails.result.result
-		) {
-			console.log("Coming to handleSetSelectedToken inside");
-			// if (this.props.userDetails) {
-			// let defaultCurr =
-			// 	this.props.userDetails.result.result.userHldr.alternateCurrency;
-			// console.log("defaultCurrny at EventPage", defaultCurr);
-			console.log(
-				"DefaultCurreencyyy",
-				this.props.userDetails.result.result.userHldr.alternateCurrency
-			);
-			if (
-				typeof this.props.userDetails.result.result.userHldr
-					.alternateCurrency == "string"
-			) {
-				if (
+		if (this.props.tokensListContract) {
+			if (this.props.userDetails) {
+				let defaultCurr =
+					this.props.userDetails.result &&
 					this.props.userDetails.result.result.userHldr
-						.alternateCurrency === "Dollar" ||
-					this.props.userDetails.result.result.userHldr
-						.alternateCurrency === "usd"
-				) {
+						.alternateCurrency;
+				console.log(
+					"defaultCurrny at EventPage",
+					this.props.tokensListContract
+				);
+				if (typeof defaultCurr == "string") {
+					if (defaultCurr === "Dollar" || defaultCurr === "usd") {
+						this.props.tokensListContract.map((v, i) => {
+							if (v.tokenName == "usd-coin") {
+								this.setState({
+									selectedToken:
+										this.props.tokensListContract[i],
+								});
+							}
+						});
+					}
+					if (defaultCurr === "") {
+						this.props.tokensListContract.map((v, i) => {
+							if (v.tokenName == "phoenixdao") {
+								this.setState({
+									selectedToken:
+										this.props.tokensListContract[i],
+								});
+							}
+						});
+					}
+				} else if (typeof defaultCurr == "object") {
 					this.props.tokensListContract.map((v, i) => {
-						if (v.tokenName == "usd-coin") {
+						if (v.tokenName == defaultCurr.tokenName) {
+							// console.log("Heyyyyyyyyyyyyyyyyyyyyyyy1");
 							this.setState({
 								selectedToken: this.props.tokensListContract[i],
 							});
 						}
 					});
 				}
-				if (
-					this.props.userDetails.result.result.userHldr
-						.alternateCurrency === ""
-				) {
-					this.props.tokensListContract.map((v, i) => {
-						if (v.tokenName == "phoenixdao") {
-							this.setState({
-								selectedToken: this.props.tokensListContract[i],
-							});
-						}
-					});
-				}
-			} else if (
-				typeof this.props.userDetails.result.result.userHldr
-					.alternateCurrency == "object"
-			) {
+			} else {
+				// console.log("Heyyyyyyyyyyyyyyyyyyyyyyy");
 				this.props.tokensListContract.map((v, i) => {
-					if (
-						v.tokenName ==
-						this.props.userDetails.result.result.userHldr
-							.alternateCurrency.tokenName
-					) {
+					if (v.tokenName == "phoenixdao") {
 						this.setState({
 							selectedToken: this.props.tokensListContract[i],
 						});
 					}
 				});
 			}
-			// } else {
-			// this.props.tokensListContract.map((v, i) => {
-			// 	if (v.tokenName == "phoenixdao") {
-			// 		this.setState({
-			// 			selectedToken: this.props.tokensListContract[i],
-			// 		});
-			// 	}
-			// });
-			// }
 		} else {
 			this.setState({
 				selectedToken: {
@@ -3200,7 +3192,6 @@ class EventPage extends Component {
 					tokenName: "phoenixdao",
 				},
 			});
-			// await this.props.handleGetUserDetails();
 		}
 	};
 
@@ -3212,7 +3203,7 @@ class EventPage extends Component {
 			this.props.userDetails
 		);
 
-		// await this.props.handleGetUserDetails();
+		await this.props.handleGetUserDetails();
 		// await this.props.handleSetTokenListContract();
 		await this.handleSetSelectedToken();
 
@@ -3280,6 +3271,10 @@ class EventPage extends Component {
 	componentWillUnmount() {
 		this.isCancelled = true;
 		this._isMounted = false;
+
+		// await this.checkUserTicketLocation();
+		// let buyers = await generateBuyerArr(this.props.match.params.id);
+		// this.setState({ soldTicket: buyers });
 	}
 	async componentDidUpdate(prevProps) {
 		if (this.props.purchased !== prevProps.purchased) {
