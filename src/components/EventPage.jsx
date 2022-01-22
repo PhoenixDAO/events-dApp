@@ -2147,6 +2147,7 @@ class EventPage extends Component {
 									tokensListContract={
 										this.props.tokensListContract
 									}
+									isPHNX={this.state.isPHNX}
 									selectedToken={this.state.selectedToken}
 								/>
 								<Snackbar
@@ -2820,12 +2821,13 @@ class EventPage extends Component {
 																		}
 																	>
 																		<a
+																		rel="noopener noreferrer"
 																			href={
 																				this
 																					.state
 																					.networkId ==
 																				137
-																					? explorerWithAddress
+																					? explorerWithAddress + sold.address
 																					: this
 																							.state
 																							.networkId ==
@@ -2834,7 +2836,7 @@ class EventPage extends Component {
 																					: etherscanRinkbyAddress +
 																					  sold.address
 																			}
-																			target="blank"
+																			target="_blank"
 																		>
 																			{sold.address.slice(
 																				0,

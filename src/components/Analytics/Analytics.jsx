@@ -30,7 +30,6 @@ import { useStyles } from "./styles";
 import Top5Events from "./Top5Events";
 import TicketsByLocation from "./TicketsByLocation";
 import { pricingFormatter } from "../../utils/pricingSuffix";
-import axios from "axios";
 
 const Analytics = (props, context) => {
 	const classes = useStyles();
@@ -38,7 +37,6 @@ const Analytics = (props, context) => {
 	const [userDetails, setUserDetails] = useState([]);
 	const [revenueCategory, setrevenueCategory] =
 		useState("eventRevenueInPhnx");
-		const [phnxToUSDValue, setPhnxToUSDValue] = useState(1)
 	const [timeStamp, setTimeStamp] = useState("86400");
 	const [dollarRevenue, setDollarRevenue] = useState(0);
 	const [phnxRevenue, setPhnxRevenue] = useState(0);
@@ -75,18 +73,10 @@ const Analytics = (props, context) => {
 			setEventNames(props.eventName[0]);
 		}
 	}, [props.eventName]);
-	useEffect(()=>{
-		(async ()=>{await axios.get("https://api.coingecko.com/api/v3/simple/price?ids=phoenixdao&vs_currencies=usd").then((result)=>{
-			setPhnxToUSDValue(result.data.phoenixdao.usd)
-			handleTimeStampChange();
-		}).catch((err)=>{
-			console.log(err)
-		});})();
-	},[])
 	useEffect(() => {
 		getViewsAndFavourites();
 		handleTimeStampChange();
-	}, [props.graphData, customDate.startDate, customDate.endDate, phnxToUSDValue]);
+	}, [props.graphData, customDate.startDate, customDate.endDate]);
 
 	useEffect(() => {
 		getDollarRevenue();
@@ -269,17 +259,10 @@ const Analytics = (props, context) => {
 					Number(dollarData[key].totalDollarRevenue) +
 					Number(graphDays[i].totalDollarRevenue);
 			} else {
-				if(Number(graphDays[i].totalPhnxRevenue)>0 && Number(graphDays[i].totalDollarRevenue)==0){
-					dollarData[key] = {
-						startTimeStamp: graphDays[i].startTimeStamp,
-						totalDollarRevenue: Number(graphDays[i].totalDollarRevenue + (graphDays[i].totalPhnxRevenue *( phnxToUSDValue))),
-					};
-					}else{
-						dollarData[key] = {
-							startTimeStamp: graphDays[i].startTimeStamp,
-							totalDollarRevenue: graphDays[i].totalDollarRevenue,
-						};
-			}
+				dollarData[key] = {
+					startTimeStamp: graphDays[i].startTimeStamp,
+					totalDollarRevenue: graphDays[i].totalDollarRevenue,
+				};
 			}
 		}
 		const dollarKey = Object.keys(dollarData);
@@ -375,20 +358,7 @@ const Analytics = (props, context) => {
 									).toFixed(3) + " PHNX",
 									"PHNX"
 							  )
-							): (
-								(event.eventRevenueInDollar == 0 && event.eventRevenueInPhnx > 0)?(
-								(
-									Number((event.totalPhnxRevenue / 1000000000000000000)*phnxToUSDValue)
-								).toFixed(3)==0.000?"$0":pricingFormatter(
-										"$" +
-											(
-												Number((event.eventRevenueInPhnx / 1000000000000000000)*phnxToUSDValue)
-											).toFixed(3),
-										"$"
-								  )
-								  )
-								:(
-								(
+							): ((
 								event.eventRevenueInDollar /
 								1000000000000000000
 							).toFixed(3)==0.000?"$0":pricingFormatter(
@@ -398,7 +368,7 @@ const Analytics = (props, context) => {
 											1000000000000000000
 										).toFixed(3),
 									"$"
-							  )))}
+							  ))}
 					</Grid>
 				</Grid>
 			));
@@ -500,6 +470,7 @@ const Analytics = (props, context) => {
 		} else {
 			timestamp = timeStamp;
 		}
+
 		setTimeStamp(timestamp);
 		let today = Math.floor(Date.now() / 1000);
 		let elapsedTime = today - timestamp;
@@ -596,25 +567,19 @@ const Analytics = (props, context) => {
 					);
 				}
 			});
-			let isphnxConvert = 0;
 			if (graphForDays.length > 0) {
-				graphForDays.forEach(async (event) => {
+				graphForDays.forEach((event) => {
+					totalDollarRevenue += Number(
+						Web3.utils.fromWei(event.totalDollarRevenue.toString())
+					);
+
+					soldTicket += Number(event.soldTickets.toString());
 					totalPhnxRevenue +=
 						event.totalPhnxRevenue / 1000000000000000000;
-					if(Number(event.totalPhnxRevenue)>0 && Number(event.totalDollarRevenue)==0){
-						totalDollarRevenue += (event.totalPhnxRevenue / 1000000000000000000)*phnxToUSDValue;
-						}else{
-							totalDollarRevenue += Number(
-								Web3.utils.fromWei(event.totalDollarRevenue.toString())
-								);
-							}
-							
-							soldTicket += Number(event.soldTickets.toString());
-						});
+				});
 				let liveDollarRevenue = await getPhoenixDAOMarketValue(
 					totalDollarRevenue
 				);
-				console.log("hello analytics: ",graphForDays )
 				setLiveDollarRevenue(liveDollarRevenue);
 				setDollarRevenue(totalDollarRevenue.toFixed(3));
 				setPhnxRevenue(totalPhnxRevenue.toFixed(3));
