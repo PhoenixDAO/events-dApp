@@ -3147,8 +3147,7 @@ class EventPage extends Component {
 						this.props.tokensListContract.map((v, i) => {
 							if (v.tokenName == "usd-coin") {
 								this.setState({
-									selectedToken:
-										this.props.tokensListContract[i],
+									selectedToken: this.props.tokensListContract[i],
 								});
 							}
 						});
@@ -3181,6 +3180,16 @@ class EventPage extends Component {
 							selectedToken: this.props.tokensListContract[i],
 						});
 					}
+				});
+			}}
+			else{
+				this.setState({
+					selectedToken: {
+						displayName: "PhoenixDAO",
+						image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
+						tokenAddress: this.props.networkId==GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2,
+						tokenName: "phoenixdao",
+					},
 				});
 			}
 		} else {
