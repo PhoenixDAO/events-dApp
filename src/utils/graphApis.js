@@ -121,6 +121,7 @@ export async function getTimeData(owner) {
                   soldTickets
                   totalPhnxRevenue
                   totalDollarRevenue
+				  isPHNX
                 }
               }`,
 		},
@@ -214,6 +215,7 @@ export async function getTodayData(owner, timestamp) {
 					soldTickets
 					totalPhnxRevenue
 					totalDollarRevenue
+					isPHNX
                 }
               }`,
 		},

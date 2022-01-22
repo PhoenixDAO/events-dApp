@@ -6,6 +6,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import PhnxLogo from "./Images/phnxPriceLogo.svg";
 import { ShoppingCartOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { pricingFormatter } from "../utils/pricingSuffix";
@@ -373,7 +374,8 @@ const ApprovalModal = (props) => {
 								<div className={classes.priceAlignment}>
 									{" "}
 									<img
-										src={
+										src={(props.isPHNX)?
+											PhnxLogo:
 											props.selectedToken &&
 											props.selectedToken.image
 										}
