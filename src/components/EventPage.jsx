@@ -2407,20 +2407,28 @@ class EventPage extends Component {
 																	.handleSelectedTokenState
 															}
 															token="phnx"
-															value={pricingFormatter(
+															value={
 																this.state
-																	.token_price,
-																"PHNX",
-																this.state
-																	.isPHNX ||
-																	(this.state
-																		.selectedToken &&
-																		this
-																			.state
-																			.selectedToken
-																			.tokenName ==
-																			"phoenixdao")
-															)}
+																	.token_price
+																	? pricingFormatter(
+																			this
+																				.state
+																				.token_price,
+																			"PHNX",
+																			this
+																				.state
+																				.isPHNX ||
+																				(this
+																					.state
+																					.selectedToken &&
+																					this
+																						.state
+																						.selectedToken
+																						.tokenName ==
+																						"phoenixdao")
+																	  )
+																	: `__`
+															}
 															isEventPage={true}
 														/>
 													)}

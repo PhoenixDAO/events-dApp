@@ -144,14 +144,14 @@ function PriceSelectBox(props) {
 							marginRight: "4px",
 						}}
 					/>
-					{/* {price.amount ? `${price.amount}` : `__`} */}
-					{price.amount
+					{/* {price.amount ? `${price.amount}` : `--`} */}
+					{price.amount != "--"
 						? props.isPHNX
 							? `${price.amount}`
 							: (Number(price.amount) * 1.02)
 									.toString()
 									.slice(0, 7) // If token is not Phnx it's price will be shown 102%
-						: `__`}
+						: `--`}
 					<ArrowDropDownIcon
 						style={{ color: "rgba(0, 0, 0, 0.7)" }}
 					/>
