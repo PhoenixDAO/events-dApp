@@ -3192,17 +3192,7 @@ class EventPage extends Component {
 					},
 				});
 			}
-		} else {
-			this.setState({
-				selectedToken: {
-					displayName: "PhoenixDAO",
-					image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
-					tokenAddress: this.props.networkId==GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2,
-					tokenName: "phoenixdao",
-				},
-			});
-		}
-	};
+		};
 
 	async componentDidMount() {
 		console.log(
