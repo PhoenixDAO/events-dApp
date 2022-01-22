@@ -385,10 +385,11 @@ const ApprovalModal = (props) => {
 											className={classes.PhnxPrice}
 											title={props.phnx_price}
 										>
-											{pricingFormatter(
+											{props.phnx_price}
+											{/* {pricingFormatter(
 												props.phnx_price,
 												"PHNX"
-											)}
+											)} */}
 										</span>
 										<div
 											style={{
@@ -397,11 +398,11 @@ const ApprovalModal = (props) => {
 											}}
 											title={props.dollar_price}
 										>
-											{/* {dollar_price} */}
-											{pricingFormatter(
+											{props.dollar_price&&props.dollar_price.toString().slice(0, 6)}
+											{/* {pricingFormatter(
 												props.dollar_price,
 												"$"
-											)}
+											)} */}
 										</div>
 									</div>
 								</div>
