@@ -398,39 +398,7 @@ const DetailForm = (props) => {
 					<div className="acc-form-prt">
 						<div className="frm-single">
 							<p className="acc-inpt-heading">DEFAULT CURRENCY</p>
-							{/* <select
-								className="acc-inpt acc-select"
-								onChange={(e) => {
-									setAlternateCurrency({
-										tokenName: e.target.value,
-										chainId: props.networkId,
-									});
-								}}
-								value={
-									alternateCurrency &&
-									alternateCurrency.tokenName
-								}
-							>
-								{props.tokensListContract &&
-									props.tokensListContract.map((v, i) => {
-										return (
-											<option value={v.tokenName}>
-												{v.tokenName}
-											</option>
-										);
-									})} */}
-							{/* {[
-									...RinkbeyNetworkArray[
-										props.networkId == 137 ? 0 : 1
-									].networks,
-								].map((data) => {
-									return (
-										<option value={data.tokenName}>
-											{data.tokenName}
-										</option>
-									);
-								})} */}
-							{/* </select> */}
+
 							<Select
 								onChange={(e) => {
 									setAlternateCurrency({
@@ -477,6 +445,13 @@ const DetailForm = (props) => {
 														"'Aeonik', sans-serif",
 												}}
 											>
+												<img
+													src={v.image}
+													style={{
+														height: "20px",
+														marginRight: 10,
+													}}
+												/>
 												{v.displayName}
 											</MenuItem>
 										);

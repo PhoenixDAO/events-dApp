@@ -55,7 +55,8 @@ export const GetTokenPrices2 = async (netId) => {
 		let coingeckoData = await GetTokenDetailApi(v[2]);
 		console.log("coingeckoImage oooo", coingeckoData);
 		newTokensList.push({
-			displayName: coingeckoData.data.name,
+			// displayName: coingeckoData.data.name,
+			displayName: coingeckoData.data.symbol,
 			tokenName: v[2],
 			chainId: v[1],
 			image: coingeckoData.data.image.small,
@@ -157,15 +158,30 @@ export const initTokenContract = async (tokenAddress) => {
 // Open_events_Address
 export const CheckTokenAllowance = async (account, tokenAddress, networkId) => {
 	if (account && tokenAddress) {
-		console.log("this.props.eventsAddress +> 2", networkId == GLOBAL_NETWORK_ID?Open_events_Address:Open_events_Address_2,);
-		console.log("account, tokenAddress ==>>> ", account, tokenAddress,networkId);
+		console.log(
+			"this.props.eventsAddress +> 2",
+			networkId == GLOBAL_NETWORK_ID
+				? Open_events_Address
+				: Open_events_Address_2
+		);
+		console.log(
+			"account, tokenAddress ==>>> ",
+			account,
+			tokenAddress,
+			networkId
+		);
 		try {
 			const Contract = await initTokenContract(
 				tokenAddress.toLowerCase()
 			);
 			const allowance = await Contract.methods
 				// .allowance(account.toLowerCase(), tokenAddress.toLowerCase())
-				.allowance(account.toLowerCase(), networkId == GLOBAL_NETWORK_ID?Open_events_Address:Open_events_Address_2)
+				.allowance(
+					account.toLowerCase(),
+					networkId == GLOBAL_NETWORK_ID
+						? Open_events_Address
+						: Open_events_Address_2
+				)
 				.call();
 			console.log("allowance CheckTokenAllowance =>> ", allowance);
 			return allowance;
@@ -180,7 +196,12 @@ export const GiveAllowance = async (account, tokenAddress, networkId) => {
 		const Contract = await initTokenContract(tokenAddress);
 		let balance = await Contract.methods.totalSupply().call();
 		// let approval = Contract.methods.approve(account, balance);
-		let approval = Contract.methods.approve( networkId == GLOBAL_NETWORK_ID?Open_events_Address:Open_events_Address_2, balance);
+		let approval = Contract.methods.approve(
+			networkId == GLOBAL_NETWORK_ID
+				? Open_events_Address
+				: Open_events_Address_2,
+			balance
+		);
 		return approval;
 	}
 	// let balance = await this.props.phnxContract.methods
