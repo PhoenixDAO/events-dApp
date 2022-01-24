@@ -176,7 +176,7 @@ const useStyles = makeStyles((theme) => ({
 			marginBottom: "0px",
 		},
 		"@media (max-width:1000px)": {
-			maxWidth: "45.33%",
+			maxWidth: "40%",
 		},
 		minHeight: "71px",
 		textAlign: "end",

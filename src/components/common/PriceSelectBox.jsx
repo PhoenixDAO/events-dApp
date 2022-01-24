@@ -148,7 +148,7 @@ function PriceSelectBox(props) {
 					{price.amount
 						? Number(price.amount) < 0.0001
 							? price.amount.toString().slice(0, 9)
-							: price.amount.toString().slice(0, 6) // If token is not Phnx it's price will be shown 102%
+							: price.amount.toString() // If token is not Phnx it's price will be shown 102%
 						: `--`}
 					<ArrowDropDownIcon
 						style={{ color: "rgba(0, 0, 0, 0.7)" }}
