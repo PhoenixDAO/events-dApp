@@ -74,6 +74,6 @@ function formatting(number, type,isPHNX) {
 function roundingPrice(num, limit) {
 	return (
 		Math.round((num / limit + Number.EPSILON) * 1000000) / 1000000 ?
-		Math.round((num / limit + Number.EPSILON) * 1000000) / 1000000:"- "
+		(((Math.round((num / limit + Number.EPSILON) * 1000000) / 1000000).toFixed(2) == 0.00)?(Math.round((num / limit + Number.EPSILON) * 1000000) / 1000000).toFixed(6):(Math.round((num / limit + Number.EPSILON) * 1000000) / 1000000).toFixed(2)):"- "
 	);
 }
