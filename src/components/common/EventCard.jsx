@@ -859,18 +859,17 @@ const EventCard = (props, context) => {
 										)
 									) : token_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
-											{/* <p
-												title={phnx_price[0] + " PHNX"}
-												style={{
-													fontFamily:
-														'"Aeonik", sans-serif',
-												}}
-											>
-												{pricingFormatter(
-													phnx_price[0],
-													"PHNX"
-												)}
-											</p> */}
+											{console.log(
+												"Dhunnnnnnnnn",
+												pricingFormatter(
+													dollar_price,
+													"$",
+													(selectedToken &&
+														selectedToken.tokenName ==
+															"phoenixdao") ||
+														event_data.isPHNX
+												)
+											)}
 											<PriceSelectBox
 												isPHNX={event_data.isPHNX}
 												tokensListContract={
@@ -903,7 +902,8 @@ const EventCard = (props, context) => {
 														selectedToken.tokenName ==
 															"phoenixdao") ||
 														event_data.isPHNX
-												)}
+												)}{" "}
+												Hiiii
 											</p>
 										</div>
 									) : (

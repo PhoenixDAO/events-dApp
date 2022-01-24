@@ -2373,19 +2373,6 @@ class EventPage extends Component {
 																	)
 															  )
 															: ""}
-														{/* <option
-													aria-label="None"
-													value=""
-												/>
-												<option value={10}>
-													Bronze Ticket
-												</option>
-												<option value={20}>
-													Silver Ticket
-												</option>
-												<option value={30}>
-													Golden Ticket
-												</option> */}
 													</Select>
 												</FormControl>
 											)}
@@ -2439,48 +2426,60 @@ class EventPage extends Component {
 															)}`}
 														</div>
 													)}
-													{!this.state.isPHNX && (
-														<PriceSelectBox
-															tokensListContract={
-																this.props
-																	.tokensListContract
-															}
-															selectedToken={
-																this.state
-																	.selectedToken &&
-																this.state
-																	.selectedToken
-															}
-															setSelectedToken={
-																this
-																	.handleSelectedTokenState
-															}
-															token="phnx"
-															value={
-																this.state
-																	.token_price
-																	? pricingFormatter(
-																			this
-																				.state
-																				.token_price,
-																			"PHNX",
-																			this
-																				.state
-																				.isPHNX ||
-																				(this
-																					.state
-																					.selectedToken &&
+													{this.state.dollar_price &&
+													this.state.dollar_price.slice(
+														1
+													) != 0
+														? !this.state
+																.isPHNX && (
+																<PriceSelectBox
+																	tokensListContract={
+																		this
+																			.props
+																			.tokensListContract
+																	}
+																	selectedToken={
+																		this
+																			.state
+																			.selectedToken &&
+																		this
+																			.state
+																			.selectedToken
+																	}
+																	setSelectedToken={
+																		this
+																			.handleSelectedTokenState
+																	}
+																	token="phnx"
+																	value={
+																		this
+																			.state
+																			.token_price
+																			? pricingFormatter(
 																					this
 																						.state
-																						.selectedToken
-																						.tokenName ==
-																						"phoenixdao")
-																	  )
-																	: `--`
-															}
-															isEventPage={true}
-														/>
-													)}
+																						.token_price,
+																					"PHNX",
+																					this
+																						.state
+																						.isPHNX ||
+																						(this
+																							.state
+																							.selectedToken &&
+																							this
+																								.state
+																								.selectedToken
+																								.tokenName ==
+																								"phoenixdao")
+																			  )
+																			: `--`
+																	}
+																	isEventPage={
+																		true
+																	}
+																/>
+														  )
+														: "Free"}
 												</span>
 												<div
 													style={{
@@ -2504,8 +2503,12 @@ class EventPage extends Component {
 													}
 												>
 													{console.log(
-														"dollar price:",
-														this.state.dollar_price
+														"dollar price ggg:",
+														this.state
+															.dollar_price &&
+															this.state.dollar_price.slice(
+																1
+															)
 													)}
 													{pricingFormatter(
 														this.state.dollar_price,
