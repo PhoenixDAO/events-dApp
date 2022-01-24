@@ -383,18 +383,19 @@ const Analytics = (props, context) => {
 		settimeLabel("DATE");
 		let newDataObj = {};
 		const timeDataArr = data;
+        console.log("🚀 ~ file: Analytics.jsx", timeDataArr)
 		for (let i = 0; i < timeDataArr.length; i++) {
-			if (newDataObj[timeDataArr[i].startTimeStamp]) {
+			if (newDataObj[i]) {
 				const soldTickets = Number(
-					newDataObj[timeDataArr[i].startTimeStamp].soldTickets
+					newDataObj[i].soldTickets
 				);
 				const totalDollarRevenue = Number(
-					newDataObj[timeDataArr[i].startTimeStamp].totalDollarRevenue
+					newDataObj[i].totalDollarRevenue
 				);
 				const totalPhnxRevenue = Number(
-					newDataObj[timeDataArr[i].startTimeStamp].totalPhnxRevenue
+					newDataObj[i].totalPhnxRevenue
 				);
-				newDataObj[timeDataArr[i].startTimeStamp] = {
+				newDataObj[i] = {
 					...timeDataArr[i],
 					soldTickets:
 						soldTickets + Number(timeDataArr[i].soldTickets),
@@ -405,8 +406,9 @@ const Analytics = (props, context) => {
 						totalPhnxRevenue +
 						Number(timeDataArr[i].totalPhnxRevenue),
 				};
+                console.log("🚀 ~ file: Analytics.jsx", newDataObj[i])
 			} else {
-				newDataObj[timeDataArr[i].startTimeStamp] = timeDataArr[i];
+				newDataObj[i] = timeDataArr[i];
 			}
 		}
 
