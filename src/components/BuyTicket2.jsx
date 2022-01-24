@@ -185,7 +185,7 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "22px",
 		marginTop: "-10px",
 		fontWeight: "700",
-		wordBreak: "break-word",
+		// wordBreak: "break-word",
 	},
 	PhnxPrice: {
 		fontSize: "16px",
@@ -374,10 +374,11 @@ const ApprovalModal = (props) => {
 								<div className={classes.priceAlignment}>
 									{" "}
 									<img
-										src={(props.isPHNX)?
-											PhnxLogo:
-											props.selectedToken &&
-											props.selectedToken.image
+										src={
+											props.isPHNX
+												? PhnxLogo
+												: props.selectedToken &&
+												  props.selectedToken.image
 										}
 										className={classes.logo}
 										alt="token logo"
@@ -400,7 +401,10 @@ const ApprovalModal = (props) => {
 											}}
 											title={props.dollar_price}
 										>
-											{props.dollar_price&&props.dollar_price.toString().slice(0, 6)}
+											{props.dollar_price &&
+												props.dollar_price
+													.toString()
+													.slice(0, 6)}
 											{/* {pricingFormatter(
 												props.dollar_price,
 												"$"
