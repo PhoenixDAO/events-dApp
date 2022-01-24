@@ -441,15 +441,23 @@ class EventPage extends Component {
 			selectedToken: {
 				displayName: "PhoenixDAO",
 				image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
-				tokenAddress: this.props.networkId==GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2,
+				tokenAddress:
+					this.props.networkId == GLOBAL_NETWORK_ID
+						? PhoenixDAO_Mainnet_Token_Address
+						: PhoenixDAO_Testnet_Token_Address_2,
 				tokenName: "phoenixdao",
 			},
-			tokensListContract:this.props.tokensListContract?this.props.tokensListContract: {
-				displayName: "PhoenixDAO",
-				image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
-				tokenAddress: this.props.networkId==GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2,
-				tokenName: "phoenixdao",
-			}
+			tokensListContract: this.props.tokensListContract
+				? this.props.tokensListContract
+				: {
+						displayName: "PhoenixDAO",
+						image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
+						tokenAddress:
+							this.props.networkId == GLOBAL_NETWORK_ID
+								? PhoenixDAO_Mainnet_Token_Address
+								: PhoenixDAO_Testnet_Token_Address_2,
+						tokenName: "phoenixdao",
+				  },
 		};
 		this.isCancelled = false;
 		this.onChangePage = this.onChangePage.bind(this);
@@ -718,6 +726,10 @@ class EventPage extends Component {
 
 		// 	console.log("blockChain Events in eventPage",blockChainEvent)
 		const graphURL = await GetGraphApi();
+		// this.setState({
+		// 	blockChainEvent: {},
+		// 	blockChainEventLoaded: true,
+		// });
 		await axios({
 			url: graphURL,
 			method: "post",
@@ -809,149 +821,17 @@ class EventPage extends Component {
 					// console.log("hello: the result are",this.state.alternateEventPresent)
 					// throw "event not found";
 				}
+				this.setState({ alternateEventLoading: false });
+				console.log("graphEventsgraphEvents", graphEvents);
 			})
 			.catch((err) => {
 				this.setState({
 					blockChainEvent: {},
 					blockChainEventLoaded: true,
+					alternateEventLoading: false,
 				});
 			});
 	}
-
-	//Get SoldTicket Data
-	// async loadblockhain() {
-	// 	const web3 = new Web3(
-	// 		new Web3.providers.WebsocketProvider(INFURA_WEB_URL)
-	// 	);
-	// 	const openEvents = new web3.eth.Contract(
-	// 		Open_events_ABI,
-	// 		Open_events_Address
-	// 	);
-
-	// 	if (this._isMounted) {
-	// 		this.setState({ openEvents });
-	// 		this.setState({ phoenixDAOTransfer: [] });
-	// 	}
-	// 	const blockNumber = await web3.eth.getBlockNumber();
-	// 	if (this._isMounted) {
-	// 		this.setState({
-	// 			blocks: blockNumber - 50000,
-	// 			latestblocks: blockNumber - 1,
-	// 			soldTicket: [],
-	// 		});
-	// 	}
-
-	// 	// openEvents
-	// 	// 	.getPastEvents("SoldTicket", {
-	// 	// 		filter: { eventId: this.props.match.params.id },
-	// 	// 		fromBlock: 5000000,
-	// 	// 		toBlock: 'latest',
-	// 	// 	})
-	// 	// 	.then((events) => {
-	// 	await axios({
-	// 		url: graphURL,
-	// 		method: "post",
-	// 		data: {
-	// 			// query: `
-	// 			//   {
-	// 			// 	events {
-	// 			// 	  eventId
-	// 			// 	  price
-	// 			// 	  token
-	// 			// 	  sold
-	// 			// 	  buyers
-	// 			// 	}
-	// 			//   }
-	// 			//   `,
-	// 			query: `{
-	// 				tickets(where: { eventId:${this.props.match.params.id}}){
-	// 					id
-	// 					eventId
-	// 					buyer
-	// 					boughtTimeStamp
-	// 					boughtLocation
-	// 					eventLocation
-	// 					soldCategory
-	// 					categoryIndex
-	// 					priceInPhnx
-	// 					priceInDollar
-	// 				  }
-	// 			}`,
-	// 		},
-	// 	})
-	// 		.then((graphEvents) => {
-	// 			console.log("GraphQL query for event buyers in eventPage", graphEvents.data.data.tickets)
-	// 			let buyersOfTheEvent = graphEvents.data.data.tickets.map((ticket) => {
-	// 				return ticket.buyer;
-	// 			});
-	// 			console.log("GraphQL result in eventPage", buyersOfTheEvent)
-	// 			if (this._isMounted) {
-	// 				this.setState({
-	// 					load: false,
-	// 					soldTicket: buyersOfTheEvent,
-	// 					active_length: buyersOfTheEvent.length,
-	// 					check: buyersOfTheEvent,
-	// 				});
-	// 			}
-
-	// 			// let tickets = graphEvents.data.data.events.find(
-	// 			// 	(event) => event.eventId == this.props.match.params.id
-	// 			// );
-
-	// 			// this.setState({ load: true });
-	// 			// var newsort = tickets.buyers
-	// 			// 	.concat()
-	// 			// 	.sort((a, b) => b.blockNumber - a.blockNumber);
-	// 			// if (this._isMounted) {
-	// 			// 	this.setState({
-	// 			// 		load: false,
-	// 			// 		soldTicket: newsort,
-	// 			// 		active_length: newsort.length,
-	// 			// 		check: newsort,
-	// 			// 	});
-	// 			// }
-	// 		})
-	// 		.catch((err) => console.log("Error in GraphQL query for event buyers in eventPage", err));
-
-	// 	// openEvents
-	// 	// 	.getPastEvents("SoldTicket", {
-	// 	// 		fromBlock: 5000000,
-	// 	// 		toBlock: 'latest',
-	// 	// 	})
-	// 	// 	.then((events) => {console.log("mere soldTickets without Id",events)})
-	// 	// 	.catch((err) => console.error(err));
-
-	// 	//Listen for Incoming Sold Tickets
-	// 	// openEvents.events
-	// 	// 	.SoldTicket({
-	// 	// 		filter: { eventId: this.props.match.params.id },
-	// 	// 		fromBlock: blockNumber,
-	// 	// 		toBlock: "latest",
-	// 	// 	})
-	// 	// 	.on("data", (log) => {
-	// 	// 		console.log('mere soldTickets listner', log)
-	// 	// 		setTimeout(() => {
-	// 	// 			this.setState({ load: true });
-
-	// 	// 			this.setState({
-	// 	// 				soldTicket: [...this.state.soldTicket, log],
-	// 	// 			});
-	// 	// 			var newest = this.state.soldTicket;
-	// 	// 			var newsort = newest
-	// 	// 				.concat()
-	// 	// 				.sort((a, b) => b.blockNumber - a.blockNumber);
-	// 	// 			if (this._isMounted) {
-	// 	// 				this.setState({ soldTicket: newsort });
-	// 	// 				this.setState({
-	// 	// 					active_length: this.state.soldTicket.length,
-	// 	// 				});
-	// 	// 			}
-	// 	// 			this.setState({ load: false });
-	// 	// 		}),
-	// 	// 			15000;
-	// 	// 	});
-	// }
-
 	//get market cap & dollar value of PhoenixDAO
 	componentDidUpdate() {
 		this.updateIPFS();
@@ -1096,6 +976,11 @@ class EventPage extends Component {
 					event_data.prices[categoryIndex].toString()
 				);
 				// Dynamic function for price calculation Ends
+				console.log(
+					"dollar_price: ",
+					event_data.token,
+					token_price[categoryIndex]
+				);
 				let priceInPhnx = event_data.token
 					? token_price[categoryIndex] + "PHNX"
 					: "FREE";
@@ -1228,7 +1113,8 @@ class EventPage extends Component {
 							this.props.accounts[0],
 							this.state.selectedToken.tokenAddress,
 							this.props.networkId
-						)) == 0 || !this.state.selectedToken.tokenName == "ethereum"
+						)) == 0 ||
+						!this.state.selectedToken.tokenName == "ethereum"
 					) {
 						let tokenContract = await initTokenContract(
 							this.state.isPHNX
@@ -1251,9 +1137,11 @@ class EventPage extends Component {
 							approve: await GiveAllowance(
 								this.props.accounts[0],
 								this.state.isPHNX
-									? this.props.networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
+									? this.props.networkId == GLOBAL_NETWORK_ID
+										? PhoenixDAO_Mainnet_Token_Address
+										: PhoenixDAO_Testnet_Token_Address_2
 									: this.state.selectedToken.tokenAddress,
-									this.props.networkId
+								this.props.networkId
 							),
 						});
 						this.handleClickOpen2();
@@ -1282,9 +1170,11 @@ class EventPage extends Component {
 					let approval = await GiveAllowance(
 						this.props.accounts[0],
 						this.state.isPHNX
-							? this.props.networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
+							? this.props.networkId == GLOBAL_NETWORK_ID
+								? PhoenixDAO_Mainnet_Token_Address
+								: PhoenixDAO_Testnet_Token_Address_2
 							: this.state.selectedToken.tokenAddress,
-							this.props.networkId
+						this.props.networkId
 					);
 					console.log("Coming here ifffff approval", approval);
 					// let balance = await this.props.phnxContract.methods
@@ -1361,16 +1251,18 @@ class EventPage extends Component {
 				let a = await CheckTokenAllowance(
 					this.props.accounts[0],
 					this.state.isPHNX
-					? this.props.networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
-					: this.state.selectedToken.tokenAddress,
+						? this.props.networkId == GLOBAL_NETWORK_ID
+							? PhoenixDAO_Mainnet_Token_Address
+							: PhoenixDAO_Testnet_Token_Address_2
+						: this.state.selectedToken.tokenAddress,
 					this.props.networkId
-					);
-					console.log("allowance at this.allowance", a);
-					this.setState({
-						allow: a,
-					});
-					return a;
-				}
+				);
+				console.log("allowance at this.allowance", a);
+				this.setState({
+					allow: a,
+				});
+				return a;
+			}
 		}
 	};
 
@@ -1649,13 +1541,20 @@ class EventPage extends Component {
 						// 	this.props.accounts[0],
 						// 	this.state.selectedToken.tokenAddress
 						// ),
-						approve: this.state.selectedToken.tokenName =="ethereum"?true:await GiveAllowance(
-							this.props.accounts[0],
-							this.state.isPHNX
-								?( (this.props.networkId == GLOBAL_NETWORK_ID)?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2)
-								: this.state.selectedToken.tokenAddress,
-								this.props.networkId
-						),
+						approve:
+							this.state.selectedToken.tokenName == "ethereum"
+								? true
+								: await GiveAllowance(
+										this.props.accounts[0],
+										this.state.isPHNX
+											? this.props.networkId ==
+											  GLOBAL_NETWORK_ID
+												? PhoenixDAO_Mainnet_Token_Address
+												: PhoenixDAO_Testnet_Token_Address_2
+											: this.state.selectedToken
+													.tokenAddress,
+										this.props.networkId
+								  ),
 					},
 					async () => {
 						// let temp = await this.allowance();
@@ -1691,9 +1590,11 @@ class EventPage extends Component {
 								this.state.selectedToken.tokenName == "ethereum"
 									? true
 									: false,
-									this.state.isPHNX
-								? this.props.networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
-								: this.state.selectedToken.tokenAddress
+								this.state.isPHNX
+									? this.props.networkId == GLOBAL_NETWORK_ID
+										? PhoenixDAO_Mainnet_Token_Address
+										: PhoenixDAO_Testnet_Token_Address_2
+									: this.state.selectedToken.tokenAddress
 							);
 							// }
 							this.setState({
@@ -1926,14 +1827,14 @@ class EventPage extends Component {
 				this.state.blockChainEvent === undefined ||
 				Object.keys(this.state.blockChainEvent).length === 0
 			) {
+				{
+					console.log(
+						"this.state.blockChainEventttt",
+						this.state.blockChainEvent
+					);
+				}
 				if (this.state.alternateEventPresent == null) {
 					body = (
-						// <div className="text-center mt-5">
-						// 	<span role="img" aria-label="uncorn">
-						// 		🦄
-						// 	</span>{" "}
-						// 	PhoenixDAO Event not found
-						// </div>
 						<EmptyState
 							text={`Event doesn't exist... 😔`}
 							btnText="Go to Dashboard"
@@ -1959,7 +1860,7 @@ class EventPage extends Component {
 									? "Matic"
 									: ""
 							} Network.
-							Both Matic and Ethereum events are currently supported.`}
+							Both Matic and Ethereum events are currently supported. Also check if you are signed with metamask`}
 							btnText="Go to Dashboard"
 							url="/allevents/1"
 						/>
@@ -2113,31 +2014,22 @@ class EventPage extends Component {
 									eventDate={this.state.eventDate}
 									eventEndDate={this.state.eventEndDate}
 									phnx_price={pricingFormatter(
-										this.state
-											.token_price && this.state
-											.token_price,
+										this.state.token_price &&
+											this.state.token_price,
 										"PHNX",
-										this.state
-											.isPHNX ||
-											(this.state
-												.selectedToken &&
-												this
-													.state
-													.selectedToken
-													.tokenName ==
-													"phoenixdao")
+										this.state.isPHNX ||
+											(this.state.selectedToken &&
+												this.state.selectedToken
+													.tokenName == "phoenixdao")
 									)}
 									eventEndTime={this.state.eventEndTime}
 									dollar_price={pricingFormatter(
 										this.state.dollar_price,
 										"$",
 										this.state.isPHNX ||
-											(this.state
-												.selectedToken &&
-												this.state
-													.selectedToken
-													.tokenName ==
-													"phoenixdao")
+											(this.state.selectedToken &&
+												this.state.selectedToken
+													.tokenName == "phoenixdao")
 									)}
 									allowance={this.allowance}
 									allow={this.state.allow}
@@ -2294,7 +2186,6 @@ class EventPage extends Component {
 													}
 												>
 													<Select
-														// native
 														value={
 															this.state
 																.selectedCategoryIndex
@@ -2353,19 +2244,6 @@ class EventPage extends Component {
 																	)
 															  )
 															: ""}
-														{/* <option
-													aria-label="None"
-													value=""
-												/>
-												<option value={10}>
-													Bronze Ticket
-												</option>
-												<option value={20}>
-													Silver Ticket
-												</option>
-												<option value={30}>
-													Golden Ticket
-												</option> */}
 													</Select>
 												</FormControl>
 											)}
@@ -2378,20 +2256,6 @@ class EventPage extends Component {
 														this.state.token_price
 													}
 												>
-													{/* {this.state.isPHNX &&
-												
-												<><img
-													src={PhnxLogo}
-													style={{
-														height: props.isEventPage ? "25px" : "20px",
-														marginRight: "4px",
-													}}
-												/>
-														{pricingFormatter(
-															this.state
-																.token_price,
-															"PHNX"
-														)}</>} */}
 													{this.state.isPHNX && (
 														<div
 															className={
@@ -2419,47 +2283,60 @@ class EventPage extends Component {
 															)}`}
 														</div>
 													)}
-													{!this.state.isPHNX && (
-														<PriceSelectBox
-															tokensListContract={
-																this.props
-																	.tokensListContract
-															}
-															selectedToken={
-																this.state
-																	.selectedToken && this.state
-																	.selectedToken
-															}
-															setSelectedToken={
-																this
-																	.handleSelectedTokenState
-															}
-															token="phnx"
-															value={
-																this.state
-																	.token_price
-																	? pricingFormatter(
-																			this
-																				.state
-																				.token_price,
-																			"PHNX",
-																			this
-																				.state
-																				.isPHNX ||
-																				(this
-																					.state
-																					.selectedToken &&
+													{this.state.dollar_price &&
+													this.state.dollar_price.slice(
+														1
+													) > 0
+														? !this.state
+																.isPHNX && (
+																<PriceSelectBox
+																	tokensListContract={
+																		this
+																			.props
+																			.tokensListContract
+																	}
+																	selectedToken={
+																		this
+																			.state
+																			.selectedToken &&
+																		this
+																			.state
+																			.selectedToken
+																	}
+																	setSelectedToken={
+																		this
+																			.handleSelectedTokenState
+																	}
+																	token="phnx"
+																	value={
+																		this
+																			.state
+																			.token_price
+																			? pricingFormatter(
 																					this
 																						.state
-																						.selectedToken
-																						.tokenName ==
-																						"phoenixdao")
-																	  )
-																	: `--`
-															}
-															isEventPage={true}
-														/>
-													)}
+																						.token_price,
+																					"PHNX",
+																					this
+																						.state
+																						.isPHNX ||
+																						(this
+																							.state
+																							.selectedToken &&
+																							this
+																								.state
+																								.selectedToken
+																								.tokenName ==
+																								"phoenixdao")
+																			  )
+																			: `--`
+																	}
+																	isEventPage={
+																		true
+																	}
+																/>
+														  )
+														: "Free"}
 												</span>
 												<div
 													style={{
@@ -2483,20 +2360,26 @@ class EventPage extends Component {
 													}
 												>
 													{console.log(
-														"dollar price:",
-														this.state.dollar_price
+														"dollar price ggg:",
+														this.state
+															.dollar_price &&
+															this.state.dollar_price.slice(
+																1
+															)
 													)}
-													{pricingFormatter(
-														this.state.dollar_price,
-														"$",
-														this.state.isPHNX ||
-															(this.state
-																.selectedToken &&
-																this.state
-																	.selectedToken
-																	.tokenName ==
-																	"phoenixdao")
-													)}
+													{this.state.dollar_price &&
+														pricingFormatter(
+															this.state
+																.dollar_price,
+															"$",
+															this.state.isPHNX ||
+																(this.state
+																	.selectedToken &&
+																	this.state
+																		.selectedToken
+																		.tokenName ==
+																		"phoenixdao")
+														)}
 												</div>
 											</div>
 
@@ -2821,13 +2704,14 @@ class EventPage extends Component {
 																		}
 																	>
 																		<a
-																		rel="noopener noreferrer"
+																			rel="noopener noreferrer"
 																			href={
 																				this
 																					.state
 																					.networkId ==
 																				137
-																					? explorerWithAddress + sold.address
+																					? explorerWithAddress +
+																					  sold.address
 																					: this
 																							.state
 																							.networkId ==
@@ -3030,108 +2914,21 @@ class EventPage extends Component {
 				}
 			}
 		}
+		// else {
+		// 	body = (
+		// 		<EmptyState
+		// 			text="This Event doesn't exist!"
+		// 			btnText="Go to Dashboard"
+		// 			url="/allevents/1"
+		// 		/>
+		// 	);
+		// }
 		return (
 			<div className="event-page-wrapper">
 				<span className={classes.eventDescriptionFont}>{body}</span>
 			</div>
 		);
 	}
-
-	// handleSetSelectedToken = async () => {
-	// 	// await this.props.handleGetUserDetais();
-	// 	await this.props.handleSetTokenListContract();
-	// 	console.log("Coming to handleSetSelectedToken");
-	// 	console.log(
-	// 		"handleSetSelectedToken tokenList=>",
-	// 		this.props.tokensListContract,
-	// 		"userDetails",
-	// 		this.props.userDetails
-	// 	);
-	// 	if (this.props.tokensListContract
-	// 		// this.props.tokensListContract.length > 0 &&
-	// 		// this.props.userDetails &&
-	// 		// this.props.userDetails.result &&
-	// 		// this.props.userDetails.result.result
-	// 	) {
-	// 		// if (this.props.userDetails) {
-	// 		// let defaultCurr =
-	// 		// 	this.props.userDetails.result.result.userHldr.alternateCurrency;
-	// 		// console.log("defaultCurrny at EventPage", defaultCurr);
-	// 		console.log(
-	// 			"DefaultCurreencyyy",
-	// 			this.props.userDetails.result.result.userHldr.alternateCurrency
-	// 		);
-	// 		if (
-	// 			typeof this.props.userDetails.result.result.userHldr
-	// 				.alternateCurrency == "string"
-	// 		) {
-	// 			if (
-	// 				this.props.userDetails.result.result.userHldr
-	// 					.alternateCurrency === "Dollar" ||
-	// 				this.props.userDetails.result.result.userHldr
-	// 					.alternateCurrency === "usd"
-	// 			) {
-	// 				this.props.tokensListContract.map((v, i) => {
-	// 					if (v.tokenName == "usd-coin") {
-	// 						this.setState({
-	// 							selectedToken: this.props.tokensListContract[i],
-	// 						});
-	// 					}
-	// 				});
-	// 			}
-	// 			if (
-	// 				this.props.userDetails.result.result.userHldr
-	// 					.alternateCurrency === ""
-	// 			) {
-	// 				this.props.tokensListContract.map((v, i) => {
-	// 					if (v.tokenName == "phoenixdao") {
-	// 						this.setState({
-	// 							selectedToken: this.props.tokensListContract[i],
-	// 						});
-	// 					}
-	// 				});
-	// 			}
-	// 		} else if (
-	// 			typeof this.props.userDetails.result.result.userHldr
-	// 				.alternateCurrency == "object"
-	// 		) {
-	// 			this.props.tokensListContract.map((v, i) => {
-	// 				if (
-	// 					v.tokenName ==
-	// 					this.props.userDetails.result.result.userHldr
-	// 						.alternateCurrency.tokenName
-	// 				) {
-	// 					this.setState({
-	// 						selectedToken: this.props.tokensListContract[i],
-	// 					});
-	// 				}
-	// 			});
-	// 		}
-	// 		// } else {
-	// 		// this.props.tokensListContract.map((v, i) => {
-	// 		// 	if (v.tokenName == "phoenixdao") {
-	// 		// 		this.setState({
-	// 		// 			selectedToken: this.props.tokensListContract[i],
-	// 		// 		});
-	// 		// 	}
-	// 		// });
-	// 		// }
-	// 	} else {
-	// 		this.setState({
-	// 			selectedToken: {
-	// 				displayName: "PhoenixDAO",
-	// 				image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
-	// 				// tokenAddress: "0x521855AA99a80Cb467A12b1881f05CF9440c7023",
-	// 				tokenAddress:
-	// 					this.props.networkId == GLOBAL_NETWORK_ID
-	// 						? PhoenixDAO_Mainnet_Token_Address
-	// 						: PhoenixDAO_Testnet_Token_Address_2,
-	// 				tokenName: "phoenixdao",
-	// 			},
-	// 		});
-	// 		// await this.props.handleGetUserDetails();
-	// 	}
-	// };
 
 	handleSetSelectedToken = async () => {
 		if (this.props.tokensListContract) {
@@ -3149,7 +2946,8 @@ class EventPage extends Component {
 						this.props.tokensListContract.map((v, i) => {
 							if (v.tokenName == "usd-coin") {
 								this.setState({
-									selectedToken: this.props.tokensListContract[i],
+									selectedToken:
+										this.props.tokensListContract[i],
 								});
 							}
 						});
@@ -3183,37 +2981,45 @@ class EventPage extends Component {
 						});
 					}
 				});
-			}}
-			else{
-				this.setState({
-					selectedToken: {
-						displayName: "PhoenixDAO",
-						image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
-						tokenAddress: this.props.networkId==GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2,
-						tokenName: "phoenixdao",
-					},
-				});
 			}
-		};
+		} else {
+			this.setState({
+				selectedToken: {
+					displayName: "PhoenixDAO",
+					image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
+					tokenAddress:
+						this.props.networkId == GLOBAL_NETWORK_ID
+							? PhoenixDAO_Mainnet_Token_Address
+							: PhoenixDAO_Testnet_Token_Address_2,
+					tokenName: "phoenixdao",
+				},
+			});
+		}
+	};
 
 	async componentDidMount() {
 		console.log(
-			"this.props.tokensListContract =??",
-			this.props.tokensListContract,
-			"this.props.userDetails tokensListContract =??",
-			this.props.userDetails
+			"parseInt(this.props.match.params.id)",
+			parseInt(this.props.match.params.id)
 		);
+		await this.loadEventFromBlockchain();
+		// console.log(
+		// 	"this.props.tokensListContract =??",
+		// 	this.props.tokensListContract,
+		// 	"this.props.userDetails tokensListContract =??",
+		// 	this.props.userDetails
+		// );
 
 		await this.props.handleGetUserDetails();
 		// await this.props.handleSetTokenListContract();
 		await this.handleSetSelectedToken();
 
-		console.log(
-			"this.props.tokensListContract =??",
-			this.props.tokensListContract,
-			"this.props.userDetails tokensListContract =??",
-			this.props.userDetails
-		);
+		// console.log(
+		// 	"this.props.tokensListContract =??",
+		// 	this.props.tokensListContract,
+		// 	"this.props.userDetails tokensListContract =??",
+		// 	this.props.userDetails
+		// );
 
 		if (parseInt(this.props.match.params.id)) {
 			this.getUserFavoritesEvent();
@@ -3227,7 +3033,11 @@ class EventPage extends Component {
 			await this.loadEventFromBlockchain();
 			await this.initApproveMethod();
 			await this.checkUserTicketLocation();
-			if (this.props.accounts[0] && this.props.eventsAddress && this.state.selectedToken.tokenAddress) {
+			if (
+				this.props.accounts[0] &&
+				this.props.eventsAddress &&
+				this.state.selectedToken.tokenAddress
+			) {
 				await this.allowance();
 				// await CheckTokenAllowance(
 				// 	this.props.accounts[0],

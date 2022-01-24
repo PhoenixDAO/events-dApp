@@ -740,7 +740,11 @@ const EventCard = (props, context) => {
 									)}
 									{event_data.name}
 								</Typography>
-								{console.log("hello event token: ", selectedToken, event_data.isPHNX)}
+								{console.log(
+									"hello event token: ",
+									selectedToken,
+									event_data.isPHNX
+								)}
 								<Typography
 									className={classes.price}
 									variant="body1"
@@ -774,7 +778,10 @@ const EventCard = (props, context) => {
 													{pricingFormatter(
 														token_price,
 														"PHNX",
-														(((selectedToken)&&selectedToken.tokenName=="phoenixdao") || event_data.isPHNX)
+														(selectedToken &&
+															selectedToken.tokenName ==
+																"phoenixdao") ||
+															event_data.isPHNX
 													)}
 												</p>
 												{/* <PriceSelectBox token="phnx" value={pricingFormatter(
@@ -791,7 +798,10 @@ const EventCard = (props, context) => {
 													{pricingFormatter(
 														dollar_price[0],
 														"$",
-														(((selectedToken)&&selectedToken.tokenName=="phoenixdao") || event_data.isPHNX)
+														(selectedToken &&
+															selectedToken.tokenName ==
+																"phoenixdao") ||
+															event_data.isPHNX
 													)}
 												</p>
 											</div>
@@ -819,7 +829,10 @@ const EventCard = (props, context) => {
 													{pricingFormatter(
 														token_price,
 														"PHNX",
-														(((selectedToken)&&selectedToken.tokenName=="phoenixdao") || event_data.isPHNX)
+														(selectedToken &&
+															selectedToken.tokenName ==
+																"phoenixdao") ||
+															event_data.isPHNX
 													)}
 												</p>
 												{/* <PriceSelectBox token="phnx" value={pricingFormatter(
@@ -836,42 +849,47 @@ const EventCard = (props, context) => {
 													{pricingFormatter(
 														dollar_price[0],
 														"$",
-														(((selectedToken)&&selectedToken.tokenName=="phoenixdao") || event_data.isPHNX)
+														(selectedToken &&
+															selectedToken.tokenName ==
+																"phoenixdao") ||
+															event_data.isPHNX
 													)}
 												</p>
 											</div>
 										)
 									) : token_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
-											{/* <p
-												title={phnx_price[0] + " PHNX"}
-												style={{
-													fontFamily:
-														'"Aeonik", sans-serif',
-												}}
-											>
-												{pricingFormatter(
-													phnx_price[0],
-													"PHNX"
-												)}
-											</p> */}
-											<PriceSelectBox
-												isPHNX={event_data.isPHNX}
-												tokensListContract={
-													props.tokensListContract
-												}
-												token="phnx"
-												value={pricingFormatter(
-													token_price[0],
-													"PHNX",
-													(((selectedToken)&&selectedToken.tokenName=="phoenixdao") || event_data.isPHNX)
-												)}
-												setSelectedToken={
-													setSelectedToken
-												}
-												selectedToken={selectedToken}
-												// defaultToken={defaultToken}
-											/>
+											{/* {console.log(
+												"Dhunnnnnnnnn",
+												Number(token_price[0]) > 0,
+												token_price[0]
+											)} */}
+											{Number(token_price[0]) > 0 ? (
+												<PriceSelectBox
+													isPHNX={event_data.isPHNX}
+													tokensListContract={
+														props.tokensListContract
+													}
+													token="phnx"
+													value={pricingFormatter(
+														token_price[0],
+														"PHNX",
+														(selectedToken &&
+															selectedToken.tokenName ==
+																"phoenixdao") ||
+															event_data.isPHNX
+													)}
+													setSelectedToken={
+														setSelectedToken
+													}
+													selectedToken={
+														selectedToken
+													}
+													// defaultToken={defaultToken}
+												/>
+											) : (
+												"Free"
+											)}
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price}
@@ -880,7 +898,10 @@ const EventCard = (props, context) => {
 												{pricingFormatter(
 													dollar_price,
 													"$",
-													(((selectedToken)&&selectedToken.tokenName=="phoenixdao") || event_data.isPHNX)
+													(selectedToken &&
+														selectedToken.tokenName ==
+															"phoenixdao") ||
+														event_data.isPHNX
 												)}
 											</p>
 										</div>
@@ -913,7 +934,10 @@ const EventCard = (props, context) => {
 												value={pricingFormatter(
 													token_price[0],
 													"PHNX",
-													(((selectedToken)&&selectedToken.tokenName=="phoenixdao") || event_data.isPHNX)
+													(selectedToken &&
+														selectedToken.tokenName ==
+															"phoenixdao") ||
+														event_data.isPHNX
 												)}
 												setSelectedToken={
 													setSelectedToken
@@ -928,7 +952,10 @@ const EventCard = (props, context) => {
 												{pricingFormatter(
 													dollar_price,
 													"$",
-													(((selectedToken)&&selectedToken.tokenName=="phoenixdao") || event_data.isPHNX)
+													(selectedToken &&
+														selectedToken.tokenName ==
+															"phoenixdao") ||
+														event_data.isPHNX
 												)}
 											</p>
 										</div>
@@ -1080,7 +1107,10 @@ const EventCard = (props, context) => {
 														event_data.eventRevenueInPhnx
 													),
 													"PHNX",
-													(((selectedToken)&&selectedToken.tokenName=="phoenixdao") || event_data.isPHNX)
+													(selectedToken &&
+														selectedToken.tokenName ==
+															"phoenixdao") ||
+														event_data.isPHNX
 											  )}{" "}
 										{/* PHNX */}
 									</Typography>
@@ -1102,7 +1132,10 @@ const EventCard = (props, context) => {
 														event_data.eventRevenueInDollar.toString()
 													),
 													"$",
-													(((selectedToken)&&selectedToken.tokenName=="phoenixdao") || event_data.isPHNX)
+													(selectedToken &&
+														selectedToken.tokenName ==
+															"phoenixdao") ||
+														event_data.isPHNX
 											  )}
 									</Typography>
 									<Divider />
