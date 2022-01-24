@@ -633,10 +633,13 @@ class EventPreviewPage extends Component {
 										<span className={classes.PhnxPrice}>
 											{console.log(
 												"this.state.dollar_priceeee",
-												this.state.dollar_price
+												this.props.ticketCategories[
+													this.state.ticketIndex
+												]["dollarPrice"]
 											)}
-											{this.state.dollar_price &&
-											this.state.dollar_price.slice(1) > 0
+											{this.props.ticketCategories[
+												this.state.ticketIndex
+											]["dollarPrice"] > 0
 												? !this.state.isPHNX &&
 												  (this.props.ticketCategories
 														.length > 0 ? (
@@ -678,9 +681,9 @@ class EventPreviewPage extends Component {
 											}}
 										>
 											{/* $ */}
-											{this.state.dollar_price &&
-											this.state.dollar_price.slice(1) >
-												0 &&
+											{this.props.ticketCategories[
+												this.state.ticketIndex
+											]["dollarPrice"] > 0 &&
 											this.props.ticketCategories.length >
 												0
 												? pricingFormatter(
