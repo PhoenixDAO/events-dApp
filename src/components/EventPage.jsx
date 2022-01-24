@@ -953,6 +953,16 @@ class EventPage extends Component {
 												price.toString()
 											) / v.usdPrice
 										).toFixed(3);
+									} else if (
+										Web3.utils.fromWei(price.toString()) /
+											v.usdPrice <
+										0.0001
+									) {
+										return (
+											Web3.utils.fromWei(
+												price.toString()
+											) / v.usdPrice
+										).toFixed(6);
 									} else {
 										return (
 											Web3.utils.fromWei(
