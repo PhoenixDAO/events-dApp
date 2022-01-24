@@ -188,7 +188,7 @@ const styles = (theme) => ({
 		marginTop: "-4px",
 	},
 	eventDetailsNoBorder: {
-		// wordBreak: "break-word",
+		wordBreak: "break-word",
 		border: "0px solid !important",
 	},
 	previewPadding: {
