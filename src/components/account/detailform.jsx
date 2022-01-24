@@ -34,11 +34,14 @@ const useStyles = (theme) => ({
 		width: "100%",
 		paddingTop: "5px",
 		paddingBottom: "5px",
-		paddingLeft: "10px",
+		// paddingLeft: "10px",
 		fontSize: "18px",
 		"& .MuiSelect-select:focus": {
 			background: "#fff",
 		},
+		"& .MuiSelect-select":{
+			paddingLeft:"10px"
+		}
 	},
 });
 const DetailForm = (props) => {
@@ -414,16 +417,8 @@ const DetailForm = (props) => {
 								id="demo-simple-select-outlined"
 								fullWidth
 								displayEmpty
+								disableUnderline 
 								className={classes.detailSelect}
-								style={{
-									borderRadius: "5px",
-									border: "1px solid #e4e4e4",
-									width: "100%",
-									paddingTop: "5px",
-									paddingBottom: "5px",
-									paddingLeft: "10px",
-									fontSize: "18px",
-								}}
 								MenuProps={{
 									classes: {
 										paper: { maxHeight: "200px" },
