@@ -343,10 +343,17 @@ class EventPreviewPage extends Component {
 				const TOKENS_LIST = this.props.tokensListContract;
 				TOKENS_LIST.map((v, i) => {
 					if (selectedTokenName == v.tokenName) {
-						if (v.tokenName == "weth" || v.tokenName == "ether") {
+						if (
+							v.tokenName == "weth" ||
+							v.tokenName == "ethereum"
+						) {
 							token_price =
 								this.props.fields.ticketCategories.map(
 									(price) => {
+										console.log(
+											"price.dollarPrice / v.usdPrice",
+											price.dollarPrice / v.usdPrice
+										);
 										if (
 											price.dollarPrice / v.usdPrice >
 											0.1
@@ -354,6 +361,21 @@ class EventPreviewPage extends Component {
 											return (
 												price.dollarPrice / v.usdPrice
 											).toFixed(3);
+										}
+										if (
+											price.dollarPrice / v.usdPrice <
+											0.0001
+										) {
+											// console.log(
+											// 	"price.dollarPrice / Coming here",
+											// 	(
+											// 		price.dollarPrice /
+											// 		v.usdPrice
+											// 	).toFixed(6)
+											// );
+											return (
+												price.dollarPrice / v.usdPrice
+											).toFixed(6);
 										} else {
 											return (
 												price.dollarPrice / v.usdPrice
@@ -380,6 +402,7 @@ class EventPreviewPage extends Component {
 				// event_data.token
 				// 	?
 				token_price[categoryIndex];
+			console.log("price.dollarPrice / priceInPhnx", priceInPhnx);
 			// : "FREE";
 			let priceInDollar = event_data.token ? "$" + dollar_price : "";
 			this.setState({
@@ -533,21 +556,26 @@ class EventPreviewPage extends Component {
 										/> */}
 										TICKET PRICE
 									</p>
+									{console.log(
+										"this.state.token_price11",
+										this.state.token_price
+									)}
 									{this.state.token_price ? (
 										this.state.token_price != "--" &&
 										this.state.isPHNX && (
 											<span className={classes.PhnxPrice}>
 												<img
+													style={{ marginTop: 8 }}
 													src={
 														"/images/phoenixdao.svg"
 													}
 													className="event_price-image"
 													alt="Event Price"
 												/>
-												{/* {console.log(
+												{console.log(
 													"this.state.token_price",
 													this.state.token_price
-												)} */}
+												)}
 												{this.state.token_price}
 											</span>
 										)
@@ -658,11 +686,10 @@ class EventPreviewPage extends Component {
 																	.handleSelectedTokenState
 															}
 															token="phnx"
-															value={pricingFormatter(
+															value={
 																this.state
-																	.token_price,
-																"PHNX"
-															)}
+																	.token_price
+															}
 															isEventPage={true}
 														/>
 												  ) : (
