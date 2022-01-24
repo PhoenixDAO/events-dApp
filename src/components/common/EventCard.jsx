@@ -859,37 +859,37 @@ const EventCard = (props, context) => {
 										)
 									) : token_price.length === 1 ? (
 										<div className={classes.priceAlignment}>
-											{console.log(
+											{/* {console.log(
 												"Dhunnnnnnnnn",
-												pricingFormatter(
-													dollar_price,
-													"$",
-													(selectedToken &&
-														selectedToken.tokenName ==
-															"phoenixdao") ||
-														event_data.isPHNX
-												)
+												Number(token_price[0]) > 0,
+												token_price[0]
+											)} */}
+											{Number(token_price[0]) > 0 ? (
+												<PriceSelectBox
+													isPHNX={event_data.isPHNX}
+													tokensListContract={
+														props.tokensListContract
+													}
+													token="phnx"
+													value={pricingFormatter(
+														token_price[0],
+														"PHNX",
+														(selectedToken &&
+															selectedToken.tokenName ==
+																"phoenixdao") ||
+															event_data.isPHNX
+													)}
+													setSelectedToken={
+														setSelectedToken
+													}
+													selectedToken={
+														selectedToken
+													}
+													// defaultToken={defaultToken}
+												/>
+											) : (
+												"Free"
 											)}
-											<PriceSelectBox
-												isPHNX={event_data.isPHNX}
-												tokensListContract={
-													props.tokensListContract
-												}
-												token="phnx"
-												value={pricingFormatter(
-													token_price[0],
-													"PHNX",
-													(selectedToken &&
-														selectedToken.tokenName ==
-															"phoenixdao") ||
-														event_data.isPHNX
-												)}
-												setSelectedToken={
-													setSelectedToken
-												}
-												selectedToken={selectedToken}
-												// defaultToken={defaultToken}
-											/>
 											<p
 												className={classes.starting}
 												title={"$" + dollar_price}
@@ -902,8 +902,7 @@ const EventCard = (props, context) => {
 														selectedToken.tokenName ==
 															"phoenixdao") ||
 														event_data.isPHNX
-												)}{" "}
-												Hiiii
+												)}
 											</p>
 										</div>
 									) : (
