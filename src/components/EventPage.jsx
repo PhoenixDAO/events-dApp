@@ -2346,7 +2346,7 @@ class EventPage extends Component {
 																	}
 																/>
 														  )
-														: "Free"}
+														: ""}
 												</span>
 												<div
 													style={{
