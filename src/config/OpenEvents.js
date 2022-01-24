@@ -878,7 +878,7 @@ export const Open_events_ABI = [
 
 //Matic mainnet
 export const Open_events_Address_2 =
-	"0xD5603056fa9Bc5A08eF0B43ef2753e31fE6A08EF";
+	"0xfde6F254134B4Aa1D1c3777eeEe0dc90D795619c";
 /*-------------------------------------------------------------------------------------------------*/
 
 // ETHEREUM MAINNET

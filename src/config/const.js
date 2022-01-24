@@ -218,8 +218,11 @@ export const INFURA_WEB_URL_2 =
 // export const graphURLV2 =
 // 	"https://api.thegraph.com/subgraphs/name/musfirazia/event-subgraphv2";
 
+// export const graphURLV2 =
+// 	"https://api.thegraph.com/subgraphs/name/zainhasan97-razi/eventssubgraph";
+
 export const graphURLV2 =
-	"https://api.thegraph.com/subgraphs/name/zainhasan97-razi/eventssubgraph";
+	"https://api.thegraph.com/subgraphs/name/ijlal-ishaq/phnx-app-matic";
 
 export const GLOBAL_NETWORK_ID = 4;
 export const GLOBAL_NETWORK_ID_2 = 137;
