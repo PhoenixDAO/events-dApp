@@ -169,7 +169,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function PreviewEvent({ fields, activeStep, tokensListContract }) {
+export default function PreviewEvent({
+	fields,
+	activeStep,
+	tokensListContract,
+}) {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 
@@ -195,7 +199,7 @@ export default function PreviewEvent({ fields, activeStep, tokensListContract })
 		eventDescription,
 		city,
 		country,
-		isPHNX
+		isPHNX,
 	} = fields;
 
 	const handleClickOpen = () => {
@@ -327,13 +331,18 @@ export default function PreviewEvent({ fields, activeStep, tokensListContract })
 												{/* PHNX */}
 											</p>
 											<p className={classes.starting}>
-												{" "}
-												{/* $ */}
-												{pricingFormatter(
+												{/* {console.log(
+													"jjjjjjjjjjjjj",
 													ticketCategories[0]
-														.dollarPrice,
-													"$"
-												)}
+														.dollarPrice
+												)} */}
+												{ticketCategories[0]
+													.dollarPrice > 0 &&
+													pricingFormatter(
+														ticketCategories[0]
+															.dollarPrice,
+														"$"
+													)}
 											</p>
 										</div>
 									)}

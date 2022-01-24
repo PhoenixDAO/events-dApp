@@ -88,7 +88,7 @@ class CreateEvent extends Component {
 				eventCategory: "free",
 				ticketAvailability: "unlimited",
 			},
-			activeStep: 0,
+			activeStep: 2,
 			activeFlamingStep: 0,
 			progressText: 0,
 			shareUrl: "",

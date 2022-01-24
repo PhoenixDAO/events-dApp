@@ -2314,7 +2314,6 @@ class EventPage extends Component {
 													}
 												>
 													<Select
-														// native
 														value={
 															this.state
 																.selectedCategoryIndex
@@ -2385,20 +2384,6 @@ class EventPage extends Component {
 														this.state.token_price
 													}
 												>
-													{/* {this.state.isPHNX &&
-												
-												<><img
-													src={PhnxLogo}
-													style={{
-														height: props.isEventPage ? "25px" : "20px",
-														marginRight: "4px",
-													}}
-												/>
-														{pricingFormatter(
-															this.state
-																.token_price,
-															"PHNX"
-														)}</>} */}
 													{this.state.isPHNX && (
 														<div
 															className={
@@ -2429,7 +2414,7 @@ class EventPage extends Component {
 													{this.state.dollar_price &&
 													this.state.dollar_price.slice(
 														1
-													) != 0
+													) > 0
 														? !this.state
 																.isPHNX && (
 																<PriceSelectBox
@@ -2510,17 +2495,19 @@ class EventPage extends Component {
 																1
 															)
 													)}
-													{pricingFormatter(
-														this.state.dollar_price,
-														"$",
-														this.state.isPHNX ||
-															(this.state
-																.selectedToken &&
-																this.state
-																	.selectedToken
-																	.tokenName ==
-																	"phoenixdao")
-													)}
+													{this.state.dollar_price &&
+														pricingFormatter(
+															this.state
+																.dollar_price,
+															"$",
+															this.state.isPHNX ||
+																(this.state
+																	.selectedToken &&
+																	this.state
+																		.selectedToken
+																		.tokenName ==
+																		"phoenixdao")
+														)}
 												</div>
 											</div>
 

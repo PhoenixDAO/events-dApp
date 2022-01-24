@@ -112,7 +112,7 @@ const styles = (theme) => ({
 	eventinfo: {
 		fontSize: "22px",
 		fontWeight: "700",
-		wordBreak: "break-word",
+		// wordBreak: "break-word",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
@@ -188,7 +188,7 @@ const styles = (theme) => ({
 		marginTop: "-4px",
 	},
 	eventDetailsNoBorder: {
-		wordBreak: "break-word",
+		// wordBreak: "break-word",
 		border: "0px solid !important",
 	},
 	previewPadding: {
@@ -532,18 +532,27 @@ class EventPreviewPage extends Component {
 										/> */}
 										TICKET PRICE
 									</p>
-									{this.state.isPHNX && (
+									{this.state.token_price ? (
+										this.state.token_price != "--" &&
+										this.state.isPHNX && (
+											<span className={classes.PhnxPrice}>
+												<img
+													src={
+														"/images/phoenixdao.svg"
+													}
+													className="event_price-image"
+													alt="Event Price"
+												/>
+												{console.log(
+													"this.state.token_price",
+													this.state.token_price
+												)}
+												{this.state.token_price}
+											</span>
+										)
+									) : (
 										<span className={classes.PhnxPrice}>
-											<img
-												src={"/images/phoenixdao.svg"}
-												className="event_price-image"
-												alt="Event Price"
-											/>
-											{
-												this.state.token_price
-												// ? this.state.token_price
-												// : "--"
-											}
+											Free
 										</span>
 									)}
 									{/* {this.state.isPHNX && (
@@ -622,12 +631,14 @@ class EventPreviewPage extends Component {
 
 									<div className={classes.eventinfo}>
 										<span className={classes.PhnxPrice}>
-											{
-												// !this.props.token ? (
-												// 	"Free"
-												// ) :
-												!this.state.isPHNX &&
-													(this.props.ticketCategories
+											{console.log(
+												"this.state.dollar_priceeee",
+												this.state.dollar_price
+											)}
+											{this.state.dollar_price &&
+											this.state.dollar_price.slice(1) > 0
+												? !this.state.isPHNX &&
+												  (this.props.ticketCategories
 														.length > 0 ? (
 														<PriceSelectBox
 															tokensListContract={
@@ -650,20 +661,16 @@ class EventPreviewPage extends Component {
 															)}
 															isEventPage={true}
 														/>
-													) : (
+												  ) : (
 														""
-													))
-
-												// : (
-												// 	this.state.token_price
-												// )
-											}
+												  ))
+												: "Free"}
 											{/* PHNX */}
 										</span>
-										{console.log(
+										{/* {console.log(
 											"this.state.token_price---",
 											this.state.token_price
-										)}
+										)} */}
 										<div
 											style={{
 												color: "#56555D",
@@ -671,8 +678,11 @@ class EventPreviewPage extends Component {
 											}}
 										>
 											{/* $ */}
-											{this.props.ticketCategories
-												.length > 0
+											{this.state.dollar_price &&
+											this.state.dollar_price.slice(1) >
+												0 &&
+											this.props.ticketCategories.length >
+												0
 												? pricingFormatter(
 														this.props
 															.ticketCategories[
