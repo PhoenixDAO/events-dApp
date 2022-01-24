@@ -119,6 +119,7 @@ const styles = (theme) => ({
 		fontWeight: "700",
 		color: "#413AE2",
 		display: "flex",
+		width: 200,
 	},
 	categoryGrid: {
 		backgroundColor: "white",
@@ -188,7 +189,7 @@ const styles = (theme) => ({
 		marginTop: "-4px",
 	},
 	eventDetailsNoBorder: {
-		wordBreak: "break-word",
+		// wordBreak: "break-word",
 		border: "0px solid !important",
 	},
 	previewPadding: {
@@ -543,10 +544,10 @@ class EventPreviewPage extends Component {
 													className="event_price-image"
 													alt="Event Price"
 												/>
-												{console.log(
+												{/* {console.log(
 													"this.state.token_price",
 													this.state.token_price
-												)}
+												)} */}
 												{this.state.token_price}
 											</span>
 										)
@@ -631,12 +632,12 @@ class EventPreviewPage extends Component {
 
 									<div className={classes.eventinfo}>
 										<span className={classes.PhnxPrice}>
-											{console.log(
+											{/* {console.log(
 												"this.state.dollar_priceeee",
 												this.props.ticketCategories[
 													this.state.ticketIndex
 												]["dollarPrice"]
-											)}
+											)} */}
 											{this.props.ticketCategories[
 												this.state.ticketIndex
 											]["dollarPrice"] > 0
