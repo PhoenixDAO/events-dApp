@@ -565,6 +565,7 @@ class EventPreviewPage extends Component {
 										this.state.isPHNX && (
 											<span className={classes.PhnxPrice}>
 												<img
+													style={{ marginTop: 8 }}
 													src={
 														"/images/phoenixdao.svg"
 													}
