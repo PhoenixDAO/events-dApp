@@ -500,7 +500,7 @@ class App extends Component {
 	) => {
 		let chainId = await this.getNetworkId();
 		console.log(
-			"event page price: apps")
+			"event page price: apps", isEthereum)
 		if (
 			this.state.account.length !== 0 &&
 			this.props.web3.networkId === (await this.getNetworkId())
@@ -769,6 +769,7 @@ class App extends Component {
 				// })
 				.on("error", (error) => {
 					if (error !== null) {
+						if (	error.message.includes("not mined within 50 blocks")) {
 						txerror = error;
 						toast(
 							<Notify
@@ -782,6 +783,7 @@ class App extends Component {
 								pauseOnHover: true,
 							}
 						);
+						}
 					}
 					this.setState({ disabledStatus: false, purchased: false });
 				});

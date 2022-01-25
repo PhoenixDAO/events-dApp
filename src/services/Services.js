@@ -6,7 +6,7 @@ import {
 	Open_events_Address_2,
 	Open_events_ABI,
 } from "../config/OpenEvents";
-import { GLOBAL_NETWORK_ID } from "../config/const.js";
+import { GLOBAL_NETWORK_ID, GLOBAL_NETWORK_ID_2 } from "../config/const.js";
 // import { toast } from "react-toastify";
 // import Notify from "../components/common/Notify";
 // import { RinkbeyNetworkArray } from "../config/const";
@@ -116,11 +116,18 @@ export const GetWhiteListedToken = async (netId) => {
 	const TokenList = await EventsContract.methods
 		.getWhiteListedTokensList()
 		.call();
-	if (netId == 1 || netId == 4) {
+	if (netId == GLOBAL_NETWORK_ID) {
 		TokenList.push([
 			"0x0000000000000000000000000000000000000000",
 			"1",
 			"ethereum",
+		]);
+	}
+	else if(netId == GLOBAL_NETWORK_ID_2){
+		TokenList.push([
+			"0x0000000000000000000000000000000000000000",
+			"137",
+			"matic-network",
 		]);
 	}
 	console.log("WhiteListTokensss ++>>", TokenList, netId);
