@@ -2266,33 +2266,40 @@ class EventPage extends Component {
 														this.state.token_price
 													}
 												>
-													{this.state.isPHNX && (
-														<div
-															className={
-																classes.PhnxPriceEventPage
-															}
-														>
-															<img
-																src={PhnxLogo}
-																style={{
-																	height: "25px",
-																	marginRight:
-																		"4px",
-																}}
-															/>
-															{`${pricingFormatter(
-																this.state
-																	.token_price,
-																"PHNX",
-																this.state
-																	.isPHNX ||
+													{this.state.isPHNX &&
+														this.state
+															.dollar_price && (
+															<div
+																className={
+																	classes.PhnxPriceEventPage
+																}
+															>
+																<img
+																	src={
+																		PhnxLogo
+																	}
+																	style={{
+																		height: "25px",
+																		marginRight:
+																			"4px",
+																	}}
+																/>
+
+																{`${pricingFormatter(
 																	this.state
-																		.selectedToken
-																		.tokenName ==
-																		"phoenixdao"
-															)}`}
-														</div>
-													)}
+																		.token_price,
+																	"PHNX",
+																	this.state
+																		.isPHNX ||
+																		this
+																			.state
+																			.selectedToken
+																			.tokenName ==
+																			"phoenixdao"
+																)}`}
+															</div>
+														)}
+
 													{this.state.dollar_price &&
 													this.state.dollar_price.slice(
 														1
@@ -2347,6 +2354,18 @@ class EventPage extends Component {
 																/>
 														  )
 														: ""}
+													{`${pricingFormatter(
+														this.state.token_price,
+														"PHNX",
+														this.state.isPHNX ||
+															this.state
+																.selectedToken
+																.tokenName ==
+																"phoenixdao"
+													)}` == "Free" &&
+														!this.state
+															.dollar_price &&
+														"Free"}
 												</span>
 												<div
 													style={{
@@ -2369,14 +2388,14 @@ class EventPage extends Component {
 															  ) * 1.02
 													}
 												>
-													{console.log(
+													{/* {console.log(
 														"dollar price ggg:",
 														this.state
 															.dollar_price &&
 															this.state.dollar_price.slice(
 																1
 															)
-													)}
+													)} */}
 													{this.state.dollar_price &&
 														pricingFormatter(
 															this.state
