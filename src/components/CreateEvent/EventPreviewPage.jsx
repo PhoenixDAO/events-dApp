@@ -560,7 +560,7 @@ class EventPreviewPage extends Component {
 										"this.state.token_price11",
 										this.state.token_price
 									)}
-									{this.state.token_price ? (
+									{this.state.token_price && (
 										this.state.token_price != "--" &&
 										this.state.isPHNX && (
 											<span className={classes.PhnxPrice}>
@@ -579,10 +579,6 @@ class EventPreviewPage extends Component {
 												{pricingFormatter(this.state.token_price,"PHNX", this.state.isPHNX)}
 											</span>
 										)
-									) : (
-										<span className={classes.PhnxPrice}>
-											Free
-										</span>
 									)}
 									{/* {this.state.isPHNX && (
 										<p className={classes.ticketPrice}>
@@ -687,8 +683,27 @@ class EventPreviewPage extends Component {
 															}
 															token="phnx"
 															value={
-																this.state
-																	.token_price
+																this
+																			.state
+																			.token_price
+																			? pricingFormatter(
+																					this
+																						.state
+																						.token_price,
+																					"PHNX",
+																					this
+																						.state
+																						.isPHNX ||
+																						(this
+																							.state
+																							.selectedToken &&
+																							this
+																								.state
+																								.selectedToken
+																								.tokenName ==
+																								"phoenixdao")
+																			  )
+																			: `--`
 															}
 															isEventPage={true}
 														/>
