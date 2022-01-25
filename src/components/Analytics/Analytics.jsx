@@ -356,7 +356,7 @@ const Analytics = (props, context) => {
 										event.eventRevenueInPhnx /
 										1000000000000000000
 									).toFixed(3) + " PHNX",
-									"PHNX"
+									"PHNX",true
 							  )
 							): ((
 								event.eventRevenueInDollar /
@@ -367,7 +367,7 @@ const Analytics = (props, context) => {
 											event.eventRevenueInDollar /
 											1000000000000000000
 										).toFixed(3),
-									"$"
+									"$",true
 							  ))}
 					</Grid>
 				</Grid>
