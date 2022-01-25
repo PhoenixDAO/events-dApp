@@ -912,7 +912,7 @@ class EventPage extends Component {
 					return (
 						Web3.utils.fromWei(price.toString()) *
 						this.state.PhoenixDAO_market.usd
-					).toFixed(3);
+					);
 				});
 				let token_price = Web3.utils.fromWei(
 					event_data.prices[categoryIndex].toString()
@@ -938,47 +938,47 @@ class EventPage extends Component {
 					const TOKENS_LIST = this.props.tokensListContract;
 					TOKENS_LIST.map((v, i) => {
 						if (selectedTokenName == v.tokenName) {
-							if (
-								v.tokenName == "weth" ||
-								v.tokenName == "ethereum"
-							) {
-								token_price = event_data.prices.map((price) => {
-									if (
-										Web3.utils.fromWei(price.toString()) /
-											v.usdPrice >
-										0.1
-									) {
-										return (
-											Web3.utils.fromWei(
-												price.toString()
-											) / v.usdPrice
-										).toFixed(3);
-									} else if (
-										Web3.utils.fromWei(price.toString()) /
-											v.usdPrice <
-										0.0001
-									) {
-										return (
-											Web3.utils.fromWei(
-												price.toString()
-											) / v.usdPrice
-										).toFixed(6);
-									} else {
-										return (
-											Web3.utils.fromWei(
-												price.toString()
-											) / v.usdPrice
-										);
-									}
-								});
-							} else {
+							// if (
+							// 	v.tokenName == "weth" ||
+							// 	v.tokenName == "ethereum"
+							// ) {
+							// 	token_price = event_data.prices.map((price) => {
+							// 		if (
+							// 			Web3.utils.fromWei(price.toString()) /
+							// 				v.usdPrice >
+							// 			0.1
+							// 		) {
+							// 			return (
+							// 				Web3.utils.fromWei(
+							// 					price.toString()
+							// 				) / v.usdPrice
+							// 			).toFixed(3);
+							// 		} else if (
+							// 			Web3.utils.fromWei(price.toString()) /
+							// 				v.usdPrice <
+							// 			0.0001
+							// 		) {
+							// 			return (
+							// 				Web3.utils.fromWei(
+							// 					price.toString()
+							// 				) / v.usdPrice
+							// 			).toFixed(6);
+							// 		} else {
+							// 			return (
+							// 				Web3.utils.fromWei(
+							// 					price.toString()
+							// 				) / v.usdPrice
+							// 			);
+							// 		}
+							// 	});
+							// } else {
 								token_price = event_data.prices.map((price) => {
 									return (
 										Web3.utils.fromWei(price.toString()) /
 										v.usdPrice
-									).toFixed(3);
+									);
 								});
-							}
+							// }
 						}
 					});
 				}
@@ -2355,6 +2355,7 @@ class EventPage extends Component {
 																/>
 														  )
 														: ""}
+														{console.log("this token price: ", this.state.token_price)}
 													{`${pricingFormatter(
 														this.state.token_price,
 														"PHNX",

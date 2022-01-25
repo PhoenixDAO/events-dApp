@@ -706,7 +706,7 @@ class App extends Component {
 								from: this.state.account,
 								value: await Web3.utils.toWei(
 									Number(phnx_price.split("PHNX")[0] * 1.045)
-										.toFixed(7)
+										.toFixed(10)
 										.toString(),
 									"ether"
 								),

@@ -50,6 +50,7 @@ function formatting(number, type,isPHNX) {
 			return type + Math.round(num * 1000000) / 1000000;
 		}
 	} else {
+		console.log("number phnx,", num)
 		if (num > 999 && num < 1000000) {
 			return roundingPrice(num, 1000) + "K ";
 		} else if (num > 999999 && num < 1000000000) {
