@@ -228,6 +228,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	cardMainDetails: {
 		display: "flex",
+		// flexWrap:'wrap',
 		justifyContent: "space-between",
 		height: "100%",
 		"@media (min-width:765px) and (max-width: 1100px)": {
@@ -464,7 +465,7 @@ const EventCard = (props, context) => {
 		dollar_price = event_data.prices.map((price) => {
 			return (
 				Web3.utils.fromWei(price.toString()) * PhoenixDAO_market.usd
-			).toFixed(3);
+			);
 		});
 		token_price = Web3.utils.fromWei(event_data.prices[0].toString());
 		//  console.log("phnx price coingecko: ",phnx_price, dollar_price)
@@ -473,30 +474,30 @@ const EventCard = (props, context) => {
 		const TOKENS_LIST = props.tokensListContract;
 		TOKENS_LIST.map((v, i) => {
 			if (selectedTokenName == v.tokenName) {
-				if (v.tokenName == "weth" || v.tokenName == "ethereum") {
-					token_price = event_data.prices.map((price) => {
-						if (
-							Web3.utils.fromWei(price.toString()) / v.usdPrice >
-							0.1
-						) {
-							return (
-								Web3.utils.fromWei(price.toString()) /
-								v.usdPrice
-							).toFixed(3);
-						} else {
-							return (
-								Web3.utils.fromWei(price.toString()) /
-								v.usdPrice
-							);
-						}
-					});
-				} else {
+				// if (v.tokenName == "weth" || v.tokenName == "ethereum") {
+				// 	token_price = event_data.prices.map((price) => {
+				// 		if (
+				// 			Web3.utils.fromWei(price.toString()) / v.usdPrice >
+				// 			0.1
+				// 		) {
+				// 			return (
+				// 				Web3.utils.fromWei(price.toString()) /
+				// 				v.usdPrice
+				// 			).toFixed(3);
+				// 		} else {
+				// 			return (
+				// 				Web3.utils.fromWei(price.toString()) /
+				// 				v.usdPrice
+				// 			);
+				// 		}
+				// 	});
+				// } else {
 					token_price = event_data.prices.map((price) => {
 						return (
 							Web3.utils.fromWei(price.toString()) / v.usdPrice
-						).toFixed(3);
+						);
 					});
-				}
+				// }
 			}
 		});
 		dollar_price = Web3.utils.fromWei(event_data.prices[0].toString());

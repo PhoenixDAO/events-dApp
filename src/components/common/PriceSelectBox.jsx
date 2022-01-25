@@ -16,6 +16,7 @@ import PropTypes from "prop-types";
 import { drizzleConnect } from "drizzle-react";
 // import PhnxPriceLogo from "../Images/phnxPriceLogo.svg";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import { pricingFormatter } from "../../utils/pricingSuffix";
 // import { RinkbeyNetworkArray } from "../../config/const";
 
 const useStyles = makeStyles((theme) => ({
@@ -146,9 +147,11 @@ function PriceSelectBox(props) {
 					/>
 					{/* {price.amount ? `${price.amount}` : `--`} */}
 					{price.amount
-						? Number(price.amount) < 0.0001
-							? price.amount.toString().slice(0, 9)
-							: price.amount.toString() // If token is not Phnx it's price will be shown 102%
+						? 
+						// Number(price.amount) < 0.0001
+						// 	? price.amount.toString().slice(0, 9)
+						// 	:
+							 price.amount.toString() // If token is not Phnx it's price will be shown 102%
 						: `--`}
 					<ArrowDropDownIcon
 						style={{ color: "rgba(0, 0, 0, 0.7)" }}

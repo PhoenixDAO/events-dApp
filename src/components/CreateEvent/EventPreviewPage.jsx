@@ -343,56 +343,56 @@ class EventPreviewPage extends Component {
 				const TOKENS_LIST = this.props.tokensListContract;
 				TOKENS_LIST.map((v, i) => {
 					if (selectedTokenName == v.tokenName) {
-						if (
-							v.tokenName == "weth" ||
-							v.tokenName == "ethereum"
-						) {
-							token_price =
-								this.props.fields.ticketCategories.map(
-									(price) => {
-										console.log(
-											"price.dollarPrice / v.usdPrice",
-											price.dollarPrice / v.usdPrice
-										);
-										if (
-											price.dollarPrice / v.usdPrice >
-											0.1
-										) {
-											return (
-												price.dollarPrice / v.usdPrice
-											).toFixed(3);
-										}
-										if (
-											price.dollarPrice / v.usdPrice <
-											0.0001
-										) {
-											// console.log(
-											// 	"price.dollarPrice / Coming here",
-											// 	(
-											// 		price.dollarPrice /
-											// 		v.usdPrice
-											// 	).toFixed(6)
-											// );
-											return (
-												price.dollarPrice / v.usdPrice
-											).toFixed(6);
-										} else {
-											return (
-												price.dollarPrice / v.usdPrice
-											);
-										}
-									}
-								);
-						} else {
+						// if (
+						// 	v.tokenName == "weth" ||
+						// 	v.tokenName == "ethereum"
+						// ) {
+						// 	token_price =
+						// 		this.props.fields.ticketCategories.map(
+						// 			(price) => {
+						// 				console.log(
+						// 					"price.dollarPrice / v.usdPrice",
+						// 					price.dollarPrice / v.usdPrice
+						// 				);
+						// 				if (
+						// 					price.dollarPrice / v.usdPrice >
+						// 					0.1
+						// 				) {
+						// 					return (
+						// 						price.dollarPrice / v.usdPrice
+						// 					).toFixed(3);
+						// 				}
+						// 				if (
+						// 					price.dollarPrice / v.usdPrice <
+						// 					0.0001
+						// 				) {
+						// 					// console.log(
+						// 					// 	"price.dollarPrice / Coming here",
+						// 					// 	(
+						// 					// 		price.dollarPrice /
+						// 					// 		v.usdPrice
+						// 					// 	).toFixed(6)
+						// 					// );
+						// 					return (
+						// 						price.dollarPrice / v.usdPrice
+						// 					).toFixed(6);
+						// 				} else {
+						// 					return (
+						// 						price.dollarPrice / v.usdPrice
+						// 					);
+						// 				}
+						// 			}
+						// 		);
+						// } else {
 							token_price =
 								this.props.fields.ticketCategories.map(
 									(price) => {
 										return (
 											price.dollarPrice / v.usdPrice
-										).toFixed(3);
+										);
 									}
 								);
-						}
+						// }
 					}
 				});
 			}
@@ -576,7 +576,7 @@ class EventPreviewPage extends Component {
 													"this.state.token_price",
 													this.state.token_price
 												)}
-												{this.state.token_price}
+												{pricingFormatter(this.state.token_price,"PHNX", this.state.isPHNX)}
 											</span>
 										)
 									) : (
