@@ -583,6 +583,7 @@ class App extends Component {
 				})
 				.on("error", (error) => {
 					if (error !== null) {
+						if (error.message.includes("not mined within 50 blocks")) {
 						txerror = error;
 						toast(
 							<Notify
@@ -600,6 +601,7 @@ class App extends Component {
 							disabledStatus: false,
 							purchased: false,
 						});
+					}
 					}
 				});
 			this.setState({ afterApprove: false });
@@ -769,7 +771,7 @@ class App extends Component {
 				// })
 				.on("error", (error) => {
 					if (error !== null) {
-						if (	error.message.includes("not mined within 50 blocks")) {
+						if (error.message.includes("not mined within 50 blocks")) {
 						txerror = error;
 						toast(
 							<Notify
