@@ -372,17 +372,22 @@ const ApprovalModal = (props) => {
 								className={classes.gridPadding}
 							>
 								<div className={classes.priceAlignment}>
-									{" "}
-									<img
-										src={
-											props.isPHNX
-												? PhnxLogo
-												: props.selectedToken &&
-												  props.selectedToken.image
-										}
-										className={classes.logo}
-										alt="token logo"
-									/>
+									{/* {console.log(
+										"Dollar priceAtBuyTicket",
+										props.dollar_price
+									)} */}
+									{props.dollar_price && (
+										<img
+											src={
+												props.isPHNX
+													? PhnxLogo
+													: props.selectedToken &&
+													  props.selectedToken.image
+											}
+											className={classes.logo}
+											alt="token logo"
+										/>
+									)}
 									<div className={classes.eventinfo}>
 										<span
 											className={classes.PhnxPrice}
