@@ -337,7 +337,7 @@ class CreateEvent extends Component {
 				oneTimeBuy,
 				token, // false means free
 				onsite, // true means event is onsite
-				isPHNX,
+				token?isPHNX:true,
 				this.props.accounts[0], //owner
 				time.toString(), //time
 				totalQuantity.toString(), //totalQuantity
@@ -358,7 +358,7 @@ class CreateEvent extends Component {
 					oneTimeBuy,
 					token, // false means free
 					onsite, // true means event is onsite
-					isPHNX,
+					token?isPHNX:true,
 					this.props.accounts[0], //owner
 					time.toString(), //time
 					totalQuantity.toString(), //totalQuantity
