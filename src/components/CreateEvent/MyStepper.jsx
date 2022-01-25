@@ -1592,7 +1592,6 @@ const MyStepper = ({
 												)}
 
 												<br />
-
 												{/* save button */}
 												<Button
 													color="primary"
@@ -1601,6 +1600,17 @@ const MyStepper = ({
 													className={
 														classes.addAnotherImageBtn
 													}
+													disabled={ticketCategories[
+														ticketIndex
+													].phnxPrice == "0.00000" || ticketCategories[
+														ticketIndex
+													].phnxPrice == "0" || ticketCategories[
+														ticketIndex
+													].dollarPrice == "0.00000" || ticketCategories[
+														ticketIndex
+													].dollarPrice == "0" || ticketCategories[
+														ticketIndex
+													].ticketName == ""}
 													onClick={() => {
 														handleSaveTicketCatogory(
 															ticketIndex

@@ -705,26 +705,27 @@ export const useFormControls = () => {
 						!errors["phnxPrice"] &&
 						phnxPrice &&
 						!errors["dollarPrice"] &&
-						dollarPrice;
+						dollarPrice && dollarPrice !="0.00000" && dollarPrice !="0" &&phnxPrice !="0.00000" && phnxPrice !="0";
 					return isValid;
 				} else {
+					console.log("dollarPrice", dollarPrice, typeof(dollarPrice))
 					const isValid =
 						!errors["noOfTickets"] &&
 						noOfTickets &&
 						!errors["phnxPrice"] &&
 						phnxPrice &&
 						!errors["dollarPrice"] &&
-						dollarPrice;
+						dollarPrice && dollarPrice !="0.00000" && dollarPrice !="0" &&phnxPrice !="0.00000" && phnxPrice !="0";
 					return isValid;
 				}
 			} else {
 				// multiple ticket type event
 				if (ticketCategories.length == 1) {
-					const isValid = ticketCategories[0].isShown;
+					const isValid = ticketCategories[0].isShown &&  ticketCategories[0].dollarPrice !="0.00000" && ticketCategories[0].dollarPrice !="0" &&ticketCategories[0].phnxPrice !="0.00000" && ticketCategories[0].phnxPrice !="0";
 					return isValid;
 				} else {
 					const isValid = ticketCategories.map((ticketCategory) => {
-						return ticketCategory.isShown;
+						return ticketCategory.isShown &&  ticketCategory.dollarPrice !="0.00000" && ticketCategory.dollarPrice !="0" &&ticketCategory.phnxPrice !="0.00000" && ticketCategory.phnxPrice !="0";
 					});
 					return new Set(isValid).size == 1;
 				}
