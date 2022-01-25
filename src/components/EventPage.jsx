@@ -1124,7 +1124,7 @@ class EventPage extends Component {
 							this.state.selectedToken.tokenAddress,
 							this.props.networkId
 						)) == 0 ||
-						!this.state.selectedToken.tokenName == "ethereum"
+						!this.state.selectedToken.tokenName == "ethereum" ||!this.state.selectedToken.tokenName == "matic-network"
 					) {
 						let tokenContract = await initTokenContract(
 							this.state.isPHNX
@@ -1168,7 +1168,7 @@ class EventPage extends Component {
 			} else {
 				if (
 					(await this.allowance()) == 0 ||
-					!this.state.selectedToken.tokenName == "ethereum"
+					!this.state.selectedToken.tokenName == "ethereum" ||!this.state.selectedToken.tokenName == "matic-network"
 				) {
 					// if (
 					// 	(await CheckTokenAllowance(
@@ -1252,7 +1252,7 @@ class EventPage extends Component {
 				"this.props.eventsAddress +>",
 				this.props.eventsAddress
 			);
-			if (this.state.selectedToken.tokenName === "ethereum") {
+			if (this.state.selectedToken.tokenName === "ethereum" || this.state.selectedToken.tokenName == "matic-network") {
 				this.setState({
 					allow: true,
 				});
@@ -1396,7 +1396,7 @@ class EventPage extends Component {
 				networkId === GLOBAL_NETWORK_ID_2
 			) {
 				let balance = 0;
-				if (this.state.selectedToken.tokenName == "ethereum") {
+				if (this.state.selectedToken.tokenName == "ethereum" || this.state.selectedToken.tokenName == "matic-network") {
 					const web3 = new Web3(window.ethereum);
 					balance = await web3.eth.getBalance(this.props.accounts[0]);
 					balance = Web3.utils.fromWei(balance.toString());
@@ -1552,7 +1552,7 @@ class EventPage extends Component {
 						// 	this.state.selectedToken.tokenAddress
 						// ),
 						approve:
-							this.state.selectedToken.tokenName == "ethereum"
+							this.state.selectedToken.tokenName == "ethereum" || this.state.selectedToken.tokenName == "matic-network"
 								? true
 								: await GiveAllowance(
 										this.props.accounts[0],
@@ -1581,6 +1581,7 @@ class EventPage extends Component {
 							this.handleClickOpen();
 						} else {
 							// if (this.state.selectedToken.tokenName != "ether") {
+                                // console.log("this.state.selectedToken.tokenName", this.state.selectedToken.tokenName)
 							await this.props.inquire(
 								this.props.id,
 								this.state.fee,
@@ -1597,7 +1598,7 @@ class EventPage extends Component {
 								this.state.dollar_price,
 								time,
 								date2,
-								this.state.selectedToken.tokenName == "ethereum"
+								(this.state.selectedToken.tokenName == "ethereum" || this.state.selectedToken.tokenName == "matic-network")
 									? true
 									: false,
 								this.state.isPHNX
@@ -2942,7 +2943,7 @@ class EventPage extends Component {
 
 	handleSetSelectedToken = async () => {
 		if (this.props.tokensListContract) {
-			if (this.props.userDetails) {
+			if (this.props.userDetails && !this.state.isPHNX) {
 				let defaultCurr =
 					this.props.userDetails.result &&
 					this.props.userDetails.result.result.userHldr
