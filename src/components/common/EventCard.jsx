@@ -228,6 +228,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	cardMainDetails: {
 		display: "flex",
+		// flexWrap:'wrap',
 		justifyContent: "space-between",
 		height: "100%",
 		"@media (min-width:765px) and (max-width: 1100px)": {
