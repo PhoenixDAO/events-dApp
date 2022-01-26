@@ -708,7 +708,7 @@ export const useFormControls = () => {
 						dollarPrice && dollarPrice !="0.00000" && dollarPrice !="0" &&phnxPrice !="0.00000" && phnxPrice !="0";
 					return isValid;
 				} else {
-					console.log("dollarPrice", dollarPrice, typeof(dollarPrice))
+					// console.log("dollarPrice", dollarPrice, typeof(dollarPrice))
 					const isValid =
 						!errors["noOfTickets"] &&
 						noOfTickets &&

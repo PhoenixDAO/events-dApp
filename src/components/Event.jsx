@@ -246,7 +246,7 @@ class Event extends Component {
 			address: this.props.accounts[0],
 			networkId: this.props.networkId,
 		});
-		console.log("res of getUserDetails =>>>>>", res);
+		// console.log("res of getUserDetails =>>>>>", res);
 		this.setState({ userDetail: res });
 	};
 	handleClickOpen = () => {
@@ -789,10 +789,10 @@ class Event extends Component {
 	}
 
 	async componentDidMount() {
-		console.log(
-			"tokenListContract at Event.jsx",
-			this.props.tokensListContract
-		);
+		// console.log(
+		// 	"tokenListContract at Event.jsx",
+		// 	this.props.tokensListContract
+		// );
 		// this._isMounted = true;
 		// await this.GetPrices();
 		await this.handleGetPrices();

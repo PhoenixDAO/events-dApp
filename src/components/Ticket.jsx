@@ -148,7 +148,7 @@ class Ticket extends Component {
 				address: this.props.accounts[0],
 				networkId: this.props.networkId,
 			});
-			console.log("Resp of handleGetUserDetails ==>>>> ", response);
+			// console.log("Resp of handleGetUserDetails ==>>>> ", response);
 			if (!response.error) {
 				this.setState({
 					userDetails: response,
@@ -415,7 +415,7 @@ class Ticket extends Component {
 						blockChainEvent: graphEvents.data.data.events[0],
 						blockChainEventLoaded: true,
 					});
-					console.log("hello ticket: ", graphEvents.data.data.events[0])
+					// console.log("hello ticket: ", graphEvents.data.data.events[0])
 				})
 				.catch((err) => {
 					this.setState({
@@ -460,7 +460,7 @@ class Ticket extends Component {
 		if (this.state.blockChainEvent !== null && this.state.eventId != "" && this.state.blockChainEvent) {
 			let event_data = this.state.blockChainEvent;
 
-			console.log("hello ticket: ", this.state.blockChainEvent)
+			// console.log("hello ticket: ", this.state.blockChainEvent)
 			let reported = false;
 			for (let j = 0; j < this.state.hideEvent.length; j++) {
 				if (this.state.eventId == this.state.hideEvent[j].id) {
@@ -536,10 +536,10 @@ class Ticket extends Component {
 	}
 
 	componentDidMount() {
-		console.log(
-			"tokensListContract at Ticket.jsx",
-			this.props.tokensListContract
-		);
+		// console.log(
+		// 	"tokensListContract at Ticket.jsx",
+		// 	this.props.tokensListContract
+		// );
 		this.updateIPFS();
 		this.updateEvent();
 		this.filterHideEvent();

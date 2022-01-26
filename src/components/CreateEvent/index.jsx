@@ -99,7 +99,7 @@ class CreateEvent extends Component {
 	}
 
 	onFieldsChange = (f) => {
-		console.log("input field change", this.state.fields);
+		// console.log("input field change", this.state.fields);
 		this.setState({ fields: { ...this.state.fields, ...f } });
 	};
 
@@ -175,7 +175,7 @@ class CreateEvent extends Component {
 			city,
 			images,
 		} = this.state.fields;
-		console.log("images", images);
+		// console.log("images", images);
 		this.state.fields = {
 			...this.state.fields,
 			images: images,
@@ -191,7 +191,7 @@ class CreateEvent extends Component {
 				""
 			),
 		};
-		console.log("this.state.fields", values);
+		// console.log("this.state.fields", values);
 		const fieldString = JSON.stringify(values);
 		const name = "eventInfo";
 		var cookie = `${name}=${fieldString}`;
@@ -236,17 +236,17 @@ class CreateEvent extends Component {
 		for (var i = 0; i < ticketCategories.length; i++) {
 			categories.push(ticketCategories[i].ticketName);
 			// we should send phoenix price instead of dollar price
-			console.log("hello prices", ticketCategories);
+			// console.log("hello prices", ticketCategories);
 			if (isPHNX && eventCategory != "free") {
 				prices.push(
 					Web3.utils.toWei(ticketCategories[i].phnxPrice.toString())
 				);
-				console.log("hello prices", prices);
+				// console.log("hello prices", prices);
 			} else {
 				prices.push(
 					Web3.utils.toWei(ticketCategories[i].dollarPrice.toString())
 				);
-				console.log("hello prices", prices);
+				// console.log("hello prices", prices);
 			}
 
 			tktQntySold.push("0");
@@ -299,7 +299,7 @@ class CreateEvent extends Component {
 
 		let buffer = Buffer.from(ipfsData);
 		let hash = await ipfs.add(buffer, { pin: pinit });
-		console.log("hxs", hash);
+		// console.log("hxs", hash);
 
 		if (!hash[0].hash) {
 			this.onHandleTxReject();
@@ -333,26 +333,26 @@ class CreateEvent extends Component {
 				infura = INFURA_URL_2;
 			}
 			const web3 = new Web3(infura);
-			console.log("Event form detailssss", [
-				oneTimeBuy,
-				token, // false means free
-				onsite, // true means event is onsite
-				token?isPHNX:true,
-				this.props.accounts[0], //owner
-				time.toString(), //time
-				totalQuantity.toString(), //totalQuantity
-				"0", //totalQntySold
-				eventName,
-				eventTopic,
-				location,
-				cityName,
-				hash[0].hash,
-				ticketLimited,
-				tktQnty,
-				prices,
-				tktQntySold,
-				categories,
-			]);
+			// console.log("Event form detailssss", [
+			// 	oneTimeBuy,
+			// 	token, // false means free
+			// 	onsite, // true means event is onsite
+			// 	token?isPHNX:true,
+			// 	this.props.accounts[0], //owner
+			// 	time.toString(), //time
+			// 	totalQuantity.toString(), //totalQuantity
+			// 	"0", //totalQntySold
+			// 	eventName,
+			// 	eventTopic,
+			// 	location,
+			// 	cityName,
+			// 	hash[0].hash,
+			// 	ticketLimited,
+			// 	tktQnty,
+			// 	prices,
+			// 	tktQntySold,
+			// 	categories,
+			// ]);
 			this.props.eventsContract.methods
 				.createEvent([
 					oneTimeBuy,
@@ -470,7 +470,7 @@ class CreateEvent extends Component {
 						if (
 							error.message.includes("not mined within 50 blocks")
 						) {
-							console.log("error.includes");
+							// console.log("error.includes");
 							let intervalVar = setInterval(async () => {
 								let receipt =
 									await web3.eth.getTransactionReceipt(

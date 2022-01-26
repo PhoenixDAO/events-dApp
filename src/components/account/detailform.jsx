@@ -143,7 +143,7 @@ const DetailForm = (props) => {
 				web3 = new Web3(new Web3.providers.HttpProvider(infura));
 			}
 			const networkId = await web3.eth.net.getId();
-			console.log("This called getNetworkId", networkId);
+			// console.log("This called getNetworkId", networkId);
 			if (networkId === GLOBAL_NETWORK_ID) {
 				return networkId;
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
@@ -291,7 +291,7 @@ const DetailForm = (props) => {
 				}
 			}
 		} else {
-			console.log("User detailss ==>>>> ", detail);
+			// console.log("User detailss ==>>>> ", detail);
 			props.setUserDetails(detail.result);
 			props.history.push("/");
 			// window.location.reload();
@@ -306,10 +306,10 @@ const DetailForm = (props) => {
 			props.userDetails.result.result.userHldr &&
 			props.tokensListContract
 		) {
-			console.log(
-				"UserDetails ,=>>",
-				props.userDetails.result.result.userHldr.alternateCurrency
-			);
+			// console.log(
+			// 	"UserDetails ,=>>",
+			// 	props.userDetails.result.result.userHldr.alternateCurrency
+			// );
 			let defaultCurr =
 				props.userDetails.result.result.userHldr.alternateCurrency;
 			if (typeof defaultCurr == "string") {

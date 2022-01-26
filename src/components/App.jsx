@@ -156,7 +156,7 @@ class App extends Component {
 			phoenixAddress = PhoenixDAO_Testnet_Token_Address_2;
 		} else {
 			this.setState({ openNetworkSnackbar: true });
-			console.log("Wrong network address | not supported");
+			// console.log("Wrong network address | not supported");
 		}
 		return { eventAddress, phoenixAddress };
 	}
@@ -187,7 +187,7 @@ class App extends Component {
 			}
 			return null;
 		} catch (err) {
-			console.log("err", err);
+			// console.log("err", err);
 		}
 	}
 	async initializeContract() {
@@ -204,7 +204,6 @@ class App extends Component {
 			// 	"eventAddress",
 			// 	eventAddress
 			// );
-			console.log("event page price: apps address", phoenixAddress)
 			const openEvents = await new web3.eth.Contract(
 				Open_events_ABI,
 				eventAddress
@@ -268,6 +267,7 @@ class App extends Component {
 		} else {
 			this.setState({ isDesktop: true });
 		}
+		console.clear();
 	}
 
 	componentWillUpdate() {
@@ -499,8 +499,6 @@ class App extends Component {
 		selectedToken
 	) => {
 		let chainId = await this.getNetworkId();
-		console.log(
-			"event page price: apps", isEthereum)
 		if (
 			this.state.account.length !== 0 &&
 			this.props.web3.networkId === (await this.getNetworkId())
@@ -615,7 +613,6 @@ class App extends Component {
 			let a = await this.state.phnxContract.methods
 				.allowance(this.state.account, eventAddress)
 				.call();
-				console.log("allowance at this.allowance", a, this.state.account, eventAddress, phoenixAddress)
 			return a;
 		}
 	};
@@ -1020,7 +1017,7 @@ class App extends Component {
 			});
 			return userData;
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 		}
 	};
 
@@ -1048,7 +1045,7 @@ class App extends Component {
 			// console.log('decryption sign ==>>', decrypt )
 			return sign;
 		} catch (err) {
-			console.log("Err at handleSignMessage", err);
+			// console.log("Err at handleSignMessage", err);
 		}
 	};
 

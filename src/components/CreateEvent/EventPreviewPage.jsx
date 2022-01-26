@@ -309,22 +309,22 @@ class EventPreviewPage extends Component {
 		// console.log("thissssssssss 11", this.props.token_price);
 		let event_data = this.props.fields;
 		if (this.props.isPHNX) {
-			console.log("this.props.fields.phnxPrice", this.props.fields);
+			// console.log("this.props.fields.phnxPrice", this.props.fields);
 			let priceInPhnx = 0;
 			if (this.props.fields.phnxPrice) {
-				console.log("this.props.fields.phnxPrice 1");
+				// console.log("this.props.fields.phnxPrice 1");
 				priceInPhnx = this.props.fields.phnxPrice
 					? this.props.fields.phnxPrice // + "PHNX"
 					: "FREE";
 			} else if (typeof this.props.fields.ticketCategories) {
-				console.log("this.props.fields.phnxPrice 2");
+				// console.log("this.props.fields.phnxPrice 2");
 				priceInPhnx =
 					this.props.fields.ticketCategories[
 						this.props.fields.ticketIndex
 					].phnxPrice;
 			} else {
 				priceInPhnx = "Free";
-				console.log("this.props.fields.phnxPrice 3");
+				// console.log("this.props.fields.phnxPrice 3");
 			}
 			let priceInDollar = this.props.fields.dollarPrice
 				? "$" + this.props.fields.dollarPrice
@@ -402,7 +402,7 @@ class EventPreviewPage extends Component {
 				// event_data.token
 				// 	?
 				token_price[categoryIndex];
-			console.log("price.dollarPrice / priceInPhnx", priceInPhnx);
+			// console.log("price.dollarPrice / priceInPhnx", priceInPhnx);
 			// : "FREE";
 			let priceInDollar = event_data.token ? "$" + dollar_price : "";
 			this.setState({
@@ -414,12 +414,12 @@ class EventPreviewPage extends Component {
 	};
 	handleCategoryChange = (event) => {
 		this.setState({ ticketIndex: event.target.value });
-		console.log("Event preview: ", event.target.value);
+		// console.log("Event preview: ", event.target.value);
 		this.priceCalculation(event.target.value);
 	};
 	handleSelectedTokenState = async (result) => {
-		console.log("ether_price ??", result);
-		console.log("hello");
+		// console.log("ether_price ??", result);
+		// console.log("hello");
 		this.setState({ selectedToken: result }, () => {
 			this.priceCalculation(this.state.ticketIndex);
 		});
@@ -556,10 +556,6 @@ class EventPreviewPage extends Component {
 										/> */}
 										TICKET PRICE
 									</p>
-									{console.log(
-										"this.state.token_price11",
-										this.state.token_price
-									)}
 									{this.state.token_price && (
 										this.state.token_price != "--" &&
 										this.state.isPHNX && (
@@ -572,10 +568,6 @@ class EventPreviewPage extends Component {
 													className="event_price-image"
 													alt="Event Price"
 												/>
-												{console.log(
-													"this.state.token_price",
-													this.state.token_price
-												)}
 												{pricingFormatter(this.state.token_price,"PHNX", this.state.isPHNX)}
 											</span>
 										)
@@ -932,10 +924,6 @@ class EventPreviewPage extends Component {
 		this._topicRemovedDashes();
 		this.priceCalculation(0);
 		// this.GetPrices();
-		console.log(
-			"This.props.tokensListContract EventPreviewPage",
-			this.props.tokensListContract
-		);
 	}
 }
 

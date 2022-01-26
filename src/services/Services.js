@@ -49,11 +49,11 @@ export const GetTokenDetailApi = (tokenId) => {
 
 export const GetTokenPrices2 = async (netId) => {
 	let tokensListContract = await GetWhiteListedToken(netId);
-	console.log("token address +++", tokensListContract);
+	// console.log("token address +++", tokensListContract);
 	let newTokensList = [];
 	tokensListContract.map(async (v, i) => {
 		let coingeckoData = await GetTokenDetailApi(v[2]);
-		console.log("coingeckoImage oooo", coingeckoData);
+		// console.log("coingeckoImage oooo", coingeckoData);
 		newTokensList.push({
 			// displayName: coingeckoData.data.name,
 			displayName: coingeckoData.data.symbol,
@@ -73,7 +73,7 @@ export const GetTokenPrices2 = async (netId) => {
 	// 	tokenName: "ethereum"
 	// 	usdPrice: 0.04173026}])
 	// }
-	console.log("token address +++ newTokensList ++>>> ", newTokensList);
+	// console.log("token address +++ newTokensList ++>>> ", newTokensList);
 	if (tokensListContract && newTokensList) {
 		return newTokensList;
 	} else {
@@ -82,10 +82,10 @@ export const GetTokenPrices2 = async (netId) => {
 };
 
 export const Increment2Percent = (originalPrice) => {
-	console.log("originalPrice =>", originalPrice);
+	// console.log("originalPrice =>", originalPrice);
 	let twoPercent = (2 * originalPrice) / 100;
 	let incrementedValue = Number(originalPrice) + Number(twoPercent);
-	console.log("incrementedValue =>", incrementedValue);
+	// console.log("incrementedValue =>", incrementedValue);
 	return incrementedValue;
 };
 
@@ -112,7 +112,7 @@ export const GetWhiteListedToken = async (netId) => {
 		Open_events_ABI,
 		netId == GLOBAL_NETWORK_ID ? Open_events_Address : Open_events_Address_2
 	);
-	console.log("EventsContract ==>>>", EventsContract);
+	// console.log("EventsContract ==>>>", EventsContract);
 	const TokenList = await EventsContract.methods
 		.getWhiteListedTokensList()
 		.call();
@@ -130,7 +130,7 @@ export const GetWhiteListedToken = async (netId) => {
 			"matic-network",
 		]);
 	}
-	console.log("WhiteListTokensss ++>>", TokenList, netId);
+	// console.log("WhiteListTokensss ++>>", TokenList, netId);
 	return TokenList;
 };
 
@@ -155,7 +155,7 @@ export const initTokenContract = async (tokenAddress) => {
 				ERC20_ABI,
 				tokenAddress
 			);
-			console.log("init contract TOKEN =>", TOKEN);
+			// console.log("init contract TOKEN =>", TOKEN);
 			return TOKEN;
 		} catch (err) {
 			console.log("Err in contract init =>", err);
@@ -165,18 +165,18 @@ export const initTokenContract = async (tokenAddress) => {
 // Open_events_Address
 export const CheckTokenAllowance = async (account, tokenAddress, networkId) => {
 	if (account && tokenAddress) {
-		console.log(
-			"this.props.eventsAddress +> 2",
-			networkId == GLOBAL_NETWORK_ID
-				? Open_events_Address
-				: Open_events_Address_2
-		);
-		console.log(
-			"account, tokenAddress ==>>> ",
-			account,
-			tokenAddress,
-			networkId
-		);
+		// console.log(
+		// 	"this.props.eventsAddress +> 2",
+		// 	networkId == GLOBAL_NETWORK_ID
+		// 		? Open_events_Address
+		// 		: Open_events_Address_2
+		// );
+		// console.log(
+		// 	"account, tokenAddress ==>>> ",
+		// 	account,
+		// 	tokenAddress,
+		// 	networkId
+		// );
 		try {
 			const Contract = await initTokenContract(
 				tokenAddress.toLowerCase()
@@ -190,7 +190,7 @@ export const CheckTokenAllowance = async (account, tokenAddress, networkId) => {
 						: Open_events_Address_2
 				)
 				.call();
-			console.log("allowance CheckTokenAllowance =>> ", allowance);
+			// console.log("allowance CheckTokenAllowance =>> ", allowance);
 			return allowance;
 		} catch (err) {
 			console.log("Err at CheckTokenAllowance =>> ", err);
@@ -257,7 +257,7 @@ export const base64ToBlob = (url) => {
 	// 	(window.location = blobUrl)
 	// );
 	// if ((window.location = blobUrl)) {
-	console.log("blobUrl ==>>", blobUrl);
+	// console.log("blobUrl ==>>", blobUrl);
 	return blobUrl;
 	// }
 };
