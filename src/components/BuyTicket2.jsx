@@ -249,7 +249,7 @@ const ApprovalModal = (props) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(props.open);
 	useEffect(() => {
-		console.log("props.selectedToken.image", props.selectedToken);
+		// console.log("props.selectedToken.image", props.selectedToken);
 	}, [props]);
 	return (
 		<Dialog

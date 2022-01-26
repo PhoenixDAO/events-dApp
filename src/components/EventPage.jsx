@@ -766,10 +766,10 @@ class EventPage extends Component {
 		})
 			.then(async (graphEvents) => {
 				if (graphEvents.data.data.events.length > 0) {
-					console.log(
-						"hello: event exists ",
-						graphEvents.data.data.events
-					);
+					// console.log(
+					// 	"hello: event exists ",
+					// 	graphEvents.data.data.events
+					// );
 					// console.log("hello: event url is title",this.props.match.params.title )
 					// console.log("hello: event url is title",urlFormatter(graphEvents.data.data.events[0].name) )
 					if (
@@ -822,7 +822,7 @@ class EventPage extends Component {
 					// throw "event not found";
 				}
 				this.setState({ alternateEventLoading: false });
-				console.log("graphEventsgraphEvents", graphEvents);
+				// console.log("graphEventsgraphEvents", graphEvents);
 			})
 			.catch((err) => {
 				this.setState({
@@ -907,7 +907,7 @@ class EventPage extends Component {
 		if (event_data.prices) {
 			if (event_data.isPHNX) {
 				this.setState({ isPHNX: event_data.isPHNX });
-				console.log("event details:", event_data);
+				// console.log("event details:", event_data);
 				let dollar_price = event_data.prices.map((price) => {
 					return (
 						Web3.utils.fromWei(price.toString()) *
@@ -917,7 +917,7 @@ class EventPage extends Component {
 				let token_price = Web3.utils.fromWei(
 					event_data.prices[categoryIndex].toString()
 				);
-				console.log("dollar_price: ", dollar_price, token_price);
+				// console.log("dollar_price: ", dollar_price, token_price);
 				let priceInPhnx = event_data.token
 					? token_price + "PHNX"
 					: "FREE";
@@ -986,16 +986,16 @@ class EventPage extends Component {
 					event_data.prices[categoryIndex].toString()
 				);
 				// Dynamic function for price calculation Ends
-				console.log(
-					"dollar_price: ",
-					event_data.token,
-					token_price[categoryIndex]
-				);
+				// console.log(
+				// 	"dollar_price: ",
+				// 	event_data.token,
+				// 	token_price[categoryIndex]
+				// );
 				let priceInPhnx = event_data.token
 					? token_price[categoryIndex] + "PHNX"
 					: "FREE";
 				let priceInDollar = event_data.token ? "$" + dollar_price : "";
-				console.log("event page price:", priceInDollar, priceInPhnx);
+				// console.log("event page price:", priceInDollar, priceInPhnx);
 				this.setState({
 					dollar_price: priceInDollar,
 					token_price: priceInPhnx,
@@ -1092,7 +1092,7 @@ class EventPage extends Component {
 	};
 
 	handleClickOpen = async () => {
-		console.log("hello selected: ", this.state.selectedToken);
+		// console.log("hello selected: ", this.state.selectedToken);
 		if (
 			this.props.networkId != GLOBAL_NETWORK_ID &&
 			this.props.networkId != GLOBAL_NETWORK_ID_2
@@ -1176,7 +1176,7 @@ class EventPage extends Component {
 					// 		this.state.selectedToken.tokenAddress
 					// 	)) == 0
 					// ) {
-					console.log("Coming here ifffff");
+					// console.log("Coming here ifffff");
 					let approval = await GiveAllowance(
 						this.props.accounts[0],
 						this.state.isPHNX
@@ -1186,7 +1186,7 @@ class EventPage extends Component {
 							: this.state.selectedToken.tokenAddress,
 						this.props.networkId
 					);
-					console.log("Coming here ifffff approval", approval);
+					// console.log("Coming here ifffff approval", approval);
 					// let balance = await this.props.phnxContract.methods
 					// 	.totalSupply()
 					// 	.call();
@@ -1248,10 +1248,10 @@ class EventPage extends Component {
 	// };
 	allowance = async () => {
 		if (this.state.selectedToken) {
-			console.log(
-				"this.props.eventsAddress +>",
-				this.props.eventsAddress
-			);
+			// console.log(
+			// 	"this.props.eventsAddress +>",
+			// 	this.props.eventsAddress
+			// );
 			if (this.state.selectedToken.tokenName === "ethereum" || this.state.selectedToken.tokenName == "matic-network") {
 				this.setState({
 					allow: true,
@@ -1267,7 +1267,7 @@ class EventPage extends Component {
 						: this.state.selectedToken.tokenAddress,
 					this.props.networkId
 				);
-				console.log("allowance at this.allowance", a);
+				// console.log("allowance at this.allowance", a);
 				this.setState({
 					allow: a,
 				});
@@ -1412,21 +1412,21 @@ class EventPage extends Component {
 						.balanceOf(this.props.accounts[0])
 						.call();
 					let decimal = await tokenContract.methods.decimals().call();
-					console.log(
-						"checkuser",
-						weiObject[`${decimal}`],
-						decimal,
-						typeof decimal
-					);
+					// console.log(
+					// 	"checkuser",
+					// 	weiObject[`${decimal}`],
+					// 	decimal,
+					// 	typeof decimal
+					// );
 					balance = await Web3.utils.fromWei(
 						balance.toString(),
 						await weiObject[decimal]
 					);
 				}
-				console.log(
-					`checkUserBalance of ${this.state.selectedToken.tokenName}`,
-					balance
-				);
+				// console.log(
+				// 	`checkUserBalance of ${this.state.selectedToken.tokenName}`,
+				// 	balance
+				// );
 				if (
 					this.state.isPHNX ||
 					this.state.selectedToken.tokenName == "phoenixdao"
@@ -1510,16 +1510,16 @@ class EventPage extends Component {
 				// 	this.state.selectedCategoryIndex,
 				// 	geoFindUser,
 				// ]);
-				console.log(
-					"event page price:",
-					this.props.match.params.id,
-					this.state.selectedCategoryIndex,
-					this.state.selectedToken.tokenAddress,
-					this.props.networkId,
-					this.props.networkId == GLOBAL_NETWORK_ID
-						? PhoenixDAO_Mainnet_Token_Address
-						: PhoenixDAO_Testnet_Token_Address_2
-				);
+				// console.log(
+				// 	"event page price:",
+				// 	this.props.match.params.id,
+				// 	this.state.selectedCategoryIndex,
+				// 	this.state.selectedToken.tokenAddress,
+				// 	this.props.networkId,
+				// 	this.props.networkId == GLOBAL_NETWORK_ID
+				// 		? PhoenixDAO_Mainnet_Token_Address
+				// 		: PhoenixDAO_Testnet_Token_Address_2
+				// );
 				this.setState(
 					{
 						fee: this.state.blockChainEvent[2],
@@ -1795,7 +1795,7 @@ class EventPage extends Component {
 		}
 	};
 	handleSelectedTokenState = async (result) => {
-		console.log("handleSelectedTokenState EventPage", result);
+		// console.log("handleSelectedTokenState EventPage", result);
 		this.setState({ selectedToken: result }, () => {
 			this.priceCalculation(this.state.selectedCategoryIndex);
 		});
@@ -1839,10 +1839,10 @@ class EventPage extends Component {
 				Object.keys(this.state.blockChainEvent).length === 0
 			) {
 				{
-					console.log(
-						"this.state.blockChainEventttt",
-						this.state.blockChainEvent
-					);
+					// console.log(
+					// 	"this.state.blockChainEventttt",
+					// 	this.state.blockChainEvent
+					// );
 				}
 				if (this.state.alternateEventPresent == null) {
 					body = (
@@ -2355,7 +2355,6 @@ class EventPage extends Component {
 																/>
 														  )
 														: ""}
-														{console.log("this token price: ", this.state.token_price)}
 													{`${pricingFormatter(
 														this.state.token_price,
 														"PHNX",
@@ -2968,10 +2967,10 @@ class EventPage extends Component {
 					this.props.userDetails.result &&
 					this.props.userDetails.result.result.userHldr
 						.alternateCurrency;
-				console.log(
-					"defaultCurrny at EventPage",
-					this.props.tokensListContract
-				);
+				// console.log(
+				// 	"defaultCurrny at EventPage",
+				// 	this.props.tokensListContract
+				// );
 				if (typeof defaultCurr == "string") {
 					if (defaultCurr === "Dollar" || defaultCurr === "usd") {
 						this.props.tokensListContract.map((v, i) => {
@@ -3029,10 +3028,10 @@ class EventPage extends Component {
 	};
 
 	async componentDidMount() {
-		console.log(
-			"parseInt(this.props.match.params.id)",
-			parseInt(this.props.match.params.id)
-		);
+		// console.log(
+		// 	"parseInt(this.props.match.params.id)",
+		// 	parseInt(this.props.match.params.id)
+		// );
 		await this.loadEventFromBlockchain();
 		// console.log(
 		// 	"this.props.tokensListContract =??",

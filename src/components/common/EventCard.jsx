@@ -270,10 +270,10 @@ const EventCard = (props, context) => {
 	} = props;
 
 	useEffect(() => {
-		console.log(
-			"This.props.tokenListContract at EventCard",
-			props.tokensListContract
-		);
+		// console.log(
+		// 	"This.props.tokenListContract at EventCard",
+		// 	props.tokensListContract
+		// );
 		setIcon(favoriteEvent);
 		getPhoenixDAOMarketValue();
 		// console.log("tokenPrices ==>>>>", tokenPrices);
@@ -324,7 +324,7 @@ const EventCard = (props, context) => {
 				let propsTokenName =
 					props.userDetails.result.result.userHldr.alternateCurrency
 						.tokenName;
-				console.log("propsTokenName =>>", propsTokenName);
+				// console.log("propsTokenName =>>", propsTokenName);
 				props.tokensListContract &&
 					props.tokensListContract.map((v, i) => {
 						if (propsTokenName == v.tokenName) {
@@ -741,11 +741,6 @@ const EventCard = (props, context) => {
 									)}
 									{event_data.name}
 								</Typography>
-								{console.log(
-									"hello event token: ",
-									selectedToken,
-									event_data.isPHNX
-								)}
 								<Typography
 									className={classes.price}
 									variant="body1"
