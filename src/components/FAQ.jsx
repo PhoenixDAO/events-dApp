@@ -188,6 +188,100 @@ const questions = [
 		description:
 			"Yes you can preview events before hosting/submitting them to the public.",
 	},
+	{
+		heading: "What assets are accepted on the Event Marketplace?",
+		description: (
+			<span>
+				ETHEREUM
+				<ul>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/phoenixdao/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							PHNX
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/tether/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							USDT
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/usd-coin/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							USDC
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/ethereum/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Eth
+						</a>
+					</li>
+				</ul>
+				POLYGON
+				<ul>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/phoenixdao/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							PHNX
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/tether/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							USDT
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/usd-coin/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							USDC
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/polygon/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							MATIC
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/wmatic/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							WRAPPED MATIC
+						</a>
+					</li>
+				</ul>
+			</span>
+		),
+	},
 ];
 
 const AllQuestionsOnAccordianCards = () => {

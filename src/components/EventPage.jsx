@@ -419,6 +419,7 @@ class EventPage extends Component {
 			SnackbarMessage: "",
 			locationEvent: "",
 			disableBuyTicketBtn: false,
+			selectCurrency:false,
 			// phnx_price: "",
 			token_price: "",
 			eventExistInContract: false,
@@ -438,7 +439,16 @@ class EventPage extends Component {
 			// 	image: RinkbeyNetworkArray[0].networks[0].image,
 			// 	tokenAddress: RinkbeyNetworkArray[0].networks[0].tokenAddress,
 			// },
-			selectedToken: {
+			selectedToken: !this.props.isPHNX?{
+				displayName: "PhoenixDAO",
+				image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
+				tokenAddress:
+					this.props.networkId == GLOBAL_NETWORK_ID
+						? PhoenixDAO_Mainnet_Token_Address
+						: PhoenixDAO_Testnet_Token_Address_2,
+				tokenName: "phoenixdao",
+				firstTime:true
+			}:{
 				displayName: "PhoenixDAO",
 				image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
 				tokenAddress:
@@ -1092,7 +1102,7 @@ class EventPage extends Component {
 	};
 
 	handleClickOpen = async () => {
-		// console.log("hello selected: ", this.state.selectedToken);
+		console.log("hello selected: ", this.state.selectedToken,  this.props.token, this.state.isPHNX);
 		if (
 			this.props.networkId != GLOBAL_NETWORK_ID &&
 			this.props.networkId != GLOBAL_NETWORK_ID_2
@@ -1102,6 +1112,12 @@ class EventPage extends Component {
 				open3Message: "Please connect to Ethereum or Matic Mainnet",
 			});
 		} else {
+			if(this.state.selectedToken.firstTime && (!this.state.isPHNX && this.state.token_price != "FREE") ){
+				this.setState({
+					selectCurrency: true,
+				});
+			}
+			else{
 			// this.setState({ open2: true });
 			if (this.state.oneTimeBuy) {
 				let buyers = this.state.soldTicket;
@@ -1217,6 +1233,7 @@ class EventPage extends Component {
 					}
 				}
 			}
+		}
 		}
 	};
 	handleCloseSnackbar() {
@@ -1682,6 +1699,7 @@ class EventPage extends Component {
 	handleCloseSnackbar4 = () => {
 		this.setState({
 			disableBuyTicketBtn: false,
+			selectCurrency:false,
 		});
 	};
 
@@ -2079,6 +2097,21 @@ class EventPage extends Component {
 										className="snackbar"
 									/>
 								)}
+									{this.state.selectedToken && (
+									<Snackbar
+									anchorOrigin={{
+										vertical: "top",
+										horizontal: "center",
+									}}
+									open={this.state.selectCurrency}
+									onClose={this.handleCloseSnackbar4}
+									message={`Please select a currency to buy a ticket`}
+									autoHideDuration={3000}
+									key={"top" + "center"}
+									className="snackbar"
+								/>
+								)}
+									
 								<Header
 									disabled={
 										disabled ||
@@ -3042,7 +3075,7 @@ class EventPage extends Component {
 
 		await this.props.handleGetUserDetails();
 		// await this.props.handleSetTokenListContract();
-		await this.handleSetSelectedToken();
+		// await this.handleSetSelectedToken();
 
 		// console.log(
 		// 	"this.props.tokensListContract =??",

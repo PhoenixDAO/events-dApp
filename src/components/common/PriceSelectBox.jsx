@@ -49,6 +49,15 @@ const useStyles = makeStyles((theme) => ({
 	menuItem: {
 		flex: "none",
 	},
+	selectCurrency:{
+		marginTop:"10px",
+		fontWeight: 700,
+		fontSize:"15px",
+		width: "100%",
+		height: "50px",
+		border:"1px solid black",
+		marginBottom:"10px",
+	}
 }));
 
 // function PriceSelectBox({ value, token, isEventPage }) {
@@ -133,26 +142,25 @@ function PriceSelectBox(props) {
 						handleToggle(event);
 					}}
 					className={
-						props.isEventPage
+						 props.selectedToken? (!props.selectedToken.firstTime?props.isEventPage
 							? classes.PhnxPriceEventPage
-							: classes.PhnxPrice
+							: classes.PhnxPrice:classes.selectCurrency): classes.PhnxPriceEventPage
 					}
 				>
-					<img
+					{props.selectedToken && ( !props.selectedToken.firstTime)&&(<img
 						src={props.selectedToken && props.selectedToken.image}
 						style={{
 							height: props.isEventPage ? "25px" : "20px",
 							marginRight: "4px",
 						}}
-					/>
-					{/* {price.amount ? `${price.amount}` : `--`} */}
-					{price.amount
+					/>)}
+					{props.selectedToken ? ( !props.selectedToken.firstTime)?(price.amount
 						? 
 						// Number(price.amount) < 0.0001
 						// 	? price.amount.toString().slice(0, 9)
 						// 	:
 							 price.amount.toString() // If token is not Phnx it's price will be shown 102%
-						: `--`}
+						: `--`):"Select Currency":"--"}
 					<ArrowDropDownIcon
 						style={{ color: "rgba(0, 0, 0, 0.7)" }}
 					/>
