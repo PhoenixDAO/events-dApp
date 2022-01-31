@@ -2422,15 +2422,16 @@ class EventPage extends Component {
 															  ) * 1.02
 													}
 												>
-													{/* {console.log(
+													{/* {
+													console.log(
 														"dollar price ggg:",
 														this.state
-															.dollar_price &&
-															this.state.dollar_price.slice(
-																1
-															)
-													)} */}
-													{this.state.dollar_price &&
+															.dollar_price,
+															typeof(this.state.dollar_price)
+													)
+													} */}
+													{this.state.dollar_price =="$NaN"
+													?"-":
 														pricingFormatter(
 															this.state
 																.dollar_price,
@@ -2442,7 +2443,8 @@ class EventPage extends Component {
 																		.selectedToken
 																		.tokenName ==
 																		"phoenixdao")
-														)}
+														)
+													}
 												</div>
 											</div>
 
