@@ -179,7 +179,7 @@ function PriceSelectBox(props) {
 								transformOrigin:
 									placement === "bottom"
 										? "center top"
-										: "center bottom",
+										: "left bottom",
 							}}
 						>
 							<Paper>
@@ -247,7 +247,7 @@ function PriceSelectBox(props) {
 																}
 															>
 																{
-																	data.displayName
+																	`${data.tokenName.charAt(0).toUpperCase() + data.tokenName.slice(1)} (${data.displayName.toUpperCase()})`
 																}
 															</ListItemText>
 														</MenuItem>
