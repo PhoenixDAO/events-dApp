@@ -62,6 +62,7 @@ export const GetTokenPrices2 = async (netId) => {
 			image: coingeckoData.data.image.small,
 			tokenAddress: v[0],
 			usdPrice: coingeckoData.data.market_data.current_price.usd,
+			tokenDisplayName:coingeckoData.data.name,
 		});
 	});
 	// if(netId == 1 || netId == 4)

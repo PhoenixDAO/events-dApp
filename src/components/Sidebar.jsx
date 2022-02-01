@@ -1082,7 +1082,7 @@ class Sidebar extends Component {
 									}}
 								>
 									<a
-										href="https://macncheese.finance/matic-polygon-mainnet-faucet.php"
+										href="https://www.youtube.com/watch?v=EmesDS8J-rs"
 										target="_blank"
 									>
 										{/* 🏃‍♂️ Matic(Polygon) Mainnet Faucet - Get
