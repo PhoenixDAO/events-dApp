@@ -788,9 +788,9 @@ const MyStepper = ({
 								>
 									<MenuItem value="free">Free Event</MenuItem>
 									<MenuItem value="single">
-										{`Paid (Single Ticket Type Event)`}
+										{`Paid`}
 									</MenuItem>
-									<MenuItem value="multiple">{`Paid (Multiple Ticket Type Event)`}</MenuItem>
+									<MenuItem value="multiple">{`Multiple Ticket Categories`}</MenuItem>
 								</Select>
 							</FormControl>
 

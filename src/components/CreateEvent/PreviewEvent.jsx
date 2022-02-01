@@ -303,7 +303,8 @@ export default function PreviewEvent({
 												{pricingFormatter(
 													ticketCategories[0]
 														.phnxPrice,
-													"PHNX"
+													"PHNX",
+													isPHNX
 												)}{" "}
 												{/* PHNX */}
 											</p>
@@ -313,7 +314,8 @@ export default function PreviewEvent({
 												{pricingFormatter(
 													ticketCategories[0]
 														.dollarPrice,
-													"$"
+													"$",
+													isPHNX
 												)}
 											</p>
 										</div>
@@ -326,7 +328,8 @@ export default function PreviewEvent({
 												{pricingFormatter(
 													ticketCategories[0]
 														.phnxPrice,
-													"PHNX"
+													"PHNX",
+													isPHNX
 												)}{" "}
 												{/* PHNX */}
 											</p>
@@ -341,7 +344,8 @@ export default function PreviewEvent({
 													pricingFormatter(
 														ticketCategories[0]
 															.dollarPrice,
-														"$"
+														"$",
+														isPHNX
 													)}
 											</p>
 										</div>
@@ -428,7 +432,7 @@ export default function PreviewEvent({
 									? eventLocation
 										? city
 											? eventLocation +
-											  " " +
+											  ", " +
 											  city.name +
 											  ", " +
 											  country.name

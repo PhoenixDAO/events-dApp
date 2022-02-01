@@ -247,7 +247,7 @@ function PriceSelectBox(props) {
 																}
 															>
 																{
-																	`${data.tokenName.charAt(0).toUpperCase() + data.tokenName.slice(1)} (${data.displayName.toUpperCase()})`
+																	`${data.tokenDisplayName} (${data.displayName.toUpperCase()})`
 																}
 															</ListItemText>
 														</MenuItem>
