@@ -608,7 +608,7 @@ const MyStepper = ({
 
 										<label className={classes.label}>
 											{index === 0
-												? `EVENT IMAGE`
+												? `EVENT THUMBNAIL`
 												: `COVER IMAGE ${index}`}
 										</label>
 										<div style={{ position: "relative" }}>
