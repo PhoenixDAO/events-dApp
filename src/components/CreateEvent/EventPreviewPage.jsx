@@ -249,6 +249,15 @@ const styles = (theme) => ({
 			// minHeight:"100px",
 		},
 	},
+	eventBannerText:{
+    position: "absolute",
+    top: "0",
+    paddingLeft: "15px",
+    paddingTop: "10px",
+    fontSize: "20px",
+    color: "#d3d3d48a",
+    textShadow: "0 0 8px #0d0d0dde",
+	}
 });
 class EventPreviewPage extends Component {
 	constructor(props) {
@@ -489,9 +498,11 @@ class EventPreviewPage extends Component {
 													this.props.image1
 											  )
 									}")`,
+									position: "relative"
 								}}
 								className={classes.imageDiv}
 							>
+								<span className={classes.eventBannerText}>Event Banner</span>
 								{/* <img
 										className="card-img-top event-image"
 										src={image}
