@@ -252,11 +252,19 @@ const styles = (theme) => ({
 	eventBannerText:{
     position: "absolute",
     top: "0",
-    paddingLeft: "15px",
-    paddingTop: "10px",
-    fontSize: "20px",
-    color: "#d3d3d48a",
+    // paddingLeft: "15px",
+    // paddingTop: "10px",
+    // color: "#d3d3d48a",
     textShadow: "0 0 8px #0d0d0dde",
+	background: "grey",
+    width: "100%",
+    height: "100%",
+    textAlign: "center",
+    borderRadius: "10px",
+    opacity: "0.2",
+    color: "white",
+    padding: "90px",
+    fontSize: "23px",
 	}
 });
 class EventPreviewPage extends Component {
