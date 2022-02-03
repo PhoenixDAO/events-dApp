@@ -263,8 +263,11 @@ const styles = (theme) => ({
     borderRadius: "10px",
     opacity: "0.2",
     color: "white",
-    padding: "90px",
+    // padding: "90px",
+	display:"flex",
     fontSize: "23px",
+	alignItems: "center",
+    placeContent: "center",
 	}
 });
 class EventPreviewPage extends Component {

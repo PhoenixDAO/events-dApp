@@ -434,11 +434,12 @@ export default function PreviewEvent({
 											? eventLocation +
 											  ", " +
 											  city.name +
-											  ", " +
+											  ((city.name==" ")?"":", ") +
 											  country.name
 											: eventLocation
 										: "Location"
 									: `Online`}
+                                            {/* {console.log("eventLocation", eventLocation, city?((city.name)?", "+city.name+",":"not"+city.name+"not"):"none"), city?"hello"+city.name+"hello":"none city name"} */}
 							</Typography>
 
 							<Typography
