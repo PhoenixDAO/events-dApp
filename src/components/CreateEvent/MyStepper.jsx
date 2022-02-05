@@ -846,7 +846,7 @@ const MyStepper = ({
 																}
 															/>
 														}
-														label="USD value"
+														label="Fix the value of your ticket to USD"
 													/>
 													<FormControlLabel
 														value="limited"
@@ -870,7 +870,7 @@ const MyStepper = ({
 																}
 															/>
 														}
-														label="PHNX value"
+														label="Lock users to ONLY purchase in PHNX"
 													/>
 												</RadioGroup>
 											</FormControl>
