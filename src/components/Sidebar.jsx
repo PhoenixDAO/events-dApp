@@ -1041,8 +1041,9 @@ class Sidebar extends Component {
 								style={{ maxWidth: "250px" }}
 							>
 								<a
-									target="blank"
+									target="_blank"
 									title="Telegram"
+									rel="noopener noreferrer"
 									href="https://t.me/PHNXDAO"
 								>
 									<div className="imageHolder">
@@ -1050,7 +1051,8 @@ class Sidebar extends Component {
 									</div>
 								</a>
 								<a
-									target="blank"
+									target="_blank"
+									rel="noopener noreferrer"
 									title="Twitter"
 									href="https://twitter.com/phnxdao"
 								>
@@ -1059,7 +1061,8 @@ class Sidebar extends Component {
 									</div>
 								</a>
 								<a
-									target="blank"
+									target="_blank"
+									rel="noopener noreferrer"
 									title="GitHub"
 									href="https://github.com/PhoenixDAO/events-dApp/tree/designing"
 								>
@@ -1079,7 +1082,7 @@ class Sidebar extends Component {
 									}}
 								>
 									<a
-										href="https://macncheese.finance/matic-polygon-mainnet-faucet.php"
+										href="https://www.youtube.com/watch?v=EmesDS8J-rs"
 										target="_blank"
 									>
 										{/* 🏃‍♂️ Matic(Polygon) Mainnet Faucet - Get

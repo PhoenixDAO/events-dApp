@@ -169,7 +169,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function PreviewEvent({ fields, activeStep, tokensListContract }) {
+export default function PreviewEvent({
+	fields,
+	activeStep,
+	tokensListContract,
+}) {
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
 
@@ -195,7 +199,7 @@ export default function PreviewEvent({ fields, activeStep, tokensListContract })
 		eventDescription,
 		city,
 		country,
-		isPHNX
+		isPHNX,
 	} = fields;
 
 	const handleClickOpen = () => {
@@ -299,7 +303,8 @@ export default function PreviewEvent({ fields, activeStep, tokensListContract })
 												{pricingFormatter(
 													ticketCategories[0]
 														.phnxPrice,
-													"PHNX"
+													"PHNX",
+													isPHNX
 												)}{" "}
 												{/* PHNX */}
 											</p>
@@ -309,7 +314,8 @@ export default function PreviewEvent({ fields, activeStep, tokensListContract })
 												{pricingFormatter(
 													ticketCategories[0]
 														.dollarPrice,
-													"$"
+													"$",
+													isPHNX
 												)}
 											</p>
 										</div>
@@ -322,18 +328,25 @@ export default function PreviewEvent({ fields, activeStep, tokensListContract })
 												{pricingFormatter(
 													ticketCategories[0]
 														.phnxPrice,
-													"PHNX"
+													"PHNX",
+													isPHNX
 												)}{" "}
 												{/* PHNX */}
 											</p>
 											<p className={classes.starting}>
-												{" "}
-												{/* $ */}
-												{pricingFormatter(
+												{/* {console.log(
+													"jjjjjjjjjjjjj",
 													ticketCategories[0]
-														.dollarPrice,
-													"$"
-												)}
+														.dollarPrice
+												)} */}
+												{ticketCategories[0]
+													.dollarPrice > 0 &&
+													pricingFormatter(
+														ticketCategories[0]
+															.dollarPrice,
+														"$",
+														isPHNX
+													)}
 											</p>
 										</div>
 									)}
@@ -419,13 +432,14 @@ export default function PreviewEvent({ fields, activeStep, tokensListContract })
 									? eventLocation
 										? city
 											? eventLocation +
-											  " " +
-											  city.name +
 											  ", " +
+											  city.name +
+											  ((city.name==" ")?"":", ") +
 											  country.name
 											: eventLocation
 										: "Location"
 									: `Online`}
+                                            {/* {console.log("eventLocation", eventLocation, city?((city.name)?", "+city.name+",":"not"+city.name+"not"):"none"), city?"hello"+city.name+"hello":"none city name"} */}
 							</Typography>
 
 							<Typography

@@ -17,8 +17,6 @@ const PostContactForm = async (values, successCallback, errorCallback) => {
 	else errorCallback();
 };
 
-
-
 // const initialFormValues= {
 // 	fullName: parsedCookies.fullName && typeof(parsedCookies.fullName) !='undefined' ? parsedCookies.fullName : "",
 // 	email: parsedCookies.email && typeof(parsedCookies.email) !='undefined' ? parsedCookies.email : "",
@@ -152,14 +150,13 @@ export const useFormControls = () => {
 		// console.log("before being changed parts", parts);
 		if (parts.length === 2) return parts.pop().split(";").shift();
 	};
-	
+
 	const parsedCookies =
 		getCookie("eventInfo") === undefined || null
 			? {}
 			: JSON.parse(getCookie("eventInfo"));
-	
-		
-	const initialFormValues= {
+
+	const initialFormValues = {
 		fullName: parsedCookies.fullName ? parsedCookies.fullName : "",
 		email: parsedCookies.email ? parsedCookies.email : "",
 		message: parsedCookies.message ? parsedCookies.message : "",
@@ -189,7 +186,9 @@ export const useFormControls = () => {
 			? parsedCookies.eventEndDate
 			: null,
 		//2nd_stepper
-		eventType: parsedCookies.eventType ? parsedCookies.eventType : "physical",
+		eventType: parsedCookies.eventType
+			? parsedCookies.eventType
+			: "physical",
 		eventTopic: parsedCookies.eventTopic ? parsedCookies.eventTopic : "",
 		eventLocation: parsedCookies.eventLocation
 			? parsedCookies.eventLocation
@@ -197,11 +196,13 @@ export const useFormControls = () => {
 		eventLink: parsedCookies.eventLink ? parsedCookies.eventLink : "",
 		country: {
 			id:
-				parsedCookies.country == null || parsedCookies.country == undefined
+				parsedCookies.country == null ||
+				parsedCookies.country == undefined
 					? ""
 					: parsedCookies.country.id,
 			name:
-				parsedCookies.country == null || parsedCookies.country == undefined
+				parsedCookies.country == null ||
+				parsedCookies.country == undefined
 					? ""
 					: parsedCookies.country.name,
 		},
@@ -225,7 +226,7 @@ export const useFormControls = () => {
 					? ""
 					: parsedCookies.city.name,
 		},
-		images: [{ name: "" },{name:""}],
+		images: [{ name: "" }, { name: "" }],
 		//3rd_stepper
 		eventCategory: parsedCookies.eventCategory
 			? parsedCookies.eventCategory
@@ -233,62 +234,70 @@ export const useFormControls = () => {
 		restrictWallet: parsedCookies.restrictWallet
 			? parsedCookies.restrictWallet
 			: false,
-			isPHNX: parsedCookies.isPHNX
-			? parsedCookies.isPHNX
-			: false,
+		isPHNX: parsedCookies.isPHNX ? parsedCookies.isPHNX : true,
 		ticketIndex: parsedCookies.ticketIndex ? parsedCookies.ticketIndex : 0,
 		ticketName: parsedCookies.ticketName ? parsedCookies.ticketName : "",
-		dollarPrice: parsedCookies.dollarPrice ? parsedCookies.dollarPrice : "0",
+		dollarPrice: parsedCookies.dollarPrice
+			? parsedCookies.dollarPrice
+			: "0",
 		phnxPrice: parsedCookies.phnxPrice ? parsedCookies.phnxPrice : "",
 		ticketAvailability: parsedCookies.ticketAvailability
 			? parsedCookies.ticketAvailability
 			: "unlimited",
 		noOfTickets: parsedCookies.noOfTickets ? parsedCookies.noOfTickets : "",
-		isCompleted: parsedCookies.isCompleted ? parsedCookies.isCompleted : false,
-		ticketCategories:(parsedCookies.ticketCategories != null &&
-		parsedCookies.ticketCategories != undefined &&
-		parsedCookies.ticketCategories.length > 0)
-			? parsedCookies.ticketCategories
-			:  [
-				{
-					ticketName:
-						parsedCookies.ticketCategories != null &&
-						parsedCookies.ticketCategories != undefined &&
-						parsedCookies.ticketCategories.length > 0
-							? parsedCookies.ticketCategories[0].ticketName
-							: "",
-					dollarPrice:
-						parsedCookies.ticketCategories != null &&
-						parsedCookies.ticketCategories != undefined &&
-						parsedCookies.ticketCategories.length > 0
-							? parsedCookies.ticketCategories[0].dollarPrice
-							: "0",
-					phnxPrice:
-						parsedCookies.ticketCategories != null &&
-						parsedCookies.ticketCategories != undefined &&
-						parsedCookies.ticketCategories.length > 0
-							? parsedCookies.ticketCategories[0].phnxPrice
-							: "",
-					ticketAvailability:
-						parsedCookies.ticketCategories != null &&
-						parsedCookies.ticketCategories != undefined &&
-						parsedCookies.ticketCategories.length > 0
-							? parsedCookies.ticketCategories[0].ticketAvailability
-							: "unlimited",
-					noOfTickets:
-						parsedCookies.ticketCategories != null &&
-						parsedCookies.ticketCategories != undefined &&
-						parsedCookies.ticketCategories.length > 0
-							? parsedCookies.ticketCategories[0].noOfTickets
-							: "",
-					isShown:
-						parsedCookies.ticketCategories != null &&
-						parsedCookies.ticketCategories != undefined &&
-						parsedCookies.ticketCategories.length > 0
-							? parsedCookies.ticketCategories[0].isShown
-							: false,
-				},
-			],
+		isCompleted: parsedCookies.isCompleted
+			? parsedCookies.isCompleted
+			: false,
+		ticketCategories:
+			parsedCookies.ticketCategories != null &&
+			parsedCookies.ticketCategories != undefined &&
+			parsedCookies.ticketCategories.length > 0
+				? parsedCookies.ticketCategories
+				: [
+						{
+							ticketName:
+								parsedCookies.ticketCategories != null &&
+								parsedCookies.ticketCategories != undefined &&
+								parsedCookies.ticketCategories.length > 0
+									? parsedCookies.ticketCategories[0]
+											.ticketName
+									: "",
+							dollarPrice:
+								parsedCookies.ticketCategories != null &&
+								parsedCookies.ticketCategories != undefined &&
+								parsedCookies.ticketCategories.length > 0
+									? parsedCookies.ticketCategories[0]
+											.dollarPrice
+									: "0",
+							phnxPrice:
+								parsedCookies.ticketCategories != null &&
+								parsedCookies.ticketCategories != undefined &&
+								parsedCookies.ticketCategories.length > 0
+									? parsedCookies.ticketCategories[0]
+											.phnxPrice
+									: "",
+							ticketAvailability:
+								parsedCookies.ticketCategories != null &&
+								parsedCookies.ticketCategories != undefined &&
+								parsedCookies.ticketCategories.length > 0
+									? parsedCookies.ticketCategories[0]
+											.ticketAvailability
+									: "unlimited",
+							noOfTickets:
+								parsedCookies.ticketCategories != null &&
+								parsedCookies.ticketCategories != undefined &&
+								parsedCookies.ticketCategories.length > 0
+									? parsedCookies.ticketCategories[0]
+											.noOfTickets
+									: "",
+							isShown:
+								parsedCookies.ticketCategories != null &&
+								parsedCookies.ticketCategories != undefined &&
+								parsedCookies.ticketCategories.length > 0
+									? parsedCookies.ticketCategories[0].isShown
+									: false,
+						},
+				  ],
 		// ticketCategories: [
 		// 	{
 		// 		ticketName:
@@ -416,14 +425,13 @@ export const useFormControls = () => {
 		if ("eventDate" in fieldValues) {
 			let eventStartTimeOneday = new Date(fieldValues.eventStartTime);
 			var today = new Date();
-						today.setHours(today.getHours() + 3);
+			today.setHours(today.getHours() + 3);
 			if (eventStartTimeOneday <= today) {
-							temp.eventStartTime = "Event should be after 3 Hours.";
-							// console.log("name ==> eventStartTime")
-						}
-						else{
-							temp.eventStartTime = "";
-						}
+				temp.eventStartTime = "Event should be after 3 Hours.";
+				// console.log("name ==> eventStartTime")
+			} else {
+				temp.eventStartTime = "";
+			}
 			temp.eventDate = fieldValues.eventDate
 				? ""
 				: "This field is required.";
@@ -451,14 +459,13 @@ export const useFormControls = () => {
 		if ("eventStartDate" in fieldValues) {
 			let eventStartTimeOneday = new Date(fieldValues.eventStartTime);
 			var today = new Date();
-						today.setHours(today.getHours() + 3);
+			today.setHours(today.getHours() + 3);
 			if (eventStartTimeOneday <= today) {
-							temp.eventStartTime = "Event should be after 3 Hours.";
-							// console.log("name ==> eventStartTime")
-						}
-						else{
-							temp.eventStartTime = "";
-						}
+				temp.eventStartTime = "Event should be after 3 Hours.";
+				// console.log("name ==> eventStartTime")
+			} else {
+				temp.eventStartTime = "";
+			}
 			temp.eventStartDate = fieldValues.eventStartDate
 				? ""
 				: "This field is required.";
@@ -522,21 +529,20 @@ export const useFormControls = () => {
 				? ""
 				: "This field is required.";
 
-		if ("dollarPrice" in fieldValues)
-		{
+		if ("dollarPrice" in fieldValues) {
 			temp.dollarPrice = fieldValues.dollarPrice
 				? ""
 				: "This field is required.";
-				if(temp.dollarPrice == ""){
-					temp.phnxPrice = "";
-				}
+			if (temp.dollarPrice == "") {
+				temp.phnxPrice = "";
+			}
 		}
 
-		if ("phnxPrice" in fieldValues){
+		if ("phnxPrice" in fieldValues) {
 			temp.phnxPrice = fieldValues.phnxPrice
 				? ""
 				: "This field is required.";
-			if(temp.phnxPrice == ""){
+			if (temp.phnxPrice == "") {
 				temp.dollarPrice = "";
 			}
 		}
@@ -660,13 +666,13 @@ export const useFormControls = () => {
 					!errors["image0"] &&
 					image0 &&
 					eventTopic;
-					let allImages = true;
-					if(images.length>0){
-						allImages = images.slice(0,3).map((image)=>{
-							return image.name !="";
-						})
-					}
-					return isValid && new Set(allImages).size ==1;
+				let allImages = true;
+				if (images.length > 0) {
+					allImages = images.slice(0, 3).map((image) => {
+						return image.name != "";
+					});
+				}
+				return isValid && new Set(allImages).size == 1;
 			} else {
 				const isValid =
 					!errors["eventLink"] &&
@@ -674,13 +680,13 @@ export const useFormControls = () => {
 					!errors["image0"] &&
 					image0 &&
 					eventTopic;
-					let allImages = true;
-					if(images.length>0){
-						allImages = images.slice(0,3).map((image)=>{
-							return image.name !="";
-						})
-					}
-				return isValid && new Set(allImages).size ==1;
+				let allImages = true;
+				if (images.length > 0) {
+					allImages = images.slice(0, 3).map((image) => {
+						return image.name != "";
+					});
+				}
+				return isValid && new Set(allImages).size == 1;
 				// return isValid;
 			}
 		} else if (activeStep === 2) {
@@ -699,28 +705,29 @@ export const useFormControls = () => {
 						!errors["phnxPrice"] &&
 						phnxPrice &&
 						!errors["dollarPrice"] &&
-						dollarPrice;
+						dollarPrice && dollarPrice !="0.00000" && dollarPrice !="0" &&phnxPrice !="0.00000" && phnxPrice !="0";
 					return isValid;
 				} else {
+					// console.log("dollarPrice", dollarPrice, typeof(dollarPrice))
 					const isValid =
 						!errors["noOfTickets"] &&
 						noOfTickets &&
 						!errors["phnxPrice"] &&
 						phnxPrice &&
 						!errors["dollarPrice"] &&
-						dollarPrice;
+						dollarPrice && dollarPrice !="0.00000" && dollarPrice !="0" &&phnxPrice !="0.00000" && phnxPrice !="0";
 					return isValid;
 				}
 			} else {
 				// multiple ticket type event
-				if(ticketCategories.length == 1){
-					const isValid = ticketCategories[0].isShown;
+				if (ticketCategories.length == 1) {
+					const isValid = ticketCategories[0].isShown &&  ticketCategories[0].dollarPrice !="0.00000" && ticketCategories[0].dollarPrice !="0" &&ticketCategories[0].phnxPrice !="0.00000" && ticketCategories[0].phnxPrice !="0";
 					return isValid;
-				}
-				else{
-					const isValid = ticketCategories.map((ticketCategory)=>{
-						return ticketCategory.isShown})
-					return new Set(isValid).size ==1;
+				} else {
+					const isValid = ticketCategories.map((ticketCategory) => {
+						return ticketCategory.isShown &&  ticketCategory.dollarPrice !="0.00000" && ticketCategory.dollarPrice !="0" &&ticketCategory.phnxPrice !="0.00000" && ticketCategory.phnxPrice !="0";
+					});
+					return new Set(isValid).size == 1;
 				}
 			}
 		} else if (activeStep === 3) {
@@ -927,8 +934,8 @@ export const useFormControls = () => {
 			let PHNX = dollarToPhnx(value);
 			ticketCategories[index]["dollarPrice"] = USD;
 			ticketCategories[index]["phnxPrice"] = PHNX;
-				validate({ ["phnxPrice"]: PHNX })
-					validate({ ["dollarPrice"]: USD });
+			validate({ ["phnxPrice"]: PHNX });
+			validate({ ["dollarPrice"]: USD });
 			setValues({
 				...values,
 				ticketCategories: [...ticketCategories],
@@ -944,10 +951,10 @@ export const useFormControls = () => {
 			let PHNX = value;
 			ticketCategories[index]["dollarPrice"] = USD;
 			ticketCategories[index]["phnxPrice"] = PHNX;
-				// console.log("dollar price: ",USD)
-				validate({ ["dollarPrice"]: USD })
-					// console.log("phnx price: ",PHNX)
-					validate({ ["phnxPrice"]: PHNX });
+			// console.log("dollar price: ",USD)
+			validate({ ["dollarPrice"]: USD });
+			// console.log("phnx price: ",PHNX)
+			validate({ ["phnxPrice"]: PHNX });
 			setValues({
 				...values,
 				ticketCategories: [...ticketCategories],
@@ -1090,7 +1097,8 @@ export const useFormControls = () => {
 		if (eventTime === "onedayevent") {
 			let eventDateOneDay = new Date(eventDate);
 			let eventStartTimeOneday = new Date(eventStartTime);
-			let eventEndTimeOneday = eventEndTime==null?eventEndTime:new Date(eventEndTime);
+			let eventEndTimeOneday =
+				eventEndTime == null ? eventEndTime : new Date(eventEndTime);
 
 			// console.log("eventDateOneDay", eventDateOneDay);
 			// console.log("eventStartTimeOneday", eventStartTimeOneday);
@@ -1142,7 +1150,8 @@ export const useFormControls = () => {
 			let eventDateOneDay = new Date(eventStartDate);
 			let eventEndDateOneDay = new Date(eventEndDate);
 			let eventStartTimeOneday = new Date(eventStartTime);
-			let eventEndTimeOneday = eventEndTime==null?eventEndTime:new Date(eventEndTime);;
+			let eventEndTimeOneday =
+				eventEndTime == null ? eventEndTime : new Date(eventEndTime);
 			//change date timing
 			eventDateOneDay.setHours(
 				eventStartTimeOneday.getHours(),

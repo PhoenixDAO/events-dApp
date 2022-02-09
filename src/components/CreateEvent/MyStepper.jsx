@@ -608,7 +608,7 @@ const MyStepper = ({
 
 										<label className={classes.label}>
 											{index === 0
-												? `EVENT IMAGE`
+												? `EVENT THUMBNAIL`
 												: `COVER IMAGE ${index}`}
 										</label>
 										<div style={{ position: "relative" }}>
@@ -788,9 +788,9 @@ const MyStepper = ({
 								>
 									<MenuItem value="free">Free Event</MenuItem>
 									<MenuItem value="single">
-										{`Paid (Single Ticket Type Event)`}
+										{`Paid`}
 									</MenuItem>
-									<MenuItem value="multiple">{`Paid (Multiple Ticket Type Event)`}</MenuItem>
+									<MenuItem value="multiple">{`Multiple Ticket Categories`}</MenuItem>
 								</Select>
 							</FormControl>
 
@@ -846,7 +846,7 @@ const MyStepper = ({
 																}
 															/>
 														}
-														label="USD value"
+														label="Fix the value of your ticket to USD"
 													/>
 													<FormControlLabel
 														value="limited"
@@ -870,7 +870,7 @@ const MyStepper = ({
 																}
 															/>
 														}
-														label="PHNX value"
+														label="Lock users to ONLY purchase in PHNX"
 													/>
 												</RadioGroup>
 											</FormControl>
@@ -1592,7 +1592,6 @@ const MyStepper = ({
 												)}
 
 												<br />
-
 												{/* save button */}
 												<Button
 													color="primary"
@@ -1601,6 +1600,17 @@ const MyStepper = ({
 													className={
 														classes.addAnotherImageBtn
 													}
+													disabled={ticketCategories[
+														ticketIndex
+													].phnxPrice == "0.00000" || ticketCategories[
+														ticketIndex
+													].phnxPrice == "0" || ticketCategories[
+														ticketIndex
+													].dollarPrice == "0.00000" || ticketCategories[
+														ticketIndex
+													].dollarPrice == "0" || ticketCategories[
+														ticketIndex
+													].ticketName == ""}
 													onClick={() => {
 														handleSaveTicketCatogory(
 															ticketIndex

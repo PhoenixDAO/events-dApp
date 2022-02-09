@@ -32,6 +32,11 @@ import {
 	MenuItem,
 } from "@material-ui/core";
 import { getUserDetails } from "../../config/serverAPIs";
+import { GLOBAL_NETWORK_ID, GLOBAL_NETWORK_ID_2 } from "../../config/const.js";
+import {
+	PhoenixDAO_Mainnet_Token_Address,
+	PhoenixDAO_Testnet_Token_Address_2,
+} from "../../config/phoenixDAOcontract_testnet";
 import RichTextEditor from "react-rte";
 import { pricingFormatter } from "../../utils/pricingSuffix";
 import PriceSelectBox from "../common/PriceSelectBox";
@@ -107,13 +112,14 @@ const styles = (theme) => ({
 	eventinfo: {
 		fontSize: "22px",
 		fontWeight: "700",
-		wordBreak: "break-word",
+		// wordBreak: "break-word",
 	},
 	PhnxPrice: {
 		fontSize: "22px",
 		fontWeight: "700",
 		color: "#413AE2",
 		display: "flex",
+		width: 200,
 	},
 	categoryGrid: {
 		backgroundColor: "white",
@@ -183,7 +189,7 @@ const styles = (theme) => ({
 		marginTop: "-4px",
 	},
 	eventDetailsNoBorder: {
-		wordBreak: "break-word",
+		// wordBreak: "break-word",
 		border: "0px solid !important",
 	},
 	previewPadding: {
@@ -243,6 +249,26 @@ const styles = (theme) => ({
 			// minHeight:"100px",
 		},
 	},
+	eventBannerText:{
+    position: "absolute",
+    top: "0",
+    // paddingLeft: "15px",
+    // paddingTop: "10px",
+    // color: "#d3d3d48a",
+    textShadow: "0 0 8px #0d0d0dde",
+	background: "grey",
+    width: "100%",
+    height: "100%",
+    textAlign: "center",
+    borderRadius: "10px",
+    opacity: "0.2",
+    color: "white",
+    // padding: "90px",
+	display:"flex",
+    fontSize: "23px",
+	alignItems: "center",
+    placeContent: "center",
+	}
 });
 class EventPreviewPage extends Component {
 	constructor(props) {
@@ -252,9 +278,16 @@ class EventPreviewPage extends Component {
 			organizerDetails: "",
 			topic: "",
 			ticketIndex: 0,
-			selectedToken: this.props.tokensListContract
-				? this.props.tokensListContract[0]
-				: null,
+			// selectedToken: null,
+			selectedToken: {
+				displayName: "PhoenixDAO",
+				image: "https://assets.coingecko.com/coins/images/11523/small/Token_Icon.png?1618447147",
+				tokenAddress:
+					this.props.networkId == GLOBAL_NETWORK_ID
+						? PhoenixDAO_Mainnet_Token_Address
+						: PhoenixDAO_Testnet_Token_Address_2,
+				tokenName: "phoenixdao",
+			},
 			isPHNX: this.props.isPHNX ? this.props.isPHNX : null,
 			// tokenPrices: { phnx: "", eth: "", matic: "", usdt: "" },
 		};
@@ -262,75 +295,6 @@ class EventPreviewPage extends Component {
 		this.getOrganizerDetails = this.getOrganizerDetails.bind(this);
 		this._topicRemovedDashes = this._topicRemovedDashes.bind(this);
 	}
-
-	// GetPrices = async () => {
-	// 	console.log("resEthPrice.data.thereum.usd1");
-	// 	try {
-	// 		let resEthPrice = await GetEthPrice();
-	// 		if (resEthPrice) {
-	// 			// console.log('resEthPrice.data.thereum.usd', resEthPrice.data.ethereum.usd)
-	// 			this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					eth: resEthPrice.data.ethereum.usd,
-	// 				},
-	// 			});
-	// 		}
-	// 		let resPhnxPrice = await GetPhnxPrice();
-	// 		if (resPhnxPrice) {
-	// 			// console.log('resPhnxPrice.data.phoenixdao.usd', resPhnxPrice.data.phoenixdao.usd)
-	// 			this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					phnx: resPhnxPrice.data.phoenixdao.usd,
-	// 				},
-	// 			});
-	// 		}
-	// 		let resMaticPrice = await GetMaticPrice();
-	// 		if (resMaticPrice) {
-	// 			// console.log('resMaticPrice.data[`matic-network`].usd', resMaticPrice.data[`matic-network`].usd)
-	// 			this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					matic: resMaticPrice.data[`matic-network`].usd,
-	// 				},
-	// 			});
-	// 		}
-	// 		let resUsdtPrice = await GetUsdtPrice();
-	// 		if (resUsdtPrice) {
-	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-	// 			this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					usdt: resUsdtPrice.data.tether.usd,
-	// 				},
-	// 			});
-	// 		}
-	// 		let resWethPrice = await GetWethPrice();
-	// 		if (resWethPrice) {
-	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-	// 			this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					weth: resWethPrice.data.weth.usd,
-	// 				},
-	// 			});
-	// 		}
-	// 		let resUsdcPrice = await GetUsdcPrice();
-	// 		if (resUsdcPrice) {
-	// 			// console.log('resUsdtPrice.data.tether.usd', resUsdtPrice.data.tether.usd)
-	// 			this.setState({
-	// 				tokenPrices: {
-	// 					...this.state.tokenPrices,
-	// 					usdc: resUsdcPrice.data[`usd-coin`].usd,
-	// 				},
-	// 			});
-	// 		}
-	// 	} catch (e) {
-	// 		console.error("Err at GetPrices =>>", e);
-	// 	}
-	// };
-
 	_topicRemovedDashes() {
 		let rawTopic = this.props.eventTopic;
 		var topicRemovedDashes = rawTopic;
@@ -361,11 +325,27 @@ class EventPreviewPage extends Component {
 		}
 	}
 	priceCalculation = async (categoryIndex) => {
+		// console.log("thissssssssss", this.props.token);
+		// console.log("thissssssssss 11", this.props.token_price);
 		let event_data = this.props.fields;
 		if (this.props.isPHNX) {
-			let priceInPhnx = this.props.fields.phnxPrice
-				? this.props.fields.phnxPrice + "PHNX"
-				: "FREE";
+			// console.log("this.props.fields.phnxPrice", this.props.fields);
+			let priceInPhnx = 0;
+			if (this.props.fields.phnxPrice) {
+				// console.log("this.props.fields.phnxPrice 1");
+				priceInPhnx = this.props.fields.phnxPrice
+					? this.props.fields.phnxPrice // + "PHNX"
+					: "FREE";
+			} else if (typeof this.props.fields.ticketCategories) {
+				// console.log("this.props.fields.phnxPrice 2");
+				priceInPhnx =
+					this.props.fields.ticketCategories[
+						this.props.fields.ticketIndex
+					].phnxPrice;
+			} else {
+				priceInPhnx = "Free";
+				// console.log("this.props.fields.phnxPrice 3");
+			}
 			let priceInDollar = this.props.fields.dollarPrice
 				? "$" + this.props.fields.dollarPrice
 				: "";
@@ -383,42 +363,67 @@ class EventPreviewPage extends Component {
 				const TOKENS_LIST = this.props.tokensListContract;
 				TOKENS_LIST.map((v, i) => {
 					if (selectedTokenName == v.tokenName) {
-						if (v.tokenName == "weth" || v.tokenName == "ether") {
-							token_price =
-								this.props.fields.ticketCategories.map(
-									(price) => {
-										if (
-											price.dollarPrice / v.usdPrice >
-											0.1
-										) {
-											return (
-												price.dollarPrice / v.usdPrice
-											).toFixed(3);
-										} else {
-											return (
-												price.dollarPrice / v.usdPrice
-											);
-										}
-									}
-								);
-						} else {
+						// if (
+						// 	v.tokenName == "weth" ||
+						// 	v.tokenName == "ethereum"
+						// ) {
+						// 	token_price =
+						// 		this.props.fields.ticketCategories.map(
+						// 			(price) => {
+						// 				console.log(
+						// 					"price.dollarPrice / v.usdPrice",
+						// 					price.dollarPrice / v.usdPrice
+						// 				);
+						// 				if (
+						// 					price.dollarPrice / v.usdPrice >
+						// 					0.1
+						// 				) {
+						// 					return (
+						// 						price.dollarPrice / v.usdPrice
+						// 					).toFixed(3);
+						// 				}
+						// 				if (
+						// 					price.dollarPrice / v.usdPrice <
+						// 					0.0001
+						// 				) {
+						// 					// console.log(
+						// 					// 	"price.dollarPrice / Coming here",
+						// 					// 	(
+						// 					// 		price.dollarPrice /
+						// 					// 		v.usdPrice
+						// 					// 	).toFixed(6)
+						// 					// );
+						// 					return (
+						// 						price.dollarPrice / v.usdPrice
+						// 					).toFixed(6);
+						// 				} else {
+						// 					return (
+						// 						price.dollarPrice / v.usdPrice
+						// 					);
+						// 				}
+						// 			}
+						// 		);
+						// } else {
 							token_price =
 								this.props.fields.ticketCategories.map(
 									(price) => {
 										return (
 											price.dollarPrice / v.usdPrice
-										).toFixed(3);
+										);
 									}
 								);
-						}
+						// }
 					}
 				});
 			}
 			dollar_price = this.props.fields.dollarPrice;
 			// Dynamic function for price calculation Ends
-			let priceInPhnx = event_data.token
-				? token_price[categoryIndex] + "PHNX"
-				: "FREE";
+			let priceInPhnx =
+				// event_data.token
+				// 	?
+				token_price[categoryIndex];
+			// console.log("price.dollarPrice / priceInPhnx", priceInPhnx);
+			// : "FREE";
 			let priceInDollar = event_data.token ? "$" + dollar_price : "";
 			this.setState({
 				dollar_price: priceInDollar,
@@ -429,12 +434,12 @@ class EventPreviewPage extends Component {
 	};
 	handleCategoryChange = (event) => {
 		this.setState({ ticketIndex: event.target.value });
-		console.log("Event preview: ", event.target.value);
+		// console.log("Event preview: ", event.target.value);
 		this.priceCalculation(event.target.value);
 	};
 	handleSelectedTokenState = async (result) => {
-		console.log("ether_price ??", result);
-		console.log("hello");
+		// console.log("ether_price ??", result);
+		// console.log("hello");
 		this.setState({ selectedToken: result }, () => {
 			this.priceCalculation(this.state.ticketIndex);
 		});
@@ -504,9 +509,11 @@ class EventPreviewPage extends Component {
 													this.props.image1
 											  )
 									}")`,
+									position: "relative"
 								}}
 								className={classes.imageDiv}
 							>
+								<span className={classes.eventBannerText}>Event Banner</span>
 								{/* <img
 										className="card-img-top event-image"
 										src={image}
@@ -571,92 +578,159 @@ class EventPreviewPage extends Component {
 										/> */}
 										TICKET PRICE
 									</p>
-									{this.props.ticketCategories.length > 1 && (
-										<FormControl
-											variant="outlined"
-											className={classes.ticketSelect}
-										>
-											<Select
-												// native
-												value={this.state.ticketIndex}
-												onChange={
-													this.handleCategoryChange
-												}
-												inputProps={{
-													name: "age",
-													id: "outlined-age-native-simple",
-												}}
-												MenuProps={{
-													classes: {
-														paper: classes.menuPaper,
-													},
-													getContentAnchorEl: null,
-													anchorOrigin: {
-														vertical: "bottom",
-														horizontal: "left",
-													},
-												}}
-												className={classes.selectInput}
-											>
-												{this.props.ticketCategories
-													.length > 0 &&
-													this.props.ticketCategories.map(
-														(category, i) => (
-															<MenuItem
-																value={i}
-																style={{
-																	fontFamily:
-																		"'Aeonik', sans-serif",
-																	maxWidth:
-																		"170px",
-																}}
-															>
-																<span
-																	className={
-																		classes.selectWidth
-																	}
-																>
-																	{
-																		category.ticketName
-																	}
-																</span>
-															</MenuItem>
-														)
-													)}
-											</Select>
-										</FormControl>
+									{this.state.token_price && (
+										this.state.token_price != "--" &&
+										this.state.isPHNX && (
+											<span className={classes.PhnxPrice}>
+												<img
+													style={{ marginTop: 8 }}
+													src={
+														"/images/phoenixdao.svg"
+													}
+													className="event_price-image"
+													alt="Event Price"
+												/>
+												{pricingFormatter(this.state.token_price,"PHNX", this.state.isPHNX)}
+											</span>
+										)
 									)}
+									{/* {this.state.isPHNX && (
+										<p className={classes.ticketPrice}>
+											<img
+												src={"/images/phoenixdao.svg"}
+												className="event_price-image"
+												alt="Event Price"
+											/>
+											TICKET PRICE
+										</p>
+									)} */}
+									{!this.state.isPHNX &&
+										this.props.ticketCategories.length >
+											1 && (
+											<FormControl
+												variant="outlined"
+												className={classes.ticketSelect}
+											>
+												<Select
+													// native
+													value={
+														this.state.ticketIndex
+													}
+													onChange={
+														this
+															.handleCategoryChange
+													}
+													inputProps={{
+														name: "age",
+														id: "outlined-age-native-simple",
+													}}
+													MenuProps={{
+														classes: {
+															paper: classes.menuPaper,
+														},
+														getContentAnchorEl:
+															null,
+														anchorOrigin: {
+															vertical: "bottom",
+															horizontal: "left",
+														},
+													}}
+													className={
+														classes.selectInput
+													}
+												>
+													{this.props.ticketCategories
+														.length > 0 &&
+														this.props.ticketCategories.map(
+															(category, i) => (
+																<MenuItem
+																	value={i}
+																	style={{
+																		fontFamily:
+																			"'Aeonik', sans-serif",
+																		maxWidth:
+																			"170px",
+																	}}
+																>
+																	<span
+																		className={
+																			classes.selectWidth
+																		}
+																	>
+																		{
+																			category.ticketName
+																		}
+																	</span>
+																</MenuItem>
+															)
+														)}
+												</Select>
+											</FormControl>
+										)}
 
 									<div className={classes.eventinfo}>
 										<span className={classes.PhnxPrice}>
-											{!this.props.token ? (
-												"Free"
-											) : this.props.ticketCategories
-													.length > 0 ? (
-												<PriceSelectBox
-													tokensListContract={
-														this.props
-															.tokensListContract
-													}
-													selectedToken={
-														this.state.selectedToken
-													}
-													setSelectedToken={
-														this
-															.handleSelectedTokenState
-													}
-													token="phnx"
-													value={pricingFormatter(
-														this.state.token_price,
-														"PHNX"
-													)}
-													isEventPage={true}
-												/>
-											) : (
-												""
-											)}
+											{/* {console.log(
+												"this.state.dollar_priceeee",
+												this.props.ticketCategories[
+													this.state.ticketIndex
+												]["dollarPrice"]
+											)} */}
+											{this.props.ticketCategories[
+												this.state.ticketIndex
+											]["dollarPrice"] > 0
+												? !this.state.isPHNX &&
+												  (this.props.ticketCategories
+														.length > 0 ? (
+														<PriceSelectBox
+															tokensListContract={
+																this.props
+																	.tokensListContract
+															}
+															selectedToken={
+																this.state
+																	.selectedToken
+															}
+															setSelectedToken={
+																this
+																	.handleSelectedTokenState
+															}
+															token="phnx"
+															value={
+																this
+																			.state
+																			.token_price
+																			? pricingFormatter(
+																					this
+																						.state
+																						.token_price,
+																					"PHNX",
+																					this
+																						.state
+																						.isPHNX ||
+																						(this
+																							.state
+																							.selectedToken &&
+																							this
+																								.state
+																								.selectedToken
+																								.tokenName ==
+																								"phoenixdao")
+																			  )
+																			: `--`
+															}
+															isEventPage={true}
+														/>
+												  ) : (
+														""
+												  ))
+												: "Free"}
 											{/* PHNX */}
 										</span>
+										{/* {console.log(
+											"this.state.token_price---",
+											this.state.token_price
+										)} */}
 										<div
 											style={{
 												color: "#56555D",
@@ -664,8 +738,11 @@ class EventPreviewPage extends Component {
 											}}
 										>
 											{/* $ */}
-											{this.props.ticketCategories
-												.length > 0
+											{this.props.ticketCategories[
+												this.state.ticketIndex
+											]["dollarPrice"] > 0 &&
+											this.props.ticketCategories.length >
+												0
 												? pricingFormatter(
 														this.props
 															.ticketCategories[
@@ -869,10 +946,6 @@ class EventPreviewPage extends Component {
 		this._topicRemovedDashes();
 		this.priceCalculation(0);
 		// this.GetPrices();
-		console.log(
-			"This.props.tokensListContract EventPreviewPage",
-			this.props.tokensListContract
-		);
 	}
 }
 

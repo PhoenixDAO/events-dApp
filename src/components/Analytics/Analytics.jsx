@@ -356,7 +356,7 @@ const Analytics = (props, context) => {
 										event.eventRevenueInPhnx /
 										1000000000000000000
 									).toFixed(3) + " PHNX",
-									"PHNX"
+									"PHNX",true
 							  )
 							): ((
 								event.eventRevenueInDollar /
@@ -367,7 +367,7 @@ const Analytics = (props, context) => {
 											event.eventRevenueInDollar /
 											1000000000000000000
 										).toFixed(3),
-									"$"
+									"$",true
 							  ))}
 					</Grid>
 				</Grid>
@@ -383,6 +383,7 @@ const Analytics = (props, context) => {
 		settimeLabel("DATE");
 		let newDataObj = {};
 		const timeDataArr = data;
+        // console.log("🚀 ~ file: Analytics.jsx", timeDataArr)
 		for (let i = 0; i < timeDataArr.length; i++) {
 			if (newDataObj[timeDataArr[i].startTimeStamp]) {
 				const soldTickets = Number(
@@ -405,6 +406,7 @@ const Analytics = (props, context) => {
 						totalPhnxRevenue +
 						Number(timeDataArr[i].totalPhnxRevenue),
 				};
+                // console.log("🚀 ~ file: Analytics.jsx", newDataObj[timeDataArr[i].startTimeStamp])
 			} else {
 				newDataObj[timeDataArr[i].startTimeStamp] = timeDataArr[i];
 			}

@@ -4,12 +4,13 @@ import PropTypes from "prop-types";
 import {
 	PhoenixDAO_Testnet_Token_ABI,
 	PhoenixDAO_Mainnet_Token_Address,
+	PhoenixDAO_Testnet_Token_Address_2,
 } from "../config/phoenixDAOcontract_testnet.js";
 import Web3 from "web3";
 import ipfs from "../utils/ipfs";
 import { urlFormatter } from "../utils/urlFormatter";
 
-import { API_URL, REPORT_EVENT, GET_USER_DETAIL } from "../config/const";
+import { API_URL, REPORT_EVENT, GET_USER_DETAIL, GLOBAL_NETWORK_ID } from "../config/const";
 import axios from "axios";
 import Loading from "./Loading";
 // import eventTopics from "../config/topics.json";
@@ -46,7 +47,7 @@ class Event extends Component {
 				contractName: "PHNX",
 				web3Contract: new context.drizzle.web3.eth.Contract(
 					PhoenixDAO_Testnet_Token_ABI,
-					PhoenixDAO_Mainnet_Token_Address
+					props.networkId == GLOBAL_NETWORK_ID?PhoenixDAO_Mainnet_Token_Address:PhoenixDAO_Testnet_Token_Address_2
 				),
 			};
 			context.drizzle.addContract(contractConfig);
@@ -245,7 +246,7 @@ class Event extends Component {
 			address: this.props.accounts[0],
 			networkId: this.props.networkId,
 		});
-		console.log("res of getUserDetails =>>>>>", res);
+		// console.log("res of getUserDetails =>>>>>", res);
 		this.setState({ userDetail: res });
 	};
 	handleClickOpen = () => {
@@ -765,7 +766,7 @@ class Event extends Component {
 							eventDescription={this.state.eventDescription}
 							eventLocation={this.state.eventLocation}
 							selectedTab={this.props.selectedTab}
-							tokenPrices={this.state.tokenPrices}
+							// tokenPrices={this.state.tokenPrices}
 							userDetails={this.state.userDetail}
 							tokensListContract={this.props.tokensListContract}
 						/>
@@ -788,10 +789,10 @@ class Event extends Component {
 	}
 
 	async componentDidMount() {
-		console.log(
-			"tokenListContract at Event.jsx",
-			this.props.tokensListContract
-		);
+		// console.log(
+		// 	"tokenListContract at Event.jsx",
+		// 	this.props.tokensListContract
+		// );
 		// this._isMounted = true;
 		// await this.GetPrices();
 		await this.handleGetPrices();

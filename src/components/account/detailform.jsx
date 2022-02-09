@@ -11,7 +11,12 @@ import PropTypes from "prop-types";
 import IdentityForm from "./identityform";
 import Tooltip from "@material-ui/core/Tooltip";
 import ipfs from "../../utils/ipfs";
-import { CircularProgress } from "@material-ui/core";
+import {
+	CircularProgress,
+	MenuItem,
+	Select,
+	withStyles,
+} from "@material-ui/core";
 import Web3 from "web3";
 import {
 	GLOBAL_NETWORK_ID,
@@ -22,6 +27,23 @@ import {
 } from "../../config/const";
 
 // import { useHistory } from "react-router-dom";
+const useStyles = (theme) => ({
+	detailSelect: {
+		borderRadius: "5px",
+		border: "1px solid #e4e4e4",
+		width: "100%",
+		paddingTop: "5px",
+		paddingBottom: "5px",
+		// paddingLeft: "10px",
+		fontSize: "18px",
+		"& .MuiSelect-select:focus": {
+			background: "#fff",
+		},
+		"& .MuiSelect-select":{
+			paddingLeft:"10px"
+		}
+	},
+});
 const DetailForm = (props) => {
 	const [open, setOpen] = useState(false);
 	const [organizer, setOrganizer] = useState("");
@@ -121,7 +143,7 @@ const DetailForm = (props) => {
 				web3 = new Web3(new Web3.providers.HttpProvider(infura));
 			}
 			const networkId = await web3.eth.net.getId();
-			console.log("This called getNetworkId", networkId);
+			// console.log("This called getNetworkId", networkId);
 			if (networkId === GLOBAL_NETWORK_ID) {
 				return networkId;
 			} else if (networkId === GLOBAL_NETWORK_ID_2) {
@@ -269,7 +291,7 @@ const DetailForm = (props) => {
 				}
 			}
 		} else {
-			console.log("User detailss ==>>>> ", detail);
+			// console.log("User detailss ==>>>> ", detail);
 			props.setUserDetails(detail.result);
 			props.history.push("/");
 			// window.location.reload();
@@ -284,10 +306,10 @@ const DetailForm = (props) => {
 			props.userDetails.result.result.userHldr &&
 			props.tokensListContract
 		) {
-			console.log(
-				"UserDetails ,=>>",
-				props.userDetails.result.result.userHldr.alternateCurrency
-			);
+			// console.log(
+			// 	"UserDetails ,=>>",
+			// 	props.userDetails.result.result.userHldr.alternateCurrency
+			// );
 			let defaultCurr =
 				props.userDetails.result.result.userHldr.alternateCurrency;
 			if (typeof defaultCurr == "string") {
@@ -316,7 +338,7 @@ const DetailForm = (props) => {
 			}
 		}
 	}, [props.userDetails, props.tokensListContract]);
-
+	const { classes } = props;
 	return (
 		<div className="dtl-hldr">
 			<div className="acc-basic-info">
@@ -379,8 +401,8 @@ const DetailForm = (props) => {
 					<div className="acc-form-prt">
 						<div className="frm-single">
 							<p className="acc-inpt-heading">DEFAULT CURRENCY</p>
-							<select
-								className="acc-inpt acc-select"
+
+							<Select
 								onChange={(e) => {
 									setAlternateCurrency({
 										tokenName: e.target.value,
@@ -391,27 +413,45 @@ const DetailForm = (props) => {
 									alternateCurrency &&
 									alternateCurrency.tokenName
 								}
+								labelId="demo-simple-select-outlined-label"
+								id="demo-simple-select-outlined"
+								fullWidth
+								displayEmpty
+								disableUnderline 
+								className={classes.detailSelect}
+								MenuProps={{
+									classes: {
+										paper: { maxHeight: "200px" },
+									},
+									getContentAnchorEl: null,
+									anchorOrigin: {
+										vertical: "bottom",
+										horizontal: "left",
+									},
+								}}
 							>
 								{props.tokensListContract &&
 									props.tokensListContract.map((v, i) => {
 										return (
-											<option value={v.tokenName}>
-												{v.tokenName}
-											</option>
+											<MenuItem
+												value={v.tokenName}
+												style={{
+													fontFamily:
+														"'Aeonik', sans-serif",
+												}}
+											>
+												<img
+													src={v.image}
+													style={{
+														height: "20px",
+														marginRight: 10,
+													}}
+												/>
+												{v.displayName}
+											</MenuItem>
 										);
 									})}
-								{/* {[
-									...RinkbeyNetworkArray[
-										props.networkId == 137 ? 0 : 1
-									].networks,
-								].map((data) => {
-									return (
-										<option value={data.tokenName}>
-											{data.tokenName}
-										</option>
-									);
-								})} */}
-							</select>
+							</Select>
 						</div>
 					</div>
 					{/* <p>{alternateCurrency} {props.networkId}</p> */}
@@ -494,6 +534,6 @@ const mapStateToProps = (state) => {
 };
 
 const AppContainer = drizzleConnect(DetailForm, mapStateToProps);
-export default AppContainer;
+export default withStyles(useStyles)(AppContainer);
 
 // export default DetailForm;

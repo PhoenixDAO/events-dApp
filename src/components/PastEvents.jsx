@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 // import Carousel from "react-bootstrap/Carousel";
 import axios from "axios";
-import { API_URL, REPORT_EVENT,graphURL } from "../config/const";
+import { API_URL, REPORT_EVENT, graphURL } from "../config/const";
 // Import dApp Components
 // import Loading from "./Loading";
 import PhoenixDAOLoader from "./PhoenixDAOLoader";
@@ -35,9 +35,8 @@ class PastEvents extends Component {
 			disabledBuying: false,
 		};
 		this.contracts = context.drizzle.contracts;
-		this.eventCount = this.contracts[
-			"DaoEvents"
-		].methods.getEventsCount.cacheCall();
+		this.eventCount =
+			this.contracts["DaoEvents"].methods.getEventsCount.cacheCall();
 		this.perPage = 6;
 		this.topicClick = this.topicClick.bind(this);
 		this.myRef = React.createRef();
@@ -67,42 +66,48 @@ class PastEvents extends Component {
 
 	//Load Blockchain Data
 	async loadBlockchain() {
+		// GRAPH BLOCK //
+		// console.log("GraphQL query before call",Date.now())
 
-	// GRAPH BLOCK //
-	// console.log("GraphQL query before call",Date.now())
-
-	await axios({
-		url: graphURL,
-		method: 'post',
-		data: {
-		query: `
+		await axios({
+			url: graphURL,
+			method: "post",
+			data: {
+				query: `
 		{
 			eventsRemoveds {
 			id
 			eventId
 			}
 		}
-		`
-		}
-	}).then((graphDeletedEvents)=>{
-		// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
+		`,
+			},
+		})
+			.then((graphDeletedEvents) => {
+				// console.log("GraphQL query all deleted events",graphDeletedEvents.data.data)
 
-		if(!graphDeletedEvents.data || !graphDeletedEvents.data.data === undefined){
-			this.setState({ Deleted_Events: [] });
-		}else{
-			this.setState({ Deleted_Events: graphDeletedEvents.data.data.eventsRemoveds });
-		}
-	}).catch((err)=>{
-		console.error(err);
-		this.setState({ Deleted_Events: [] });
-	})
+				if (
+					!graphDeletedEvents.data ||
+					!graphDeletedEvents.data.data === undefined
+				) {
+					this.setState({ Deleted_Events: [] });
+				} else {
+					this.setState({
+						Deleted_Events:
+							graphDeletedEvents.data.data.eventsRemoveds,
+					});
+				}
+			})
+			.catch((err) => {
+				console.error(err);
+				this.setState({ Deleted_Events: [] });
+			});
 
-
-	await axios({
-	url: graphURL,
-	method: 'post',
-	data: {
-	query: `
+		await axios({
+			url: graphURL,
+			method: "post",
+			data: {
+				query: `
 	{
 		events(first: 1000) {
 		id
@@ -120,42 +125,41 @@ class PastEvents extends Component {
 		revenueOfEvent
 		}
 	}
-	`
-	}
-	}).then((graphEvents)=>{
-	// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
+	`,
+			},
+		})
+			.then((graphEvents) => {
+				// console.log("GraphQL query response",Date.now(),graphEvents.data.data.events)
 
-	if(!graphEvents.data || graphEvents.data.data === undefined){
-		// console.log("GraphQL query -- graphEvents undefined")
-		this.setState({ past_events: [] ,past_events_copy: [],
-			past_length: 0
-			});
-	}else{
-		if (this._isMounted) {
-			const dateTime = Date.now();
-			const dateNow = Math.floor(dateTime / 1000);
-			this.setState({ loading: true });
-		
-			let newsort = graphEvents.data.data.events
-				.concat()
-				.sort((a, b) => b.blockNumber - a.blockNumber)
-				.filter(
-					(pastEvents) =>
-					pastEvents.time < dateNow
-				)
-					// console.log("GraphQL query newsort",newsort)
-			
+				if (!graphEvents.data || graphEvents.data.data === undefined) {
+					// console.log("GraphQL query -- graphEvents undefined")
 					this.setState({
-						past_events: newsort,
-						past_events_copy: newsort,
-						past_length: newsort.length,
+						past_events: [],
+						past_events_copy: [],
+						past_length: 0,
 					});
-			this.setState({ loading: false });
-		}
+				} else {
+					if (this._isMounted) {
+						const dateTime = Date.now();
+						const dateNow = Math.floor(dateTime / 1000);
+						this.setState({ loading: true });
 
-	}
+						let newsort = graphEvents.data.data.events
+							.concat()
+							.sort((a, b) => b.blockNumber - a.blockNumber)
+							.filter((pastEvents) => pastEvents.time < dateNow);
+						// console.log("GraphQL query newsort",newsort)
 
-	}).catch((err) => console.error(err))
+						this.setState({
+							past_events: newsort,
+							past_events_copy: newsort,
+							past_length: newsort.length,
+						});
+						this.setState({ loading: false });
+					}
+				}
+			})
+			.catch((err) => console.error(err));
 	}
 
 	//Search Past Events By Name
@@ -163,7 +167,10 @@ class PastEvents extends Component {
 		let { value } = e.target;
 		this.setState({ value }, () => {
 			try {
-				if (this.state.value !== "" && this.state.past_events_copy.length!==0) {
+				if (
+					this.state.value !== "" &&
+					this.state.past_events_copy.length !== 0
+				) {
 					var filteredEvents = this.state.past_events_copy;
 					filteredEvents = filteredEvents.filter((events) => {
 						return (
@@ -197,17 +204,11 @@ class PastEvents extends Component {
 			if (this.state.isOldestFirst) {
 				newPolls = past_events
 					.concat()
-					.sort(
-						(a, b) =>
-							a.eventId - b.eventId
-					);
+					.sort((a, b) => a.eventId - b.eventId);
 			} else {
 				newPolls = past_events
 					.concat()
-					.sort(
-						(a, b) =>
-							b.eventId - a.eventId
-					);
+					.sort((a, b) => b.eventId - a.eventId);
 			}
 
 			this.setState({
@@ -255,8 +256,8 @@ class PastEvents extends Component {
 					if (!skip) {
 						for (let j = 0; j < this.state.hideEvent.length; j++) {
 							if (
-								this.state.past_events[i]
-									.eventId === this.state.hideEvent[j].id
+								this.state.past_events[i].eventId ===
+								this.state.hideEvent[j].id
 							) {
 								skip = true;
 							}
@@ -512,15 +513,14 @@ class PastEvents extends Component {
 	filterHideEvent = async () => {
 		try {
 			const networkId = await getNetworkId();
-            const get = await axios.get(
-                `${API_URL}${REPORT_EVENT}/${networkId}`
-            );
+			const get = await axios.get(
+				`${API_URL}${REPORT_EVENT}/${networkId}`
+			);
 			this.setState({
 				hideEvent: get.data.result,
 			});
 			return;
-		} catch (error) {
-		}
+		} catch (error) {}
 	};
 
 	componentDidMount() {

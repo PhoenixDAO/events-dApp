@@ -262,7 +262,7 @@ class Ticket extends Component {
 			);
 			const openEvents = new web3.eth.Contract(
 				Open_events_ABI,
-				Open_events_Address
+				this.props.networkId == GLOBAL_NETWORK_ID?Open_events_Address:Open_events_Address_2,
 			);
 			const blockChainEvent= await openEvents.methods.events(this.props.contracts["DaoEvents"].getTicket[this.ticket]
 			.value[0]).call()

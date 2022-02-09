@@ -6,6 +6,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import PhnxLogo from "./Images/phnxPriceLogo.svg";
 import { ShoppingCartOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { pricingFormatter } from "../utils/pricingSuffix";
@@ -184,7 +185,7 @@ const useStyles = makeStyles((theme) => ({
 		fontSize: "22px",
 		marginTop: "-10px",
 		fontWeight: "700",
-		wordBreak: "break-word",
+		// wordBreak: "break-word",
 	},
 	PhnxPrice: {
 		fontSize: "16px",
@@ -248,7 +249,7 @@ const ApprovalModal = (props) => {
 	const classes = useStyles();
 	const [open, setOpen] = useState(props.open);
 	useEffect(() => {
-		console.log("props.selectedToken.image", props.selectedToken);
+		// console.log("props.selectedToken.image", props.selectedToken);
 	}, [props]);
 	return (
 		<Dialog
@@ -371,24 +372,32 @@ const ApprovalModal = (props) => {
 								className={classes.gridPadding}
 							>
 								<div className={classes.priceAlignment}>
-									{" "}
-									<img
-										src={
-											props.selectedToken &&
-											props.selectedToken.image
-										}
-										className={classes.logo}
-										alt="token logo"
-									/>
+									{/* {console.log(
+										"Dollar priceAtBuyTicket",
+										props.dollar_price
+									)} */}
+									{props.dollar_price && (
+										<img
+											src={
+												props.isPHNX
+													? PhnxLogo
+													: props.selectedToken &&
+													  props.selectedToken.image
+											}
+											className={classes.logo}
+											alt="token logo"
+										/>
+									)}
 									<div className={classes.eventinfo}>
 										<span
 											className={classes.PhnxPrice}
 											title={props.phnx_price}
 										>
-											{pricingFormatter(
+											{props.phnx_price}
+											{/* {pricingFormatter(
 												props.phnx_price,
 												"PHNX"
-											)}
+											)} */}
 										</span>
 										<div
 											style={{
@@ -397,11 +406,14 @@ const ApprovalModal = (props) => {
 											}}
 											title={props.dollar_price}
 										>
-											{/* {dollar_price} */}
-											{pricingFormatter(
+											{props.dollar_price &&
+												props.dollar_price
+													.toString()
+													.slice(0, 6)}
+											{/* {pricingFormatter(
 												props.dollar_price,
 												"$"
-											)}
+											)} */}
 										</div>
 									</div>
 								</div>

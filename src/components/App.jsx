@@ -32,9 +32,6 @@ import PropTypes from "prop-types";
 import Snackbar1 from "./Snackbar";
 import Snackbar2 from "./Snackbar2";
 import Snackbar from "@material-ui/core/Snackbar";
-
-// Hiii
-
 import {
 	INFURA_URL,
 	INFURA_WEB_URL,
@@ -72,7 +69,7 @@ import BuyTicket from "./common/BuyTicket";
 import SkeletonEvent from "./common/SkeletonEvent";
 import IdentityForm from "./common/AvatarSelector/identityform";
 import DialogueBox from "./common/DialogueBox";
-import { GetTokenPrices2 } from "../services/Services";
+import { CheckTokenAllowance, GetTokenPrices2 } from "../services/Services";
 
 let ethereum = window.ethereum;
 let web3 = window.web3;
@@ -130,6 +127,7 @@ class App extends Component {
 			isDesktop: null,
 			networkId: null,
 			tokensListContract: null,
+			selectedToken:null,
 		};
 		this.myRef = React.createRef();
 
@@ -158,7 +156,7 @@ class App extends Component {
 			phoenixAddress = PhoenixDAO_Testnet_Token_Address_2;
 		} else {
 			this.setState({ openNetworkSnackbar: true });
-			console.log("Wrong network address | not supported");
+			// console.log("Wrong network address | not supported");
 		}
 		return { eventAddress, phoenixAddress };
 	}
@@ -189,7 +187,7 @@ class App extends Component {
 			}
 			return null;
 		} catch (err) {
-			console.log("err", err);
+			// console.log("err", err);
 		}
 	}
 	async initializeContract() {
@@ -225,9 +223,15 @@ class App extends Component {
 	async componentWillMount() {
 		await this.initializeContract();
 	}
-	async componentDidMount() {
-		let res = await GetTokenPrices2();
+
+	handleSetTokenListContract = async () => {
+		let res = await GetTokenPrices2(await this.getNetworkId());
 		this.setState({ tokensListContract: res });
+	};
+	selectDefaultToken = async () =>{
+
+	}
+	async componentDidMount() {
 		if (window.ethereum && window.ethereum.isMetaMask) {
 			web3 = new Web3(ethereum);
 			const accounts = await web3.eth.getAccounts();
@@ -235,6 +239,10 @@ class App extends Component {
 				localStorage.removeItem("account");
 			}
 		}
+		await this.handleSetTokenListContract();
+		await this.selectDefaultToken();
+		// let res = await GetTokenPrices2(await this.getNetworkId());
+		// await this.setState({ tokensListContract: res });
 		await this.loadBlockchainData();
 		let hasTouchScreen = false;
 		if ("maxTouchPoints" in navigator) {
@@ -259,6 +267,7 @@ class App extends Component {
 		} else {
 			this.setState({ isDesktop: true });
 		}
+		console.clear();
 	}
 
 	componentWillUpdate() {
@@ -292,6 +301,40 @@ class App extends Component {
 
 	handleClose2 = () => {
 		this.setState({ open2: false, purchased: false });
+	};
+
+	handleGetUserDetails = async () => {
+		const accounts = await web3.eth.getAccounts();
+		this.setState({ account: accounts[0] });
+		const networkId = await this.getNetworkId();
+		if (accounts[0] && networkId) {
+			const token = localStorage.getItem("AUTH_TOKEN");
+			if (token) {
+				const userChecker = await getUserDetails({
+					address: accounts[0],
+					networkId: networkId,
+				});
+				if (!userChecker.error) {
+					this.setState({
+						userDetails: userChecker,
+						open: userChecker.result.result.userHldr.firstTime,
+					});
+					return;
+				}
+			}
+			const userDetails = await this.authMetaMask();
+			if (!userDetails.error) {
+				this.setState({
+					userDetails: userDetails,
+					open: userDetails.result.result.userHldr.firstTime,
+				});
+				localStorage.removeItem("AUTH_TOKEN");
+				localStorage.setItem(
+					"AUTH_TOKEN",
+					userDetails.result.result.token
+				);
+			}
+		}
 	};
 
 	//Get Account
@@ -341,37 +384,39 @@ class App extends Component {
 				});
 				const accounts = await web3.eth.getAccounts();
 
-				this.setState({ account: accounts[0] });
-				const networkId = await this.getNetworkId();
-				if (accounts[0] && networkId) {
-					const token = localStorage.getItem("AUTH_TOKEN");
-					if (token) {
-						const userChecker = await getUserDetails({
-							address: accounts[0],
-							networkId: networkId,
-						});
-						if (!userChecker.error) {
-							this.setState({
-								userDetails: userChecker,
-								open: userChecker.result.result.userHldr
-									.firstTime,
-							});
-							return;
-						}
-					}
-					const userDetails = await this.authMetaMask();
-					if (!userDetails.error) {
-						this.setState({
-							userDetails: userDetails,
-							open: userDetails.result.result.userHldr.firstTime,
-						});
-						localStorage.removeItem("AUTH_TOKEN");
-						localStorage.setItem(
-							"AUTH_TOKEN",
-							userDetails.result.result.token
-						);
-					}
-				}
+				await this.handleGetUserDetails(accounts);
+
+				// this.setState({ account: accounts[0] });
+				// const networkId = await this.getNetworkId();
+				// if (accounts[0] && networkId) {
+				// 	const token = localStorage.getItem("AUTH_TOKEN");
+				// 	if (token) {
+				// 		const userChecker = await getUserDetails({
+				// 			address: accounts[0],
+				// 			networkId: networkId,
+				// 		});
+				// 		if (!userChecker.error) {
+				// 			this.setState({
+				// 				userDetails: userChecker,
+				// 				open: userChecker.result.result.userHldr
+				// 					.firstTime,
+				// 			});
+				// 			return;
+				// 		}
+				// 	}
+				// 	const userDetails = await this.authMetaMask();
+				// 	if (!userDetails.error) {
+				// 		this.setState({
+				// 			userDetails: userDetails,
+				// 			open: userDetails.result.result.userHldr.firstTime,
+				// 		});
+				// 		localStorage.removeItem("AUTH_TOKEN");
+				// 		localStorage.setItem(
+				// 			"AUTH_TOKEN",
+				// 			userDetails.result.result.token
+				// 		);
+				// 	}
+				// }
 			}
 		} catch (err) {
 			// console.log(err);
@@ -450,7 +495,8 @@ class App extends Component {
 		dollar_price,
 		time,
 		date,
-		isEthereum
+		isEthereum,
+		selectedToken
 	) => {
 		let chainId = await this.getNetworkId();
 		if (
@@ -474,7 +520,7 @@ class App extends Component {
 					time,
 					date2: date,
 				},
-				() => this.buy(isEthereum, phnx_price)
+				() => this.buy(isEthereum, phnx_price,selectedToken)
 			);
 		} else {
 			toast(
@@ -535,6 +581,7 @@ class App extends Component {
 				})
 				.on("error", (error) => {
 					if (error !== null) {
+						if (error.message.includes("not mined within 50 blocks")) {
 						txerror = error;
 						toast(
 							<Notify
@@ -553,6 +600,7 @@ class App extends Component {
 							purchased: false,
 						});
 					}
+					}
 				});
 			this.setState({ afterApprove: false });
 			this.setState({ disabledStatus: false });
@@ -570,11 +618,14 @@ class App extends Component {
 	};
 
 	//Buy Function, Notify listen for transaction status.
-	buy = async (isEthereum, phnx_price) => {
+	buy = async (isEthereum, phnx_price, selectedToken) => {
 		let txreceipt = "";
 		let txconfirmed = "";
 		let txerror = "";
-		if ((await this.allowance()) == 0) {
+		if ((await CheckTokenAllowance(
+			this.props.accounts[0],
+			selectedToken, this.props.networkId
+		)) == 0 && !isEthereum) {
 			this.state.approve
 				.send({ from: this.state.account })
 				.on("transactionHash", (hash) => {
@@ -650,7 +701,15 @@ class App extends Component {
 				// .send({ from: this.state.account})
 				.send(
 					isEthereum
-						? { from: this.state.account, value: phnx_price }
+						? {
+								from: this.state.account,
+								value: await Web3.utils.toWei(
+									Number(phnx_price.split("PHNX")[0] * 1.045)
+										.toFixed(10)
+										.toString(),
+									"ether"
+								),
+						  }
 						: { from: this.state.account, value: 0 }
 				)
 				.on("transactionHash", (hash) => {
@@ -709,6 +768,7 @@ class App extends Component {
 				// })
 				.on("error", (error) => {
 					if (error !== null) {
+						if (error.message.includes("not mined within 50 blocks")) {
 						txerror = error;
 						toast(
 							<Notify
@@ -722,6 +782,7 @@ class App extends Component {
 								pauseOnHover: true,
 							}
 						);
+						}
 					}
 					this.setState({ disabledStatus: false, purchased: false });
 				});
@@ -956,7 +1017,7 @@ class App extends Component {
 			});
 			return userData;
 		} catch (err) {
-			console.log(err);
+			// console.log(err);
 		}
 	};
 
@@ -984,7 +1045,7 @@ class App extends Component {
 			// console.log('decryption sign ==>>', decrypt )
 			return sign;
 		} catch (err) {
-			console.log("Err at handleSignMessage", err);
+			// console.log("Err at handleSignMessage", err);
 		}
 	};
 
@@ -1064,22 +1125,36 @@ class App extends Component {
 						<Route
 							exact
 							path="/event/:title/:id"
-							render={(props) => (
-								<EventPage
-									{...props}
-									inquire={this.inquireBuy}
-									disabledStatus={this.state.disabledStatus}
-									toggleDisabling={this.toggleDisabling}
-									eventsContract={this.state.eventsContract}
-									phnxContract={this.state.phnxContract}
-									purchased={this.state.purchased}
-									togglePurchase={this.togglePurchase}
-									eventsAddress={this.state.eventsAddress}
-									tokensListContract={
-										this.state.tokensListContract
-									}
-								/>
-							)}
+							render={(props) =>
+								this.state.tokensListContract && (
+									<EventPage
+										{...props}
+										inquire={this.inquireBuy}
+										disabledStatus={
+											this.state.disabledStatus
+										}
+										toggleDisabling={this.toggleDisabling}
+										eventsContract={
+											this.state.eventsContract
+										}
+										phnxContract={this.state.phnxContract}
+										purchased={this.state.purchased}
+										togglePurchase={this.togglePurchase}
+										eventsAddress={this.state.eventsAddress}
+										userDetails={this.state.userDetails}
+										handleGetUserDetails={
+											this.handleGetUserDetails
+										}
+										handleSetTokenListContract={
+											this.handleSetTokenListContract
+										}
+										tokensListContract={
+											// this.state.tokensListContract &&
+											this.state.tokensListContract
+										}
+									/>
+								)
+							}
 						/>
 						<Route
 							exact
@@ -1103,6 +1178,7 @@ class App extends Component {
 									{...props}
 									disabledStatus={this.state.disabledStatus}
 									inquire={this.inquireBuy}
+									userDetails={this.state.userDetails}
 									tokensListContract={
 										this.state.tokensListContract
 									}
@@ -1396,6 +1472,7 @@ class App extends Component {
 								{...props}
 								executeScroll={this.executeScroll}
 								eventsContract={this.state.eventsContract}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1417,6 +1494,7 @@ class App extends Component {
 								error={this.state.error}
 								account={this.state.account}
 								eventsContract={this.state.eventsContract}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1436,6 +1514,7 @@ class App extends Component {
 								userDetails={this.state.userDetails}
 								setUserDetails={this.setUserDetails}
 								handleSignMessage={this.handleSignMessage}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1451,6 +1530,7 @@ class App extends Component {
 								executeScroll={this.executeScroll}
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1460,22 +1540,32 @@ class App extends Component {
 					<Route
 						exact
 						path="/event/:title/:id"
-						render={(props) => (
-							<EventPage
-								{...props}
-								inquire={this.inquireBuy}
-								disabledStatus={this.state.disabledStatus}
-								toggleDisabling={this.toggleDisabling}
-								eventsContract={this.state.eventsContract}
-								phnxContract={this.state.phnxContract}
-								purchased={this.state.purchased}
-								togglePurchase={this.togglePurchase}
-								eventsAddress={this.state.eventsAddress}
-								tokensListContract={
-									this.state.tokensListContract
-								}
-							/>
-						)}
+						render={(props) =>
+							this.state.tokensListContract && (
+								<EventPage
+									{...props}
+									inquire={this.inquireBuy}
+									disabledStatus={this.state.disabledStatus}
+									toggleDisabling={this.toggleDisabling}
+									eventsContract={this.state.eventsContract}
+									phnxContract={this.state.phnxContract}
+									purchased={this.state.purchased}
+									togglePurchase={this.togglePurchase}
+									eventsAddress={this.state.eventsAddress}
+									userDetails={this.state.userDetails}
+									handleGetUserDetails={
+										this.handleGetUserDetails
+									}
+									handleSetTokenListContract={
+										this.handleSetTokenListContract
+									}
+									tokensListContract={
+										// this.state.tokensListContract &&
+										this.state.tokensListContract
+									}
+								/>
+							)
+						}
 					/>
 					<Route
 						exact
@@ -1513,6 +1603,7 @@ class App extends Component {
 								{...props}
 								disabledStatus={this.state.disabledStatus}
 								inquire={this.inquireBuy}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1527,6 +1618,7 @@ class App extends Component {
 							<WrapperTopicsLandingPage
 								{...props}
 								eventsContract={this.state.eventsContract}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}
@@ -1543,6 +1635,7 @@ class App extends Component {
 								inquire={this.inquireBuy}
 								disabledStatus={this.state.disabledStatus}
 								toggleDisabling={this.toggleDisabling}
+								userDetails={this.state.userDetails}
 								tokensListContract={
 									this.state.tokensListContract
 								}

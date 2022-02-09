@@ -87,23 +87,24 @@ const useStyles = makeStyles((theme) => ({
 const questions = [
 	{
 		heading: "How to setup MetaMask for Matic?",
-		description: (<span>
-			Follow these steps and/or watch our walkthrough guide here - <a href="https://youtu.be/TDt0VoXoNuM" target="_blank">https://youtu.be/TDt0VoXoNuM</a>
+		description: (
+			<span>
+				Follow these steps and/or watch our walkthrough guide here -{" "}
+				<a href="https://youtu.be/TDt0VoXoNuM" target="_blank">
+					https://youtu.be/TDt0VoXoNuM
+				</a>
+				<ul>
+					<li>Go to network tab on metamask</li>
+					<li>From there select custom Rpc</li>
+					<li>In custom RPC add network name Matic Mainnet</li>
+					<li>In RPC URL : https://rpc-mainnet.matic.quiknode.pro</li>
+					<li>In network Id: 137</li>
 
-			<ul>
-				<li>Go to network tab on metamask</li>
-				<li>From there select custom Rpc</li>
-				<li>In custom RPC add network name Matic Mainnet</li>
-				<li>In RPC URL :  https://rpc-mainnet.matic.quiknode.pro</li>
-				<li>In network Id: 137</li>
-
-				<li>After adding these details click on save</li>
-				<li>Now you can use the Events Marketplace</li>
-
-
-			</ul>
-
-		</span>)
+					<li>After adding these details click on save</li>
+					<li>Now you can use the Events Marketplace</li>
+				</ul>
+			</span>
+		),
 	},
 	{
 		heading: "What is PhoenixDAO Events dApp?",
@@ -116,7 +117,7 @@ const questions = [
 			"Yes you can create multiple types of tickets. By way of example you can create free/paid tickets on the dApp. For paid events, you can also make the tickets in categories with different prices which helps you distinguish the different types of attendees you’ll be expecting to participate.",
 	},
 	{
-		heading: "Do I compulsorily need to use Meta Mask?",
+		heading: "Do I compulsorily need to use MetaMask?",
 		description:
 			"For now, yes. You need MetaMask (MM) if you want to be able to see and interact with all events that are live on the dApp. Tickets fees are charged from your MM wallet. We are working to support other web wallets which will give users options based on preferences.",
 	},
@@ -126,8 +127,34 @@ const questions = [
 			"First, in the situation that your event failed to create, you may need to do some basic checks like making sure your Metamask wallet is connected, you have balance that can cover the gas cost of creating your event/interacting with the blockchain and also you have properly filled all required fields while creating the events. If all these are ticked and it still doesn’t work, then it could be a network problem. You’re advised to give some time and try again. There’s also a feedback form at the bottom of the platform to get back to the team if it persist.",
 	},
 	{
-		heading: "Help, I can't connect to meta mask",
-		description:(<span>Here’s a video guide on <a href="https://www.youtube.com/watch?v=Af_lQ1zUnoM" target="_blank">“How to connect to Meta mask”</a>, <a href="https://quickswap-layer2.medium.com/guide-how-to-set-up-custom-matic-mainnet-rpc-for-metamask-transfer-assets-from-l1-to-l2-to-use-3b1e55ccb5cb" target="_blank">“How to change Network”</a>, and <a href="https://metamask.zendesk.com/hc/en-us/articles/360015489591-Basic-Safety-and-Security-Tips-for-MetaMask" target="_blank">“How to be Safe on Meta Mask”</a>. Don’t forget to check our {<Link to="/guide" >“How it works page”</Link>} on the dApp menu.</span>),
+		heading: "Help, I can't connect to metamask",
+		description: (
+			<span>
+				Here’s a video guide on{" "}
+				<a
+					href="https://www.youtube.com/watch?v=Af_lQ1zUnoM"
+					target="_blank"
+				>
+					“How to connect to Metamask”
+				</a>
+				,{" "}
+				<a
+					href="https://quickswap-layer2.medium.com/guide-how-to-set-up-custom-matic-mainnet-rpc-for-metamask-transfer-assets-from-l1-to-l2-to-use-3b1e55ccb5cb"
+					target="_blank"
+				>
+					“How to change Network”
+				</a>
+				, and{" "}
+				<a
+					href="https://metamask.zendesk.com/hc/en-us/articles/360015489591-Basic-Safety-and-Security-Tips-for-MetaMask"
+					target="_blank"
+				>
+					“How to be Safe on MetaMask”
+				</a>
+				. Don’t forget to check our{" "}
+				{<Link to="/guide">“How it works page”</Link>} on the dApp menu.
+			</span>
+		),
 	},
 	{
 		heading: "What is Matic Mainnet?",
@@ -140,7 +167,8 @@ const questions = [
 			"Yes you can schedule an event for later by adding to your favourite. This way it becomes easier for you to check the event details.\nNB: When you schedule an event for later, it doesn’t change the date set by the creator for the event to hold. Also, you can only add and view favourite after/when you connect your wallet",
 	},
 	{
-		heading: "What could be the possible reason for event creation failing?",
+		heading:
+			"What could be the possible reason for event creation failing?",
 		description:
 			"Some of the reasons include but not limited to Network congestion/failure to send either on the Ethereum/Matic Network, low/insufficient balance to cover gas fee in your MetaMask wallet, missing required details while filling events details, and probably when using a wallet that has been flagged for fraudulent/suspicious activities.",
 	},
@@ -151,8 +179,7 @@ const questions = [
 			"These and more features are already on the development backlog to be integrated. The best bet now if you find yourself in such a situation is to resell your ticket.\nNB: There are features planned to be integrated in future versions/iterations of the dApp.",
 	},
 	{
-		heading:
-			"Is there a limit to the number of tickets I can buy?",
+		heading: "Is there a limit to the number of tickets I can buy?",
 		description:
 			"If ticket category is limited you can buy tickets to that limit or if it is unlimited no of seats you can buy infinite no of tickets.\nIf the event is restricted to one wallet address then you can only buy it once with one wallet address.",
 	},
@@ -160,6 +187,100 @@ const questions = [
 		heading: "Can I preview events before hosting?",
 		description:
 			"Yes you can preview events before hosting/submitting them to the public.",
+	},
+	{
+		heading: "What assets are accepted on the Event Marketplace?",
+		description: (
+			<span>
+				ETHEREUM
+				<ul>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/phoenixdao/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							PHNX
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/tether/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							USDT
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/usd-coin/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							USDC
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/ethereum/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							Eth
+						</a>
+					</li>
+				</ul>
+				POLYGON
+				<ul>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/phoenixdao/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							PHNX
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/tether/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							USDT
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/usd-coin/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							USDC
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/polygon/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							MATIC
+						</a>
+					</li>
+					<li>
+						<a
+							href="https://coinmarketcap.com/currencies/wmatic/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							WRAPPED MATIC
+						</a>
+					</li>
+				</ul>
+			</span>
+		),
 	},
 ];
 
@@ -192,7 +313,6 @@ const FAQ = (props) => {
 
 				<AllQuestionsOnAccordianCards />
 			</Grid>
-			
 		</div>
 	);
 };

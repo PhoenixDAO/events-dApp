@@ -198,6 +198,8 @@ export const INFURA_WEB_URL =
 // 	"https://api.thegraph.com/subgraphs/name/musfirazia/eventsdapp";
 export const graphURLV1 =
 	"https://api.thegraph.com/subgraphs/name/ijlal-ishaq/phnx-app";
+// export const graphURLV1 =
+// 	"https://api.thegraph.com/subgraphs/name/zainhasan97-razi/eventsgraph2";
 
 // Ethereum mainnet
 // export const INFURA_URL =
@@ -213,8 +215,14 @@ export const INFURA_URL_2 =
 	"https://speedy-nodes-nyc.moralis.io/27dcd9d4dd0ceef1ad3788eb/polygon/mainnet";
 export const INFURA_WEB_URL_2 =
 	"wss://speedy-nodes-nyc.moralis.io/27dcd9d4dd0ceef1ad3788eb/polygon/mainnet/ws";
+// export const graphURLV2 =
+// 	"https://api.thegraph.com/subgraphs/name/musfirazia/event-subgraphv2";
+
+// export const graphURLV2 =
+// 	"https://api.thegraph.com/subgraphs/name/zainhasan97-razi/eventssubgraph";
+
 export const graphURLV2 =
-	"https://api.thegraph.com/subgraphs/name/musfirazia/event-subgraphv2";
+	"https://api.thegraph.com/subgraphs/name/ijlal-ishaq/phnx-app-matic";
 
 export const GLOBAL_NETWORK_ID = 4;
 export const GLOBAL_NETWORK_ID_2 = 137;

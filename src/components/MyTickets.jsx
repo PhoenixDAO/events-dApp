@@ -364,10 +364,10 @@ class MyTickets extends Component {
 		);
 	}
 	componentDidMount() {
-		console.log(
-			`tokensListContract at MyTickets.jsx`,
-			this.props.tokensListContract
-		);
+		// console.log(
+		// 	`tokensListContract at MyTickets.jsx`,
+		// 	this.props.tokensListContract
+		// );
 		this.loadTicketsFromBlockchain();
 		this.filterHideEvent();
 
