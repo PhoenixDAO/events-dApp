@@ -1,9 +1,8 @@
 name: Development Workflow
-
 on:
   push:
     branches:
-      - devdesign
+      - designing
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,7 +15,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '12'
-
       - name: Copy a file from s3
         uses: prewk/s3-cp-action@v2
         with:
@@ -49,8 +47,6 @@ jobs:
         
       - name: Run script
         run: ./changes.sh
-
-
 #       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
 #         with:
 #           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
@@ -59,8 +55,6 @@ jobs:
           
 #       - name: Push to Heroku
 #         run: git push heroku master
-
-
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
@@ -68,8 +62,6 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEV_DESIGN }}"
-          projectId: phoenix-events-ad618
-
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          projectId: event-dao-dapp
           channelId: live
-
