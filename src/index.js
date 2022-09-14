@@ -21,17 +21,7 @@ import {
 	makeStyles,
 } from "@material-ui/core/styles";
 import { CssBaseline } from "@material-ui/core";
-// import { getNetworkId } from "../../config/getGraphApi";
-// var web3s = new Web3(window.ethereum);
-// let url;
-// const network = getNetworkId().then((data)=>{
-// 	if (data == GLOBAL_NETWORK_ID) {
-// 		url=INFURA_URL_2
-// 		console.log("Url",url);
-// 	} else {
-// 		url=INFURA_WEB_URL_2
-// 	}
-// });
+
 const options = {
 	web3: {
 		customProvider: new Web3(INFURA_URL),
