@@ -20,7 +20,7 @@ jobs:
         with:
          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-         source: 's3://xord-testing/node-modules/node_modules.zip'
+         source: 's3://phoenix-node-modules/node_modules.zip'
          dest: '.'
          
       - name: Unzip modules
