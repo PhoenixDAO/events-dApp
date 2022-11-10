@@ -57,7 +57,7 @@ jobs:
 #         run: git push heroku master
       - uses: actions/setup-node@v1
         with:
-          node-version: '12'
+          node-version: '14'
    
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
